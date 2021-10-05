@@ -52,3 +52,7 @@ ALARM 4:  4 tiny pulses.  (VERY QUIET, useful in meetings)
 COUNTDOWN:  6 very tiny pulses.
 
 These will cycle in a loop from ALARM 1 to COUNTDOWN playing their tones until they run out.  All 5 will not last longer than 50 seconds.  To stop them from playing, edit their time.
+
+FIRST TIME USAGE:
+
+Users will want to go into Options -> Watchy Connect -> MENU to Connect.  Connect to the Watchy Connect WiFi access point with your phone, laptop, computer, etc.  From there, scan for your home network (or whichever one you want to use it with) and setup the WiFi connectivity there, once it works, the Access Point will close.  This will ALWAYS ask for a new WiFi setting, unlike previous versions, you can change your default WiFi as it will not try to connect to your current default one (if any).  Once you've done that, the other WiFi enabled functions will connect to that WiFi and will state it's IP address for web browsing to.
