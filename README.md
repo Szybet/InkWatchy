@@ -1,4 +1,4 @@
-Watchy GSR Compile instructions (Arduino):
+Watchy GSR Compile Instructions (Arduino):
 
 Go to the Arduino folder:
 
@@ -21,3 +21,5 @@ This repo's format:
 Stream folder contains the stream.
 Archive folder contains the ZIP of the stream to be placed inside Arduino's Stream folder.
 Bin folder contains the current bin that you can use esptool (.py or .exe) to install the current bin to the Watchy.
+
+For instructions on usage of the firmware, see "Usage".
