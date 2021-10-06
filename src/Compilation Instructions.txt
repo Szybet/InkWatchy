@@ -1,0 +1,78 @@
+Compiling instructions:
+
+In order to compile this you need:  Arduino Libraries, ArduinoOTA AND Watchy base.
+
+You'll need to edit 2 files:
+
+GxEPD2_154_D67.cpp:
+
+Insert the following code past the following:
+
+GxEPD2_154_D67::GxEPD2_154_D67(int8_t cs, int8_t dc, int8_t rst, int8_t busy) :
+  GxEPD2_EPD(cs, dc, rst, busy, HIGH, 10000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate)
+{
+}
+
+to read:
+
+GxEPD2_154_D67::GxEPD2_154_D67(int8_t cs, int8_t dc, int8_t rst, int8_t busy) :
+  GxEPD2_EPD(cs, dc, rst, busy, HIGH, 10000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate)
+{
+}
+
+bool IsDark;                                    // GuruSR:  Changed for setDarkBorder
+void GxEPD2_154_D67::setDarkBorder(bool Dark){  // GuruSR:  Changed for setDarkBorder
+	IsDark=Dark;                                  // GuruSR:  Changed for setDarkBorder
+}                                               // GuruSR:  Changed for setDarkBorder
+
+
+Change the code in _initdisplay from:
+
+void GxEPD2_154_D67::_InitDisplay()
+{
+  if (_hibernating) _reset();
+  delay(10); // 10ms according to specs
+  _writeCommand(0x12); // soft reset
+  delay(10); // 10ms according to specs
+  _writeCommand(0x01); // Driver output control
+  _writeData(0xC7);
+  _writeData(0x00);
+  _writeData(0x00);
+  _writeCommand(0x3C); // BorderWavefrom
+  _writeData(0x05);
+  _writeCommand(0x18); // Read built-in temperature sensor
+  _writeData(0x80);
+  _setPartialRamArea(0, 0, WIDTH, HEIGHT);
+}
+
+to:
+
+void GxEPD2_154_D67::_InitDisplay()
+{
+  if (_hibernating) _reset();
+  delay(10); // 10ms according to specs
+  _writeCommand(0x12); // soft reset
+  delay(10); // 10ms according to specs
+  _writeCommand(0x01); // Driver output control
+  _writeData(0xC7);
+  _writeData(0x00);
+  _writeData(0x00);
+  _writeCommand(0x3C); // BorderWavefrom
+  _writeData(IsDark ? 0x02 : 0x05);         // GuruSR:  Changed for setDarkBorder
+  _writeCommand(0x18); // Read built-in temperature sensor
+  _writeData(0x80);
+  _setPartialRamArea(0, 0, WIDTH, HEIGHT);
+}
+
+Edit GxEPD2_154_D67.h to include the following after:
+
+void hibernate(); // turns powerOff() and sets controller to deep sleep for minimum power use, ONLY if wakeable by RST (rst >= 0)
+
+to:
+
+void hibernate(); // turns powerOff() and sets controller to deep sleep for minimum power use, ONLY if wakeable by RST (rst >= 0)
+void setDarkBorder(bool Dark);        // GuruSR:  Changed for setDarkBorder
+
+Make a backup of these two files if you happen to update a newer version of GxEPD2.
+
+This will allow the compilation on either Arduino or PlatformIO. 
