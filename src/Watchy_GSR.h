@@ -16,7 +16,7 @@
 #include <HTTPClient.h>
 #include <Arduino_JSON.h>
 #include <DS3232RTC.h>
-#include "GxEPD2_BW-B.h"
+#include "GxEPD2_BW.h"
 #include "mbedtls/base64.h"
 #include <Wire.h>
 #include "BLE.h"
