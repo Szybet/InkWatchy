@@ -1,6 +1,6 @@
 #include "Watchy_GSR.h"
 
-Watchy watchy;
+WatchyGSR watchy;
 
 void setup(){
   watchy.init();

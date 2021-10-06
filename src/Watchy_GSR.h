@@ -1,7 +1,6 @@
 #ifndef WATCHY_GSR_H
 #define WATCHY_GSR_H
 
-#include "config.h"
 #include "Defines_GSR.h"
 #include "Web-HTML.h"
 #include <Arduino.h>
@@ -19,7 +18,6 @@
 #include "GxEPD2_BW.h"
 #include "mbedtls/base64.h"
 #include <Wire.h>
-#include "BLE.h"
 #include "bma.h"
 
 #include "icons.h"
@@ -36,12 +34,12 @@
 #include "aAntiCorona36pt7b.h"
 #include "aAntiCorona12pt7b.h"
 
-class Watchy{
+class WatchyGSR{
     public:
         static DS3232RTC RTC;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
     public:
-        Watchy();
+        WatchyGSR();
         void init();
         void showWatchFace();
         void drawWatchFace(); //override this method for different watch faces

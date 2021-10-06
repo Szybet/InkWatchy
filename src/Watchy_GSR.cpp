@@ -108,13 +108,10 @@ struct SpeedUp {
     time_t Last;
 } Turbo;
 
-DS3232RTC Watchy::RTC(false); 
-GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> Watchy::display(GxEPD2_154_D67(CS, DC, RESET, BUSY));
+DS3232RTC WatchyGSR::RTC(false); 
+GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> WatchyGSR::display(GxEPD2_154_D67(CS, DC, RESET, BUSY));
 
 volatile uint8_t Button;
-RTC_DATA_ATTR BMA423 sensor;
-RTC_DATA_ATTR bool WIFI_CONFIGURED;
-RTC_DATA_ATTR bool BLE_CONFIGURED;
 
 //RTC_DATA_ATTR alignas(8) struct AlarmID {
 RTC_DATA_ATTR     uint8_t   Alarms_Hour[4];
@@ -141,10 +138,10 @@ unsigned long LastButton, OTAFail;
 
 //    nvs_handle hNVS;
 
-Watchy::Watchy(){}  //constructor
+WatchyGSR::WatchyGSR(){}  //constructor
 
 // Init Defaults after a reboot, setup all the variables here for defaults to avoid randomness.
-void Watchy::setupDefaults(){
+void WatchyGSR::setupDefaults(){
     Options.TwentyFour = false;
     Options.LiteMode = true;
     Options.Feedback = true;
@@ -155,7 +152,7 @@ void Watchy::setupDefaults(){
     Steps.Minutes = 0;
 }
 
-void Watchy::init(){
+void WatchyGSR::init(){
     uint64_t wakeupBit;
     time_t NTPWaiting, RightNOW, LastCheck;
     int AlarmIndex, Pushed;                          // Alarm being played.
@@ -201,10 +198,10 @@ void Watchy::init(){
             Updates.Full=true;
             UpdateDisp=true;
             //Init interrupts.
-            attachInterrupt(digitalPinToInterrupt(MENU_BTN_PIN), std::bind(&Watchy::handleInterrupt,this), HIGH);
-            attachInterrupt(digitalPinToInterrupt(BACK_BTN_PIN), std::bind(&Watchy::handleInterrupt,this), HIGH);
-            attachInterrupt(digitalPinToInterrupt(UP_BTN_PIN), std::bind(&Watchy::handleInterrupt,this), HIGH);
-            attachInterrupt(digitalPinToInterrupt(DOWN_BTN_PIN), std::bind(&Watchy::handleInterrupt,this), HIGH);
+            attachInterrupt(digitalPinToInterrupt(MENU_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+            attachInterrupt(digitalPinToInterrupt(BACK_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+            attachInterrupt(digitalPinToInterrupt(UP_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+            attachInterrupt(digitalPinToInterrupt(DOWN_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
             break;
     }
     // Sometimes BMA crashes - simply try to reinitialize bma...
@@ -502,7 +499,7 @@ void Watchy::init(){
     deepSleep();
 }
 
-void Watchy::showWatchFace(){
+void WatchyGSR::showWatchFace(){
   display.epd2.setDarkBorder(Options.Border);
   drawWatchFace();
   if (Options.Feedback && DoHapatic){
@@ -515,7 +512,7 @@ void Watchy::showWatchFace(){
   ScreenRefresh();
 }
 
-void Watchy::drawWatchFace(){
+void WatchyGSR::drawWatchFace(){
     uint8_t Direction;
 
     Direction = sensor.getDirection();  // Directional screen on.  == DIRECTION_DISP_UP
@@ -540,7 +537,7 @@ void Watchy::drawWatchFace(){
     UpdateDisp = false;
 }
 
-void Watchy::drawTime(){
+void WatchyGSR::drawTime(){
     int16_t  x1, y1;
     uint16_t w, h, tw;
     String O;
@@ -564,7 +561,7 @@ void Watchy::drawTime(){
     WatchTime.LastTime = O;
 }
 
-void Watchy::drawDay(){
+void WatchyGSR::drawDay(){
     int16_t  x1, y1;
     uint16_t w, h, tw;
     String O;
@@ -580,7 +577,7 @@ void Watchy::drawDay(){
     WatchTime.LastDay = O;
 }
 
-void Watchy::drawDate(){
+void WatchyGSR::drawDate(){
     int16_t  x1, y1;
     uint16_t w, h, tw;
     String O;
@@ -597,7 +594,7 @@ void Watchy::drawDate(){
     WatchTime.LastDate = O;
 }
 
-void Watchy::drawYear(){
+void WatchyGSR::drawYear(){
     int16_t  x1, y1;
     uint16_t w, h, tw;
     String O;
@@ -613,7 +610,7 @@ void Watchy::drawYear(){
     WatchTime.LastYear = O;
 }
 
-void Watchy::drawMenu(){
+void WatchyGSR::drawMenu(){
     int16_t  x1, y1;
     uint16_t w, h, tw;
     String O, S;
@@ -823,7 +820,7 @@ void Watchy::drawMenu(){
     Menu.LastItem = O;
 }
 
-void Watchy::deepSleep(){
+void WatchyGSR::deepSleep(){
   //display.hibernate();
   
   #ifndef ESP_RTC
@@ -836,7 +833,7 @@ void Watchy::deepSleep(){
   esp_deep_sleep_start();
 }
 
-void Watchy::detectBattery(){
+void WatchyGSR::detectBattery(){
     float CBAT, BATOff;
     CBAT = getBatteryVoltage(); // Check battery against previous versions to determine which direction the battery is going.
     BATOff = CBAT - Battery.Last;
@@ -851,7 +848,7 @@ void Watchy::detectBattery(){
     }
 }
 
-void Watchy::ProcessNTP(){
+void WatchyGSR::ProcessNTP(){
   // Do ProgressNTP here.
   switch (NTPData.State){
     // Start WiFi and Connect.
@@ -994,7 +991,7 @@ void Watchy::ProcessNTP(){
   }
 }
 
-void Watchy::drawChargeMe(){
+void WatchyGSR::drawChargeMe(){
   // Shows Battery Direction indicators.
   int8_t D = 0;
   if (Battery.Direction == 1){
@@ -1016,7 +1013,7 @@ void Watchy::drawChargeMe(){
   Battery.LastState = D;
 }
 
-void Watchy::drawStatus(){
+void WatchyGSR::drawStatus(){
   if (WatchyStatus > ""){
       display.fillRect(NTPX, NTPY - 19, 60, 20, Options.LiteMode ? GxEPD_WHITE : GxEPD_BLACK);
       display.setFont(&Bronova_Regular13pt7b);
@@ -1026,7 +1023,7 @@ void Watchy::drawStatus(){
   }
 }
 
-void Watchy::setStatus(String Status){
+void WatchyGSR::setStatus(String Status){
     if (WatchyStatus != Status){
       WatchyStatus = Status;
       Updates.Status=true;
@@ -1034,7 +1031,7 @@ void Watchy::setStatus(String Status){
     }
 }
 
-void Watchy::VibeTo(bool Mode){
+void WatchyGSR::VibeTo(bool Mode){
     if (Mode != VibeMode){
         if (Mode){
             sensor.enableFeature(BMA423_WAKEUP, false);
@@ -1049,7 +1046,7 @@ void Watchy::VibeTo(bool Mode){
 }
 
 /*
-void Watchy::handleAccelerometer(){
+void WatchyGSR::handleAccelerometer(){
   uint8_t Direction;
 
   //Serial.println("Accel int.");
@@ -1064,7 +1061,7 @@ void Watchy::handleAccelerometer(){
   }
 }*/
 
-void Watchy::handleButtonPress(uint8_t Pressed){
+void WatchyGSR::handleButtonPress(uint8_t Pressed){
   uint8_t Direction;
   int ml, mh;
 
@@ -1599,14 +1596,14 @@ void Watchy::handleButtonPress(uint8_t Pressed){
   }
 }
 
-void Watchy::UpdateUTC(){
+void WatchyGSR::UpdateUTC(){
     tmElements_t TM;  //    struct tm * tm;
     RTC.read(TM);
     WatchTime.UTC = TM;
     WatchTime.UTC_RAW = makeTime(TM);
 }
 
-void Watchy::UpdateClock(){
+void WatchyGSR::UpdateClock(){
     struct tm * tm;
     setenv("TZ",WatchTime.POSIX,1);
     tzset();
@@ -1620,7 +1617,7 @@ void Watchy::UpdateClock(){
     WatchTime.Local.Year = tm->tm_year;
 }
 
-void Watchy::_rtcConfig() {
+void WatchyGSR::_rtcConfig() {
   tmElements_t TM;
   //https://github.com/JChristensen/DS3232RTC
   RTC.squareWave(SQWAVE_NONE); //disable square wave output
@@ -1630,7 +1627,7 @@ void Watchy::_rtcConfig() {
   RTC.read(TM);
 }
 
-void Watchy::_bmaConfig() {
+void WatchyGSR::_bmaConfig() {
 
   if (sensor.begin(_readRegister, _writeRegister, delay) == false) {
     //fail to init BMA
@@ -1725,7 +1722,7 @@ void Watchy::_bmaConfig() {
   //sensor.enableWakeupInterrupt();
 }
 
-float Watchy::getBatteryVoltage(){
+float WatchyGSR::getBatteryVoltage(){
     float A, B, C, D;
     A = analogRead(ADC_PIN) - 0.0125;
     B = analogRead(ADC_PIN) - 0.0125;
@@ -1734,7 +1731,7 @@ float Watchy::getBatteryVoltage(){
     return (((A + B + C + D) / 16384.0) * 7.23);
 }
 
-uint16_t Watchy::_readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len) {
+uint16_t WatchyGSR::_readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len) {
   Wire.beginTransmission(address);
   Wire.write(reg);
   Wire.endTransmission();
@@ -1746,14 +1743,14 @@ uint16_t Watchy::_readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint
   return 0;
 }
 
-uint16_t Watchy::_writeRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len) {
+uint16_t WatchyGSR::_writeRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len) {
   Wire.beginTransmission(address);
   Wire.write(reg);
   Wire.write(data, len);
   return (0 !=  Wire.endTransmission());
 }
 
-String Watchy::MakeTime(int Hour, int Minutes, bool& Alarm) {  // Use variable with Alarm, if set to False on the way in, returns PM indication.
+String WatchyGSR::MakeTime(int Hour, int Minutes, bool& Alarm) {  // Use variable with Alarm, if set to False on the way in, returns PM indication.
     int H;
     String AP;
     H = Hour;
@@ -1775,7 +1772,7 @@ String Watchy::MakeTime(int Hour, int Minutes, bool& Alarm) {  // Use variable w
     return String(H) + (Minutes < 10 ? ":0" : ":") + String(Minutes) + (!Options.TwentyFour ? AP : "");
 }
 
-String Watchy::MakeHour(uint8_t Hour){
+String WatchyGSR::MakeHour(uint8_t Hour){
     int H;
     H = Hour;
     if (!Options.TwentyFour){
@@ -1789,11 +1786,11 @@ String Watchy::MakeHour(uint8_t Hour){
     return String(H);
 }
 
-String Watchy::MakeMinutes(uint8_t Minutes){
+String WatchyGSR::MakeMinutes(uint8_t Minutes){
     return (Minutes < 10 ? "0" : "") + String(Minutes);
 }
 
-String Watchy::MakeSteps(uint32_t uSteps){
+String WatchyGSR::MakeSteps(uint32_t uSteps){
     String S, T, X;
     int I, C;
 
@@ -1809,7 +1806,7 @@ String Watchy::MakeSteps(uint32_t uSteps){
     return T;
 }
 
-void Watchy::CheckAlarm(int I){
+void WatchyGSR::CheckAlarm(int I){
     uint16_t  B;
     bool bA;
     B = (ALARM_ACTIVE | Bits[WatchTime.Local.Wday]);
@@ -1831,7 +1828,7 @@ void Watchy::CheckAlarm(int I){
     }
 }
 
-void Watchy::CheckCD(){
+void WatchyGSR::CheckCD(){
   uint16_t M = ((WatchTime.UTC_RAW - TimerDown.LastUTC) / 60);
   uint16_t E;
 
@@ -1850,7 +1847,7 @@ void Watchy::CheckCD(){
 }
 
 // Counts the active (255) alarms/timers and after 3, sets them to lower values.
-void Watchy::CalculateTones(){
+void WatchyGSR::CalculateTones(){
     uint8_t Count;
     CheckAlarm(0); CheckAlarm(1); CheckAlarm(2); CheckAlarm(3); CheckCD();
     if (Alarms_Times[0] > 0) Count++;
@@ -1879,20 +1876,20 @@ void Watchy::CalculateTones(){
     }
 }
 
-void Watchy::StopCD(){
+void WatchyGSR::StopCD(){
     if (TimerDown.ToneLeft > 0){
         TimerDown.ToneLeft = 1;
         TimerDown.Tone = 1;
     }
 }
 
-uint8_t Watchy::getToneTimes(uint8_t ToneIndex){
+uint8_t WatchyGSR::getToneTimes(uint8_t ToneIndex){
     if (ToneIndex > 3) return TimerDown.ToneLeft;
     return Alarms_Times[ToneIndex];
 }
 
 // Catches Steps and moves "Yesterday" into the other setting.
-void Watchy::monitorSteps(){
+void WatchyGSR::monitorSteps(){
     if (Steps.Hour == WatchTime.Local.Hour && Steps.Minutes == WatchTime.Local.Minute){
         if (!Steps.Reset){
             Steps.Yesterday=sensor.getCounter();
@@ -1903,7 +1900,7 @@ void Watchy::monitorSteps(){
 }
 
 /*
-String Watchy::GetStoredTimezone(){
+String WatchyGSR::GetStoredTimezone(){
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES) {
         // NVS partition was truncated and needs to be erased
@@ -1926,7 +1923,7 @@ String Watchy::GetStoredTimezone(){
     return TZMISSING;
 }
 
-bool Watchy::StoreTimezone(String Timezone){
+bool WatchyGSR::StoreTimezone(String Timezone){
     bool B;
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES) {
@@ -1948,12 +1945,12 @@ bool Watchy::StoreTimezone(String Timezone){
 }
 */
 
-IRAM_ATTR void Watchy::handleInterrupt(){
+IRAM_ATTR void WatchyGSR::handleInterrupt(){
     uint8_t B = getButtonPins();
     if (B > 0 && (millis() - LastButton) > KEYPAUSE) { Button = B; LastButton = millis(); }
 }
 
-IRAM_ATTR uint8_t Watchy::getButtonPins(){
+IRAM_ATTR uint8_t WatchyGSR::getButtonPins(){
     bool SW1 = (digitalRead(MENU_BTN_PIN) == 1);
     bool SW2 = (digitalRead(BACK_BTN_PIN) == 1);
     bool SW3 = (digitalRead(UP_BTN_PIN) == 1);
@@ -1966,7 +1963,7 @@ IRAM_ATTR uint8_t Watchy::getButtonPins(){
     return 0;
 }
 
-uint8_t Watchy::getButtonMaskToID(uint64_t HW){
+uint8_t WatchyGSR::getButtonMaskToID(uint64_t HW){
       if (HW & MENU_BTN_MASK)      return Options.Lefty ? 4 : getSwapped(1);   // Menu Button [SW1]
       else if (HW & BACK_BTN_MASK) return Options.Lefty ? 3 : getSwapped(2);   // Back Button [SW2]
       else if (HW & UP_BTN_MASK)   return Options.Lefty ? getSwapped(2) : 3;     // Up Button [SW3]
@@ -1974,7 +1971,7 @@ uint8_t Watchy::getButtonMaskToID(uint64_t HW){
    return 0;
 }
 
-IRAM_ATTR uint8_t Watchy::getSwapped(uint8_t pIn){
+IRAM_ATTR uint8_t WatchyGSR::getSwapped(uint8_t pIn){
     switch (pIn){
         case 1:
           return Options.Swapped ? 2 : 1;
@@ -1983,7 +1980,7 @@ IRAM_ATTR uint8_t Watchy::getSwapped(uint8_t pIn){
     }
 }
 
-void Watchy::ScreenRefresh(){
+void WatchyGSR::ScreenRefresh(){
     uint16_t XL, YL, XH, YH;
     bool DoIt;
 
@@ -2015,7 +2012,7 @@ void Watchy::ScreenRefresh(){
     Updates.Full=false;
 }
 
-void Watchy::initZeros(){
+void WatchyGSR::initZeros(){
     GuiMode = WATCHON;
     ScreenOn = true;
     VibeMode = 0;
@@ -2064,7 +2061,7 @@ void Watchy::initZeros(){
 
 // Settings Storage & Retrieval here.
 
-String Watchy::GetSettings(){
+String WatchyGSR::GetSettings(){
     unsigned char I[96];
     unsigned char O[96];
     int K = 0;
@@ -2104,7 +2101,7 @@ String Watchy::GetSettings(){
     return S;
 }
 
-void Watchy::StoreSettings(String FromUser){
+void WatchyGSR::StoreSettings(String FromUser){
     unsigned char O[96], E[96];
     int K = 0;
     int J = 0;
@@ -2143,17 +2140,17 @@ void Watchy::StoreSettings(String FromUser){
 }
 
 // Turbo Mode!
-void Watchy::SetTurbo(){
+void WatchyGSR::SetTurbo(){
     Turbo.On=true;
     Turbo.Last=millis();
     LastButton=millis();  // Here for speed.
 }
 
-bool Watchy::InTurbo() { return (Turbo.On && millis() - Turbo.Last < (Options.Turbo * 1000)); }
+bool WatchyGSR::InTurbo() { return (Turbo.On && millis() - Turbo.Last < (Options.Turbo * 1000)); }
 
 // Debugging here.
 
-void Watchy::DBug(String Value){
+void WatchyGSR::DBug(String Value){
     if (USEDEBUG){
         if (!SerialSetup){
             Serial.begin(115200);
@@ -2163,7 +2160,7 @@ void Watchy::DBug(String Value){
     }
 }
 
-String Watchy::ToHex(uint64_t Value){
+String WatchyGSR::ToHex(uint64_t Value){
   unsigned long long1 = (unsigned long)((Value & 0xFFFF0000) >> 16 );
   unsigned long long2 = (unsigned long)((Value & 0x0000FFFF));
   return String(long1, HEX) + String(long2, HEX);
