@@ -1,6 +1,6 @@
 Compiling instructions:
 
-In order to compile this you need:  Arduino Libraries AND also ArduinoOTA.
+In order to compile this you need:  Arduino Libraries, ArduinoOTA AND Watchy base.
 
 You'll need to edit 2 files:
 
