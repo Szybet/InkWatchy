@@ -4,7 +4,7 @@ In order to compile this you need:  Arduino Libraries AND also ArduinoOTA.
 
 You'll need to edit 2 files:
 
-GxEPD2_154_D67.h:
+GxEPD2_154_D67.cpp:
 
 Insert the following code past the following:
 
