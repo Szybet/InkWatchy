@@ -56,3 +56,5 @@ These will cycle in a loop from ALARM 1 to COUNTDOWN playing their tones until t
 FIRST TIME USAGE:
 
 Users will want to go into Options -> Watchy Connect -> MENU to Connect.  Connect to the Watchy Connect WiFi access point with your phone, laptop, computer, etc.  From there, scan for your home network (or whichever one you want to use it with) and setup the WiFi connectivity there, once it works, the Access Point will close.  This will ALWAYS ask for a new WiFi setting, unlike previous versions, you can change your default WiFi as it will not try to connect to your current default one (if any).  Once you've done that, the other WiFi enabled functions will connect to that WiFi and will state it's IP address for web browsing to.
+
+NOTE:  Buttons do not work unless you're looking at the watch face, as it detects the orientation of the watch before accepting any button presses.
