@@ -4,7 +4,7 @@ Steps -> Reset Time -> Reset Steps
 Alarms -> (Alarms 1 to 4) -> HH:MM -> Days + Repeat + Active settings
 Timers -> Countdown Timer & Elapsed Time\n
 Options ->
-            Display Style  --- Lite or Dark mode.
+            Display Style  --- Light or Dark mode.
             Border Mode    --- Show (white) or Hide (black) the border on the display.
             Dexterity      --- Swap the Back/Menu with UP/DOWN for left-handed users.
             Menu & Back    --- Normal or Swap the Menu & Back button positions.
@@ -58,4 +58,4 @@ FIRST TIME USAGE:
 
 Users will want to go into Options -> Watchy Connect -> MENU to Connect.  Connect to the Watchy Connect WiFi access point with your phone, laptop, computer, etc.  From there, scan for your home network (or whichever one you want to use it with) and setup the WiFi connectivity there, once it works, the Access Point will close.  This will ALWAYS ask for a new WiFi setting, unlike previous versions, you can change your default WiFi as it will not try to connect to your current default one (if any).  Once you've done that, the other WiFi enabled functions will connect to that WiFi and will state it's IP address for web browsing to.
 
-NOTE:  Buttons do not work unless you're looking at the watch face, as it detects the orientation of the watch before accepting any button presses.
+NOTE:  Orientation is turned off by default, if you want buttons to work only when you're looking at the Watchy, see Options -> Orientation.
