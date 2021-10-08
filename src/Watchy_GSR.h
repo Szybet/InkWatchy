@@ -9,7 +9,7 @@
 #include <ESPmDNS.h>
 #include <WiFi.h>
 #include <WiFiClient.h>
-#include <ArduinoOTA.h>;
+#include <ArduinoOTA.h>
 #include <Update.h>
 #include <WiFiUdp.h>
 #include <WiFiManager.h>
@@ -29,7 +29,7 @@
 //#include "nvs.h"
 //#include "nvs_handle.hpp"
 
-#include "aAntiCorona15pt7b.h";
+#include "aAntiCorona15pt7b.h"
 #include "Bronova_Regular13pt7b.h"
 #include "aAntiCorona16pt7b.h"
 #include "aAntiCorona36pt7b.h"

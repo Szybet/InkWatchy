@@ -5,8 +5,6 @@
 #define USEDEBUG 1  // !0 is on, will not setup Serial OR print output if zero.
 
 //display
-#define BLE_DEVICE_NAME "Watchy BLE OTA"
-#define WATCHFACE_NAME "Watchy GSR"
 #define SOFTWARE_VERSION_MAJOR 1
 #define SOFTWARE_VERSION_MINOR 0
 #define SOFTWARE_VERSION_PATCH 0
@@ -53,6 +51,8 @@
 #define MENU_TIMERS 2
 #define MENU_OPTIONS 3
 #define MENU_ALARM1 4
+#define MENU_ALARM2 5
+#define MENU_ALARM3 6
 #define MENU_ALARM4 7
 #define MENU_TIMEDN 8
 #define MENU_TIMEUP 9
