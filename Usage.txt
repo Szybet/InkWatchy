@@ -8,6 +8,7 @@ Options ->
             Border Mode    --- Show (white) or Hide (black) the border on the display.
             Dexterity      --- Swap the Back/Menu with UP/DOWN for left-handed users.
             Menu & Back    --- Normal or Swap the Menu & Back button positions.
+            Orientation    --- [NEW] Turn on button ignoring on orientation (Watchy UP) or Ignore the orientation of the Watchy.
             Time Mode      --- AM/PM or 24 Hour mode of time display.
             Feedback       --- Causes a hapatic feedback using the vibration motor.
             Turbo Time     --- How many seconds Watchy stays active after your last button press before sleeping.
