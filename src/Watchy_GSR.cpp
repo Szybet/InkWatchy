@@ -524,7 +524,7 @@ void WatchyGSR::drawWatchFace(){
     ScreenOn = (Direction == DIRECTION_DISP_UP || Direction == DIRECTION_TOP_EDGE || Battery.Direction == 1 || true);  // True set due to bug.
 
     if (ScreenOn){
-      if (!OTAUpdate){
+      if (!(OTAUpdate || WatchyAPOn)){
           drawTime();
           drawDay();
           drawYear();
