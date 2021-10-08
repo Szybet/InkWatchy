@@ -9,8 +9,8 @@ static const char UserAgent[] PROGMEM = "Watchy";
 
 //  AlarmVBs[] = {"0111111110", "0011001100", "0110110110", "0101001010"};
 int AlarmVBs[] = {0x01FE, 0x00CC, 0x01B6, 0x014A};
-//                          0        1         2         3          4          5          6          7          8                  9                10               11             12           13             14           15          16            17             18              19                20            21            22
-const char *Headings[] = {"Steps", "Alarms", "Timers", "Options", "Alarm 1", "Alarm 2", "Alarm 3", "Alarm 4", "Countdown Timer", "Elapsed Timer", "Display Style", "Border Mode", "Dexterity", "Menu & Back", "Time Mode", "Feedback", "Turbo Time", "Reset Screen", "Sync Watchy", "Watchy Connect", "OTA Update", "OTA Website","Watchy Reboot"};
+//                          0        1         2         3          4          5          6          7          8                  9                10               11             12           13             14            15           16           17            18              19             20               21            22             23
+const char *Headings[] = {"Steps", "Alarms", "Timers", "Options", "Alarm 1", "Alarm 2", "Alarm 3", "Alarm 4", "Countdown Timer", "Elapsed Timer", "Display Style", "Border Mode", "Dexterity", "Menu & Back", "Orientation", "Time Mode", "Feedback", "Turbo Time", "Reset Screen", "Sync Watchy", "Watchy Connect", "OTA Update", "OTA Website","Watchy Reboot"};
 
 const uint16_t Bits[10] = {1,2,4,8,16,32,64,128,256,512};
 
@@ -28,6 +28,7 @@ RTC_DATA_ATTR struct Optional {
     bool Border;                      // True to set the border to black/white.
     bool Lefty;                       // Swaps the buttons to the other side.
     bool Swapped;                     // Menu and Back buttons swap ends (vertically).
+    bool Orientated;                  // Set to false to not bother which way the buttons are.
     uint8_t Turbo;                    // 0-10 seconds.
 } Options;
 
@@ -147,8 +148,8 @@ void WatchyGSR::setupDefaults(){
     Options.Feedback = true;
     Options.Border = false;
     Options.Lefty = false;
-    Options.Turbo = 3;
     Options.Swapped = false;
+    Options.Turbo = 3;
     Steps.Hour = 6;
     Steps.Minutes = 0;
 }
@@ -762,6 +763,12 @@ void WatchyGSR::drawMenu(){
         }else {
             O = "Show";
         }
+    }else if (Menu.Item == MENU_ORNT){  // Watchy Orientation.
+        if (Options.Orientated){
+            O = "Watchy UP";
+        }else {
+            O = "Ignore";
+        }
     }else if (Menu.Item == MENU_MODE){  // 24hr Format Swap.
         if (Options.TwentyFour){
             O = "24 Hour";
@@ -822,7 +829,7 @@ void WatchyGSR::drawMenu(){
 }
 
 void WatchyGSR::deepSleep(){
-  //display.hibernate();
+  display.hibernate();
   
   #ifndef ESP_RTC
   esp_sleep_enable_ext0_wakeup(RTC_PIN, 0); //enable deep sleep wake on RTC interrupt
@@ -1078,7 +1085,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
   }
   */
 
-  if (Direction != DIRECTION_DISP_UP && Direction != DIRECTION_TOP_EDGE) return; // Don't accept it.
+  if (Options.Orientated) { if (Direction != DIRECTION_DISP_UP && Direction != DIRECTION_TOP_EDGE) return; } // Don't accept it.
 
   switch (Pressed){
     case 1:
@@ -1244,6 +1251,12 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   Options.Border = !Options.Border;
                   Menu.LastItem=""; // Forces a redraw.
                   display.init(0,false);  // Force it here so it fixes the border.
+                  DoHapatic = true;
+                  UpdateDisp = true;  // Quick Update.
+                  SetTurbo();
+              }else if (Menu.Item == MENU_ORNT){  // Watchy Orientation
+                  Options.Orientated = !Options.Orientated;
+                  Menu.LastItem=""; // Forces a redraw.
                   DoHapatic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
@@ -2081,6 +2094,7 @@ String WatchyGSR::GetSettings(){
     K |= Options.Border ? 8 : 0;
     K |= Options.Lefty ? 16 : 0;
     K |= Options.Swapped ? 32 : 0;
+    K |= Options.Orientated ? 64 : 0;
     I[2] = (K); I[3] = Options.Turbo;
 
     I[4] = (TimerDown.MaxHours);
@@ -2124,6 +2138,7 @@ void WatchyGSR::StoreSettings(String FromUser){
         Options.Border = (V & 8) ? true : false;
         Options.Lefty = (V & 16) ? true : false;
         Options.Swapped = (V & 32) ? true : false;
+        Options.Orientated = (V & 64) ? true : false;
     }
     J++; if (L > J) Options.Turbo = clamp(O[J],0,10);
     J++; if (L > J) TimerDown.MaxHours = clamp(O[J],0,23);

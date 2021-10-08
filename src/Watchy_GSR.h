@@ -1,6 +1,7 @@
 #ifndef WATCHY_GSR_H
 #define WATCHY_GSR_H
 
+#include <Watchy.h>
 #include "Defines_GSR.h"
 #include "Web-HTML.h"
 #include <Arduino.h>

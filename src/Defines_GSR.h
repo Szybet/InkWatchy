@@ -60,15 +60,16 @@
 #define MENU_BRDR 11
 #define MENU_SIDE 12
 #define MENU_SWAP 13
-#define MENU_MODE 14
-#define MENU_FEED 15
-#define MENU_TRBO 16
-#define MENU_SCRN 17
-#define MENU_SYNC 18
-#define MENU_WIFI 19
-#define MENU_OTAU 20
-#define MENU_OTAM 21
-#define MENU_RSET 22
+#define MENU_ORNT 14
+#define MENU_MODE 15
+#define MENU_FEED 16
+#define MENU_TRBO 17
+#define MENU_SCRN 18
+#define MENU_SYNC 19
+#define MENU_WIFI 20
+#define MENU_OTAU 21
+#define MENU_OTAM 22
+#define MENU_RSET 23
 
 // Menu segments.
 #define MENU_INNORMAL 0
