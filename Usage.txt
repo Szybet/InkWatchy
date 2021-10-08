@@ -14,8 +14,8 @@ Options ->
             Reset Screen   --- Reset screen if artifacting or ghosting is happening.
             Sync Watchy    --- Sync Watchy RTC by Time, TimeZone, TimeZone & Time
             Watchy Connect --- Used to give the base WiFi credentials to Watchy.  (More will come later.)
-            OTA Update     --- Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.
-            OTA Website    --- Website offers Backup & Restore of settings and WiFi upload of OTA bin file.
+            OTA Update     --- Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.)
+            OTA Website    --- Website offers Backup & Restore of settings and WiFi upload of OTA bin file.  (ESCAPE by holding "BACK" for 10 seconds.)
             Watchy Reboot  --- Reboot the Watchy in the event something stops working.
             
 Button usage:
