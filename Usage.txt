@@ -10,7 +10,7 @@ Options ->
             Menu & Back    --- Normal or Swap the Menu & Back button positions.
             Orientation    --- [NEW] Turn on button ignoring on orientation (Watchy UP) or Ignore the orientation of the Watchy.
             Time Mode      --- AM/PM or 24 Hour mode of time display.
-            Feedback       --- Causes a hapatic feedback using the vibration motor.
+            Feedback       --- Causes a haptic feedback using the vibration motor.
             Turbo Time     --- How many seconds Watchy stays active after your last button press before sleeping.
             Reset Screen   --- Reset screen if artifacting or ghosting is happening.
             Sync Watchy    --- Sync Watchy RTC by Time, TimeZone, TimeZone & Time
