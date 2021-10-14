@@ -70,7 +70,7 @@ These will cycle in a loop from ALARM 1 to COUNTDOWN playing their tones until t
 FIRST TIME USAGE:
 
 1.  Go into Options -> Watchy Connect -> MENU to Connect.
-2.  Connect to the Watchy Connect WiFi access point with your phone, laptop, computer, etc.
+2.  Connect to the Watchy Connect WiFi access point with your phone, laptop, computer, etc.  (Password is:  Watchy123)
 3.  Scan for your home network (or whichever one you want to use it with) and setup the WiFi connectivity there, once it works, the Access Point will close.  This will ALWAYS ask for a new WiFi setting, unlike previous versions, you can change your WiFi "X" (last known good connection).
 4.  Go to (Options -> ) OTA Website, browse to the IP address in Watchy menu.
 5.  Pick "Backup & Restore Settings" to restore your previous Watchy settings, paste in the settings you had and click Store.
