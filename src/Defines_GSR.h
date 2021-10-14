@@ -6,7 +6,7 @@
 
 //display
 #define SOFTWARE_VERSION_MAJOR 1
-#define SOFTWARE_VERSION_MINOR 0
+#define SOFTWARE_VERSION_MINOR 1
 #define SOFTWARE_VERSION_PATCH 0
 #define HARDWARE_VERSION_MAJOR 1
 #define HARDWARE_VERSION_MINOR 0
@@ -15,6 +15,11 @@
 #define WiFi_AP_SSID "Watchy Connect"
 #define WiFi_AP_PSWD "Watchy123"
 #define WiFi_AP_HIDE false
+#define WiFi_SSID_MAX 32
+#define WiFi_PASS_MAX 63
+// Use instead of Watchy Connect (if necessary)
+#define WiFi_DEF_SSID ""
+#define WiFi_DEF_PASS ""
 
 // Battery
 #define MinBattery 3.58
@@ -54,22 +59,23 @@
 #define MENU_ALARM2 5
 #define MENU_ALARM3 6
 #define MENU_ALARM4 7
-#define MENU_TIMEDN 8
-#define MENU_TIMEUP 9
-#define MENU_DISP 10
-#define MENU_BRDR 11
-#define MENU_SIDE 12
-#define MENU_SWAP 13
-#define MENU_ORNT 14
-#define MENU_MODE 15
-#define MENU_FEED 16
-#define MENU_TRBO 17
-#define MENU_SCRN 18
-#define MENU_SYNC 19
-#define MENU_WIFI 20
-#define MENU_OTAU 21
-#define MENU_OTAM 22
-#define MENU_RSET 23
+#define MENU_TONES 8
+#define MENU_TIMEDN 9
+#define MENU_TIMEUP 10
+#define MENU_DISP 11
+#define MENU_BRDR 12
+#define MENU_SIDE 13
+#define MENU_SWAP 14
+#define MENU_ORNT 15
+#define MENU_MODE 16
+#define MENU_FEED 17
+#define MENU_TRBO 18
+#define MENU_SCRN 19
+#define MENU_SYNC 20
+#define MENU_WIFI 21
+#define MENU_OTAU 22
+#define MENU_OTAM 23
+#define MENU_RSET 24
 
 // Menu segments.
 #define MENU_INNORMAL 0

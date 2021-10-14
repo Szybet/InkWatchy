@@ -77,6 +77,7 @@ class WatchyGSR{
         void CalculateTones();
         void StopCD();
         uint8_t getToneTimes(uint8_t ToneIndex);
+        String getReduce(uint8_t Amount);
         void monitorSteps();
 //        String GetStoredTimezone();
 //        virtual bool StoreTimezone(String Timezone);
@@ -84,7 +85,16 @@ class WatchyGSR{
         uint8_t getButtonMaskToID(uint64_t HW);
         uint8_t getSwapped(uint8_t pIn);
         void ScreenRefresh();
+        void AskForWiFi();
+        void processWiFiRequest();
+        wl_status_t currentWiFi();
+        void endWiFi();
+        static void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info);
+        String buildWiFiAPPage();
+        void parseWiFiPageArg(String ARG, String DATA);
         void setupDefaults();
+        String APIDtoString(uint8_t Index);
+        String PASStoString(uint8_t Index);
         void initZeros();
         String GetSettings();
         void StoreSettings(String FromUser);
