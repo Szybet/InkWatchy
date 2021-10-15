@@ -1096,7 +1096,6 @@ void WatchyGSR::ProcessNTP(){
         break;
       }
       WatchTime.UTC_RAW = time(nullptr);
-      NTPData.Last = WatchTime.UTC_RAW;
       tmElements_t TM;
       breakTime(WatchTime.UTC_RAW,TM);
       RTC.write(TM);
@@ -1110,6 +1109,7 @@ void WatchyGSR::ProcessNTP(){
       NTPData.Wait = 0;
       NTPData.Pause = 0;
       NTPData.State = 0;
+      NTPData.Last = WatchTime.UTC_RAW; // Moved from section 6 to here, to limit the atttempts.
       NTPData.UpdateUTC = false;
       NTPData.TimeZone = false;
       Battery.UpCount=0;  // Stop it from thinking the battery went wild.
