@@ -8,7 +8,7 @@
 - **FIX:**  Move NTP test while charging is seen to detect Battery which only happens once a minute (avoids constant NTP checks blocking WiFi usage when no WiFi is available).
 
 **Version 1.2:**
-- **FIX:**  Fixed WiFi Additonal Access Point functionality.
+- **FIX:**  Fixed Additional WiFi Access Point functionality.
 - **FIX:**  Fixed minor issues with various menus not giving proper results.
 - **ADD:**  Non-Volatile Storage for settings and Timezone.
 - **ADD:**  Troubleshooting Menu with Screen Reset, Watchy Reboot and Detect Travel (RTC).
