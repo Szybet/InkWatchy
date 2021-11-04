@@ -69,6 +69,16 @@ ALARMS & COUNTDOWN TIMER PULSES:
 
 These will cycle in a loop from ALARM 1 to COUNTDOWN playing their tones until they run out.  All 5 will not last longer than 50 seconds.  To stop them from playing, edit their time.  Each Alarm (and the Countdown Timer) have their own reduction for repeats of their tones, which will shorten these durations.
 
+SCREEN OFF:
+
+1.  3 modes are present, **{Off}**, "Always" and "Bed Time".
+2.  "Always" mode will turn the screen off when not in a menu, it will go off after the delay set in "Screen Auto-Off" (MENU once from "Screen Off").
+3.  "Bed Time" mode will turn the screen off at any time between the two hours, inside or outside of a menu.  MENU after "Screen Auto-Off" to see the "Sleeping Begins".
+4.  "Sleeping Begins" and "Sleeping Ends" cannot be the same hour, but can be 1 hour apart from each other, either before or after the other.
+5.  All modes when not **Off** will use the "Screen Auto-Off" delay after any button press.
+6.  While the screen is off, any button press will just turn it on for the duration set in "Screen Auto-Off", a second press is needed to use the Watchy as normal.
+7.  If Turbo Time is set longer than "Screen Auto-Off", Turbo Time will still be active, pressing any key will instantly do what was asked even with the screen off.
+
 FIRST TIME USAGE:
 
 1.  Go into Options -> Watchy Connect -> MENU to Connect.
