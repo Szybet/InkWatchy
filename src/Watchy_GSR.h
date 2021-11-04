@@ -23,11 +23,7 @@
 
 #include "icons.h"
 #include "Olsen2POSIX.h"
-
-//#include "esp_system.h"
-//#include "nvs_flash.h"
-//#include "nvs.h"
-//#include "nvs_handle.hpp"
+#include "ArduinoNvs.h"
 
 #include "aAntiCorona15pt7b.h"
 #include "Bronova_Regular13pt7b.h"
@@ -60,16 +56,20 @@ class WatchyGSR{
         void drawMenu();
         void VibeTo(bool Mode);
         //void handleAccelerometer();
+        void GoDark();
         void detectBattery();
         void ProcessNTP();
         void UpdateUTC();
         void UpdateClock();
+        void ManageTime();
         void _rtcConfig();
         void _bmaConfig();
         static uint16_t _readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
         static uint16_t _writeRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
         String MakeTime(int Hour, int Minutes, bool& Alarm);
         String MakeHour(uint8_t Hour);
+        String MakeSeconds(uint8_t Seconds);
+        String MakeTOD(uint8_t Hour, bool AddZeros);
         String MakeMinutes(uint8_t Minutes);
         String MakeSteps(uint32_t uSteps);
         void CheckAlarm(int I);
@@ -79,14 +79,13 @@ class WatchyGSR{
         uint8_t getToneTimes(uint8_t ToneIndex);
         String getReduce(uint8_t Amount);
         void monitorSteps();
-//        String GetStoredTimezone();
-//        virtual bool StoreTimezone(String Timezone);
         uint8_t getButtonPins();
         uint8_t getButtonMaskToID(uint64_t HW);
         uint8_t getSwapped(uint8_t pIn);
         void ScreenRefresh();
         void AskForWiFi();
         void processWiFiRequest();
+        String WiFiIndicator(uint8_t Index);
         wl_status_t currentWiFi();
         void endWiFi();
         static void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info);
@@ -98,8 +97,12 @@ class WatchyGSR{
         void initZeros();
         String GetSettings();
         void StoreSettings(String FromUser);
+        String RetrieveSettings();
+        void RecordSettings();
         void SetTurbo();
         bool InTurbo();
+        bool DarkWait();
+        bool Showing();
         void DBug(String Value);
         String ToHex(uint64_t Value);
 };
