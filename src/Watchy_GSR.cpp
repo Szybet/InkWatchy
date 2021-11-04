@@ -334,7 +334,7 @@ void WatchyGSR::init(){
                                     Pulse = (((TimerDown.Tone / 2) & 1) != 0);
                                     if (!Pulse && TimerDown.Tone > 0) TimerDown.Tone--;
                                     VibeTo(Pulse);   // Turns Vibe on or off depending on bit state.
-                                    LastUse=millis();
+                                    LastUse=millis(); LastButton = LastUse;
                                 }
                             }else WaitForNext=true;
                         }else if (Alarms_Times[AlarmIndex] > 0){
@@ -342,14 +342,14 @@ void WatchyGSR::init(){
                                 Alarms_Playing[AlarmIndex]--;
                                 if (Menu.SubItem > 0 && Menu.Item - MENU_ALARM1 == AlarmIndex){
                                     VibeTo(false);
-                                    LastUse=millis();
+                                    LastUse=millis(); LastButton = LastUse;
                                     DoHaptic = false;
                                     Alarms_Playing[AlarmIndex]=0;
                                     Alarms_Times[AlarmIndex]=0;
                                 }else{
                                     Pulse = ((AlarmVBs[AlarmIndex] & Bits[Alarms_Playing[AlarmIndex] / 3]) != 0);
                                     VibeTo(Pulse);   // Turns Vibe on or off depending on bit state.
-                                    LastUse=millis();
+                                    LastUse=millis(); LastButton = LastUse;
                                     DoHaptic = false;
                                 }
                                 if (Alarms_Playing[AlarmIndex] == 0 && Alarms_Times[AlarmIndex] > 0){
@@ -826,7 +826,7 @@ void WatchyGSR::drawMenu(){
               break;
             case 3: // 0x minutes.
               S=MakeMinutes(Steps.Minutes);
-              O=MakeHour(Steps.Hour) + ":" + S.charAt(0) + "[" + S.charAt(1) + MakeTOD(Steps.Hour, true) + "]";
+              O=MakeHour(Steps.Hour) + ":" + S.charAt(0) + "[" + S.charAt(1) + "]" + MakeTOD(Steps.Hour, true);
               break;
             case 4: // Sunday.
               O = "MENU to Reset";
@@ -847,7 +847,7 @@ void WatchyGSR::drawMenu(){
               O=MakeHour(Alarms_Hour[Menu.Item - MENU_ALARM1]) + ":[" + S.charAt(0) + "]" + S.charAt(1) + MakeTOD(Alarms_Hour[Menu.Item - MENU_ALARM1], false) + " " + getReduce(Alarms_Repeats[Menu.Item - MENU_ALARM1]);
               break;
             case 3: // 0x minutes.
-              O=MakeHour(Alarms_Hour[Menu.Item - MENU_ALARM1]) + ":" + S.charAt(0) + "[" + S.charAt(1) + MakeTOD(Alarms_Hour[Menu.Item - MENU_ALARM1], false) + "] " + getReduce(Alarms_Repeats[Menu.Item - MENU_ALARM1]);
+              O=MakeHour(Alarms_Hour[Menu.Item - MENU_ALARM1]) + ":" + S.charAt(0) + "[" + S.charAt(1) + "]" + MakeTOD(Alarms_Hour[Menu.Item - MENU_ALARM1], false) + " " + getReduce(Alarms_Repeats[Menu.Item - MENU_ALARM1]);
               break;
             case 4: // Repeats
               O=MakeHour(Alarms_Hour[Menu.Item - MENU_ALARM1]) + ":" + S.charAt(0) + S.charAt(1) + MakeTOD(Alarms_Hour[Menu.Item - MENU_ALARM1], false) + " [" + getReduce(Alarms_Repeats[Menu.Item - MENU_ALARM1]) + "]";
@@ -2317,6 +2317,7 @@ void WatchyGSR::CheckAlarm(int I){
         if (bA && Alarms_Times[I] == 0 && (Alarms_Active[I] & ALARM_TRIGGERED) == 0){
             Alarms_Times[I] = 255;
             Alarms_Playing[I] = 30;
+            LastUse=millis(); LastButton=LastUse;
             UpdateDisp=true;  // Force it on, if it is in Dark Running.
             Alarms_Active[I] |= ALARM_TRIGGERED;
             if ((Alarms_Active[I] & ALARM_REPEAT) == 0){
@@ -2343,6 +2344,7 @@ void WatchyGSR::CheckCD(){
         TimerDown.Tone = 24;
         TimerDown.ToneLeft = 255;
         TimerDown.Active = false;
+        LastUse=millis(); LastButton=LastUse;
         UpdateDisp = true;  // Quick Update.
     }
 }
