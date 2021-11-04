@@ -22,7 +22,7 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | Time Mode       | **{AM/PM}** or 24 Hour mode of time display. |
 |            | Feedback        | **{Enable}** or Disable haptic feedback on button presses (during use). |
 |            | Turbo Time      | How many seconds Watchy stays active after your last button press before sleeping. |
-|            | Screen Off      | Enables "Always" off or "Bed Time" screen blanking (which uses no cpu to update display, battery savings). |
+|            | Screen Off      | Enables "Always", Disabled or "Bed Time" screen blanking (which uses no cpu to update display, battery savings). |
 |            | Sync Watchy     | Sync Watchy RTC by Time, TimeZone, TimeZone & Time |
 |            | Watchy Connect  | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. |
 |            | OTA Update      | Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.) |
@@ -71,11 +71,11 @@ These will cycle in a loop from ALARM 1 to COUNTDOWN playing their tones until t
 
 SCREEN OFF:
 
-1.  3 modes are present, **{Off}**, "Always" and "Bed Time".
+1.  3 modes are present, **{Disabled}**, "Always" and "Bed Time".
 2.  "Always" mode will turn the screen off when not in a menu, it will go off after the delay set in "Screen Auto-Off" (MENU once from "Screen Off").
 3.  "Bed Time" mode will turn the screen off at any time between the two hours, inside or outside of a menu.  MENU after "Screen Auto-Off" to see the "Sleeping Begins".
 4.  "Sleeping Begins" and "Sleeping Ends" cannot be the same hour, but can be 1 hour apart from each other, either before or after the other.
-5.  All modes when not **Off** will use the "Screen Auto-Off" delay after any button press.
+5.  All modes when not **Disabled** will use the "Screen Auto-Off" delay after any button press.
 6.  While the screen is off, any button press will just turn it on for the duration set in "Screen Auto-Off", a second press is needed to use the Watchy as normal.
 7.  If Turbo Time is set longer than "Screen Auto-Off", Turbo Time will still be active, pressing any key will instantly do what was asked even with the screen off.
 
