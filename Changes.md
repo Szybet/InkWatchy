@@ -10,6 +10,7 @@
 **Version 1.2:**
 - **FIX:**  Fixed Additional WiFi Access Point functionality.
 - **FIX:**  Fixed minor issues with various menus not giving proper results.
+- **FIX:**  Fixed WiFi indicator to show properly.
 - **ADD:**  Non-Volatile Storage for settings and Timezone.
 - **ADD:**  Troubleshooting Menu with Screen Reset, Watchy Reboot and Detect Travel (RTC).
-- **ADD:**  Feature Add:  Screen Off with Off, "Always" and "Bed Time".
+- **ADD:**  Feature Add:  Screen Off with "Disabled", "Always" and "Bed Time".
