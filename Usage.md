@@ -22,12 +22,14 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | Time Mode       | **{AM/PM}** or 24 Hour mode of time display. |
 |            | Feedback        | **{Enable}** or Disable haptic feedback on button presses (during use). |
 |            | Turbo Time      | How many seconds Watchy stays active after your last button press before sleeping. |
-|            | Reset Screen    | Reset screen if artifacting or ghosting is happening. |
+|            | Screen Off      | Enables "Always" off or "Bed Time" screen blanking (which uses no cpu to update display, battery savings). |
 |            | Sync Watchy     | Sync Watchy RTC by Time, TimeZone, TimeZone & Time |
 |            | Watchy Connect  | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. |
 |            | OTA Update      | Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.) |
 |            | OTA Website     | Website offers Backup & Restore of Settings, WiFi AP Settings and WiFi OTA upload of a bin file.  (ESCAPE by holding "BACK" for 10 seconds.) |
-|            | Watchy Reboot   | Reboot the Watchy in the event something stops working. |
+|**Troubleshoot** | Reset Screen    | Reset screen if artifacting or ghosting is happening. |
+|                 | Watchy Reboot   | Reboot the Watchy in the event something stops working. |
+|                 | Detect Drift    | Detect drift in RTC clock (takes 2 minutes). |
             
 Button usage:
 
