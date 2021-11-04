@@ -6,3 +6,10 @@
 - **ADD:**  Tone Reduction in Alarms Sub-Menu to set all 4 alarms to this reduction.
 - **ADD:**  Manual WiFi default settings in Defines_GSR.h (WiFi_DEF_SSID) for people who want to manually add their always default WiFi at compile time.
 - **FIX:**  Move NTP test while charging is seen to detect Battery which only happens once a minute (avoids constant NTP checks blocking WiFi usage when no WiFi is available).
+
+**Version 1.2:**
+- **FIX:**  Fixed WiFi Additonal Access Point functionality.
+- **FIX:**  Fixed minor issues with various menus not giving proper results.
+- **ADD:**  Non-Volatile Storage for settings and Timezone.
+- **ADD:**  Troubleshooting Menu with Screen Reset, Watchy Reboot and Detect Travel (RTC).
+- **ADD:**  Feature Add:  Screen Off with Off, "Always" and "Bed Time".
