@@ -11,6 +11,7 @@
 - **FIX:**  Fixed Additional WiFi Access Point functionality.
 - **FIX:**  Fixed minor issues with various menus not giving proper results.
 - **FIX:**  Fixed WiFi indicator to show properly.
+- **FIX:**  Fixed POSIX Timezone to be null when not set with a proper one, will auto-force Timezone detection on reboot only if none is stored in Non-Volatile Storage.
 - **ADD:**  Non-Volatile Storage for settings and Timezone.
 - **ADD:**  Troubleshooting Menu with Screen Reset, Watchy Reboot and Detect Travel (RTC).
 - **ADD:**  Feature Add:  Screen Off with "Disabled", "Always" and "Bed Time".
