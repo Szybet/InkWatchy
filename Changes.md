@@ -15,3 +15,6 @@
 - **ADD:**  Non-Volatile Storage for settings and Timezone.
 - **ADD:**  Troubleshooting Menu with Screen Reset, Watchy Reboot and Detect Travel (RTC).
 - **ADD:**  Feature Add:  Screen Off with "Disabled", "Always" and "Bed Time".
+
+**Version 1.2.1:**
+- **FIX:**  Made buttons work always with screen blanking, once to bring screen on, second one does action (if one).
