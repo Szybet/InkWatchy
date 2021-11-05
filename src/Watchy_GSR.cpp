@@ -54,9 +54,10 @@ RTC_DATA_ATTR struct Optional {
 } Options;
 
 RTC_DATA_ATTR int GuiMode;
-RTC_DATA_ATTR bool ScreenOn;              // Screen needs to be on.
-RTC_DATA_ATTR bool VibeMode;              // Vibe Motor is On=True/Off=False, used for the Haptic and Alarms.
-RTC_DATA_ATTR String WatchyStatus;        // Used for the indicator in the bottom left, so when it changes, it asks for a screen refresh, if not, it doesn't.
+RTC_DATA_ATTR bool ScreenOn;          // Screen needs to be on.
+RTC_DATA_ATTR bool Darkness;          // Whether or not the screen is darkened.
+RTC_DATA_ATTR bool VibeMode;          // Vibe Motor is On=True/Off=False, used for the Haptic and Alarms.
+RTC_DATA_ATTR String WatchyStatus;    // Used for the indicator in the bottom left, so when it changes, it asks for a screen refresh, if not, it doesn't.
 
 RTC_DATA_ATTR struct TimeData {
     time_t UTC_RAW;           // Copy of the UTC on init.
@@ -131,6 +132,7 @@ struct dispUpdate {
     bool Charge;
     bool Full;
     bool Drawn;
+    bool Dark;
 } Updates;
 
 struct SpeedUp {
@@ -198,6 +200,7 @@ void WatchyGSR::init(){
     esp_sleep_wakeup_cause_t wakeup_reason;
     Wire.begin(SDA, SCL); //init i2c
     NVS.begin();
+    display.epd2.setDarkBorder(Options.Border);
     display.init(0, false); //_initial_refresh to false to prevent full update on init (moved here so it isn't done repeatedly during loops).
 
     pinMode(MENU_BTN_PIN, INPUT);   // Prep these for the loop below.
@@ -210,6 +213,7 @@ void WatchyGSR::init(){
     DoOnce = true;
     Updates.Drawn = false;
     LastButton = 0;
+    LastUse = 0;
 
     switch (wakeup_reason)
     {
@@ -225,10 +229,8 @@ void WatchyGSR::init(){
             UpdateDisp=Showing();
             break;
         case ESP_SLEEP_WAKEUP_EXT1: //button Press
-            //if (wakeup_reason & ACC_INT_MASK) handleAccelerometer(); else 
             UpdateDisp = !Showing();
-            Pushed = getButtonMaskToID(wakeupBit);
-            if (Pushed > 0) { Button = Pushed; LastButton = millis(); }
+            Button = getButtonMaskToID(wakeupBit);
             break;
         default: //reset
             WatchTime.EPSMS = ((60000 - millis()) * 1000);
@@ -262,7 +264,7 @@ void WatchyGSR::init(){
         _bmaConfig();
     }
 
-    if (Button > 0) { if (Showing()) handleButtonPress(Button); else { SetTurbo(); UpdateDisp = true; } Button = 0; }
+    if (Button > 0) { handleButtonPress(Button); Button = 0; }
 
     CalculateTones(); monitorSteps();
     AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
@@ -1068,13 +1070,14 @@ void WatchyGSR::deepSleep(){
   if (Options.NeedsSaving) RecordSettings();
 
   esp_sleep_enable_ext0_wakeup(RTC_PIN, 0); //enable deep sleep wake on RTC interrupt
-  esp_sleep_enable_ext1_wakeup(BTN_PIN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press
+  esp_sleep_enable_ext1_wakeup(BTN_PIN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
   esp_deep_sleep_start();
 }
 
 void WatchyGSR::GoDark(){
   if ((Updates.Drawn || Battery.Direction != Battery.DarkDirection) && Showing() == false)
   {
+    Darkness=true;
     display.epd2.setDarkBorder(true);
     display.init(0,false);  // Force it here so it fixes the border.
     display.fillScreen(GxEPD_BLACK);
@@ -1353,6 +1356,8 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
   */
 
   if (Options.Orientated) { if (Direction != DIRECTION_DISP_UP && Direction != DIRECTION_TOP_EDGE) return; } // Don't accept it.
+  LastButton=millis();
+  if (Darkness) { Button = 0; SetTurbo(); UpdateDisp=true; return; }  // Don't do the button, just exit.
 
   switch (Pressed){
     case 1:
@@ -2200,7 +2205,7 @@ void WatchyGSR::_bmaConfig() {
   // Enable BMA423 isTilt feature
   //sensor.enableFeature(BMA423_TILT, true);
   // Enable BMA423 isDoubleClick feature
-  //sensor.enableFeature(BMA423_WAKEUP, true);
+//  sensor.enableFeature(BMA423_WAKEUP, true);
 
   // Reset steps
   //sensor.resetStepCounter();
@@ -2209,7 +2214,7 @@ void WatchyGSR::_bmaConfig() {
   //sensor.enableStepCountInterrupt();
   //sensor.enableTiltInterrupt();
   // It corresponds to isDoubleClick interrupt
-  //sensor.enableWakeupInterrupt();
+//  sensor.enableWakeupInterrupt();
 }
 
 float WatchyGSR::getBatteryVoltage(){
@@ -2418,7 +2423,7 @@ void WatchyGSR::monitorSteps(){
 
 IRAM_ATTR void WatchyGSR::handleInterrupt(){
     uint8_t B = getButtonPins();
-    if (B > 0 && (LastButton == 0 || (millis() - LastButton) > KEYPAUSE)) { Button = B; LastButton = millis(); }
+    if (B > 0 && (LastButton == 0 || (millis() - LastButton) > KEYPAUSE)) Button = B;
 }
 
 IRAM_ATTR uint8_t WatchyGSR::getButtonPins(){
@@ -2471,6 +2476,7 @@ void WatchyGSR::ScreenRefresh(){
     }else{ XL = 0; YL = 0; XH = 200; YH = 200; DoIt = true; }
     if (DoIt){
         if(Updates.Full) display.setFullWindow(); else display.setFullWindow(); //init moved, can't do this:  display.setPartialWindow(XL, YL, XH - XL, YH - YL);
+        Darkness=false;
         display.display(!Updates.Full); //partial refresh
     }
     Updates.Drawn=Updates.Time || Updates.Day || Updates.Date || Updates.Header || Updates.Item || Updates.Status || Updates.Year || Updates.Charge || Updates.Full;
