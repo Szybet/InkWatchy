@@ -71,6 +71,7 @@ RTC_DATA_ATTR struct TimeData {
     String LastYear;
     unsigned long EPSMS;      // Milliseconds (rounded to the enxt minute) when the clock was updated via NTP.
     bool NewMinute;           // Set to True when New Minute happens.
+    time_t TravelTest;        // For Travel Testing.
 } WatchTime;
 
 RTC_DATA_ATTR struct Countdown {
@@ -2076,19 +2077,18 @@ void WatchyGSR::UpdateClock(){
 
 // Manage time will determine if the RTC is in use, will also set a flag to "New Minute" for the loop functions to see the minute change.
 void WatchyGSR::ManageTime(){
-    tmElements_t TM;
-    time_t TT;
+    tmElements_t TM;  //    struct tm * tm;
     int I;
     if (WatchTime.EPSMS < millis()){
         // Deal with NTPData.TimeTest.
         if (NTPData.TimeTest){
-            TT = WatchTime.UTC_RAW + 60;      // Add the minute.
-            UpdateUTC();
             NTPData.TestCount++;
+            UpdateUTC();
+            if (NTPData.TestCount == 1) WatchTime.TravelTest = WatchTime.UTC_RAW + 60;      // Add the minute.
             if (NTPData.TestCount > 1){
                 I = Options.Drift;
                 if (NTPData.NTPDone){
-                    Options.Drift = (TT - WatchTime.UTC_RAW);
+                    Options.Drift = (WatchTime.TravelTest - WatchTime.UTC_RAW);
                     Options.UsingDrift = (Options.Drift != 0);
                     if (Menu.Item == MENU_TOFF) Menu.SubItem = 3;
                     NTPData.TimeTest = false;
