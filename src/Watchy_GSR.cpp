@@ -2078,6 +2078,7 @@ void WatchyGSR::UpdateClock(){
 void WatchyGSR::ManageTime(){
     tmElements_t TM;
     time_t TT;
+    int I;
     if (WatchTime.EPSMS < millis()){
         // Deal with NTPData.TimeTest.
         if (NTPData.TimeTest){
@@ -2085,6 +2086,7 @@ void WatchyGSR::ManageTime(){
             UpdateUTC();
             NTPData.TestCount++;
             if (NTPData.TestCount > 1){
+                I = Options.Drift;
                 if (NTPData.NTPDone){
                     Options.Drift = (TT - WatchTime.UTC_RAW);
                     Options.UsingDrift = (Options.Drift != 0);
@@ -2094,6 +2096,7 @@ void WatchyGSR::ManageTime(){
                     NTPData.TimeTest = false;
                     if (Menu.Item == MENU_TOFF) Menu.SubItem = 0;
                 }
+                Options.NeedsSaving |= (I != Options.Drift);
                 UpdateClock();
             }
         }
