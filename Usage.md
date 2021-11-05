@@ -77,7 +77,7 @@ SCREEN OFF:
 4.  "Sleeping Begins" and "Sleeping Ends" cannot be the same hour, but can be 1 hour apart from each other, either before or after the other.
 5.  All modes when not **Disabled** will use the "Screen Auto-Off" delay after any button press.
 6.  While the screen is off, any button press will just turn it on for the duration set in "Screen Auto-Off", a second press is needed to use the Watchy as normal.
-7.  If Turbo Time is set longer than "Screen Auto-Off", Turbo Time will still be active, pressing any key will instantly do what was asked even with the screen off.
+7.  If Turbo Time is set longer than "Screen Auto-Off", Turbo Time will still be active and buttons will react as normal with respect to screen blanking.
 
 FIRST TIME USAGE:
 
