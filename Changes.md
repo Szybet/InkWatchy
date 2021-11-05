@@ -18,3 +18,5 @@
 
 **Version 1.2.1:**
 - **FIX:**  Made buttons work always with screen blanking, once to bring screen on, second one does action (if one).
+- **FIX:**  Fixed Restore Settings with empty data causing Watchy to crash.
+- **FIX:**  Detect Drift not saving changed value to NVS.
