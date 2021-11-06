@@ -168,8 +168,9 @@ bool Sensitive;    // Loop code is sensitive, like OTAUpdate, TimeTest
 bool OTAUpdate;    // Internet based OTA Update.
 bool OTAEnd;       // Means somewhere, it wants this to end, so end it.
 int OTATry;        // Tries to connect to WiFi.
-bool DoHaptic;    // Want it to happen after screen update.
+bool DoHaptic;     // Want it to happen after screen update.
 bool UpdateDisp;   // Display needs to be updated.
+bool IDidIt;       // Tells if the Drifting wa sdone this minute.
 unsigned long LastButton, LastUse, OTAFail;
 
 WatchyGSR::WatchyGSR(){}  //constructor
@@ -195,7 +196,7 @@ void WatchyGSR::setupDefaults(){
 void WatchyGSR::init(){
     uint64_t wakeupBit;
     int AlarmIndex, Pushed;                          // Alarm being played.
-    bool AlarmsOn, WaitForNext, Pulse, DoOnce, B, IDidIt;
+    bool AlarmsOn, WaitForNext, Pulse, DoOnce, B;
     unsigned long Since, AlarmReset, APLoop;
     String S;
 
