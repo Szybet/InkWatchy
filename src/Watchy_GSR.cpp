@@ -222,12 +222,11 @@ void WatchyGSR::init(){
     switch (wakeup_reason)
     {
         case ESP_SLEEP_WAKEUP_EXT0: //RTC Alarm
-            WatchTime.NewMinute=true;
+            WatchTime.Drifting += Options.Drift;
+            IDidIt = true;
             UpdateUTC();
-            WatchTime.EPSMS = (millis() + (60000 - (1000 * WatchTime.UTC.Second)));
-            ManageTime();   // Account for drift.
             RTC.alarm(ALARM_2); //resets the alarm flag in the RTC
-            WatchTime.NewMinute=false;
+            WatchTime.EPSMS = (millis() + (60000 - (1000 * WatchTime.UTC.Second)));
             UpdateClock();
             detectBattery();
             UpdateDisp=Showing();
@@ -2101,6 +2100,7 @@ void WatchyGSR::ManageTime(){
                     Options.UsingDrift = (Options.Drift != 0);
                     if (Menu.Item == MENU_TOFF) Menu.SubItem = 3;
                     NTPData.TimeTest = false;
+                    if (Options.UsingDrift) WatchTime.Drifting = Options.Drift;
                 }else{
                     NTPData.TimeTest = false;
                     if (Menu.Item == MENU_TOFF) Menu.SubItem = 0;
