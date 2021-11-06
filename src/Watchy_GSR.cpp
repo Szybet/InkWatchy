@@ -72,6 +72,7 @@ RTC_DATA_ATTR struct TimeData {
     unsigned long EPSMS;      // Milliseconds (rounded to the enxt minute) when the clock was updated via NTP.
     bool NewMinute;           // Set to True when New Minute happens.
     time_t TravelTest;        // For Travel Testing.
+    int32_t Drifting;         // The amount to add to UTC_RAW after reading from the RTC.
 } WatchTime;
 
 RTC_DATA_ATTR struct Countdown {
@@ -194,7 +195,7 @@ void WatchyGSR::setupDefaults(){
 void WatchyGSR::init(){
     uint64_t wakeupBit;
     int AlarmIndex, Pushed;                          // Alarm being played.
-    bool AlarmsOn, WaitForNext, Pulse, DoOnce, B;
+    bool AlarmsOn, WaitForNext, Pulse, DoOnce, B, IDidIt;
     unsigned long Since, AlarmReset, APLoop;
     String S;
 
@@ -212,6 +213,7 @@ void WatchyGSR::init(){
     wakeup_reason = esp_sleep_get_wakeup_cause(); //get wake up reason
     wakeupBit = esp_sleep_get_ext1_wakeup_status();
     DoOnce = true;
+    IDidIt = false;
     Updates.Drawn = false;
     LastButton = 0;
     LastUse = 0;
@@ -219,22 +221,23 @@ void WatchyGSR::init(){
     switch (wakeup_reason)
     {
         case ESP_SLEEP_WAKEUP_EXT0: //RTC Alarm
-            RTC.alarm(ALARM_2); //resets the alarm flag in the RTC
-            WatchTime.EPSMS = ((60000 - millis()) * 1000);
             WatchTime.NewMinute=true;
             UpdateUTC();
+            WatchTime.EPSMS = (millis() + (60000 - (1000 * WatchTime.UTC.Second)));
             ManageTime();   // Account for drift.
+            RTC.alarm(ALARM_2); //resets the alarm flag in the RTC
             WatchTime.NewMinute=false;
             UpdateClock();
             detectBattery();
             UpdateDisp=Showing();
             break;
         case ESP_SLEEP_WAKEUP_EXT1: //button Press
+            UpdateUTC();
+            WatchTime.EPSMS = (millis() + (60000 - (1000 * WatchTime.UTC.Second)));
             UpdateDisp = !Showing();
             Button = getButtonMaskToID(wakeupBit);
             break;
         default: //reset
-            WatchTime.EPSMS = ((60000 - millis()) * 1000);
             setupDefaults();
             initZeros();
             _rtcConfig();
@@ -242,6 +245,7 @@ void WatchyGSR::init(){
             B = NVS.getString("GSR-TZ",S);
             if (S.length() > 0) strcpy(WatchTime.POSIX,S.c_str());
             UpdateUTC();
+            WatchTime.EPSMS = (millis() + (60000 - (1000 * WatchTime.UTC.Second)));
             UpdateClock();
             RetrieveSettings();
             AlarmIndex=0;
@@ -1052,7 +1056,7 @@ void WatchyGSR::drawMenu(){
                 O = "Calculating";
                 break;
             case 3:
-                if (Options.UsingDrift) O = String(Options.Drift) + " " + MakeSeconds(Options.Drift); else O = "No Drift";
+                if (Options.UsingDrift){ if (Options.Drift< 0) O = "+" + String(0 - Options.Drift) + " " + MakeSeconds(0 - Options.Drift); else O = "-" + String(Options.Drift) + " " + MakeSeconds(Options.Drift); } else O = "No Drift";
         }
     }
     if (O > ""){
@@ -1242,6 +1246,7 @@ void WatchyGSR::ProcessNTP(){
       WatchTime.UTC_RAW = time(nullptr);
       breakTime(WatchTime.UTC_RAW,TM);
       RTC.write(TM);
+      WatchTime.Drifting = 0;
       WatchTime.EPSMS = (millis() + (60000 - (1000 * WatchTime.UTC.Second)));
       WatchTime.UTC = TM;
       NTPData.NTPDone = true;
@@ -2057,8 +2062,8 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
 void WatchyGSR::UpdateUTC(){
     tmElements_t TM;  //    struct tm * tm;
     RTC.read(TM);
-    WatchTime.UTC = TM;
-    WatchTime.UTC_RAW = makeTime(TM);
+    WatchTime.UTC_RAW = makeTime(TM) + (NTPData.TimeTest ? 0 : WatchTime.Drifting);
+    breakTime(WatchTime.UTC_RAW,WatchTime.UTC);
 }
 
 void WatchyGSR::UpdateClock(){
@@ -2088,7 +2093,9 @@ void WatchyGSR::ManageTime(){
             if (NTPData.TestCount > 1){
                 I = Options.Drift;
                 if (NTPData.NTPDone){
-                    Options.Drift = (WatchTime.TravelTest - WatchTime.UTC_RAW);
+                    if (WatchTime.TravelTest > WatchTime.UTC_RAW) Options.Drift = 0 - (WatchTime.TravelTest - WatchTime.UTC_RAW);
+                    else if (WatchTime.UTC_RAW > WatchTime.TravelTest) Options.Drift = WatchTime.UTC_RAW - WatchTime.TravelTest;
+                    else if (WatchTime.UTC_RAW == WatchTime.TravelTest) Options.Drift = 0;
                     Options.UsingDrift = (Options.Drift != 0);
                     if (Menu.Item == MENU_TOFF) Menu.SubItem = 3;
                     NTPData.TimeTest = false;
@@ -2103,14 +2110,13 @@ void WatchyGSR::ManageTime(){
         WatchTime.EPSMS += 60000;
         WatchTime.NewMinute=true;
     }
-    if (WatchTime.NewMinute){
+    if (WatchTime.NewMinute && !NTPData.TimeTest && !IDidIt){
         WatchTime.EPSMS += ((Options.UsingDrift ? Options.Drift : 0) * 1000);
         if (Options.UsingDrift){
-            WatchTime.UTC_RAW += Options.Drift;
-            breakTime(WatchTime.UTC_RAW,TM);
-            RTC.write(TM);
-            WatchTime.UTC=TM;
+            WatchTime.Drifting += Options.Drift;
+            IDidIt = true;
             UpdateDisp=Showing();
+            UpdateUTC();
         }
     }
 }
@@ -2639,6 +2645,7 @@ void WatchyGSR::initZeros(){
     VibeMode = 0;
     WatchyStatus = "";
     WatchTime.TimeZone = "";
+    WatchTime.Drifting = 0;
     for (I = 0; I < 64; I++) WatchTime.POSIX[I] = 0;
     Menu.Style = MENU_INNORMAL;
     Menu.Item = 0;
