@@ -170,7 +170,7 @@ bool OTAEnd;       // Means somewhere, it wants this to end, so end it.
 int OTATry;        // Tries to connect to WiFi.
 bool DoHaptic;     // Want it to happen after screen update.
 bool UpdateDisp;   // Display needs to be updated.
-bool IDidIt;       // Tells if the Drifting wa sdone this minute.
+bool IDidIt;       // Tells if the Drifting was done this minute.
 unsigned long LastButton, LastUse, OTAFail;
 
 WatchyGSR::WatchyGSR(){}  //constructor
