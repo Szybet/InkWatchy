@@ -564,6 +564,7 @@ void WatchyGSR::init(){
                     Since=millis();
                 }
                 WatchTime.NewMinute=false;
+                IDidIt=false;
                 Sensitive = ((OTAUpdate && Menu.SubItem == 3) || (NTPData.TimeTest && Menu.SubItem == 2));
             }
         }
@@ -2118,6 +2119,7 @@ void WatchyGSR::ManageTime(){
             IDidIt = true;
             UpdateDisp=Showing();
             UpdateUTC();
+            UpdateClock();
         }
     }
 }
