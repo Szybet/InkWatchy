@@ -562,8 +562,8 @@ void WatchyGSR::init(){
                     if (Since <= 50) delay(Since);
                     UpdateUTC();
                     Since=millis();
-                    WatchTime.NewMinute=false;
                 }
+                WatchTime.NewMinute=false;
                 Sensitive = ((OTAUpdate && Menu.SubItem == 3) || (NTPData.TimeTest && Menu.SubItem == 2));
             }
         }
