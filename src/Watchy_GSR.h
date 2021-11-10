@@ -103,6 +103,8 @@ class WatchyGSR{
         bool InTurbo();
         bool DarkWait();
         bool Showing();
+        void RefreshCPU();
+        void RefreshCPU(int Value);
         void DBug(String Value);
         String ToHex(uint64_t Value);
 };
