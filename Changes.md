@@ -21,3 +21,10 @@
 - **FIX:**  Fixed Restore Settings with empty data causing Watchy to crash.
 - **FIX:**  Detect Drift not saving changed value to NVS.
 - **FIX:**  Detect Drift now correctly checks 1 minute.  (No more oddities with drift calculations.)
+
+**Version 1.3:**
+- **ADD:**  Excessive failover for Detect Travel +/- 30 seconds will cause Watchy to ignore RTC and use internal CPU timing [see Usage]
+- **ADD:**  CPU control to improve lifespan of battery operation.  8+ hours of battery while in non-RTC mode, using tailored option changes.
+- **FIX:**  Fix WiFi timeouts not properly setup if inside Active Mode for too long.
+- **FIX:**  Status printing not showing up on dark backgrounds.
+- **FIX:**  Fixed Dark so the face drawing knows it happened and vice-versa.
