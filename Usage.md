@@ -97,4 +97,5 @@ WiFi entries can be edited from Watchy's Options -> OTA Website, surf to the Wat
 WiFi options in the Options menu will not be available if the low battery indicator is on.
 
 [1]  If non-RTC mode is entered, the entry for "Detect Drift" will be replaced with "Return to RTC" when backed away from the results, which will state the RTC as bad.  The Watchy will then turn off a variety (and some will be locked) of settings to ensure better battery life, reducing timer and alarm announcements and will force the screen to blank unless you press a button.  While non-RTC mode is active, menus will not keep the screen on (constant "Bed Time" mode), so be sure to increase your "Screen Auto-Off" to adjust it's frequency.
+
 [2]  "Always" mode is used during non-RTC mode, with the exception that menus are ignored (acting like "Bed Time" mode).
