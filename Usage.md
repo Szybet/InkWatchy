@@ -24,12 +24,12 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | Turbo Time      | How many seconds Watchy stays active after your last button press before sleeping. |
 |            | Screen Off      | Enables "Always", Disabled or "Bed Time" screen blanking (which uses no cpu to update display, battery savings). |
 |            | Sync Watchy     | Sync Watchy RTC by Time, TimeZone, TimeZone & Time |
-|            | Watchy Connect  | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. |
+|            | Watchy Connect  | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. "BACK" to immediately exit |
 |            | OTA Update      | Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.) |
 |            | OTA Website     | Website offers Backup & Restore of Settings, WiFi AP Settings and WiFi OTA upload of a bin file.  (ESCAPE by holding "BACK" for 10 seconds.) |
 |**Troubleshoot** | Reset Screen    | Reset screen if artifacting or ghosting is happening. |
 |                 | Watchy Reboot   | Reboot the Watchy in the event something stops working. |
-|                 | Detect Drift    | Detect drift in RTC clock (takes 2 minutes). |
+|                 | Detect Drift    | Detect drift in RTC clock (takes 2 minutes). Excessive drift enters non-RTC mode. [1] |
             
 Button usage:
 
@@ -72,7 +72,7 @@ These will cycle in a loop from ALARM 1 to COUNTDOWN playing their tones until t
 SCREEN OFF:
 
 1.  3 modes are present, **{Disabled}**, "Always" and "Bed Time".
-2.  "Always" mode will turn the screen off when not in a menu, it will go off after the delay set in "Screen Auto-Off" (MENU once from "Screen Off").
+2.  "Always" mode will turn the screen off when not in a menu, it will go off after the delay set in "Screen Auto-Off" (MENU once from "Screen Off"). [2]
 3.  "Bed Time" mode will turn the screen off at any time between the two hours, inside or outside of a menu.  MENU after "Screen Auto-Off" to see the "Sleeping Begins".
 4.  "Sleeping Begins" and "Sleeping Ends" cannot be the same hour, but can be 1 hour apart from each other, either before or after the other.
 5.  All modes when not **Disabled** will use the "Screen Auto-Off" delay after any button press.
@@ -85,10 +85,16 @@ FIRST TIME USAGE:
 2.  Connect to the Watchy Connect WiFi access point with your phone, laptop, computer, etc.  (Password is:  Watchy123)
 3.  Scan for your home network (or whichever one you want to use it with) and setup the WiFi connectivity there, once it works, the Access Point will close.  This will ALWAYS ask for a new WiFi setting, unlike previous versions, you can change your WiFi "X" (last known good connection).
 4.  Go to (Options -> ) OTA Website, browse to the IP address in Watchy menu.
-5.  Pick "Backup & Restore Settings" to restore your previous Watchy settings, paste in the settings you had and click Store.
+5.  Pick "Backup & Restore Settings" if you have previous Watchy settings to restore, paste in the settings you had and click Store.
+6.  If you don't have previous settings, go into "Edit Additional WiFi Access Points" and add up to 10 there, click Store to finish.  (See WiFi USAGE for more).
 
 WiFi USAGE:
 
 WiFi now has 10 entries (AP A to AP J), the most recent successfully connected AP is labelled "X".  See compilation for usage for making a default "X".
 
 WiFi entries can be edited from Watchy's Options -> OTA Website, surf to the Watchy in a browser and select "Edit Additional WiFi Access Points".  When they are correct, click "Store".  The "?" at the end of each password, lets you toggle the *'s on/off.
+
+WiFi options in the Options menu will not be available if the low battery indicator is on.
+
+[1]  If non-RTC mode is entered, the entry for "Detect Drift" will be replaced with "Return to RTC" when backed away from the results, which will state the RTC as bad.  The Watchy will then turn off a variety (and some will be locked) of settings to ensure better battery life, reducing timer and alarm announcements and will force the screen to blank unless you press a button.  While non-RTC mode is active, menus will not keep the screen on (constant "Bed Time" mode), so be sure to increase your "Screen Auto-Off" to adjust it's frequency.
+[2]  "Always" mode is used during non-RTC mode, with the exception that menus are ignored (acting like "Bed Time" mode).
