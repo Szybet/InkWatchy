@@ -589,12 +589,13 @@ void WatchyGSR::init(){
         if (UpdateDisp) showWatchFace(); //partial updates on tick
         AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
         ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC);
+        if (ActiveMode) DoOnce = true;
     }
     deepSleep();
 }
 
 void WatchyGSR::showWatchFace(){
-  RefreshCPU(CPUMID);
+  if (!WatchTime.DeadRTC || Battery.Direction == 1) RefreshCPU(CPUMID);
   if (Darkness.Went) display.init(0,false);  // Force it here so it fixes the border.
   display.epd2.setDarkBorder(Options.Border);
   drawWatchFace();
@@ -2985,7 +2986,7 @@ void WatchyGSR::SetTurbo(){
     Darkness.Last=LastButton;     // Keeps track of SleepMode.
 }
 
-bool WatchyGSR::InTurbo() { return (Options.Turbo > 0 && millis() - TurboTime < (Options.Turbo * 1000)); }
+bool WatchyGSR::InTurbo() { return (!WatchTime.DeadRTC && Options.Turbo > 0 && millis() - TurboTime < (Options.Turbo * 1000)); }
 
 bool WatchyGSR::DarkWait(){
     bool B = (Darkness.Last > 0 && (millis() - Darkness.Last) < (Options.SleepMode * 1000));
