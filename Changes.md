@@ -28,3 +28,7 @@
 - **FIX:**  Fix WiFi timeouts not properly setup if inside Active Mode for too long.
 - **FIX:**  Status printing not showing up on dark backgrounds.
 - **FIX:**  Fixed Dark so the face drawing knows it happened and vice-versa.
+
+**Version 1.3.1:**
+- **ADD:**  Added Performance menu with "Turbo", "Normal" and "Battery Saving" options.
+- **FIX:**  Fixed CPU control to be less intensive with respect to reading the CPU too much, now happens at top of init once, using valid set response to record value later.
