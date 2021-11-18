@@ -55,6 +55,7 @@ RTC_DATA_ATTR struct Optional {
     uint8_t SleepMode;                // Turns screen off (black, won't show any screen unless a button is pressed)
     uint8_t SleepStart;               // Hour when you go to bed.
     uint8_t SleepEnd;                 // Hour when you wake up.
+    uint8_t Performance;              // Performance style, "Turbo", "Normal", "Battery Saving" 
     bool NeedsSaving;                 // NVS code to tell it things have been updated, so save to NVS.
 } Options;
 
@@ -225,6 +226,7 @@ void WatchyGSR::init(){
     LastButton = 0;
     Darkness.Last = 0;
     TurboTime = 0;
+    CPUSet.Freq=getCpuFrequencyMhz();
 
     switch (wakeup_reason)
     {
@@ -248,15 +250,15 @@ void WatchyGSR::init(){
             Button = getButtonMaskToID(wakeupBit);
             break;
         default: //reset
-            RefreshCPU(CPUMAX);
-            setupDefaults();
             initZeros();
+            setupDefaults();
             _rtcConfig();
             _bmaConfig();
             UpdateUTC();
             B = NVS.getString("GSR-TZ",S);
             if (S.length() > 0) strcpy(WatchTime.POSIX,S.c_str());
             RetrieveSettings();
+            RefreshCPU(CPUMAX);
             WatchTime.WatchyRTC = esp_timer_get_time() + ((60 - WatchTime.UTC.Second) * 1000000);
             WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
             UpdateUTC();
@@ -595,7 +597,7 @@ void WatchyGSR::init(){
 }
 
 void WatchyGSR::showWatchFace(){
-  if (!WatchTime.DeadRTC || Battery.Direction == 1) RefreshCPU(CPUMID);
+  if (Options.Performance > 0) RefreshCPU((Options.Performance == 1 ? CPUMID : CPUMAX));
   if (Darkness.Went) display.init(0,false);  // Force it here so it fixes the border.
   display.epd2.setDarkBorder(Options.Border);
   drawWatchFace();
@@ -807,6 +809,9 @@ void WatchyGSR::drawMenu(){
                 case 4:
                     O = "Sleeping Ends";
             }
+            break;
+        case MENU_SAVE:
+            O = "Performance";
             break;
         case MENU_TRBL:
             O = "Troubleshoot";
@@ -1023,6 +1028,9 @@ void WatchyGSR::drawMenu(){
                 case 4:
                     O = MakeHour(Options.SleepStart) + MakeTOD(Options.SleepStart, true) + " to [" + MakeHour(Options.SleepEnd) + MakeTOD(Options.SleepEnd, true) + "]";
             }
+    }else if (Menu.Item == MENU_SAVE){  // Performance
+        if (Options.Performance == 2 || WatchTime.DeadRTC) O = "Battery Saving";
+        else O = ((Options.Performance == 1) ? "Normal" : "Turbo");
     }else if (Menu.Item == MENU_TRBL){  // Troubleshooting.
         O = "MENU to Enter";
     }else if (Menu.Item == MENU_SYNC){  // NTP
@@ -1533,6 +1541,13 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                       UpdateDisp = true;  // Quick Update.
                       SetTurbo();
                   }
+              }else if (Menu.Item == MENU_SAVE && !WatchTime.DeadRTC){  // Battery Saver.
+                  Options.Performance = roller(Options.Performance + 1,0,2);
+                  Options.NeedsSaving = true;
+                  Menu.LastItem=""; // Forces a redraw.
+                  DoHaptic = true;
+                  UpdateDisp = true;  // Quick Update.
+                  SetTurbo();
               }else if (Menu.Item == MENU_SYNC){  // Sync Time
                   if (Menu.SubItem == 0){
                       Menu.SubItem++;
@@ -2822,7 +2837,8 @@ String WatchyGSR::GetSettings(){
     // Versuib 128. 
     I[J] = (Options.Drift & 255); J++;
     I[J] = ((Options.Drift >> 8) & 255); J++;
-    I[J] = (Options.SleepStyle); J++;
+    W = ((Options.Performance & 15) << 4);
+    I[J] = (Options.SleepStyle | W); J++;
     I[J] = (Options.SleepMode); J++;
     I[J] = (Options.SleepStart); J++;
     I[J] = (Options.SleepEnd); J++;
@@ -2906,7 +2922,10 @@ void WatchyGSR::StoreSettings(String FromUser){
                       WatchTime.DeadRTC = true;
                   }else WatchTime.DeadRTC = false;
               }
-         J++; if (L > J) Options.SleepStyle = clamp(O[J],(WatchTime.DeadRTC ? 1 : 0),2);
+         J++; if (L > J){
+            V = ((O[J] & 240) >> 4); Options.Performance = clamp(V,0,2);
+            Options.SleepStyle = clamp((V & 3),(WatchTime.DeadRTC ? 1 : 0),2);
+         }
          J++; if (L > J) Options.SleepMode = clamp(O[J],1,10);
          J++; if (L > J) Options.SleepStart = clamp(O[J],0,23);
          J++; if (L > J) Options.SleepEnd = clamp(O[J],0,23);
@@ -3018,13 +3037,12 @@ bool WatchyGSR::Showing() {
 void WatchyGSR::RefreshCPU(){ RefreshCPU(0); }
 void WatchyGSR::RefreshCPU(int Value){
     uint32_t C;
-    bool B;
-    CPUSet.Freq=getCpuFrequencyMhz();
-    C = (InTurbo() || Value == CPUMID) ? 160 : 80;
+    if (WatchTime.DeadRTC || Options.Performance == 2) C = 80;
+    else C = (InTurbo() || Value == CPUMID) ? 160 : 80;
     if (Value == CPUMAX) CPUSet.Locked = true;
     if (Value == CPUDEF) CPUSet.Locked = false;
-    if (WatchyAPOn || OTAUpdate || GSRWiFi.Requests > 0 || CPUSet.Locked) C = 240;
-    if (C != CPUSet.Freq) B = setCpuFrequencyMhz(C);
+    if (WatchyAPOn || OTAUpdate || GSRWiFi.Requests > 0 || CPUSet.Locked || (Options.Performance == 0 && !WatchTime.DeadRTC)) C = 240;
+    if (C != CPUSet.Freq) if (setCpuFrequencyMhz(C)); CPUSet.Freq = C;
 }
 
 // Debugging here.

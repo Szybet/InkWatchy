@@ -7,7 +7,7 @@
 //display
 #define SOFTWARE_VERSION_MAJOR 1
 #define SOFTWARE_VERSION_MINOR 3
-#define SOFTWARE_VERSION_PATCH 0
+#define SOFTWARE_VERSION_PATCH 1
 #define HARDWARE_VERSION_MAJOR 1
 #define HARDWARE_VERSION_MINOR 0
 
@@ -72,14 +72,15 @@
 #define MENU_FEED 17
 #define MENU_TRBO 18
 #define MENU_DARK 19
-#define MENU_TRBL 20
-#define MENU_SYNC 21
-#define MENU_WIFI 22
-#define MENU_OTAU 23
-#define MENU_OTAM 24
-#define MENU_SCRN 25
-#define MENU_RSET 26
-#define MENU_TOFF 27  // Time Diff offset.
+#define MENU_SAVE 20
+#define MENU_TRBL 21
+#define MENU_SYNC 22
+#define MENU_WIFI 23
+#define MENU_OTAU 24
+#define MENU_OTAM 25
+#define MENU_SCRN 26
+#define MENU_RSET 27
+#define MENU_TOFF 28  // Time Diff offset.
 
 // Menu segments.
 #define MENU_INNORMAL 0
