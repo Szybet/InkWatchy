@@ -23,6 +23,7 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | Feedback        | **{Enable}** or Disable haptic feedback on button presses (during use). |
 |            | Turbo Time      | How many seconds Watchy stays active after your last button press before sleeping. |
 |            | Screen Off      | Enables "Always", Disabled or "Bed Time" screen blanking (which uses no cpu to update display, battery savings). |
+|            | Performance     | Offers **{Turbo}**, Normal and Battery Saving [3] options, reduces responsiveness as you go away from Turbo. |
 |            | Sync Watchy     | Sync Watchy RTC by Time, TimeZone, TimeZone & Time |
 |            | Watchy Connect  | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. "BACK" to immediately exit |
 |            | OTA Update      | Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.) |
@@ -99,3 +100,5 @@ WiFi options in the Options menu will not be available if the low battery indica
 [1]  If non-RTC mode is entered, the entry for "Detect Drift" will be replaced with "Return to RTC" when backed away from the results, which will state the RTC as bad.  The Watchy will then turn off a variety (and some will be locked) of settings to ensure better battery life, reducing timer and alarm announcements and will force the screen to blank unless you press a button.  While non-RTC mode is active, menus will not keep the screen on (constant "Bed Time" mode), so be sure to increase your "Screen Auto-Off" to adjust it's frequency.
 
 [2]  "Always" mode is used during non-RTC mode, with the exception that menus are ignored (acting like "Bed Time" mode).
+
+[3]  "Battery Saving" is forced on when using non-RTC mode.
