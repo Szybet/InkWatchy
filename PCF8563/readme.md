@@ -25,9 +25,10 @@ PCF8563 WatchyGSR::RTC(false);
 #endif
 ```
 
-- The library has 2 notable #defines, PCF8563RTC (defined uses it, commented out, doesn't).  Also TIME_H_DIFF which is used to put the year right from 1970 to 2000.
+- The library has 1 notable #define TIME_H_DIFF which is used to put the year right from 1970 to 2000.
 
 **beta:**
 
+- Set a define in Watchy_GSR.h for PCF8563RTC to use it, or don't to use the original (which really what this beta isn't set for).
 - These files go over top of the current build, these files offer compiling the Watchy_GSR with the PCF8563 RTC as in Watchy_GSR.h, it is set to 1.
 - Move Watchy.h and Watchy.cpp from the libraries section, out to it's own Stream, so it isn't in the way of compiling this beta.
