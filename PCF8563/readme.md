@@ -7,19 +7,23 @@
 
 Class (Watchy.h):
 
+```
 #ifndef PCF8563RTC
         static DS3232RTC RTC;
 #else
         static PCF8563 RTC;
 #endif
+```
 
 Class (Watchy.cpp):
 
+```
 #ifndef PCF8563RTC
 DS3232RTC WatchyGSR::RTC(false); 
 #else
 PCF8563 WatchyGSR::RTC(false);
 #endif
+```
 
 - The library has 2 notable #defines, PCF8563RTC (defined uses it, commented out, doesn't).  Also TIME_H_DIFF which is used to put the year right from 1970 to 2000.
 
