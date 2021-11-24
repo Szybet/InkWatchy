@@ -654,6 +654,7 @@ bool PCF8563::alarm(byte alarmNumber)
 {
 	if (alarmNumber == ALARM_2)
 	{
+		getDateTime();
 		clearAlarm();
 		_alarm_hour = RTCC_ALARM;
 		_alarm_minute = (_minute > 58 ? 0 : _minute + 1);
