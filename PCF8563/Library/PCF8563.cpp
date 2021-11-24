@@ -641,9 +641,7 @@ byte PCF8563::read(tmElements_t &tm)
 // Returns the I2C status (zero if successful).
 byte PCF8563::write(tmElements_t &tm)
 {
-	tmElements_t T = tm;
-	T.Year -= TIME_H_DIFF;	// Take the extra 30 years off when using this function.
-	setDateTime(T.Day, T.Wday, T.Month, 0, T.Year, T.Hour, T.Minute, T.Second);
+	setDateTime(tm.Day, tm.Wday, tm.Month, false, tm.Year - TIME_H_DIFF, tm.Hour, tm.Minute, tm.Second);
     return 0;
 }
 
