@@ -269,7 +269,7 @@ void PCF8563::setAlarm(byte min, byte hour, byte day, byte weekday)
         min = decToBcd(min);
         min &= ~RTCC_ALARM;
     } else {
-        min = 0x0; min |= RTCC_ALARM;
+        min = RTCC_ALARM;
     }
 
     if (hour <99) {
@@ -277,14 +277,14 @@ void PCF8563::setAlarm(byte min, byte hour, byte day, byte weekday)
         hour = decToBcd(hour);
         hour &= ~RTCC_ALARM;
     } else {
-        hour = 0x0; hour |= RTCC_ALARM;
+        hour = RTCC_ALARM;
     }
 
     if (day <99) {
         day = constrain(day, 1, 31);
         day = decToBcd(day); day &= ~RTCC_ALARM;
     } else {
-        day = 0x0; day |= RTCC_ALARM;
+        day = RTCC_ALARM;
     }
 
     if (weekday <99) {
@@ -292,7 +292,7 @@ void PCF8563::setAlarm(byte min, byte hour, byte day, byte weekday)
         weekday = decToBcd(weekday);
         weekday &= ~RTCC_ALARM;
     } else {
-        weekday = 0x0; weekday |= RTCC_ALARM;
+        weekday = RTCC_ALARM;
     }
 
     _alarm_hour = hour;
@@ -652,30 +652,28 @@ void PCF8563::setAlarm(ALARM_TYPES_t alarmType, byte minutes, byte hours, byte d
 void PCF8563::alarmInterrupt(byte alarmNumber, bool alarmEnabled) { if (alarmEnabled) enableAlarm(); else resetAlarm(); }
 bool PCF8563::alarm(byte alarmNumber)
 {
-	tmElements_t tm;
-	time_t t;
-
 	if (alarmNumber == ALARM_2)
 	{
 		clearAlarm();
-		getDateTime();
-		tm.Year = _year;
-		tm.Month = _month;
-		tm.Day = _day;
-		tm.Wday = _weekday;
-		tm.Hour = _hour;
-		tm.Minute = _minute;
-		tm.Second = _sec;
-		tm.Year += TIME_H_DIFF;	// Add the extra 30 years on when using this function.
-		t = makeTime(tm) + (60 - _sec);
-		breakTime(t, tm);
-		setAlarm(tm.Minute, tm.Hour, tm.Day, tm.Wday);
+		_alarm_hour = RTCC_ALARM;
+		_alarm_minute = (_minute > 58 ? 0 : _minute + 1);
+		_alarm_weekday = RTCC_ALARM;
+		_alarm_day = RTCC_ALARM;
+
+		// First set alarm values, then enable
+		Wire.beginTransmission(Rtcc_Addr);    // Issue I2C start signal
+		Wire.write((byte)RTCC_ALRM_MIN_ADDR);
+		Wire.write((byte)_alarm_minute);
+		Wire.write((byte)_alarm_hour);
+		Wire.write((byte)_alarm_day);
+		Wire.write((byte)_alarm_weekday);
+		Wire.endTransmission();
 		enableAlarm();
 	}
 	return (_status2 & RTCC_ALARM_AF);
 }
 bool PCF8563::checkAlarm(byte alarmNumber) { return alarm(alarmNumber); }
-bool PCF8563::clearAlarm(byte alarmNumber) { clearAlarm(); }
+bool PCF8563::clearAlarm(byte alarmNumber) { clearAlarm(); return true; }
 void PCF8563::squareWave(SQWAVE_FREQS_t freq) { setSquareWave((byte)freq); }
 bool PCF8563::oscStopped(bool clearOSF) { return false;	} // Not sure this works.
 int16_t PCF8563::temperature() { return 32767; }	// 0x7FFF returns to prove it is the PCF8563 not the DS3232.
