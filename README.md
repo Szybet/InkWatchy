@@ -8,6 +8,8 @@ src folder contains a universal (Arduino & PlatformIO) setup for compilation, in
 
 Needed libraries:  Arduino, ArduinoOTA and Watchy base.
 
-**NOTE:**  Watchy uses version 1.0.6 of the ESP32 libraries, anything higher won't compile, remove them manually and revert back to version 1.0.6.
+**NOTES:**
+- Watchy uses version 1.0.6 of the ESP32 libraries, anything higher won't compile, remove them manually and revert back to version 1.0.6.
+- PCF8563 RTCs are supported with the accompanying Library folder, be sure to set #define PCF8563RTC 1 in one of your files to activate that and be sure to follow the Compilation Instructions on this to ensure things work, any issues, submit Issues or pull requests to that file.
 
 For instructions on usage of the firmware, see "Usage".
