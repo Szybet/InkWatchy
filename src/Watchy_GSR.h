@@ -1,7 +1,6 @@
 #ifndef WATCHY_GSR_H
 #define WATCHY_GSR_H
 
-#include <Watchy.h>
 #include "Defines_GSR.h"
 #include "Web-HTML.h"
 #include <Arduino.h>
@@ -15,11 +14,15 @@
 #include <WiFiManager.h>
 #include <HTTPClient.h>
 #include <Arduino_JSON.h>
+#ifndef PCF8563RTC
 #include <DS3232RTC.h>
+#else
+#include <PCF8563.h>
+#endif
 #include "GxEPD2_BW.h"
 #include "mbedtls/base64.h"
 #include <Wire.h>
-#include "bma.h"
+#include <bma.h>
 
 #include "icons.h"
 #include "Olsen2POSIX.h"
@@ -33,7 +36,11 @@
 
 class WatchyGSR{
     public:
+#ifndef PCF8563RTC
         static DS3232RTC RTC;
+#else
+        static PCF8563 RTC;
+#endif
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
     public:
         WatchyGSR();

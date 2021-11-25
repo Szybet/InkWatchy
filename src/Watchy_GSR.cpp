@@ -148,7 +148,16 @@ RTC_DATA_ATTR struct dispUpdate {
     bool Drawn;
 } Updates;
 
+#ifndef WATCHY_H
+RTC_DATA_ATTR BMA423 sensor;
+#endif
+
+#ifndef PCF8563RTC
 DS3232RTC WatchyGSR::RTC(false); 
+#else
+PCF8563 WatchyGSR::RTC(false);
+#endif
+
 GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> WatchyGSR::display(GxEPD2_154_D67(CS, DC, RESET, BUSY));
 
 volatile uint8_t Button;
@@ -1408,7 +1417,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
 
   if (Options.Orientated) { if (Direction != DIRECTION_DISP_UP && Direction != DIRECTION_TOP_EDGE) return; } // Don't accept it.
   if (LastButton > 0 && (millis() - LastButton) < KEYPAUSE) return;
-  LastButton=millis(); Darkness.Last=LastButton;
+  if (LastButton > 0) { LastButton=millis(); Darkness.Last=LastButton; }
   if (Darkness.Went) { UpdateDisp=true; return; }  // Don't do the button, just exit.
 
   switch (Pressed){
@@ -2199,9 +2208,7 @@ void WatchyGSR::ManageTime(){
 
 void WatchyGSR::_rtcConfig() {
   tmElements_t TM;
-  //https://github.com/JChristensen/DS3232RTC
   RTC.squareWave(SQWAVE_NONE); //disable square wave output
-  //RTC.set(compileTime()); //set RTC time to compile time
   RTC.setAlarm(ALM2_EVERY_MINUTE, 0, 0, 0, 0); //alarm wakes up Watchy every minute
   RTC.alarmInterrupt(ALARM_2, true); //enable alarm interrupt
   RTC.read(TM);
@@ -3005,10 +3012,10 @@ void WatchyGSR::SetTurbo(){
     Darkness.Last=LastButton;     // Keeps track of SleepMode.
 }
 
-bool WatchyGSR::InTurbo() { return (!WatchTime.DeadRTC && Options.Turbo > 0 && millis() - TurboTime < (Options.Turbo * 1000)); }
+bool WatchyGSR::InTurbo() { return (!WatchTime.DeadRTC && Options.Turbo > 0 && TurboTime != 0 && millis() - TurboTime < (Options.Turbo * 1000)); }
 
 bool WatchyGSR::DarkWait(){
-    bool B = (Darkness.Last > 0 && (millis() - Darkness.Last) < (Options.SleepMode * 1000));
+    bool B = (Darkness.Last != 0 && (millis() - Darkness.Last) < (Options.SleepMode * 1000));
         if (Options.SleepStyle == 2){
             if (B) return B;
             if (Options.SleepEnd > Options.SleepStart) { if (WatchTime.Local.Hour >= Options.SleepStart && WatchTime.Local.Hour < Options.SleepEnd) return false; }

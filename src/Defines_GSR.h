@@ -1,13 +1,16 @@
 #ifndef DEFINES_GSR_H
 #define DEFINES_GSR_H
 
+// Watchy has the newer PCF8563 RTC clock.
+//#define PCF8563RTC 1
+
 //debug
 #define USEDEBUG 1  // !0 is on, will not setup Serial OR print output if zero.
 
 //display
 #define SOFTWARE_VERSION_MAJOR 1
 #define SOFTWARE_VERSION_MINOR 3
-#define SOFTWARE_VERSION_PATCH 1
+#define SOFTWARE_VERSION_PATCH 2
 #define HARDWARE_VERSION_MAJOR 1
 #define HARDWARE_VERSION_MINOR 0
 
