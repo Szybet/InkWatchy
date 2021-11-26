@@ -271,6 +271,9 @@ void WatchyGSR::init(){
             break;
     }
 
+    display.init(0,false);  // Force it here so it fixes the border.
+    display.epd2.setDarkBorder(Options.Border);
+
     // Sometimes BMA crashes - simply try to reinitialize bma...
 
     if (sensor.getErrorCode() != 0) {
@@ -590,7 +593,6 @@ void WatchyGSR::init(){
 
 void WatchyGSR::showWatchFace(){
   if (Options.Performance > 0) RefreshCPU((Options.Performance == 1 ? CPUMID : CPUMAX));
-  display.init(0,false);  // Force it here so it fixes the border.
   display.epd2.setDarkBorder(Options.Border);
   display.setFullWindow();
   drawWatchFace();
