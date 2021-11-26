@@ -29,7 +29,6 @@ PCF8563 WatchyGSR::RTC(false);
 
 **Usage:**
 
-- Set a define in Watchy_GSR.h for PCF8563RTC to use it, or don't to use the original DS3232RTC.
+- Set a define in "Watchy".h for PCF8563RTC to use it, or don't to use the original DS3232RTC.
 - Place the PCF8563 folder anywhere in the compiler's range of view for finding files to compile.
-- Move Watchy.h and Watchy.cpp from the libraries section, out to it's own Stream, so it isn't in the way of compiling this version.
 - Report any linking errors to the Compilation Instructions file, so I can track them (also comment on which IDE you used).
