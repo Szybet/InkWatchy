@@ -2826,7 +2826,7 @@ void WatchyGSR::StoreSettings(String FromUser){
               }
          J++; if (L > J){
             V = ((O[J] & 240) >> 4); Options.Performance = clamp(V,0,2);
-            Options.SleepStyle = clamp((V & 3),(WatchTime.DeadRTC ? 1 : 0),2);
+            Options.SleepStyle = clamp((O[J] & 3),(WatchTime.DeadRTC ? 1 : 0),2);
          }
          J++; if (L > J) Options.SleepMode = clamp(O[J],1,10);
          J++; if (L > J) Options.SleepStart = clamp(O[J],0,23);
