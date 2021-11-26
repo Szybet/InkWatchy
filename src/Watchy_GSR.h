@@ -1,6 +1,7 @@
 #ifndef WATCHY_GSR_H
 #define WATCHY_GSR_H
 
+#include <Watchy.h>
 #include "Defines_GSR.h"
 #include "Web-HTML.h"
 #include <Arduino.h>
@@ -89,7 +90,6 @@ class WatchyGSR{
         uint8_t getButtonPins();
         uint8_t getButtonMaskToID(uint64_t HW);
         uint8_t getSwapped(uint8_t pIn);
-        void ScreenRefresh();
         void AskForWiFi();
         void processWiFiRequest();
         String WiFiIndicator(uint8_t Index);

@@ -70,10 +70,6 @@ RTC_DATA_ATTR struct TimeData {
     tmElements_t Local;       // Copy of the Local time on init.
     String TimeZone;          // The location timezone, not the actual POSIX.
     char POSIX[64];           // The POSIX result.
-    String LastTime;          // Used for determining if the time display changed.
-    String LastDay;
-    String LastDate;
-    String LastYear;
     unsigned long EPSMS;      // Milliseconds (rounded to the enxt minute) when the clock was updated via NTP.
     bool NewMinute;           // Set to True when New Minute happens.
     time_t TravelTest;        // For Travel Testing.
@@ -114,8 +110,6 @@ RTC_DATA_ATTR struct MenuUse {
     int8_t Item;            // What Menu Item is being viewed.
     int8_t SubItem;         // Used for menus that have sub items, like alarms and Sync Time.
     int8_t SubSubItem;      // Used mostly in the alarm to offset choice.
-    String LastHeader;      // Used for checking menu state needing update.
-    String LastItem;
 } Menu;
 
 RTC_DATA_ATTR struct NTPUse {
@@ -136,14 +130,6 @@ RTC_DATA_ATTR struct GoneDark {
 } Darkness;                     // Whether or not the screen is darkened.
 
 RTC_DATA_ATTR struct dispUpdate {
-    bool Time;
-    bool Day;
-    bool Date;
-    bool Header;
-    bool Item;
-    bool Status;
-    bool Year;
-    bool Charge;
     bool Full;
     bool Drawn;
 } Updates;
@@ -284,9 +270,6 @@ void WatchyGSR::init(){
             attachInterrupt(digitalPinToInterrupt(DOWN_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
             break;
     }
-
-    display.init(0, false); //_initial_refresh to false to prevent full update on init (moved here so it isn't done repeatedly during loops).
-    display.epd2.setDarkBorder(Options.Border);
 
     // Sometimes BMA crashes - simply try to reinitialize bma...
 
@@ -607,8 +590,9 @@ void WatchyGSR::init(){
 
 void WatchyGSR::showWatchFace(){
   if (Options.Performance > 0) RefreshCPU((Options.Performance == 1 ? CPUMID : CPUMAX));
-  if (Darkness.Went) display.init(0,false);  // Force it here so it fixes the border.
+  display.init(0,false);  // Force it here so it fixes the border.
   display.epd2.setDarkBorder(Options.Border);
+  display.setFullWindow();
   drawWatchFace();
 
   if (Options.Feedback && DoHaptic){
@@ -618,7 +602,11 @@ void WatchyGSR::showWatchFace(){
   }
   DoHaptic=false;
   UpdateDisp=false;
-  ScreenRefresh();
+  Darkness.Went=false;
+  Darkness.Last = millis();
+  display.display(!Updates.Full); //partial refresh
+  Updates.Full=false;
+  Updates.Drawn=true;
   RefreshCPU();
 }
 
@@ -667,8 +655,6 @@ void WatchyGSR::drawTime(){
         display.drawBitmap(tw, TimeY - 45, PMIndicator, 6, 6, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
 //        display.fillRect(tw, TimeY - 45 ,6 ,6, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
     }
-    Updates.Time = (O != WatchTime.LastTime);
-    WatchTime.LastTime = O;
 }
 
 void WatchyGSR::drawDay(){
@@ -683,8 +669,6 @@ void WatchyGSR::drawDay(){
     w = (200 - w) /2;
     display.setCursor(w, DayY);
     display.println(O);
-    Updates.Day = (O != WatchTime.LastDay);
-    WatchTime.LastDay = O;
 }
 
 void WatchyGSR::drawDate(){
@@ -700,8 +684,6 @@ void WatchyGSR::drawDate(){
     w = (200 - w) /2;
     display.setCursor(w, DateY);
     display.print(O);
-    Updates.Date = (O != WatchTime.LastDate);
-    WatchTime.LastDate = O;
 }
 
 void WatchyGSR::drawYear(){
@@ -716,8 +698,6 @@ void WatchyGSR::drawYear(){
     w = (200 - w) /2;
     display.setCursor(w, YearY);
     display.print(O);
-    Updates.Year = (O != WatchTime.LastYear);
-    WatchTime.LastYear = O;
 }
 
 void WatchyGSR::drawMenu(){
@@ -850,8 +830,6 @@ void WatchyGSR::drawMenu(){
     w = (196 - w) /2;
     display.setCursor(w + 2, HeaderY);
     display.print(O);
-    Updates.Header = (O != Menu.LastHeader);
-    Menu.LastHeader = O;
     display.setTextColor(GxEPD_BLACK);  // Only show menu in Light mode
     if (Menu.Item == MENU_STEPS){  //Steps
         switch (Menu.SubItem){
@@ -1103,8 +1081,6 @@ void WatchyGSR::drawMenu(){
         display.setCursor(w + 2, DataY);
         display.print(O);
     }
-    Updates.Item = (O != Menu.LastItem);
-    Menu.LastItem = O;
 }
 
 void WatchyGSR::deepSleep(){
@@ -1127,20 +1103,6 @@ void WatchyGSR::GoDark(){
     Battery.DarkDirection = Battery.Direction;
     display.setFullWindow();
     display.display(true);
-    WatchTime.LastTime="";
-    WatchTime.LastDay="";
-    WatchTime.LastDate="";
-    WatchTime.LastYear="";
-    Menu.LastHeader="";
-    Menu.LastItem="";
-    Updates.Time=true;
-    Updates.Day=true;
-    Updates.Date=true;
-    Updates.Header=true;
-    Updates.Item=true;
-    Updates.Status=true;
-    Updates.Year=true;
-    Updates.Charge=true;
     Updates.Drawn=false;
     if (WatchTime.DeadRTC) display.hibernate();
   }
@@ -1333,8 +1295,6 @@ void WatchyGSR::drawChargeMe(){
       display.drawBitmap(155, 178, ChargeMe, 40, 17, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
       D = 1;
   }
-  Updates.Charge = (D != Battery.LastState);
-  Battery.LastState = D;
 }
 
 void WatchyGSR::drawStatus(){
@@ -1364,7 +1324,6 @@ void WatchyGSR::drawStatus(){
 void WatchyGSR::setStatus(String Status){
     if (WatchyStatus != Status){
       WatchyStatus = Status;
-      Updates.Status=true;
       UpdateDisp=Showing();
     }
 }
@@ -1417,15 +1376,12 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
 
   if (Options.Orientated) { if (Direction != DIRECTION_DISP_UP && Direction != DIRECTION_TOP_EDGE) return; } // Don't accept it.
   if (LastButton > 0 && (millis() - LastButton) < KEYPAUSE) return;
-  if (LastButton > 0) { LastButton=millis(); Darkness.Last=LastButton; }
-  if (Darkness.Went) { UpdateDisp=true; return; }  // Don't do the button, just exit.
+  if (Darkness.Went) { Darkness.Last=millis(); UpdateDisp=true; return; }  // Don't do the button, just exit.
 
   switch (Pressed){
     case 1:
           if (GuiMode != MENUON){
             GuiMode = MENUON;
-            Menu.LastItem="";
-            Menu.LastHeader="";
             DoHaptic = true;
             UpdateDisp = true;  // Quick Update.
             SetTurbo();
@@ -1470,21 +1426,18 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                       SetTurbo();
                   }else if (Menu.SubItem > 4 && Menu.SubItem < 12){
                       Alarms_Active[Menu.Item - MENU_ALARM1] ^= Bits[Menu.SubItem - 5];  // Toggle day.
-                      Menu.LastItem=""; // Forces a redraw.
                       Options.NeedsSaving = true;
                       DoHaptic = true;
                       UpdateDisp = true;  // Quick Update.
                       SetTurbo();
                   }else if (Menu.SubItem == 12){
                       Alarms_Active[Menu.Item - MENU_ALARM1] ^= ALARM_REPEAT;  // Toggle repeat.
-                      Menu.LastItem=""; // Forces a redraw.
                       Options.NeedsSaving = true;
                       DoHaptic = true;
                       UpdateDisp = true;  // Quick Update.
                       SetTurbo();
                   }else if (Menu.SubItem == 13){
                       Alarms_Active[Menu.Item - MENU_ALARM1] ^= ALARM_ACTIVE;  // Toggle Active.
-                      Menu.LastItem=""; // Forces a redraw.
                       Options.NeedsSaving = true;
                       DoHaptic = true;
                       UpdateDisp = true;  // Quick Update.
@@ -1496,7 +1449,6 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                       Alarms_Repeats[1] = Options.MasterRepeats;
                       Alarms_Repeats[2] = Options.MasterRepeats;
                       Alarms_Repeats[3] = Options.MasterRepeats;
-                      Menu.LastItem=""; // Forces a redraw.
                       Options.NeedsSaving = true;
                       DoHaptic = true;
                       UpdateDisp = true;  // Quick Update.
@@ -1553,7 +1505,6 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               }else if (Menu.Item == MENU_SAVE && !WatchTime.DeadRTC){  // Battery Saver.
                   Options.Performance = roller(Options.Performance + 1,0,2);
                   Options.NeedsSaving = true;
-                  Menu.LastItem=""; // Forces a redraw.
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
@@ -1579,8 +1530,6 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                           NTPData.UpdateUTC = true;
                       }
                       GuiMode = WATCHON;
-                      WatchTime.LastDay="";
-                      WatchTime.LastDate="";
                       Menu.Item = MENU_DISP;
                       Menu.SubItem = 0;
                       DoHaptic = true;
@@ -1590,7 +1539,6 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   }
               }else if (Menu.Item == MENU_DISP){  // Switch Mode
                   Options.LightMode = !Options.LightMode;
-                  Menu.LastItem=""; // Forces a redraw.
                   Options.NeedsSaving = true;
                   Updates.Full = true;
                   DoHaptic = true;
@@ -1598,21 +1546,18 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   SetTurbo();
               }else if (Menu.Item == MENU_SIDE){  // Dexterity Mode
                   Options.Lefty = !Options.Lefty;
-                  Menu.LastItem=""; // Forces a redraw.
                   Options.NeedsSaving = true;
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
               }else if (Menu.Item == MENU_SWAP){  // Swap Menu/Back Buttons
                   Options.Swapped = !Options.Swapped;
-                  Menu.LastItem=""; // Forces a redraw.
                   Options.NeedsSaving = true;
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
               }else if (Menu.Item == MENU_BRDR){  // Border Mode
                   Options.Border = !Options.Border;
-                  Menu.LastItem=""; // Forces a redraw.
                   Options.NeedsSaving = true;
                   display.init(0,false);  // Force it here so it fixes the border.
                   DoHaptic = true;
@@ -1620,21 +1565,18 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   SetTurbo();
               }else if (Menu.Item == MENU_ORNT){  // Watchy Orientation
                   Options.Orientated = !Options.Orientated;
-                  Menu.LastItem=""; // Forces a redraw.
                   Options.NeedsSaving = true;
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
               }else if (Menu.Item == MENU_MODE){  // Switch Time Mode
                   Options.TwentyFour = !Options.TwentyFour;
-                  Menu.LastItem=""; // Forces a redraw.
                   Options.NeedsSaving = true;
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
               }else if (Menu.Item == MENU_FEED && !WatchTime.DeadRTC){  // Feedback.
                   Options.Feedback = !Options.Feedback;
-                  Menu.LastItem=""; // Forces a redraw.
                   Options.NeedsSaving = true;
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
@@ -1654,8 +1596,6 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   }
               }else if (Menu.Item == MENU_SCRN){  // Reset Screen
                   GuiMode = WATCHON;
-                  WatchTime.LastDay="";
-                  WatchTime.LastDate="";
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   Updates.Full = true;
@@ -1675,13 +1615,10 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   AskForWiFi();
               }else if (Menu.Item == MENU_RSET){  // Watchy Reboot
                   if (Menu.SubItem == 1) ESP.restart(); else Menu.SubItem++;
-                  Menu.LastItem=""; // Forces a redraw.
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
               }else if (Menu.Item == MENU_TOFF && NTPData.State == 0 && Menu.SubItem == 0){  // Detect Drift
-                  WatchTime.LastDay="";
-                  WatchTime.LastDate="";
                   if (WatchTime.DeadRTC){
                       Options.NeedsSaving = true;
                       WatchTime.DeadRTC = false;
@@ -1783,8 +1720,6 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               }
           }else{
               GuiMode = WATCHON;
-              WatchTime.LastDay="";
-              WatchTime.LastDate="";
               Menu.SubItem = 0;
               Menu.SubSubItem = 0;
               DoHaptic = true;
@@ -2549,40 +2484,6 @@ IRAM_ATTR uint8_t WatchyGSR::getSwapped(uint8_t pIn){
     return 0;
 }
 
-void WatchyGSR::ScreenRefresh(){
-    uint16_t XL, YL, XH, YH;
-    bool DoIt = false;
-
-    XL = 200; YL = 200; XH = 0; YH = 0;
-
-    if (!Updates.Full){
-        DoIt = false;
-        if (Updates.Time)   { XL = 0; YL = TimeY - 45; XH = 200; YH = TimeY; DoIt = true; }
-        if (Updates.Day)    { XL = 0; YL = golow(DayY - 16, YL); XH = 200; YH = gobig(DayY, YH); DoIt = true; }
-        if (Updates.Date)   { XL = 0; YL = golow(DateY - 16,YL); XH = 200; YH = gobig(DateY, YH); DoIt = true; }
-        if (Updates.Header) { XL = 0; YL = golow(MenuTop, YL); XH = 200; YH = gobig(MenuTop + (MenuHeight / 2), YH); DoIt = true; }
-        if (Updates.Item)   { XL = 0; YL = golow(MenuTop + (MenuHeight / 2), YL); XH = 200; YH = gobig(MenuTop + (MenuHeight / 2), YH); DoIt = true; }
-        if (Updates.Status) { XL = golow(NTPX, XL); YL = golow(NTPY - 19, YL); XH = gobig(60, XH); YH = gobig(NTPY, YH); DoIt = true; }
-        if (Updates.Year)   { XL = 0; YL = golow(YearY - 17, YL); XH = gobig(154, XH); YH = gobig(YearY, YH); DoIt = true; }
-        if (Updates.Charge) { XL = golow(155, XL); YL = golow(178, YL); XH = gobig(196, XH); YH = gobig(196, YH); DoIt = true; }
-    }else{ XL = 0; YL = 0; XH = 200; YH = 200; DoIt = true; }
-    if (DoIt){
-        if(Updates.Full) display.setFullWindow(); else display.setFullWindow(); //init moved, can't do this:  display.setPartialWindow(XL, YL, XH - XL, YH - YL);
-        Darkness.Went=false; Darkness.Last = millis();
-        display.display(!Updates.Full); //partial refresh
-        Updates.Drawn=Updates.Time || Updates.Day || Updates.Date || Updates.Header || Updates.Item || Updates.Status || Updates.Year || Updates.Charge || Updates.Full;
-        Updates.Time=false;
-        Updates.Day=false;
-        Updates.Date=false;
-        Updates.Header=false;
-        Updates.Item=false;
-        Updates.Status=false;
-        Updates.Year=false;
-        Updates.Charge=false;
-        Updates.Full=false;
-    }
-}
-
 void WatchyGSR::AskForWiFi(){ if (!GSRWiFi.Requested && !GSRWiFi.Working) GSRWiFi.Requested = true; }
 void WatchyGSR::endWiFi(){
     if (GSRWiFi.Requests - 1 <= 0){
@@ -2771,14 +2672,6 @@ void WatchyGSR::initZeros(){
     GSRWiFi.Working=false;
     GSRWiFi.Results=false;
     GSRWiFi.Index=0;
-    Updates.Time=true;
-    Updates.Day=true;
-    Updates.Date=true;
-    Updates.Header=true;
-    Updates.Item=true;
-    Updates.Status=true;
-    Updates.Year=true;
-    Updates.Charge=true;
     Updates.Full=true;
     Updates.Drawn=true;
     strcpy(GSRWiFi.AP[0].APID,S.c_str());

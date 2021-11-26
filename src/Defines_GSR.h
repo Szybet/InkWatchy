@@ -10,7 +10,7 @@
 //display
 #define SOFTWARE_VERSION_MAJOR 1
 #define SOFTWARE_VERSION_MINOR 3
-#define SOFTWARE_VERSION_PATCH 2
+#define SOFTWARE_VERSION_PATCH 3
 #define HARDWARE_VERSION_MAJOR 1
 #define HARDWARE_VERSION_MINOR 0
 
@@ -93,7 +93,7 @@
 #define MENU_INTROUBLE 4
 
 // Button debounce.
-#define KEYPAUSE 333
+#define KEYPAUSE 293
 
 //ALARM flags.
 #define ALARM_REPEAT 128
