@@ -2,9 +2,9 @@ Compiling instructions:
 
 In order to compile this you need:  Arduino Libraries, ArduinoOTA AND Watchy base.
 
-**VERSION 1.3.2 CHANGES**
+**VERSION 1.3.3 CHANGES**
 
-Watchy.cpp and Watchy.h included with the examples from SQFMI (Watchy base) need to be moved OUT of the range the compiler has access to or you'll see errors as they can conflict with this Watchy.
+Watchy.cpp and Watchy.h included with the examples from SQFMI (Watchy base) ARE need to be IN range that the compiler has access to or you'll see errors.
 
 You'll need to edit 2 files:
 
