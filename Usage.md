@@ -93,6 +93,8 @@ WiFi USAGE:
 
 WiFi now has 10 entries (AP A to AP J), the most recent successfully connected AP is labelled "X".  See compilation for usage for making a default "X".
 
+WiFi will require the Performance to boost to Turbo during it's usage, limit usage to reduce battery drain.
+
 WiFi entries can be edited from Watchy's Options -> OTA Website, surf to the Watchy in a browser and select "Edit Additional WiFi Access Points".  When they are correct, click "Store".  The "?" at the end of each password, lets you toggle the *'s on/off.
 
 WiFi options in the Options menu will not be available if the low battery indicator is on.
