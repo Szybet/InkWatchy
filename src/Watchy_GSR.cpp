@@ -1446,7 +1446,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                       SetTurbo();
                   }
               }else if (Menu.Item == MENU_TONES){   // Tones.
-                      Options.MasterRepeats = clamp(Options.MasterRepeats + 1, (WatchTime.DeadRTC ? 4 : 0), 4);
+                      Options.MasterRepeats = roller(Options.MasterRepeats + 1, (WatchTime.DeadRTC ? 4 : 0), 4);
                       Alarms_Repeats[0] = Options.MasterRepeats;
                       Alarms_Repeats[1] = Options.MasterRepeats;
                       Alarms_Repeats[2] = Options.MasterRepeats;
