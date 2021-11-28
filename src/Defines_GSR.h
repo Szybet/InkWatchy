@@ -107,7 +107,11 @@
 #define AlarmSetup 1234567890
 
 //pins
+#ifndef PCF8563RTC
 #define ADC_PIN 33
+#else
+#define ADC_PIN 35
+#endif
 #define RTC_PIN GPIO_NUM_27
 #define CS 5
 #define DC 10
