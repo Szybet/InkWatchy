@@ -32,3 +32,12 @@
 **Version 1.3.1:**
 - **ADD:**  Added Performance menu with "Turbo", "Normal" and "Battery Saving" options.
 - **FIX:**  Fixed CPU control to be less intensive with respect to reading the CPU too much, now happens at top of init once, using valid set response to record value later.
+
+**Version 1.3.2:**
+- **FIX:**  Fixed Turbo Mode and Sleep Modes to not work on each minute regardless of you pushing a button or not.
+
+**Version 1.3.3:**
+- **FIX:**  Fixed the restoration of Screen Blanking from storage and restoration from OTA Website.
+
+**Version 1.3.4:**
+- **ADD:**  Unification of 2 Watchy versions (DS3231 & PCF8563), also included (and noted for submission) WatchyBattery.h to read the proper ADC PIN depending on RTC type.
