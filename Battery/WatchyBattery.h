@@ -11,5 +11,5 @@ class WatchyBatt {
                 return analogRead(35);
              return 0.0;
         };
-}
+};
 #endif
