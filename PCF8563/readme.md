@@ -26,6 +26,16 @@ PCF8563 WatchyGSR::RTC(false);
 #endif
 ```
 
+Defines (config.h & Defines_GSR.h) below the //pins comment:
+
+```
+#ifndef PCF8563RTC
+#define ADC_PIN 33
+#else
+#define ADC_PIN 35
+#endif
+```
+
 - The library has 1 notable #define TIME_H_DIFF which is used to put the year right from 1970 to 2000.
 
 **Usage:**
