@@ -10,6 +10,6 @@ class WatchyBatt {
              else if (RTC.rtcType == PCF8563)
                 return analogRead(35);
              return 0.0;
-        }
+        };
 }
 #endif
