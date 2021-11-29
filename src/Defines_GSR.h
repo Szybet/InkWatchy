@@ -1,8 +1,7 @@
 #ifndef DEFINES_GSR_H
 #define DEFINES_GSR_H
 
-// Watchy has the newer PCF8563 RTC clock.
-//#define PCF8563RTC 1
+#define __cplusplus 1
 
 //debug
 #define USEDEBUG 1  // !0 is on, will not setup Serial OR print output if zero.
@@ -10,7 +9,7 @@
 //display
 #define SOFTWARE_VERSION_MAJOR 1
 #define SOFTWARE_VERSION_MINOR 3
-#define SOFTWARE_VERSION_PATCH 3
+#define SOFTWARE_VERSION_PATCH 4
 #define HARDWARE_VERSION_MAJOR 1
 #define HARDWARE_VERSION_MINOR 0
 
@@ -107,11 +106,6 @@
 #define AlarmSetup 1234567890
 
 //pins
-#ifndef PCF8563RTC
-#define ADC_PIN 33
-#else
-#define ADC_PIN 35
-#endif
 #define RTC_PIN GPIO_NUM_27
 #define CS 5
 #define DC 10

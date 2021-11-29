@@ -138,12 +138,7 @@ RTC_DATA_ATTR struct dispUpdate {
 RTC_DATA_ATTR BMA423 sensor;
 #endif
 
-#ifndef PCF8563RTC
-DS3232RTC WatchyGSR::RTC(false); 
-#else
-PCF8563 WatchyGSR::RTC(false);
-#endif
-
+WatchyRTC WatchyGSR::RTC;
 GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> WatchyGSR::display(GxEPD2_154_D67(CS, DC, RESET, BUSY));
 
 volatile uint8_t Button;
@@ -197,7 +192,7 @@ void WatchyGSR::setupDefaults(){
     Steps.Minutes = 0;
 }
 
-void WatchyGSR::init(){
+void WatchyGSR::init(String datetime){
     uint64_t wakeupBit;
     int AlarmIndex, Pushed;                          // Alarm being played.
     bool WaitForNext, Pulse, DoOnce, B;
@@ -207,6 +202,7 @@ void WatchyGSR::init(){
     esp_sleep_wakeup_cause_t wakeup_reason;
     Wire.begin(SDA, SCL); //init i2c
     NVS.begin();
+    RTC.init();
 
     pinMode(MENU_BTN_PIN, INPUT);   // Prep these for the loop below.
     pinMode(BACK_BTN_PIN, INPUT);
@@ -229,7 +225,7 @@ void WatchyGSR::init(){
             WatchTime.Drifting += Options.Drift;
             IDidIt = true;
             UpdateUTC();
-            RTC.alarm(ALARM_2); //resets the alarm flag in the RTC
+            RTC.clearAlarm(); //resets the alarm flag in the RTC
             WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
             WatchTime.NewMinute = true;
             RefreshCPU(CPUMAX);
@@ -247,7 +243,7 @@ void WatchyGSR::init(){
         default: //reset
             initZeros();
             setupDefaults();
-            _rtcConfig();
+            RTC.config(datetime);
             _bmaConfig();
             UpdateUTC();
             B = NVS.getString("GSR-TZ",S);
@@ -1260,7 +1256,7 @@ void WatchyGSR::ProcessNTP(){
       }
       WatchTime.UTC_RAW = time(nullptr);
       breakTime(WatchTime.UTC_RAW,WatchTime.UTC);
-      RTC.write(WatchTime.UTC);
+      RTC.set(WatchTime.UTC);
       WatchTime.Drifting = 0;
       WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
       WatchTime.WatchyRTC = esp_timer_get_time() + ((60 - WatchTime.UTC.Second) * 1000000);
@@ -2143,14 +2139,6 @@ void WatchyGSR::ManageTime(){
     }
 }
 
-void WatchyGSR::_rtcConfig() {
-  tmElements_t TM;
-  RTC.squareWave(SQWAVE_NONE); //disable square wave output
-  RTC.setAlarm(ALM2_EVERY_MINUTE, 0, 0, 0, 0); //alarm wakes up Watchy every minute
-  RTC.alarmInterrupt(ALARM_2, true); //enable alarm interrupt
-  RTC.read(TM);
-}
-
 void WatchyGSR::_bmaConfig() {
 
   if (sensor.begin(_readRegister, _writeRegister, delay) == false) {
@@ -2248,10 +2236,11 @@ void WatchyGSR::_bmaConfig() {
 
 float WatchyGSR::getBatteryVoltage(){
     float A, B, C, D;
-    A = analogRead(ADC_PIN) - 0.0125;
-    B = analogRead(ADC_PIN) - 0.0125;
-    C = analogRead(ADC_PIN) - 0.0125;
-    D = analogRead(ADC_PIN) - 0.0125;
+    WatchyBatt Batt;
+    A = Batt.Read(RTC) - 0.0125;
+    B = Batt.Read(RTC) - 0.0125;
+    C = Batt.Read(RTC) - 0.0125;
+    D = Batt.Read(RTC) - 0.0125;
     return (((A + B + C + D) / 16384.0) * 7.23);
 }
 

@@ -15,13 +15,11 @@
 #include <WiFiManager.h>
 #include <HTTPClient.h>
 #include <Arduino_JSON.h>
-#ifndef PCF8563RTC
 #include <DS3232RTC.h>
-#else
-#include <PCF8563.h>
-#endif
+#include <Rtc_Pcf8563.h>
+#include "WatchyBattery.h"
 #include "GxEPD2_BW.h"
-#include "mbedtls/base64.h"
+#include <mbedtls/base64.h>
 #include <Wire.h>
 #include <bma.h>
 
@@ -37,15 +35,11 @@
 
 class WatchyGSR{
     public:
-#ifndef PCF8563RTC
-        static DS3232RTC RTC;
-#else
-        static PCF8563 RTC;
-#endif
+        static WatchyRTC RTC;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
     public:
         WatchyGSR();
-        void init();
+        void init(String datetime = "");
         void showWatchFace();
         void drawWatchFace(); //override this method for different watch faces
         void drawTime();
