@@ -2234,14 +2234,13 @@ void WatchyGSR::_bmaConfig() {
 //  sensor.enableWakeupInterrupt();
 }
 
-float WatchyGSR::getBatteryVoltage(){
-    float A, B, C, D;
-    WatchyBatt Batt;
-    A = Batt.Read(RTC) - 0.0125;
-    B = Batt.Read(RTC) - 0.0125;
-    C = Batt.Read(RTC) - 0.0125;
-    D = Batt.Read(RTC) - 0.0125;
-    return (((A + B + C + D) / 16384.0) * 7.23);
+float WatchyGSR::getBatteryVoltage(){ return ((BatteryRead() - 0.0125) +  (BatteryRead() - 0.0125) + (BatteryRead() - 0.0125) + (BatteryRead() - 0.0125)) / 4; }
+float WatchyGSR::BatteryRead(){
+    if (RTC.rtcType == DS3231)
+        return analogReadMilliVolts(V10_ADC_PIN) / 500.0f; // Battery voltage goes through a 1/2 divider.
+     else if (RTC.rtcType == PCF8563)
+        return analogReadMilliVolts(V15_ADC_PIN) / 500.0f;
+     return 0.0;
 }
 
 uint16_t WatchyGSR::_readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len) {

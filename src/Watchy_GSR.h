@@ -17,7 +17,6 @@
 #include <Arduino_JSON.h>
 #include <DS3232RTC.h>
 #include <Rtc_Pcf8563.h>
-#include "WatchyBattery.h"
 #include "GxEPD2_BW.h"
 #include <mbedtls/base64.h>
 #include <Wire.h>
@@ -49,6 +48,7 @@ class WatchyGSR{
         void handleButtonPress(uint8_t Pressed);
         virtual void deepSleep();
         float getBatteryVoltage();
+        float BatteryRead();
         bool IsDark();
         IRAM_ATTR void handleInterrupt();
    private:
