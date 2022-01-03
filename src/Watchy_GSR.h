@@ -14,15 +14,15 @@
 #include <Update.h>
 #include <WiFiManager.h>
 #include <HTTPClient.h>
-#include "SmallRTC.h"
-#include "SmallNTP.h"
+#include <SmallRTC.h>
+#include <SmallNTP.h>
+#include <Olson2POSIX.h>
 #include "GxEPD2_BW.h"
 #include <mbedtls/base64.h>
 #include <Wire.h>
 #include <bma.h>
 
 #include "icons.h"
-#include "Olson2POSIX.h"
 #include "ArduinoNvs.h"
 
 #include "aAntiCorona15pt7b.h"
