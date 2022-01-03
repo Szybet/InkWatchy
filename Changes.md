@@ -46,3 +46,4 @@
 - **FIX:**  Fixed the "Bed Time" orientation to only work during the Bed Time range.
 - **ADD:**  Double Tap modes "On" and "Only".
 - **ADD:**  3 new repositories added with branched out functions:  SmallRTC (replacement of WatchyRTC), SmallNTP (industry standard NTP) and Olson2POSIX Timezone collection and setting.
+- **FIX:**  Fixed battery level control of Watchy, extremely low battery will stop updating the screen to prolong battery life, button presses will only work.
