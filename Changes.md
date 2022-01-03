@@ -41,3 +41,8 @@
 
 **Version 1.3.4:**
 - **ADD:**  Unification of 2 Watchy versions (DS3231 & PCF8563), also included (and noted for submission) WatchyBattery.h to read the proper ADC PIN depending on RTC type.
+
+**Version 1.3.5:**
+- **FIX:**  Fixed the "Bed Time" orientation to only work during the Bed Time range.
+- **ADD:**  Double Tap modes "On" and "Only".
+- **ADD:**  3 new repositories added with branched out functions:  SmallRTC (replacement of WatchyRTC), SmallNTP (industry standard NTP) and Olson2POSIX Timezone collection and setting.
