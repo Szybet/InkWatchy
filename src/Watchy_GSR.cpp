@@ -280,7 +280,7 @@ void WatchyGSR::init(String datetime){
     }
 
 
-    if ((Battery.Last > LowBattery || Button != 0) && !(Options.SleepStyle == 4 && Darkness.Went && !Updates.Tapped)){
+    if ((Battery.Last > LowBattery || Button != 0 || Updates.Tapped) && !(Options.SleepStyle == 4 && Darkness.Went && !Updates.Tapped)){
         //Init interrupts.
         attachInterrupt(digitalPinToInterrupt(MENU_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
         attachInterrupt(digitalPinToInterrupt(BACK_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
@@ -1123,10 +1123,8 @@ void WatchyGSR::deepSleep(){
   DisplaySleep();
   for(I = 0; I < 40; I++) { pinMode(I, INPUT); }
   esp_sleep_enable_ext1_wakeup(((Options.SleepStyle > 2 && !WatchTime.DeadRTC && BatOk) ? ACC_INT_MASK : 0) | BTN_PIN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
-  //  RTC.clearAlarm(); //resets the alarm flag in the RTC
   esp_sleep_enable_ext0_wakeup(RTC_PIN, 0); //enable deep sleep wake on RTC interrupt
   SRTC.nextMinuteWake();
-//SRTC.clearAlarm();
   esp_deep_sleep_start();
 }
 
