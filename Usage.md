@@ -72,13 +72,15 @@ These will cycle in a loop from ALARM 1 to COUNTDOWN playing their tones until t
 
 SCREEN OFF:
 
-1.  3 modes are present, **{Disabled}**, "Always" and "Bed Time".
+1.  **5** modes are present, **{Disabled}**, "Always", "Bed Time", "Double Tap On" and "Double Tap Only".
 2.  "Always" mode will turn the screen off when not in a menu, it will go off after the delay set in "Screen Auto-Off" (MENU once from "Screen Off"). [2]
 3.  "Bed Time" mode will turn the screen off at any time between the two hours, inside or outside of a menu.  MENU after "Screen Auto-Off" to see the "Sleeping Begins".
 4.  "Sleeping Begins" and "Sleeping Ends" cannot be the same hour, but can be 1 hour apart from each other, either before or after the other.
 5.  All modes when not **Disabled** will use the "Screen Auto-Off" delay after any button press.
 6.  While the screen is off, any button press will just turn it on for the duration set in "Screen Auto-Off", a second press is needed to use the Watchy as normal.
 7.  If Turbo Time is set longer than "Screen Auto-Off", Turbo Time will still be active and buttons will react as normal with respect to screen blanking.
+8.  "Double Tap On" will allow buttons to turn the screen on or a double tap on the device.
+9.  "Double Tap Only" will only allow a double tap to turn the screen on, only then will buttons work.  "Screen Auto-Off" will default to 2 seconds if off.
 
 FIRST TIME USAGE:
 
