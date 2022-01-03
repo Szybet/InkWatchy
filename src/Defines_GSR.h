@@ -1,17 +1,11 @@
 #ifndef DEFINES_GSR_H
 #define DEFINES_GSR_H
 
-#define __cplusplus 1
+// Time Sync Server
+#define ntpServer "time.nrc.ca"
 
 //debug
-#define USEDEBUG 1  // !0 is on, will not setup Serial OR print output if zero.
-
-//display
-#define SOFTWARE_VERSION_MAJOR 1
-#define SOFTWARE_VERSION_MINOR 3
-#define SOFTWARE_VERSION_PATCH 4
-#define HARDWARE_VERSION_MAJOR 1
-#define HARDWARE_VERSION_MINOR 0
+#define USEDEBUG 0  // !0 is on, will not setup Serial OR print output if zero.
 
 // WiFi
 #define WiFi_AP_SSID "Watchy Connect"
@@ -25,10 +19,11 @@
 #define WiFi_DEF_PASS ""
 
 // Battery
+#define MaxBattery 4.37
 #define MinBattery 3.58
+#define LowBattery 3.45
 
 // functions
-#define clamp(v,lo,hi) (((v)<(lo))?(lo):((v)>(hi))?(hi):(v))
 #define roller(v,lo,hi) (((v)<(lo))?(hi):((v)>(hi))?(lo):(v))
 #define gobig(v,lo) ((v)>(lo)?(v):(lo))
 #define golow(v,hi) ((v)<(hi)?(v):(hi))
@@ -75,14 +70,16 @@
 #define MENU_TRBO 18
 #define MENU_DARK 19
 #define MENU_SAVE 20
-#define MENU_TRBL 21
-#define MENU_SYNC 22
-#define MENU_WIFI 23
-#define MENU_OTAU 24
-#define MENU_OTAM 25
-#define MENU_SCRN 26
-#define MENU_RSET 27
-#define MENU_TOFF 28  // Time Diff offset.
+#define MENU_TPWR 21
+#define MENU_INFO 22
+#define MENU_TRBL 23
+#define MENU_SYNC 24
+#define MENU_WIFI 25
+#define MENU_OTAU 26
+#define MENU_OTAM 27
+#define MENU_SCRN 28
+#define MENU_RSET 29
+#define MENU_TOFF 30  // Time Diff offset.
 
 // Menu segments.
 #define MENU_INNORMAL 0
@@ -92,7 +89,7 @@
 #define MENU_INTROUBLE 4
 
 // Button debounce.
-#define KEYPAUSE 293
+#define KEYPAUSE 728
 
 //ALARM flags.
 #define ALARM_REPEAT 128

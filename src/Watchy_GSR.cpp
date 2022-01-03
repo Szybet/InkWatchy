@@ -1,14 +1,12 @@
 #include "Watchy_GSR.h"
 
-// Debug message code.
-bool SerialSetup;
-
-//Timezone configuration
-static const char TZURL[] PROGMEM = "http://ip-api.com/json";
 static const char UserAgent[] PROGMEM = "Watchy";
+//WiFi statics.
+static const wifi_power_t RawWiFiTX[11]= {WIFI_POWER_19_5dBm,WIFI_POWER_19dBm,WIFI_POWER_18_5dBm,WIFI_POWER_17dBm,WIFI_POWER_15dBm,WIFI_POWER_13dBm,WIFI_POWER_11dBm,WIFI_POWER_8_5dBm,WIFI_POWER_7dBm,WIFI_POWER_5dBm,WIFI_POWER_2dBm};
+static const char *IDWiFiTX[11] = {"19.5dBm [Max]","19dBm","18.5dBm","17dBm","15dBm [Laptop]","13dBm","11dBm","8.5dBm [Medium]","7dBm","5dBm [10 meters]","2dBm [Low]"};
+
 char WiFiIDs[] PROGMEM = "ABCDEFGHIJ";
 
-//  AlarmVBs[] = {"0111111110", "0011001100", "0110110110", "0101001010"};
 int AlarmVBs[] = {0x01FE, 0x00CC, 0x01B6, 0x014A};
 const uint16_t Bits[10] = {1,2,4,8,16,32,64,128,256,512};
 const float Reduce[5] = {1.0,0.8,0.6,0.4,0.2};
@@ -22,9 +20,12 @@ RTC_DATA_ATTR struct GSRWireless {
     struct APInfo {
         char APID[33];
         char PASS[64];
+        uint8_t TPWRIndex;
     } AP[10];                // Using APID to avoid internal confusion with SSID.
     unsigned long Last;      // Used with millis() to maintain sanity.
     bool Tried;              // Tried to connect at least once.
+    wifi_power_t TransmitPower;
+    wifi_event_id_t WiFiEventID;
 } GSRWiFi;
 
 RTC_DATA_ATTR struct CPUWork {
@@ -57,10 +58,10 @@ RTC_DATA_ATTR struct Optional {
     uint8_t SleepEnd;                 // Hour when you wake up.
     uint8_t Performance;              // Performance style, "Turbo", "Normal", "Battery Saving" 
     bool NeedsSaving;                 // NVS code to tell it things have been updated, so save to NVS.
+    bool BedTimeOrientation;          // Make Buttons only work while Watch is in normal orientation.
 } Options;
 
 RTC_DATA_ATTR int GuiMode;
-RTC_DATA_ATTR bool ScreenOn;          // Screen needs to be on.
 RTC_DATA_ATTR bool VibeMode;          // Vibe Motor is On=True/Off=False, used for the Haptic and Alarms.
 RTC_DATA_ATTR String WatchyStatus;    // Used for the indicator in the bottom left, so when it changes, it asks for a screen refresh, if not, it doesn't.
 
@@ -69,7 +70,6 @@ RTC_DATA_ATTR struct TimeData {
     tmElements_t UTC;         // Copy of UTC only split up for usage.
     tmElements_t Local;       // Copy of the Local time on init.
     String TimeZone;          // The location timezone, not the actual POSIX.
-    char POSIX[64];           // The POSIX result.
     unsigned long EPSMS;      // Milliseconds (rounded to the enxt minute) when the clock was updated via NTP.
     bool NewMinute;           // Set to True when New Minute happens.
     time_t TravelTest;        // For Travel Testing.
@@ -132,13 +132,17 @@ RTC_DATA_ATTR struct GoneDark {
 RTC_DATA_ATTR struct dispUpdate {
     bool Full;
     bool Drawn;
+    bool Init;
+    bool Tapped;
 } Updates;
 
 #ifndef WATCHY_H
 RTC_DATA_ATTR BMA423 sensor;
 #endif
 
-WatchyRTC WatchyGSR::RTC;
+//WatchyRTC WatchyGSR::SRTC;
+SmallRTC WatchyGSR::SRTC;
+SmallNTP WatchyGSR::SNTP;
 GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> WatchyGSR::display(GxEPD2_154_D67(CS, DC, RESET, BUSY));
 
 volatile uint8_t Button;
@@ -155,7 +159,7 @@ RTC_DATA_ATTR     uint8_t   Alarms_Repeats[4];        // 0-4 (20-80%) reduction 
 WiFiClient WiFiC;             // Tz
 WiFiManager wifiManager;
 HTTPClient HTTP;              // Tz
-Olsen2POSIX OP;               // Tz code.
+Olson2POSIX OP;               // Tz code.
 WebServer server(80);
 unsigned long OTATimer;
 bool WatchyAPOn;   // States Watchy's AP is on for connection.  Puts in Active Mode until back happens.
@@ -169,6 +173,7 @@ bool DoHaptic;     // Want it to happen after screen update.
 bool UpdateDisp;   // Display needs to be updated.
 bool IDidIt;       // Tells if the Drifting was done this minute.
 bool AlarmsOn;     // Moved for CPU.
+bool Rebooted;     // Used in DisplayInit to force a full initial on power up.
 time_t TurboTime;  // Moved here for less work.
 unsigned long LastButton, OTAFail;
 
@@ -188,6 +193,8 @@ void WatchyGSR::setupDefaults(){
     Options.SleepStart = 23;
     Options.SleepEnd = 7;
     Options.MasterRepeats = 0;  // 100%.
+    Options.BedTimeOrientation = false;
+    GSRWiFi.TransmitPower = WiFi.getTxPower();
     Steps.Hour = 6;
     Steps.Minutes = 0;
 }
@@ -198,11 +205,10 @@ void WatchyGSR::init(String datetime){
     bool WaitForNext, Pulse, DoOnce, B;
     unsigned long Since, APLoop;
     String S;
-
     esp_sleep_wakeup_cause_t wakeup_reason;
+
     Wire.begin(SDA, SCL); //init i2c
     NVS.begin();
-    RTC.init();
 
     pinMode(MENU_BTN_PIN, INPUT);   // Prep these for the loop below.
     pinMode(BACK_BTN_PIN, INPUT);
@@ -214,6 +220,8 @@ void WatchyGSR::init(String datetime){
     DoOnce = true;
     IDidIt = false;
     Updates.Drawn = false;
+    Updates.Init = true;
+    Updates.Tapped = false;
     LastButton = 0;
     Darkness.Last = 0;
     TurboTime = 0;
@@ -222,34 +230,43 @@ void WatchyGSR::init(String datetime){
     switch (wakeup_reason)
     {
         case ESP_SLEEP_WAKEUP_EXT0: //RTC Alarm
+            RefreshCPU(CPUDEF);
             WatchTime.Drifting += Options.Drift;
             IDidIt = true;
+            SRTC.resetWake();
+//            SRTC.config("");
             UpdateUTC();
-            RTC.clearAlarm(); //resets the alarm flag in the RTC
             WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
             WatchTime.NewMinute = true;
-            RefreshCPU(CPUMAX);
             UpdateClock();
             detectBattery();
             UpdateDisp=Showing();
             break;
         case ESP_SLEEP_WAKEUP_EXT1: //button Press
-            RefreshCPU(CPUMAX);
+            RefreshCPU(CPUDEF);
             UpdateUTC();
             WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
-            UpdateDisp = !Showing();
+            if (Options.SleepStyle != 4) UpdateDisp = !Showing();
+            if ((wakeupBit & ACC_INT_MASK) && Darkness.Went && Options.SleepStyle > 2){  // Accelerometer caused this.
+                while (!sensor.getINT()) {} // Clears the interrupt so it doesn't repeat!
+                if (UpRight()){
+                    if (Options.SleepMode == 0) Options.SleepMode = 2;  // Do this to avoid someone accidentally not setting this before usage.
+                    Updates.Tapped = true; Darkness.Last=millis(); UpdateDisp = true; // Update Screen to new state.
+                }
+            }
             Button = getButtonMaskToID(wakeupBit);
             break;
         default: //reset
+            SRTC.init();
             initZeros();
             setupDefaults();
-            RTC.config(datetime);
+            Rebooted=true;
             _bmaConfig();
             UpdateUTC();
             B = NVS.getString("GSR-TZ",S);
-            if (S.length() > 0) strcpy(WatchTime.POSIX,S.c_str());
+            OP.setCurrentPOSIX(S);
             RetrieveSettings();
-            RefreshCPU(CPUMAX);
+            RefreshCPU(CPUDEF);
             WatchTime.WatchyRTC = esp_timer_get_time() + ((60 - WatchTime.UTC.Second) * 1000000);
             WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
             UpdateUTC();
@@ -259,70 +276,69 @@ void WatchyGSR::init(String datetime){
             WaitForNext=false;
             Updates.Full=true;
             UpdateDisp=true;
-            //Init interrupts.
-            attachInterrupt(digitalPinToInterrupt(MENU_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
-            attachInterrupt(digitalPinToInterrupt(BACK_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
-            attachInterrupt(digitalPinToInterrupt(UP_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
-            attachInterrupt(digitalPinToInterrupt(DOWN_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
             break;
     }
 
-    display.init(0,false);  // Force it here so it fixes the border.
-    display.epd2.setDarkBorder(Options.Border);
 
-    // Sometimes BMA crashes - simply try to reinitialize bma...
+    if ((Battery.Last > LowBattery || Button != 0) && !(Options.SleepStyle == 4 && Darkness.Went && !Updates.Tapped)){
+        //Init interrupts.
+        attachInterrupt(digitalPinToInterrupt(MENU_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        attachInterrupt(digitalPinToInterrupt(BACK_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        attachInterrupt(digitalPinToInterrupt(UP_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        attachInterrupt(digitalPinToInterrupt(DOWN_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        DisplayInit();
 
-    if (sensor.getErrorCode() != 0) {
-        sensor.shutDown();
-        sensor.wakeUp();
-        sensor.softReset();
-        _bmaConfig();
-    }
+        // Sometimes BMA crashes - simply try to reinitialize bma...
 
-    if (Button > 0) { handleButtonPress(Button); Button = 0; }
+        if (sensor.getErrorCode() != 0) {
+            sensor.shutDown();
+            sensor.wakeUp();
+            sensor.softReset();
+            _bmaConfig();
+        }
 
-    CalculateTones(); monitorSteps();
-    AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
-    ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC);
-    Sensitive = ((OTAUpdate && Menu.SubItem == 3) || (NTPData.TimeTest && Menu.SubItem == 2));
+        if (Button > 0) { handleButtonPress(Button); Button = 0; }
 
-    RefreshCPU();
+        CalculateTones(); monitorSteps();
+        AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
+        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC);
+        Sensitive = ((OTAUpdate && Menu.SubItem == 3) || (NTPData.TimeTest && Menu.SubItem == 2));
 
-    while(DoOnce || Button > 0){
-        DoOnce = false;  // Do this whole thing once, catch late button presses at the END of the loop just before Deep Sleep.
-        ManageTime();   // Handle Time method.
-        AlarmReset = millis();
-        if (UpdateDisp) showWatchFace(); //partial updates on tick
-        if (ActiveMode == true){
-            while (ActiveMode == true) { // Here, we hijack the init and LOOP until the NTP is done, watching for the proper time when we *SHOULD* update the screen to keep time with everything.
-                Since=millis();
-                ManageTime();   // Handle Time method.
-                processWiFiRequest(); // Process any WiFi requests.
-                if (!Sensitive){
-                    if (NTPData.State > 0 && !WatchyAPOn && !OTAUpdate){
-                        if (NTPData.Pause == 0) ProcessNTP(); else NTPData.Pause--;
-                        if (WatchTime.NewMinute){
-                            NTPData.Wait++;
-                            UpdateDisp=Showing();
+        RefreshCPU();
+
+        while(DoOnce){
+            DoOnce = false;  // Do this whole thing once, catch late button presses at the END of the loop just before Deep Sleep.
+            ManageTime();   // Handle Time method.
+            AlarmReset = millis();
+            if (UpdateDisp) showWatchFace(); //partial updates on tick
+            if (ActiveMode == true){
+                while (ActiveMode == true) { // Here, we hijack the init and LOOP until the NTP is done, watching for the proper time when we *SHOULD* update the screen to keep time with everything.
+                    Since=millis();
+                    ManageTime();   // Handle Time method.
+                    processWiFiRequest(); // Process any WiFi requests.
+                    if (!Sensitive){
+                        if (NTPData.State > 0 && !WatchyAPOn && !OTAUpdate){
+                            if (NTPData.Pause == 0) ProcessNTP(); else NTPData.Pause--;
+                            if (WatchTime.NewMinute){
+                                NTPData.Wait++;
+                                UpdateDisp=Showing();
+                            }
                         }
-                    }
 
-                    // Here, make sure the clock updates on-screen.
-                    if (WatchTime.NewMinute){
-                        detectBattery();
-                        UpdateDisp = Showing();
-                    }
+                        // Here, make sure the clock updates on-screen.
+                        if (WatchTime.NewMinute){
+                            detectBattery();
+                            UpdateDisp = Showing();
+                        }
 
-                    // Here, do the alarm buzzings by way of which one is running.
+                        // Here, do the alarm buzzings by way of which one is running.
 
-                    if (AlarmsOn && !OTAUpdate){
-                        if (WaitForNext){
-                            // Wait for the next second to change between any alarms still to play.
-                            if (millis() - AlarmReset > 999){ // Time changed.
-                                AlarmReset = millis();
-                                WaitForNext = false;
-                                AlarmIndex = roller(AlarmIndex + 1, 0, 4);
-                                if (getToneTimes(AlarmIndex) == 0){
+                        if (AlarmsOn && !OTAUpdate){
+                            if (WaitForNext){
+                                // Wait for the next second to change between any alarms still to play.
+                                if (millis() - AlarmReset > 999){ // Time changed.
+                                    AlarmReset = millis();
+                                    WaitForNext = false;
                                     AlarmIndex = roller(AlarmIndex + 1, 0, 4);
                                     if (getToneTimes(AlarmIndex) == 0){
                                         AlarmIndex = roller(AlarmIndex + 1, 0, 4);
@@ -330,270 +346,266 @@ void WatchyGSR::init(String datetime){
                                             AlarmIndex = roller(AlarmIndex + 1, 0, 4);
                                             if (getToneTimes(AlarmIndex) == 0){
                                                 AlarmIndex = roller(AlarmIndex + 1, 0, 4);
+                                                if (getToneTimes(AlarmIndex) == 0){
+                                                    AlarmIndex = roller(AlarmIndex + 1, 0, 4);
+                                                }
                                             }
                                         }
                                     }
                                 }
-                            }
-                        }else if(AlarmIndex == 4){
-                            if (TimerDown.ToneLeft > 0){
-                                if (TimerDown.Tone == 0){
-                                    WaitForNext=true;
-                                    if (TimerDown.ToneLeft > 0){
-                                        TimerDown.ToneLeft--;
-                                        TimerDown.Tone = 24;
+                            }else if(AlarmIndex == 4){
+                                if (TimerDown.ToneLeft > 0){
+                                    if (TimerDown.Tone == 0){
+                                        WaitForNext=true;
+                                        if (TimerDown.ToneLeft > 0){
+                                            TimerDown.ToneLeft--;
+                                            TimerDown.Tone = 24;
+                                        }
+                                    }else{
+                                        TimerDown.Tone--;
+                                        Pulse = (((TimerDown.Tone / 2) & 1) != 0);
+                                        if (!Pulse && TimerDown.Tone > 0) TimerDown.Tone--;
+                                        VibeTo(Pulse);   // Turns Vibe on or off depending on bit state.
+                                        Darkness.Last=millis();
                                     }
-                                }else{
-                                    TimerDown.Tone--;
-                                    Pulse = (((TimerDown.Tone / 2) & 1) != 0);
-                                    if (!Pulse && TimerDown.Tone > 0) TimerDown.Tone--;
-                                    VibeTo(Pulse);   // Turns Vibe on or off depending on bit state.
-                                    Darkness.Last=millis();
-                                }
-                            }else WaitForNext=true;
-                        }else if (Alarms_Times[AlarmIndex] > 0){
-                            if (Alarms_Playing[AlarmIndex] > 0){
-                                Alarms_Playing[AlarmIndex]--;
-                                if (Menu.SubItem > 0 && Menu.Item - MENU_ALARM1 == AlarmIndex){
-                                    VibeTo(false);
-                                    Darkness.Last=millis();
-                                    DoHaptic = false;
-                                    Alarms_Playing[AlarmIndex]=0;
-                                    Alarms_Times[AlarmIndex]=0;
-                                }else{
-                                    Pulse = ((AlarmVBs[AlarmIndex] & Bits[Alarms_Playing[AlarmIndex] / 3]) != 0);
-                                    VibeTo(Pulse);   // Turns Vibe on or off depending on bit state.
-                                    Darkness.Last=millis();
-                                    DoHaptic = false;
-                                }
-                                if (Alarms_Playing[AlarmIndex] == 0 && Alarms_Times[AlarmIndex] > 0){
-                                    Alarms_Times[AlarmIndex]--;   // Decrease count, eventually this will all stop on it's own.
-                                    WaitForNext = true;
-                                    if (Alarms_Times[AlarmIndex] > 0) Alarms_Playing[AlarmIndex] = 30;
-                                }
+                                }else WaitForNext=true;
+                            }else if (Alarms_Times[AlarmIndex] > 0){
+                                if (Alarms_Playing[AlarmIndex] > 0){
+                                    Alarms_Playing[AlarmIndex]--;
+                                    if (Menu.SubItem > 0 && Menu.Item - MENU_ALARM1 == AlarmIndex){
+                                        VibeTo(false);
+                                        Darkness.Last=millis();
+                                        DoHaptic = false;
+                                        Alarms_Playing[AlarmIndex]=0;
+                                        Alarms_Times[AlarmIndex]=0;
+                                    }else{
+                                        Pulse = ((AlarmVBs[AlarmIndex] & Bits[Alarms_Playing[AlarmIndex] / 3]) != 0);
+                                        VibeTo(Pulse);   // Turns Vibe on or off depending on bit state.
+                                        Darkness.Last=millis();
+                                        DoHaptic = false;
+                                    }
+                                    if (Alarms_Playing[AlarmIndex] == 0 && Alarms_Times[AlarmIndex] > 0){
+                                        Alarms_Times[AlarmIndex]--;   // Decrease count, eventually this will all stop on it's own.
+                                        WaitForNext = true;
+                                        if (Alarms_Times[AlarmIndex] > 0) Alarms_Playing[AlarmIndex] = 30;
+                                    }
+                                }else WaitForNext = true;
                             }else WaitForNext = true;
-                        }else WaitForNext = true;
-                    }
+                        }
 
-                    if (GSRWiFi.Requests == 0 && WatchyAPOn && !OTAUpdate){
-                        switch (Menu.SubItem){
-                            case 0: // Turn off AP.
-                                OTAEnd = true;
-                                break;
-                            case 1: // Turn on AP.
-                                if (WiFi.getMode() != WIFI_AP || (millis() - OTATimer > 4000 && OTATry < 3)){
-                                    OTATimer=millis();
-                                    OTATry++;
-                                    WiFi.setHostname(WiFi_AP_SSID);
-                                    wifiManager.setConfigPortalBlocking(false);
-                                    wifiManager.setWiFiAPHidden(WiFi_AP_HIDE);
-                                    OTAEnd |= (!WiFi.softAP(WiFi_AP_SSID, WiFi_AP_PSWD, 1, WiFi_AP_HIDE, WiFi_AP_MAXC));
-                                }else if (WiFi.getMode() == WIFI_AP){
-                                    wifiManager.startWebPortal();
-                                    Menu.SubItem++;
-                                    setStatus("WiFi-AP");
-                                    UpdateDisp=Showing();
-                                    APLoop=millis();
-                                }else Menu.SubItem = 0; // Fail, something is amiss.
-                                break;
-                            default: // 2 to 5 is here.
-                                if (Menu.SubItem > 1){
-                                    if(WiFi.getMode() == WIFI_STA){
-                                        Menu.SubItem = 0;
-                                        break;
-                                    }
-                                    if (wifiManager.process()){ // Setting worked.
-                                        Menu.SubItem = 0;
-                                        break;
-                                    }
-                                    if (millis() - APLoop > 8000){
-                                        Menu.SubItem = roller(Menu.SubItem + 1, 2,4);
-                                        UpdateDisp = Showing();
+                        if (GSRWiFi.Requests == 0 && WatchyAPOn && !OTAUpdate){
+                            switch (Menu.SubItem){
+                                case 0: // Turn off AP.
+                                    OTAEnd = true;
+                                    break;
+                                case 1: // Turn on AP.
+                                    if (WiFi.getMode() != WIFI_AP || (millis() - OTATimer > 4000 && OTATry < 3)){
+                                        OTATimer=millis();
+                                        OTATry++;
+                                        WiFi.setHostname(WiFi_AP_SSID);
+                                        wifiManager.setConfigPortalBlocking(false);
+                                        wifiManager.setWiFiAPHidden(WiFi_AP_HIDE);
+                                        OTAEnd |= (!WiFi.softAP(WiFi_AP_SSID, WiFi_AP_PSWD, 1, WiFi_AP_HIDE, WiFi_AP_MAXC));
+                                        if (!OTAEnd) UpdateWiFiPower();
+                                    }else if (WiFi.getMode() == WIFI_AP){
+                                        wifiManager.startWebPortal();
+                                        Menu.SubItem++;
+                                        setStatus("WiFi-AP");
+                                        UpdateDisp=Showing();
                                         APLoop=millis();
+                                    }else Menu.SubItem = 0; // Fail, something is amiss.
+                                    break;
+                                default: // 2 to 5 is here.
+                                    if (Menu.SubItem > 1){
+                                        if(WiFi.getMode() == WIFI_STA){
+                                            Menu.SubItem = 0;
+                                            break;
+                                        }
+                                        if (wifiManager.process()){ // Setting worked.
+                                            Menu.SubItem = 0;
+                                            break;
+                                        }
+                                        if (millis() - APLoop > 8000){
+                                            Menu.SubItem = roller(Menu.SubItem + 1, 2,4);
+                                            UpdateDisp = Showing();
+                                            APLoop=millis();
+                                        }
                                     }
-                                }
+                            }
                         }
                     }
-                }
-                if (OTAUpdate){
-                  switch (Menu.SubItem){
-                      case 1: // Wait for WiFi to connect or fail.
-                          if (WiFi.status() != WL_CONNECTED && currentWiFi() != WL_CONNECT_FAILED) OTATimer = millis();
-                          else if (WiFi.status() == WL_CONNECTED){
-                              Menu.SubItem++;
-                              UpdateDisp = Showing();
-                          }else OTAEnd=true;
-                          break;
-                      case 2: // Setup Arduino OTA and wait for it to either finish or fail by way of back button held for too long OR 2 minute with no upload.
-                          if (Menu.Item == MENU_OTAU){
-                          ArduinoOTA.setHostname(WiFi_AP_SSID);
-                          ArduinoOTA
-                            .onStart([]() {
-                              String Type;
-                              if (ArduinoOTA.getCommand() == U_FLASH)
-                                Type = "sketch";
-                              else // U_SPIFFS
-                                Type = "filesystem";
-                              // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
-                              //Serial.println("Start updating " + Type);
-                            })
-                            .onEnd([]() {
-                              OTAEnd = true;
-                              //Serial.println("\nEnd");
-                            })
-                            .onProgress([](unsigned int progress, unsigned int total) {
-                              OTATimer=millis();
-                              //Serial.printf("Progress: %u%%\n", (progress / (total / 100)));
-                            })
-                            .onError([](ota_error_t error) {
-                              /*Serial.printf("Error[%u]: ", error);
-                              if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
-                              else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
-                              else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
-                              else if (error == OTA_RECEIVE_ERROR) Serial.println("Receive Failed");
-                              else if (error == OTA_END_ERROR) Serial.println("End Failed");
-                              */
-                            });
-                          ArduinoOTA.begin();
-                          RefreshCPU(CPUMAX);
-                          }else if (Menu.Item == MENU_OTAM){
-                              /*return index page which is stored in basicIndex */
-                              server.on("/", HTTP_GET, [=]() {
-                                server.sendHeader("Connection", "close");
-                                server.send(200, "text/html", basicIndex);
-                                OTATimer=millis();
-                              });
-                              server.on("/settings", HTTP_GET, [=]() {
-                                String S = settingsA + GetSettings() + settingsB;
-                                server.sendHeader("Connection", "close");
-                                server.send(200, "text/html", S);
-                                OTATimer=millis();
-                              });
-                              server.on("/wifi", HTTP_GET, [=]() {
-                                server.sendHeader("Connection", "close");
-                                server.send(200, "text/html", buildWiFiAPPage());
-                                OTATimer=millis();
-                              });
-                              server.on("/update", HTTP_GET, [=]() {
-                                server.sendHeader("Connection", "close");
-                                server.send(200, "text/html", updateIndex);
-                                OTATimer=millis();
-                              });
-                              server.on("/settings", HTTP_POST, [=](){
-                                  if (server.argName(0) == "settings") { StoreSettings(server.arg(0)); RecordSettings(); }
-                                  server.sendHeader("Connection", "close");
-                                  server.send(200, "text/html", settingsDone);
+                    if (OTAUpdate){
+                      switch (Menu.SubItem){
+                          case 1: // Wait for WiFi to connect or fail.
+                              if (WiFi.status() != WL_CONNECTED && currentWiFi() != WL_CONNECT_FAILED) OTATimer = millis();
+                              else if (WiFi.status() == WL_CONNECTED){
+                                  Menu.SubItem++;
+                                  UpdateDisp = Showing();
+                              }else OTAEnd=true;
+                              break;
+                          case 2: // Setup Arduino OTA and wait for it to either finish or fail by way of back button held for too long OR 2 minute with no upload.
+                              if (Menu.Item == MENU_OTAU){
+                              ArduinoOTA.setHostname(WiFi_AP_SSID);
+                              ArduinoOTA
+                                .onStart([]() {
+                                  String Type;
+                                  if (ArduinoOTA.getCommand() == U_FLASH)
+                                    Type = "sketch";
+                                  else // U_SPIFFS
+                                    Type = "filesystem";
+                                  // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
+                                })
+                                .onEnd([]() {
+                                  OTAEnd = true;
+                                })
+                                .onProgress([](unsigned int progress, unsigned int total) {
                                   OTATimer=millis();
-                              });
-                              server.on("/wifi", HTTP_POST, [=](){
-                                  uint8_t I = 0;
-                                  while (I < server.args()){
-                                      parseWiFiPageArg(server.argName(I),server.arg(I)); I++;
-                                  }
-                                  server.sendHeader("Connection", "close");
-                                  server.send(200, "text/html", wifiDone);
-                                  RecordSettings();
-                                  OTAFail = millis() - 598000;
-                              });
-                              server.on("/update", HTTP_POST, [](){
-                                server.sendHeader("Connection", "close");
-                                server.send(200, "text/plain", (Update.hasError()) ? "Upload Failed." : "Watchy will reboot!");
-                                delay(2000);
-                                ESP.restart();
-                              }, []() {
-                                HTTPUpload& upload = server.upload();
-                                if (upload.status == UPLOAD_FILE_START) {
-                                  OTATimer=millis();
-                                  //Serial.printf("Update: %s\n", upload.filename.c_str());
-                                  if (!Update.begin(UPDATE_SIZE_UNKNOWN)) { //start with max available size
-                                    Update.printError(Serial);
-                                  }
-                                } else if (upload.status == UPLOAD_FILE_WRITE) {
-                                  /* flashing firmware to ESP*/
-                                  delay(2);
-                                  if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) Update.printError(Serial);
-                                  delay(2);
-                                } else if (upload.status == UPLOAD_FILE_END) {
-                                  if (Update.end(true)) { //true to set the size to the current progress
-                                    OTAEnd=true;
-                                  //Serial.printf("Update Success: %u\nRebooting...\n", upload.totalSize);
-                                  } //else Update.printError(Serial);
-                                }
-                              });
+                                })
+                                .onError([](ota_error_t error) {
+                                  OTAEnd=true;
+                                });
                               RefreshCPU(CPUMAX);
-                              server.begin();
-                          }
-                          Menu.SubItem++;
-                          showWatchFace();
-                          break;
-                      case 3: // Monitor back button and turn WiFi off if it happens, or if duration is longer than 2 minutes.
-                          if (Menu.Item == MENU_OTAU)      ArduinoOTA.handle();
-                          else if (Menu.Item == MENU_OTAM) server.handleClient();
-                          if (getButtonPins() != 2) OTATimer = millis(); // Not pressing "BACK".
-                          if (millis() - OTATimer > 10000 || millis() - OTAFail > 600000) OTAEnd = true;  // Fail if holding back for 10 seconds OR 600 seconds has passed.
+                              ArduinoOTA.begin();
+                              }else if (Menu.Item == MENU_OTAM){
+                                  /*return index page which is stored in basicIndex */
+                                  server.on("/", HTTP_GET, [=]() {
+                                    server.sendHeader("Connection", "close");
+                                    server.send(200, "text/html", basicIndex);
+                                    OTATimer=millis();
+                                  });
+                                  server.on("/settings", HTTP_GET, [=]() {
+                                    String S = settingsA + GetSettings() + settingsB;
+                                    server.sendHeader("Connection", "close");
+                                    server.send(200, "text/html", S);
+                                    OTATimer=millis();
+                                  });
+                                  server.on("/wifi", HTTP_GET, [=]() {
+                                    server.sendHeader("Connection", "close");
+                                    server.send(200, "text/html", buildWiFiAPPage());
+                                    OTATimer=millis();
+                                  });
+                                  server.on("/update", HTTP_GET, [=]() {
+                                    server.sendHeader("Connection", "close");
+                                    server.send(200, "text/html", updateIndex);
+                                    OTATimer=millis();
+                                  });
+                                  server.on("/settings", HTTP_POST, [=](){
+                                      if (server.argName(0) == "settings") { StoreSettings(server.arg(0)); RecordSettings(); }
+                                      server.sendHeader("Connection", "close");
+                                      server.send(200, "text/html", settingsDone);
+                                      OTATimer=millis();
+                                  });
+                                  server.on("/wifi", HTTP_POST, [=](){
+                                      uint8_t I = 0;
+                                      while (I < server.args()){
+                                          parseWiFiPageArg(server.argName(I),server.arg(I)); I++;
+                                      }
+                                      server.sendHeader("Connection", "close");
+                                      server.send(200, "text/html", wifiDone);
+                                      RecordSettings();
+                                      OTAFail = millis() - 598000;
+                                  });
+                                  server.on("/update", HTTP_POST, [](){
+                                    server.sendHeader("Connection", "close");
+                                    server.send(200, "text/plain", (Update.hasError()) ? "Upload Failed." : "Watchy will reboot!");
+                                    delay(2000);
+                                    ESP.restart();
+                                  }, []() {
+                                    HTTPUpload& upload = server.upload();
+                                    if (upload.status == UPLOAD_FILE_START) {
+                                      OTATimer=millis();
+
+                                      if (!Update.begin(UPDATE_SIZE_UNKNOWN)) { //start with max available size
+                                        OTAEnd=true;
+                                      }
+                                    } else if (upload.status == UPLOAD_FILE_WRITE) {
+                                      /* flashing firmware to ESP*/
+
+                                      if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) OTAEnd=true;
+
+                                    } else if (upload.status == UPLOAD_FILE_END) {
+                                      if (Update.end(true)) { //true to set the size to the current progress
+                                        OTAEnd=true;
+                                      }
+                                    }
+                                  });
+                                  RefreshCPU(CPUMAX);
+                                  server.begin();
+                              }
+                              Menu.SubItem++;
+                              showWatchFace();
+                              break;
+                          case 3: // Monitor back button and turn WiFi off if it happens, or if duration is longer than 2 minutes.
+                              if (WiFi.status() == WL_DISCONNECTED) OTAEnd = true;
+                              else if (Menu.Item == MENU_OTAU)      ArduinoOTA.handle();
+                              else if (Menu.Item == MENU_OTAM) server.handleClient();
+                              if (getButtonPins() != 2) OTATimer = millis(); // Not pressing "BACK".
+                              if (millis() - OTATimer > 10000 || millis() - OTAFail > 600000) OTAEnd = true;  // Fail if holding back for 10 seconds OR 600 seconds has passed.
+                        }
                     }
-                }
 
-                // OTAEnd code.
-                if (OTAEnd){
-                    //if (Menu.Item == MENU_OTAU)      ArduinoOTA.stop(); // Why is there no stop/close???
-                    if (Menu.Item == MENU_OTAM) server.stop();
-                    if (WatchyAPOn) wifiManager.stopConfigPortal();
-                    VibeTo(false);
-                    OTAEnd=false;
-                    OTAUpdate=false;
-                    WatchyAPOn = false;
-                    endWiFi();
-                    if (Menu.Item != MENU_TOFF){
-                        Menu.SubItem=0;
-                        UpdateUTC();
-                        UpdateClock();
+                    // OTAEnd code.
+                    if (OTAEnd){
+                        if (Menu.Item == MENU_OTAU)      ArduinoOTA.end();
+                        else if (Menu.Item == MENU_OTAM) server.stop();
+                        if (WatchyAPOn) wifiManager.stopConfigPortal();
+                        VibeTo(false);
+                        OTAEnd=false;
+                        OTAUpdate=false;
+                        WatchyAPOn = false;
+                        endWiFi();
+                        if (Menu.Item != MENU_TOFF){
+                            Menu.SubItem=0;
+                            UpdateUTC();
+                            UpdateClock();
+                        }
+                        Battery.UpCount=0;  // Stop it from thinking the battery went wild.
+                        UpdateDisp=Showing();
                     }
-                    Battery.UpCount=0;  // Stop it from thinking the battery went wild.
-                    UpdateDisp=Showing();
+
+                    // Don't do anything time sensitive while in OTA Update.
+                    if (!Sensitive){
+                        // Here, check for button presses and respond, done here to avoid turbo button presses.
+
+                        if (!DarkWait()) GoDark();
+                        handleInterrupt();
+                        if (Button > 0) { handleButtonPress(Button); Button = 0; }
+                        if (UpdateDisp) showWatchFace(); //partial updates on tick
+                        if (!Updates.Init) { if (!(InTurbo() || DarkWait())) DisplaySleep(); }
+
+                        CalculateTones(); monitorSteps();
+                        AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
+                        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC);
+
+                        if (WatchTime.DeadRTC && Options.NeedsSaving) RecordSettings();
+                        RefreshCPU(CPUDEF);
+                        Since=50-(millis()-Since);
+                        if (Since <= 50) delay(Since);
+                    }
+                    WatchTime.NewMinute=false;
+                    IDidIt=false;
+                    Sensitive = ((OTAUpdate && Menu.SubItem == 3) || (NTPData.TimeTest && Menu.SubItem == 2));
                 }
-
-                // Don't do anything time sensitive while in OTA Update.
-                if (!Sensitive){
-                    // Here, check for button presses and respond, done here to avoid turbo button presses.
-
-                    if (!DarkWait()) GoDark();
-                    handleInterrupt();
-                    if (Button > 0) { handleButtonPress(Button); Button = 0; }
-                    if (UpdateDisp) showWatchFace(); //partial updates on tick
-
-                    CalculateTones(); monitorSteps();
-                    AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
-                    ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC);
-
-                    if (WatchTime.DeadRTC && Options.NeedsSaving) RecordSettings();
-                    RefreshCPU(CPUDEF);
-                    Since=50-(millis()-Since);
-                    if (Since <= 50) delay(Since);
-                }
-                WatchTime.NewMinute=false;
-                IDidIt=false;
-                Sensitive = ((OTAUpdate && Menu.SubItem == 3) || (NTPData.TimeTest && Menu.SubItem == 2));
             }
-        }
 
-        if (Button > 0) { handleButtonPress(Button); Button = 0; }
-        processWiFiRequest(); // Process any WiFi requests.
-        if (UpdateDisp) showWatchFace(); //partial updates on tick
-        AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
-        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC);
-        if (ActiveMode) DoOnce = true;
+            if (Button > 0) { handleButtonPress(Button); Button = 0; }
+            processWiFiRequest(); // Process any WiFi requests.
+            if (UpdateDisp) showWatchFace(); //partial updates on tick
+            AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
+            ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC);
+            if (ActiveMode) DoOnce = true;
+        }
     }
     deepSleep();
 }
 
 void WatchyGSR::showWatchFace(){
-  if (Options.Performance > 0) RefreshCPU((Options.Performance == 1 ? CPUMID : CPUMAX));
-  display.epd2.setDarkBorder(Options.Border);
+  if (Options.Performance > 0 && Battery.Last > MinBattery ) RefreshCPU((Options.Performance == 1 ? CPUMID : CPUMAX));
+  DisplayInit();
   display.setFullWindow();
   drawWatchFace();
 
-  if (Options.Feedback && DoHaptic){
+  if (Options.Feedback && DoHaptic && Battery.Last > MinBattery){
     VibeTo(true);
     delay(40);
     VibeTo(false);
@@ -603,30 +615,23 @@ void WatchyGSR::showWatchFace(){
   Darkness.Went=false;
   Darkness.Last = millis();
   display.display(!Updates.Full); //partial refresh
+  if (!(InTurbo() || DarkWait())) DisplaySleep();
   Updates.Full=false;
   Updates.Drawn=true;
   RefreshCPU();
 }
 
 void WatchyGSR::drawWatchFace(){
-    uint8_t Direction;
-
-    Direction = sensor.getDirection();  // Directional screen on.  == DIRECTION_DISP_UP
-
     display.fillScreen(Options.LightMode ? GxEPD_WHITE : GxEPD_BLACK);
-    display.setTextColor(Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+    display.setTextColor(FontColor());
 
-    ScreenOn = (Direction == DIRECTION_DISP_UP || Direction == DIRECTION_TOP_EDGE || Battery.Direction == 1 || true);  // True set due to bug.
-
-    if (ScreenOn){
-      if (!(OTAUpdate || WatchyAPOn || (Menu.Item == MENU_TOFF && Menu.SubItem == 2))){
-          drawTime();
-          drawDay();
-          drawYear();
-      }
-      if (GuiMode == WATCHON)     drawDate();
-      else if (GuiMode == MENUON) drawMenu();
+    if (!(OTAUpdate || WatchyAPOn || (Menu.Item == MENU_TOFF && Menu.SubItem == 2))){
+        drawTime();
+        drawDay();
+        drawYear();
     }
+    if (GuiMode == WATCHON)     drawDate();
+    else if (GuiMode == MENUON) drawMenu();
     drawChargeMe();
     // Show WiFi/AP/TZ/NTP if in progress.
     drawStatus();
@@ -641,7 +646,7 @@ void WatchyGSR::drawTime(){
     PM = false;
     O = MakeTime(WatchTime.Local.Hour, WatchTime.Local.Minute, PM);
     display.setFont(&aAntiCorona36pt7b);
-    display.setTextColor(Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+    display.setTextColor(FontColor());
 
     display.getTextBounds(O, 0, TimeY, &x1, &y1, &w, &h);
     tw = (200 - w) /2;
@@ -649,7 +654,7 @@ void WatchyGSR::drawTime(){
     display.println(O);
 
     if (PM){
-        tw=clamp(tw + w + 6, 0, 184);
+        tw=constrain(tw + w + 6, 0, 184);
         display.drawBitmap(tw, TimeY - 45, PMIndicator, 6, 6, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
 //        display.fillRect(tw, TimeY - 45 ,6 ,6, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
     }
@@ -662,7 +667,7 @@ void WatchyGSR::drawDay(){
 
     O = dayStr(WatchTime.Local.Wday + 1);
     display.setFont(&aAntiCorona16pt7b);
-    display.setTextColor(Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+    display.setTextColor(FontColor());
     display.getTextBounds(O, 0, DayY, &x1, &y1, &w, &h);
     w = (200 - w) /2;
     display.setCursor(w, DayY);
@@ -675,7 +680,7 @@ void WatchyGSR::drawDate(){
     String O;
 
     display.setFont(&aAntiCorona15pt7b);  //Shahd_Serif17pt7b);
-    display.setTextColor(Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+    display.setTextColor(FontColor());
     O = String(monthStr(WatchTime.Local.Month)) + " " + String(WatchTime.Local.Day);
     //O="September 30";
     display.getTextBounds(O, 0, DateY, &x1, &y1, &w, &h);
@@ -690,8 +695,8 @@ void WatchyGSR::drawYear(){
     String O;
 
     display.setFont(&aAntiCorona16pt7b);
-    display.setTextColor(Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
-    O = String(WatchTime.Local.Year + 1900);
+    display.setTextColor(FontColor());
+    O = String(WatchTime.Local.Year + RTC_LOCALYEAR_OFFSET);  //1900
     display.getTextBounds(O, 0, YearY, &x1, &y1, &w, &h);
     w = (200 - w) /2;
     display.setCursor(w, YearY);
@@ -795,10 +800,19 @@ void WatchyGSR::drawMenu(){
                     break;
                 case 4:
                     O = "Sleeping Ends";
+                    break;
+                case 5:
+                    O = "Orientation";
             }
             break;
         case MENU_SAVE:
             O = "Performance";
+            break;
+        case MENU_TPWR:
+            O = "WiFi Tx Power";
+            break;
+        case MENU_INFO:
+            O = "Information";
             break;
         case MENU_TRBL:
             O = "Troubleshoot";
@@ -1002,6 +1016,12 @@ void WatchyGSR::drawMenu(){
                             break;
                         case 2:
                             O = "Bed Time";
+                            break;
+                        case 3:
+                            O = "Double Tap On";
+                            break;
+                        case 4:
+                            O = "Double Tap Only";
                     }
                     break;
                 case 2:
@@ -1012,7 +1032,21 @@ void WatchyGSR::drawMenu(){
                     break;
                 case 4:
                     O = MakeHour(Options.SleepStart) + MakeTOD(Options.SleepStart, true) + " to [" + MakeHour(Options.SleepEnd) + MakeTOD(Options.SleepEnd, true) + "]";
+                    break;
+                case 5:
+                    O = Options.BedTimeOrientation ? "Watchy UP" : "Ignore";
             }
+    }else if (Menu.Item == MENU_TPWR){  // WiFi Tx Power
+        O = IDWiFiTX[getTXOffset(GSRWiFi.TransmitPower)];
+    }else if (Menu.Item == MENU_INFO){  // Information
+        switch (Menu.SubItem){
+            case 0:
+                O = "Version: " + String(Build);
+                break;
+            case 1:
+                O = "Battery: " + String(Battery.Last - (Battery.Last > MaxBattery ? 1.00 : 0.00)) + "V";
+                break;
+        }
     }else if (Menu.Item == MENU_SAVE){  // Performance
         if (Options.Performance == 2 || WatchTime.DeadRTC) O = "Battery Saving";
         else O = ((Options.Performance == 1) ? "Normal" : "Turbo");
@@ -1082,27 +1116,33 @@ void WatchyGSR::drawMenu(){
 }
 
 void WatchyGSR::deepSleep(){
+  uint8_t I;
+  bool BatOk = (Battery.Last == 0 || Battery.Last > LowBattery);
   GoDark();
-  display.hibernate();
   if (Options.NeedsSaving) RecordSettings();
+  DisplaySleep();
+  for(I = 0; I < 40; I++) { pinMode(I, INPUT); }
+  esp_sleep_enable_ext1_wakeup(((Options.SleepStyle > 2 && !WatchTime.DeadRTC && BatOk) ? ACC_INT_MASK : 0) | BTN_PIN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
+  //  RTC.clearAlarm(); //resets the alarm flag in the RTC
   esp_sleep_enable_ext0_wakeup(RTC_PIN, 0); //enable deep sleep wake on RTC interrupt
-  esp_sleep_enable_ext1_wakeup(BTN_PIN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
+  SRTC.nextMinuteWake();
+//SRTC.clearAlarm();
   esp_deep_sleep_start();
 }
 
 void WatchyGSR::GoDark(){
-  if ((Updates.Drawn || Battery.Direction != Battery.DarkDirection || !Darkness.Went) && !Showing())
+  if ((Updates.Drawn || Battery.Direction != Battery.DarkDirection || !Darkness.Went || Battery.Last < LowBattery) && !Showing())
   {
     Darkness.Went=true;
-    display.init(0,false);  // Force it here so it fixes the border.
-    display.epd2.setDarkBorder(true);
-    display.fillScreen(GxEPD_BLACK);
-    if (getBatteryVoltage() < MinBattery) display.drawBitmap(155, 178, ChargeMe, 40, 17, GxEPD_WHITE); else if (Battery.Direction == 1) display.drawBitmap(155, 178, Charging, 40, 17, GxEPD_WHITE);
-    Battery.DarkDirection = Battery.Direction;
+    Updates.Init=Updates.Drawn;
     display.setFullWindow();
+    DisplayInit(true);  // Force it here so it fixes the border.
+    display.fillScreen(GxEPD_BLACK);
+    if (Battery.Last < MinBattery) display.drawBitmap(155, 178, (Battery.Last < LowBattery ? ChargeMeBad : ChargeMe), 40, 17, GxEPD_WHITE); else if (Battery.Direction == 1) display.drawBitmap(155, 178, Charging, 40, 17, GxEPD_WHITE);
+    Battery.DarkDirection = Battery.Direction;
     display.display(true);
     Updates.Drawn=false;
-    if (WatchTime.DeadRTC) display.hibernate();
+    display.hibernate();
   }
 }
 
@@ -1120,7 +1160,7 @@ void WatchyGSR::detectBattery(){
             // Check if the NTP has been done.
             if (WatchTime.UTC_RAW - NTPData.Last > 14400 && NTPData.State == 0){
                 NTPData.State = 1;
-                NTPData.TimeZone = (WatchTime.POSIX[0] == 0);   // No Timezone, go get one!
+                NTPData.TimeZone = (OP.getCurrentPOSIX() != OP.TZMISSING);   // No Timezone, go get one!
                 NTPData.UpdateUTC = true;
                 AskForWiFi();
             }
@@ -1181,7 +1221,8 @@ void WatchyGSR::ProcessNTP(){
       NTPData.State++;
       setStatus("TZ");
       // Do the next part.
-      HTTP.begin(WiFiC, TZURL);  // Call it and leave.
+//      HTTP.begin(WiFiC, TZURL);  // Call it and leave.
+      OP.beginOlsonFromWeb();
       NTPData.Wait = 0;
       NTPData.Pause = 80;
       break;
@@ -1194,20 +1235,16 @@ void WatchyGSR::ProcessNTP(){
           NTPData.State = 99;
           break;
       }
-      if (HTTP.GET() == HTTP_CODE_OK) {
-        String payload = HTTP.getString();
-        JSONVar root = JSON.parse(payload);
-        String S = JSON.stringify(root["timezone"]);
-        S.replace('"',' ');
-        S.trim();
-        WatchTime.TimeZone = S;
-        HTTP.end();
+      if (OP.gotOlsonFromWeb()) {
+        WatchTime.TimeZone = OP.getCurrentOlson();
+        OP.endOlsonFromWeb();
         NTPData.Wait = 0;
         NTPData.Pause = 0;
         NTPData.State++;   // Test
       }else if (NTPData.Wait > 0){
           NTPData.Pause = 0;
           NTPData.State = 99;
+          OP.endOlsonFromWeb();
       }
       break;
     }
@@ -1219,11 +1256,9 @@ void WatchyGSR::ProcessNTP(){
           NTPData.Pause = 0;
           NTPData.State = 99;
           break;
-      }else if (NewTZ ==""){
-          break;
       }
-      strcpy(WatchTime.POSIX, NewTZ.c_str());
       B = NVS.setString("GSR-TZ",NewTZ);
+      OP.setCurrentPOSIX(NewTZ);
       NTPData.Wait = 0;
       NTPData.Pause = 0;
       NTPData.State++;
@@ -1239,7 +1274,7 @@ void WatchyGSR::ProcessNTP(){
       }
       NTPData.NTPDone = false;
       setStatus("NTP");
-      configTime(0,0,"132.246.11.237","132.246.11.227");
+      SNTP.Begin(ntpServer); //"132.246.11.237","132.246.11.227");
       NTPData.Wait = 0;
       NTPData.Pause = 20;
       NTPData.State++;
@@ -1247,16 +1282,17 @@ void WatchyGSR::ProcessNTP(){
     }
 
     case 6:{
-      if (time(nullptr) < 1000000000l){
+      //if (time(nullptr) < 1000000000l){
+      if (!SNTP.Query()){
         if (NTPData.Wait > 0){
             NTPData.Pause = 0;
             NTPData.State = 99;
         }
         break;
       }
-      WatchTime.UTC_RAW = time(nullptr);
-      breakTime(WatchTime.UTC_RAW,WatchTime.UTC);
-      RTC.set(WatchTime.UTC);
+      WatchTime.UTC_RAW = SNTP.Results;
+      WatchTime.UTC = SNTP.tmResults;
+      SRTC.set(WatchTime.UTC);
       WatchTime.Drifting = 0;
       WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
       WatchTime.WatchyRTC = esp_timer_get_time() + ((60 - WatchTime.UTC.Second) * 1000000);
@@ -1268,6 +1304,7 @@ void WatchyGSR::ProcessNTP(){
 
     case 99:{
       OTAEnd = true;
+      SNTP.End();
       NTPData.Wait = 0;
       NTPData.Pause = 0;
       NTPData.State = 0;
@@ -1288,9 +1325,9 @@ void WatchyGSR::drawChargeMe(){
       // Show Battery charging bitmap.
       display.drawBitmap(155, 178, Charging, 40, 17, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
       D = 2;
-  }else if (getBatteryVoltage() < MinBattery){
+  }else if (Battery.Last < MinBattery){
       // Show Battery needs charging bitmap.
-      display.drawBitmap(155, 178, ChargeMe, 40, 17, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+      display.drawBitmap(155, 178, (Battery.Last < LowBattery ? ChargeMeBad : ChargeMe), 40, 17, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
       D = 1;
   }
 }
@@ -1311,7 +1348,6 @@ void WatchyGSR::drawStatus(){
       else if (WatchyStatus == "NTP") display.drawBitmap(NTPX, NTPY - 18, iSync, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
       else if (WatchyStatus == "ESP")  display.drawBitmap(NTPX, NTPY - 18, iSync, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
       else{
-          display.setCursor(NTPX + 17, NTPY);
           display.setTextColor(Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
           display.setCursor(NTPX, NTPY);
           display.print(WatchyStatus);
@@ -1340,39 +1376,12 @@ void WatchyGSR::VibeTo(bool Mode){
     }
 }
 
-/*
-void WatchyGSR::handleAccelerometer(){
-  uint8_t Direction;
-
-  //Serial.println("Accel int.");
-  if (sensor.isTilt()){
-    DBug("Tilt!!!");
-    Direction = sensor.getDirection();  // Directional screen on.  == DIRECTION_DISP_UP
-    if ((Direction == DIRECTION_DISP_UP) != ScreenOn){
-      UpdateDisp = true;  // Update Screen to new state.
-    }
-  }else if (sensor.isDoubleClick()){
-    DBug("Double Tap!");
-  }
-}*/
-
 void WatchyGSR::handleButtonPress(uint8_t Pressed){
-  uint8_t Direction;
+  uint8_t I;
   int ml, mh;
 
-  // Check to see if screen is upward, if it is/isn't, make sure it matches.
-  Direction = sensor.getDirection();  // Directional screen on.  == DIRECTION_DISP_UP
-
-  /*  Not sure if this Wrist wake is worth the effort or the battery abuse.
-  if (wakeupBit & ACC_INT_MASK){  // Movement caused this.
-      //Serial.println("Accel int.");
-      if ((Direction == DIRECTION_DISP_UP) != ScreenOn){
-          UpdateDisp = true;  // Update Screen to new state.
-      }
-  }
-  */
-
-  if (Options.Orientated) { if (Direction != DIRECTION_DISP_UP && Direction != DIRECTION_TOP_EDGE) return; } // Don't accept it.
+  if (Darkness.Went && Options.SleepStyle == 4 && !WatchTime.DeadRTC && !Updates.Tapped) return; // No buttons unless a tapped happened.
+  if (!UpRight()) return; // Don't do buttons if not upright.
   if (LastButton > 0 && (millis() - LastButton) < KEYPAUSE) return;
   if (Darkness.Went) { Darkness.Last=millis(); UpdateDisp=true; return; }  // Don't do the button, just exit.
 
@@ -1500,6 +1509,18 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                       UpdateDisp = true;  // Quick Update.
                       SetTurbo();
                   }
+              }else if (Menu.Item == MENU_TPWR && !(GSRWiFi.Requests > 0 || WatchyAPOn)){
+                  I = roller(getTXOffset(GSRWiFi.TransmitPower) + 1,0,10);
+                  GSRWiFi.TransmitPower = RawWiFiTX[I];
+                  Options.NeedsSaving = true;
+                  DoHaptic = true;
+                  UpdateDisp = true;  // Quick Update.
+                  SetTurbo();
+              }else if (Menu.Item == MENU_INFO){ // Information
+                  Menu.SubItem = roller(Menu.SubItem + 1, 0, 1);
+                  DoHaptic = true;
+                  UpdateDisp = true;  // Quick Update.
+                  SetTurbo();
               }else if (Menu.Item == MENU_SAVE && !WatchTime.DeadRTC){  // Battery Saver.
                   Options.Performance = roller(Options.Performance + 1,0,2);
                   Options.NeedsSaving = true;
@@ -1517,7 +1538,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                       switch (Menu.SubItem){
                         case 1:
                           NTPData.UpdateUTC = true;
-                          NTPData.TimeZone = (WatchTime.POSIX[0] == 0);   // No Timezone, go get one!
+                          NTPData.TimeZone = (OP.getCurrentPOSIX() != OP.TZMISSING);   // No Timezone, go get one!
                           break;
                         case 2:
                           NTPData.UpdateUTC = false;
@@ -1557,7 +1578,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               }else if (Menu.Item == MENU_BRDR){  // Border Mode
                   Options.Border = !Options.Border;
                   Options.NeedsSaving = true;
-                  display.init(0,false);  // Force it here so it fixes the border.
+                  Updates.Init = true;
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
@@ -1586,7 +1607,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
               }else if (Menu.Item == MENU_DARK){  // Sleep Mode.
-                  if (Menu.SubItem < 4){
+                  if (Menu.SubItem < 5){
                       Menu.SubItem++;
                       DoHaptic = true;
                       UpdateDisp = true;  // Quick Update.
@@ -1598,13 +1619,13 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   UpdateDisp = true;  // Quick Update.
                   Updates.Full = true;
                   SetTurbo();
-              }else if (Menu.Item == MENU_WIFI){  // Watchy Connect
+              }else if (Menu.Item == MENU_WIFI && !WatchyAPOn){  // Watchy Connect
                   Menu.SubItem++;
                   WatchyAPOn = true;
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
-              }else if (Menu.Item == MENU_OTAU || Menu.Item == MENU_OTAM){  // Watchy OTA
+              }else if ((Menu.Item == MENU_OTAU || Menu.Item == MENU_OTAM) && !(GSRWiFi.Requests > 0 || WatchyAPOn)){  // Watchy OTA
                   Menu.SubItem++;
                   OTAUpdate=true;
                   DoHaptic = true;
@@ -1845,7 +1866,8 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
           }else if (Menu.Item == MENU_DARK && Menu.SubItem > 0){  // Sleep Mode.
               switch (Menu.SubItem){
                   case 1: // Style.
-                      Options.SleepStyle = roller(Options.SleepStyle + 1, (WatchTime.DeadRTC ? 1 : 0), 2);
+                      Options.SleepStyle = roller(Options.SleepStyle + 1, (WatchTime.DeadRTC ? 1 : 0), (WatchTime.DeadRTC ? 2 : 4));
+                      Updates.Tapped = true;
                       Options.NeedsSaving = true;
                       break;
                   case 2: // SleepMode (0=off, 10 seconds)
@@ -1858,6 +1880,9 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   case 4: // SleepStart (hour)
                       if (Options.SleepEnd + 1 != Options.SleepStart) { Options.SleepEnd = roller(Options.SleepEnd + 1, 0,23); Options.NeedsSaving = true; } else return;
                       break;
+                  case 5: // Orientation.
+                      Options.BedTimeOrientation = !Options.BedTimeOrientation;
+                      Options.NeedsSaving = true;
               }
               DoHaptic = true;
               UpdateDisp = true;  // Quick Update.
@@ -1873,7 +1898,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               // Do nothing!
           }else{
               if (Menu.Style == MENU_INOPTIONS){
-                  Menu.Item = roller(Menu.Item - 1, MENU_DISP, (NTPData.State > 0 || WatchyAPOn || OTAUpdate || getBatteryVoltage() < MinBattery) ? MENU_TRBL : MENU_OTAM);
+                  Menu.Item = roller(Menu.Item - 1, MENU_DISP, (NTPData.State > 0 || WatchyAPOn || OTAUpdate || Battery.Last < MinBattery) ? MENU_TRBL : MENU_OTAM);
               }else if (Menu.Style == MENU_INALARMS){
                   Menu.Item = roller(Menu.Item - 1, MENU_ALARM1, MENU_TONES);
               }else if (Menu.Style == MENU_INTIMERS){
@@ -2010,7 +2035,8 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
           }else if (Menu.Item == MENU_DARK && Menu.SubItem > 0){  // Sleep Mode.
               switch (Menu.SubItem){
                   case 1: // Style.
-                      Options.SleepStyle = roller(Options.SleepStyle - 1, (WatchTime.DeadRTC ? 1 : 0), 2);
+                      Options.SleepStyle = roller(Options.SleepStyle - 1, (WatchTime.DeadRTC ? 1 : 0), (WatchTime.DeadRTC ? 2 : 4));
+                      Updates.Tapped = true;
                       Options.NeedsSaving = true;
                       break;
                   case 2: // SleepMode (0=off, 10 seconds)
@@ -2023,6 +2049,9 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   case 4: // SleepStart (hour)
                       if (Options.SleepEnd - 1 != Options.SleepStart) { Options.SleepEnd = roller(Options.SleepEnd - 1, 0,23); Options.NeedsSaving = true; } else return;
                       break;
+                  case 5: // Orientation.
+                      Options.BedTimeOrientation = !Options.BedTimeOrientation;
+                      Options.NeedsSaving = true;
               }
               DoHaptic = true;
               UpdateDisp = true;  // Quick Update.
@@ -2039,7 +2068,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               // Do nothing!
           }else{
               if (Menu.Style == MENU_INOPTIONS){
-                  Menu.Item = roller(Menu.Item + 1, MENU_DISP, (NTPData.State > 0 || WatchyAPOn || OTAUpdate || getBatteryVoltage() < MinBattery) ? MENU_TRBL : MENU_OTAM);
+                  Menu.Item = roller(Menu.Item + 1, MENU_DISP, (NTPData.State > 0 || WatchyAPOn || OTAUpdate || Battery.Last < MinBattery) ? MENU_TRBL : MENU_OTAM);
               }else if (Menu.Style == MENU_INALARMS){
                   Menu.Item = roller(Menu.Item + 1, MENU_ALARM1, MENU_TONES);
               }else if (Menu.Style == MENU_INTIMERS){
@@ -2062,24 +2091,23 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
 void WatchyGSR::UpdateUTC(){
     tmElements_t TM;  //    struct tm * tm;
     if (!WatchTime.DeadRTC){
-        RTC.read(TM);
+        SRTC.read(TM);
         WatchTime.UTC_RAW = makeTime(TM) + (NTPData.TimeTest ? 0 : WatchTime.Drifting);
     }
     breakTime(WatchTime.UTC_RAW,WatchTime.UTC);
 }
 
 void WatchyGSR::UpdateClock(){
-    struct tm * tm;
-    setenv("TZ",WatchTime.POSIX,1);
-    tzset();
-    tm = localtime(&WatchTime.UTC_RAW);
-    WatchTime.Local.Second = tm->tm_sec;
-    WatchTime.Local.Minute = tm->tm_min;
-    WatchTime.Local.Hour = tm->tm_hour;
-    WatchTime.Local.Wday = tm->tm_wday;
-    WatchTime.Local.Day = tm->tm_mday;
-    WatchTime.Local.Month = tm->tm_mon + 1;
-    WatchTime.Local.Year = tm->tm_year;
+    struct tm * TM;
+    OP.setCurrentTimeZone();
+    TM = localtime(&WatchTime.UTC_RAW);
+    WatchTime.Local.Second = TM->tm_sec;
+    WatchTime.Local.Minute = TM->tm_min;
+    WatchTime.Local.Hour = TM->tm_hour;
+    WatchTime.Local.Wday = TM->tm_wday;
+    WatchTime.Local.Day = TM->tm_mday;
+    WatchTime.Local.Month = TM->tm_mon + 1;
+    WatchTime.Local.Year = TM->tm_year;
 }
 
 // Manage time will determine if the RTC is in use, will also set a flag to "New Minute" for the loop functions to see the minute change.
@@ -2222,7 +2250,7 @@ void WatchyGSR::_bmaConfig() {
   // Enable BMA423 isTilt feature
   //sensor.enableFeature(BMA423_TILT, true);
   // Enable BMA423 isDoubleClick feature
-//  sensor.enableFeature(BMA423_WAKEUP, true);
+  sensor.enableFeature(BMA423_WAKEUP, true);
 
   // Reset steps
   //sensor.resetStepCounter();
@@ -2231,17 +2259,16 @@ void WatchyGSR::_bmaConfig() {
   //sensor.enableStepCountInterrupt();
   //sensor.enableTiltInterrupt();
   // It corresponds to isDoubleClick interrupt
-//  sensor.enableWakeupInterrupt();
+  sensor.enableWakeupInterrupt();
 }
 
 float WatchyGSR::getBatteryVoltage(){ return ((BatteryRead() - 0.0125) +  (BatteryRead() - 0.0125) + (BatteryRead() - 0.0125) + (BatteryRead() - 0.0125)) / 4; }
-float WatchyGSR::BatteryRead(){
-    if (RTC.rtcType == DS3231)
-        return analogReadMilliVolts(V10_ADC_PIN) / 500.0f; // Battery voltage goes through a 1/2 divider.
-     else if (RTC.rtcType == PCF8563)
-        return analogReadMilliVolts(V15_ADC_PIN) / 500.0f;
-     return 0.0;
-}
+float WatchyGSR::BatteryRead(){ return analogReadMilliVolts(SRTC.getADCPin()) / 500.0f; } // Battery voltage goes through a 1/2 divider.
+//float WatchyGSR::BatteryRead(){
+//    if (SRTC.rtcType == DS3231) return analogReadMilliVolts(V10_ADC_PIN) / 500.0f;
+//    return analogReadMilliVolts(V15_ADC_PIN) / 500.0f;
+//}
+
 
 uint16_t WatchyGSR::_readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len) {
   Wire.beginTransmission(address);
@@ -2261,6 +2288,8 @@ uint16_t WatchyGSR::_writeRegister(uint8_t address, uint8_t reg, uint8_t *data, 
   Wire.write(data, len);
   return (0 !=  Wire.endTransmission());
 }
+
+uint16_t WatchyGSR::FontColor(){ return (Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE); }
 
 String WatchyGSR::MakeTime(int Hour, int Minutes, bool& Alarm) {  // Use variable with Alarm, if set to False on the way in, returns PM indication.
     int H;
@@ -2440,6 +2469,7 @@ void WatchyGSR::monitorSteps(){
 
 IRAM_ATTR void WatchyGSR::handleInterrupt(){
     uint8_t B = getButtonPins();
+    if (Options.SleepStyle == 4 && !Updates.Tapped) return;   // Screen didn't permit buttons to work.
     if (B > 0 && (LastButton == 0 || (millis() - LastButton) > KEYPAUSE)) Button = B;
 }
 
@@ -2484,6 +2514,8 @@ void WatchyGSR::endWiFi(){
         GSRWiFi.Index = 0;
         setStatus("");
         WiFi.disconnect();
+        WiFi.removeEvent(GSRWiFi.WiFiEventID);
+        GSRWiFi.WiFiEventID = 0;
         WiFi.mode(WIFI_OFF);
     }else if (GSRWiFi.Requests > 0) GSRWiFi.Requests--;
 }
@@ -2491,7 +2523,9 @@ void WatchyGSR::endWiFi(){
 void WatchyGSR::processWiFiRequest(){
     wl_status_t WiFiE = WL_CONNECT_FAILED;
     wl_status_t rWiFi = WiFi.status();
+    wifi_config_t conf;
     String AP, PA, O;
+    uint8_t I;
 
     if (GSRWiFi.Requested){
         GSRWiFi.Requested = false;
@@ -2499,10 +2533,14 @@ void WatchyGSR::processWiFiRequest(){
             RefreshCPU(CPUMAX);
             OTATimer = millis();
             OTAFail = OTATimer;
-            WiFi.onEvent(WatchyGSR::WiFiStationDisconnected, SYSTEM_EVENT_STA_DISCONNECTED);
             WiFi.disconnect();
             WiFi.setHostname(WiFi_AP_SSID);
             WiFi.mode(WIFI_STA);
+#ifdef ARDUINO_ESP32_RELEASE_1_0_6
+            if (GSRWiFi.WiFiEventID == 0) GSRWiFi.WiFiEventID = WiFi.onEvent(WatchyGSR::WiFiStationDisconnected, SYSTEM_EVENT_STA_DISCONNECTED);  // ARDUINO_EVENT_WIFI_STA_DISCONNECTED
+#else
+            if (GSRWiFi.WiFiEventID == 0) GSRWiFi.WiFiEventID = WiFi.onEvent(WatchyGSR::WiFiStationDisconnected, ARDUINO_EVENT_WIFI_STA_DISCONNECTED);  // SYSTEM_EVENT_STA_DISCONNECTED
+#endif
             GSRWiFi.Index = 0;
             GSRWiFi.Tried = false;
             GSRWiFi.Last = 0;
@@ -2519,13 +2557,20 @@ void WatchyGSR::processWiFiRequest(){
             if (GSRWiFi.Tried){
                 WiFi.disconnect();
                 GSRWiFi.Index++;
-                GSRWiFi.Tried = false; 
+                GSRWiFi.Tried = false;
             }
             if (GSRWiFi.Index < 11){
                 if (GSRWiFi.Index == 0){
                     setStatus(WiFiIndicator(24));
                     GSRWiFi.Tried = true;
-                    if (WiFi_DEF_SSID > "") WiFiE = WiFi.begin(WiFi_DEF_SSID,WiFi_DEF_PASS); else WiFiE = WiFi.begin();
+                    if (WiFi_DEF_SSID > ""){
+                        WiFiE = WiFi.begin(WiFi_DEF_SSID,WiFi_DEF_PASS);
+                        UpdateWiFiPower(WiFi_DEF_SSID,WiFi_DEF_PASS);
+                    }else{
+                        WiFiE = WiFi.begin();
+                        esp_wifi_get_config((wifi_interface_t)WIFI_IF_STA, &conf);
+                        UpdateWiFiPower(reinterpret_cast<const char*>(conf.sta.ssid),reinterpret_cast<const char*>(conf.sta.password));
+                    }
                     GSRWiFi.Last = millis() + 9000;
                     //if (WiFiE == WL_CONNECT_FAILED || WiFiE == WL_NO_SSID_AVAIL) { GSRWiFi.Last = millis() + 53000; GSRWiFi.Index++; }   // Try the next one instantly.
                 }
@@ -2536,6 +2581,7 @@ void WatchyGSR::processWiFiRequest(){
                         setStatus(O);
                         GSRWiFi.Tried = true;
                         WiFiE = WiFi.begin(AP.c_str(),PA.c_str());
+                        UpdateWiFiPower(GSRWiFi.AP[GSRWiFi.Index].TPWRIndex);
                         GSRWiFi.Last = millis() + 9000;
                     }else GSRWiFi.Index++;
                     //if (WiFiE == WL_CONNECT_FAILED || WiFiE == WL_NO_SSID_AVAIL || AP == "") { GSRWiFi.Last = millis() + 53000; GSRWiFi.Index++; }   // Try the next one instantly.
@@ -2561,6 +2607,26 @@ String WatchyGSR::WiFiIndicator(uint8_t Index){
     return S;
 }
 
+void WatchyGSR::UpdateWiFiPower(String SSID, String PSK){
+    uint8_t I;
+    for (I = 0; I < 11; I++){ if (APIDtoString(I) == SSID && PASStoString(I) == PSK) { UpdateWiFiPower(GSRWiFi.AP[I].TPWRIndex); return; } }
+    UpdateWiFiPower();
+}
+
+void WatchyGSR::UpdateWiFiPower(String SSID){
+    uint8_t I;
+    for (I = 0; I < 11; I++){ if (APIDtoString(I) == SSID) { UpdateWiFiPower(GSRWiFi.AP[I].TPWRIndex); return; } }
+    UpdateWiFiPower();
+}
+
+void WatchyGSR::UpdateWiFiPower(uint8_t PWRIndex){
+    wifi_power_t CW=WiFi.getTxPower();
+    bool B;
+
+    if (PWRIndex > 0) B = WiFi.setTxPower(RawWiFiTX[PWRIndex - 1]);
+    else if (CW != GSRWiFi.TransmitPower && GSRWiFi.TransmitPower != 0) B = WiFi.setTxPower(GSRWiFi.TransmitPower);
+}
+
 wl_status_t WatchyGSR::currentWiFi(){
     if (WiFi.status() == WL_CONNECTED) return WL_CONNECTED;
     if (GSRWiFi.Working) return WL_IDLE_STATUS;  // Make like it is relaxing doing nothing.
@@ -2574,9 +2640,9 @@ void WatchyGSR::WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info)
 String WatchyGSR::buildWiFiAPPage(){
     String S = wifiIndexA;
     String T;
-    int I = 0;
+    uint8_t I, J;
 
-    while (I < 10){
+    for (I = 0; I < 10; I++){
         T = wifiIndexB;
         T.replace("$",String(char(65 + I)));
         T.replace("#",String(char(48 + I)));
@@ -2586,8 +2652,17 @@ String WatchyGSR::buildWiFiAPPage(){
         T = wifiIndexC;
         T.replace("#",String(char(48 + I)));
         T.replace("$",PASStoString(I));
+        S += T;
+
+        for (J = 0; J < 12; J++){
+            T = wifiIndexC1;
+            T.replace("#",String(J));
+            T.replace("%",(J == GSRWiFi.AP[I].TPWRIndex ? " selected" : ""));
+            T.replace("$",(J > 0 ? IDWiFiTX[J - 1] : "* Watchy WiFi TX Power *"));
+            S += T;
+        }
+        T = wifiIndexC2;
         S += (T + (I < 9 ? "</tr>" : ""));
-        I++;
     }
     return S + wifiIndexD;
 }
@@ -2596,8 +2671,9 @@ void WatchyGSR::parseWiFiPageArg(String ARG, String DATA){
     uint8_t I = String(ARG.charAt(2)).toInt();
     String S = ARG.substring(0,2);
 
-    if (S == "AP") strcpy(GSRWiFi.AP[I].APID, DATA.c_str());
-    if (S == "PA") strcpy(GSRWiFi.AP[I].PASS, DATA.c_str());
+    if      (S == "AP") strcpy(GSRWiFi.AP[I].APID, DATA.c_str());
+    else if (S == "PA") strcpy(GSRWiFi.AP[I].PASS, DATA.c_str());
+    else if (S == "TX") GSRWiFi.AP[I].TPWRIndex = DATA.toInt();
 }
 
 String WatchyGSR::APIDtoString(uint8_t Index){
@@ -2618,12 +2694,11 @@ void WatchyGSR::initZeros(){
     String S = "";
     uint8_t I;
     GuiMode = WATCHON;
-    ScreenOn = true;
     VibeMode = 0;
     WatchyStatus = "";
     WatchTime.TimeZone = "";
     WatchTime.Drifting = 0;
-    for (I = 0; I < 64; I++) WatchTime.POSIX[I] = 0;
+    OP.init();
     Menu.Style = MENU_INNORMAL;
     Menu.Item = 0;
     Menu.SubItem = 0;
@@ -2684,6 +2759,16 @@ void WatchyGSR::initZeros(){
     strcpy(GSRWiFi.AP[8].PASS,S.c_str());
     strcpy(GSRWiFi.AP[9].APID,S.c_str());
     strcpy(GSRWiFi.AP[9].PASS,S.c_str());
+    GSRWiFi.AP[0].TPWRIndex=0;
+    GSRWiFi.AP[1].TPWRIndex=0;
+    GSRWiFi.AP[2].TPWRIndex=0;
+    GSRWiFi.AP[3].TPWRIndex=0;
+    GSRWiFi.AP[4].TPWRIndex=0;
+    GSRWiFi.AP[5].TPWRIndex=0;
+    GSRWiFi.AP[6].TPWRIndex=0;
+    GSRWiFi.AP[7].TPWRIndex=0;
+    GSRWiFi.AP[8].TPWRIndex=0;
+    GSRWiFi.AP[9].TPWRIndex=0;
     NTPData.TimeZone=false;
     NTPData.UpdateUTC=true;
     NTPData.State=1;
@@ -2712,7 +2797,7 @@ String WatchyGSR::GetSettings(){
 
        // Retrieve the settings from the current state into a base64 string.
 
-    I[J] = 129; J++; // New Version.
+    I[J] = 130; J++; // New Version.
     I[J] = (Steps.Hour); J++;
     I[J] = (Steps.Minutes); J++;
     K  = Options.TwentyFour ? 1 : 0;
@@ -2724,7 +2809,7 @@ String WatchyGSR::GetSettings(){
     K |= Options.Orientated ? 64 : 0;
     K |= Options.UsingDrift ? 128 : 0;
     I[J] = (K); J++;
-    // Versuib 128. 
+    // Versuib 129. 
     I[J] = (Options.Drift & 255); J++;
     I[J] = ((Options.Drift >> 8) & 255); J++;
     W = ((Options.Performance & 15) << 4);
@@ -2733,6 +2818,11 @@ String WatchyGSR::GetSettings(){
     I[J] = (Options.SleepStart); J++;
     I[J] = (Options.SleepEnd); J++;
     // End Version 129.
+    // Version 130.
+    I[J] = (getTXOffset(GSRWiFi.TransmitPower)); J++;
+    K  = Options.BedTimeOrientation ? 1 : 0;
+    I[J] = (K); J++;
+    // Emd Version 130.
 
     V = (Options.MasterRepeats << 5); I[J] = (Options.Turbo | V); J++;
 
@@ -2752,6 +2842,7 @@ String WatchyGSR::GetSettings(){
     for (X = 0; X < 10; X++){
         S = APIDtoString(X);
         if (S > "") {
+            I[J] = GSRWiFi.AP[X].TPWRIndex; J++; // Store the WiFi power per AP.
             W = S.length();
             I[J] = W; J++;
             for (Y = 0; Y < W; Y++){
@@ -2790,8 +2881,8 @@ void WatchyGSR::StoreSettings(String FromUser){
     mbedtls_base64_decode(&O[0], 2047, &L, &E[0], J); L--;  // Take dead zero off end.
 
     J = 0; if (L > J && O[J] > 128) {NewV = O[J]; J++; }  // Detect NewVersion and go past.
-           if (L > J) Steps.Hour = clamp(O[J],0,23);
-    J++;   if (L > J) Steps.Minutes = clamp(O[J],0,59);
+           if (L > J) Steps.Hour = constrain(O[J],0,23);
+    J++;   if (L > J) Steps.Minutes = constrain(O[J],0,59);
     J++;
     if (L > J) {
         V = O[J];
@@ -2813,33 +2904,37 @@ void WatchyGSR::StoreSettings(String FromUser){
                   }else WatchTime.DeadRTC = false;
               }
          J++; if (L > J){
-            V = ((O[J] & 240) >> 4); Options.Performance = clamp(V,0,2);
-            Options.SleepStyle = clamp((O[J] & 3),(WatchTime.DeadRTC ? 1 : 0),2);
+            V = ((O[J] & 240) >> 4); Options.Performance = constrain(V,0,2);
+            Options.SleepStyle = constrain((O[J] & 7),(WatchTime.DeadRTC ? 1 : 0),4);
          }
-         J++; if (L > J) Options.SleepMode = clamp(O[J],1,10);
-         J++; if (L > J) Options.SleepStart = clamp(O[J],0,23);
-         J++; if (L > J) Options.SleepEnd = clamp(O[J],0,23);
+         J++; if (L > J) Options.SleepMode = constrain(O[J],1,10);
+         J++; if (L > J) Options.SleepStart = constrain(O[J],0,23);
+         J++; if (L > J) Options.SleepEnd = constrain(O[J],0,23);
+         if (NewV > 129){
+            J++; if (L > J){ V = constrain(O[J],0,10); GSRWiFi.TransmitPower = RawWiFiTX[V]; }
+            J++; if (L > J){ V = O[J]; Options.BedTimeOrientation = (V & 1) ? true : false; }
+         }
     }
     if (WatchTime.DeadRTC) Options.Feedback = false;
     J++; if (L > J){
         V = ((O[J] & 224) >> 5);
-        Options.MasterRepeats = clamp(V,(WatchTime.DeadRTC ? 4 : 0),4);
-        Options.Turbo = clamp((O[J] & 31),0,10);
+        Options.MasterRepeats = constrain(V,(WatchTime.DeadRTC ? 4 : 0),4);
+        Options.Turbo = constrain((O[J] & 31),0,10);
     }
     J++; if (L > J){
         V = ((O[J] & 224) >> 5);
-        TimerDown.MaxTones = clamp(V,(WatchTime.DeadRTC ? 4 : 0),4);
-        TimerDown.MaxHours = clamp((O[J] & 31),0,23);
+        TimerDown.MaxTones = constrain(V,(WatchTime.DeadRTC ? 4 : 0),4);
+        TimerDown.MaxHours = constrain((O[J] & 31),0,23);
     }
-    J++; if (L > J) TimerDown.MaxMins = clamp(O[J],0,59);
+    J++; if (L > J) TimerDown.MaxMins = constrain(O[J],0,59);
 
     for (K = 0; K < 4; K++){
         J++; if (L > J){
             V = ((O[J] & 224) >> 5);
-            Alarms_Repeats[K] = clamp(V,(WatchTime.DeadRTC ? 4 : 0),4);
-            Alarms_Hour[K] = clamp((O[J] & 31),0,23);
+            Alarms_Repeats[K] = constrain(V,(WatchTime.DeadRTC ? 4 : 0),4);
+            Alarms_Hour[K] = constrain((O[J] & 31),0,23);
         }
-        J++; if (L > J) Alarms_Minutes[K] = clamp(O[J],0,59);
+        J++; if (L > J) Alarms_Minutes[K] = constrain(O[J],0,59);
         J++; if (L > J + 1){
             V = ((O[J + 1] & 255) << 8);
             Alarms_Active[K] = ((O[J] | V) & ALARM_NOTRIGGER); J++;
@@ -2852,6 +2947,7 @@ void WatchyGSR::StoreSettings(String FromUser){
     while (L > J){
         Ok = false;
         if (L > J){ // get APx
+            if (NewV > 129) { GSRWiFi.AP[A].TPWRIndex=constrain(O[J],0,10); J++; }
             W = O[J]; J++; S = "";
             if (L > J + (W - 1)) {  // Read APx.
                 for (I = 0; L > J && I < W; I++){
@@ -2877,7 +2973,7 @@ void WatchyGSR::StoreSettings(String FromUser){
     OTAFail = millis() - 598000;
 }
 // NVS code.
-String WatchyGSR::RetrieveSettings(){
+void WatchyGSR::RetrieveSettings(){
     String S = NVS.getString("GSR-Options");
     Options.NeedsSaving = false;
     StoreSettings(S);
@@ -2890,20 +2986,32 @@ void WatchyGSR::RecordSettings(){
 
 // Turbo Mode!
 void WatchyGSR::SetTurbo(){
-    TurboTime=millis();
-    LastButton=TurboTime;  // Here for speed.
-    Darkness.Last=LastButton;     // Keeps track of SleepMode.
+    if (Battery.Last > MinBattery){
+        TurboTime=millis();
+        LastButton=TurboTime;  // Here for speed.
+        //Darkness.Last=LastButton;     // Keeps track of SleepMode.
+    }
 }
 
 bool WatchyGSR::InTurbo() { return (!WatchTime.DeadRTC && Options.Turbo > 0 && TurboTime != 0 && millis() - TurboTime < (Options.Turbo * 1000)); }
 
+bool WatchyGSR::BedTime() {
+    if (Options.SleepEnd > Options.SleepStart) return (WatchTime.Local.Hour >= Options.SleepStart && WatchTime.Local.Hour < Options.SleepEnd);
+    return (WatchTime.Local.Hour >= Options.SleepStart || WatchTime.Local.Hour < Options.SleepEnd);
+}
+
+bool WatchyGSR::UpRight() {
+    uint8_t Direction = sensor.getDirection();
+    if (Options.Orientated || (BedTime() && Options.BedTimeOrientation)) return (Direction == DIRECTION_DISP_UP || Direction == DIRECTION_TOP_EDGE); // Return whether or not it is up.
+    return true;  // Fake it til you make it.
+}
+
 bool WatchyGSR::DarkWait(){
-    bool B = (Darkness.Last != 0 && (millis() - Darkness.Last) < (Options.SleepMode * 1000));
+    bool B = ((Options.SleepStyle > 0 || WatchTime.DeadRTC) && Darkness.Last != 0 && (millis() - Darkness.Last) < (Options.SleepMode * 1000));
         if (Options.SleepStyle == 2){
-            if (B) return B;
-            if (Options.SleepEnd > Options.SleepStart) { if (WatchTime.Local.Hour >= Options.SleepStart && WatchTime.Local.Hour < Options.SleepEnd) return false; }
-            else if (WatchTime.Local.Hour >= Options.SleepStart || WatchTime.Local.Hour < Options.SleepEnd) return false;
-        }else if (Options.SleepStyle > 0) return B;
+            if (!BedTime()) return false;
+            return B;
+        }else if (Options.SleepStyle > 0 || WatchTime.DeadRTC) return B;
     return false;
 }
 
@@ -2919,36 +3027,38 @@ bool WatchyGSR::Showing() {
             if (B) return B;
             if (Options.SleepEnd > Options.SleepStart) { if (WatchTime.Local.Hour >= Options.SleepStart && WatchTime.Local.Hour < Options.SleepEnd) return false; }
             else if (WatchTime.Local.Hour >= Options.SleepStart || WatchTime.Local.Hour < Options.SleepEnd) return false;
-        }
+        }else if (Options.SleepStyle > 2) return B;
     }
     return true;
 }
 
 void WatchyGSR::RefreshCPU(){ RefreshCPU(0); }
 void WatchyGSR::RefreshCPU(int Value){
-    uint32_t C;
-    if (WatchTime.DeadRTC || Options.Performance == 2) C = 80;
-    else C = (InTurbo() || Value == CPUMID) ? 160 : 80;
-    if (Value == CPUMAX) CPUSet.Locked = true;
-    if (Value == CPUDEF) CPUSet.Locked = false;
-    if (WatchyAPOn || OTAUpdate || GSRWiFi.Requests > 0 || CPUSet.Locked || (Options.Performance == 0 && !WatchTime.DeadRTC)) C = 240;
+    uint32_t C = 80;
+    if (!WatchTime.DeadRTC && Battery.Last > MinBattery) {
+        if (Value == CPUMAX) CPUSet.Locked = true;
+        if (Value == CPUDEF) CPUSet.Locked = false;
+        if (!CPUSet.Locked && Options.Performance != 2) C = (InTurbo() || Value == CPUMID) ? 160 : 80;
+        if (WatchyAPOn || OTAUpdate || GSRWiFi.Requests > 0 || CPUSet.Locked || Options.Performance == 0) C = 240;
+    }
     if (C != CPUSet.Freq) if (setCpuFrequencyMhz(C)); CPUSet.Freq = C;
 }
 
-// Debugging here.
+// Function to find the existing WiFi power in the static index.
 
-void WatchyGSR::DBug(String Value){
-    if (USEDEBUG){
-        if (!SerialSetup){
-            Serial.begin(115200);
-            SerialSetup=true;
-        }
-        Serial.println(Value);
-    }
+uint8_t WatchyGSR::getTXOffset(wifi_power_t Current){
+    uint8_t I;
+    for (I = 0; I < 11; I++){ if (RawWiFiTX[I] == Current) return I; }
+    return 0;
 }
 
-String WatchyGSR::ToHex(uint64_t Value){
-  unsigned long long1 = (unsigned long)((Value & 0xFFFF0000) >> 16 );
-  unsigned long long2 = (unsigned long)((Value & 0x0000FFFF));
-  return String(long1, HEX) + String(long2, HEX);
+void WatchyGSR::DisplayInit(bool ForceDark){
+  display.epd2.setDarkBorder(Options.Border | ForceDark);
+  if (Updates.Init){
+    display.init(0,Rebooted,10,true);  // Force it here so it fixes the border.
+    Updates.Init=false;
+    Rebooted=false;
+  }
 }
+
+void WatchyGSR::DisplaySleep(){ if (!Updates.Init) { Updates.Init = true; display.hibernate(); } }
