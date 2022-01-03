@@ -1,6 +1,6 @@
 Compiling instructions:
 
-In order to compile this you need:  Arduino Libraries, ArduinoOTA AND Watchy (1.2.9 or greater) base.
+In order to compile this you need:  Arduino Libraries, ArduinoOTA, SmallRTC (GuruSR), SmallNTP (GuruSR), Olson2POSIX (GuruSR) AND Watchy (1.2.9 or greater) base.
 
 **VERSION 1.3.4 CHANGES**
 
