@@ -47,3 +47,10 @@
 - **ADD:**  Double Tap modes "On" and "Only".
 - **ADD:**  3 new repositories added with branched out functions:  SmallRTC (replacement of WatchyRTC), SmallNTP (industry standard NTP) and Olson2POSIX Timezone collection and setting.
 - **FIX:**  Fixed battery level control of Watchy, extremely low battery will stop updating the screen to prolong battery life, button presses will only work.
+
+**Version 1.3.6:**
+- **FIX:**  Corrected Timezone tests (they were backwards).
+- **FIX:**  Changed border from "Show/Hide" to "Light/Dark" to match Display Style.
+- **FIX:**  Updated BMA control to properly work with Double Tap, method is there for Wrist tilt, no motion setup for it at present.
+- **ADD:**  Functionality to block Non-Volatile Storage from being used, will erase and reboot the Watchy and stop using it for this Watchy face.
+- **FIX:**  Corrected NTP server to pool.ntp.org, it should work globally, though it does have a restriction on use, so expect it to fail if used too much.
