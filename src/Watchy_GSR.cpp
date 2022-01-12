@@ -11,6 +11,11 @@ int AlarmVBs[] = {0x01FE, 0x00CC, 0x01B6, 0x014A};
 const uint16_t Bits[10] = {1,2,4,8,16,32,64,128,256,512};
 const float Reduce[5] = {1.0,0.8,0.6,0.4,0.2};
 
+// Specific defines to this Watchy face.
+#define GName "GSR"
+#define GSettings "GSR-Options"
+#define GTZ "GSR-TZ"
+
 RTC_DATA_ATTR struct GSRWireless {
     bool Requested;          // Request WiFi.
     bool Working;            // Working on getting WiFi.
@@ -60,6 +65,26 @@ RTC_DATA_ATTR struct Optional {
     bool NeedsSaving;                 // NVS code to tell it things have been updated, so save to NVS.
     bool BedTimeOrientation;          // Make Buttons only work while Watch is in normal orientation.
 } Options;
+
+RTC_DATA_ATTR struct Designing {
+    struct MenuPOS {
+       byte Top;    // MenuTop 72
+       byte Header; // HeaderY 97
+       byte Data;   // DataY 138
+    } Menu;
+    struct FacePOS {
+       byte Time;   // TimeY 56
+       byte Day;    // DayY 101
+       byte Date;   // DateY 143
+       byte Year;   // YearY 186
+    } Face;
+    struct StatusPOS {
+        byte WIFIx;  // NTPX 5
+        byte WIFIy;  // NTPY 193
+        byte BATTx;  // 155
+        byte BATTy;  // 178
+    } Status;
+} Design;
 
 RTC_DATA_ATTR int GuiMode;
 RTC_DATA_ATTR bool VibeMode;          // Vibe Motor is On=True/Off=False, used for the Haptic and Alarms.
@@ -246,15 +271,16 @@ void WatchyGSR::init(String datetime){
             RefreshCPU(CPUDEF);
             UpdateUTC();
             WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
+            Button = getButtonMaskToID(wakeupBit);
             if (Options.SleepStyle != 4) UpdateDisp = !Showing();
-            if ((wakeupBit & ACC_INT_MASK) && Darkness.Went && Options.SleepStyle > 2){  // Accelerometer caused this.
-                while (!sensor.getINT()) {} // Clears the interrupt so it doesn't repeat!
-                if (UpRight()){
+            if (Darkness.Went && UpRight()){
+                if (Button == 5 && Options.SleepStyle > 1){  // Accelerometer caused this.
                     if (Options.SleepMode == 0) Options.SleepMode = 2;  // Do this to avoid someone accidentally not setting this before usage.
                     Updates.Tapped = true; Darkness.Last=millis(); UpdateDisp = true; // Update Screen to new state.
+                }else if (Button == 6){  // Wrist.
+                    Darkness.Last=millis(); UpdateDisp = true; // Do this anyways, always.
                 }
             }
-            Button = getButtonMaskToID(wakeupBit);
             break;
         default: //reset
             SRTC.init();
@@ -263,7 +289,7 @@ void WatchyGSR::init(String datetime){
             Rebooted=true;
             _bmaConfig();
             UpdateUTC();
-            B = NVS.getString("GSR-TZ",S);
+            if (OkNVS(GName)) B = NVS.getString(GTZ,S);
             OP.setCurrentPOSIX(S);
             RetrieveSettings();
             RefreshCPU(CPUDEF);
@@ -648,14 +674,14 @@ void WatchyGSR::drawTime(){
     display.setFont(&aAntiCorona36pt7b);
     display.setTextColor(FontColor());
 
-    display.getTextBounds(O, 0, TimeY, &x1, &y1, &w, &h);
+    display.getTextBounds(O, 0, Design.Face.Time, &x1, &y1, &w, &h);
     tw = (200 - w) /2;
-    display.setCursor(tw, TimeY);
+    display.setCursor(tw, Design.Face.Time);
     display.println(O);
 
     if (PM){
         tw=constrain(tw + w + 6, 0, 184);
-        display.drawBitmap(tw, TimeY - 45, PMIndicator, 6, 6, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+        display.drawBitmap(tw, Design.Face.Time - 45, PMIndicator, 6, 6, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
 //        display.fillRect(tw, TimeY - 45 ,6 ,6, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
     }
 }
@@ -668,9 +694,9 @@ void WatchyGSR::drawDay(){
     O = dayStr(WatchTime.Local.Wday + 1);
     display.setFont(&aAntiCorona16pt7b);
     display.setTextColor(FontColor());
-    display.getTextBounds(O, 0, DayY, &x1, &y1, &w, &h);
+    display.getTextBounds(O, 0, Design.Face.Day, &x1, &y1, &w, &h);
     w = (200 - w) /2;
-    display.setCursor(w, DayY);
+    display.setCursor(w, Design.Face.Day);
     display.println(O);
 }
 
@@ -683,9 +709,9 @@ void WatchyGSR::drawDate(){
     display.setTextColor(FontColor());
     O = String(monthStr(WatchTime.Local.Month)) + " " + String(WatchTime.Local.Day);
     //O="September 30";
-    display.getTextBounds(O, 0, DateY, &x1, &y1, &w, &h);
+    display.getTextBounds(O, 0, Design.Face.Date, &x1, &y1, &w, &h);
     w = (200 - w) /2;
-    display.setCursor(w, DateY);
+    display.setCursor(w, Design.Face.Date);
     display.print(O);
 }
 
@@ -697,9 +723,9 @@ void WatchyGSR::drawYear(){
     display.setFont(&aAntiCorona16pt7b);
     display.setTextColor(FontColor());
     O = String(WatchTime.Local.Year + RTC_LOCALYEAR_OFFSET);  //1900
-    display.getTextBounds(O, 0, YearY, &x1, &y1, &w, &h);
+    display.getTextBounds(O, 0, Design.Face.Year, &x1, &y1, &w, &h);
     w = (200 - w) /2;
-    display.setCursor(w, YearY);
+    display.setCursor(w, Design.Face.Year);
     display.print(O);
 }
 
@@ -709,8 +735,8 @@ void WatchyGSR::drawMenu(){
     String O, S;
 
     display.setFont(&aAntiCorona12pt7b);
-    display.fillRect(0, MenuTop, 200, MenuHeight, Options.LightMode ? GxEPD_WHITE : GxEPD_BLACK);
-    display.drawBitmap(0, MenuTop, (Menu.Style == MENU_INOPTIONS) ? OptionsMenuBackground : MenuBackground, 200, MenuHeight, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+    display.fillRect(0, Design.Menu.Top, MenuWidth, MenuHeight, Options.LightMode ? GxEPD_WHITE : GxEPD_BLACK);
+    display.drawBitmap(0, Design.Menu.Top, (Menu.Style == MENU_INOPTIONS) ? OptionsMenuBackground : MenuBackground, MenuWidth, MenuHeight, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
     display.setTextColor(Options.LightMode && Menu.Style != MENU_INNORMAL ? GxEPD_WHITE : GxEPD_BLACK);
     switch (Menu.Item){
         case MENU_STEPS:
@@ -837,10 +863,23 @@ void WatchyGSR::drawMenu(){
             break;
         case MENU_TOFF:
             if (WatchTime.DeadRTC) O = "Return to RTC"; else O = "Detect Travel";
+            break;
+        case MENU_UNVS:
+            switch (Menu.SubItem){
+                case 0:
+                    O = "Storage Settings";
+                    break;
+                case 1:
+                    O = "Change Storage";
+                    break;
+                case 2:
+                    O = "Delete and Reboot";
+                    break;
+            }
     }
-    display.getTextBounds(O, 0, HeaderY, &x1, &y1, &w, &h);
+    display.getTextBounds(O, 0, Design.Menu.Header, &x1, &y1, &w, &h);
     w = (196 - w) /2;
-    display.setCursor(w + 2, HeaderY);
+    display.setCursor(w + 2, Design.Menu.Header);
     display.print(O);
     display.setTextColor(GxEPD_BLACK);  // Only show menu in Light mode
     if (Menu.Item == MENU_STEPS){  //Steps
@@ -977,9 +1016,9 @@ void WatchyGSR::drawMenu(){
         }
     }else if (Menu.Item == MENU_BRDR){  // Border Mode
         if (Options.Border){
-            O = "Hide";
+            O = "Dark";
         }else {
-            O = "Show";
+            O = "Light";
         }
     }else if (Menu.Item == MENU_ORNT){  // Watchy Orientation.
         if (Options.Orientated){
@@ -1106,25 +1145,43 @@ void WatchyGSR::drawMenu(){
             case 3:
                 if (WatchTime.DeadRTC) O = "Bad RTC"; else { if (Options.UsingDrift){ if (Options.Drift< 0) O = "+" + String(0 - Options.Drift) + " " + MakeSeconds(0 - Options.Drift); else O = "-" + String(Options.Drift) + " " + MakeSeconds(Options.Drift); } else O = "No Drift"; }
         }
+    }else if (Menu.Item == MENU_UNVS){  // USE NVS
+        switch (Menu.SubItem){
+            case 0:
+                O = (OkNVS(GName) ? "Menu to Disable" : "Menu to Enable");
+                break;
+            case 1:
+                O = (Menu.SubSubItem == 0 ? "MENU to Keep" : "Menu to Change");
+                break;
+            case 2:
+                O = "Delete and Reboot";
+                break;
+        }
     }
+
     if (O > ""){
-        display.getTextBounds(O, 0, DataY, &x1, &y1, &w, &h);
+        display.getTextBounds(O, 0, Design.Menu.Data, &x1, &y1, &w, &h);
         w = (196 - w) /2;
-        display.setCursor(w + 2, DataY);
+        display.setCursor(w + 2, Design.Menu.Data);
         display.print(O);
     }
 }
 
 void WatchyGSR::deepSleep(){
   uint8_t I;
+  bool BT = (Options.SleepStyle == 2 && BedTime());
+  bool B = ((Options.SleepStyle == 1 || Options.SleepStyle > 2) || BT);
   bool BatOk = (Battery.Last == 0 || Battery.Last > LowBattery);
+
+  UpdateBMA();
   GoDark();
   if (Options.NeedsSaving) RecordSettings();
   DisplaySleep();
   for(I = 0; I < 40; I++) { pinMode(I, INPUT); }
-  esp_sleep_enable_ext1_wakeup(((Options.SleepStyle > 2 && !WatchTime.DeadRTC && BatOk) ? ACC_INT_MASK : 0) | BTN_PIN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
+  esp_sleep_enable_ext1_wakeup(((B && !WatchTime.DeadRTC && BatOk) ? (BMA432_INT1_MASK | BMA432_INT2_MASK) : 0) | BTN_PIN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
   esp_sleep_enable_ext0_wakeup(RTC_PIN, 0); //enable deep sleep wake on RTC interrupt
-  SRTC.nextMinuteWake();
+  if (BT) SRTC.atMinuteWake((WatchTime.UTC.Minute < 30 ? 30 : 0));
+  else SRTC.nextMinuteWake();
   esp_deep_sleep_start();
 }
 
@@ -1136,7 +1193,7 @@ void WatchyGSR::GoDark(){
     display.setFullWindow();
     DisplayInit(true);  // Force it here so it fixes the border.
     display.fillScreen(GxEPD_BLACK);
-    if (Battery.Last < MinBattery) display.drawBitmap(155, 178, (Battery.Last < LowBattery ? ChargeMeBad : ChargeMe), 40, 17, GxEPD_WHITE); else if (Battery.Direction == 1) display.drawBitmap(155, 178, Charging, 40, 17, GxEPD_WHITE);
+    if (Battery.Last < MinBattery) display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < LowBattery ? ChargeMeBad : ChargeMe), 40, 17, GxEPD_WHITE); else if (Battery.Direction == 1) display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, Charging, 40, 17, GxEPD_WHITE);
     Battery.DarkDirection = Battery.Direction;
     display.display(true);
     Updates.Drawn=false;
@@ -1158,7 +1215,7 @@ void WatchyGSR::detectBattery(){
             // Check if the NTP has been done.
             if (WatchTime.UTC_RAW - NTPData.Last > 14400 && NTPData.State == 0){
                 NTPData.State = 1;
-                NTPData.TimeZone = (OP.getCurrentPOSIX() != OP.TZMISSING);   // No Timezone, go get one!
+                NTPData.TimeZone = (OP.getCurrentPOSIX() == OP.TZMISSING);   // No Timezone, go get one!
                 NTPData.UpdateUTC = true;
                 AskForWiFi();
             }
@@ -1222,7 +1279,7 @@ void WatchyGSR::ProcessNTP(){
 //      HTTP.begin(WiFiC, TZURL);  // Call it and leave.
       OP.beginOlsonFromWeb();
       NTPData.Wait = 0;
-      NTPData.Pause = 80;
+      NTPData.Pause = 20;
       break;
   }
 
@@ -1255,7 +1312,7 @@ void WatchyGSR::ProcessNTP(){
           NTPData.State = 99;
           break;
       }
-      B = NVS.setString("GSR-TZ",NewTZ);
+      if (OkNVS(GName)) B = NVS.setString(GTZ,NewTZ);
       OP.setCurrentPOSIX(NewTZ);
       NTPData.Wait = 0;
       NTPData.Pause = 0;
@@ -1321,33 +1378,33 @@ void WatchyGSR::drawChargeMe(){
   int8_t D = 0;
   if (Battery.Direction == 1){
       // Show Battery charging bitmap.
-      display.drawBitmap(155, 178, Charging, 40, 17, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, Charging, 40, 17, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
       D = 2;
   }else if (Battery.Last < MinBattery){
       // Show Battery needs charging bitmap.
-      display.drawBitmap(155, 178, (Battery.Last < LowBattery ? ChargeMeBad : ChargeMe), 40, 17, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < LowBattery ? ChargeMeBad : ChargeMe), 40, 17, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
       D = 1;
   }
 }
 
 void WatchyGSR::drawStatus(){
   if (WatchyStatus > ""){
-      display.fillRect(NTPX, NTPY - 19, 60, 20, Options.LightMode ? GxEPD_WHITE : GxEPD_BLACK);
+      display.fillRect(Design.Status.WIFIx, Design.Status.WIFIy - 19, 60, 20, Options.LightMode ? GxEPD_WHITE : GxEPD_BLACK);
       display.setFont(&Bronova_Regular13pt7b);
       if (WatchyStatus.startsWith("WiFi")){
-          display.drawBitmap(NTPX, NTPY - 18, iWiFi, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+          display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iWiFi, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
           if (WatchyStatus.length() > 4){
-              display.setCursor(NTPX + 17, NTPY);
+              display.setCursor(Design.Status.WIFIx + 17, Design.Status.WIFIy);
               display.setTextColor(Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
               display.print(WatchyStatus.substring(4));
           }
       }
-      else if (WatchyStatus == "TZ") display.drawBitmap(NTPX, NTPY - 18, iTZ, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
-      else if (WatchyStatus == "NTP") display.drawBitmap(NTPX, NTPY - 18, iSync, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
-      else if (WatchyStatus == "ESP")  display.drawBitmap(NTPX, NTPY - 18, iSync, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+      else if (WatchyStatus == "TZ") display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iTZ, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+      else if (WatchyStatus == "NTP") display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iSync, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+      else if (WatchyStatus == "ESP")  display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iSync, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
       else{
           display.setTextColor(Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
-          display.setCursor(NTPX, NTPY);
+          display.setCursor(Design.Status.WIFIx, Design.Status.WIFIy);
           display.print(WatchyStatus);
       }
   }
@@ -1368,7 +1425,7 @@ void WatchyGSR::VibeTo(bool Mode){
             digitalWrite(VIB_MOTOR_PIN, true);
         }else{
             digitalWrite(VIB_MOTOR_PIN, false);
-            sensor.enableFeature(BMA423_WAKEUP, true);
+            sensor.enableFeature(BMA423_WAKEUP,(Options.SleepStyle > 2 && BedTime()));
         }
         VibeMode = Mode;
     }
@@ -1382,6 +1439,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
   if (!UpRight()) return; // Don't do buttons if not upright.
   if (LastButton > 0 && (millis() - LastButton) < KEYPAUSE) return;
   if (Darkness.Went) { Darkness.Last=millis(); UpdateDisp=true; return; }  // Don't do the button, just exit.
+  if ((NTPData.TimeTest || OTAUpdate) && (Pressed == 3 || Pressed == 4)) return;  // Up/Down don't work in these modes.
 
   switch (Pressed){
     case 1:
@@ -1536,7 +1594,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                       switch (Menu.SubItem){
                         case 1:
                           NTPData.UpdateUTC = true;
-                          NTPData.TimeZone = (OP.getCurrentPOSIX() != OP.TZMISSING);   // No Timezone, go get one!
+                          NTPData.TimeZone = (OP.getCurrentPOSIX() == OP.TZMISSING);   // No Timezone, go get one!
                           break;
                         case 2:
                           NTPData.UpdateUTC = false;
@@ -1649,6 +1707,20 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
+              }else if (Menu.Item == MENU_UNVS){  // USE NVS
+                  if (Menu.SubItem == 0) Menu.SubItem++;
+                  else if (Menu.SubItem == 1){
+                      if (Menu.SubSubItem == 1){
+                          if (OkNVS(GName)) Menu.SubItem == 2;  // delete, request
+                          else { SetNVS(GName,true); Menu.SubItem = 0; Menu.SubSubItem = 0; }
+                      }else Menu.SubItem = 0; // Keep, don't change.
+                  }else if (Menu.SubItem == 2){
+                      NVSEmpty();
+                      ESP.restart();
+                  }
+                  DoHaptic = true;
+                  UpdateDisp = true;  // Quick Update.
+                  SetTurbo();
               }
           }
           break;
@@ -1735,6 +1807,12 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
               }
+          }else if (Menu.Item == MENU_UNVS){  // USE NVS
+              Menu.SubItem = 0;
+              Menu.SubSubItem = 0;
+              DoHaptic = true;
+              UpdateDisp = true;  // Quick Update.
+              SetTurbo();
           }else{
               GuiMode = WATCHON;
               Menu.SubItem = 0;
@@ -1894,6 +1972,14 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               // Do nothing!
           }else if (Menu.Item == MENU_TOFF && Menu.SubItem > 0){
               // Do nothing!
+          }else if (Menu.Item == MENU_UNVS && Menu.SubItem == 1){  // USE NVS
+              if (Menu.SubSubItem == 1){
+                  Menu.SubSubItem = 0;
+                  DoHaptic = true;
+                  UpdateDisp = true;  // Quick Update.
+                  SetTurbo();
+              }
+              return;
           }else{
               if (Menu.Style == MENU_INOPTIONS){
                   Menu.Item = roller(Menu.Item - 1, MENU_DISP, (NTPData.State > 0 || WatchyAPOn || OTAUpdate || Battery.Last < MinBattery) ? MENU_TRBL : MENU_OTAM);
@@ -1902,7 +1988,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               }else if (Menu.Style == MENU_INTIMERS){
                   Menu.Item = roller(Menu.Item - 1, MENU_TIMEDN, MENU_TIMEUP);
               }else if (Menu.Style == MENU_INTROUBLE){
-                  Menu.Item = roller(Menu.Item - 1, MENU_SCRN, MENU_TOFF);
+                  Menu.Item = roller(Menu.Item - 1, MENU_SCRN, MENU_UNVS);
               }else{
                   Menu.Item = roller(Menu.Item - 1, MENU_STEPS, MENU_OPTIONS);
               }
@@ -2064,6 +2150,14 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               // Do nothing!
           }else if (Menu.Item == MENU_TOFF && Menu.SubItem > 0){
               // Do nothing!
+          }else if (Menu.Item == MENU_UNVS && Menu.SubItem == 1){  // USE NVS
+              if (Menu.SubSubItem == 0){
+                  Menu.SubSubItem = 1;
+                  DoHaptic = true;
+                  UpdateDisp = true;  // Quick Update.
+                  SetTurbo();
+              }
+              return;
           }else{
               if (Menu.Style == MENU_INOPTIONS){
                   Menu.Item = roller(Menu.Item + 1, MENU_DISP, (NTPData.State > 0 || WatchyAPOn || OTAUpdate || Battery.Last < MinBattery) ? MENU_TRBL : MENU_OTAM);
@@ -2072,7 +2166,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               }else if (Menu.Style == MENU_INTIMERS){
                   Menu.Item = roller(Menu.Item + 1, MENU_TIMEDN, MENU_TIMEUP);
               }else if (Menu.Style == MENU_INTROUBLE){
-                  Menu.Item = roller(Menu.Item + 1, MENU_SCRN, MENU_TOFF);
+                  Menu.Item = roller(Menu.Item + 1, MENU_SCRN, MENU_UNVS);
               }else{
                   Menu.Item = roller(Menu.Item + 1, MENU_STEPS, MENU_OPTIONS);
               }
@@ -2097,6 +2191,7 @@ void WatchyGSR::UpdateUTC(){
 
 void WatchyGSR::UpdateClock(){
     struct tm * TM;
+
     OP.setCurrentTimeZone();
     TM = localtime(&WatchTime.UTC_RAW);
     WatchTime.Local.Second = TM->tm_sec;
@@ -2248,7 +2343,7 @@ void WatchyGSR::_bmaConfig() {
   // Enable BMA423 isTilt feature
   //sensor.enableFeature(BMA423_TILT, true);
   // Enable BMA423 isDoubleClick feature
-  sensor.enableFeature(BMA423_WAKEUP, true);
+//  sensor.enableFeature(BMA423_WAKEUP, true);
 
   // Reset steps
   //sensor.resetStepCounter();
@@ -2257,7 +2352,16 @@ void WatchyGSR::_bmaConfig() {
   //sensor.enableStepCountInterrupt();
   //sensor.enableTiltInterrupt();
   // It corresponds to isDoubleClick interrupt
-  sensor.enableWakeupInterrupt();
+//  sensor.enableWakeupInterrupt();
+}
+
+void WatchyGSR::UpdateBMA(){
+    bool BT = (Options.SleepStyle == 2 && BedTime());
+    bool B = (Options.SleepStyle > 2);
+
+    sensor.enableFeature(BMA423_WAKEUP,B || BT);
+    sensor.enableFeature(BMA423_TILT,(Options.SleepStyle == 1));
+    sensor.enableWakeupInterrupt(Options.SleepStyle == 1 || B || BT);
 }
 
 float WatchyGSR::getBatteryVoltage(){ return ((BatteryRead() - 0.0125) +  (BatteryRead() - 0.0125) + (BatteryRead() - 0.0125) + (BatteryRead() - 0.0125)) / 4; }
@@ -2489,6 +2593,12 @@ uint8_t WatchyGSR::getButtonMaskToID(uint64_t HW){
       else if (HW & BACK_BTN_MASK) return Options.Lefty ? 3 : getSwapped(2);   // Back Button [SW2]
       else if (HW & UP_BTN_MASK)   return Options.Lefty ? getSwapped(2) : 3;     // Up Button [SW3]
       else if (HW & DOWN_BTN_MASK) return Options.Lefty ? getSwapped(1) : 4;   // Down Button [SW4]
+      else if ((HW & BMA432_INT1_MASK) || (HW & BMA432_INT2_MASK)) {           // Acccelerometer.
+          sensor.getINT();
+          int IRQMask = sensor.getIRQMASK();
+          if (IRQMask & BMA423_WAKEUP_INT) return 5;  // Double Tap.
+          else if (IRQMask & BMA423_TILT_INT) return 6;  // Wrist Tilt.
+      }
    return 0;
 }
 
@@ -2691,6 +2801,17 @@ String WatchyGSR::PASStoString(uint8_t Index){
 void WatchyGSR::initZeros(){
     String S = "";
     uint8_t I;
+    Design.Menu.Top = 72;
+    Design.Menu.Header = 97;
+    Design.Menu.Data = 138;
+    Design.Face.Time = 56;
+    Design.Face.Day = 101;
+    Design.Face.Date = 143;
+    Design.Face.Year = 186;
+    Design.Status.WIFIx = 5;
+    Design.Status.WIFIy = 193;
+    Design.Status.BATTx = 155;
+    Design.Status.BATTy = 178;
     GuiMode = WATCHON;
     VibeMode = 0;
     WatchyStatus = "";
@@ -2972,14 +3093,45 @@ void WatchyGSR::StoreSettings(String FromUser){
 }
 // NVS code.
 void WatchyGSR::RetrieveSettings(){
-    String S = NVS.getString("GSR-Options");
+    if (OkNVS(GName)){
+        String S = NVS.getString(GSettings);
+        StoreSettings(S);
+    }
     Options.NeedsSaving = false;
-    StoreSettings(S);
 }
 
 void WatchyGSR::RecordSettings(){
-    bool B = NVS.setString("GSR-Options",GetSettings());
+    bool B = true;
+    if (OkNVS(GName)) B = NVS.setString(GSettings,GetSettings());
     Options.NeedsSaving = !B;
+}
+
+bool WatchyGSR::OkNVS(String FaceName){
+    String S = NVS.getString("NoNVS");
+    String R = ".#.";
+    R.replace("#",FaceName);
+    return (S.indexOf(R) < 0);
+}
+
+void WatchyGSR::SetNVS(String FaceName, bool Enabled){
+    String S = NVS.getString("NoNVS");
+    String R = ".#.";
+    R.replace("#",FaceName);
+    int I = S.indexOf(R);
+    if (!Enabled) {
+        if (I == 0) {
+            S += R;
+            bool B = NVS.setString("NoNVS",S);
+        }else if (I > -1){
+            S.replace(R,"");
+            bool B = NVS.setString("NoNVS",S);
+        }
+    }
+}
+
+void WatchyGSR::NVSEmpty(){
+    NVS.erase(GSettings);
+    NVS.erase(GTZ);
 }
 
 // Turbo Mode!

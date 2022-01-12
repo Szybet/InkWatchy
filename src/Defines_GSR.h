@@ -2,7 +2,7 @@
 #define DEFINES_GSR_H
 
 // Time Sync Server
-#define ntpServer "time.nrc.ca"
+#define ntpServer "pool.ntp.org"
 
 //debug
 #define USEDEBUG 0  // !0 is on, will not setup Serial OR print output if zero.
@@ -32,21 +32,15 @@
 #define WATCHON 0
 #define MENUON 1
 
-// Nenu offset defines.
-#define MenuTop 72
+// Nenu size defines.
+#define MenuWidth 200
 #define MenuHeight 83
-#define HeaderY 97
-#define DataY 138
 
-// Watchface offset defines.
-#define TimeY 56
-#define DayY 101
-#define DateY 143
-#define YearY 186
-
-// NTP & TZ Offset defines.
-#define NTPY 193
-#define NTPX 5
+// BMA For Tilt/DTap
+#define BMA432_INT1_PIN 14
+#define BMA432_INT2_PIN 12
+#define BMA432_INT1_MASK (1<<BMA432_INT1_PIN)
+#define BMA432_INT2_MASK (1<<BMA432_INT2_PIN)
 
 // Menu offsets so I don't have to statically entere them everywhere.
 #define MENU_STEPS 0
@@ -80,6 +74,7 @@
 #define MENU_SCRN 28
 #define MENU_RSET 29
 #define MENU_TOFF 30  // Time Diff offset.
+#define MENU_UNVS 31
 
 // Menu segments.
 #define MENU_INNORMAL 0

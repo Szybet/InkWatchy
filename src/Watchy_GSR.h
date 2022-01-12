@@ -37,7 +37,7 @@ class WatchyGSR{
 //        static WatchyRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.3.5";
+        static constexpr const char* Build = "1.3.6";
     public:
         WatchyGSR();
         void init(String datetime = "");
@@ -68,6 +68,7 @@ class WatchyGSR{
         void ManageTime();
         void _rtcConfig();
         void _bmaConfig();
+        void UpdateBMA();
         static uint16_t _readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
         static uint16_t _writeRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
         uint16_t FontColor();
@@ -106,6 +107,9 @@ class WatchyGSR{
         void StoreSettings(String FromUser);
         void RetrieveSettings();
         void RecordSettings();
+        bool OkNVS(String FaceName);
+        void SetNVS(String FaceName, bool Enabled = true);
+        void NVSEmpty();
         void SetTurbo();
         bool InTurbo();
         bool BedTime();
