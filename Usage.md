@@ -7,30 +7,31 @@ This Watchy "face" contains the following heiarchy of options and settings:
 
 **Legend**:  **{}** items are defaults.
 
-|Menu | Sub-Menu Item | Function Description |
-|---- | ------------- | -------------------- |
-|**Steps** | Reset Time        | Reset Steps ... Use Menu information for more help. |
-|**Alarms** | Alarms #         |  HH:MM -> Full -> Days + Repeat + Active settings |
-|           | Tone Repeats     |  **{Full}** repeats.  Allows you to reduce the amount of alarm tones that repeat (80%-20% in 20% increments).  Resets the tone repeats for all alarms when you change this. |
-|**Timers** | Countdown Timer  | HH:MM -> {Full} -> On/**{Off}**  (Full, see Tone Repeats above for information). |
-|           | Elapsed Time     | HH:MM On/**{Off}** |
-|**Options** | Display Style   | **{Light}** or Dark mode. |
-|            | Border Mode     | Border around the display:  **{Show}** (White) or Hide (Black). |
-|            | Dexterity       | Swap the Back/Menu with UP/DOWN for left-handed users. |
-|            | Menu & Back     | **{Normal}** or Swap the Menu & Back button positions. |
-|            | Orientation     | Ignore button on Watchy orientation:  **{Ignore}** or Watchy UP. |
-|            | Time Mode       | **{AM/PM}** or 24 Hour mode of time display. |
-|            | Feedback        | **{Enable}** or Disable haptic feedback on button presses (during use). |
-|            | Turbo Time      | How many seconds Watchy stays active after your last button press before sleeping. |
-|            | Screen Off      | Enables "Always", Disabled or "Bed Time" screen blanking (which uses no cpu to update display, battery savings). |
-|            | Performance     | Offers **{Turbo}**, Normal and Battery Saving [3] options, reduces responsiveness as you go away from Turbo. |
-|            | Sync Watchy     | Sync Watchy RTC by Time, TimeZone, TimeZone & Time |
-|            | Watchy Connect  | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. "BACK" to immediately exit |
-|            | OTA Update      | Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.) |
-|            | OTA Website     | Website offers Backup & Restore of Settings, WiFi AP Settings and WiFi OTA upload of a bin file.  (ESCAPE by holding "BACK" for 10 seconds.) |
-|**Troubleshoot** | Reset Screen    | Reset screen if artifacting or ghosting is happening. |
-|                 | Watchy Reboot   | Reboot the Watchy in the event something stops working. |
-|                 | Detect Drift    | Detect drift in RTC clock (takes 2 minutes). Excessive drift enters non-RTC mode. [1] |
+|Menu | Sub-Menu Item  | Function Description |
+|---- | -------------  | -------------------- |
+|**Steps** | Reset Time         | Reset Steps ... Use Menu information for more help. |
+|**Alarms** | Alarms #          |  HH:MM -> Full -> Days + Repeat + Active settings |
+|           | Tone Repeats      |  **{Full}** repeats.  Allows you to reduce the amount of alarm tones that repeat (80%-20% in 20% increments).  Resets the tone repeats for all alarms when you change this. |
+|**Timers** | Countdown Timer   | HH:MM -> {Full} -> On/**{Off}**  (Full, see Tone Repeats above for information). |
+|           | Elapsed Time      | HH:MM On/**{Off}** |
+|**Options** | Display Style    | **{Light}** or Dark mode. |
+|            | Border Mode      | Border around the display:  **{Show}** (White) or Hide (Black). |
+|            | Dexterity        | Swap the Back/Menu with UP/DOWN for left-handed users. |
+|            | Menu & Back      | **{Normal}** or Swap the Menu & Back button positions. |
+|            | Orientation      | Ignore button on Watchy orientation:  **{Ignore}** or Watchy UP. |
+|            | Time Mode        | **{AM/PM}** or 24 Hour mode of time display. |
+|            | Feedback         | **{Enable}** or Disable haptic feedback on button presses (during use). |
+|            | Turbo Time       | How many seconds Watchy stays active after your last button press before sleeping. |
+|            | Screen Off       | Enables "Always", Disabled or "Bed Time" screen blanking (which uses no cpu to update display, battery savings). |
+|            | Performance      | Offers **{Turbo}**, Normal and Battery Saving [3] options, reduces responsiveness as you go away from Turbo. |
+|            | Sync Watchy      | Sync Watchy RTC by Time, TimeZone, TimeZone & Time |
+|            | Watchy Connect   | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. "BACK" to immediately exit |
+|            | OTA Update       | Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.) |
+|            | OTA Website      | Website offers Backup & Restore of Settings, WiFi AP Settings and WiFi OTA upload of a bin file.  (ESCAPE by holding "BACK" for 10 seconds.) |
+|**Troubleshoot** | Reset Screen     | Reset screen if artifacting or ghosting is happening. |
+|                 | Watchy Reboot    | Reboot the Watchy in the event something stops working. |
+|                 | Detect Drift     | Detect drift in RTC clock (takes 2 minutes). Excessive drift enters non-RTC mode. [1] |
+|                 | Storage Settings | Allows you to disable Non-Volatile Storage of settings for this Watchy face (or re-enable them). [4] |
             
 Button usage:
 
@@ -106,3 +107,5 @@ WiFi options in the Options menu will not be available if the low battery indica
 [2]  "Always" mode is used during non-RTC mode, with the exception that menus are ignored (acting like "Bed Time" mode).
 
 [3]  "Battery Saving" is forced on when using non-RTC mode.
+
+[4]  Disabling Non-Volatile Storage will ask for you to select you want to proceed, if you proceed the NVS will have the settings removed, Watchy will reboot and will continue to not store any settings in the NVS.
