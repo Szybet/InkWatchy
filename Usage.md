@@ -15,7 +15,7 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |**Timers** | Countdown Timer   | HH:MM -> {Full} -> On/**{Off}**  (Full, see Tone Repeats above for information). |
 |           | Elapsed Time      | HH:MM On/**{Off}** |
 |**Options** | Display Style    | **{Light}** or Dark mode. |
-|            | Border Mode      | Border around the display:  **{Show}** (White) or Hide (Black). |
+|            | Border Mode      | Border around the display:  **{Light}** (White) or Dark (Black). |
 |            | Dexterity        | Swap the Back/Menu with UP/DOWN for left-handed users. |
 |            | Menu & Back      | **{Normal}** or Swap the Menu & Back button positions. |
 |            | Orientation      | Ignore button on Watchy orientation:  **{Ignore}** or Watchy UP. |
