@@ -22,7 +22,7 @@
 #include <Wire.h>
 #include <bma.h>
 
-#include "icons.h"
+#include "Icons_GSR.h"
 #include "ArduinoNvs.h"
 
 #include "aAntiCorona15pt7b.h"
@@ -34,32 +34,44 @@
 class WatchyGSR{
     public:
         static SmallRTC SRTC;
-//        static WatchyRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.3.6";
+        static constexpr const char* Build = "1.3.7";
     public:
         WatchyGSR();
-        void init(String datetime = "");
+        virtual void init(String datetime = "") final;
         void showWatchFace();
         void drawWatchFace(); //override this method for different watch faces
         void drawTime();
         void drawDay();
         void drawDate();
         void drawYear();
-        void handleButtonPress(uint8_t Pressed);
-        virtual void deepSleep();
-        float getBatteryVoltage();
-        float BatteryRead();
-        bool IsDark();
-        IRAM_ATTR void handleInterrupt();
-   private:
+        virtual void handleButtonPress(uint8_t Pressed) final;
+        virtual void deepSleep() final;
+        virtual float getBatteryVoltage() final;
+        virtual float BatteryRead() final;
+        virtual bool IsDark() final;
+        IRAM_ATTR virtual void handleInterrupt() final;
         void drawChargeMe();
         void drawStatus();
+        virtual void VibeTo(bool Mode) final;
+        virtual String MakeTime(int Hour, int Minutes, bool& Alarm) final;
+        virtual String MakeHour(uint8_t Hour) final;
+        virtual String MakeMinutes(uint8_t Minutes) final;
+        virtual uint16_t ForeColor() final;
+        virtual uint16_t BackColor() final;
+        void InsertPost();
+        void InsertBitmap();
+        void InsertDefaults();
+        void InsertOnMinute();
+        void InsertWiFi();
+        void InsertWiFiEnding();
+        virtual void AskForWiFi() final;
+        virtual wl_status_t currentWiFi() final;
+        virtual void endWiFi() final;
+   private:
         void setStatus(String Status);
         void drawMenu();
-        void VibeTo(bool Mode);
-        //void handleAccelerometer();
         void GoDark();
         void detectBattery();
         void ProcessNTP();
@@ -71,12 +83,9 @@ class WatchyGSR{
         void UpdateBMA();
         static uint16_t _readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
         static uint16_t _writeRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len);
-        uint16_t FontColor();
-        String MakeTime(int Hour, int Minutes, bool& Alarm);
-        String MakeHour(uint8_t Hour);
-        String MakeSeconds(uint8_t Seconds);
+        void UpdateFonts();
         String MakeTOD(uint8_t Hour, bool AddZeros);
-        String MakeMinutes(uint8_t Minutes);
+        String MakeSeconds(uint8_t Seconds);
         String MakeSteps(uint32_t uSteps);
         void CheckAlarm(int I);
         void CheckCD();
@@ -88,14 +97,11 @@ class WatchyGSR{
         uint8_t getButtonPins();
         uint8_t getButtonMaskToID(uint64_t HW);
         uint8_t getSwapped(uint8_t pIn);
-        void AskForWiFi();
         void processWiFiRequest();
         String WiFiIndicator(uint8_t Index);
         void UpdateWiFiPower(String SSID, String PSK);
         void UpdateWiFiPower(String SSID);
         void UpdateWiFiPower(uint8_t PWRIndex = 0);
-        wl_status_t currentWiFi();
-        void endWiFi();
         static void WiFiStationDisconnected(WiFiEvent_t event, WiFiEventInfo_t info);
         String buildWiFiAPPage();
         void parseWiFiPageArg(String ARG, String DATA);

@@ -16,7 +16,7 @@ const float Reduce[5] = {1.0,0.8,0.6,0.4,0.2};
 #define GSettings "GSR-Options"
 #define GTZ "GSR-TZ"
 
-RTC_DATA_ATTR struct GSRWireless {
+RTC_DATA_ATTR struct GSRWireless final {
     bool Requested;          // Request WiFi.
     bool Working;            // Working on getting WiFi.
     bool Results;            // Results of WiFi, found an AP?
@@ -33,19 +33,19 @@ RTC_DATA_ATTR struct GSRWireless {
     wifi_event_id_t WiFiEventID;
 } GSRWiFi;
 
-RTC_DATA_ATTR struct CPUWork {
+RTC_DATA_ATTR struct CPUWork final {
     uint32_t Freq;
     bool     Locked;
 } CPUSet;
 
-RTC_DATA_ATTR struct Stepping {
+RTC_DATA_ATTR struct Stepping final {
     uint8_t Hour;
     uint8_t Minutes;
     bool Reset;
     uint32_t Yesterday;
 } Steps;
 
-RTC_DATA_ATTR struct Optional {
+RTC_DATA_ATTR struct Optional final {
     bool TwentyFour;                  // If the face shows 24 hour or Am/Pm.
     bool LightMode;                    // Light/Dark mode.
     bool Feedback;                    // Haptic Feedback on buttons.
@@ -66,7 +66,7 @@ RTC_DATA_ATTR struct Optional {
     bool BedTimeOrientation;          // Make Buttons only work while Watch is in normal orientation.
 } Options;
 
-RTC_DATA_ATTR struct Designing {
+RTC_DATA_ATTR struct Designing final {
     struct MenuPOS {
        byte Top;    // MenuTop 72
        byte Header; // HeaderY 97
@@ -74,9 +74,18 @@ RTC_DATA_ATTR struct Designing {
     } Menu;
     struct FacePOS {
        byte Time;   // TimeY 56
+       byte TimeHeight; // 45
+       uint16_t TimeColor;  // Font Color.
+       const GFXfont *TimeFont; // Font.
        byte Day;    // DayY 101
+       uint16_t DayColor;  // Font Color.
+       const GFXfont *DayFont; // Font.
        byte Date;   // DateY 143
+       uint16_t DateColor;  // Font Color.
+       const GFXfont *DateFont; // Font.
        byte Year;   // YearY 186
+       uint16_t YearColor;  // Font Color.
+       const GFXfont *YearFont; // Font.
     } Face;
     struct StatusPOS {
         byte WIFIx;  // NTPX 5
@@ -90,7 +99,7 @@ RTC_DATA_ATTR int GuiMode;
 RTC_DATA_ATTR bool VibeMode;          // Vibe Motor is On=True/Off=False, used for the Haptic and Alarms.
 RTC_DATA_ATTR String WatchyStatus;    // Used for the indicator in the bottom left, so when it changes, it asks for a screen refresh, if not, it doesn't.
 
-RTC_DATA_ATTR struct TimeData {
+RTC_DATA_ATTR struct TimeData final {
     time_t UTC_RAW;           // Copy of the UTC on init.
     tmElements_t UTC;         // Copy of UTC only split up for usage.
     tmElements_t Local;       // Copy of the Local time on init.
@@ -103,7 +112,7 @@ RTC_DATA_ATTR struct TimeData {
     bool DeadRTC;             // Set when Drift fails to get a good count less than 30 seconds.
 } WatchTime;
 
-RTC_DATA_ATTR struct Countdown {
+RTC_DATA_ATTR struct Countdown final {
   bool Active;
   uint8_t Hours;
   uint8_t Mins;
@@ -115,13 +124,13 @@ RTC_DATA_ATTR struct Countdown {
   time_t LastUTC;
 } TimerDown;
 
-RTC_DATA_ATTR struct CountUp {
+RTC_DATA_ATTR struct CountUp final {
   bool Active;
   time_t SetAt;
   time_t StopAt;
 } TimerUp;
 
-RTC_DATA_ATTR struct BatteryUse {
+RTC_DATA_ATTR struct BatteryUse final {
     float Last;             // Used to track battery changes, only updates past 0.01 in change.
     int8_t Direction;       // -1 for draining, 1 for charging.
     int8_t DarkDirection;   // Direction copy for Options.SleepMode.
@@ -130,14 +139,14 @@ RTC_DATA_ATTR struct BatteryUse {
     int8_t LastState;       // 0=not visible, 1= showing chargeme, 2=showing charging.
 } Battery;
 
-RTC_DATA_ATTR struct MenuUse {
+RTC_DATA_ATTR struct MenuUse final {
     int8_t Style;           // MENU_INNORMAL or MENU_INOPTIONS
     int8_t Item;            // What Menu Item is being viewed.
     int8_t SubItem;         // Used for menus that have sub items, like alarms and Sync Time.
     int8_t SubSubItem;      // Used mostly in the alarm to offset choice.
 } Menu;
 
-RTC_DATA_ATTR struct NTPUse {
+RTC_DATA_ATTR struct NTPUse final {
     uint8_t State;          // State = 0=Off, 1=Start WiFi, 2=Wait for WiFi, TZ, send NTP request, etc, Finish.  See function ProcessNTP();
     uint8_t Wait;           // Counts up to 3 minutes, then fails.
     uint8_t Pause;          // How many 50ms to pause for.
@@ -149,12 +158,12 @@ RTC_DATA_ATTR struct NTPUse {
     bool NTPDone;           // Sets it to Done when an NTP has happened in the past.
 } NTPData;
 
-RTC_DATA_ATTR struct GoneDark {
+RTC_DATA_ATTR struct GoneDark final {
     bool Went;
     unsigned long Last;
 } Darkness;                     // Whether or not the screen is darkened.
 
-RTC_DATA_ATTR struct dispUpdate {
+RTC_DATA_ATTR struct dispUpdate final {
     bool Full;
     bool Drawn;
     bool Init;
@@ -222,6 +231,7 @@ void WatchyGSR::setupDefaults(){
     GSRWiFi.TransmitPower = WiFi.getTxPower();
     Steps.Hour = 6;
     Steps.Minutes = 0;
+    InsertDefaults();
 }
 
 void WatchyGSR::init(String datetime){
@@ -281,6 +291,7 @@ void WatchyGSR::init(String datetime){
                     Darkness.Last=millis(); UpdateDisp = true; // Do this anyways, always.
                 }
             }
+            InsertOnMinute();
             break;
         default: //reset
             SRTC.init();
@@ -298,6 +309,8 @@ void WatchyGSR::init(String datetime){
             UpdateUTC();
             UpdateClock();
             AlarmIndex=0;
+            UpdateFonts();
+            InsertPost();
             AlarmsOn=false;
             WaitForNext=false;
             Updates.Full=true;
@@ -327,7 +340,7 @@ void WatchyGSR::init(String datetime){
 
         CalculateTones(); monitorSteps();
         AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
-        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC);
+        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested);
         Sensitive = ((OTAUpdate && Menu.SubItem == 3) || (NTPData.TimeTest && Menu.SubItem == 2));
 
         RefreshCPU();
@@ -343,6 +356,7 @@ void WatchyGSR::init(String datetime){
                     ManageTime();   // Handle Time method.
                     processWiFiRequest(); // Process any WiFi requests.
                     if (!Sensitive){
+                        if (currentWiFi() == WL_CONNECTED) InsertWiFi();
                         if (NTPData.State > 0 && !WatchyAPOn && !OTAUpdate){
                             if (NTPData.Pause == 0) ProcessNTP(); else NTPData.Pause--;
                             if (WatchTime.NewMinute){
@@ -601,7 +615,7 @@ void WatchyGSR::init(String datetime){
 
                         CalculateTones(); monitorSteps();
                         AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
-                        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC);
+                        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested);
 
                         if (WatchTime.DeadRTC && Options.NeedsSaving) RecordSettings();
                         RefreshCPU(CPUDEF);
@@ -648,8 +662,9 @@ void WatchyGSR::showWatchFace(){
 }
 
 void WatchyGSR::drawWatchFace(){
-    display.fillScreen(Options.LightMode ? GxEPD_WHITE : GxEPD_BLACK);
-    display.setTextColor(FontColor());
+    display.fillScreen(BackColor());
+    InsertBitmap();
+    display.setTextColor(ForeColor());
 
     if (!(OTAUpdate || WatchyAPOn || (Menu.Item == MENU_TOFF && Menu.SubItem == 2))){
         drawTime();
@@ -671,8 +686,8 @@ void WatchyGSR::drawTime(){
     bool PM;
     PM = false;
     O = MakeTime(WatchTime.Local.Hour, WatchTime.Local.Minute, PM);
-    display.setFont(&aAntiCorona36pt7b);
-    display.setTextColor(FontColor());
+    display.setFont(Design.Face.TimeFont);
+    display.setTextColor(Design.Face.TimeColor);
 
     display.getTextBounds(O, 0, Design.Face.Time, &x1, &y1, &w, &h);
     tw = (200 - w) /2;
@@ -681,8 +696,7 @@ void WatchyGSR::drawTime(){
 
     if (PM){
         tw=constrain(tw + w + 6, 0, 184);
-        display.drawBitmap(tw, Design.Face.Time - 45, PMIndicator, 6, 6, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
-//        display.fillRect(tw, TimeY - 45 ,6 ,6, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+        display.drawBitmap(tw, Design.Face.Time - Design.Face.TimeHeight, PMIndicator, 6, 6, ForeColor());
     }
 }
 
@@ -692,8 +706,8 @@ void WatchyGSR::drawDay(){
     String O;
 
     O = dayStr(WatchTime.Local.Wday + 1);
-    display.setFont(&aAntiCorona16pt7b);
-    display.setTextColor(FontColor());
+    display.setFont(Design.Face.DayFont);
+    display.setTextColor(Design.Face.DayColor);
     display.getTextBounds(O, 0, Design.Face.Day, &x1, &y1, &w, &h);
     w = (200 - w) /2;
     display.setCursor(w, Design.Face.Day);
@@ -705,8 +719,8 @@ void WatchyGSR::drawDate(){
     uint16_t w, h;
     String O;
 
-    display.setFont(&aAntiCorona15pt7b);  //Shahd_Serif17pt7b);
-    display.setTextColor(FontColor());
+    display.setFont(Design.Face.DateFont);
+    display.setTextColor(Design.Face.DateColor);
     O = String(monthStr(WatchTime.Local.Month)) + " " + String(WatchTime.Local.Day);
     //O="September 30";
     display.getTextBounds(O, 0, Design.Face.Date, &x1, &y1, &w, &h);
@@ -720,8 +734,8 @@ void WatchyGSR::drawYear(){
     uint16_t w, h, tw;
     String O;
 
-    display.setFont(&aAntiCorona16pt7b);
-    display.setTextColor(FontColor());
+    display.setFont(Design.Face.YearFont);
+    display.setTextColor(Design.Face.YearColor);
     O = String(WatchTime.Local.Year + RTC_LOCALYEAR_OFFSET);  //1900
     display.getTextBounds(O, 0, Design.Face.Year, &x1, &y1, &w, &h);
     w = (200 - w) /2;
@@ -735,8 +749,8 @@ void WatchyGSR::drawMenu(){
     String O, S;
 
     display.setFont(&aAntiCorona12pt7b);
-    display.fillRect(0, Design.Menu.Top, MenuWidth, MenuHeight, Options.LightMode ? GxEPD_WHITE : GxEPD_BLACK);
-    display.drawBitmap(0, Design.Menu.Top, (Menu.Style == MENU_INOPTIONS) ? OptionsMenuBackground : MenuBackground, MenuWidth, MenuHeight, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+    display.fillRect(0, Design.Menu.Top, MenuWidth, MenuHeight, BackColor());
+    display.drawBitmap(0, Design.Menu.Top, (Menu.Style == MENU_INOPTIONS) ? OptionsMenuBackground : MenuBackground, MenuWidth, MenuHeight, ForeColor());
     display.setTextColor(Options.LightMode && Menu.Style != MENU_INNORMAL ? GxEPD_WHITE : GxEPD_BLACK);
     switch (Menu.Item){
         case MENU_STEPS:
@@ -1378,32 +1392,32 @@ void WatchyGSR::drawChargeMe(){
   int8_t D = 0;
   if (Battery.Direction == 1){
       // Show Battery charging bitmap.
-      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, Charging, 40, 17, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, Charging, 40, 17, ForeColor());
       D = 2;
   }else if (Battery.Last < MinBattery){
       // Show Battery needs charging bitmap.
-      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < LowBattery ? ChargeMeBad : ChargeMe), 40, 17, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < LowBattery ? ChargeMeBad : ChargeMe), 40, 17, ForeColor());
       D = 1;
   }
 }
 
 void WatchyGSR::drawStatus(){
   if (WatchyStatus > ""){
-      display.fillRect(Design.Status.WIFIx, Design.Status.WIFIy - 19, 60, 20, Options.LightMode ? GxEPD_WHITE : GxEPD_BLACK);
+      display.fillRect(Design.Status.WIFIx, Design.Status.WIFIy - 19, 60, 20, BackColor());
       display.setFont(&Bronova_Regular13pt7b);
       if (WatchyStatus.startsWith("WiFi")){
-          display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iWiFi, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+          display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iWiFi, 19, 19, ForeColor());
           if (WatchyStatus.length() > 4){
               display.setCursor(Design.Status.WIFIx + 17, Design.Status.WIFIy);
-              display.setTextColor(Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+              display.setTextColor(ForeColor());
               display.print(WatchyStatus.substring(4));
           }
       }
-      else if (WatchyStatus == "TZ") display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iTZ, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
-      else if (WatchyStatus == "NTP") display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iSync, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
-      else if (WatchyStatus == "ESP")  display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iSync, 19, 19, Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+      else if (WatchyStatus == "TZ") display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iTZ, 19, 19, ForeColor());
+      else if (WatchyStatus == "NTP") display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iSync, 19, 19, ForeColor());
+      else if (WatchyStatus == "ESP")  display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iSync, 19, 19, ForeColor());
       else{
-          display.setTextColor(Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE);
+          display.setTextColor(ForeColor());
           display.setCursor(Design.Status.WIFIx, Design.Status.WIFIy);
           display.print(WatchyStatus);
       }
@@ -2366,11 +2380,6 @@ void WatchyGSR::UpdateBMA(){
 
 float WatchyGSR::getBatteryVoltage(){ return ((BatteryRead() - 0.0125) +  (BatteryRead() - 0.0125) + (BatteryRead() - 0.0125) + (BatteryRead() - 0.0125)) / 4; }
 float WatchyGSR::BatteryRead(){ return analogReadMilliVolts(SRTC.getADCPin()) / 500.0f; } // Battery voltage goes through a 1/2 divider.
-//float WatchyGSR::BatteryRead(){
-//    if (SRTC.rtcType == DS3231) return analogReadMilliVolts(V10_ADC_PIN) / 500.0f;
-//    return analogReadMilliVolts(V15_ADC_PIN) / 500.0f;
-//}
-
 
 uint16_t WatchyGSR::_readRegister(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len) {
   Wire.beginTransmission(address);
@@ -2391,9 +2400,28 @@ uint16_t WatchyGSR::_writeRegister(uint8_t address, uint8_t reg, uint8_t *data, 
   return (0 !=  Wire.endTransmission());
 }
 
-uint16_t WatchyGSR::FontColor(){ return (Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE); }
+void WatchyGSR::UpdateFonts(){
+    Design.Face.TimeColor = ForeColor();
+    Design.Face.DayColor = ForeColor();
+    Design.Face.DateColor = ForeColor();
+    Design.Face.YearColor = ForeColor();
+}
 
-String WatchyGSR::MakeTime(int Hour, int Minutes, bool& Alarm) {  // Use variable with Alarm, if set to False on the way in, returns PM indication.
+// Override functions.
+uint16_t WatchyGSR::ForeColor(){ return (Options.LightMode ? GxEPD_BLACK : GxEPD_WHITE); }
+
+uint16_t WatchyGSR::BackColor(){ return (Options.LightMode ? GxEPD_WHITE : GxEPD_BLACK); }
+
+void WatchyGSR::InsertPost() {}
+void WatchyGSR::InsertBitmap() {}
+void WatchyGSR::InsertDefaults() {}
+void WatchyGSR::InsertOnMinute() {}
+void WatchyGSR::InsertWiFi() {}
+void WatchyGSR::InsertWiFiEnding() {}
+
+bool WatchyGSR::IsDark(){ return Darkness.Went; }
+
+String WatchyGSR::MakeTime(int Hour, int Minutes, bool& Alarm){  // Use variable with Alarm, if set to False on the way in, returns PM indication.
     int H;
     String AP = "";
     H = Hour;
@@ -2625,6 +2653,7 @@ void WatchyGSR::endWiFi(){
         WiFi.removeEvent(GSRWiFi.WiFiEventID);
         GSRWiFi.WiFiEventID = 0;
         WiFi.mode(WIFI_OFF);
+        InsertWiFiEnding();
     }else if (GSRWiFi.Requests > 0) GSRWiFi.Requests--;
 }
 
@@ -2805,9 +2834,18 @@ void WatchyGSR::initZeros(){
     Design.Menu.Header = 97;
     Design.Menu.Data = 138;
     Design.Face.Time = 56;
+    Design.Face.TimeHeight = 45;
+    Design.Face.TimeColor = GxEPD_BLACK;
+    Design.Face.TimeFont = &aAntiCorona36pt7b;
     Design.Face.Day = 101;
+    Design.Face.DayColor = GxEPD_BLACK;
+    Design.Face.DayFont = &aAntiCorona16pt7b;
     Design.Face.Date = 143;
+    Design.Face.DateColor = GxEPD_BLACK;
+    Design.Face.DateFont = &aAntiCorona15pt7b;
     Design.Face.Year = 186;
+    Design.Face.YearColor = GxEPD_BLACK;
+    Design.Face.YearFont = &aAntiCorona16pt7b;
     Design.Status.WIFIx = 5;
     Design.Status.WIFIy = 193;
     Design.Status.BATTx = 155;
