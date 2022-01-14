@@ -11,15 +11,23 @@ A structure allows you to reposition AND change font color along with font for e
 | Design.Face.TimeHeight | 45 | Height of font used for PM indicator so it will sit at the top of TimeFont. |
 | Design.Face.TimeColor | GxEPD_BLACK | Color the Time is drawn in. |
 | Design.Face.TimeFont | &aAntiCorona36pt7b | Font used for Time display. |
+| Design.Face.TimeLeft | {Unused} | Left point to start drawing Time display. |
+| Design.Face.TimeStyle | WatchyGSR::dCENTER | Alignment method for Time display.  If set for WatchyGSR:dRIGHT, AM/PM indicator will be on the left. |
 | Design.Face.Day | 101 | Vertical baseline of Day of Week on screen. |
 | Design.Face.DayColor | GxEPD_BLACK; | Color the Day of Week is drawn in. |
-| Design.Face.DayFont | &aAntiCorona16pt7b; | Font used for Day of Week display. |
+| Design.Face.DayFont | &aAntiCorona16pt7b | Font used for Day of Week display. |
+| Design.Face.DayLeft | {Unused} | Left point to start drawing Day of Week display. |
+| Design.Face.DayStyle | WatchyGSR::dCENTER | Alignment method for Day of Week display. |
 | Design.Face.Date | 143 | Vertical baseline of Date on screen. |
 | Design.Face.DateColor | GxEPD_BLACK | Color the Date is drawn in. |
 | Design.Face.DateFont | &aAntiCorona15pt7b | Font used for Date display. |
+| Design.Face.DateLeft | {Unused} | Left point to start drawing Date display. |
+| Design.Face.DateStyle | WatchyGSR::dCENTER | Alignment method for Date display. |
 | Design.Face.Year | 186 | Vertical baseline of Year on screen. |
 | Design.Face.YearColor | GxEPD_BLACK | Color the Year is drawn in. |
 | Design.Face.YearFont | &aAntiCorona16pt7b | Font used for Year display. |
+| Design.Face.YearLeft | {Unused} | Left point to start drawing Year display. |
+| Design.Face.YearStyle | WatchyGSR::dCENTER | Alignment method for Year display. |
 | Design.Status.WIFIx | 5 | Left edge of WIFI status on screen. |
 | Design.Status.WIFIy | 193 | Vertical baseline of WIFI status on screen. |
 | Design.Status.BATTx | 155 | Left edge of Battery state on screen. |
