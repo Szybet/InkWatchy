@@ -10,7 +10,7 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |Menu | Sub-Menu Item  | Function Description |
 |---- | -------------  | -------------------- |
 |**Steps** | Reset Time         | Reset Steps ... Use Menu information for more help. |
-|**Alarms** | Alarms #          |  HH:MM -> Full -> Days + Repeat + Active settings **[5]** |
+|**Alarms** | Alarms #          |  HH:MM -> Full -> Days + Repeat + Active settings [^5] |
 |           | Tone Repeats      |  **{Full}** repeats.  Allows you to reduce the amount of alarm tones that repeat (80%-20% in 20% increments).  Resets the tone repeats for all alarms when you change this. |
 |**Timers** | Countdown Timer   | HH:MM -> {Full} -> On/**{Off}**  (Full, see Tone Repeats above for information). |
 |           | Elapsed Time      | HH:MM On/**{Off}** |
@@ -22,16 +22,16 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | Time Mode        | **{AM/PM}** or 24 Hour mode of time display. |
 |            | Feedback         | **{Enable}** or Disable haptic feedback on button presses (during use). |
 |            | Turbo Time       | How many seconds Watchy stays active after your last button press before sleeping. |
-|            | Screen Off       | Enables "Always", Disabled or "Bed Time" **[5]** screen blanking (which uses no cpu to update display, battery savings). |
-|            | Performance      | Offers **{Turbo}**, Normal and Battery Saving [3] options, reduces responsiveness as you go away from Turbo. |
+|            | Screen Off       | Enables "Always", Disabled or "Bed Time" [^5] screen blanking (which uses no cpu to update display, battery savings). |
+|            | Performance      | Offers **{Turbo}**, Normal and Battery Saving [^3] options, reduces responsiveness as you go away from Turbo. |
 |            | Sync Watchy      | Sync Watchy RTC by Time, TimeZone, TimeZone & Time |
 |            | Watchy Connect   | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. "BACK" to immediately exit |
 |            | OTA Update       | Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.) |
 |            | OTA Website      | Website offers Backup & Restore of Settings, WiFi AP Settings and WiFi OTA upload of a bin file.  (ESCAPE by holding "BACK" for 10 seconds.) |
 |**Troubleshoot** | Reset Screen     | Reset screen if artifacting or ghosting is happening. |
 |                 | Watchy Reboot    | Reboot the Watchy in the event something stops working. |
-|                 | Detect Drift     | Detect drift in RTC clock (takes 2 minutes). Excessive drift enters non-RTC mode. [1] |
-|                 | Storage Settings | Allows you to disable Non-Volatile Storage of settings for this Watchy face (or re-enable them). [4] |
+|                 | Detect Drift     | Detect drift in RTC clock (takes 2 minutes). Excessive drift enters non-RTC mode. [^1] |
+|                 | Storage Settings | Allows you to disable Non-Volatile Storage of settings for this Watchy face (or re-enable them). [^4] |
             
 Button usage:
 
@@ -48,7 +48,7 @@ STEPS:
 
 ALARMS:  (WHITE settings means "ON", Black is "OFF")
 
-- Alarms allow HH:MM setting **[5]**
+- Alarms allow HH:MM setting [^5]
 - Tone Repeats are custom per Alarm but are reset to the value you use in Tone Repeats.
 - All days of the week can be toggled On/**{Off}**.  White days are the only active days.
 - Repeat offers to repeat the choices.  If Repeat is **{off}**, day will go Black.
@@ -74,7 +74,7 @@ These will cycle in a loop from ALARM 1 to COUNTDOWN playing their tones until t
 SCREEN OFF:
 
 1.  **5** modes are present, **{Disabled}**, "Always", "Bed Time", "Double Tap On" and "Double Tap Only".
-2.  "Always" mode will turn the screen off when not in a menu, it will go off after the delay set in "Screen Auto-Off" (MENU once from "Screen Off"). [2]
+2.  "Always" mode will turn the screen off when not in a menu, it will go off after the delay set in "Screen Auto-Off" (MENU once from "Screen Off"). [^2]
 3.  "Bed Time" mode will turn the screen off at any time between the two hours, inside or outside of a menu.  MENU after "Screen Auto-Off" to see the "Sleeping Begins".
 4.  "Sleeping Begins" and "Sleeping Ends" cannot be the same hour, but can be 1 hour apart from each other, either before or after the other.
 5.  All modes when not **Disabled** will use the "Screen Auto-Off" delay after any button press.
@@ -102,11 +102,8 @@ WiFi entries can be edited from Watchy's Options -> OTA Website, surf to the Wat
 
 WiFi options in the Options menu will not be available if the low battery indicator is on.
 
-[1]  If non-RTC mode is entered, the entry for "Detect Drift" will be replaced with "Return to RTC" when backed away from the results, which will state the RTC as bad.  The Watchy will then turn off a variety (and some will be locked) of settings to ensure better battery life, reducing timer and alarm announcements and will force the screen to blank unless you press a button.  While non-RTC mode is active, menus will not keep the screen on (constant "Bed Time" mode), so be sure to increase your "Screen Auto-Off" to adjust it's frequency.
-
-[2]  "Always" mode is used during non-RTC mode, with the exception that menus are ignored (acting like "Bed Time" mode).
-
-[3]  "Battery Saving" is forced on when using non-RTC mode.
-
-[4]  Disabling Non-Volatile Storage will ask for you to select you want to proceed, if you proceed the NVS will have the settings removed, Watchy will reboot and will continue to not store any settings in the NVS.
-**[5]**  With the invention of SmallRTC's atMinuteWake, Bed Time now uses atMinuteWake for on the hour (0) and 30 minutes past the hour, do not place alarms inside Bed Time hours unless they are on the hour (0) or 30 minutes past the hour.  If you don't adhere to this, the alarm will *not* fire for that day.  Move the Bed Time period away from any alarms to ensure they'll work.
+[^1]:  If non-RTC mode is entered, the entry for "Detect Drift" will be replaced with "Return to RTC" when backed away from the results, which will state the RTC as bad.  The Watchy will then turn off a variety (and some will be locked) of settings to ensure better battery life, reducing timer and alarm announcements and will force the screen to blank unless you press a button.  While non-RTC mode is active, menus will not keep the screen on (constant "Bed Time" mode), so be sure to increase your "Screen Auto-Off" to adjust it's frequency.
+[^2]:  "Always" mode is used during non-RTC mode, with the exception that menus are ignored (acting like "Bed Time" mode).
+[^3]:  "Battery Saving" is forced on when using non-RTC mode.
+[^4]:  Disabling Non-Volatile Storage will ask for you to select you want to proceed, if you proceed the NVS will have the settings removed, Watchy will reboot and will continue to not store any settings in the NVS.
+[^5]:  With the invention of SmallRTC's atMinuteWake, Bed Time now uses atMinuteWake for on the hour (0) and 30 minutes past the hour, do not place alarms inside Bed Time hours unless they are on the hour (0) or 30 minutes past the hour.  If you don't adhere to this, the alarm will *not* fire for that day.  Move the Bed Time period away from any alarms to ensure they'll work.
