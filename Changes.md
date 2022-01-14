@@ -59,3 +59,7 @@
 - **ADD:**  Unified format of main Watchy face, so override can be done to include new fonts and relocation.
 - **ADD:**  Functions to allow insertion of override code into certain parts of Watchy_GSR without having to replicate whole sections.
 - **FIX:**  Changed icons.h to Icons_GSR.h to remove Watchy.h conflict and also removed steps image.
+
+**Version 1.3.8:**
+- **ADD:**  Extra Design functionality for Watchy face orientation of elements.
+- **FIX:**  InsertWiFi() now only runs if no other process is using the WiFi to avoid collsions.
