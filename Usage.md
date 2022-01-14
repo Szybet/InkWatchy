@@ -10,7 +10,7 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |Menu | Sub-Menu Item  | Function Description |
 |---- | -------------  | -------------------- |
 |**Steps** | Reset Time         | Reset Steps ... Use Menu information for more help. |
-|**Alarms** | Alarms #          |  HH:MM -> Full -> Days + Repeat + Active settings |
+|**Alarms** | Alarms #          |  HH:MM -> Full -> Days + Repeat + Active settings **[5]** |
 |           | Tone Repeats      |  **{Full}** repeats.  Allows you to reduce the amount of alarm tones that repeat (80%-20% in 20% increments).  Resets the tone repeats for all alarms when you change this. |
 |**Timers** | Countdown Timer   | HH:MM -> {Full} -> On/**{Off}**  (Full, see Tone Repeats above for information). |
 |           | Elapsed Time      | HH:MM On/**{Off}** |
@@ -22,7 +22,7 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | Time Mode        | **{AM/PM}** or 24 Hour mode of time display. |
 |            | Feedback         | **{Enable}** or Disable haptic feedback on button presses (during use). |
 |            | Turbo Time       | How many seconds Watchy stays active after your last button press before sleeping. |
-|            | Screen Off       | Enables "Always", Disabled or "Bed Time" screen blanking (which uses no cpu to update display, battery savings). |
+|            | Screen Off       | Enables "Always", Disabled or "Bed Time" **[5]** screen blanking (which uses no cpu to update display, battery savings). |
 |            | Performance      | Offers **{Turbo}**, Normal and Battery Saving [3] options, reduces responsiveness as you go away from Turbo. |
 |            | Sync Watchy      | Sync Watchy RTC by Time, TimeZone, TimeZone & Time |
 |            | Watchy Connect   | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. "BACK" to immediately exit |
@@ -48,7 +48,7 @@ STEPS:
 
 ALARMS:  (WHITE settings means "ON", Black is "OFF")
 
-- Alarms allow HH:MM setting
+- Alarms allow HH:MM setting **[5]**
 - Tone Repeats are custom per Alarm but are reset to the value you use in Tone Repeats.
 - All days of the week can be toggled On/**{Off}**.  White days are the only active days.
 - Repeat offers to repeat the choices.  If Repeat is **{off}**, day will go Black.
@@ -109,3 +109,4 @@ WiFi options in the Options menu will not be available if the low battery indica
 [3]  "Battery Saving" is forced on when using non-RTC mode.
 
 [4]  Disabling Non-Volatile Storage will ask for you to select you want to proceed, if you proceed the NVS will have the settings removed, Watchy will reboot and will continue to not store any settings in the NVS.
+**[5]**  With the invention of SmallRTC's atMinuteWake, Bed Time now uses atMinuteWake for on the hour (0) and 30 minutes past the hour, do not place alarms inside Bed Time hours unless they are on the hour (0) or 30 minutes past the hour.  If you don't adhere to this, the alarm will *not* fire for that day.  Move the Bed Time period away from any alarms to ensure they'll work.
