@@ -56,8 +56,8 @@ Functions available for communication:
 | handleButtonPress(uint8_t Pressed) | Accepts Switch # from 1 to 4, can "fake" a button press. |
 | float getBatteryVoltage() | Returns a cleaned battery voltage. |
 | IsDark() | Is the screen currently black (Screen Off has triggered from settings). |
-| VibeTo(bool Mode) | Set VibeTo to true to enable vibration motor, false to stop it. |
-| MakeTime(int Hour, int Minutes, bool& Alarm) | Use a variable in Alarm set to false for normal Hour & Minutes format or true for Alarm format.  Returns a String. |
+| VibeTo(bool Mode) | Set VibeTo to `true` to enable vibration motor, `false` to stop it. |
+| MakeTime(int Hour, int Minutes, bool& **Alarm**) | Use a variable in **Alarm** parameter always.  When **Alarm** is set to `false` you'll get normal Hour & Minutes format based on Options, **Alarm** will be `true` for PM.  Setting **Alarm** to `true` for Alarm format.  Returns a String. |
 | MakeHour(uint8_t Hour) | Return the hour formatted in a String using 12 or 24hr format. |
 | MakeMinutes(uint8_t Minutes) | Returns a string of the Minutes. |
 | ForeColor() | Returns the current Fore (font) color for usage with current style. |
