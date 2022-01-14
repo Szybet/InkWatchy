@@ -37,7 +37,7 @@ Functions available for overriding:
 | drawYear() | Override to change the format of how the Year is drawn. |
 | drawChargeMe() | Override to change the format of how the Battery Status is drawn. |
 | drawStatus() | Override to change the format of how the current WiFi Status is drawn. |
-
+ 
 Functions for inserting extra code in places.
 
 | Function Name | Usage |
@@ -48,7 +48,7 @@ Functions for inserting extra code in places.
 | InsertOnMinute() | This Function is called once the Clock has been updated to the new minute but before the screen is drawn. |
 | InsertWiFi() | This Function is called repeatedly in a loop only *IF* WiFi has been enabled and connected, only use this if you asked for it. |
 | InsertWiFiEnding() | This Function is called when WiFi has been turned off. |
-
+ 
 Functions available for communication:
 
 | Function Name | Usage |
@@ -68,6 +68,26 @@ Functions available for communication:
 
 **NOTES ON WiFi**
 
-If you plan to use WiFi, remember, users will want to actually keep using the Watchy_GSR underneath while you're using WiFi, so while it is nice to pack everything in at once, the InsertWiFi() function is repeatedly called until you tell it you're done by saying EndWiFi(), you may see another InsertWiFi() after doing so, just be sure to ignore any InserWiFi() calls you didn't ask for.
+If you plan to use WiFi, remember, users will want to actually keep using the Watchy_GSR underneath while you're using WiFi, so while it is nice to pack everything in at once, the `InsertWiFi()` function is repeatedly called until you tell it you're done by saying `EndWiFi()`, you may see another `InsertWiFi()` after doing so, just be sure to ignore any `InsertWiFi()` calls you didn't ask for.
 
-Breaking up your WiFi functions so that they're only done in parts is best.  Anything you have to wait for, make an int that tells you where you are in your work and when InsertWiFi() returns, continue where you left off.  When you're finished, make sure you EndWiFi() and make note you finished on your end.
+Breaking up your WiFi functions so that they're only done in parts is best.  Anything you have to wait for, make an int that tells you where you are in your work and when `InsertWiFi()` returns, continue where you left off.  When you're finished, make sure you `EndWiFi()` and make note you finished on your end by zeroing your int.
+
+Recommend an int variable being set to 1 when you `AskForWiFi()`, then when `InsertWiFi()` is called, you do part of the work, ++ the int, when it returns again, repeat until you're finished.  When you finish, call `EndWiFi()` and set your int to 0.  When you receive an `InsertWiFiEnd()`, set your int to 0, this way, your code will always work properly.  You can even test in `InsertOnMinute()` if your int is 0 before commencing so you don't try twice.  Only `AskForWiFi()` once and only call `EndWiFi()` once or any other operation using WiFi may be cancelled.
+
+| TIME Structure | Contents |
+| -------------------- | ------------------ |
+| WatchTime.Local.Second | Contains the current second(s) in Local time. |
+| WatchTime.Local.Minute | Contains the current minute(s) in Local time. |
+| WatchTime.Local.Hour | Contains the current Hour in Local time. |
+| WatchTime.Local.Wday | Contains the Day of Week (Days since Sunday) in Local time. |
+| WatchTime.Local.Day | Contains the Date (1 to 31) in Local time. |
+| WatchTime.Local.Month | Contains the Month (1 to 12) in Local time. |
+| WatchTime.Local.Year | Contains the Year (since 1900) in Local time. |
+| | |
+| WatchTime.UTC.Second | Contains the current second(s) in Coordinated Universal time. |
+| WatchTime.UTC.Minute | Contains the current minute(s) in Coordinated Universal time. |
+| WatchTime.UTC.Hour | Contains the current Hour in Coordinated Universal time. |
+| WatchTime.UTC.Wday | Contains the Day of Week (Days since Sunday) in Coordinated Universal time. |
+| WatchTime.UTC.Day | Contains the Date (1 to 31) in Coordinated Universal time. |
+| WatchTime.UTC.Month | Contains the Month (1 to 12) in Coordinated Universal time. |
+| WatchTime.UTC.Year | Contains the Year (since 1900) in Coordinated Universal time. |
