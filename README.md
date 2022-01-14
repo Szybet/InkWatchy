@@ -4,10 +4,10 @@ Bin folder contains the current bin that you can use esptool (.py or .exe) to in
 
 src folder contains a universal (Arduino & PlatformIO) setup for compilation, instructions on how to get it to compile are in the src folder.
 
-Needed libraries:  Arduino Libraries, ArduinoOTA, SmallRTC (GuruSR), SmallNTP (GuruSR), Olson2POSIX (GuruSR) AND Watchy (1.2.9 or greater) base.
+Needed libraries:  Arduino Libraries, ArduinoOTA, SmallRTC (GuruSR), SmallNTP (GuruSR), Olson2POSIX (GuruSR) AND Watchy (1.3.3 or greater) base.
 
 **NOTES:**
-- Watchy uses version 1.0.6 or 2.0.1 (or higher) of the ESP32 libraries, 2.0.0 won't compile, remove them manually and revert back to version 1.0.6 or use 2.0.1 or higher (which seems to have been fixed).
+- Watchy uses version 1.0.6 or 2.0.2 (or higher) of the ESP32 libraries, 2.0.0 won't compile, remove them manually and revert back to version 1.0.6 or use 2.0.2 or higher (which seems to have been fixed).
 
 For instructions on usage of the firmware, see "Usage".
 
@@ -24,3 +24,5 @@ For those **WANTING** to use this Watchy code without programming and having to 
 8. Click the RED colored button below that showed up and wait.  (It doesn't show any progress until it says it failed or succeeded.)
 9. If all went well, you'll see the success message and your Watchy will reboot with this Watchy face.
 10. If you didn't get this far, then you either didn't connect to Watchy AP fast enough or something else happened, so try again at Step 2.
+
+For those wanting to override the looks of this Watchy face, look at the Override Information.
