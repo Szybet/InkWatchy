@@ -54,3 +54,8 @@
 - **FIX:**  Updated BMA control to properly work with Double Tap, method is there for Wrist tilt, no motion setup for it at present.
 - **ADD:**  Functionality to block Non-Volatile Storage from being used, will erase and reboot the Watchy and stop using it for this Watchy face.
 - **FIX:**  Corrected NTP server to pool.ntp.org, it should work globally, though it does have a restriction on use, so expect it to fail if used too much.
+
+**Version 1.3.7:**
+- **ADD:**  Unified format of main Watchy face, so override can be done to include new fonts and relocation.
+- **ADD:**  Functions to allow insertion of override code into certain parts of Watchy_GSR without having to replicate whole sections.
+- **FIX:**  Changed icons.h to Icons_GSR.h to remove Watchy.h conflict and also removed steps image.
