@@ -61,5 +61,5 @@
 - **FIX:**  Changed icons.h to Icons_GSR.h to remove Watchy.h conflict and also removed steps image.
 
 **Version 1.3.8:**
-- **ADD:**  Extra Design functionality for Watchy face orientation of elements.
+- **ADD:**  Extra Design functionality for Unified format of main Watchy face which includes orientation of elements.
 - **FIX:**  InsertWiFi() now only runs if no other process is using the WiFi to avoid collsions.
