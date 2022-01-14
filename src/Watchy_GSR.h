@@ -36,7 +36,8 @@ class WatchyGSR{
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.3.7";
+        static constexpr const char* Build = "1.3.8";
+        enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
     public:
         WatchyGSR();
         virtual void init(String datetime = "") final;
@@ -72,6 +73,7 @@ class WatchyGSR{
    private:
         void setStatus(String Status);
         void drawMenu();
+        void drawData(String dData, byte Left, byte Bottom, WatchyGSR::DesOps Style, bool isTime = false, bool PM = false);
         void GoDark();
         void detectBattery();
         void ProcessNTP();

@@ -77,15 +77,23 @@ RTC_DATA_ATTR struct Designing final {
        byte TimeHeight; // 45
        uint16_t TimeColor;  // Font Color.
        const GFXfont *TimeFont; // Font.
+       WatchyGSR::DesOps TimeStyle; // dCENTER
+       byte TimeLeft;  // Only for dSTATIC
        byte Day;    // DayY 101
        uint16_t DayColor;  // Font Color.
        const GFXfont *DayFont; // Font.
+       WatchyGSR::DesOps DayStyle; // dCENTER
+       byte DayLeft;  // Only for dSTATIC
        byte Date;   // DateY 143
        uint16_t DateColor;  // Font Color.
        const GFXfont *DateFont; // Font.
+       WatchyGSR::DesOps DateStyle; // dCENTER
+       byte DateLeft;  // Only for dSTATIC
        byte Year;   // YearY 186
        uint16_t YearColor;  // Font Color.
        const GFXfont *YearFont; // Font.
+       WatchyGSR::DesOps YearStyle; // dCENTER
+       byte YearLeft;  // Only for dSTATIC
     } Face;
     struct StatusPOS {
         byte WIFIx;  // NTPX 5
@@ -356,7 +364,7 @@ void WatchyGSR::init(String datetime){
                     ManageTime();   // Handle Time method.
                     processWiFiRequest(); // Process any WiFi requests.
                     if (!Sensitive){
-                        if (currentWiFi() == WL_CONNECTED) InsertWiFi();
+                        if (currentWiFi() == WL_CONNECTED && NTPData.State == 0 && !OTAUpdate && !WatchyAPOn && !NTPData.TimeTest) InsertWiFi();
                         if (NTPData.State > 0 && !WatchyAPOn && !OTAUpdate){
                             if (NTPData.Pause == 0) ProcessNTP(); else NTPData.Pause--;
                             if (WatchTime.NewMinute){
@@ -680,67 +688,32 @@ void WatchyGSR::drawWatchFace(){
 }
 
 void WatchyGSR::drawTime(){
-    int16_t  x1, y1;
-    uint16_t w, h, tw;
     String O;
-    bool PM;
-    PM = false;
+    bool PM = false;
     O = MakeTime(WatchTime.Local.Hour, WatchTime.Local.Minute, PM);
     display.setFont(Design.Face.TimeFont);
     display.setTextColor(Design.Face.TimeColor);
 
-    display.getTextBounds(O, 0, Design.Face.Time, &x1, &y1, &w, &h);
-    tw = (200 - w) /2;
-    display.setCursor(tw, Design.Face.Time);
-    display.println(O);
-
-    if (PM){
-        tw=constrain(tw + w + 6, 0, 184);
-        display.drawBitmap(tw, Design.Face.Time - Design.Face.TimeHeight, PMIndicator, 6, 6, ForeColor());
-    }
+    drawData(O,Design.Face.TimeLeft,Design.Face.Time,Design.Face.TimeStyle, true, PM);
 }
 
 void WatchyGSR::drawDay(){
-    int16_t  x1, y1;
-    uint16_t w, h;
-    String O;
-
-    O = dayStr(WatchTime.Local.Wday + 1);
     display.setFont(Design.Face.DayFont);
     display.setTextColor(Design.Face.DayColor);
-    display.getTextBounds(O, 0, Design.Face.Day, &x1, &y1, &w, &h);
-    w = (200 - w) /2;
-    display.setCursor(w, Design.Face.Day);
-    display.println(O);
+    drawData(dayStr(WatchTime.Local.Wday + 1), Design.Face.DayLeft, Design.Face.Day, Design.Face.DayStyle);
 }
 
 void WatchyGSR::drawDate(){
-    int16_t  x1, y1;
-    uint16_t w, h;
-    String O;
-
+    String O = String(monthStr(WatchTime.Local.Month)) + " " + String(WatchTime.Local.Day);
     display.setFont(Design.Face.DateFont);
     display.setTextColor(Design.Face.DateColor);
-    O = String(monthStr(WatchTime.Local.Month)) + " " + String(WatchTime.Local.Day);
-    //O="September 30";
-    display.getTextBounds(O, 0, Design.Face.Date, &x1, &y1, &w, &h);
-    w = (200 - w) /2;
-    display.setCursor(w, Design.Face.Date);
-    display.print(O);
+    drawData(O, Design.Face.DateLeft, Design.Face.Date, Design.Face.DateStyle);
 }
 
 void WatchyGSR::drawYear(){
-    int16_t  x1, y1;
-    uint16_t w, h, tw;
-    String O;
-
     display.setFont(Design.Face.YearFont);
     display.setTextColor(Design.Face.YearColor);
-    O = String(WatchTime.Local.Year + RTC_LOCALYEAR_OFFSET);  //1900
-    display.getTextBounds(O, 0, Design.Face.Year, &x1, &y1, &w, &h);
-    w = (200 - w) /2;
-    display.setCursor(w, Design.Face.Year);
-    display.print(O);
+    drawData(String(WatchTime.Local.Year + RTC_LOCALYEAR_OFFSET), Design.Face.YearLeft, Design.Face.Year, Design.Face.YearStyle);  //1900
 }
 
 void WatchyGSR::drawMenu(){
@@ -1181,6 +1154,37 @@ void WatchyGSR::drawMenu(){
     }
 }
 
+void WatchyGSR::drawData(String dData, byte Left, byte Bottom, WatchyGSR::DesOps Style, bool isTime, bool PM){
+    uint16_t w, Width, Height, Ind;
+    int16_t X, Y;
+
+    display.getTextBounds(dData, Left, Bottom, &X, &Y, &Width, &Height);
+
+    Bottom = constrain(Bottom, 4, 196);
+    switch (Style){
+        case WatchyGSR::dLEFT:
+            Left = 4;
+            break;
+        case WatchyGSR::dRIGHT:
+            Left = constrain(196 - Width, 4, 196);
+            break;
+        case WatchyGSR::dSTATIC:
+            Left = constrain(Left, 4, 196);
+            break;
+        case WatchyGSR::dCENTER:
+            Left = constrain(4 + ((192 - Width) / 2), 4, 196);
+            break;
+    };
+    display.setCursor(Left, Bottom);
+    display.print(dData);
+
+    if (isTime && PM){
+        if (Style == WatchyGSR::dRIGHT) Left = constrain(Left - 12, 4, 196);
+        else Left = constrain(Left + Width + 6, 4, 190);
+        display.drawBitmap(Left, Bottom - Design.Face.TimeHeight, PMIndicator, 6, 6, ForeColor());
+    }
+}
+
 void WatchyGSR::deepSleep(){
   uint8_t I;
   bool BT = (Options.SleepStyle == 2 && BedTime());
@@ -1290,7 +1294,6 @@ void WatchyGSR::ProcessNTP(){
       NTPData.State++;
       setStatus("TZ");
       // Do the next part.
-//      HTTP.begin(WiFiC, TZURL);  // Call it and leave.
       OP.beginOlsonFromWeb();
       NTPData.Wait = 0;
       NTPData.Pause = 20;
@@ -2837,15 +2840,20 @@ void WatchyGSR::initZeros(){
     Design.Face.TimeHeight = 45;
     Design.Face.TimeColor = GxEPD_BLACK;
     Design.Face.TimeFont = &aAntiCorona36pt7b;
+    Design.Face.TimeStyle = WatchyGSR::dCENTER;
     Design.Face.Day = 101;
     Design.Face.DayColor = GxEPD_BLACK;
     Design.Face.DayFont = &aAntiCorona16pt7b;
+    Design.Face.DayStyle = WatchyGSR::dCENTER;
     Design.Face.Date = 143;
     Design.Face.DateColor = GxEPD_BLACK;
     Design.Face.DateFont = &aAntiCorona15pt7b;
+    Design.Face.DateStyle = WatchyGSR::dCENTER;
     Design.Face.Year = 186;
+    Design.Face.YearLeft = 99;
     Design.Face.YearColor = GxEPD_BLACK;
     Design.Face.YearFont = &aAntiCorona16pt7b;
+    Design.Face.YearStyle = WatchyGSR::dCENTER;
     Design.Status.WIFIx = 5;
     Design.Status.WIFIy = 193;
     Design.Status.BATTx = 155;
