@@ -1,6 +1,5 @@
 **A simple yet pleasant looking Watchy Face, loaded with features**
 
-
 ![Watchy GSR Face](https://github.com/GuruSR/Watchy_GSR/blob/main/Images/Watchy_GSR.jpg)
 
 This Watchy "face" contains the following heiarchy of options and settings:
