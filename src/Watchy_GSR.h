@@ -36,7 +36,7 @@ class WatchyGSR{
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.3.8";
+        static constexpr const char* Build = "1.3.9";
         enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
     public:
         WatchyGSR();

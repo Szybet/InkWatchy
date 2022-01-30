@@ -118,6 +118,7 @@ RTC_DATA_ATTR struct TimeData final {
     int32_t Drifting;         // The amount to add to UTC_RAW after reading from the RTC.
     int64_t WatchyRTC;        // Counts Microseconds from boot.
     bool DeadRTC;             // Set when Drift fails to get a good count less than 30 seconds.
+    uint8_t NextAlarm;        // Next index that will need to wake the Watchy from sleep to fire.
 } WatchTime;
 
 RTC_DATA_ATTR struct Countdown final {
@@ -277,7 +278,6 @@ void WatchyGSR::init(String datetime){
             WatchTime.Drifting += Options.Drift;
             IDidIt = true;
             SRTC.resetWake();
-//            SRTC.config("");
             UpdateUTC();
             WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
             WatchTime.NewMinute = true;
@@ -294,8 +294,10 @@ void WatchyGSR::init(String datetime){
             if (Darkness.Went && UpRight()){
                 if (Button == 5 && Options.SleepStyle > 1){  // Accelerometer caused this.
                     if (Options.SleepMode == 0) Options.SleepMode = 2;  // Do this to avoid someone accidentally not setting this before usage.
+                    UpdateClock(); // Make sure these are done during times when it won't.
                     Updates.Tapped = true; Darkness.Last=millis(); UpdateDisp = true; // Update Screen to new state.
                 }else if (Button == 6){  // Wrist.
+                    UpdateClock(); // Make sure these are done during times when it won't.
                     Darkness.Last=millis(); UpdateDisp = true; // Do this anyways, always.
                 }
             }
@@ -314,7 +316,6 @@ void WatchyGSR::init(String datetime){
             RefreshCPU(CPUDEF);
             WatchTime.WatchyRTC = esp_timer_get_time() + ((60 - WatchTime.UTC.Second) * 1000000);
             WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
-            UpdateUTC();
             UpdateClock();
             AlarmIndex=0;
             UpdateFonts();
@@ -346,7 +347,6 @@ void WatchyGSR::init(String datetime){
 
         if (Button > 0) { handleButtonPress(Button); Button = 0; }
 
-        CalculateTones(); monitorSteps();
         AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
         ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested);
         Sensitive = ((OTAUpdate && Menu.SubItem == 3) || (NTPData.TimeTest && Menu.SubItem == 2));
@@ -621,7 +621,6 @@ void WatchyGSR::init(String datetime){
                         if (UpdateDisp) showWatchFace(); //partial updates on tick
                         if (!Updates.Init) { if (!(InTurbo() || DarkWait())) DisplaySleep(); }
 
-                        CalculateTones(); monitorSteps();
                         AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
                         ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested);
 
@@ -722,8 +721,8 @@ void WatchyGSR::drawMenu(){
     String O, S;
 
     display.setFont(&aAntiCorona12pt7b);
-    display.fillRect(0, Design.Menu.Top, MenuWidth, MenuHeight, BackColor());
-    display.drawBitmap(0, Design.Menu.Top, (Menu.Style == MENU_INOPTIONS) ? OptionsMenuBackground : MenuBackground, MenuWidth, MenuHeight, ForeColor());
+    //display.fillRect(0, Design.Menu.Top, MenuWidth, MenuHeight, BackColor());
+    display.drawBitmap(0, Design.Menu.Top, (Menu.Style == MENU_INOPTIONS) ? OptionsMenuBackground : MenuBackground, MenuWidth, MenuHeight, ForeColor(), BackColor());
     display.setTextColor(Options.LightMode && Menu.Style != MENU_INNORMAL ? GxEPD_WHITE : GxEPD_BLACK);
     switch (Menu.Item){
         case MENU_STEPS:
@@ -1186,19 +1185,30 @@ void WatchyGSR::drawData(String dData, byte Left, byte Bottom, WatchyGSR::DesOps
 }
 
 void WatchyGSR::deepSleep(){
-  uint8_t I;
-  bool BT = (Options.SleepStyle == 2 && BedTime());
-  bool B = ((Options.SleepStyle == 1 || Options.SleepStyle > 2) || BT);
+  uint8_t I, N, D;
   bool BatOk = (Battery.Last == 0 || Battery.Last > LowBattery);
+  bool BT = (Options.SleepStyle == 2 && BedTime());
+  bool B = (((Options.SleepStyle == 1 || Options.SleepStyle > 2) || BT) && BatOk);
+  bool DM;
 
-  UpdateBMA();
-  GoDark();
+  UpdateUTC(); UpdateClock(); UpdateBMA(); GoDark();
+  DM = (Darkness.Went && !TimerDown.Active);
+  D = WatchTime.Local.Wday + 1;
+
+  if (DM){
+    N = (WatchTime.UTC.Minute < 30 ? 30 : 60);
+    if (WatchTime.NextAlarm != 99){
+        if (Alarms_Minutes[WatchTime.NextAlarm] >= WatchTime.Local.Minute && Alarms_Minutes[WatchTime.NextAlarm] < N) N = Alarms_Minutes[WatchTime.NextAlarm];
+    }
+    if (N == 60 && WatchTime.Local.Hour == 23) D = constrain(D + 1, 1, 7);
+  }
+
   if (Options.NeedsSaving) RecordSettings();
   DisplaySleep();
   for(I = 0; I < 40; I++) { pinMode(I, INPUT); }
-  esp_sleep_enable_ext1_wakeup(((B && !WatchTime.DeadRTC && BatOk) ? (BMA432_INT1_MASK | BMA432_INT2_MASK) : 0) | BTN_PIN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
+  esp_sleep_enable_ext1_wakeup((B ? (BMA432_INT1_MASK | BMA432_INT2_MASK) : 0) | BTN_PIN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
   esp_sleep_enable_ext0_wakeup(RTC_PIN, 0); //enable deep sleep wake on RTC interrupt
-  if (BT) SRTC.atMinuteWake((WatchTime.UTC.Minute < 30 ? 30 : 0));
+  if (DM) SRTC.atMinuteWake(N % 60, WatchTime.Local.Hour, D);
   else SRTC.nextMinuteWake();
   esp_deep_sleep_start();
 }
@@ -1455,7 +1465,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
   if (Darkness.Went && Options.SleepStyle == 4 && !WatchTime.DeadRTC && !Updates.Tapped) return; // No buttons unless a tapped happened.
   if (!UpRight()) return; // Don't do buttons if not upright.
   if (LastButton > 0 && (millis() - LastButton) < KEYPAUSE) return;
-  if (Darkness.Went) { Darkness.Last=millis(); UpdateDisp=true; return; }  // Don't do the button, just exit.
+  if (Darkness.Went) { Darkness.Last=millis(); UpdateClock(); UpdateDisp=true; return; }  // Don't do the button, just exit.
   if ((NTPData.TimeTest || OTAUpdate) && (Pressed == 3 || Pressed == 4)) return;  // Up/Down don't work in these modes.
 
   switch (Pressed){
@@ -2198,12 +2208,11 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
 }
 
 void WatchyGSR::UpdateUTC(){
-    tmElements_t TM;  //    struct tm * tm;
     if (!WatchTime.DeadRTC){
-        SRTC.read(TM);
-        WatchTime.UTC_RAW = makeTime(TM) + (NTPData.TimeTest ? 0 : WatchTime.Drifting);
+        SRTC.read(WatchTime.UTC);
+        WatchTime.UTC_RAW = SRTC.MakeTime(WatchTime.UTC) + (NTPData.TimeTest ? 0 : WatchTime.Drifting);
     }
-    breakTime(WatchTime.UTC_RAW,WatchTime.UTC);
+    SRTC.BreakTime(WatchTime.UTC_RAW,WatchTime.UTC);
 }
 
 void WatchyGSR::UpdateClock(){
@@ -2218,6 +2227,7 @@ void WatchyGSR::UpdateClock(){
     WatchTime.Local.Day = TM->tm_mday;
     WatchTime.Local.Month = TM->tm_mon + 1;
     WatchTime.Local.Year = TM->tm_year;
+    CalculateTones(); monitorSteps(); // Moved here for accuracy during Deep Sleep.
 }
 
 // Manage time will determine if the RTC is in use, will also set a flag to "New Minute" for the loop functions to see the minute change.
@@ -2346,12 +2356,13 @@ void WatchyGSR::_bmaConfig() {
   sensor.setINTPinConfig(config, BMA4_INTR1_MAP);
 
   struct bma423_axes_remap remap_data;
-  remap_data.x_axis = 1;
-  remap_data.x_axis_sign = 0xFF;
-  remap_data.y_axis = 0;
-  remap_data.y_axis_sign = 0xFF;
+  remap_data.x_axis = 0;  //1
+  remap_data.x_axis_sign = 1;//0xFF;
+  remap_data.y_axis = 1;  //0
+  remap_data.y_axis_sign = 0;//0xFF;
   remap_data.z_axis = 2;
-  remap_data.z_axis_sign = 0xFF;
+  remap_data.z_axis_sign = 1;//0xFF;
+
   // Need to raise the wrist function, need to set the correct axis
   sensor.setRemapAxes(&remap_data);
 
@@ -2497,8 +2508,12 @@ void WatchyGSR::CheckAlarm(int I){
     bA = (Alarms_Hour[I] == WatchTime.Local.Hour && Alarms_Minutes[I] == WatchTime.Local.Minute);
     if (!bA && Alarms_Times[I] == 0 && (Alarms_Active[I] & ALARM_TRIGGERED) != 0){
         Alarms_Active[I] &= ALARM_NOTRIGGER;
-    }else if ((Alarms_Active[I] & B) == B){  // Active and Active Day.
-        if (bA && Alarms_Times[I] == 0 && (Alarms_Active[I] & ALARM_TRIGGERED) == 0){
+    }else if ((Alarms_Active[I] & B) == B && (Alarms_Active[I] & ALARM_TRIGGERED) == 0){  // Active and Active Day.
+        // Check alarm listed to see if it is earlier than the one slated.
+        if (Alarms_Hour[I] == WatchTime.Local.Hour && Alarms_Minutes[I] > WatchTime.Local.Minute && !bA){
+            if (WatchTime.NextAlarm == 99) WatchTime.NextAlarm = I; else if (Alarms_Minutes[I] < Alarms_Minutes[WatchTime.NextAlarm]) WatchTime.NextAlarm = I;
+        }
+        if (bA && Alarms_Times[I] == 0){
             Alarms_Times[I] = 255;
             Alarms_Playing[I] = 30;
             Darkness.Last=millis();
@@ -2518,7 +2533,7 @@ void WatchyGSR::CheckCD(){
   uint16_t M = ((WatchTime.UTC_RAW - TimerDown.LastUTC) / 60);
   uint16_t E;
 
-    if ( M > 0){
+    if (M > 0){
         TimerDown.LastUTC = WatchTime.UTC_RAW;
         E = TimerDown.Mins + (TimerDown.Hours * 60) - M;
         TimerDown.Hours = (E / 60);
@@ -2536,7 +2551,7 @@ void WatchyGSR::CheckCD(){
 // Counts the active (255) alarms/timers and after 3, sets them to lower values.
 void WatchyGSR::CalculateTones(){
     uint8_t Count = 0;
-    CheckAlarm(0); CheckAlarm(1); CheckAlarm(2); CheckAlarm(3); CheckCD();
+    WatchTime.NextAlarm = 99; CheckAlarm(0); CheckAlarm(1); CheckAlarm(2); CheckAlarm(3); CheckCD();
     if (Alarms_Times[0] > 0) Count++;
     if (Alarms_Times[1] > 0) Count++;
     if (Alarms_Times[2] > 0) Count++;
