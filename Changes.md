@@ -63,3 +63,9 @@
 **Version 1.3.8:**
 - **ADD:**  Extra Design functionality for Unified format of main Watchy face which includes orientation of elements.
 - **FIX:**  InsertWiFi() now only runs if no other process is using the WiFi to avoid collsions.
+
+**Version 1.3.9:**
+- **FIX:**  Repaired Screen Blanking issues with alarms during Bed Time (utilizing atMinuteWake from SmallRTC 1.5).
+- **FIX:**  Recognize Countdown Timer is in use during Screen Blanking and not use atMinuteWake, but nextMinuteWake instead.
+- **ADD:**  All Screen Blanking now use atMinuteWake when Countdown Timer is not in use, this works by waking at minutes 0 and 30 or the next Alarm minute.
+- **FIX:**  makeTime and breakTime introduce a month and week day starting with 1, which is incorrect, versions from SmallRTC & SmallNTP now fix this issue, so January 29 will not be seen as February 29 by the RTCs.
