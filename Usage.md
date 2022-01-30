@@ -21,8 +21,10 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | Time Mode        | **{AM/PM}** or 24 Hour mode of time display. |
 |            | Feedback         | **{Enable}** or Disable haptic feedback on button presses (during use). |
 |            | Turbo Time       | How many seconds Watchy stays active after your last button press before sleeping. |
-|            | Screen Off       | Enables "Always", Disabled or "Bed Time" [^5] screen blanking (which uses no cpu to update display, battery savings). |
+|            | Screen Off       | **{Disabled}**, "Always", "Bed Time" [^6], "Double Tap On", "Double Tap Only" Screen Blanking (which uses no cpu to update display, battery savings). |
 |            | Performance      | Offers **{Turbo}**, Normal and Battery Saving [^3] options, reduces responsiveness as you go away from Turbo. |
+|            | WiFi Tx Power    | Allows the user to lower the default WiFi Transmission Power to save battery life during WiFi operations. |
+|            | Information      | Shows the current Watchy_GSR Version and current Battery Voltage when you press "MENU". |
 |            | Sync Watchy      | Sync Watchy RTC by Time, TimeZone, TimeZone & Time |
 |            | Watchy Connect   | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. "BACK" to immediately exit |
 |            | OTA Update       | Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.) |
@@ -78,7 +80,7 @@ SCREEN OFF:
 4.  "Sleeping Begins" and "Sleeping Ends" cannot be the same hour, but can be 1 hour apart from each other, either before or after the other.
 5.  All modes when not **Disabled** will use the "Screen Auto-Off" delay after any button press.
 6.  While the screen is off, any button press will just turn it on for the duration set in "Screen Auto-Off", a second press is needed to use the Watchy as normal.
-7.  If Turbo Time is set longer than "Screen Auto-Off", Turbo Time will still be active and buttons will react as normal with respect to screen blanking.
+7.  If Turbo Time is set longer than "Screen Auto-Off", Turbo Time will still be active and buttons will react as normal with respect to Screen Blanking.
 8.  "Double Tap On" will allow buttons to turn the screen on or a double tap on the device.
 9.  "Double Tap Only" will only allow a double tap to turn the screen on, only then will buttons work.  "Screen Auto-Off" will default to 2 seconds if off.
 
@@ -105,4 +107,5 @@ WiFi options in the Options menu will not be available if the low battery indica
 [^2]:  "Always" mode is used during non-RTC mode, with the exception that menus are ignored (acting like "Bed Time" mode).
 [^3]:  "Battery Saving" is forced on when using non-RTC mode.
 [^4]:  Disabling Non-Volatile Storage will ask for you to select you want to proceed, if you proceed the NVS will have the settings removed, Watchy will reboot and will continue to not store any settings in the NVS.
-[^5]:  With the invention of SmallRTC's atMinuteWake, Bed Time now uses atMinuteWake for on the hour (0) and 30 minutes past the hour, do not place alarms inside Bed Time hours unless they are on the hour (0) or 30 minutes past the hour.  If you don't adhere to this, the alarm will *not* fire for that day.  Move the Bed Time period away from any alarms to ensure they'll work.
+[^5]:  With the invention of SmallRTC's atMinuteWake, all Screen Blanking will now use atMinuteWake for on the hour (0 minute) and 30 minutes past the hour, Alarms will now *WORK* in all Screen Blanking modes and will properly fire.  The only change is, the Countdown Timer will *NOT* allow the atMinuteWake to happen, but normal nextMinuteWakes until it finishes.  SmallRTC's atMinuteWake will cause the Watchy to only wake 2 (plus Alarms) times an hour, massively reducing battery usage.
+[^6]:  Double Tap works while in Bed Time, as do the buttons.
