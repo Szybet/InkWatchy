@@ -170,6 +170,7 @@ RTC_DATA_ATTR struct NTPUse final {
 RTC_DATA_ATTR struct GoneDark final {
     bool Went;
     unsigned long Last;
+    bool Woke;
 } Darkness;                     // Whether or not the screen is darkened.
 
 RTC_DATA_ATTR struct dispUpdate final {
@@ -246,7 +247,7 @@ void WatchyGSR::setupDefaults(){
 void WatchyGSR::init(String datetime){
     uint64_t wakeupBit;
     int AlarmIndex, Pushed;                          // Alarm being played.
-    bool WaitForNext, Pulse, DoOnce, B;
+    bool WaitForNext, Pulse, DoOnce, B, Up;
     unsigned long Since, APLoop;
     String S;
     esp_sleep_wakeup_cause_t wakeup_reason;
@@ -268,6 +269,7 @@ void WatchyGSR::init(String datetime){
     Updates.Tapped = false;
     LastButton = 0;
     Darkness.Last = 0;
+    Darkness.Woke = false;
     TurboTime = 0;
     CPUSet.Freq=getCpuFrequencyMhz();
 
@@ -295,10 +297,10 @@ void WatchyGSR::init(String datetime){
                 if (Button == 5 && Options.SleepStyle > 1){  // Accelerometer caused this.
                     if (Options.SleepMode == 0) Options.SleepMode = 2;  // Do this to avoid someone accidentally not setting this before usage.
                     UpdateClock(); // Make sure these are done during times when it won't.
-                    Updates.Tapped = true; Darkness.Last=millis(); UpdateDisp = true; // Update Screen to new state.
+                    Darkness.Woke=true; Updates.Tapped=true; Darkness.Last=millis(); UpdateDisp = true; // Update Screen to new state.
                 }else if (Button == 6){  // Wrist.
                     UpdateClock(); // Make sure these are done during times when it won't.
-                    Darkness.Last=millis(); UpdateDisp = true; // Do this anyways, always.
+                    Darkness.Woke=true; Darkness.Last=millis(); UpdateDisp = true; // Do this anyways, always.
                 }
             }
             InsertOnMinute();
@@ -362,6 +364,10 @@ void WatchyGSR::init(String datetime){
                 while (ActiveMode == true) { // Here, we hijack the init and LOOP until the NTP is done, watching for the proper time when we *SHOULD* update the screen to keep time with everything.
                     Since=millis();
                     ManageTime();   // Handle Time method.
+                    Up=IsUp();
+                    // Wrist Tilt delay, keep screen on during this until you put your wrist down.
+                    if (Darkness.Woke && Up) Darkness.Last = millis();
+                    if ((Options.SleepStyle == 1 || Options.SleepStyle > 2) && Darkness.Went && Up) { Darkness.Last = millis(); Darkness.Woke = true; UpdateDisp=Showing(); }
                     processWiFiRequest(); // Process any WiFi requests.
                     if (!Sensitive){
                         if (currentWiFi() == WL_CONNECTED && NTPData.State == 0 && !OTAUpdate && !WatchyAPOn && !NTPData.TimeTest) InsertWiFi();
@@ -1465,7 +1471,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
   if (Darkness.Went && Options.SleepStyle == 4 && !WatchTime.DeadRTC && !Updates.Tapped) return; // No buttons unless a tapped happened.
   if (!UpRight()) return; // Don't do buttons if not upright.
   if (LastButton > 0 && (millis() - LastButton) < KEYPAUSE) return;
-  if (Darkness.Went) { Darkness.Last=millis(); UpdateClock(); UpdateDisp=true; return; }  // Don't do the button, just exit.
+  if (Darkness.Went) { Darkness.Woke=true; Darkness.Last=millis(); UpdateClock(); UpdateDisp=true; return; }  // Don't do the button, just exit.
   if ((NTPData.TimeTest || OTAUpdate) && (Pressed == 3 || Pressed == 4)) return;  // Up/Down don't work in these modes.
 
   switch (Pressed){
@@ -2267,6 +2273,7 @@ void WatchyGSR::ManageTime(){
         if (WatchTime.DeadRTC) WatchTime.WatchyRTC += 60000000; else WatchTime.EPSMS += 60000;
         WatchTime.NewMinute=true;
     }
+
     if (WatchTime.NewMinute && !NTPData.TimeTest && !IDidIt){
         if (WatchTime.DeadRTC){
             WatchTime.UTC_RAW += 60;
@@ -2279,10 +2286,10 @@ void WatchyGSR::ManageTime(){
             if (Options.UsingDrift){
                 WatchTime.Drifting += Options.Drift;
                 IDidIt = true;
-                UpdateDisp=Showing();
-                UpdateUTC();
-                UpdateClock();
             }
+            UpdateDisp=Showing();
+            UpdateUTC();
+            UpdateClock();
         }
     }
 }
@@ -2356,12 +2363,12 @@ void WatchyGSR::_bmaConfig() {
   sensor.setINTPinConfig(config, BMA4_INTR1_MAP);
 
   struct bma423_axes_remap remap_data;
-  remap_data.x_axis = 0;  //1
-  remap_data.x_axis_sign = 1;//0xFF;
-  remap_data.y_axis = 1;  //0
-  remap_data.y_axis_sign = 0;//0xFF;
+  remap_data.x_axis = 1;
+  remap_data.x_axis_sign = 1;
+  remap_data.y_axis = 0;
+  remap_data.y_axis_sign = 1;
   remap_data.z_axis = 2;
-  remap_data.z_axis_sign = 1;//0xFF;
+  remap_data.z_axis_sign = 1;
 
   // Need to raise the wrist function, need to set the correct axis
   sensor.setRemapAxes(&remap_data);
@@ -2386,10 +2393,12 @@ void WatchyGSR::_bmaConfig() {
 void WatchyGSR::UpdateBMA(){
     bool BT = (Options.SleepStyle == 2 && BedTime());
     bool B = (Options.SleepStyle > 2);
+    bool A = (Options.SleepStyle == 1);
 
-    sensor.enableFeature(BMA423_WAKEUP,B || BT);
-    sensor.enableFeature(BMA423_TILT,(Options.SleepStyle == 1));
-    sensor.enableWakeupInterrupt(Options.SleepStyle == 1 || B || BT);
+    sensor.enableFeature(BMA423_WAKEUP,B | BT);
+    sensor.enableWakeupInterrupt(B | BT);
+    sensor.enableFeature(BMA423_TILT,A | B);
+    sensor.enableTiltInterrupt(A | B);
 }
 
 float WatchyGSR::getBatteryVoltage(){ return ((BatteryRead() - 0.0125) +  (BatteryRead() - 0.0125) + (BatteryRead() - 0.0125) + (BatteryRead() - 0.0125)) / 4; }
@@ -3212,9 +3221,13 @@ bool WatchyGSR::BedTime() {
 }
 
 bool WatchyGSR::UpRight() {
-    uint8_t Direction = sensor.getDirection();
-    if (Options.Orientated || (BedTime() && Options.BedTimeOrientation)) return (Direction == DIRECTION_DISP_UP || Direction == DIRECTION_TOP_EDGE); // Return whether or not it is up.
+    if (Options.Orientated || (BedTime() && Options.BedTimeOrientation)) return IsUp();
     return true;  // Fake it til you make it.
+}
+
+bool WatchyGSR::IsUp() {
+      uint8_t Direction = sensor.getDirection();
+      return (Direction == DIRECTION_DISP_UP || Direction == DIRECTION_BOTTOM_EDGE); // Return whether or not it is up.
 }
 
 bool WatchyGSR::DarkWait(){
