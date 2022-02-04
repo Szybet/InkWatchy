@@ -21,7 +21,7 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | Time Mode        | **{AM/PM}** or 24 Hour mode of time display. |
 |            | Feedback         | **{Enable}** or Disable haptic feedback on button presses (during use). |
 |            | Turbo Time       | How many seconds Watchy stays active after your last button press before sleeping. |
-|            | Screen Off       | **{Disabled}**, "Always", "Bed Time" [^6], "Double Tap On", "Double Tap Only" Screen Blanking (which uses no cpu to update display, battery savings). |
+|            | Screen Off       | **{Disabled}**, "Always", "Bed Time" [^6], "Double Tap On", "Double Tap Only".  [^7] Screen Blanking (which uses no cpu to update display, battery savings). |
 |            | Performance      | Offers **{Turbo}**, Normal and Battery Saving [^3] options, reduces responsiveness as you go away from Turbo. |
 |            | WiFi Tx Power    | Allows the user to lower the default WiFi Transmission Power to save battery life during WiFi operations. |
 |            | Information      | Shows the current Watchy_GSR Version and current Battery Voltage when you press "MENU". |
@@ -109,3 +109,4 @@ WiFi options in the Options menu will not be available if the low battery indica
 [^4]:  Disabling Non-Volatile Storage will ask for you to select you want to proceed, if you proceed the NVS will have the settings removed, Watchy will reboot and will continue to not store any settings in the NVS.
 [^5]:  With the invention of SmallRTC's atMinuteWake, all Screen Blanking will now use atMinuteWake for on the hour (0 minute) and 30 minutes past the hour, Alarms will now *WORK* in all Screen Blanking modes and will properly fire.  The only change is, the Countdown Timer will *NOT* allow the atMinuteWake to happen, but normal nextMinuteWakes until it finishes.  SmallRTC's atMinuteWake will cause the Watchy to only wake 2 (plus Alarms) times an hour, massively reducing battery usage.
 [^6]:  Double Tap works while in Bed Time, as do the buttons.
+[^7]:  While your wrist is "Up", the Watchy will sit in Active Mode (battery usage), until you lower or tilt your wrist to cause the screen to go out again.
