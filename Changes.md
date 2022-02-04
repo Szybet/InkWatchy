@@ -69,3 +69,7 @@
 - **FIX:**  Recognize Countdown Timer is in use during Screen Blanking and not use atMinuteWake, but nextMinuteWake instead.
 - **ADD:**  All Screen Blanking now use atMinuteWake when Countdown Timer is not in use, this works by waking at minutes 0 and 30 or the next Alarm minute.
 - **FIX:**  makeTime and breakTime introduce a month and week day starting with 1, which is incorrect, versions from SmallRTC & SmallNTP now fix this issue, so January 29 will not be seen as February 29 by the RTCs.
+
+**Version 1.4:**
+- **FIX:**  Corrected the orientation of the display with the accelerometer.
+- **ADD:**  Added Wrist Tilt support for all Screen Blanking with "Screen on Hold" (actively watches your wrist to turn screen off again, heavy battery usage).
