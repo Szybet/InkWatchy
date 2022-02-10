@@ -5,8 +5,9 @@ A structure allows you to reposition AND change font color along with font for e
 | Design Element  | Default | Description |
 | --------------- | ------- | ----------- |
 | Design.Menu.Top | 72 | Top of where the Menu starts vertically on the screen. |
-| Design.Menu.Header | 97 | Vertical baseline of Menu Header (section). |
-| Design.Menu.Data | 138 | Vertical baseline of Menu Data (value to set/change). |
+| Design.Menu.Header | **25** | Vertical baseline of Menu Header (section) **from Design.Menu.Top**. |
+| Design.Menu.Data | **66** | Vertical baseline of Menu Data (value to set/change) **from Design.Menu.Top**. |
+| Design.Menu.Font | &aAntiCorona12pt7b | Font used for Menu Header & Data display. |
 | Design.Face.Time | 56 | Vertical baseline of Time on screen. |
 | Design.Face.TimeHeight | 45 | Height of font used for PM indicator so it will sit at the top of TimeFont. |
 | Design.Face.TimeColor | GxEPD_BLACK | Color the Time is drawn in. |
