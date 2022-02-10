@@ -10,9 +10,9 @@
 // WiFi
 #define WiFi_AP_SSID "Watchy Connect"
 #define WiFi_AP_PSWD "Watchy123"
-#define WiFi_AP_HIDE false
-#define WiFi_AP_MAXC 4
-#define WiFi_SSID_MAX 32
+#define WiFi_AP_HIDE false  // Hide "WiFi_AP_SSID" so it doesn't show up in the normal scan list.  IS NOT A SECURITY METHOD!
+#define WiFi_AP_MAXC 4      // Maximum user connections (default is 4).
+#define WiFi_SSID_MAX 32    // Do not change these two values.
 #define WiFi_PASS_MAX 63
 // Use instead of Watchy Connect (if necessary)
 #define WiFi_DEF_SSID ""
@@ -36,11 +36,8 @@
 #define MenuWidth 200
 #define MenuHeight 83
 
-// BMA For Tilt/DTap
-#define BMA432_INT1_PIN 14
-#define BMA432_INT2_PIN 12
-#define BMA432_INT1_MASK (1<<BMA432_INT1_PIN)
-#define BMA432_INT2_MASK (1<<BMA432_INT2_PIN)
+// Max number of WatchStyles
+#define MaxStyles 1
 
 // Menu offsets so I don't have to statically entere them everywhere.
 #define MENU_STEPS 0
@@ -54,27 +51,28 @@
 #define MENU_TONES 8
 #define MENU_TIMEDN 9
 #define MENU_TIMEUP 10
-#define MENU_DISP 11
-#define MENU_BRDR 12
-#define MENU_SIDE 13
-#define MENU_SWAP 14
-#define MENU_ORNT 15
-#define MENU_MODE 16
-#define MENU_FEED 17
-#define MENU_TRBO 18
-#define MENU_DARK 19
-#define MENU_SAVE 20
-#define MENU_TPWR 21
-#define MENU_INFO 22
-#define MENU_TRBL 23
-#define MENU_SYNC 24
-#define MENU_WIFI 25
-#define MENU_OTAU 26
-#define MENU_OTAM 27
-#define MENU_SCRN 28
-#define MENU_RSET 29
-#define MENU_TOFF 30  // Time Diff offset.
-#define MENU_UNVS 31
+#define MENU_STYL 11
+#define MENU_DISP 12
+#define MENU_BRDR 13
+#define MENU_SIDE 14
+#define MENU_SWAP 15
+#define MENU_ORNT 16
+#define MENU_MODE 17
+#define MENU_FEED 18
+#define MENU_TRBO 19
+#define MENU_DARK 20
+#define MENU_SAVE 21
+#define MENU_TPWR 22
+#define MENU_INFO 23
+#define MENU_TRBL 24
+#define MENU_SYNC 25
+#define MENU_WIFI 26
+#define MENU_OTAU 27
+#define MENU_OTAM 28
+#define MENU_SCRN 29
+#define MENU_RSET 30
+#define MENU_TOFF 31  // Time Diff offset.
+#define MENU_UNVS 32
 
 // Menu segments.
 #define MENU_INNORMAL 0
@@ -98,11 +96,11 @@
 #define AlarmSetup 1234567890
 
 //pins
-#define RTC_PIN GPIO_NUM_27
-#define CS 5
-#define DC 10
-#define RESET 9
-//#define BUSY 19
+#define RTC_INT_PIN GPIO_NUM_27
+#define EPD_CS 5
+#define EPD_DC 10
+#define EPD_RESET 9
+#define EPD_BUSY 19
 #define VIB_MOTOR_PIN 13
 #define MENU_BTN_PIN 26
 #define BACK_BTN_PIN 25

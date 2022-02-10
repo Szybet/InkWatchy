@@ -20,23 +20,25 @@
 #include "GxEPD2_BW.h"
 #include <mbedtls/base64.h>
 #include <Wire.h>
-#include <bma.h>
+#include <StableBMA.h>
 
 #include "Icons_GSR.h"
 #include "ArduinoNvs.h"
 
-#include "aAntiCorona15pt7b.h"
 #include "Bronova_Regular13pt7b.h"
+#include "aAntiCorona12pt7b.h"
+#include "aAntiCorona13pt7b.h"
+#include "aAntiCorona14pt7b.h"
+#include "aAntiCorona15pt7b.h"
 #include "aAntiCorona16pt7b.h"
 #include "aAntiCorona36pt7b.h"
-#include "aAntiCorona12pt7b.h"
 
 class WatchyGSR{
     public:
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.4";
+        static constexpr const char* Build = "1.4.1";
         enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
     public:
         WatchyGSR();
@@ -70,6 +72,10 @@ class WatchyGSR{
         virtual void AskForWiFi() final;
         virtual wl_status_t currentWiFi() final;
         virtual void endWiFi() final;
+        virtual void getAngle(uint16_t Angle, uint8_t Away, uint8_t &X, uint8_t &Y) final;
+        virtual bool SafeToDraw() final;
+        void initWatchFaceStyle();
+        void drawWatchFaceStyle();
    private:
         void setStatus(String Status);
         void drawMenu();
@@ -122,7 +128,6 @@ class WatchyGSR{
         bool InTurbo();
         bool BedTime();
         bool UpRight();
-        bool IsUp();
         bool DarkWait();
         bool Showing();
         void RefreshCPU();
@@ -131,6 +136,5 @@ class WatchyGSR{
         void DisplayInit(bool ForceDark = false);
         void DisplaySleep();
 };
-
-extern RTC_DATA_ATTR BMA423 sensor;
+extern RTC_DATA_ATTR StableBMA SBMA;
 #endif
