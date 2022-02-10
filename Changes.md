@@ -73,3 +73,8 @@
 **Version 1.4:**
 - **FIX:**  Corrected the orientation of the display with the accelerometer.
 - **ADD:**  Added Wrist Tilt support for all Screen Blanking with "Screen on Hold" (actively watches your wrist to turn screen off again, heavy battery usage).
+
+**Version 1.4.1:**
+- **FIX:**  Corrected missing internal wake functions.
+- **ADD:**  Watch Style menu with 1 extra style called "Ballsy".
+- **FIX:**  Re-arranged Design Menu setup and included Font.
