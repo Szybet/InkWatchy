@@ -1,28 +1,28 @@
 Compiling instructions:
 
-In order to compile this you need:  Arduino Libraries, ArduinoOTA, SmallRTC (GuruSR), SmallNTP (GuruSR), Olson2POSIX (GuruSR) AND Watchy (1.3.3 or greater) base.
+In order to compile this you need:  Arduino Libraries, ArduinoOTA, SmallRTC (GuruSR), SmallNTP (GuruSR), StableBMA (GuruSR), Olson2POSIX (GuruSR) AND Watchy (1.2.9 or greater) base.
 
-**VERSION 1.3.7 CHANGES**
+**VERSION 1.4.1 CHANGES**
 
-Requires Watchy base 1.3.3 or greater.
+Requires Watchy base 1.2.9 or greater, as well as the above libraries.  When editing the file changes below, DO NOT COPY items that say not to, instead make the changes or copy in the changes to avoid compiler errors.
 
 You'll need to edit 2 files:
 
 GxEPD2_154_D67.cpp:
 
-Insert the following code past the following:
+Insert the following code past the following:  (Note, the uint8/16_t's below can either be uint8_t or uint16_t based on GxEPD2 version, don't copy those lines.)
 
-GxEPD2_154_D67::GxEPD2_154_D67(int8_t cs, int8_t dc, int8_t rst, int8_t busy) :
+GxEPD2_154_D67::GxEPD2_154_D67(int8/16_t cs, int8/16_t dc, int8/16_t rst, int8/16_t busy) :
   GxEPD2_EPD(cs, dc, rst, busy, HIGH, 10000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate)
 {
 }
 
 to read:
 
-GxEPD2_154_D67::GxEPD2_154_D67(int8_t cs, int8_t dc, int8_t rst, int8_t busy) :
-  GxEPD2_EPD(cs, dc, rst, busy, HIGH, 10000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate)
-{
-}
+GxEPD2_154_D67::GxEPD2_154_D67(int8/16_t cs, int8/16_t dc, int8/16_t rst, int8/16_t busy) :  <- DO NOT COPY THIS
+  GxEPD2_EPD(cs, dc, rst, busy, HIGH, 10000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate)  <- DO NOT COPY THIS
+{  <- DO NOT COPY THIS
+}  <- DO NOT COPY THIS
 
 bool IsDark;                                    // GuruSR:  Changed for setDarkBorder
 void GxEPD2_154_D67::setDarkBorder(bool Dark){  // GuruSR:  Changed for setDarkBorder
@@ -53,19 +53,19 @@ to:
 
 void GxEPD2_154_D67::_InitDisplay()
 {
-  if (_hibernating) _reset();
-  delay(10); // 10ms according to specs
-  _writeCommand(0x12); // soft reset
-  delay(10); // 10ms according to specs
-  _writeCommand(0x01); // Driver output control
-  _writeData(0xC7);
-  _writeData(0x00);
-  _writeData(0x00);
-  _writeCommand(0x3C); // BorderWavefrom
+  if (_hibernating) _reset();                               <- DO NOT COPY THIS
+  delay(10); // 10ms according to specs                     <- DO NOT COPY THIS
+  _writeCommand(0x12); // soft reset                        <- DO NOT COPY THIS
+  delay(10); // 10ms according to specs                     <- DO NOT COPY THIS
+  _writeCommand(0x01); // Driver output control             <- DO NOT COPY THIS
+  _writeData(0xC7);                                         <- DO NOT COPY THIS
+  _writeData(0x00);                                         <- DO NOT COPY THIS
+  _writeData(0x00);                                         <- DO NOT COPY THIS
+  _writeCommand(0x3C); // BorderWavefrom                    <- DO NOT COPY THIS
   _writeData(IsDark ? 0x02 : 0x05);         // GuruSR:  Changed for setDarkBorder
-  _writeCommand(0x18); // Read built-in temperature sensor
-  _writeData(0x80);
-  _setPartialRamArea(0, 0, WIDTH, HEIGHT);
+  _writeCommand(0x18); // Read built-in temperature sensor  <- DO NOT COPY THIS
+  _writeData(0x80);                                         <- DO NOT COPY THIS
+  _setPartialRamArea(0, 0, WIDTH, HEIGHT);                  <- DO NOT COPY THIS
 }
 
 Edit GxEPD2_154_D67.h to include the following after:
