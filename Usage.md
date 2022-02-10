@@ -13,7 +13,8 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |           | Tone Repeats      |  **{Full}** repeats.  Allows you to reduce the amount of alarm tones that repeat (80%-20% in 20% increments).  Resets the tone repeats for all alarms when you change this. |
 |**Timers** | Countdown Timer   | HH:MM -> {Full} -> On/**{Off}**  (Full, see Tone Repeats above for information). |
 |           | Elapsed Time      | HH:MM On/**{Off}** |
-|**Options** | Display Style    | **{Light}** or Dark mode. |
+|**Options** | Watch Style      | Choose between "Original" and "Ballsy" style. |
+|            | Display Style    | **{Light}** or Dark mode. |
 |            | Border Mode      | Border around the display:  **{Light}** (White) or Dark (Black). |
 |            | Dexterity        | Swap the Back/Menu with UP/DOWN for left-handed users. |
 |            | Menu & Back      | **{Normal}** or Swap the Menu & Back button positions. |
