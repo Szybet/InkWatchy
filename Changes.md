@@ -78,3 +78,7 @@
 - **FIX:**  Corrected missing internal wake functions.
 - **ADD:**  Watch Style menu with 1 extra style called "Ballsy".
 - **FIX:**  Re-arranged Design Menu setup and included Font.
+
+**Version 1.4.2:**
+- **FIX:**  Repaired the Tilt detection so non-Screen Blanking won't keep the Watchy in Active Mode draining the battery while upright.
+- **ADD:**  Extra functions (see Override Information) to offer adding or replacing existing Watch Styles without altering the base code.
