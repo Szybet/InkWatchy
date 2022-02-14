@@ -57,6 +57,9 @@ Functions for inserting extra code in places.
 | InsertOnMinute() | This Function is called once the Clock has been updated to the new minute but before the screen is drawn. |
 | InsertWiFi() | This Function is called repeatedly in a loop only *IF* WiFi has been enabled and connected, only use this if you asked for it. |
 | InsertWiFiEnding() | This Function is called when WiFi has been turned off. |
+| InsertAddWatchStyles() | Use this function to add Watch Styles starting from Index 0 [`AllowDefaultWatchStyles(false)`] or from Index 2 if allowing default Watch Styles. |
+| InsertInitWatchStyle() | The init function as seen at the end of Watchy_GSR.cpp.  See **Version 1.4.2 Additions** below. |
+| InsertDrawWatchStyle() | The Draw function as seen at the bottom of Watchy_GSR.cpp. See **Version 1.4.2 Additions** below. |
  
 Functions available for communication:
 
@@ -74,6 +77,8 @@ Functions available for communication:
 | AskForWiFi() | Tells the Watchy_GSR that your code wants WiFi, when it connects, you will see InsertWiFi() called, make sure you keep track of this yourself. |
 | currentWiFi() | Returns WL_CONNECTED when connected or not, InsertWiFi() is only called when WL_CONNECTED happens. |
 | endWiFi() | Tell Watchy_GSR that you're finished with the WiFi, only do this *IF* you asked for it. |
+| AllowDefaultWatchStyles(bool Allow) | Will state if you want (**{true}**/false) the original Watch Styles (Index 0 (Classic GSR) and 1 (Ballsy) to be used first). |
+| AddWatchStyle(String StyleName) | Will return the Index of the added Watch Style (255 = error), 30 character max limit on Watch Style name. |
 
 **NOTES ON WiFi**
 
@@ -100,3 +105,25 @@ Recommend an int variable being set to 1 when you `AskForWiFi()`, then when `Ins
 | WatchTime.UTC.Day | Contains the Date (1 to 31) in Coordinated Universal time. |
 | WatchTime.UTC.Month | Contains the Month (1 to 12) in Coordinated Universal time. |
 | WatchTime.UTC.Year | Contains the Year (since 1900) in Coordinated Universal time. |
+
+**Version 1.4.2 Additions**
+
+The addition of the following functions will allow overriding both the original Watch Styles or adding to them, the author's choice.  This is all done without writing any changes to the Watchy_GSR base code, so as to avoid having to re-apply changes to that code after version changes.
+
+Overriding `InsertDefaults()` function, you can call this function:
+
+`AllowDefaultWatchStyles({true}/false);` // Will state if you want the original Watch Styles (Index 0 (Classic GSR) and 1 (Ballsy) to be used first).
+
+Just after the default Watch Styles are added (if told to), another function will be called:
+
+`InsertAddWatchStyles()` // Use this function to add Watch Styles starting from Index 0 [`AllowDefaultWatchStyles(false)`] or from Index 2 if allowing default Watch Styles.
+
+`uint8_t AddWatchStyle(string StyleName)` // Will return the Index of the added Watch Style (255 = error), 30 character max limit on Watch Style name.
+
+Override these two functions to add your Init and Draw for the Watch Styles:
+
+`void InsertInitWatchStyle(uint8_t StyleID)`  // The init function as seen at the end of Watchy_GSR.cpp.
+
+`void InsertDrawWatchStyle(uint8_t StyleID)`  // The Draw function as seen at the bottom of Watchy_GSR.cpp.
+
+Overriding in this manner can be done using a switch and only checking for your Indexes, but you could also just as easily use an IF statement and record your Watch Styles in uint8_t variables for each during `InsertAddWatchStyles()`.  The best part about this is, all of this is done PRIOR to the settings reload from NVS (if not disabled), so your chosen Watch Style will remain after a reboot.
