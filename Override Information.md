@@ -104,7 +104,7 @@ Recommend an int variable being set to 1 when you `AskForWiFi()`, then when `Ins
 | WatchTime.UTC.Wday | Contains the Day of Week (Days since Sunday) in Coordinated Universal time. |
 | WatchTime.UTC.Day | Contains the Date (1 to 31) in Coordinated Universal time. |
 | WatchTime.UTC.Month | Contains the Month (1 to 12) in Coordinated Universal time. |
-| WatchTime.UTC.Year | Contains the Year (since 1900) in Coordinated Universal time. |
+| WatchTime.UTC.Year | Contains the Year (since 1970) in Coordinated Universal time. |
 
 **Version 1.4.2 Additions**
 
