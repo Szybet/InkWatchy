@@ -38,7 +38,7 @@ class WatchyGSR{
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.4.1";
+        static constexpr const char* Build = "1.4.2";
         enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
     public:
         WatchyGSR();
@@ -69,6 +69,11 @@ class WatchyGSR{
         void InsertOnMinute();
         void InsertWiFi();
         void InsertWiFiEnding();
+        void InsertAddWatchStyles();
+        void InsertDrawWatchStyle(uint8_t StyleID);
+        void InsertInitWatchStyle(uint8_t StyleID);
+        virtual uint8_t AddWatchStyle(String StyleName) final;
+        virtual void AllowDefaultWatchStyles(bool Allow = true) final;
         virtual void AskForWiFi() final;
         virtual wl_status_t currentWiFi() final;
         virtual void endWiFi() final;

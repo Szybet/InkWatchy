@@ -32,12 +32,12 @@
 #define WATCHON 0
 #define MENUON 1
 
+// Maximum styles possible.
+#define MaxStyles 25
+
 // Nenu size defines.
 #define MenuWidth 200
 #define MenuHeight 83
-
-// Max number of WatchStyles
-#define MaxStyles 1
 
 // Menu offsets so I don't have to statically entere them everywhere.
 #define MENU_STEPS 0

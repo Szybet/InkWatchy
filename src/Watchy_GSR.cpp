@@ -105,9 +105,16 @@ RTC_DATA_ATTR struct Designing final {
     } Status;
 } Design;
 
+RTC_DATA_ATTR struct DesignStyles final {
+    uint8_t Count;
+    char Style[32 * MaxStyles];
+} WatchStyles;
+
 RTC_DATA_ATTR int GuiMode;
 RTC_DATA_ATTR bool VibeMode;          // Vibe Motor is On=True/Off=False, used for the Haptic and Alarms.
 RTC_DATA_ATTR String WatchyStatus;    // Used for the indicator in the bottom left, so when it changes, it asks for a screen refresh, if not, it doesn't.
+RTC_DATA_ATTR int BasicWatchStyles;
+RTC_DATA_ATTR bool DefaultWatchStyles;  // States that the original 2 Watch Styles are to be added.
 
 RTC_DATA_ATTR struct TimeData final {
     time_t UTC_RAW;           // Copy of the UTC on init.
@@ -249,6 +256,7 @@ void WatchyGSR::init(String datetime){
     int AlarmIndex, Pushed;                          // Alarm being played.
     bool WaitForNext, Pulse, DoOnce, B, Up;
     unsigned long Since, APLoop;
+    uint8_t I;
     String S;
     esp_sleep_wakeup_cause_t wakeup_reason;
 
@@ -307,12 +315,26 @@ void WatchyGSR::init(String datetime){
             SRTC.resetWake();
             break;
         default: //reset
+            WatchStyles.Count = 0;
+            BasicWatchStyles = -1;
             SRTC.init();
             initZeros();
             setupDefaults();
             Rebooted=true;
             Darkness.Woke=true;
             _bmaConfig();
+            if (DefaultWatchStyles){
+                I = AddWatchStyle("Classic GSR");
+                I = AddWatchStyle("Ballsy");
+                BasicWatchStyles = I;
+            }
+            InsertAddWatchStyles();
+            if (WatchStyles.Count == 0){
+                I = AddWatchStyle("Classic GSR");
+                I = AddWatchStyle("Ballsy");
+                BasicWatchStyles = I;
+                DefaultWatchStyles = true;
+            }
             UpdateUTC();
             if (OkNVS(GName)) B = NVS.getString(GTZ,S);
             OP.setCurrentPOSIX(S);
@@ -369,8 +391,10 @@ void WatchyGSR::init(String datetime){
                     ManageTime();   // Handle Time method.
                     Up=SBMA.IsUp();
                     // Wrist Tilt delay, keep screen on during this until you put your wrist down.
-                    if (Darkness.Woke && Up) Darkness.Last = millis();
-                    if ((Options.SleepStyle == 1 || Options.SleepStyle > 2) && Darkness.Went && Up && !WatchTime.BedTime) { Darkness.Last = millis(); Darkness.Woke = true; UpdateDisp=Showing(); }
+                    if (Options.SleepStyle == 1 || Options.SleepStyle > 2){
+                        if (Darkness.Woke && Up) Darkness.Last = millis();
+                        if (Darkness.Went && Up && !WatchTime.BedTime) { Darkness.Last = millis(); Darkness.Woke = true; UpdateDisp=Showing(); }
+                    }
                     processWiFiRequest(); // Process any WiFi requests.
                     if (!Sensitive){
                         if (currentWiFi() == WL_CONNECTED && NTPData.State == 0 && !OTAUpdate && !WatchyAPOn && !NTPData.TimeTest) InsertWiFi();
@@ -990,14 +1014,9 @@ void WatchyGSR::drawMenu(){
     }else if (Menu.Item == MENU_OPTIONS){ // Options Menu
         O = "MENU to Enter";
     }else if (Menu.Item == MENU_STYL){  // Switch Watch Style
-        switch (Options.WatchFaceStyle){
-            case 1:
-                O = "Ballsy";
-                break;
-            default:
-                O = "Original";
-                break;
-        }
+        O = "";
+        for (x1 = 0; x1 < 32; x1++)
+          O = O + WatchStyles.Style[Options.WatchFaceStyle * 32 + x1];
     }else if (Menu.Item == MENU_DISP){  // Switch Mode
         if (Options.LightMode){
             O = "Light";
@@ -1657,7 +1676,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                       AskForWiFi();
                   }
               }else if (Menu.Item == MENU_STYL){  // Switch Watch Face
-                  Options.WatchFaceStyle = roller(Options.WatchFaceStyle + 1,0,MaxStyles);
+                  Options.WatchFaceStyle = roller(Options.WatchFaceStyle + 1,0,WatchStyles.Count - 1);
                   initWatchFaceStyle();
                   Options.NeedsSaving = true;
                   DoHaptic = true;
@@ -2385,6 +2404,19 @@ void WatchyGSR::InsertDefaults() {}
 void WatchyGSR::InsertOnMinute() {}
 void WatchyGSR::InsertWiFi() {}
 void WatchyGSR::InsertWiFiEnding() {}
+void WatchyGSR::InsertAddWatchStyles() {}
+void WatchyGSR::InsertInitWatchStyle(uint8_t StyleID) {}
+void WatchyGSR::InsertDrawWatchStyle(uint8_t StyleID) {}
+uint8_t WatchyGSR::AddWatchStyle(String StyleName){
+    if (WatchStyles.Count >= MaxStyles || StyleName.length() > 30) return 255;  // Full / too long..
+    for (int I = 0; I < WatchStyles.Count; I++)
+        if (String(WatchStyles.Style[I * 32]) == StyleName) return 255;  // Error, alrady there.
+
+    strcpy(&WatchStyles.Style[WatchStyles.Count * 32], StyleName.c_str());
+    WatchStyles.Count++;
+    return WatchStyles.Count;
+}
+void WatchyGSR::AllowDefaultWatchStyles(bool Allow) { DefaultWatchStyles = Allow; }
 
 bool WatchyGSR::IsDark(){ return Darkness.Went; }
 
@@ -2886,6 +2918,7 @@ void WatchyGSR::initZeros(){
     TimerDown.Hours = 0;
     TimerDown.MaxTones = 0;
     TimerDown.Active = false;
+    DefaultWatchStyles = true;
     AskForWiFi();
 }
 
@@ -3024,7 +3057,7 @@ void WatchyGSR::StoreSettings(String FromUser){
             J++; if (L > J){ V = O[J]; Options.BedTimeOrientation = (V & 1) ? true : false; }
          }
          if (NewV > 130){
-            J++; if (L > J){ V = constrain(O[J],0,MaxStyles); Options.WatchFaceStyle = V; }
+            J++; if (L > J){ V = constrain(O[J],0,WatchStyles.Count - 1); Options.WatchFaceStyle = V; }
          }
     }
     if (WatchTime.DeadRTC) Options.Feedback = false;
@@ -3231,7 +3264,11 @@ void WatchyGSR::getAngle(uint16_t Angle, uint8_t Away, uint8_t &X, uint8_t &Y){
 // Watch Face designs are here.
 
 void WatchyGSR::initWatchFaceStyle(){
-   switch (Options.WatchFaceStyle){
+    uint8_t Style = Options.WatchFaceStyle;
+    if (DefaultWatchStyles) { if (Style > BasicWatchStyles && Style != 255) { InsertDrawWatchStyle(Style); return; } }
+    else if (WatchStyles.Count > 0 && BasicWatchStyles == -1) { InsertDrawWatchStyle(Style); return; }
+    else Style = 0;
+    switch (Style){
       case 1: // Ballsy
           Design.Menu.Top = 117;
           Design.Menu.Header = 25;
@@ -3294,8 +3331,12 @@ void WatchyGSR::initWatchFaceStyle(){
 void WatchyGSR::drawWatchFaceStyle(){
     uint8_t X, Y;
     uint16_t A;
-    switch (Options.WatchFaceStyle){
-       case 1: // Ballsy
+    uint8_t Style = Options.WatchFaceStyle;
+    if (DefaultWatchStyles) { if (Style > BasicWatchStyles && Style != 255) { InsertDrawWatchStyle(Style); return; } }
+    else if (WatchStyles.Count > 0 && BasicWatchStyles == -1) { InsertDrawWatchStyle(Style); return; }
+    else Style = 0;
+    switch (Style){
+        case 1: // Ballsy
             drawDay();
             drawDate();
             if (SafeToDraw()){
