@@ -3265,8 +3265,8 @@ void WatchyGSR::getAngle(uint16_t Angle, uint8_t Away, uint8_t &X, uint8_t &Y){
 
 void WatchyGSR::initWatchFaceStyle(){
     uint8_t Style = Options.WatchFaceStyle;
-    if (DefaultWatchStyles) { if (Style > BasicWatchStyles && Style != 255) { InsertDrawWatchStyle(Style); return; } }
-    else if (WatchStyles.Count > 0 && BasicWatchStyles == -1) { InsertDrawWatchStyle(Style); return; }
+    if (DefaultWatchStyles) { if (Style > BasicWatchStyles && Style != 255) { InsertInitWatchStyle(Style); return; } }
+    else if (WatchStyles.Count > 0 && BasicWatchStyles == -1) { InsertInitWatchStyle(Style); return; }
     else Style = 0;
     switch (Style){
       case 1: // Ballsy
