@@ -60,6 +60,7 @@ Functions for inserting extra code in places.
 | InsertAddWatchStyles() | Use this function to add Watch Styles starting from Index 0 [`AllowDefaultWatchStyles(false)`] or from Index 2 if allowing default Watch Styles. |
 | InsertInitWatchStyle() | The init function as seen at the end of Watchy_GSR.cpp.  See **Version 1.4.2 Additions** below. |
 | InsertDrawWatchStyle() | The Draw function as seen at the bottom of Watchy_GSR.cpp. See **Version 1.4.2 Additions** below. |
+| InsertNTPServer() | Use this to return "your favorite NTP Server". See **Version 1.4.3 Additions** below. |
  
 Functions available for communication:
 
@@ -127,3 +128,11 @@ Override these two functions to add your Init and Draw for the Watch Styles:
 `void InsertDrawWatchStyle(uint8_t StyleID)`  // The Draw function as seen at the bottom of Watchy_GSR.cpp.
 
 Overriding in this manner can be done using a switch and only checking for your Indexes, but you could also just as easily use an IF statement and record your Watch Styles in uint8_t variables for each during `InsertAddWatchStyles()`.  The best part about this is, all of this is done PRIOR to the settings reload from NVS (if not disabled), so your chosen Watch Style will remain after a reboot.
+
+**Version 1.4.3 Additions**
+
+void InsertNTPServer() { return "Your favorite NTP Server"; } // Will let you pick your favorite NTP server.
+
+**How to Make Your Own Version**
+
+Copy the GSR.ino to another file name, like MyGSR.ino and edit it, do all of your overrides in that.
