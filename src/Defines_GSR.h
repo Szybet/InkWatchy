@@ -1,9 +1,6 @@
 #ifndef DEFINES_GSR_H
 #define DEFINES_GSR_H
 
-// Time Sync Server
-#define ntpServer "pool.ntp.org"
-
 //debug
 #define USEDEBUG 0  // !0 is on, will not setup Serial OR print output if zero.
 
@@ -20,8 +17,6 @@
 
 // Battery
 #define MaxBattery 4.37
-#define MinBattery 3.58
-#define LowBattery 3.45
 
 // functions
 #define roller(v,lo,hi) (((v)<(lo))?(hi):((v)>(hi))?(lo):(v))

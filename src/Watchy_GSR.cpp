@@ -156,6 +156,8 @@ RTC_DATA_ATTR struct BatteryUse final {
     int8_t UpCount;         // Counts how many times the battery is in a direction to determine true charging.
     int8_t DownCount;
     int8_t LastState;       // 0=not visible, 1= showing chargeme, 2=showing charging.
+    float MinLevel;         // Lowest level before the indicator comes on.
+    float LowLevel;         // The battery is about to get too low for the RTC to function.
 } Battery;
 
 RTC_DATA_ATTR struct MenuUse final {
@@ -181,7 +183,8 @@ RTC_DATA_ATTR struct GoneDark final {
     bool Went;
     unsigned long Last;
     bool Woke;
-} Darkness;                     // Whether or not the screen is darkened.
+    unsigned long Tilt;     // Used to track Tilt, if upright count for 1 second.
+} Darkness;                 // Whether or not the screen is darkened.
 
 RTC_DATA_ATTR struct dispUpdate final {
     bool Full;
@@ -277,6 +280,7 @@ void WatchyGSR::init(String datetime){
     Updates.Tapped = false;
     LastButton = 0;
     Darkness.Last = 0;
+    Darkness.Tilt = 0;
     Darkness.Woke = false;
     TurboTime = 0;
     CPUSet.Freq=getCpuFrequencyMhz();
@@ -306,10 +310,10 @@ void WatchyGSR::init(String datetime){
                 if (Button == 5 && Options.SleepStyle > 1){  // Accelerometer caused this.
                     if (Options.SleepMode == 0) Options.SleepMode = 2;  // Do this to avoid someone accidentally not setting this before usage.
                     UpdateClock(); // Make sure these are done during times when it won't.
-                    Darkness.Woke=true; Updates.Tapped=true; Darkness.Last=millis(); UpdateDisp = true; // Update Screen to new state.
+                    Darkness.Woke=true; Updates.Tapped=true; Darkness.Last=millis(); Darkness.Tilt = Darkness.Last; UpdateDisp = true; // Update Screen to new state.
                 }else if (Button == 6 && !WatchTime.BedTime){  // Wrist.
                     UpdateClock(); // Make sure these are done during times when it won't.
-                    Darkness.Woke=true; Darkness.Last=millis(); UpdateDisp = true; // Do this anyways, always.
+                    Darkness.Woke=true; Darkness.Last=millis(); Darkness.Tilt = Darkness.Last; UpdateDisp = true; // Do this anyways, always.
                 }
             }
             SRTC.resetWake();
@@ -318,6 +322,8 @@ void WatchyGSR::init(String datetime){
             WatchStyles.Count = 0;
             BasicWatchStyles = -1;
             SRTC.init();
+            Battery.MinLevel = SRTC.getRTCBattery();
+            Battery.LowLevel = SRTC.getRTCBattery(true);
             initZeros();
             setupDefaults();
             Rebooted=true;
@@ -355,7 +361,7 @@ void WatchyGSR::init(String datetime){
     }
 
 
-    if ((Battery.Last > LowBattery || Button != 0 || Updates.Tapped || Darkness.Woke) && !(Options.SleepStyle == 4 && Darkness.Went && !Updates.Tapped)){
+    if ((Battery.Last > Battery.LowLevel || Button != 0 || Updates.Tapped || Darkness.Woke) && !(Options.SleepStyle == 4 && Darkness.Went && !Updates.Tapped)){
         //Init interrupts.
         attachInterrupt(digitalPinToInterrupt(MENU_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
         attachInterrupt(digitalPinToInterrupt(BACK_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
@@ -391,9 +397,13 @@ void WatchyGSR::init(String datetime){
                     ManageTime();   // Handle Time method.
                     Up=SBMA.IsUp();
                     // Wrist Tilt delay, keep screen on during this until you put your wrist down.
-                    if (Options.SleepStyle == 1 || Options.SleepStyle > 2){
-                        if (Darkness.Woke && Up) Darkness.Last = millis();
-                        if (Darkness.Went && Up && !WatchTime.BedTime) { Darkness.Last = millis(); Darkness.Woke = true; UpdateDisp=Showing(); }
+                    if ((Options.SleepStyle == 1 || Options.SleepStyle > 2 || WatchTime.DeadRTC) && !WatchTime.BedTime){
+                        if (Darkness.Went && Up && !Darkness.Woke){ // Do this when the wrist is UP.
+                            if (Darkness.Tilt == 0) Darkness.Tilt = millis();
+                            else if (millis() - Darkness.Tilt > 999) { Darkness.Last = millis(); Darkness.Woke = true; UpdateDisp=Showing(); }
+                        }
+                        if (!Up) Darkness.Tilt = 0;
+                        else if (Darkness.Tilt != 0 && millis() - Darkness.Tilt > 999 && Darkness.Woke) { Darkness.Last = millis(); }
                     }
                     processWiFiRequest(); // Process any WiFi requests.
                     if (!Sensitive){
@@ -680,12 +690,12 @@ void WatchyGSR::init(String datetime){
 }
 
 void WatchyGSR::showWatchFace(){
-  if (Options.Performance > 0 && Battery.Last > MinBattery ) RefreshCPU((Options.Performance == 1 ? CPUMID : CPUMAX));
+  if (Options.Performance > 0 && Battery.Last > Battery.MinLevel ) RefreshCPU((Options.Performance == 1 ? CPUMID : CPUMAX));
   DisplayInit();
   display.setFullWindow();
   drawWatchFace();
 
-  if (Options.Feedback && DoHaptic && Battery.Last > MinBattery){
+  if (Options.Feedback && DoHaptic && Battery.Last > Battery.MinLevel){
     VibeTo(true);
     delay(40);
     VibeTo(false);
@@ -1223,7 +1233,7 @@ void WatchyGSR::deepSleep(){
   uint8_t I, N, D;
   bool BatOk, BT,B, DM;
   UpdateUTC(); UpdateClock();
-  BatOk = (Battery.Last == 0 || Battery.Last > LowBattery);
+  BatOk = (Battery.Last == 0 || Battery.Last > Battery.LowLevel);
   BT = (Options.SleepStyle == 2 && WatchTime.BedTime);
   B = (((Options.SleepStyle == 1 || Options.SleepStyle > 2) || BT) && BatOk);
 
@@ -1250,14 +1260,16 @@ void WatchyGSR::deepSleep(){
 }
 
 void WatchyGSR::GoDark(){
-  if ((Updates.Drawn || Battery.Direction != Battery.DarkDirection || !Darkness.Went || Battery.Last < LowBattery) && !Showing())
+  if ((Updates.Drawn || Battery.Direction != Battery.DarkDirection || !Darkness.Went || Battery.Last < Battery.LowLevel) && !Showing())
   {
     Darkness.Went=true;
+    Darkness.Woke=false;
+    Darkness.Tilt=0;
     Updates.Init=Updates.Drawn;
     display.setFullWindow();
     DisplayInit(true);  // Force it here so it fixes the border.
     display.fillScreen(GxEPD_BLACK);
-    if (Battery.Last < MinBattery) display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < LowBattery ? ChargeMeBad : ChargeMe), 40, 17, GxEPD_WHITE); else if (Battery.Direction == 1) display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, Charging, 40, 17, GxEPD_WHITE);
+    if (Battery.Last < Battery.MinLevel) display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < Battery.LowLevel ? ChargeMeBad : ChargeMe), 40, 17, GxEPD_WHITE); else if (Battery.Direction == 1) display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, Charging, 40, 17, GxEPD_WHITE);
     Battery.DarkDirection = Battery.Direction;
     display.display(true);
     Updates.Drawn=false;
@@ -1392,7 +1404,7 @@ void WatchyGSR::ProcessNTP(){
       }
       NTPData.NTPDone = false;
       setStatus("NTP");
-      SNTP.Begin(ntpServer); //"132.246.11.237","132.246.11.227");
+      SNTP.Begin(InsertNTPServer()); //"132.246.11.237","132.246.11.227");
       NTPData.Wait = 0;
       NTPData.Pause = 20;
       NTPData.State++;
@@ -1443,9 +1455,9 @@ void WatchyGSR::drawChargeMe(){
       // Show Battery charging bitmap.
       display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, Charging, 40, 17, ForeColor());
       D = 2;
-  }else if (Battery.Last < MinBattery){
+  }else if (Battery.Last < Battery.MinLevel){
       // Show Battery needs charging bitmap.
-      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < LowBattery ? ChargeMeBad : ChargeMe), 40, 17, ForeColor());
+      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < Battery.LowLevel ? ChargeMeBad : ChargeMe), 40, 17, ForeColor());
       D = 1;
   }
 }
@@ -1465,6 +1477,7 @@ void WatchyGSR::drawStatus(){
       else if (WatchyStatus == "TZ") display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iTZ, 19, 19, ForeColor());
       else if (WatchyStatus == "NTP") display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iSync, 19, 19, ForeColor());
       else if (WatchyStatus == "ESP")  display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iSync, 19, 19, ForeColor());
+      else if (WatchyStatus == "NC")  display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iNoClock, 19, 19, ForeColor());
       else{
           display.setTextColor(ForeColor());
           display.setCursor(Design.Status.WIFIx, Design.Status.WIFIy);
@@ -1474,6 +1487,7 @@ void WatchyGSR::drawStatus(){
 }
 
 void WatchyGSR::setStatus(String Status){
+    if (Status == "" && !SRTC.isOperating()) Status = "NC";
     if (WatchyStatus != Status){
       WatchyStatus = Status;
       UpdateDisp=Showing();
@@ -1501,7 +1515,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
   if (Darkness.Went && Options.SleepStyle == 4 && !WatchTime.DeadRTC && !Updates.Tapped) return; // No buttons unless a tapped happened.
   if (!UpRight()) return; // Don't do buttons if not upright.
   if (Pressed < 5 && LastButton > 0 && (millis() - LastButton) < KEYPAUSE) return;
-  if (Darkness.Went) { Darkness.Woke=true; Darkness.Last=millis(); UpdateUTC(); UpdateClock(); UpdateDisp=true; return; }  // Don't do the button, just exit.
+  if (Darkness.Went) { Darkness.Woke=true; Darkness.Last=millis(); Darkness.Tilt = Darkness.Last; UpdateUTC(); UpdateClock(); UpdateDisp=true; return; }  // Don't do the button, just exit.
   if ((NTPData.TimeTest || OTAUpdate) && (Pressed == 3 || Pressed == 4)) return;  // Up/Down don't work in these modes.
 
   switch (Pressed){
@@ -2052,7 +2066,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               return;
           }else{
               if (Menu.Style == MENU_INOPTIONS){
-                  Menu.Item = roller(Menu.Item - 1, MENU_STYL, (NTPData.State > 0 || WatchyAPOn || OTAUpdate || Battery.Last < MinBattery) ? MENU_TRBL : MENU_OTAM);
+                  Menu.Item = roller(Menu.Item - 1, MENU_STYL, (NTPData.State > 0 || WatchyAPOn || OTAUpdate || Battery.Last < Battery.MinLevel) ? MENU_TRBL : MENU_OTAM);
               }else if (Menu.Style == MENU_INALARMS){
                   Menu.Item = roller(Menu.Item - 1, MENU_ALARM1, MENU_TONES);
               }else if (Menu.Style == MENU_INTIMERS){
@@ -2230,7 +2244,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               return;
           }else{
               if (Menu.Style == MENU_INOPTIONS){
-                  Menu.Item = roller(Menu.Item + 1, MENU_STYL, (NTPData.State > 0 || WatchyAPOn || OTAUpdate || Battery.Last < MinBattery) ? MENU_TRBL : MENU_OTAM);
+                  Menu.Item = roller(Menu.Item + 1, MENU_STYL, (NTPData.State > 0 || WatchyAPOn || OTAUpdate || Battery.Last < Battery.MinLevel) ? MENU_TRBL : MENU_OTAM);
               }else if (Menu.Style == MENU_INALARMS){
                   Menu.Item = roller(Menu.Item + 1, MENU_ALARM1, MENU_TONES);
               }else if (Menu.Style == MENU_INTIMERS){
@@ -2296,6 +2310,7 @@ void WatchyGSR::ManageTime(){
                     else if (WatchTime.UTC_RAW == WatchTime.TravelTest) Options.Drift = 0;
                     if (Options.Drift < -29 || Options.Drift > 29){
                         WatchTime.DeadRTC = true; Options.NeedsSaving = true; Options.UsingDrift = false; Options.Feedback = false; Options.MasterRepeats = 4; Alarms_Repeats[0] = 4; Alarms_Repeats[1] = 4; Alarms_Repeats[2] = 4; Alarms_Repeats[3] = 4; TimerDown.MaxTones = 4;
+                        NTPData.State = 1; NTPData.UpdateUTC = true; AskForWiFi();
                         if (Options.SleepStyle == 0) Options.SleepStyle = 1;
                     }else Options.UsingDrift = (Options.Drift != 0);
                     if (Menu.Item == MENU_TOFF) Menu.SubItem = 3;
@@ -2416,6 +2431,7 @@ uint8_t WatchyGSR::AddWatchStyle(String StyleName){
     WatchStyles.Count++;
     return WatchStyles.Count;
 }
+String WatchyGSR::InsertNTPServer() { return "pool.ntp.org"; }
 void WatchyGSR::AllowDefaultWatchStyles(bool Allow) { DefaultWatchStyles = Allow; }
 
 bool WatchyGSR::IsDark(){ return Darkness.Went; }
@@ -3162,7 +3178,7 @@ void WatchyGSR::NVSEmpty(){
 
 // Turbo Mode!
 void WatchyGSR::SetTurbo(){
-    if (Battery.Last > MinBattery){
+    if (Battery.Last > Battery.MinLevel){
         TurboTime=millis();
         LastButton=TurboTime;  // Here for speed.
         //Darkness.Last=LastButton;     // Keeps track of SleepMode.
@@ -3205,7 +3221,7 @@ bool WatchyGSR::Showing() {
 void WatchyGSR::RefreshCPU(){ RefreshCPU(0); }
 void WatchyGSR::RefreshCPU(int Value){
     uint32_t C = 80;
-    if (!WatchTime.DeadRTC && Battery.Last > MinBattery) {
+    if (!WatchTime.DeadRTC && Battery.Last > Battery.MinLevel) {
         if (Value == CPUMAX) CPUSet.Locked = true;
         if (Value == CPUDEF) CPUSet.Locked = false;
         if (!CPUSet.Locked && Options.Performance != 2) C = (InTurbo() || Value == CPUMID) ? 160 : 80;
