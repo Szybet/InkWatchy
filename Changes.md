@@ -82,3 +82,7 @@
 **Version 1.4.2:**
 - **FIX:**  Repaired the Tilt detection so non-Screen Blanking won't keep the Watchy in Active Mode draining the battery while upright.
 - **ADD:**  Extra functions (see Override Information) to offer adding or replacing existing Watch Styles without altering the base code.
+
+**Version 1.4.3:**
+- **FIX:**  Fixed tilt during non-RTC mode, to work the same as normal.
+- **ADD:**  Added InsertNTPServer() function to insert your favorite NTP server instead of pool.ntp.org.
