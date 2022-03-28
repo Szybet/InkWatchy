@@ -69,12 +69,16 @@ RTC_DATA_ATTR struct Optional final {
 
 RTC_DATA_ATTR struct Designing final {
     struct MenuPOS {
+       byte Gutter; // 3
        byte Top;    // MenuTop 72
        byte Header; // HeaderY 97
        byte Data;   // DataY 138
        const GFXfont *Font; // Menu Font.
+       const GFXfont *FontSmall; // Menu Font.
+       const GFXfont *FontSmaller; // Menu Font.
     } Menu;
     struct FacePOS {
+       byte Gutter; // 4
        byte Time;   // TimeY 56
        byte TimeHeight; // 45
        uint16_t TimeColor;  // Font Color.
@@ -82,13 +86,19 @@ RTC_DATA_ATTR struct Designing final {
        WatchyGSR::DesOps TimeStyle; // dCENTER
        byte TimeLeft;  // Only for dSTATIC
        byte Day;    // DayY 101
+       byte DayGutter; // 4
        uint16_t DayColor;  // Font Color.
        const GFXfont *DayFont; // Font.
+       const GFXfont *DayFontSmall; // Font.
+       const GFXfont *DayFontSmaller; // Font.
        WatchyGSR::DesOps DayStyle; // dCENTER
        byte DayLeft;  // Only for dSTATIC
        byte Date;   // DateY 143
+       byte DateGutter; // 4
        uint16_t DateColor;  // Font Color.
        const GFXfont *DateFont; // Font.
+       const GFXfont *DateFontSmall; // Font.
+       const GFXfont *DateFontSmaller; // Font.
        WatchyGSR::DesOps DateStyle; // dCENTER
        byte DateLeft;  // Only for dSTATIC
        byte Year;   // YearY 186
@@ -115,6 +125,7 @@ RTC_DATA_ATTR bool VibeMode;          // Vibe Motor is On=True/Off=False, used f
 RTC_DATA_ATTR String WatchyStatus;    // Used for the indicator in the bottom left, so when it changes, it asks for a screen refresh, if not, it doesn't.
 RTC_DATA_ATTR int BasicWatchStyles;
 RTC_DATA_ATTR bool DefaultWatchStyles;  // States that the original 2 Watch Styles are to be added.
+RTC_DATA_ATTR uint8_t UP_PIN;       // Used to catch the different pin allocation for the up button.
 
 RTC_DATA_ATTR struct TimeData final {
     time_t UTC_RAW;           // Copy of the UTC on init.
@@ -155,7 +166,8 @@ RTC_DATA_ATTR struct BatteryUse final {
     int8_t DarkDirection;   // Direction copy for Options.SleepMode.
     int8_t UpCount;         // Counts how many times the battery is in a direction to determine true charging.
     int8_t DownCount;
-    int8_t LastState;       // 0=not visible, 1= showing chargeme, 2=showing charging.
+    int8_t State;           // 0=not visible, 1= showing chargeme, 2= showing reallychargeme, 3=showing charging.
+    int8_t DarkState;       // Dark state of above.
     float MinLevel;         // Lowest level before the indicator comes on.
     float LowLevel;         // The battery is about to get too low for the RTC to function.
 } Battery;
@@ -266,10 +278,10 @@ void WatchyGSR::init(String datetime){
     Wire.begin(SDA, SCL); //init i2c
     NVS.begin();
 
-    pinMode(MENU_BTN_PIN, INPUT);   // Prep these for the loop below.
-    pinMode(BACK_BTN_PIN, INPUT);
-    pinMode(UP_BTN_PIN, INPUT);
-    pinMode(DOWN_BTN_PIN, INPUT);
+    pinMode(MENU_PIN, INPUT);   // Prep these for the loop below.
+    pinMode(BACK_PIN, INPUT);
+    pinMode(UP_PIN, INPUT);
+    pinMode(DOWN_PIN, INPUT);
 
     wakeup_reason = esp_sleep_get_wakeup_cause(); //get wake up reason
     wakeupBit = esp_sleep_get_ext1_wakeup_status();
@@ -293,7 +305,6 @@ void WatchyGSR::init(String datetime){
             IDidIt = true;
             SRTC.resetWake();
             UpdateUTC();
-            WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
             WatchTime.NewMinute = true;
             UpdateClock();
             detectBattery();
@@ -303,11 +314,10 @@ void WatchyGSR::init(String datetime){
         case ESP_SLEEP_WAKEUP_EXT1: //button Press
             RefreshCPU(CPUDEF);
             UpdateUTC();
-            WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
             Button = getButtonMaskToID(wakeupBit);
             if (Options.SleepStyle != 4) UpdateDisp = !Showing();
             if (Darkness.Went && UpRight()){
-                if (Button == 5 && Options.SleepStyle > 1){  // Accelerometer caused this.
+                if (Button == 5 && Options.SleepStyle > 1 && Options.SleepStyle != 4){  // Accelerometer caused this.
                     if (Options.SleepMode == 0) Options.SleepMode = 2;  // Do this to avoid someone accidentally not setting this before usage.
                     UpdateClock(); // Make sure these are done during times when it won't.
                     Darkness.Woke=true; Updates.Tapped=true; Darkness.Last=millis(); Darkness.Tilt = Darkness.Last; UpdateDisp = true; // Update Screen to new state.
@@ -324,6 +334,8 @@ void WatchyGSR::init(String datetime){
             SRTC.init();
             Battery.MinLevel = SRTC.getRTCBattery();
             Battery.LowLevel = SRTC.getRTCBattery(true);
+            UP_PIN = 32;
+            if (SRTC.getType() == PCF8563) UP_PIN = 34;
             initZeros();
             setupDefaults();
             Rebooted=true;
@@ -363,10 +375,10 @@ void WatchyGSR::init(String datetime){
 
     if ((Battery.Last > Battery.LowLevel || Button != 0 || Updates.Tapped || Darkness.Woke) && !(Options.SleepStyle == 4 && Darkness.Went && !Updates.Tapped)){
         //Init interrupts.
-        attachInterrupt(digitalPinToInterrupt(MENU_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
-        attachInterrupt(digitalPinToInterrupt(BACK_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
-        attachInterrupt(digitalPinToInterrupt(UP_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
-        attachInterrupt(digitalPinToInterrupt(DOWN_BTN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        attachInterrupt(digitalPinToInterrupt(MENU_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        attachInterrupt(digitalPinToInterrupt(BACK_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        attachInterrupt(digitalPinToInterrupt(UP_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        attachInterrupt(digitalPinToInterrupt(DOWN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
         DisplayInit();
 
         // Sometimes BMA crashes - simply try to reinitialize bma...
@@ -397,7 +409,7 @@ void WatchyGSR::init(String datetime){
                     ManageTime();   // Handle Time method.
                     Up=SBMA.IsUp();
                     // Wrist Tilt delay, keep screen on during this until you put your wrist down.
-                    if ((Options.SleepStyle == 1 || Options.SleepStyle > 2 || WatchTime.DeadRTC) && !WatchTime.BedTime){
+                    if ((Options.SleepStyle == 1 || (Options.SleepStyle > 2 && Options.SleepStyle != 4) || WatchTime.DeadRTC) && !WatchTime.BedTime){
                         if (Darkness.Went && Up && !Darkness.Woke){ // Do this when the wrist is UP.
                             if (Darkness.Tilt == 0) Darkness.Tilt = millis();
                             else if (millis() - Darkness.Tilt > 999) { Darkness.Last = millis(); Darkness.Woke = true; UpdateDisp=Showing(); }
@@ -690,16 +702,17 @@ void WatchyGSR::init(String datetime){
 }
 
 void WatchyGSR::showWatchFace(){
-  if (Options.Performance > 0 && Battery.Last > Battery.MinLevel ) RefreshCPU((Options.Performance == 1 ? CPUMID : CPUMAX));
+  bool B = (Battery.Last > Battery.MinLevel);
+  if (Options.Performance > 0 && B) RefreshCPU((Options.Performance == 1 ? CPUMID : CPUMAX));
   DisplayInit();
   display.setFullWindow();
   drawWatchFace();
 
-  if (Options.Feedback && DoHaptic && Battery.Last > Battery.MinLevel){
+  if (Options.Feedback && DoHaptic && B){
     VibeTo(true);
     delay(40);
     VibeTo(false);
-  }
+  } else delay(40);
   DoHaptic=false;
   UpdateDisp=false;
   Darkness.Went=false;
@@ -732,26 +745,27 @@ void WatchyGSR::drawTime(){
     display.setFont(Design.Face.TimeFont);
     display.setTextColor(Design.Face.TimeColor);
 
-    drawData(O,Design.Face.TimeLeft,Design.Face.Time,Design.Face.TimeStyle, true, PM);
+    drawData(O,Design.Face.TimeLeft,Design.Face.Time,Design.Face.TimeStyle, Design.Face.Gutter, true, PM);
 }
 
 void WatchyGSR::drawDay(){
-    display.setFont(Design.Face.DayFont);
+    String O = dayStr(WatchTime.Local.Wday + 1);
+    setFontFor(O,Design.Face.DayFont,Design.Face.DayFontSmall,Design.Face.DayFontSmaller,Design.Face.DayGutter);
     display.setTextColor(Design.Face.DayColor);
-    drawData(dayStr(WatchTime.Local.Wday + 1), Design.Face.DayLeft, Design.Face.Day, Design.Face.DayStyle);
+    drawData(O, Design.Face.DayLeft, Design.Face.Day, Design.Face.DayStyle, Design.Face.DayGutter);
 }
 
 void WatchyGSR::drawDate(){
     String O = String(monthStr(WatchTime.Local.Month)) + " " + String(WatchTime.Local.Day);
-    display.setFont(Design.Face.DateFont);
+    setFontFor(O,Design.Face.DateFont,Design.Face.DateFontSmall,Design.Face.DateFontSmaller,Design.Face.DateGutter);
     display.setTextColor(Design.Face.DateColor);
-    drawData(O, Design.Face.DateLeft, Design.Face.Date, Design.Face.DateStyle);
+    drawData(O, Design.Face.DateLeft, Design.Face.Date, Design.Face.DateStyle, Design.Face.DateGutter);
 }
 
 void WatchyGSR::drawYear(){
     display.setFont(Design.Face.YearFont);
     display.setTextColor(Design.Face.YearColor);
-    drawData(String(WatchTime.Local.Year + RTC_LOCALYEAR_OFFSET), Design.Face.YearLeft, Design.Face.Year, Design.Face.YearStyle);  //1900
+    drawData(String(WatchTime.Local.Year + RTC_LOCALYEAR_OFFSET), Design.Face.YearLeft, Design.Face.Year, Design.Face.YearStyle, Design.Face.Gutter);  //1900
 }
 
 void WatchyGSR::drawMenu(){
@@ -759,7 +773,6 @@ void WatchyGSR::drawMenu(){
     uint16_t w, h;
     String O, S;
 
-    display.setFont(Design.Menu.Font);
     display.drawBitmap(0, Design.Menu.Top, (Menu.Style == MENU_INOPTIONS) ? OptionsMenuBackground : MenuBackground, MenuWidth, MenuHeight, ForeColor(), BackColor());
     display.setTextColor(Options.LightMode && Menu.Style != MENU_INNORMAL ? GxEPD_WHITE : GxEPD_BLACK);
     switch (Menu.Item){
@@ -904,6 +917,7 @@ void WatchyGSR::drawMenu(){
                     break;
             }
     }
+    setFontFor(O, Design.Menu.Font, Design.Menu.FontSmall, Design.Menu.FontSmaller, Design.Menu.Gutter);
     display.getTextBounds(O, 0, Design.Menu.Header + Design.Menu.Top, &x1, &y1, &w, &h);
     w = (196 - w) /2;
     display.setCursor(w + 2, Design.Menu.Header + Design.Menu.Top);
@@ -1191,6 +1205,7 @@ void WatchyGSR::drawMenu(){
     }
 
     if (O > ""){
+        setFontFor(O, Design.Menu.Font, Design.Menu.FontSmall, Design.Menu.FontSmaller, Design.Menu.Gutter);
         display.getTextBounds(O, 0, Design.Menu.Data + Design.Menu.Top, &x1, &y1, &w, &h);
         w = (196 - w) /2;
         display.setCursor(w + 2, Design.Menu.Data + Design.Menu.Top);
@@ -1198,35 +1213,44 @@ void WatchyGSR::drawMenu(){
     }
 }
 
-void WatchyGSR::drawData(String dData, byte Left, byte Bottom, WatchyGSR::DesOps Style, bool isTime, bool PM){
+void WatchyGSR::drawData(String dData, byte Left, byte Bottom, WatchyGSR::DesOps Style, byte Gutter, bool isTime, bool PM){
     uint16_t w, Width, Height, Ind;
     int16_t X, Y;
 
     display.getTextBounds(dData, Left, Bottom, &X, &Y, &Width, &Height);
 
-    Bottom = constrain(Bottom, 4, 196);
+    Bottom = constrain(Bottom, Gutter, 200 - Gutter);
     switch (Style){
         case WatchyGSR::dLEFT:
-            Left = 4;
+            Left = Gutter;
             break;
         case WatchyGSR::dRIGHT:
-            Left = constrain(196 - Width, 4, 196);
+            Left = constrain(200 - (Gutter + Width), Gutter, 200 - Gutter);
             break;
         case WatchyGSR::dSTATIC:
-            Left = constrain(Left, 4, 196);
+            Left = constrain(Left, Gutter, 200 - Gutter);
             break;
         case WatchyGSR::dCENTER:
-            Left = constrain(4 + ((192 - Width) / 2), 4, 196);
+            Left = constrain(4 + ((196 - (Gutter + Width)) / 2), Gutter, 200 - Gutter);
             break;
     };
     display.setCursor(Left, Bottom);
     display.print(dData);
 
     if (isTime && PM){
-        if (Style == WatchyGSR::dRIGHT) Left = constrain(Left - 12, 4, 196);
-        else Left = constrain(Left + Width + 6, 4, 190);
+        if (Style == WatchyGSR::dRIGHT) Left = constrain(Left - 12, Gutter, 200 - Gutter);
+        else Left = constrain(Left + Width + 6, Gutter, 190);
         display.drawBitmap(Left, Bottom - Design.Face.TimeHeight, PMIndicator, 6, 6, ForeColor());
     }
+}
+
+void WatchyGSR::setFontFor(String O, const GFXfont *Normal, const GFXfont *Small, const GFXfont *Smaller, byte Gutter){
+    int16_t  x1, y1;
+    uint16_t w, h;
+    byte wi = (200 - (2 * Gutter));
+    display.setFont(Normal); display.getTextBounds(O, 0, 0, &x1, &y1, &w, &h);
+    if (w > wi) { display.setFont(Small); display.getTextBounds(O, 0, 0, &x1, &y1, &w, &h); }
+    if (w > wi) { display.setFont(Smaller); display.getTextBounds(O, 0, 0, &x1, &y1, &w, &h); }
 }
 
 void WatchyGSR::deepSleep(){
@@ -1235,14 +1259,14 @@ void WatchyGSR::deepSleep(){
   UpdateUTC(); UpdateClock();
   BatOk = (Battery.Last == 0 || Battery.Last > Battery.LowLevel);
   BT = (Options.SleepStyle == 2 && WatchTime.BedTime);
-  B = (((Options.SleepStyle == 1 || Options.SleepStyle > 2) || BT) && BatOk);
+  B = (((Options.SleepStyle == 1 || (Options.SleepStyle > 2 && Options.SleepStyle != 4)) || BT) && BatOk);
 
   UpdateBMA(); GoDark();
-  DM = (Darkness.Went && !TimerDown.Active);
+  DM = (Darkness.Went && !TimerDown.Active && GuiMode != MENUON);
   D = WatchTime.Local.Wday + 1;
 
   if (DM){
-    N = (WatchTime.UTC.Minute < 30 ? 30 : 60);
+    if (Battery.Direction == 1) N = (WatchTime.UTC.Minute - (WatchTime.UTC.Minute%5) + 5); else N = (WatchTime.UTC.Minute < 30 ? 30 : 60);
     if (WatchTime.NextAlarm != 99){
         if (Alarms_Minutes[WatchTime.NextAlarm] >= WatchTime.Local.Minute && Alarms_Minutes[WatchTime.NextAlarm] < N) N = Alarms_Minutes[WatchTime.NextAlarm];
     }
@@ -1260,7 +1284,7 @@ void WatchyGSR::deepSleep(){
 }
 
 void WatchyGSR::GoDark(){
-  if ((Updates.Drawn || Battery.Direction != Battery.DarkDirection || !Darkness.Went || Battery.Last < Battery.LowLevel) && !Showing())
+  if ((Updates.Drawn || Battery.Direction != Battery.DarkDirection || Battery.State != Battery.DarkDirection || !Darkness.Went || Battery.Last < Battery.LowLevel) && !Showing())
   {
     Darkness.Went=true;
     Darkness.Woke=false;
@@ -1269,8 +1293,9 @@ void WatchyGSR::GoDark(){
     display.setFullWindow();
     DisplayInit(true);  // Force it here so it fixes the border.
     display.fillScreen(GxEPD_BLACK);
-    if (Battery.Last < Battery.MinLevel) display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < Battery.LowLevel ? ChargeMeBad : ChargeMe), 40, 17, GxEPD_WHITE); else if (Battery.Direction == 1) display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, Charging, 40, 17, GxEPD_WHITE);
+    drawChargeMe(true);
     Battery.DarkDirection = Battery.Direction;
+    Battery.DarkState = Battery.State;
     display.display(true);
     Updates.Drawn=false;
     display.hibernate();
@@ -1304,6 +1329,9 @@ void WatchyGSR::detectBattery(){
             Battery.Direction = -1; Battery.UpCount = 0; Battery.DownCount = 0;
         }
     }
+    // Do battery state here.
+    if (Battery.Direction > 0) Battery.State = 3;
+    else Battery.State = (Battery.Last > Battery.MinLevel ? (Battery.Last > Battery.LowLevel ? 0 : 1) : 2);
 }
 
 void WatchyGSR::ProcessNTP(){
@@ -1448,17 +1476,12 @@ void WatchyGSR::ProcessNTP(){
   }
 }
 
-void WatchyGSR::drawChargeMe(){
+void WatchyGSR::drawChargeMe(bool Dark){
   // Shows Battery Direction indicators.
-  int8_t D = 0;
   if (Battery.Direction == 1){
-      // Show Battery charging bitmap.
-      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, Charging, 40, 17, ForeColor());
-      D = 2;
+      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, Charging, 40, 17, (Dark ? GxEPD_WHITE : ForeColor()));   // Show Battery charging bitmap.
   }else if (Battery.Last < Battery.MinLevel){
-      // Show Battery needs charging bitmap.
-      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < Battery.LowLevel ? ChargeMeBad : ChargeMe), 40, 17, ForeColor());
-      D = 1;
+      display.drawBitmap(Design.Status.BATTx, Design.Status.BATTy, (Battery.Last < Battery.LowLevel ? ChargeMeBad : ChargeMe), 40, 17, (Dark ? GxEPD_WHITE : ForeColor()));   // Show Battery needs charging bitmap.
   }
 }
 
@@ -1502,7 +1525,7 @@ void WatchyGSR::VibeTo(bool Mode){
             digitalWrite(VIB_MOTOR_PIN, true);
         }else{
             digitalWrite(VIB_MOTOR_PIN, false);
-            SBMA.enableFeature(BMA423_WAKEUP,(Options.SleepStyle == 2 && WatchTime.BedTime) || (Options.SleepStyle > 2));
+            SBMA.enableFeature(BMA423_WAKEUP,(Options.SleepStyle == 2 && WatchTime.BedTime) || (Options.SleepStyle > 2 && Options.SleepStyle != 4));
         }
         VibeMode = Mode;
     }
@@ -1515,7 +1538,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
   if (Darkness.Went && Options.SleepStyle == 4 && !WatchTime.DeadRTC && !Updates.Tapped) return; // No buttons unless a tapped happened.
   if (!UpRight()) return; // Don't do buttons if not upright.
   if (Pressed < 5 && LastButton > 0 && (millis() - LastButton) < KEYPAUSE) return;
-  if (Darkness.Went) { Darkness.Woke=true; Darkness.Last=millis(); Darkness.Tilt = Darkness.Last; UpdateUTC(); UpdateClock(); UpdateDisp=true; return; }  // Don't do the button, just exit.
+  if (Darkness.Went && !Darkness.Woke) { Darkness.Woke=true; Darkness.Last=millis(); Darkness.Tilt = Darkness.Last; UpdateUTC(); UpdateClock(); UpdateDisp=true; return; }  // Don't do the button, just exit.
   if ((NTPData.TimeTest || OTAUpdate) && (Pressed == 3 || Pressed == 4)) return;  // Up/Down don't work in these modes.
 
   switch (Pressed){
@@ -2268,6 +2291,7 @@ void WatchyGSR::UpdateUTC(){
     if (!WatchTime.DeadRTC){
         SRTC.read(WatchTime.UTC);
         WatchTime.UTC_RAW = SRTC.MakeTime(WatchTime.UTC) + (NTPData.TimeTest ? 0 : WatchTime.Drifting);
+        WatchTime.EPSMS = (millis() + (1000 * (60 - (WatchTime.UTC.Second + (NTPData.TimeTest ? 0 : WatchTime.Drifting)))));
     }
     SRTC.BreakTime(WatchTime.UTC_RAW,WatchTime.UTC);
 }
@@ -2345,6 +2369,7 @@ void WatchyGSR::ManageTime(){
             UpdateUTC();
             UpdateClock();
         }
+        InsertOnMinute();
     }
 }
 
@@ -2372,7 +2397,7 @@ void WatchyGSR::_bmaConfig() {
 
 void WatchyGSR::UpdateBMA(){
     bool BT = (Options.SleepStyle == 2 && WatchTime.BedTime);
-    bool B = (Options.SleepStyle > 2);
+    bool B = (Options.SleepStyle > 2 && Options.SleepStyle != 4);
     bool A = (Options.SleepStyle == 1);
 
     SBMA.enableDoubleClickWake(B | BT);
@@ -2623,10 +2648,10 @@ IRAM_ATTR void WatchyGSR::handleInterrupt(){
 }
 
 IRAM_ATTR uint8_t WatchyGSR::getButtonPins(){
-    bool SW1 = (digitalRead(MENU_BTN_PIN) == 1);
-    bool SW2 = (digitalRead(BACK_BTN_PIN) == 1);
-    bool SW3 = (digitalRead(UP_BTN_PIN) == 1);
-    bool SW4 = (digitalRead(DOWN_BTN_PIN) == 1);
+    bool SW1 = (digitalRead(MENU_PIN) == 1);
+    bool SW2 = (digitalRead(BACK_PIN) == 1);
+    bool SW3 = (digitalRead(UP_PIN) == 1);
+    bool SW4 = (digitalRead(DOWN_PIN) == 1);
 
     if (SW1)      return Options.Lefty ? 4 : getSwapped(1);
     else if (SW2) return Options.Lefty ? 3 : getSwapped(2);
@@ -3197,7 +3222,7 @@ bool WatchyGSR::DarkWait(){
         if (Options.SleepStyle == 2){
             if (!WatchTime.BedTime) return false;
             return B;
-        }else if (Options.SleepStyle > 0 || WatchTime.DeadRTC) return B;
+        }else if ((GuiMode != MENUON && !WatchTime.DeadRTC && Options.SleepStyle > 0 && Options.SleepStyle != 4) || WatchTime.DeadRTC) return B;
     return false;
 }
 
@@ -3213,7 +3238,7 @@ bool WatchyGSR::Showing() {
             if (B) return B;
             if (Options.SleepEnd > Options.SleepStart) { if (WatchTime.Local.Hour >= Options.SleepStart && WatchTime.Local.Hour < Options.SleepEnd) return false; }
             else if (WatchTime.Local.Hour >= Options.SleepStart || WatchTime.Local.Hour < Options.SleepEnd) return false;
-        }else if (Options.SleepStyle > 2) return B;
+        }else if (Options.SleepStyle > 2 && Options.SleepStyle != 4) return B;
     }
     return true;
 }
@@ -3289,19 +3314,29 @@ void WatchyGSR::initWatchFaceStyle(){
           Design.Menu.Top = 117;
           Design.Menu.Header = 25;
           Design.Menu.Data = 66;
+          Design.Menu.Gutter = 3;
           Design.Menu.Font = &aAntiCorona12pt7b;
+          Design.Menu.FontSmall = &aAntiCorona11pt7b;
+          Design.Menu.FontSmaller = &aAntiCorona10pt7b;
+          Design.Face.Gutter = 4;
           Design.Face.Time = 56;
           Design.Face.TimeHeight = 45;
           Design.Face.TimeColor = GxEPD_BLACK;
           Design.Face.TimeFont = &aAntiCorona36pt7b;
           Design.Face.TimeStyle = WatchyGSR::dCENTER;
           Design.Face.Day = 54;
+          Design.Face.DayGutter = 4;
           Design.Face.DayColor = GxEPD_BLACK;
-          Design.Face.DayFont = &aAntiCorona14pt7b;
+          Design.Face.DayFont = &aAntiCorona16pt7b;
+          Design.Face.DayFontSmall = &aAntiCorona15pt7b;
+          Design.Face.DayFontSmaller = &aAntiCorona14pt7b;
           Design.Face.DayStyle = WatchyGSR::dCENTER;
           Design.Face.Date = 106;
+          Design.Face.DateGutter = 4;
           Design.Face.DateColor = GxEPD_BLACK;
-          Design.Face.DateFont = &aAntiCorona13pt7b;
+          Design.Face.DateFont = &aAntiCorona15pt7b;
+          Design.Face.DateFontSmall = &aAntiCorona14pt7b;
+          Design.Face.DateFontSmaller = &aAntiCorona13pt7b;
           Design.Face.DateStyle = WatchyGSR::dCENTER;
           Design.Face.Year = 160;
           Design.Face.YearLeft = 99;
@@ -3317,19 +3352,29 @@ void WatchyGSR::initWatchFaceStyle(){
           Design.Menu.Top = 72;
           Design.Menu.Header = 25;
           Design.Menu.Data = 66;
+          Design.Menu.Gutter = 3;
           Design.Menu.Font = &aAntiCorona12pt7b;
+          Design.Menu.FontSmall = &aAntiCorona11pt7b;
+          Design.Menu.FontSmaller = &aAntiCorona10pt7b;
+          Design.Face.Gutter = 4;
           Design.Face.Time = 56;
           Design.Face.TimeHeight = 45;
           Design.Face.TimeColor = GxEPD_BLACK;
           Design.Face.TimeFont = &aAntiCorona36pt7b;
           Design.Face.TimeStyle = WatchyGSR::dCENTER;
           Design.Face.Day = 101;
+          Design.Face.DayGutter = 4;
           Design.Face.DayColor = GxEPD_BLACK;
           Design.Face.DayFont = &aAntiCorona16pt7b;
+          Design.Face.DayFontSmall = &aAntiCorona15pt7b;
+          Design.Face.DayFontSmaller = &aAntiCorona14pt7b;
           Design.Face.DayStyle = WatchyGSR::dCENTER;
           Design.Face.Date = 143;
+          Design.Face.DateGutter = 4;
           Design.Face.DateColor = GxEPD_BLACK;
           Design.Face.DateFont = &aAntiCorona15pt7b;
+          Design.Face.DateFontSmall = &aAntiCorona14pt7b;
+          Design.Face.DateFontSmaller = &aAntiCorona13pt7b;
           Design.Face.DateStyle = WatchyGSR::dCENTER;
           Design.Face.Year = 186;
           Design.Face.YearLeft = 99;
