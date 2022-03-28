@@ -7,7 +7,11 @@ A structure allows you to reposition AND change font color along with font for e
 | Design.Menu.Top | 72 | Top of where the Menu starts vertically on the screen. |
 | Design.Menu.Header | **25** | Vertical baseline of Menu Header (section) **from Design.Menu.Top**. |
 | Design.Menu.Data | **66** | Vertical baseline of Menu Data (value to set/change) **from Design.Menu.Top**. |
+| Design.Menu.Gutter | **3** | Horizontal spacing from edge of display for Menu Header & Data items. (1.4.3C+) |
 | Design.Menu.Font | &aAntiCorona12pt7b | Font used for Menu Header & Data display. |
+| Design.Menu.FontSmall | &aAntiCorona11pt7b | Font used for Menu Header & Data display when above is too large. (1.4.3C+) |
+| Design.Menu.FontSmaller | &aAntiCorona10pt7b | Font used for Menu Header & Data display when above is too large. (1.4.3C+) |
+| Design.Face.Gutter | **4** | Horizontal spacing from edge of display for Face elements (Time, AM/PM indicator, Year, etc). (1.4.3C+) |
 | Design.Face.Time | 56 | Vertical baseline of Time on screen. |
 | Design.Face.TimeHeight | 45 | Height of font used for PM indicator so it will sit at the top of TimeFont. |
 | Design.Face.TimeColor | GxEPD_BLACK | Color the Time is drawn in. |
@@ -15,13 +19,19 @@ A structure allows you to reposition AND change font color along with font for e
 | Design.Face.TimeLeft | {Unused} | Left point to start drawing Time display. |
 | Design.Face.TimeStyle | WatchyGSR::dCENTER | Alignment method for Time display.  If set for WatchyGSR:dRIGHT, AM/PM indicator will be on the left. |
 | Design.Face.Day | 101 | Vertical baseline of Day of Week on screen. |
+| Design.Face.DayGutter | **4** | Horizontal spacing from edge of display for Day of Week element. (1.4.3C+) |
 | Design.Face.DayColor | GxEPD_BLACK; | Color the Day of Week is drawn in. |
 | Design.Face.DayFont | &aAntiCorona16pt7b | Font used for Day of Week display. |
+| Design.Face.DayFontSmall | &aAntiCorona15pt7b | Font used for Day of Week display when above is too large. (1.4.3C+) |
+| Design.Face.DayFontSmaller | &aAntiCorona14pt7b | Font used for Day of Week display when above is too large. (1.4.3C+) |
 | Design.Face.DayLeft | {Unused} | Left point to start drawing Day of Week display. |
 | Design.Face.DayStyle | WatchyGSR::dCENTER | Alignment method for Day of Week display. |
 | Design.Face.Date | 143 | Vertical baseline of Date on screen. |
+| Design.Face.DateGutter | **4** | Horizontal spacing from edge of display for Date element. (1.4.3C+) |
 | Design.Face.DateColor | GxEPD_BLACK | Color the Date is drawn in. |
 | Design.Face.DateFont | &aAntiCorona15pt7b | Font used for Date display. |
+| Design.Face.DateFontSmall | &aAntiCorona14pt7b | Font used for Date display when above is too large. (1.4.3C+) |
+| Design.Face.DateFontSmaller | &aAntiCorona13pt7b | Font used for Date display when above is too large. (1.4.3C+) |
 | Design.Face.DateLeft | {Unused} | Left point to start drawing Date display. |
 | Design.Face.DateStyle | WatchyGSR::dCENTER | Alignment method for Date display. |
 | Design.Face.Year | 186 | Vertical baseline of Year on screen. |
