@@ -86,3 +86,9 @@
 **Version 1.4.3:**
 - **FIX:**  Fixed tilt during non-RTC mode, to work the same as normal.
 - **ADD:**  Added InsertNTPServer() function to insert your favorite NTP server instead of pool.ntp.org.
+
+**Version 1.4.3C:**
+- **FIX:**  Fixed InsertOnMinute to work outside of WakeUp.
+- **FIX:**  Fixed Menu usage during "Always" Screen Blanking, to work on a nextMinute as apposed to staying in Active Mode (battery saving).
+- **ADD:**  Added extra font sizes for various segments and added a Gutter value for the watch face in anticipation of Language switching.
+- **FIX:**  Moved Button PINs to Defines_GSR to a different value from Watchy base's defines to avoid conflicts and to correct them based on RTC and not static.
