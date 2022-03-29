@@ -338,7 +338,7 @@ void WatchyGSR::init(String datetime){
             Battery.LowLevel = SRTC.getRTCBattery(true);
             UP_PIN = 32;
             UP_MASK = GPIO_SEL_32;
-            if (SRTC.getType() == PCF8563) { UP_PIN = 34; UP_MASK = GPIO_SEL_34; }
+            if (SRTC.getType() == PCF8563) { UP_PIN = 35; UP_MASK = GPIO_SEL_35; }
             BTN_MASK = MENU_MASK|BACK_MASK|UP_MASK|DOWN_MASK;
             initZeros();
             setupDefaults();
