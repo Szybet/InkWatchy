@@ -126,6 +126,8 @@ RTC_DATA_ATTR String WatchyStatus;    // Used for the indicator in the bottom le
 RTC_DATA_ATTR int BasicWatchStyles;
 RTC_DATA_ATTR bool DefaultWatchStyles;  // States that the original 2 Watch Styles are to be added.
 RTC_DATA_ATTR uint8_t UP_PIN;       // Used to catch the different pin allocation for the up button.
+RTC_DATA_ATTR uint64_t UP_MASK;
+RTC_DATA_ATTR uint64_t BTN_MASK;
 
 RTC_DATA_ATTR struct TimeData final {
     time_t UTC_RAW;           // Copy of the UTC on init.
@@ -335,7 +337,9 @@ void WatchyGSR::init(String datetime){
             Battery.MinLevel = SRTC.getRTCBattery();
             Battery.LowLevel = SRTC.getRTCBattery(true);
             UP_PIN = 32;
-            if (SRTC.getType() == PCF8563) UP_PIN = 34;
+            UP_MASK = GPIO_SEL_32;
+            if (SRTC.getType() == PCF8563) { UP_PIN = 34; UP_MASK = GPIO_SEL_34; }
+            BTN_MASK = MENU_MASK|BACK_MASK|UP_MASK|DOWN_MASK;
             initZeros();
             setupDefaults();
             Rebooted=true;
@@ -1276,7 +1280,7 @@ void WatchyGSR::deepSleep(){
   if (Options.NeedsSaving) RecordSettings();
   DisplaySleep();
   for(I = 0; I < 40; I++) { pinMode(I, INPUT); }
-  esp_sleep_enable_ext1_wakeup((B ? SBMA.WakeMask() : 0) | BTN_PIN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
+  esp_sleep_enable_ext1_wakeup((B ? SBMA.WakeMask() : 0) | BTN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
   esp_sleep_enable_ext0_wakeup(RTC_INT_PIN, 0); //enable deep sleep wake on RTC interrupt
   if (DM) SRTC.atMinuteWake(N % 60, WatchTime.Local.Hour, D);
   else SRTC.nextMinuteWake();
@@ -1632,7 +1636,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                       }else if ((TimerDown.MaxMins + TimerDown.MaxHours) > 0){
                           TimerDown.Mins = TimerDown.MaxMins;
                           TimerDown.Hours = TimerDown.MaxHours;
-                          TimerDown.LastUTC = WatchTime.UTC_RAW - WatchTime.UTC.Second;
+                          TimerDown.LastUTC = WatchTime.UTC_RAW - WatchTime.UTC.Second; // +++ Fix this to watch it under a minute and stay in Active Mode until it finishes.
                           TimerDown.Active = true;
                           DoHaptic = true;
                           UpdateDisp = true;  // Quick Update.
@@ -2661,10 +2665,10 @@ IRAM_ATTR uint8_t WatchyGSR::getButtonPins(){
 }
 
 uint8_t WatchyGSR::getButtonMaskToID(uint64_t HW){
-      if (HW & MENU_BTN_MASK)      return Options.Lefty ? 4 : getSwapped(1);   // Menu Button [SW1]
-      else if (HW & BACK_BTN_MASK) return Options.Lefty ? 3 : getSwapped(2);   // Back Button [SW2]
-      else if (HW & UP_BTN_MASK)   return Options.Lefty ? getSwapped(2) : 3;     // Up Button [SW3]
-      else if (HW & DOWN_BTN_MASK) return Options.Lefty ? getSwapped(1) : 4;   // Down Button [SW4]
+      if (HW & MENU_MASK)      return Options.Lefty ? 4 : getSwapped(1);   // Menu Button [SW1]
+      else if (HW & BACK_MASK) return Options.Lefty ? 3 : getSwapped(2);   // Back Button [SW2]
+      else if (HW & UP_MASK)   return Options.Lefty ? getSwapped(2) : 3;     // Up Button [SW3]
+      else if (HW & DOWN_MASK) return Options.Lefty ? getSwapped(1) : 4;   // Down Button [SW4]
       else if (SBMA.didBMAWakeUp(HW)) {           // Acccelerometer.
           if (SBMA.isDoubleClick()) return 5;  // Double Tap.
           else if (SBMA.isTilt()) return 6;  // Wrist Tilt.
