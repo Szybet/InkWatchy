@@ -94,4 +94,4 @@
 - **FIX:**  Moved Button PINs to Defines_GSR to a different value from Watchy base's defines to avoid conflicts and to correct them based on RTC and not static.
 
 **Version 1.4.3D:**
-- **FIX:**  Fixed the PCF8563 variants so that the UP button will work with both versions, now requiring SmallRTC Version 1.8.
+- **FIX:**  Fixed the PCF8563 variants so that the UP button will work with both versions, this now requires SmallRTC Version 1.8.
