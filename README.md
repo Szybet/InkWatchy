@@ -24,5 +24,5 @@ For those **WANTING** to use this Watchy code without programming and having to 
 8. Click the RED colored button below that showed up and wait.  (It doesn't show any progress until it says it failed or succeeded.)
 9. If all went well, you'll see the success message and your Watchy will reboot with this Watchy face.
 10. If you didn't get this far, then you either didn't connect to Watchy AP fast enough or something else happened, so try again at Step 2.
-
+ 
 For those wanting to override the looks of this Watchy face, look at the Override Information.
