@@ -95,3 +95,8 @@
 
 **Version 1.4.3D:**
 - **FIX:**  Fixed the PCF8563 variants so that the UP button will work with both versions, this now requires SmallRTC Version 1.8.
+
+**Version 1.4.3E:**
+- **ADD:**  Added support in the Override and Design setup to allow for background bitmaps for Watchy on and sleep.
+- **DEL:**  Removed InsertBitmap(), replaced with bool OverrideBitmap(), see Override Information for more details.
+- **ADD:**  bool OverrideBitmap() and bool OverrideSleepBitmap(), see Override Information for more details.
