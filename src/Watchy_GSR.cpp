@@ -69,43 +69,45 @@ RTC_DATA_ATTR struct Optional final {
 
 RTC_DATA_ATTR struct Designing final {
     struct MenuPOS {
-       byte Gutter; // 3
-       byte Top;    // MenuTop 72
-       byte Header; // HeaderY 97
-       byte Data;   // DataY 138
-       const GFXfont *Font; // Menu Font.
-       const GFXfont *FontSmall; // Menu Font.
-       const GFXfont *FontSmaller; // Menu Font.
+        byte Gutter; // 3
+        byte Top;    // MenuTop 72
+        byte Header; // HeaderY 97
+        byte Data;   // DataY 138
+        const GFXfont *Font; // Menu Font.
+        const GFXfont *FontSmall; // Menu Font.
+        const GFXfont *FontSmaller; // Menu Font.
     } Menu;
     struct FacePOS {
-       byte Gutter; // 4
-       byte Time;   // TimeY 56
-       byte TimeHeight; // 45
-       uint16_t TimeColor;  // Font Color.
-       const GFXfont *TimeFont; // Font.
-       WatchyGSR::DesOps TimeStyle; // dCENTER
-       byte TimeLeft;  // Only for dSTATIC
-       byte Day;    // DayY 101
-       byte DayGutter; // 4
-       uint16_t DayColor;  // Font Color.
-       const GFXfont *DayFont; // Font.
-       const GFXfont *DayFontSmall; // Font.
-       const GFXfont *DayFontSmaller; // Font.
-       WatchyGSR::DesOps DayStyle; // dCENTER
-       byte DayLeft;  // Only for dSTATIC
-       byte Date;   // DateY 143
-       byte DateGutter; // 4
-       uint16_t DateColor;  // Font Color.
-       const GFXfont *DateFont; // Font.
-       const GFXfont *DateFontSmall; // Font.
-       const GFXfont *DateFontSmaller; // Font.
-       WatchyGSR::DesOps DateStyle; // dCENTER
-       byte DateLeft;  // Only for dSTATIC
-       byte Year;   // YearY 186
-       uint16_t YearColor;  // Font Color.
-       const GFXfont *YearFont; // Font.
-       WatchyGSR::DesOps YearStyle; // dCENTER
-       byte YearLeft;  // Only for dSTATIC
+        const unsigned char *Bitmap;  // Null
+        const unsigned char *SleepBitmap;  // Null
+        byte Gutter; // 4
+        byte Time;   // TimeY 56
+        byte TimeHeight; // 45
+        uint16_t TimeColor;  // Font Color.
+        const GFXfont *TimeFont; // Font.
+        WatchyGSR::DesOps TimeStyle; // dCENTER
+        byte TimeLeft;  // Only for dSTATIC
+        byte Day;    // DayY 101
+        byte DayGutter; // 4
+        uint16_t DayColor;  // Font Color.
+        const GFXfont *DayFont; // Font.
+        const GFXfont *DayFontSmall; // Font.
+        const GFXfont *DayFontSmaller; // Font.
+        WatchyGSR::DesOps DayStyle; // dCENTER
+        byte DayLeft;  // Only for dSTATIC
+        byte Date;   // DateY 143
+        byte DateGutter; // 4
+        uint16_t DateColor;  // Font Color.
+        const GFXfont *DateFont; // Font.
+        const GFXfont *DateFontSmall; // Font.
+        const GFXfont *DateFontSmaller; // Font.
+        WatchyGSR::DesOps DateStyle; // dCENTER
+        byte DateLeft;  // Only for dSTATIC
+        byte Year;   // YearY 186
+        uint16_t YearColor;  // Font Color.
+        const GFXfont *YearFont; // Font.
+        WatchyGSR::DesOps YearStyle; // dCENTER
+        byte YearLeft;  // Only for dSTATIC
     } Face;
     struct StatusPOS {
         byte WIFIx;  // NTPX 5
@@ -380,7 +382,7 @@ void WatchyGSR::init(String datetime){
     }
 
 
-    if ((Battery.Last > Battery.LowLevel || Button != 0 || Updates.Tapped || Darkness.Woke) && !(Options.SleepStyle == 4 && Darkness.Went && !Updates.Tapped)){
+    if (((Battery.Last > Battery.LowLevel || Button != 0 || Updates.Tapped || Darkness.Woke) && !(Options.SleepStyle == 4 && Darkness.Went && !Updates.Tapped))  || (Battery.DarkState != Battery.State)){
         //Init interrupts.
         attachInterrupt(digitalPinToInterrupt(MENU_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
         attachInterrupt(digitalPinToInterrupt(BACK_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
@@ -733,7 +735,7 @@ void WatchyGSR::showWatchFace(){
 
 void WatchyGSR::drawWatchFace(){
     display.fillScreen(BackColor());
-    InsertBitmap();
+    if (!OverrideBitmap()) if (Design.Face.Bitmap) display.drawBitmap(0, 0, Design.Face.Bitmap, 200, 200, ForeColor(), BackColor());
     display.setTextColor(ForeColor());
 
     drawWatchFaceStyle();
@@ -1300,6 +1302,7 @@ void WatchyGSR::GoDark(){
     display.setFullWindow();
     DisplayInit(true);  // Force it here so it fixes the border.
     display.fillScreen(GxEPD_BLACK);
+    if (!OverrideSleepBitmap()) if (Design.Face.SleepBitmap) display.drawBitmap(0, 0, Design.Face.SleepBitmap, 200, 200, ForeColor(), BackColor());
     drawChargeMe(true);
     Battery.DarkDirection = Battery.Direction;
     Battery.DarkState = Battery.State;
@@ -2446,7 +2449,8 @@ uint16_t WatchyGSR::ForeColor(){ return (Options.LightMode ? GxEPD_BLACK : GxEPD
 uint16_t WatchyGSR::BackColor(){ return (Options.LightMode ? GxEPD_WHITE : GxEPD_BLACK); }
 
 void WatchyGSR::InsertPost() {}
-void WatchyGSR::InsertBitmap() {}
+bool WatchyGSR::OverrideBitmap() { return false; }
+bool WatchyGSR::OverrideSleepBitmap() { return false; }
 void WatchyGSR::InsertDefaults() {}
 void WatchyGSR::InsertOnMinute() {}
 void WatchyGSR::InsertWiFi() {}
@@ -3325,6 +3329,8 @@ void WatchyGSR::initWatchFaceStyle(){
           Design.Menu.Font = &aAntiCorona12pt7b;
           Design.Menu.FontSmall = &aAntiCorona11pt7b;
           Design.Menu.FontSmaller = &aAntiCorona10pt7b;
+          Design.Face.Bitmap = nullptr;
+          Design.Face.SleepBitmap = nullptr;
           Design.Face.Gutter = 4;
           Design.Face.Time = 56;
           Design.Face.TimeHeight = 45;
@@ -3367,6 +3373,8 @@ void WatchyGSR::initWatchFaceStyle(){
           Design.Menu.Font = &aAntiCorona12pt7b;
           Design.Menu.FontSmall = &aAntiCorona11pt7b;
           Design.Menu.FontSmaller = &aAntiCorona10pt7b;
+          Design.Face.Bitmap = nullptr;
+          Design.Face.SleepBitmap = nullptr;
           Design.Face.Gutter = 4;
           Design.Face.Time = 56;
           Design.Face.TimeHeight = 45;
