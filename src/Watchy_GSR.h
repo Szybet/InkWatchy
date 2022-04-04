@@ -2,7 +2,6 @@
 #define WATCHY_GSR_H
 
 #include <core_version.h>
-#include <Watchy.h>
 #include "Defines_GSR.h"
 #include "Web-HTML.h"
 #include <Arduino.h>
