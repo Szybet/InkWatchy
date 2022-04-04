@@ -12,6 +12,8 @@ A structure allows you to reposition AND change font color along with font for e
 | Design.Menu.FontSmall | &aAntiCorona11pt7b | Font used for Menu Header & Data display when above is too large. (1.4.3C+) |
 | Design.Menu.FontSmaller | &aAntiCorona10pt7b | Font used for Menu Header & Data display when above is too large. (1.4.3C+) |
 | Design.Face.Gutter | **4** | Horizontal spacing from edge of display for Face elements (Time, AM/PM indicator, Year, etc). (1.4.3C+) |
+| Design.Face.Bitmap | {Unused} | A bitmap to place in the background of the Watch face during operation. |
+| Design.Face.SleepBitmap | {Unused} | A bitmap use during Screen Blanking. |
 | Design.Face.Time | 56 | Vertical baseline of Time on screen. |
 | Design.Face.TimeHeight | 45 | Height of font used for PM indicator so it will sit at the top of TimeFont. |
 | Design.Face.TimeColor | GxEPD_BLACK | Color the Time is drawn in. |
@@ -62,7 +64,6 @@ Functions for inserting extra code in places.
 | Function Name | Usage |
 | ------------- | --------------------------------- |
 | InsertPost() | This Function offers a post "boot" insert, so you can make changes after settings are loaded. |
-| InsertBitmap() | This Function allows you to place a bitmap on the Watchy face before anything is drawn on it. |
 | InsertDefaults() | This Function is done at the end of setupDefaults(), so you can add your own defaults. |
 | InsertOnMinute() | This Function is called once the Clock has been updated to the new minute but before the screen is drawn. |
 | InsertWiFi() | This Function is called repeatedly in a loop only *IF* WiFi has been enabled and connected, only use this if you asked for it. |
@@ -141,8 +142,17 @@ Overriding in this manner can be done using a switch and only checking for your 
 
 **Version 1.4.3 Additions**
 
-void InsertNTPServer() { return "Your favorite NTP Server"; } // Will let you pick your favorite NTP server.
+`void InsertNTPServer()` { return "Your favorite NTP Server"; } // Will let you pick your favorite NTP server.
+
+**Version 1.4.3E Changes**
+
+Removed `void InsertBitmap()`
+
+`void OverrideBitmap()` { return true/{false}; } // This function lets you stop the Design.Face.Bitmap from drawing if you return `true`.
+
+`void OverrideSleepBitmap()` { return true/{false}; } // This function lets you stop the Design.Face.SleepBitmap from drawing if you return `true`.
+
 
 **How to Make Your Own Version**
 
-Copy the GSR.ino to another file name, like MyGSR.ino and edit it, do all of your overrides in that.
+Copy the GSR.ino to another file name, like MyGSR.ino and edit it, do all of your overrides in that.  That ino file now becomes your main compile file.
