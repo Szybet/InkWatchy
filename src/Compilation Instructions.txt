@@ -2,6 +2,12 @@ Compiling instructions:
 
 In order to compile this you need:  Arduino Libraries, ArduinoOTA (included in ESP32 2.0.2+), SmallRTC (1.6 or greater, GuruSR), SmallNTP (GuruSR), StableBMA (GuruSR), Olson2POSIX (GuruSR) AND Watchy (1.2.9 or greater) base.
 
+**VERSION 1.4.3+ CHANGES**
+
+Go into the Watchy library folder and move the following files out of it, otherwise it may not compile as these files are out of date:
+
+Watchy.h, Watchy.cpp, WatchyRTC.h and WatchyRTC.cpp  they are not needed at all.
+
 **VERSION 1.4.1 CHANGES**
 
 Requires Watchy base 1.2.9 or greater, as well as the above libraries.  When editing the file changes below, DO NOT COPY items that say not to, instead make the changes or copy in the changes to avoid compiler errors.
