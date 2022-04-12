@@ -89,10 +89,10 @@ FIRST TIME USAGE:
 
 1.  Go into Options -> Watchy Connect -> MENU to Connect.
 2.  Connect to the Watchy Connect WiFi access point with your phone, laptop, computer, etc.  (Password is:  Watchy123)
-3.  Scan for your home network (or whichever one you want to use it with) and setup the WiFi connectivity there, once it works, the Access Point will close.  This will ALWAYS ask for a new WiFi setting, unlike previous versions, you can change your WiFi "X" (last known good connection).
-4.  Go to (Options -> ) OTA Website, browse to the IP address in Watchy menu.
-5.  Pick "Backup & Restore Settings" if you have previous Watchy settings to restore, paste in the settings you had and click Store.
-6.  If you don't have previous settings, go into "Edit Additional WiFi Access Points" and add up to 10 there, click Store to finish.  (See WiFi USAGE for more).
+3.  Open a web browser and go to the IP address on the Watchy, once there you need to choose "Edit Additional WiFi Access Points".  `See WiFi USAGE for more.`
+4.  Add all of your known WiFi access point names and passwords in here and click Store.
+5.  Hit the BACK button on the Watchy to back out, now go to OTA Website and click MENU to get the Watchy to connect to your WiFi, it should if you entered the password correctly in 3, if not, repeat the process by using UP to get to Watchy Connect and pushing MENU and repeating from step 2.
+6.  (Optional) Restoring settings with Watchy Connect OR OTA Website, select "Backup & Restore Settings" if you have previous Watchy settings to restore, paste in the settings you had and click Store.
 
 WiFi USAGE:
 
