@@ -100,3 +100,8 @@
 - **ADD:**  Added support in the Override and Design setup to allow for background bitmaps for Watchy on and sleep.
 - **DEL:**  Removed InsertBitmap(), replaced with bool OverrideBitmap(), see Override Information for more details.
 - **ADD:**  bool OverrideBitmap() and bool OverrideSleepBitmap(), see Override Information for more details.
+
+**Version 1.4.3F:**
+- **DEL:**  Removed outdated web portal.
+- **ADD:**  Added OTA Website to Watchy Connect.
+- **FIX:**  Reworked wake-up code to better behave with and without Sleep modes.
