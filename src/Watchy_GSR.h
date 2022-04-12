@@ -39,17 +39,19 @@ class WatchyGSR{
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.4.3E";
+        static constexpr const char* Build = "1.4.3F";
         enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
+
     public:
         WatchyGSR();
         virtual void init(String datetime = "") final;
-        void showWatchFace();
-        void drawWatchFace(); //override this method for different watch faces
-        void drawTime();
-        void drawDay();
-        void drawDate();
-        void drawYear();
+        virtual void StartWeb() final;
+        virtual void showWatchFace();
+        virtual void drawWatchFace(); //override this method for different watch faces
+        virtual void drawTime();
+        virtual void drawDay();
+        virtual void drawDate();
+        virtual void drawYear();
         virtual void handleButtonPress(uint8_t Pressed) final;
         virtual void deepSleep() final;
         virtual float getBatteryVoltage() final;
@@ -64,26 +66,26 @@ class WatchyGSR{
         virtual String MakeMinutes(uint8_t Minutes) final;
         virtual uint16_t ForeColor() final;
         virtual uint16_t BackColor() final;
-        void InsertPost();
-        bool OverrideBitmap();
-        bool OverrideSleepBitmap();
-        void InsertDefaults();
-        void InsertOnMinute();
-        void InsertWiFi();
-        void InsertWiFiEnding();
-        void InsertAddWatchStyles();
-        void InsertDrawWatchStyle(uint8_t StyleID);
-        void InsertInitWatchStyle(uint8_t StyleID);
+        virtual void InsertPost();
+        virtual bool OverrideBitmap();
+        virtual bool OverrideSleepBitmap();
+        virtual void InsertDefaults();
+        virtual void InsertOnMinute();
+        virtual void InsertWiFi();
+        virtual void InsertWiFiEnding();
+        virtual void InsertAddWatchStyles();
+        virtual void InsertDrawWatchStyle(uint8_t StyleID);
+        virtual void InsertInitWatchStyle(uint8_t StyleID);
         virtual uint8_t AddWatchStyle(String StyleName) final;
-        String InsertNTPServer();
+        virtual String InsertNTPServer();
         virtual void AllowDefaultWatchStyles(bool Allow = true) final;
         virtual void AskForWiFi() final;
         virtual wl_status_t currentWiFi() final;
         virtual void endWiFi() final;
         virtual void getAngle(uint16_t Angle, uint8_t Away, uint8_t &X, uint8_t &Y) final;
         virtual bool SafeToDraw() final;
-        void initWatchFaceStyle();
-        void drawWatchFaceStyle();
+        virtual void initWatchFaceStyle();
+        virtual void drawWatchFaceStyle();
    private:
         void setStatus(String Status);
         void drawMenu();

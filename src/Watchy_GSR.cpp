@@ -16,6 +16,16 @@ const float Reduce[5] = {1.0,0.8,0.6,0.4,0.2};
 #define GSettings "GSR-Options"
 #define GTZ "GSR-TZ"
 
+/* Private
+RTC_DATA_ATTR WatchyGSR::GSRWireless GSRWiFi;
+RTC_DATA_ATTR WatchyGSR::CPUWork CPUSet;
+RTC_DATA_ATTR WatchyGSR::Stepping Steps;
+RTC_DATA_ATTR WatchyGSR::Optional Options;
+RTC_DATA_ATTR WatchyGSR::DesignStyles WatchStyles;
+RTC_DATA_ATTR WatchyGSR::MenuUse Menu;
+*/
+
+// Protected
 RTC_DATA_ATTR struct GSRWireless final {
     bool Requested;          // Request WiFi.
     bool Working;            // Working on getting WiFi.
@@ -32,19 +42,16 @@ RTC_DATA_ATTR struct GSRWireless final {
     wifi_power_t TransmitPower;
     wifi_event_id_t WiFiEventID;
 } GSRWiFi;
-
 RTC_DATA_ATTR struct CPUWork final {
     uint32_t Freq;
     bool     Locked;
 } CPUSet;
-
 RTC_DATA_ATTR struct Stepping final {
     uint8_t Hour;
     uint8_t Minutes;
     bool Reset;
     uint32_t Yesterday;
 } Steps;
-
 RTC_DATA_ATTR struct Optional final {
     bool TwentyFour;                  // If the face shows 24 hour or Am/Pm.
     bool LightMode;                    // Light/Dark mode.
@@ -66,6 +73,17 @@ RTC_DATA_ATTR struct Optional final {
     bool BedTimeOrientation;          // Make Buttons only work while Watch is in normal orientation.
     uint8_t WatchFaceStyle;           // Using the Style values from Defines_GSR.
 } Options;
+RTC_DATA_ATTR struct DesignStyles final {
+    uint8_t Count;
+    char Style[32 * MaxStyles];
+} WatchStyles;
+
+RTC_DATA_ATTR struct MenuUse final {
+    int8_t Style;           // MENU_INNORMAL or MENU_INOPTIONS
+    int8_t Item;            // What Menu Item is being viewed.
+    int8_t SubItem;         // Used for menus that have sub items, like alarms and Sync Time.
+    int8_t SubSubItem;      // Used mostly in the alarm to offset choice.
+} Menu;
 
 RTC_DATA_ATTR struct Designing final {
     struct MenuPOS {
@@ -116,21 +134,6 @@ RTC_DATA_ATTR struct Designing final {
         byte BATTy;  // 178
     } Status;
 } Design;
-
-RTC_DATA_ATTR struct DesignStyles final {
-    uint8_t Count;
-    char Style[32 * MaxStyles];
-} WatchStyles;
-
-RTC_DATA_ATTR int GuiMode;
-RTC_DATA_ATTR bool VibeMode;          // Vibe Motor is On=True/Off=False, used for the Haptic and Alarms.
-RTC_DATA_ATTR String WatchyStatus;    // Used for the indicator in the bottom left, so when it changes, it asks for a screen refresh, if not, it doesn't.
-RTC_DATA_ATTR int BasicWatchStyles;
-RTC_DATA_ATTR bool DefaultWatchStyles;  // States that the original 2 Watch Styles are to be added.
-RTC_DATA_ATTR uint8_t UP_PIN;       // Used to catch the different pin allocation for the up button.
-RTC_DATA_ATTR uint64_t UP_MASK;
-RTC_DATA_ATTR uint64_t BTN_MASK;
-
 RTC_DATA_ATTR struct TimeData final {
     time_t UTC_RAW;           // Copy of the UTC on init.
     tmElements_t UTC;         // Copy of UTC only split up for usage.
@@ -145,6 +148,16 @@ RTC_DATA_ATTR struct TimeData final {
     uint8_t NextAlarm;        // Next index that will need to wake the Watchy from sleep to fire.
     bool BedTime;             // If the hour is within the Bed Time settings.
 } WatchTime;
+
+RTC_DATA_ATTR int GuiMode;
+RTC_DATA_ATTR bool VibeMode;          // Vibe Motor is On=True/Off=False, used for the Haptic and Alarms.
+RTC_DATA_ATTR String WatchyStatus;    // Used for the indicator in the bottom left, so when it changes, it asks for a screen refresh, if not, it doesn't.
+RTC_DATA_ATTR int BasicWatchStyles;
+RTC_DATA_ATTR bool DefaultWatchStyles;  // States that the original 2 Watch Styles are to be added.
+RTC_DATA_ATTR uint8_t UP_PIN;       // Used to catch the different pin allocation for the up button.
+RTC_DATA_ATTR uint64_t UP_MASK;
+RTC_DATA_ATTR uint64_t BTN_MASK;
+RTC_DATA_ATTR float HWVer;
 
 RTC_DATA_ATTR struct Countdown final {
   bool Active;
@@ -175,13 +188,6 @@ RTC_DATA_ATTR struct BatteryUse final {
     float MinLevel;         // Lowest level before the indicator comes on.
     float LowLevel;         // The battery is about to get too low for the RTC to function.
 } Battery;
-
-RTC_DATA_ATTR struct MenuUse final {
-    int8_t Style;           // MENU_INNORMAL or MENU_INOPTIONS
-    int8_t Item;            // What Menu Item is being viewed.
-    int8_t SubItem;         // Used for menus that have sub items, like alarms and Sync Time.
-    int8_t SubSubItem;      // Used mostly in the alarm to offset choice.
-} Menu;
 
 RTC_DATA_ATTR struct NTPUse final {
     uint8_t State;          // State = 0=Off, 1=Start WiFi, 2=Wait for WiFi, TZ, send NTP request, etc, Finish.  See function ProcessNTP();
@@ -323,13 +329,14 @@ void WatchyGSR::init(String datetime){
             if (Darkness.Went && UpRight()){
                 if (Button == 5 && Options.SleepStyle > 1 && Options.SleepStyle != 4){  // Accelerometer caused this.
                     if (Options.SleepMode == 0) Options.SleepMode = 2;  // Do this to avoid someone accidentally not setting this before usage.
-                    UpdateClock(); // Make sure these are done during times when it won't.
                     Darkness.Woke=true; Updates.Tapped=true; Darkness.Last=millis(); Darkness.Tilt = Darkness.Last; UpdateDisp = true; // Update Screen to new state.
                 }else if (Button == 6 && !WatchTime.BedTime){  // Wrist.
-                    UpdateClock(); // Make sure these are done during times when it won't.
                     Darkness.Woke=true; Darkness.Last=millis(); Darkness.Tilt = Darkness.Last; UpdateDisp = true; // Do this anyways, always.
+                }else if (Button != 0) {
+                    Darkness.Woke=true; Darkness.Last=millis(); Darkness.Tilt = Darkness.Last; UpdateDisp = true; // Update Screen to new state.
                 }
             }
+            if (Darkness.Woke || Button != 0) UpdateClock();  // Make sure this is done when buttons are pressed for a wakeup.
             SRTC.resetWake();
             break;
         default: //reset
@@ -340,15 +347,12 @@ void WatchyGSR::init(String datetime){
             Battery.LowLevel = SRTC.getRTCBattery(true);
             UP_PIN = 32;
             UP_MASK = GPIO_SEL_32;
-            if (SRTC.getType() == PCF8563){
-                UP_PIN = 35; UP_MASK = GPIO_SEL_35;
-                if (SRTC.getADCPin() == 35) { UP_PIN = 32; UP_MASK = GPIO_SEL_32; }
-            }
+            HWVer = 1.0;
+            if (SRTC.getType() == PCF8563){ if (SRTC.getADCPin() == 35) { HWVer =1.5; UP_PIN = 32; UP_MASK = GPIO_SEL_32; } else { HWVer = 2.0; UP_PIN = 35; UP_MASK = GPIO_SEL_35; } }
             BTN_MASK = MENU_MASK|BACK_MASK|UP_MASK|DOWN_MASK;
             initZeros();
             setupDefaults();
             Rebooted=true;
-            Darkness.Woke=true;
             _bmaConfig();
             if (DefaultWatchStyles){
                 I = AddWatchStyle("Classic GSR");
@@ -378,11 +382,21 @@ void WatchyGSR::init(String datetime){
             WaitForNext=false;
             Updates.Full=true;
             UpdateDisp=true;
+            Darkness.Went=true; // Fake this.
+            Darkness.Woke=true;
+            Darkness.Last=millis();
+            Darkness.Tilt=Darkness.Last;
             break;
     }
 
+    B = true;
+    if (Darkness.Went)
+    {
+        if (Options.SleepStyle == 4) B = (Updates.Tapped || Battery.DarkState != Battery.State);
+        else B = (Darkness.Woke || Button != 0 || Battery.DarkState != Battery.State);
+    }
 
-    if (((Battery.Last > Battery.LowLevel || Button != 0 || Updates.Tapped || Darkness.Woke) && !(Options.SleepStyle == 4 && Darkness.Went && !Updates.Tapped))  || (Battery.DarkState != Battery.State)){
+    if (B || Updates.Full || WatchTime.NewMinute){
         //Init interrupts.
         attachInterrupt(digitalPinToInterrupt(MENU_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
         attachInterrupt(digitalPinToInterrupt(BACK_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
@@ -520,7 +534,7 @@ void WatchyGSR::init(String datetime){
                                         OTAEnd |= (!WiFi.softAP(WiFi_AP_SSID, WiFi_AP_PSWD, 1, WiFi_AP_HIDE, WiFi_AP_MAXC));
                                         if (!OTAEnd) UpdateWiFiPower();
                                     }else if (WiFi.getMode() == WIFI_AP){
-                                        wifiManager.startWebPortal();
+                                        WatchyGSR::StartWeb();
                                         Menu.SubItem++;
                                         setStatus("WiFi-AP");
                                         UpdateDisp=Showing();
@@ -533,10 +547,12 @@ void WatchyGSR::init(String datetime){
                                             Menu.SubItem = 0;
                                             break;
                                         }
-                                        if (wifiManager.process()){ // Setting worked.
+                                        //if (wifiManager.process()){ // Setting worked.
+                                        server.handleClient();
+                                        /*if (Server.handleRequests()){
                                             Menu.SubItem = 0;
                                             break;
-                                        }
+                                        }*/
                                         if (millis() - APLoop > 8000){
                                             Menu.SubItem = roller(Menu.SubItem + 1, 2,4);
                                             UpdateDisp = Showing();
@@ -578,79 +594,14 @@ void WatchyGSR::init(String datetime){
                                 });
                               RefreshCPU(CPUMAX);
                               ArduinoOTA.begin();
-                              }else if (Menu.Item == MENU_OTAM){
-                                  /*return index page which is stored in basicIndex */
-                                  server.on("/", HTTP_GET, [=]() {
-                                    server.sendHeader("Connection", "close");
-                                    server.send(200, "text/html", basicIndex);
-                                    OTATimer=millis();
-                                  });
-                                  server.on("/settings", HTTP_GET, [=]() {
-                                    String S = settingsA + GetSettings() + settingsB;
-                                    server.sendHeader("Connection", "close");
-                                    server.send(200, "text/html", S);
-                                    OTATimer=millis();
-                                  });
-                                  server.on("/wifi", HTTP_GET, [=]() {
-                                    server.sendHeader("Connection", "close");
-                                    server.send(200, "text/html", buildWiFiAPPage());
-                                    OTATimer=millis();
-                                  });
-                                  server.on("/update", HTTP_GET, [=]() {
-                                    server.sendHeader("Connection", "close");
-                                    server.send(200, "text/html", updateIndex);
-                                    OTATimer=millis();
-                                  });
-                                  server.on("/settings", HTTP_POST, [=](){
-                                      if (server.argName(0) == "settings") { StoreSettings(server.arg(0)); RecordSettings(); }
-                                      server.sendHeader("Connection", "close");
-                                      server.send(200, "text/html", settingsDone);
-                                      OTATimer=millis();
-                                  });
-                                  server.on("/wifi", HTTP_POST, [=](){
-                                      uint8_t I = 0;
-                                      while (I < server.args()){
-                                          parseWiFiPageArg(server.argName(I),server.arg(I)); I++;
-                                      }
-                                      server.sendHeader("Connection", "close");
-                                      server.send(200, "text/html", wifiDone);
-                                      RecordSettings();
-                                      OTAFail = millis() - 598000;
-                                  });
-                                  server.on("/update", HTTP_POST, [](){
-                                    server.sendHeader("Connection", "close");
-                                    server.send(200, "text/plain", (Update.hasError()) ? "Upload Failed." : "Watchy will reboot!");
-                                    delay(2000);
-                                    ESP.restart();
-                                  }, []() {
-                                    HTTPUpload& upload = server.upload();
-                                    if (upload.status == UPLOAD_FILE_START) {
-                                      OTATimer=millis();
-
-                                      if (!Update.begin(UPDATE_SIZE_UNKNOWN)) { //start with max available size
-                                        OTAEnd=true;
-                                      }
-                                    } else if (upload.status == UPLOAD_FILE_WRITE) {
-                                      /* flashing firmware to ESP*/
-
-                                      if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) OTAEnd=true;
-
-                                    } else if (upload.status == UPLOAD_FILE_END) {
-                                      if (Update.end(true)) { //true to set the size to the current progress
-                                        OTAEnd=true;
-                                      }
-                                    }
-                                  });
-                                  RefreshCPU(CPUMAX);
-                                  server.begin();
-                              }
+                              }else if (Menu.Item == MENU_OTAM) WatchyGSR::StartWeb();
                               Menu.SubItem++;
                               showWatchFace();
                               break;
                           case 3: // Monitor back button and turn WiFi off if it happens, or if duration is longer than 2 minutes.
                               if (WiFi.status() == WL_DISCONNECTED) OTAEnd = true;
                               else if (Menu.Item == MENU_OTAU)      ArduinoOTA.handle();
-                              else if (Menu.Item == MENU_OTAM) server.handleClient();
+                              else if (Menu.Item == MENU_OTAM)      server.handleClient();
                               if (getButtonPins() != 2) OTATimer = millis(); // Not pressing "BACK".
                               if (millis() - OTATimer > 10000 || millis() - OTAFail > 600000) OTAEnd = true;  // Fail if holding back for 10 seconds OR 600 seconds has passed.
                         }
@@ -660,7 +611,7 @@ void WatchyGSR::init(String datetime){
                     if (OTAEnd){
                         if (Menu.Item == MENU_OTAU)      ArduinoOTA.end();
                         else if (Menu.Item == MENU_OTAM) server.stop();
-                        if (WatchyAPOn) wifiManager.stopConfigPortal();
+                        if (WatchyAPOn) server.stop();
                         VibeTo(false);
                         OTAEnd=false;
                         OTAUpdate=false;
@@ -709,6 +660,74 @@ void WatchyGSR::init(String datetime){
     }
     deepSleep();
 }
+
+void WatchyGSR::StartWeb(){
+    /*return index page which is stored in basicIndex */
+    server.on("/", HTTP_GET, [=]() {
+      server.sendHeader("Connection", "close");
+      server.send(200, "text/html", basicIndex);
+      OTATimer=millis();
+    });
+    server.on("/settings", HTTP_GET, [=]() {
+      String S = settingsA + GetSettings() + settingsB;
+      server.sendHeader("Connection", "close");
+      server.send(200, "text/html", S);
+      OTATimer=millis();
+    });
+    server.on("/wifi", HTTP_GET, [=]() {
+      server.sendHeader("Connection", "close");
+      server.send(200, "text/html", buildWiFiAPPage());
+      OTATimer=millis();
+    });
+    server.on("/update", HTTP_GET, [=]() {
+      server.sendHeader("Connection", "close");
+      server.send(200, "text/html", updateIndex);
+      OTATimer=millis();
+    });
+    server.on("/settings", HTTP_POST, [=](){
+        if (server.argName(0) == "settings") { StoreSettings(server.arg(0)); RecordSettings(); }
+        server.sendHeader("Connection", "close");
+        server.send(200, "text/html", settingsDone);
+        OTATimer=millis();
+    });
+    server.on("/wifi", HTTP_POST, [=](){
+        uint8_t I = 0;
+        while (I < server.args()){
+            parseWiFiPageArg(server.argName(I),server.arg(I)); I++;
+        }
+        server.sendHeader("Connection", "close");
+        server.send(200, "text/html", wifiDone);
+        RecordSettings();
+        OTAFail = millis() - 598000;
+    });
+    server.on("/update", HTTP_POST, [](){
+      server.sendHeader("Connection", "close");
+      server.send(200, "text/plain", (Update.hasError()) ? "Upload Failed." : "Watchy will reboot!");
+      delay(2000);
+      ESP.restart();
+    }, []() {
+      HTTPUpload& upload = server.upload();
+      if (upload.status == UPLOAD_FILE_START) {
+        OTATimer=millis();
+
+        if (!Update.begin(UPDATE_SIZE_UNKNOWN)) { //start with max available size
+          OTAEnd=true;
+        }
+      } else if (upload.status == UPLOAD_FILE_WRITE) {
+        /* flashing firmware to ESP*/
+
+        if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) OTAEnd=true;
+
+      } else if (upload.status == UPLOAD_FILE_END) {
+        if (Update.end(true)) { //true to set the size to the current progress
+          OTAEnd=true;
+        }
+      }
+    });
+    RefreshCPU(CPUMAX);
+    server.begin();
+}
+
 
 void WatchyGSR::showWatchFace(){
   bool B = (Battery.Last > Battery.MinLevel);
@@ -1138,6 +1157,9 @@ void WatchyGSR::drawMenu(){
                 break;
             case 1:
                 O = "Battery: " + String(Battery.Last - (Battery.Last > MaxBattery ? 1.00 : 0.00)) + "V";
+                break;
+            case 2:
+                if (HWVer > 1.0){ O = (HWVer == 2.0) ? "V2.0 PCF8563" : "V1.5 PCF8563"; } else O = "V1 DS3231M";
                 break;
         }
     }else if (Menu.Item == MENU_SAVE){  // Performance
@@ -1683,7 +1705,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
               }else if (Menu.Item == MENU_INFO){ // Information
-                  Menu.SubItem = roller(Menu.SubItem + 1, 0, 1);
+                  Menu.SubItem = roller(Menu.SubItem + 1, 0, 2);
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
@@ -3066,7 +3088,7 @@ void WatchyGSR::StoreSettings(String FromUser){
     uint16_t V;
     size_t L;
     bool Ok;
-    uint8_t I, A, W, NewV;  // For WiFi storage.
+    uint8_t I, A, W, NewV;  // For WiFi 
     String S;
 
     J = FromUser.length(); if (J < 5) return;
