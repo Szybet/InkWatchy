@@ -16,10 +16,10 @@ Below is a layout of the Watchy Connect & the OTA Website (used while online you
 
 ![OTA Website](https://github.com/GuruSR/Watchy_GSR/blob/main/Images/Server-Help.png)
 
-The only OTA update (for which the Bin folder holds) is possible via an OTA compatible firmware which are:
+OTA update is **ONLY** possible via an OTA compatible firmware which are:
 
 `Watchy GSR` and those overriding it.
 
-** If you have an OTA upload function in your firmware, ask for it to be added here. **
+**If you have an OTA upload function in your firmware, ask for it to be added here.**
 
 For those wanting to override the looks of this Watchy face, look at the Override Information.
