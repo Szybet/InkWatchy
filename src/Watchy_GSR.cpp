@@ -1285,23 +1285,26 @@ void WatchyGSR::setFontFor(String O, const GFXfont *Normal, const GFXfont *Small
 }
 
 void WatchyGSR::deepSleep(){
-  uint8_t I, N, D;
+  uint8_t I, N, D, H;
   bool BatOk, BT,B, DM;
   UpdateUTC(); UpdateClock();
-  BatOk = (Battery.Last == 0 || Battery.Last > Battery.LowLevel);
-  BT = (Options.SleepStyle == 2 && WatchTime.BedTime);
-  B = (((Options.SleepStyle == 1 || (Options.SleepStyle > 2 && Options.SleepStyle != 4)) || BT) && BatOk);
 
+  B = false;
   UpdateBMA(); GoDark();
   DM = (Darkness.Went && !TimerDown.Active && GuiMode != MENUON);
-  D = WatchTime.Local.Wday + 1;
 
   if (DM){
+    D = WatchTime.Local.Wday + 1;
+    H - WatchTime.Local.Hour;
+    BatOk = (Battery.Last == 0 || Battery.Last > Battery.LowLevel);
+    BT = (Options.SleepStyle == 2 && WatchTime.BedTime);
+    B = (((Options.SleepStyle == 1 || (Options.SleepStyle > 2 && Options.SleepStyle != 4)) || BT) && BatOk);
     if (Battery.Direction == 1) N = (WatchTime.UTC.Minute - (WatchTime.UTC.Minute%5) + 5); else N = (WatchTime.UTC.Minute < 30 ? 30 : 60);
-    if (WatchTime.NextAlarm != 99){
-        if (Alarms_Minutes[WatchTime.NextAlarm] >= WatchTime.Local.Minute && Alarms_Minutes[WatchTime.NextAlarm] < N) N = Alarms_Minutes[WatchTime.NextAlarm];
+    if (WatchTime.NextAlarm != 99){ if (Alarms_Minutes[WatchTime.NextAlarm] >= WatchTime.Local.Minute && Alarms_Minutes[WatchTime.NextAlarm] < N) N = Alarms_Minutes[WatchTime.NextAlarm]; }
+    if (N == 60){
+        H = (H + 1) % 24;
+        if (H == 0) D = ((D + 1) > 7 ? 1 : D + 1);
     }
-    if (N == 60 && WatchTime.Local.Hour == 23) D = constrain(D + 1, 1, 7);
   }
 
   if (Options.NeedsSaving) RecordSettings();
@@ -1309,7 +1312,7 @@ void WatchyGSR::deepSleep(){
   for(I = 0; I < 40; I++) { pinMode(I, INPUT); }
   esp_sleep_enable_ext1_wakeup((B ? SBMA.WakeMask() : 0) | BTN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
   esp_sleep_enable_ext0_wakeup(RTC_INT_PIN, 0); //enable deep sleep wake on RTC interrupt
-  if (DM) SRTC.atMinuteWake(N % 60, WatchTime.Local.Hour, D);
+  if (DM) SRTC.atMinuteWake(N % 60, H, D);
   else SRTC.nextMinuteWake();
   esp_deep_sleep_start();
 }
