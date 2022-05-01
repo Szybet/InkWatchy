@@ -105,3 +105,6 @@
 - **DEL:**  Removed outdated web portal.
 - **ADD:**  Added OTA Website to Watchy Connect.
 - **FIX:**  Reworked wake-up code to better behave with and without Sleep modes.
+
+**Version 1.4.3G:**
+- **FIX:**  Reworked Deep Sleep to clean up some code that may or may not have worked accurately at times.
