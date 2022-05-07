@@ -108,3 +108,6 @@
 
 **Version 1.4.3G:**
 - **FIX:**  Reworked Deep Sleep to clean up some code that may or may not have worked accurately at times.
+
+**Version 1.4.3H:**
+- **FIX:**  Added a #define needed for Dark Border, so compiling without the #define included from Compilation Instructions will disable Dark Border completely.
