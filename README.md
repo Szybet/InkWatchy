@@ -9,6 +9,9 @@ Needed libraries:  Arduino Libraries, ArduinoOTA (included in ESP32 2.0.2+), Sma
 **NOTES:**
 - Watchy uses version 1.0.6 or 2.0.2 (or higher) of the ESP32 libraries, 2.0.0 won't compile, remove them manually and revert back to version 1.0.6 or use 2.0.2 or higher (which seems to have been fixed).
 
+**WARNING:**
+As of Version 1.4.3H, the Compilation Instructions have changed, the GxEPD2 requires a define to be added to the .h file in the Compilation Instructions or the Dark Border will be disabled.
+
 For instructions on usage of the firmware, see "Usage".
 
 Below is a layout of the Watchy Connect & the OTA Website (used while online your network) that gives you options to various things.
