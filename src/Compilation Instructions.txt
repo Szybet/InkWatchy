@@ -14,21 +14,30 @@ Requires Watchy base 1.2.9 or greater, as well as the above libraries.  When edi
 
 You'll need to edit 2 files:
 
+**NOTE** The two files can be found in Arduino->Libraries->GxEPD2->src->epd (for PlatformIO, you'll need to look where it is stored for your setup).
+
 GxEPD2_154_D67.cpp:
 
-Insert the following code past the following:  (Note, the uint8/16_t's below can either be uint8_t or uint16_t based on GxEPD2 version, don't copy those lines.)
+Copy the code below:
+
+bool IsDark;                                    // GuruSR:  Changed for setDarkBorder
+void GxEPD2_154_D67::setDarkBorder(bool Dark){  // GuruSR:  Changed for setDarkBorder
+	IsDark=Dark;                                  // GuruSR:  Changed for setDarkBorder
+}                                               // GuruSR:  Changed for setDarkBorder
+
+And add it to just under this code:  (Note, the uint8/16_t's below can either be uint8_t or uint16_t based on GxEPD2 version, don't copy those lines.)
 
 GxEPD2_154_D67::GxEPD2_154_D67(int8/16_t cs, int8/16_t dc, int8/16_t rst, int8/16_t busy) :
   GxEPD2_EPD(cs, dc, rst, busy, HIGH, 10000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate)
 {
 }
 
-to read:
+So when you're done, it looks like this:
 
-GxEPD2_154_D67::GxEPD2_154_D67(int8/16_t cs, int8/16_t dc, int8/16_t rst, int8/16_t busy) :  <- DO NOT COPY THIS
-  GxEPD2_EPD(cs, dc, rst, busy, HIGH, 10000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate)  <- DO NOT COPY THIS
-{  <- DO NOT COPY THIS
-}  <- DO NOT COPY THIS
+GxEPD2_154_D67::GxEPD2_154_D67(int8/16_t cs, int8/16_t dc, int8/16_t rst, int8/16_t busy) :
+  GxEPD2_EPD(cs, dc, rst, busy, HIGH, 10000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate)
+{
+}
 
 bool IsDark;                                    // GuruSR:  Changed for setDarkBorder
 void GxEPD2_154_D67::setDarkBorder(bool Dark){  // GuruSR:  Changed for setDarkBorder
@@ -49,7 +58,7 @@ void GxEPD2_154_D67::_InitDisplay()
   _writeData(0x00);
   _writeData(0x00);
   _writeCommand(0x3C); // BorderWavefrom
-  _writeData(0x05);
+  _writeData(0x05);      <- THIS LINE NEEDS TO BE CHANGED, LOOK BELOW!
   _writeCommand(0x18); // Read built-in temperature sensor
   _writeData(0x80);
   _setPartialRamArea(0, 0, WIDTH, HEIGHT);
@@ -74,11 +83,23 @@ void GxEPD2_154_D67::_InitDisplay()
   _setPartialRamArea(0, 0, WIDTH, HEIGHT);                  <- DO NOT COPY THIS
 }
 
-Edit GxEPD2_154_D67.h to include the following after:
+Edit GxEPD2_154_D67.h:
+
+After:
+#define _GxEPD2_154_D67_H_
+
+Add:
+#define GxEPD2DarkBorder
+
+It should look like this:
+#define _GxEPD2_154_D67_H_
+#define GxEPD2DarkBorder
+
+Further down look for:
 
 void hibernate(); // turns powerOff() and sets controller to deep sleep for minimum power use, ONLY if wakeable by RST (rst >= 0)
 
-to:
+Add the void setDarkBorder line below after the line above so it looks like:
 
 void hibernate(); // turns powerOff() and sets controller to deep sleep for minimum power use, ONLY if wakeable by RST (rst >= 0)
 void setDarkBorder(bool Dark);        // GuruSR:  Changed for setDarkBorder

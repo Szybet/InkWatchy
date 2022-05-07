@@ -386,6 +386,9 @@ void WatchyGSR::init(String datetime){
             Darkness.Woke=true;
             Darkness.Last=millis();
             Darkness.Tilt=Darkness.Last;
+#ifndef GxEPD2DarkBorder
+            Options.Border=false;
+#endif
             break;
     }
 
@@ -1774,12 +1777,14 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
               }else if (Menu.Item == MENU_BRDR){  // Border Mode
+#ifdef GxEPD2DarkBorder
                   Options.Border = !Options.Border;
                   Options.NeedsSaving = true;
                   Updates.Init = true;
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
+#endif
               }else if (Menu.Item == MENU_ORNT){  // Watchy Orientation
                   Options.Orientated = !Options.Orientated;
                   Options.NeedsSaving = true;
@@ -3108,7 +3113,11 @@ void WatchyGSR::StoreSettings(String FromUser){
         Options.TwentyFour = (V & 1) ? true : false;
         Options.LightMode = (V & 2) ? true : false;
         Options.Feedback = (V & 4) ? true : false;
+#ifdef GxEPD2DarkBorder
         Options.Border = (V & 8) ? true : false;
+#else
+        Options.Border = false;
+#endif
         Options.Lefty = (V & 16) ? true : false;
         Options.Swapped = (V & 32) ? true : false;
         Options.Orientated = (V & 64) ? true : false;
@@ -3300,7 +3309,9 @@ uint8_t WatchyGSR::getTXOffset(wifi_power_t Current){
 }
 
 void WatchyGSR::DisplayInit(bool ForceDark){
+#ifdef GxEPD2DarkBorder
   display.epd2.setDarkBorder(Options.Border | ForceDark);
+#endif
   if (Updates.Init){
     display.init(0,Rebooted,10,true);  // Force it here so it fixes the border.
     Updates.Init=false;
