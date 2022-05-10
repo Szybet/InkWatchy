@@ -16,8 +16,8 @@ A structure allows you to reposition AND change font color along with font for e
 | Design.Menu.FontSmall | &aAntiCorona11pt7b | Font used for Menu Header & Data display when above is too large. (1.4.3C+) |
 | Design.Menu.FontSmaller | &aAntiCorona10pt7b | Font used for Menu Header & Data display when above is too large. (1.4.3C+) |
 | Design.Face.Gutter | **4** | Horizontal spacing from edge of display for Face elements (Time, AM/PM indicator, Year, etc). (1.4.3C+) |
-| Design.Face.Bitmap | {Unused} | A bitmap to place in the background of the Watch face during operation. |
-| Design.Face.SleepBitmap | {Unused} | A bitmap use during Screen Blanking. |
+| Design.Face.Bitmap | {Unused} | A bitmap to place in the background of the Watch face during operation (overridable by OverrideBitmap below). |
+| Design.Face.SleepBitmap | {Unused} | A bitmap use during Screen Blanking (overridable by OverrideSleepBitmap below). |
 | Design.Face.Time | 56 | Vertical baseline of Time on screen. |
 | Design.Face.TimeHeight | 45 | Height of font used for PM indicator so it will sit at the top of TimeFont. |
 | Design.Face.TimeColor | GxEPD_BLACK | Color the Time is drawn in. |
@@ -68,14 +68,17 @@ Functions for inserting extra code in places.
 | Function Name | Usage |
 | ------------- | --------------------------------- |
 | InsertPost() | This Function offers a post "boot" insert, so you can make changes after settings are loaded. |
+| InsertNTPServer() | Use this to return "your favorite NTP Server". See **Version 1.4.3 Additions** below. |
 | InsertDefaults() | This Function is done at the end of setupDefaults(), so you can add your own defaults. |
+| OverrideBitmap() | Allows you to replace the drawing of this bitmap with either your own or nothing at all, sent `false` on return to tell it not to draw the Design.Face.Bitmap. |
 | InsertOnMinute() | This Function is called once the Clock has been updated to the new minute but before the screen is drawn. |
 | InsertWiFi() | This Function is called repeatedly in a loop only *IF* WiFi has been enabled and connected, only use this if you asked for it. |
 | InsertWiFiEnding() | This Function is called when WiFi has been turned off. |
 | InsertAddWatchStyles() | Use this function to add Watch Styles starting from Index 0 [`AllowDefaultWatchStyles(false)`] or from Index 2 if allowing default Watch Styles. |
 | InsertInitWatchStyle() | The init function as seen at the end of Watchy_GSR.cpp.  See **Version 1.4.2 Additions** below. |
 | InsertDrawWatchStyle() | The Draw function as seen at the bottom of Watchy_GSR.cpp. See **Version 1.4.2 Additions** below. |
-| InsertNTPServer() | Use this to return "your favorite NTP Server". See **Version 1.4.3 Additions** below. |
+| InsertHandlePressed() | Allows you to intercept SW2 to SW4 when nothing else did anything with them, only when the menu isn't open. |
+| OverrideSleepBitmap() | Allows you to replace the drawing of this bitmap with either your own or nothing at all, sent `false` on return to tell it not to draw the Design.Face.SleepBitmap. |
  
 Functions available for communication:
 
