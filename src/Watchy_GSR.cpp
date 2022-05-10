@@ -16,15 +16,6 @@ const float Reduce[5] = {1.0,0.8,0.6,0.4,0.2};
 #define GSettings "GSR-Options"
 #define GTZ "GSR-TZ"
 
-/* Private
-RTC_DATA_ATTR WatchyGSR::GSRWireless GSRWiFi;
-RTC_DATA_ATTR WatchyGSR::CPUWork CPUSet;
-RTC_DATA_ATTR WatchyGSR::Stepping Steps;
-RTC_DATA_ATTR WatchyGSR::Optional Options;
-RTC_DATA_ATTR WatchyGSR::DesignStyles WatchStyles;
-RTC_DATA_ATTR WatchyGSR::MenuUse Menu;
-*/
-
 // Protected
 RTC_DATA_ATTR struct GSRWireless final {
     bool Requested;          // Request WiFi.
@@ -84,70 +75,6 @@ RTC_DATA_ATTR struct MenuUse final {
     int8_t SubItem;         // Used for menus that have sub items, like alarms and Sync Time.
     int8_t SubSubItem;      // Used mostly in the alarm to offset choice.
 } Menu;
-
-RTC_DATA_ATTR struct Designing final {
-    struct MenuPOS {
-        byte Gutter; // 3
-        byte Top;    // MenuTop 72
-        byte Header; // HeaderY 97
-        byte Data;   // DataY 138
-        const GFXfont *Font; // Menu Font.
-        const GFXfont *FontSmall; // Menu Font.
-        const GFXfont *FontSmaller; // Menu Font.
-    } Menu;
-    struct FacePOS {
-        const unsigned char *Bitmap;  // Null
-        const unsigned char *SleepBitmap;  // Null
-        byte Gutter; // 4
-        byte Time;   // TimeY 56
-        byte TimeHeight; // 45
-        uint16_t TimeColor;  // Font Color.
-        const GFXfont *TimeFont; // Font.
-        WatchyGSR::DesOps TimeStyle; // dCENTER
-        byte TimeLeft;  // Only for dSTATIC
-        byte Day;    // DayY 101
-        byte DayGutter; // 4
-        uint16_t DayColor;  // Font Color.
-        const GFXfont *DayFont; // Font.
-        const GFXfont *DayFontSmall; // Font.
-        const GFXfont *DayFontSmaller; // Font.
-        WatchyGSR::DesOps DayStyle; // dCENTER
-        byte DayLeft;  // Only for dSTATIC
-        byte Date;   // DateY 143
-        byte DateGutter; // 4
-        uint16_t DateColor;  // Font Color.
-        const GFXfont *DateFont; // Font.
-        const GFXfont *DateFontSmall; // Font.
-        const GFXfont *DateFontSmaller; // Font.
-        WatchyGSR::DesOps DateStyle; // dCENTER
-        byte DateLeft;  // Only for dSTATIC
-        byte Year;   // YearY 186
-        uint16_t YearColor;  // Font Color.
-        const GFXfont *YearFont; // Font.
-        WatchyGSR::DesOps YearStyle; // dCENTER
-        byte YearLeft;  // Only for dSTATIC
-    } Face;
-    struct StatusPOS {
-        byte WIFIx;  // NTPX 5
-        byte WIFIy;  // NTPY 193
-        byte BATTx;  // 155
-        byte BATTy;  // 178
-    } Status;
-} Design;
-RTC_DATA_ATTR struct TimeData final {
-    time_t UTC_RAW;           // Copy of the UTC on init.
-    tmElements_t UTC;         // Copy of UTC only split up for usage.
-    tmElements_t Local;       // Copy of the Local time on init.
-    String TimeZone;          // The location timezone, not the actual POSIX.
-    unsigned long EPSMS;      // Milliseconds (rounded to the enxt minute) when the clock was updated via NTP.
-    bool NewMinute;           // Set to True when New Minute happens.
-    time_t TravelTest;        // For Travel Testing.
-    int32_t Drifting;         // The amount to add to UTC_RAW after reading from the RTC.
-    int64_t WatchyRTC;        // Counts Microseconds from boot.
-    bool DeadRTC;             // Set when Drift fails to get a good count less than 30 seconds.
-    uint8_t NextAlarm;        // Next index that will need to wake the Watchy from sleep to fire.
-    bool BedTime;             // If the hour is within the Bed Time settings.
-} WatchTime;
 
 RTC_DATA_ATTR int GuiMode;
 RTC_DATA_ATTR bool VibeMode;          // Vibe Motor is On=True/Off=False, used for the Haptic and Alarms.
@@ -218,6 +145,8 @@ RTC_DATA_ATTR struct dispUpdate final {
 //WatchyRTC WatchyGSR::SRTC;
 SmallRTC WatchyGSR::SRTC;
 SmallNTP WatchyGSR::SNTP;
+RTC_DATA_ATTR Designing Design;
+RTC_DATA_ATTR TimeData WatchTime;
 RTC_DATA_ATTR StableBMA SBMA;
 GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> WatchyGSR::display(GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY));
 
@@ -251,6 +180,7 @@ bool IDidIt;       // Tells if the Drifting was done this minute.
 bool AlarmsOn;     // Moved for CPU.
 bool Rebooted;     // Used in DisplayInit to force a full initial on power up.
 time_t TurboTime;  // Moved here for less work.
+uint8_t Missed;    // Button not in menu, not used, so can be used by override.
 unsigned long LastButton, OTAFail;
 
 WatchyGSR::WatchyGSR(){}  //constructor
@@ -278,7 +208,7 @@ void WatchyGSR::setupDefaults(){
 
 void WatchyGSR::init(String datetime){
     uint64_t wakeupBit;
-    int AlarmIndex, Pushed;                          // Alarm being played.
+    int AlarmIndex;
     bool WaitForNext, Pulse, DoOnce, B, Up;
     unsigned long Since, APLoop;
     uint8_t I;
@@ -301,6 +231,7 @@ void WatchyGSR::init(String datetime){
     Updates.Init = true;
     Updates.Tapped = false;
     LastButton = 0;
+    Missed = 0;
     Darkness.Last = 0;
     Darkness.Tilt = 0;
     Darkness.Woke = false;
@@ -347,13 +278,15 @@ void WatchyGSR::init(String datetime){
             Battery.LowLevel = SRTC.getRTCBattery(true);
             UP_PIN = 32;
             UP_MASK = GPIO_SEL_32;
+            //HWVer = SRTC.getWatchyHWVer();
+            //if (SRTC.getType() == PCF8563){ if (HWVer == 1.5) { UP_PIN = 32; UP_MASK = GPIO_SEL_32; } else { UP_PIN = 35; UP_MASK = GPIO_SEL_35; } }
             HWVer = 1.0;
             if (SRTC.getType() == PCF8563){ if (SRTC.getADCPin() == 35) { HWVer =1.5; UP_PIN = 32; UP_MASK = GPIO_SEL_32; } else { HWVer = 2.0; UP_PIN = 35; UP_MASK = GPIO_SEL_35; } }
             BTN_MASK = MENU_MASK|BACK_MASK|UP_MASK|DOWN_MASK;
             initZeros();
             setupDefaults();
-            Rebooted=true;
             _bmaConfig();
+            Rebooted=true;
             if (DefaultWatchStyles){
                 I = AddWatchStyle("Classic GSR");
                 I = AddWatchStyle("Ballsy");
@@ -417,6 +350,7 @@ void WatchyGSR::init(String datetime){
         }
 
         if (Button > 0) { handleButtonPress(Button); Button = 0; }
+        if (Missed > 0) { if (InsertHandlePressed(Missed, DoHaptic, UpdateDisp)) SetTurbo(); Missed = 0; }
 
         AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
         ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested);
@@ -636,6 +570,7 @@ void WatchyGSR::init(String datetime){
                         if (!DarkWait()) GoDark();
                         handleInterrupt();
                         if (Button > 0) { handleButtonPress(Button); Button = 0; }
+                        if (Missed > 0) { if (InsertHandlePressed(Missed, DoHaptic, UpdateDisp)) SetTurbo(); Missed = 0; }
                         if (UpdateDisp) showWatchFace(); //partial updates on tick
                         if (!Updates.Init) { if (!(InTurbo() || DarkWait())) DisplaySleep(); }
 
@@ -654,6 +589,7 @@ void WatchyGSR::init(String datetime){
             }
 
             if (Button > 0) { handleButtonPress(Button); Button = 0; }
+            if (Missed > 0) { if (InsertHandlePressed(Missed, DoHaptic, UpdateDisp)) SetTurbo(); Missed = 0; }
             processWiFiRequest(); // Process any WiFi requests.
             if (UpdateDisp) showWatchFace(); //partial updates on tick
             AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
@@ -668,7 +604,9 @@ void WatchyGSR::StartWeb(){
     /*return index page which is stored in basicIndex */
     server.on("/", HTTP_GET, [=]() {
       server.sendHeader("Connection", "close");
-      server.send(200, "text/html", basicIndex);
+      String S = basicIndex;
+      S.replace("^",(OTA() ? basicOTA : ""));
+      server.send(200, "text/html", S);
       OTATimer=millis();
     });
     server.on("/settings", HTTP_GET, [=]() {
@@ -683,9 +621,11 @@ void WatchyGSR::StartWeb(){
       OTATimer=millis();
     });
     server.on("/update", HTTP_GET, [=]() {
-      server.sendHeader("Connection", "close");
-      server.send(200, "text/html", updateIndex);
-      OTATimer=millis();
+      if (OTA()){
+        server.sendHeader("Connection", "close");
+        server.send(200, "text/html", updateIndex);
+        OTATimer=millis();
+      }
     });
     server.on("/settings", HTTP_POST, [=](){
         if (server.argName(0) == "settings") { StoreSettings(server.arg(0)); RecordSettings(); }
@@ -1292,7 +1232,7 @@ void WatchyGSR::deepSleep(){
   bool BatOk, BT,B, DM;
   UpdateUTC(); UpdateClock();
 
-  B = false;
+  B = false; VibeTo(false);
   UpdateBMA(); GoDark();
   DM = (Darkness.Went && !TimerDown.Active && GuiMode != MENUON);
 
@@ -1525,7 +1465,7 @@ void WatchyGSR::drawChargeMe(bool Dark){
 
 void WatchyGSR::drawStatus(){
   if (WatchyStatus > ""){
-      display.fillRect(Design.Status.WIFIx, Design.Status.WIFIy - 19, 60, 20, BackColor());
+      //display.fillRect(Design.Status.WIFIx, Design.Status.WIFIy - 19, 60, 20, BackColor());
       display.setFont(&Bronova_Regular13pt7b);
       if (WatchyStatus.startsWith("WiFi")){
           display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iWiFi, 19, 19, ForeColor());
@@ -1968,7 +1908,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               UpdateDisp = true;  // Quick Update.
               SetTurbo();
           }
-      }
+      } else Missed = 2;  // Missed a SW2.
       break;
     case 3:
       if (GuiMode == MENUON){     // Up Button [SW3]
@@ -2145,7 +2085,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               UpdateDisp = true;  // Quick Update.
               SetTurbo();
           }
-      }
+      } else Missed = 3;  // Missed a SW3.
       break;
     case 4:
       if (GuiMode == MENUON){   // Down Button [SW4]
@@ -2323,7 +2263,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               UpdateDisp = true;  // Quick Update.
               SetTurbo();
           }
-      }
+      } else Missed = 4;  // Missed a SW4.
   }
 }
 
@@ -2414,8 +2354,8 @@ void WatchyGSR::ManageTime(){
 }
 
 void WatchyGSR::_bmaConfig() {
-
-  if (SBMA.begin(_readRegister, _writeRegister, delay, SRTC.getType()) == false) {
+uint8_t Type = SRTC.getType();
+  if (SBMA.begin(_readRegister, _writeRegister, delay, Type) == false) {
     //fail to init BMA
     return;
   }
@@ -2488,14 +2428,16 @@ void WatchyGSR::InsertWiFiEnding() {}
 void WatchyGSR::InsertAddWatchStyles() {}
 void WatchyGSR::InsertInitWatchStyle(uint8_t StyleID) {}
 void WatchyGSR::InsertDrawWatchStyle(uint8_t StyleID) {}
+bool WatchyGSR::InsertHandlePressed(uint8_t SwitchNumber, bool &Haptic, bool &Refresh) { return false; }
 uint8_t WatchyGSR::AddWatchStyle(String StyleName){
     if (WatchStyles.Count >= MaxStyles || StyleName.length() > 30) return 255;  // Full / too long..
     for (int I = 0; I < WatchStyles.Count; I++)
         if (String(WatchStyles.Style[I * 32]) == StyleName) return 255;  // Error, alrady there.
 
     strcpy(&WatchStyles.Style[WatchStyles.Count * 32], StyleName.c_str());
+    int O = WatchStyles.Count;
     WatchStyles.Count++;
-    return WatchStyles.Count;
+    return O;
 }
 String WatchyGSR::InsertNTPServer() { return "pool.ntp.org"; }
 void WatchyGSR::AllowDefaultWatchStyles(bool Allow) { DefaultWatchStyles = Allow; }
@@ -2914,7 +2856,7 @@ void WatchyGSR::initZeros(){
     String S = "";
     uint8_t I;
     GuiMode = WATCHON;
-    VibeMode = 0;
+    VibeMode = false;
     WatchyStatus = "";
     WatchTime.TimeZone = "";
     WatchTime.Drifting = 0;
@@ -3300,6 +3242,17 @@ void WatchyGSR::RefreshCPU(int Value){
     if (C != CPUSet.Freq) if (setCpuFrequencyMhz(C)); CPUSet.Freq = C;
 }
 
+bool WatchyGSR::OTA(){
+    esp_partition_iterator_t IT = esp_partition_find(ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
+    if (IT != NULL){
+      const esp_partition_t *Part = esp_partition_get(IT);
+      uint64_t Size = Part->size;
+      esp_partition_iterator_release(IT);
+      return (Size == 0x1E0000);
+    }
+    return false;
+}
+
 // Function to find the existing WiFi power in the static index.
 
 uint8_t WatchyGSR::getTXOffset(wifi_power_t Current){
@@ -3322,28 +3275,28 @@ void WatchyGSR::DisplayInit(bool ForceDark){
 void WatchyGSR::DisplaySleep(){ if (!Updates.Init) { Updates.Init = true; display.hibernate(); } }
 
 bool WatchyGSR::SafeToDraw() { return (!(OTAUpdate || WatchyAPOn || (Menu.Item == MENU_TOFF && Menu.SubItem == 2))); }
+bool WatchyGSR::NoMenu() { return (GuiMode == WATCHON); };
 
-void WatchyGSR::getAngle(uint16_t Angle, uint8_t Away, uint8_t &X, uint8_t &Y){
-    uint8_t S = 200 - (Away * 2);
+void WatchyGSR::getAngle(uint16_t Angle, uint8_t Width, uint8_t Height, uint8_t &X, uint8_t &Y){
     float fX, fY, fA;
     if (Angle > 44 && Angle < 135){ // Right
         fA = Angle - 45; fA /= 90;
-        fY = Away + (fA * S);
-        fX = 200 - Away;
+        fY = (fA * Height);
+        fX = Width;
     }else if (Angle > 134 && Angle < 225){ // Bottom
         fA = Angle - 135; fA /= 90;
-        fX = 200 - (Away + (fA * S));
-        fY = 200 - Away;
+        fX = Width - (fA * Width);
+        fY = Height;
     }else if (Angle > 224 && Angle < 315){ // Left.
         fA = Angle - 225; fA /= 90;
-        fY = 200 - (Away + (fA * S));
-        fX = Away;
+        fY = Height - (fA * Height);
+        fX = 0;
     }else { // Top
         if (Angle > 314) Angle -= 315;
         else Angle += 45;
         fA = Angle; fA /= 90;
-        fX = Away + (fA * S);
-        fY = Away;
+        fX = (fA * Width);
+        fY = 0;
     }
     X = fX;
     Y = fY;
@@ -3461,17 +3414,17 @@ void WatchyGSR::drawWatchFaceStyle(){
             drawDate();
             if (SafeToDraw()){
                 for (A = 0; A < 60; A++){
-                    getAngle(A * 6, 5, X, Y);
-                    display.fillCircle(X, Y, (A == WatchTime.Local.Minute ? 5 : (A % 5 == 0 ? 3 : 1)), ForeColor());
+                    getAngle(A * 6, 190, 190, X, Y);
+                    display.fillCircle(X + 5, Y + 5, (A == WatchTime.Local.Minute ? 5 : (A % 5 == 0 ? 3 : 1)), ForeColor());
                 }
                 X = WatchTime.Local.Hour;
                 if (X > 11) X -= 12;
                 A = (X * 30) + (WatchTime.Local.Minute / 2);
-                getAngle(A, 22, X, Y);
-                display.fillCircle(X, Y, 9, ForeColor());
-                if (WatchTime.Local.Hour < 12) display.fillCircle(X, Y, 3, BackColor());
+                getAngle(A, 158, 158, X, Y);
+                display.fillCircle(X + 21, Y + 21, 9, ForeColor());
+                if (WatchTime.Local.Hour < 12) display.fillCircle(X + 21, Y + 21, 3, BackColor());
             }
-            if (GuiMode == WATCHON) drawYear();
+            if (NoMenu()) drawYear();
             break;
         default:
             if (SafeToDraw()){
@@ -3479,7 +3432,7 @@ void WatchyGSR::drawWatchFaceStyle(){
                 drawDay();
                 drawYear();
             }
-            if (GuiMode == WATCHON) drawDate();
+            if (NoMenu()) drawDate();
             break;
     }
 }

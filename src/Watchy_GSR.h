@@ -5,6 +5,7 @@
 #include "Defines_GSR.h"
 #include "Web-HTML.h"
 #include <Arduino.h>
+#include <esp_partition.h>
 #include <FunctionalInterrupt.h>
 #include <ESPmDNS.h>
 #include <WiFi.h>
@@ -39,7 +40,7 @@ class WatchyGSR{
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.4.3H";
+        static constexpr const char* Build = "1.4.3I";
         enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
 
     public:
@@ -76,14 +77,16 @@ class WatchyGSR{
         virtual void InsertAddWatchStyles();
         virtual void InsertDrawWatchStyle(uint8_t StyleID);
         virtual void InsertInitWatchStyle(uint8_t StyleID);
+        virtual bool InsertHandlePressed(uint8_t SwitchNumber, bool &Haptic, bool &Refresh);
         virtual uint8_t AddWatchStyle(String StyleName) final;
         virtual String InsertNTPServer();
         virtual void AllowDefaultWatchStyles(bool Allow = true) final;
         virtual void AskForWiFi() final;
         virtual wl_status_t currentWiFi() final;
         virtual void endWiFi() final;
-        virtual void getAngle(uint16_t Angle, uint8_t Away, uint8_t &X, uint8_t &Y) final;
+        virtual void getAngle(uint16_t Angle, uint8_t Width, uint8_t Height, uint8_t &X, uint8_t &Y) final;
         virtual bool SafeToDraw() final;
+        virtual bool NoMenu() final;
         virtual void initWatchFaceStyle();
         virtual void drawWatchFaceStyle();
    private:
@@ -143,9 +146,81 @@ class WatchyGSR{
         bool Showing();
         void RefreshCPU();
         void RefreshCPU(int Value);
+        bool OTA();
         uint8_t getTXOffset(wifi_power_t Current);
         void DisplayInit(bool ForceDark = false);
         void DisplaySleep();
 };
-extern RTC_DATA_ATTR StableBMA SBMA;
+
+struct MenuPOS {
+    byte Gutter; // 3
+    byte Top;    // MenuTop 72
+    byte Header; // HeaderY 97
+    byte Data;   // DataY 138
+    const GFXfont *Font; // Menu Font.
+    const GFXfont *FontSmall; // Menu Font.
+    const GFXfont *FontSmaller; // Menu Font.
+};
+struct FacePOS {
+    const unsigned char *Bitmap;  // Null
+    const unsigned char *SleepBitmap;  // Null
+    byte Gutter; // 4
+    byte Time;   // TimeY 56
+    byte TimeHeight; // 45
+    uint16_t TimeColor;  // Font Color.
+    const GFXfont *TimeFont; // Font.
+    WatchyGSR::DesOps TimeStyle; // dCENTER
+    byte TimeLeft;  // Only for dSTATIC
+    byte Day;    // DayY 101
+    byte DayGutter; // 4
+    uint16_t DayColor;  // Font Color.
+    const GFXfont *DayFont; // Font.
+    const GFXfont *DayFontSmall; // Font.
+    const GFXfont *DayFontSmaller; // Font.
+    WatchyGSR::DesOps DayStyle; // dCENTER
+    byte DayLeft;  // Only for dSTATIC
+    byte Date;   // DateY 143
+    byte DateGutter; // 4
+    uint16_t DateColor;  // Font Color.
+    const GFXfont *DateFont; // Font.
+    const GFXfont *DateFontSmall; // Font.
+    const GFXfont *DateFontSmaller; // Font.
+    WatchyGSR::DesOps DateStyle; // dCENTER
+    byte DateLeft;  // Only for dSTATIC
+    byte Year;   // YearY 186
+    uint16_t YearColor;  // Font Color.
+    const GFXfont *YearFont; // Font.
+    WatchyGSR::DesOps YearStyle; // dCENTER
+    byte YearLeft;  // Only for dSTATIC
+};
+struct StatusPOS {
+    byte WIFIx;  // NTPX 5
+    byte WIFIy;  // NTPY 193
+    byte BATTx;  // 155
+    byte BATTy;  // 178
+};
+struct Designing final {
+    struct MenuPOS Menu;
+    struct FacePOS Face;
+    struct StatusPOS Status;
+};
+
+struct TimeData final {
+    time_t UTC_RAW;           // Copy of the UTC on init.
+    tmElements_t UTC;         // Copy of UTC only split up for usage.
+    tmElements_t Local;       // Copy of the Local time on init.
+    String TimeZone;          // The location timezone, not the actual POSIX.
+    unsigned long EPSMS;      // Milliseconds (rounded to the enxt minute) when the clock was updated via NTP.
+    bool NewMinute;           // Set to True when New Minute happens.
+    time_t TravelTest;        // For Travel Testing.
+    int32_t Drifting;         // The amount to add to UTC_RAW after reading from the RTC.
+    int64_t WatchyRTC;        // Counts Microseconds from boot.
+    bool DeadRTC;             // Set when Drift fails to get a good count less than 30 seconds.
+    uint8_t NextAlarm;        // Next index that will need to wake the Watchy from sleep to fire.
+    bool BedTime;             // If the hour is within the Bed Time settings.
+};
+
+extern Designing Design;
+extern TimeData WatchTime;
+extern StableBMA SBMA;
 #endif
