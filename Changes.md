@@ -111,3 +111,9 @@
 
 **Version 1.4.3H:**
 - **FIX:**  Added a #define needed for Dark Border, so compiling without the #define included from Compilation Instructions will disable Dark Border completely.
+
+**Version 1.4.3I:**
+- **FIX:**  Fixed structures to be global for the ones necessary for overriding directly from the INO file.
+- **ADD:**  Updated GSR.ino to reflect overriding with examples inside that *do* work.
+- **FIX:**  Turned VibeTo to false on Deep Sleep to avoid confusion as the motor will turn off then anyways.
+- **ADD:**  getAngle changed from "gutter" to "width" and "height" mode, so now analog watch faces can be of any size and not necesarily the whole screen.
