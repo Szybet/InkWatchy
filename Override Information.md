@@ -1,3 +1,7 @@
+**PROPER OVERRIDE**
+
+Don't edit Watchy_GSR.cpp or Watchy_GSR.h, instead, edit GSR.ino as all of the overriding can be done within that file, this way that one file can be used as your project file, allowing you to override the necessary parts of the Watchy_GSR without having to re-edit updates.  Just remember to backup your GSR.ino project file before updating (to ensure you don't lose it by accident).
+
 **Overridding Watch_GSR functionality**
 
 A structure allows you to reposition AND change font color along with font for each section:
@@ -81,16 +85,18 @@ Functions available for communication:
 | float getBatteryVoltage() | Returns a cleaned battery voltage. |
 | IsDark() | Is the screen currently black (Screen Off has triggered from settings). |
 | VibeTo(bool Mode) | Set VibeTo to `true` to enable vibration motor, `false` to stop it. |
-| MakeTime(int Hour, int Minutes, bool& **Alarm**) | Use a variable in **Alarm** parameter always.  When **Alarm** is set to `false` you'll get normal Hour & Minutes format based on Options, **Alarm** will be `true` for PM.  Setting **Alarm** to `true` for Alarm format.  Returns a String. |
+| MakeTime(int Hour, int Minutes, bool &**Alarm**) | Use a variable in **Alarm** parameter always.  When **Alarm** is set to `false` you'll get normal Hour & Minutes format based on Options, **Alarm** will be `true` for PM.  Setting **Alarm** to `true` for Alarm format.  Returns a String. |
 | MakeHour(uint8_t Hour) | Return the hour formatted in a String using 12 or 24hr format. |
 | MakeMinutes(uint8_t Minutes) | Returns a string of the Minutes. |
 | ForeColor() | Returns the current Fore (font) color for usage with current style. |
 | BackColor() | Returns the current Background color for usage with current style. |
 | AskForWiFi() | Tells the Watchy_GSR that your code wants WiFi, when it connects, you will see InsertWiFi() called, make sure you keep track of this yourself. |
-| currentWiFi() | Returns WL_CONNECTED when connected or not, InsertWiFi() is only called when WL_CONNECTED happens. |
+| currentWiFi() | Returns WL_CONNECTED when connected or not, InsertWiFi() is only called when WL_CONNECTED happens and no other process is using it. |
 | endWiFi() | Tell Watchy_GSR that you're finished with the WiFi, only do this *IF* you asked for it. |
 | AllowDefaultWatchStyles(bool Allow) | Will state if you want (**{true}**/false) the original Watch Styles (Index 0 (Classic GSR) and 1 (Ballsy) to be used first). |
 | AddWatchStyle(String StyleName) | Will return the Index of the added Watch Style (255 = error), 30 character max limit on Watch Style name. |
+| NoMenu() | This returns `true` if the Menu **isn't** open. |
+| getAngle(uint16_t Angle, uint8_t Width, uint8_t Height, uint8_t &X, uint8_t &Y) | Give it an Angle, Width and Height, X and Y will have those values, useful for Analog displays |
 
 **NOTES ON WiFi**
 
@@ -117,6 +123,8 @@ Recommend an int variable being set to 1 when you `AskForWiFi()`, then when `Ins
 | WatchTime.UTC.Day | Contains the Date (1 to 31) in Coordinated Universal time. |
 | WatchTime.UTC.Month | Contains the Month (1 to 12) in Coordinated Universal time. |
 | WatchTime.UTC.Year | Contains the Year (since 1970) in Coordinated Universal time. |
+| | |
+| WatchTime.BedTime | This will be `true` if the time is within Screen Off's Sleeping range, even if it isn't in use. |
 
 **Version 1.4.2 Additions**
 
@@ -155,4 +163,6 @@ Removed `void InsertBitmap()`
 
 **How to Make Your Own Version**
 
-Copy the GSR.ino to another file name, like MyGSR.ino and edit it, do all of your overrides in that.  That ino file now becomes your main compile file.
+First, use the Library Manager and give it a release zip, this will install Watchy_GSR as a library, go into the Watchy_GSR library and move the GSR.ino out of it and place it into where your project is.  Rename it to something like MyGSR.ino and edit it, you can do all of your overrides in that.  That ino file now becomes your main compile file.
+
+If you're updating Watchy_GSR, be sure to remove the GSR.ino from it after the Library Manager has imported everything.
