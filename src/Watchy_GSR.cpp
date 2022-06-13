@@ -1252,11 +1252,10 @@ void WatchyGSR::deepSleep(){
 
   if (Options.NeedsSaving) RecordSettings();
   DisplaySleep();
+  if (DM) SRTC.atMinuteWake(N % 60, H, D); else SRTC.nextMinuteWake();  // Moved to fix PCF8563 issue with pinMode thanks to ZeroKelvinKeyboard for the find.
   for(I = 0; I < 40; I++) { pinMode(I, INPUT); }
   esp_sleep_enable_ext1_wakeup((B ? SBMA.WakeMask() : 0) | BTN_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); //enable deep sleep wake on button press  ... |ACC_INT_MASK
   esp_sleep_enable_ext0_wakeup(RTC_INT_PIN, 0); //enable deep sleep wake on RTC interrupt
-  if (DM) SRTC.atMinuteWake(N % 60, H, D);
-  else SRTC.nextMinuteWake();
   esp_deep_sleep_start();
 }
 
