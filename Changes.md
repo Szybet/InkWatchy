@@ -117,3 +117,6 @@
 - **ADD:**  Updated GSR.ino to reflect overriding with examples inside that *do* work.
 - **FIX:**  Turned VibeTo to false on Deep Sleep to avoid confusion as the motor will turn off then anyways.
 - **ADD:**  getAngle changed from "gutter" to "width" and "height" mode, so now analog watch faces can be of any size and not necesarily the whole screen.
+
+**Version 1.4.3J:**
+- **FIX:**  Moved the pinMode code until after the setting of the nextMinuteWake to repair the issue with the PCF8563 not waking, thanks to ZeroKelvinKeyboard for the find.
