@@ -120,3 +120,8 @@
 
 **Version 1.4.3J:**
 - **FIX:**  Moved the pinMode code until after the setting of the nextMinuteWake to repair the issue with the PCF8563 not waking, thanks to ZeroKelvinKeyboard for the find.
+
+**Version 1.4.4:**
+- **FIX:**  Moved all the fonts into 1 font file to reduce clutter.
+- **ADD:**  Locale_GSR now contains the English entries for all of the Watchy face text and Webpage text.  (Documentation on adding other languages to follow.)
+- **ADD:**  Overriding the Default Menu, so you can USE the Menu button for other things.  10 second hold down of MENU button will force the entry of the default menus.
