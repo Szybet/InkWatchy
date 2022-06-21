@@ -77,7 +77,7 @@ Functions for inserting extra code in places.
 | InsertAddWatchStyles() | Use this function to add Watch Styles starting from Index 0 [`AllowDefaultWatchStyles(false)`] or from Index 2 if allowing default Watch Styles. |
 | InsertInitWatchStyle() | The init function as seen at the end of Watchy_GSR.cpp.  See **Version 1.4.2 Additions** below. |
 | InsertDrawWatchStyle() | The Draw function as seen at the bottom of Watchy_GSR.cpp. See **Version 1.4.2 Additions** below. |
-| InsertHandlePressed() | Allows you to intercept SW2 to SW4 when nothing else did anything with them, only when the menu isn't open. |
+| InsertHandlePressed() | Allows you to intercept SW2 (SW1 requires `OverrideDefaultMenu(true)`) to SW4 when nothing else did anything with them, only when the menu isn't open. |
 | OverrideSleepBitmap() | Allows you to replace the drawing of this bitmap with either your own or nothing at all, sent `false` on return to tell it not to draw the Design.Face.SleepBitmap. |
  
 Functions available for communication:
@@ -85,6 +85,8 @@ Functions available for communication:
 | Function Name | Usage |
 | ------------- | --------------------------------- |
 | handleButtonPress(uint8_t Pressed) | Accepts Switch # from 1 to 4, can "fake" a button press. |
+| OverrideDefaultMenu(bool Override) | Set whether or not the default menu is overridden (true/**{false}**). |
+| ShowDefaultMenu() | Will show the Default Menu when called only if the menu is being overridden and not already open. |
 | float getBatteryVoltage() | Returns a cleaned battery voltage. |
 | IsDark() | Is the screen currently black (Screen Off has triggered from settings). |
 | VibeTo(bool Mode) | Set VibeTo to `true` to enable vibration motor, `false` to stop it. |
@@ -96,7 +98,7 @@ Functions available for communication:
 | AskForWiFi() | Tells the Watchy_GSR that your code wants WiFi, when it connects, you will see InsertWiFi() called, make sure you keep track of this yourself. |
 | currentWiFi() | Returns WL_CONNECTED when connected or not, InsertWiFi() is only called when WL_CONNECTED happens and no other process is using it. |
 | endWiFi() | Tell Watchy_GSR that you're finished with the WiFi, only do this *IF* you asked for it. |
-| AllowDefaultWatchStyles(bool Allow) | Will state if you want (**{true}**/false) the original Watch Styles (Index 0 (Classic GSR) and 1 (Ballsy) to be used first). |
+| AllowDefaultWatchStyles(bool Allow) | Will state if you want (**{true}**/false) the original Watch Styles (Index 0 (Classic GSR), 1 (Ballsy) and 2 (LCD) to be used first). |
 | AddWatchStyle(String StyleName) | Will return the Index of the added Watch Style (255 = error), 30 character max limit on Watch Style name. |
 | NoMenu() | This returns `true` if the Menu **isn't** open. |
 | getAngle(uint16_t Angle, uint8_t Width, uint8_t Height, uint8_t &X, uint8_t &Y) | Give it an Angle, Width and Height, X and Y will have those values, useful for Analog displays |
@@ -162,6 +164,10 @@ Removed `void InsertBitmap()`
 `void OverrideBitmap()` { return true/{false}; } // This function lets you stop the Design.Face.Bitmap from drawing if you return `true`.
 
 `void OverrideSleepBitmap()` { return true/{false}; } // This function lets you stop the Design.Face.SleepBitmap from drawing if you return `true`.
+
+**Version 1.4.4 Additions**
+
+Locale and Menu Override are the main offerings available, instructions will be forthcoming for the Locale setup.  For Menu Overriding, users can tell Watchy GSR that they'll handle the Menu button, can also call `ShowDefaultMenu()` to bring the Watchy GSR Default Menu up for usage when wanted, if the author makes a mistake or there is a bug, the standard Watchy GSR Default Menu can be called up by holding the Menu button down for 10 seconds.
 
 
 **How to Make Your Own Version**
