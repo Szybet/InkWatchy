@@ -12,35 +12,27 @@
 #include <WiFiClient.h>
 #include <ArduinoOTA.h>
 #include <Update.h>
-#include <WiFiManager.h>
+#include <WebServer.h>
+#include <esp_wifi.h>
 #include <HTTPClient.h>
 #include <SmallRTC.h>
 #include <SmallNTP.h>
 #include <Olson2POSIX.h>
-#include "GxEPD2_BW.h"
+#include <GxEPD2_BW.h>
+#include "Locale_GSR.h"
 #include <mbedtls/base64.h>
 #include <Wire.h>
 #include <StableBMA.h>
-
+#include "Fonts_GSR.h"
 #include "Icons_GSR.h"
 #include "ArduinoNvs.h"
-
-#include "Bronova_Regular13pt7b.h"
-#include "aAntiCorona10pt7b.h"
-#include "aAntiCorona11pt7b.h"
-#include "aAntiCorona12pt7b.h"
-#include "aAntiCorona13pt7b.h"
-#include "aAntiCorona14pt7b.h"
-#include "aAntiCorona15pt7b.h"
-#include "aAntiCorona16pt7b.h"
-#include "aAntiCorona36pt7b.h"
 
 class WatchyGSR{
     public:
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.4.3J";
+        static constexpr const char* Build = "1.4.4";
         enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
 
     public:
@@ -49,20 +41,23 @@ class WatchyGSR{
         virtual void StartWeb() final;
         virtual void showWatchFace();
         virtual void drawWatchFace(); //override this method for different watch faces
-        virtual void drawTime();
+        virtual void drawTime(uint8_t Flags = 0); // 32 means no AM/PM, 64 means add padding to <10 hour.
         virtual void drawDay();
-        virtual void drawDate();
+        virtual void drawDate(bool Short = false);  // Short month can be used.
         virtual void drawYear();
         virtual void handleButtonPress(uint8_t Pressed) final;
         virtual void deepSleep() final;
         virtual float getBatteryVoltage() final;
         virtual float BatteryRead() final;
         virtual bool IsDark() final;
+        virtual bool IsAM() final;
+        virtual bool IsPM() final;
+        virtual String GetLangWebID() final;
         IRAM_ATTR virtual void handleInterrupt() final;
         void drawChargeMe(bool Dark = false);
         void drawStatus();
         virtual void VibeTo(bool Mode) final;
-        virtual String MakeTime(int Hour, int Minutes, bool& Alarm) final;
+        virtual String MakeTime(int Hour, int Minutes, bool& Alarm) final; // For Hour | 32 means no AM/PM, | 64 means add padding to <10 hour.
         virtual String MakeHour(uint8_t Hour) final;
         virtual String MakeMinutes(uint8_t Minutes) final;
         virtual uint16_t ForeColor() final;
@@ -78,6 +73,8 @@ class WatchyGSR{
         virtual void InsertDrawWatchStyle(uint8_t StyleID);
         virtual void InsertInitWatchStyle(uint8_t StyleID);
         virtual bool InsertHandlePressed(uint8_t SwitchNumber, bool &Haptic, bool &Refresh);
+        virtual void OverrideDefaultMenu(bool Override);
+        virtual void ShowDefaultMenu() final;
         virtual uint8_t AddWatchStyle(String StyleName) final;
         virtual String InsertNTPServer();
         virtual void AllowDefaultWatchStyles(bool Allow = true) final;
@@ -223,4 +220,5 @@ struct TimeData final {
 extern Designing Design;
 extern TimeData WatchTime;
 extern StableBMA SBMA;
+extern LocaleGSR LGSR;
 #endif

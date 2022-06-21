@@ -1,9 +1,6 @@
 #ifndef DEFINES_GSR_H
 #define DEFINES_GSR_H
 
-//debug
-#define USEDEBUG 0  // !0 is on, will not setup Serial OR print output if zero.
-
 // WiFi
 #define WiFi_AP_SSID "Watchy Connect"
 #define WiFi_AP_PSWD "Watchy123"
@@ -16,7 +13,7 @@
 #define WiFi_DEF_PASS ""
 
 // Battery
-#define MaxBattery 4.37
+#define GSR_MaxBattery 4.37
 
 // functions
 #define roller(v,lo,hi) (((v)<(lo))?(hi):((v)>(hi))?(lo):(v))
@@ -24,71 +21,72 @@
 #define golow(v,hi) ((v)<(hi)?(v):(hi))
 
 // Watch face states.
-#define WATCHON 0
-#define MENUON 1
+#define GSR_WATCHON 0
+#define GSR_MENUON 1
 
 // Maximum styles possible.
-#define MaxStyles 25
+#define GSR_MaxStyles 25
 
 // Nenu size defines.
-#define MenuWidth 200
-#define MenuHeight 83
+#define GSR_MenuWidth 200
+#define GSR_MenuHeight 83
 
 // Menu offsets so I don't have to statically entere them everywhere.
-#define MENU_STEPS 0
-#define MENU_ALARMS 1
-#define MENU_TIMERS 2
-#define MENU_OPTIONS 3
-#define MENU_ALARM1 4
-#define MENU_ALARM2 5
-#define MENU_ALARM3 6
-#define MENU_ALARM4 7
-#define MENU_TONES 8
-#define MENU_TIMEDN 9
-#define MENU_TIMEUP 10
-#define MENU_STYL 11
-#define MENU_DISP 12
-#define MENU_BRDR 13
-#define MENU_SIDE 14
-#define MENU_SWAP 15
-#define MENU_ORNT 16
-#define MENU_MODE 17
-#define MENU_FEED 18
-#define MENU_TRBO 19
-#define MENU_DARK 20
-#define MENU_SAVE 21
-#define MENU_TPWR 22
-#define MENU_INFO 23
-#define MENU_TRBL 24
-#define MENU_SYNC 25
-#define MENU_WIFI 26
-#define MENU_OTAU 27
-#define MENU_OTAM 28
-#define MENU_SCRN 29
-#define MENU_RSET 30
-#define MENU_TOFF 31  // Time Diff offset.
-#define MENU_UNVS 32
+#define GSR_MENU_STEPS 0
+#define GSR_MENU_ALARMS 1
+#define GSR_MENU_TIMERS 2
+#define GSR_MENU_OPTIONS 3
+#define GSR_MENU_ALARM1 4
+#define GSR_MENU_ALARM2 5
+#define GSR_MENU_ALARM3 6
+#define GSR_MENU_ALARM4 7
+#define GSR_MENU_TONES 8
+#define GSR_MENU_TIMEDN 9
+#define GSR_MENU_TIMEUP 10
+#define GSR_MENU_STYL 11
+#define GSR_MENU_LANG 12
+#define GSR_MENU_DISP 13
+#define GSR_MENU_BRDR 14
+#define GSR_MENU_SIDE 15
+#define GSR_MENU_SWAP 16
+#define GSR_MENU_ORNT 17
+#define GSR_MENU_MODE 18
+#define GSR_MENU_FEED 19
+#define GSR_MENU_TRBO 20
+#define GSR_MENU_DARK 21
+#define GSR_MENU_SAVE 22
+#define GSR_MENU_TPWR 23
+#define GSR_MENU_INFO 24
+#define GSR_MENU_TRBL 25
+#define GSR_MENU_SYNC 26
+#define GSR_MENU_WIFI 27
+#define GSR_MENU_OTAU 28
+#define GSR_MENU_OTAM 29
+#define GSR_MENU_SCRN 30
+#define GSR_MENU_RSET 31
+#define GSR_MENU_TOFF 32  // Time Diff offset.
+#define GSR_MENU_UNVS 33
 
 // Menu segments.
-#define MENU_INNORMAL 0
-#define MENU_INALARMS 1
-#define MENU_INTIMERS 2
-#define MENU_INOPTIONS 3
-#define MENU_INTROUBLE 4
+#define GSR_MENU_INNORMAL 0
+#define GSR_MENU_INALARMS 1
+#define GSR_MENU_INTIMERS 2
+#define GSR_MENU_INOPTIONS 3
+#define GSR_MENU_INTROUBLE 4
 
 // Button debounce.
-#define KEYPAUSE 728
+#define GSR_KEYPAUSE 728
 
 //ALARM flags.
-#define ALARM_REPEAT 128
-#define ALARM_ACTIVE 256
-#define ALARM_NOTRIGGER 511
-#define ALARM_TRIGGERED 512
-#define ALARM_DAYS 127
-#define ALARM_ALL 1023
+#define GSR_ALARM_REPEAT 128
+#define GSR_ALARM_ACTIVE 256
+#define GSR_ALARM_NOTRIGGER 511
+#define GSR_ALARM_TRIGGERED 512
+#define GSR_ALARM_DAYS 127
+#define GSR_ALARM_ALL 1023
 
 // Setup lengths.
-#define AlarmSetup 1234567890
+#define GSR_AlarmSetup 1234567890
 
 //pins
 #define RTC_INT_PIN GPIO_NUM_27
@@ -97,16 +95,16 @@
 #define EPD_RESET 9
 #define EPD_BUSY 19
 #define VIB_MOTOR_PIN 13
-#define MENU_PIN 26
-#define BACK_PIN 25
-#define DOWN_PIN 4
-#define MENU_MASK GPIO_SEL_26
-#define BACK_MASK GPIO_SEL_25
-#define DOWN_MASK GPIO_SEL_4
+#define GSR_MENU_PIN 26
+#define GSR_BACK_PIN 25
+#define GSR_DOWN_PIN 4
+#define GSR_MENU_MASK GPIO_SEL_26
+#define GSR_BACK_MASK GPIO_SEL_25
+#define GSR_DOWN_MASK GPIO_SEL_4
 #define ACC_INT_MASK GPIO_SEL_14
 
 //SetCPU defines.
-#define CPUMAX 65280
-#define CPUDEF 65281
-#define CPUMID 65282
+#define GSR_CPUMAX 65280
+#define GSR_CPUDEF 65281
+#define GSR_CPUMID 65282
 #endif
