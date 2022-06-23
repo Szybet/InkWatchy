@@ -1,6 +1,6 @@
 Compiling instructions:
 
-In order to compile this you need:  Arduino Libraries, ArduinoOTA (included in ESP32 2.0.2, don't use ESP32 2.0.3), SmallRTC (1.6 or greater, GuruSR), SmallNTP (GuruSR), StableBMA (GuruSR), Olson2POSIX (GuruSR) AND Watchy (1.4.1 or greater) base.
+In order to compile this you need:  Arduino Libraries, ArduinoOTA (included in ESP32 2.0.2, don't use ESP32 2.0.3), SmallRTC (1.6 or greater, GuruSR), SmallNTP (GuruSR), StableBMA (GuruSR), Olson2POSIX (GuruSR) AND Watchy (1.4.1 or greater) base.  For the SmallRTC, SmallNTP, StableBMA and Olson2POSIX repositories, click on the Release (right of page) and click the Source code.zip (master.zip), name it as the library you're downloading (keep the .zip), then using Arduino's Library Manager you can in the Sketch Menu -> Include Library -> Add .Zip Library and pick the downloaded library to add.
 
 **VERSION 1.4.3+ CHANGES**
 
@@ -106,4 +106,4 @@ void setDarkBorder(bool Dark);        // GuruSR:  Changed for setDarkBorder
 
 Make a backup of these two files if you happen to update a newer version of GxEPD2.
 
-This will allow the compilation on either Arduino or PlatformIO.
+This will allow the compilation on either Arduino or PlatformIO. 
