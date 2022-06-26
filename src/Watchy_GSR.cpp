@@ -357,7 +357,7 @@ void WatchyGSR::init(String datetime){
         if (Missed > 0) { if (InsertHandlePressed(Missed, DoHaptic, UpdateDisp)) SetTurbo(); Missed = 0; }
 
         AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
-        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested);
+        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested || GSRWiFi.Requests > 0);
         Sensitive = ((OTAUpdate && Menu.SubItem == 3) || (NTPData.TimeTest && Menu.SubItem == 2));
 
         RefreshCPU();
@@ -576,7 +576,7 @@ void WatchyGSR::init(String datetime){
                         if (!Updates.Init) { if (!(InTurbo() || DarkWait())) DisplaySleep(); }
 
                         AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
-                        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested);
+                        ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested || GSRWiFi.Requests > 0);
 
                         if (WatchTime.DeadRTC && Options.NeedsSaving) RecordSettings();
                         RefreshCPU(GSR_CPUDEF);
