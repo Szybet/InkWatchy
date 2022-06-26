@@ -126,3 +126,4 @@
 - **ADD:**  Locale_GSR now contains the English entries for all of the Watchy face text and Webpage text.  (Documentation on adding other languages to follow.)
 - **ADD:**  Overriding the Default Menu, so you can USE the Menu button for other things.  10 second hold down of MENU button will force the entry of the default menus.
 - **ADD:**  Added a third watch face LCD.
+- **FIX:**  Re-added missing Requests test for Active Mode so AskForWiFi() would work properly, missed replacing that after a rollback.
