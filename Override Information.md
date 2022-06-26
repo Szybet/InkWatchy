@@ -118,7 +118,7 @@ Recommend an int variable being set to 1 when you `AskForWiFi()`, then when `Ins
 | WatchTime.Local.Hour | Contains the current Hour in Local time. |
 | WatchTime.Local.Wday | Contains the Day of Week (Days since Sunday) in Local time. |
 | WatchTime.Local.Day | Contains the Date (1 to 31) in Local time. |
-| WatchTime.Local.Month | Contains the Month (1 to 12) in Local time. |
+| WatchTime.Local.Month | Contains the Month (0 to 11) in Local time. |
 | WatchTime.Local.Year | Contains the Year (since 1900) in Local time. |
 | | |
 | WatchTime.UTC.Second | Contains the current second(s) in Coordinated Universal time. |
@@ -126,7 +126,7 @@ Recommend an int variable being set to 1 when you `AskForWiFi()`, then when `Ins
 | WatchTime.UTC.Hour | Contains the current Hour in Coordinated Universal time. |
 | WatchTime.UTC.Wday | Contains the Day of Week (Days since Sunday) in Coordinated Universal time. |
 | WatchTime.UTC.Day | Contains the Date (1 to 31) in Coordinated Universal time. |
-| WatchTime.UTC.Month | Contains the Month (1 to 12) in Coordinated Universal time. |
+| WatchTime.UTC.Month | Contains the Month (0 to 11) in Coordinated Universal time. |
 | WatchTime.UTC.Year | Contains the Year (since 1970) in Coordinated Universal time. |
 | | |
 | WatchTime.BedTime | This will be `true` if the time is within Screen Off's Sleeping range, even if it isn't in use. |
