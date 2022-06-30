@@ -9,7 +9,7 @@ src folder contains a universal (Arduino & PlatformIO) setup for compilation, in
 Needed libraries:  Arduino Libraries, ArduinoOTA (included in ESP32 2.0.2), SmallRTC (1.6 or greater, GuruSR), SmallNTP (GuruSR), StableBMA (GuruSR), Olson2POSIX (GuruSR) AND Watchy (1.3.3 or greater) base.
 
 **NOTES:**
-- Watchy uses version 1.0.6 or 2.0.2 (or higher than 2.0.3) of the ESP32 libraries, 2.0.0 won't compile, 2.0.2 causes a boot crash loop, remove them manually and revert back to version 1.0.6 or use 2.0.2 (which seems to have been fixed).
+- Watchy uses version 1.0.6 or 2.0.2 (or higher than 2.0.3) of the ESP32 libraries, 2.0.0 won't compile, 2.0.3 causes a boot crash loop, remove them manually and revert back to version 1.0.6 or use 2.0.2 (which seems to have been fixed).
 
 **WARNING:**
 As of Version 1.4.3H, the Compilation Instructions have changed, the GxEPD2 requires a define to be added to the .h file in the Compilation Instructions or the Dark Border will be disabled.
