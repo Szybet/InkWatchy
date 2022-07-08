@@ -102,6 +102,7 @@ Functions available for communication:
 | AddWatchStyle(String StyleName) | Will return the Index of the added Watch Style (255 = error), 30 character max limit on Watch Style name. |
 | NoMenu() | This returns `true` if the Menu **isn't** open. |
 | getAngle(uint16_t Angle, uint8_t Width, uint8_t Height, uint8_t &X, uint8_t &Y) | Give it an Angle, Width and Height, X and Y will have those values, useful for Analog displays |
+| SBMA.getCounter() | Will return a uint32_t value of the current steps taken. |
 
 **NOTES ON WiFi**
 
