@@ -96,7 +96,7 @@ Functions available for communication:
 | ForeColor() | Returns the current Fore (font) color for usage with current style. |
 | BackColor() | Returns the current Background color for usage with current style. |
 | AskForWiFi() | Tells the Watchy_GSR that your code wants WiFi, when it connects, you will see InsertWiFi() called, make sure you keep track of this yourself. |
-| currentWiFi() | Returns WL_CONNECTED when connected or not, InsertWiFi() is only called when WL_CONNECTED happens and no other process is using it. |
+| currentWiFi() | Returns `WL_CONNECTED` when connected or `WL_CONNECT_FAILED` when not, InsertWiFi() is only called when `WL_CONNECTED` happens and no other process is using it. |
 | endWiFi() | Tell Watchy_GSR that you're finished with the WiFi, only do this *IF* you asked for it. |
 | AllowDefaultWatchStyles(bool Allow) | Will state if you want (**{true}**/false) the original Watch Styles (Index 0 (Classic GSR), 1 (Ballsy) and 2 (LCD) to be used first). |
 | AddWatchStyle(String StyleName) | Will return the Index of the added Watch Style (255 = error), 30 character max limit on Watch Style name. |
