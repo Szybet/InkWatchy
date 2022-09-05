@@ -107,4 +107,5 @@
 #define GSR_CPUMAX 65280
 #define GSR_CPUDEF 65281
 #define GSR_CPUMID 65282
+#define GSR_CPULOW 65283
 #endif
