@@ -85,6 +85,7 @@ Functions available for communication:
 | Function Name | Usage |
 | ------------- | --------------------------------- |
 | handleButtonPress(uint8_t Pressed) | Accepts Switch # from 1 to 4, can "fake" a button press. |
+| getButtonPins() | Returns 0 (none) 1=MENU, 2=BACK, 3=UP, 4=DOWN for the switch pressed at the moment, see **Version 1.4.5 Additions** below for more combinations. |
 | OverrideDefaultMenu(bool Override) | Set whether or not the default menu is overridden (true/**{false}**). |
 | ShowDefaultMenu() | Will show the Default Menu when called only if the menu is being overridden and not already open. |
 | float getBatteryVoltage() | Returns a cleaned battery voltage. |
@@ -169,6 +170,11 @@ Removed `void InsertBitmap()`
 **Version 1.4.4 Additions**
 
 Locale and Menu Override are the main offerings available, instructions will be forthcoming for the Locale setup.  For Menu Overriding, users can tell Watchy GSR that they'll handle the Menu button, can also call `ShowDefaultMenu()` to bring the Watchy GSR Default Menu up for usage when wanted, if the author makes a mistake or there is a bug, the standard Watchy GSR Default Menu can be called up by holding the Menu button down for 10 seconds.
+
+**Version 1.4.4 Additions**
+
+getButtonPins() has 4 new values:  MENU + UP = 5, BACK + UP = 6, DOWN + MENU = 7 and DOWN + BACK = 8
+This is currently in **BETA** but the functionality is 100% stable, just the button press duration may be too short to catch both buttons properly.
 
 
 **How to Make Your Own Version**
