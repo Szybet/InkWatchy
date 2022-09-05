@@ -32,7 +32,7 @@ class WatchyGSR{
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.4.4";
+        static constexpr const char* Build = "1.4.5";
         enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
 
     public:
@@ -96,6 +96,8 @@ class WatchyGSR{
         void ProcessNTP();
         void UpdateUTC();
         void UpdateClock();
+        void UpdateTimerDown();
+        bool TimerAbuse();
         void ManageTime();
         void _rtcConfig();
         void _bmaConfig();
@@ -107,7 +109,6 @@ class WatchyGSR{
         String MakeSeconds(uint8_t Seconds);
         String MakeSteps(uint32_t uSteps);
         void CheckAlarm(int I);
-        void CheckCD();
         void CalculateTones();
         void StopCD();
         uint8_t getToneTimes(uint8_t ToneIndex);
@@ -115,7 +116,7 @@ class WatchyGSR{
         void monitorSteps();
         uint8_t getButtonPins();
         uint8_t getButtonMaskToID(uint64_t HW);
-        uint8_t getSwapped(uint8_t pIn);
+        uint8_t getSWValue(bool SW1, bool SW2, bool SW3, bool SW4);
         void processWiFiRequest();
         String WiFiIndicator(uint8_t Index);
         void UpdateWiFiPower(String SSID, String PSK);
