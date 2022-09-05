@@ -127,3 +127,8 @@
 - **ADD:**  Overriding the Default Menu, so you can USE the Menu button for other things.  10 second hold down of MENU button will force the entry of the default menus.
 - **ADD:**  Added a third watch face LCD.
 - **FIX:**  Re-added missing Requests test for Active Mode so AskForWiFi() would work properly, missed replacing that after a rollback.
+
+**Version 1.4.5:**
+- **FIX:**  Fixed Countdown & Elapsed Timers to be second accurate.
+- **ADD:**  Countdown & Elapsed Timers will keep Watchy in "Active Mode" (always on) while viewing their current values when they are On.
+- **ADD:**  **BETA** Added 4 extra Button values when combining MENU and BACK with UP and DOWN (see Override Information for more).
