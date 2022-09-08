@@ -89,6 +89,8 @@ RTC_DATA_ATTR float HWVer;
 
 RTC_DATA_ATTR struct Countdown final {
   bool Active;
+  bool Repeats;
+  bool Repeating;
   uint8_t Hours;  // Converted to work the same as the CountUp so seconds can be done.
   uint8_t Mins;
   uint8_t Secs;
@@ -188,6 +190,8 @@ bool AlarmsOn;     // Moved for CPU.
 bool Rebooted;     // Used in DisplayInit to force a full initial on power up.
 time_t TurboTime;  // Moved here for less work.
 uint8_t Missed;    // Button not in menu, not used, so can be used by override.
+bool AllowHaptic;  // For the Task to tell the main thread it can't use the Haptic feedback due to alarm/timer.
+uint8_t HapticMS;  // Holds how long it runs for.
 unsigned long LastButton, OTAFail, LastHelp;
 
 WatchyGSR::WatchyGSR(){}  //constructor
@@ -217,11 +221,12 @@ void WatchyGSR::setupDefaults(){
 
 void WatchyGSR::init(String datetime){
     uint64_t wakeupBit;
-    int AlarmIndex;
-    bool WaitForNext, Pulse, DoOnce, B, Up;
+    bool DoOnce, B, Up;
     unsigned long Since, APLoop;
     uint8_t I;
     String S;
+    BaseType_t SoundRet;
+    TaskHandle_t SoundHandle = NULL;
     esp_sleep_wakeup_cause_t wakeup_reason;
 
     Wire.begin(SDA, SCL); //init i2c
@@ -246,6 +251,7 @@ void WatchyGSR::init(String datetime){
     Darkness.Tilt = 0;
     Darkness.Woke = false;
     TurboTime = 0;
+    AllowHaptic = true;
     CPUSet.Freq=getCpuFrequencyMhz();
 
     switch (wakeup_reason)
@@ -318,11 +324,9 @@ void WatchyGSR::init(String datetime){
             WatchTime.WatchyRTC = esp_timer_get_time() + ((60 - WatchTime.UTC.Second) * 1000000);
             WatchTime.EPSMS = (millis() + (1000 * (60 - WatchTime.UTC.Second)));
             UpdateClock();
-            AlarmIndex=0;
             UpdateFonts();
             InsertPost();
             AlarmsOn=false;
-            WaitForNext=false;
             Updates.Full=true;
             UpdateDisp=true;
             Darkness.Went=true; // Fake this.
@@ -343,13 +347,6 @@ void WatchyGSR::init(String datetime){
     }
 
     if (B || Updates.Full || WatchTime.NewMinute){
-        //Init interrupts.
-        attachInterrupt(digitalPinToInterrupt(GSR_MENU_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
-        attachInterrupt(digitalPinToInterrupt(GSR_BACK_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
-        attachInterrupt(digitalPinToInterrupt(GSR_UP_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
-        attachInterrupt(digitalPinToInterrupt(GSR_DOWN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
-        DisplayInit();
-
         // Sometimes BMA crashes - simply try to reinitialize bma...
 
         if (SBMA.getErrorCode() != 0) {
@@ -358,6 +355,14 @@ void WatchyGSR::init(String datetime){
             SBMA.softReset();
             _bmaConfig();
         }
+
+        //Init interrupts.
+        attachInterrupt(digitalPinToInterrupt(GSR_MENU_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        attachInterrupt(digitalPinToInterrupt(GSR_BACK_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        attachInterrupt(digitalPinToInterrupt(GSR_UP_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        attachInterrupt(digitalPinToInterrupt(GSR_DOWN_PIN), std::bind(&WatchyGSR::handleInterrupt,this), HIGH);
+        SoundRet = xTaskCreate(SoundAlarms,"Alarming",20480,NULL,(configMAX_PRIORITIES -1),&SoundHandle);
+        DisplayInit();
 
         if (Button > 0) { handleButtonPress(Button); Button = 0; }
         if (GuiMode == GSR_WATCHON && MenuOverride) {
@@ -370,6 +375,7 @@ void WatchyGSR::init(String datetime){
         CalculateTones();
         AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
         ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested || GSRWiFi.Requests > 0 || TimerAbuse());
+        ActiveMode |= InsertNeedAwake(!ActiveMode);
         Sensitive = ((OTAUpdate && Menu.SubItem == 3) || (NTPData.TimeTest && Menu.SubItem == 2));
 
         RefreshCPU();
@@ -377,7 +383,7 @@ void WatchyGSR::init(String datetime){
         while(DoOnce){
             DoOnce = false;  // Do this whole thing once, catch late button presses at the END of the loop just before Deep Sleep.
             ManageTime();   // Handle Time method.
-            AlarmReset = millis();
+//            AlarmReset = millis();
             if (UpdateDisp) showWatchFace(); //partial updates on tick
             if (ActiveMode == true){
                 while (ActiveMode == true) { // Here, we hijack the init and LOOP until the NTP is done, watching for the proper time when we *SHOULD* update the screen to keep time with everything.
@@ -408,68 +414,6 @@ void WatchyGSR::init(String datetime){
                         if (WatchTime.NewMinute){
                             detectBattery();
                             UpdateDisp |= Showing();  // **TEST
-                        }
-
-                        // Here, do the alarm buzzings by way of which one is running.
-
-                        if (AlarmsOn && !OTAUpdate){
-                            if (WaitForNext){
-                                // Wait for the next second to change between any alarms still to play.
-                                if (millis() - AlarmReset > 999){ // Time changed.
-                                    AlarmReset = millis();
-                                    WaitForNext = false;
-                                    AlarmIndex = roller(AlarmIndex + 1, 0, 4);
-                                    if (getToneTimes(AlarmIndex) == 0){
-                                        AlarmIndex = roller(AlarmIndex + 1, 0, 4);
-                                        if (getToneTimes(AlarmIndex) == 0){
-                                            AlarmIndex = roller(AlarmIndex + 1, 0, 4);
-                                            if (getToneTimes(AlarmIndex) == 0){
-                                                AlarmIndex = roller(AlarmIndex + 1, 0, 4);
-                                                if (getToneTimes(AlarmIndex) == 0){
-                                                    AlarmIndex = roller(AlarmIndex + 1, 0, 4);
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }else if(AlarmIndex == 4){
-                                if (TimerDown.ToneLeft > 0){
-                                    if (TimerDown.Tone == 0){
-                                        WaitForNext=true;
-                                        if (TimerDown.ToneLeft > 0){
-                                            TimerDown.ToneLeft--;
-                                            TimerDown.Tone = 24;
-                                        }
-                                    }else{
-                                        TimerDown.Tone--;
-                                        Pulse = (((TimerDown.Tone / 2) & 1) != 0);
-                                        if (!Pulse && TimerDown.Tone > 0) TimerDown.Tone--;
-                                        VibeTo(Pulse);   // Turns Vibe on or off depending on bit state.
-                                        Darkness.Last=millis();
-                                    }
-                                }else WaitForNext=true;
-                            }else if (Alarms_Times[AlarmIndex] > 0){
-                                if (Alarms_Playing[AlarmIndex] > 0){
-                                    Alarms_Playing[AlarmIndex]--;
-                                    if (Menu.SubItem > 0 && Menu.Item - GSR_MENU_ALARM1 == AlarmIndex){
-                                        VibeTo(false);
-                                        Darkness.Last=millis();
-                                        DoHaptic = false;
-                                        Alarms_Playing[AlarmIndex]=0;
-                                        Alarms_Times[AlarmIndex]=0;
-                                    }else{
-                                        Pulse = ((AlarmVBs[AlarmIndex] & Bits[Alarms_Playing[AlarmIndex] / 3]) != 0);
-                                        VibeTo(Pulse);   // Turns Vibe on or off depending on bit state.
-                                        Darkness.Last=millis();
-                                        DoHaptic = false;
-                                    }
-                                    if (Alarms_Playing[AlarmIndex] == 0 && Alarms_Times[AlarmIndex] > 0){
-                                        Alarms_Times[AlarmIndex]--;   // Decrease count, eventually this will all stop on it's own.
-                                        WaitForNext = true;
-                                        if (Alarms_Times[AlarmIndex] > 0) Alarms_Playing[AlarmIndex] = 30;
-                                    }
-                                }else WaitForNext = true;
-                            }else WaitForNext = true;
                         }
 
                         if (GSRWiFi.Requests == 0 && WatchyAPOn && !OTAUpdate){
@@ -595,6 +539,7 @@ void WatchyGSR::init(String datetime){
 
                         AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
                         ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested || GSRWiFi.Requests > 0 || TimerAbuse());
+                        ActiveMode |= InsertNeedAwake(!ActiveMode);
 
                         if (WatchTime.DeadRTC && Options.NeedsSaving) RecordSettings();
                         RefreshCPU(GSR_CPUDEF);
@@ -619,9 +564,11 @@ void WatchyGSR::init(String datetime){
             if (UpdateDisp) showWatchFace(); //partial updates on tick
             AlarmsOn =(Alarms_Times[0] > 0 || Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || TimerDown.ToneLeft > 0);
             ActiveMode = (InTurbo() || DarkWait() || NTPData.State > 0 || AlarmsOn || WatchyAPOn || OTAUpdate || NTPData.TimeTest || WatchTime.DeadRTC || GSRWiFi.Requested || GSRWiFi.Requests > 0 || TimerAbuse());
+            ActiveMode |= InsertNeedAwake(!ActiveMode);
             if (ActiveMode) DoOnce = true;
         }
     }
+    if (SoundRet == pdPASS) vTaskDelete(SoundHandle);
     deepSleep();
 }
 
@@ -705,17 +652,17 @@ void WatchyGSR::showWatchFace(){
   DisplayInit();
   display.setFullWindow();
   drawWatchFace();
-
-  if (Options.Feedback && DoHaptic && B){
-    VibeTo(true);
-    delay(40);
-    VibeTo(false);
-  } else delay(40);
-  DoHaptic=false;
+  if (Options.Feedback && DoHaptic && B && AllowHaptic) HapticMS = 9;
+//  {
+//    VibeTo(true);
+//    delay(40);
+//    VibeTo(false);
+//  } else delay(40);
   UpdateDisp=false;
   Darkness.Went=false;
   Darkness.Last = millis();
   RefreshCPU(GSR_CPULOW);
+  DoHaptic=false;
   display.display(!Updates.Full); //partial refresh
   RefreshCPU(GSR_CPUDEF);
   if (!(InTurbo() || DarkWait())) DisplaySleep();
@@ -725,6 +672,7 @@ void WatchyGSR::showWatchFace(){
 
 void WatchyGSR::drawWatchFace(){
     display.fillScreen(BackColor());
+    display.setTextWrap(false);
     if (!OverrideBitmap()) if (Design.Face.Bitmap) display.drawBitmap(0, 0, Design.Face.Bitmap, 200, 200, ForeColor(), BackColor());
     display.setTextColor(ForeColor());
 
@@ -822,6 +770,9 @@ void WatchyGSR::drawMenu(){
             break;
         case GSR_MENU_TIMEDN:
             O = LGSR.GetID(Options.LanguageID,25);
+            break;
+        case GSR_MENU_TMEDCF:
+            O = LGSR.GetID(Options.LanguageID,119);
             break;
         case GSR_MENU_TIMEUP:
             O = LGSR.GetID(Options.LanguageID,26);
@@ -1019,25 +970,34 @@ void WatchyGSR::drawMenu(){
                 O = LGSR.GetID(Options.LanguageID,62);
                 break;
             case 1: // Hours
-                O="[" + String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + "]:" + S + ":" + T + " " + getReduce(TimerDown.MaxTones) + " " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
+                O="[" + String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + "]:" + S + ":" + T + " " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
                 break;
             case 2: // 1x minutes.
-                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":[" + S.charAt(0) + "]" + S.charAt(1) + ":" + T.charAt(0) + T.charAt(1) + " " + getReduce(TimerDown.MaxTones) + " " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
+                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":[" + S.charAt(0) + "]" + S.charAt(1) + ":" + T.charAt(0) + T.charAt(1) + " " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
                 break;
             case 3: // x1 minutes.
-                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":" + S.charAt(0) + "[" + S.charAt(1) + "]:" + T.charAt(0) + T.charAt(1) + " "  + getReduce(TimerDown.MaxTones) + " " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
+                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":" + S.charAt(0) + "[" + S.charAt(1) + "]:" + T.charAt(0) + T.charAt(1) + " " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
                 break;
             case 4: // 1x seconds.
-                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":[" + S.charAt(0) + S.charAt(1) + ":[" + T.charAt(0) + "]" + T.charAt(1) + " "  + getReduce(TimerDown.MaxTones) + " " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
+                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":" + S.charAt(0) + S.charAt(1) + ":[" + T.charAt(0) + "]" + T.charAt(1) + " " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
                 break;
             case 5: // x1 seconds..
-                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":" + S.charAt(0) + S.charAt(1) + ":" + T.charAt(0) + "[" + T.charAt(1) + "] "  + getReduce(TimerDown.MaxTones) + " " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
+                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":" + S.charAt(0) + S.charAt(1) + ":" + T.charAt(0) + "[" + T.charAt(1) + "] " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
                 break;
-            case 6: // %
-                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":" + S.charAt(0) + S.charAt(1) + ":" + T.charAt(0) + T.charAt(1) + "[" + getReduce(TimerDown.MaxTones) + "] " + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69));
+            case 6: // Button.
+                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":" + S + ":" + T + " [" + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69)) + "]";
+        }
+    }else if (Menu.Item == GSR_MENU_TMEDCF){ // Countdown Settings
+        switch (Menu.SubItem){
+            case 0:
+                O = LGSR.GetID(Options.LanguageID,62);
                 break;
-            case 7: // Button.
-                O=String(TimerDown.Active ? TimerDown.Hours : TimerDown.MaxHours) + ":" + S + ":" + T + " " + getReduce(TimerDown.MaxTones) + " [" + LGSR.GetID(Options.LanguageID, (TimerDown.Active ? 68 : 69)) + "]";
+            case 1: // Repeatable.
+               O="[" + LGSR.GetID(Options.LanguageID,(TimerDown.Repeats ? 118 : 117)) + "] " + getReduce(TimerDown.MaxTones);
+               break;
+            case 2: // %
+               O=LGSR.GetID(Options.LanguageID,(TimerDown.Repeats ? 118 : 117)) + " [" + getReduce(TimerDown.MaxTones) + "]";
+                break;
         }
     }else if (Menu.Item == GSR_MENU_TIMEUP){ // Elapsed
         switch (Menu.SubItem){
@@ -1242,11 +1202,12 @@ void WatchyGSR::drawData(String dData, byte Left, byte Bottom, WatchyGSR::DesOps
 void WatchyGSR::setFontFor(String O, const GFXfont *Normal, const GFXfont *Small, const GFXfont *Smaller, byte Gutter){
     int16_t  x1, y1;
     uint16_t w, h;
+    display.setTextWrap(false);
     byte wi = (200 - (2 * Gutter));
     display.setFont(Normal); display.getTextBounds(O, 0, 0, &x1, &y1, &w, &h);
     if (w > wi) { display.setFont(Small); display.getTextBounds(O, 0, 0, &x1, &y1, &w, &h); }
     if (w > wi) { display.setFont(Smaller); display.getTextBounds(O, 0, 0, &x1, &y1, &w, &h); }
-}
+ }
 
 void WatchyGSR::deepSleep(){
   uint8_t I, N, D, H; // 2.1
@@ -1486,26 +1447,36 @@ void WatchyGSR::drawChargeMe(bool Dark){
 }
 
 void WatchyGSR::drawStatus(){
+  uint8_t X = Design.Status.WIFIx;
+  bool Ok = true;
   if (WatchyStatus > ""){
-      //display.fillRect(Design.Status.WIFIx, Design.Status.WIFIy - 19, 60, 20, BackColor());
+      Ok = false;
       display.setFont(&Bronova_Regular13pt7b);
       if (WatchyStatus.startsWith("WiFi")){
-          display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iWiFi, 19, 19, ForeColor());
+          display.drawBitmap(X, Design.Status.WIFIy - 18, iWiFi, 19, 19, ForeColor());
           if (WatchyStatus.length() > 4){
-              display.setCursor(Design.Status.WIFIx + 17, Design.Status.WIFIy);
+              display.setCursor(X + 17, Design.Status.WIFIy);
               display.setTextColor(ForeColor());
               display.print(WatchyStatus.substring(4));
           }
       }
-      else if (WatchyStatus == "TZ") display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iTZ, 19, 19, ForeColor());
-      else if (WatchyStatus == "NTP") display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iSync, 19, 19, ForeColor());
-      else if (WatchyStatus == "ESP")  display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iSync, 19, 19, ForeColor());
-      else if (WatchyStatus == "NC")  display.drawBitmap(Design.Status.WIFIx, Design.Status.WIFIy - 18, iNoClock, 19, 19, ForeColor());
+      else if (WatchyStatus == "TZ")  display.drawBitmap(X, Design.Status.WIFIy - 18, iTZ, 19, 19, ForeColor());
+      else if (WatchyStatus == "NTP") display.drawBitmap(X, Design.Status.WIFIy - 18, iSync, 19, 19, ForeColor());
+      else if (WatchyStatus == "ESP") display.drawBitmap(X, Design.Status.WIFIy - 18, iSync, 19, 19, ForeColor());
+      else if (WatchyStatus == "NC")  display.drawBitmap(X, Design.Status.WIFIy - 18, iNoClock, 19, 19, ForeColor());
+      else if (Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || Alarms_Times[4] > 0 || TimerDown.ToneLeft > 0) Ok = true;
       else{
           display.setTextColor(ForeColor());
-          display.setCursor(Design.Status.WIFIx, Design.Status.WIFIy);
+          display.setCursor(X, Design.Status.WIFIy);
           display.print(WatchyStatus);
       }
+  }
+  if (Ok){
+    if (TimerDown.ToneLeft > 0) {display.drawBitmap(X, Design.Status.WIFIy - 15, Tone_C, 12, 14, ForeColor()); X += 13; }
+    if (Alarms_Times[0] > 0) {display.drawBitmap(X, Design.Status.WIFIy - 15, Tone_1, 12, 14, ForeColor()); X += 13; }
+    if (Alarms_Times[1] > 0) {display.drawBitmap(X, Design.Status.WIFIy - 15, Tone_2, 12, 14, ForeColor()); X += 13; }
+    if (Alarms_Times[2] > 0) {display.drawBitmap(X, Design.Status.WIFIy - 15, Tone_3, 12, 14, ForeColor()); X += 13; }
+    if (Alarms_Times[3] > 0) {display.drawBitmap(X, Design.Status.WIFIy - 15, Tone_4, 12, 14, ForeColor()); }
   }
 }
 
@@ -1520,14 +1491,101 @@ void WatchyGSR::setStatus(String Status){
 void WatchyGSR::VibeTo(bool Mode){
     if (Mode != VibeMode){
         if (Mode){
-            SBMA.enableFeature(BMA423_WAKEUP, false);
+//            SBMA.enableFeature(BMA423_WAKEUP, false);
             pinMode(VIB_MOTOR_PIN, OUTPUT);
             digitalWrite(VIB_MOTOR_PIN, true);
         }else{
             digitalWrite(VIB_MOTOR_PIN, false);
-            SBMA.enableFeature(BMA423_WAKEUP,(Options.SleepStyle == 2 && WatchTime.BedTime) || (Options.SleepStyle > 2 && Options.SleepStyle != 4));
+//            SBMA.enableFeature(BMA423_WAKEUP,(Options.SleepStyle == 2 && WatchTime.BedTime) || (Options.SleepStyle > 2 && Options.SleepStyle != 4));
         }
         VibeMode = Mode;
+    }
+}
+
+void WatchyGSR::SoundAlarms(void * parameter){
+    bool WaitForNext, Pulse, Used;
+    unsigned long M;
+    uint8_t AlarmIndex = 0;
+    WaitForNext=false;
+    Pulse=false;
+    AlarmReset=0;
+
+                          // Here, do the alarm buzzings by way of which one is running.
+    while (true){
+        M = millis();
+        Used = false;
+        if (!OTAUpdate){
+            if (WaitForNext){
+                // Wait for the next second to change between any alarms still to play.
+                if (M - AlarmReset > 999){ // Time changed.
+                    AlarmReset = M;
+                    WaitForNext = false;
+                    AlarmIndex = roller(AlarmIndex + 1, 0, 4);
+                    if (getToneTimes(AlarmIndex) == 0){
+                        AlarmIndex = roller(AlarmIndex + 1, 0, 4);
+                        if (getToneTimes(AlarmIndex) == 0){
+                            AlarmIndex = roller(AlarmIndex + 1, 0, 4);
+                            if (getToneTimes(AlarmIndex) == 0){
+                                AlarmIndex = roller(AlarmIndex + 1, 0, 4);
+                                if (getToneTimes(AlarmIndex) == 0){
+                                    AlarmIndex = roller(AlarmIndex + 1, 0, 4);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            if(AlarmIndex == 4){
+                if (TimerDown.ToneLeft > 0){
+                    if (TimerDown.Tone == 0){
+                        WaitForNext=true;
+                        TimerDown.ToneLeft--;
+                        if (TimerDown.ToneLeft > 0){
+                            Used = true;
+                            TimerDown.Tone = 22;
+                        }else UpdateDisp=true;
+                    }else{
+                        Pulse = (((TimerDown.Tone / 2) & 1) != 0);
+                        TimerDown.Tone--;
+                        if (TimerDown.Tone == 0 && TimerDown.ToneLeft == 0) UpdateDisp=true;
+                        Used = true;
+                        if (!Pulse && TimerDown.Tone > 0) TimerDown.Tone--;
+                        VibeTo(Pulse);   // Turns Vibe on or off depending on bit state.
+                        if (Pulse) { Darkness.Last=M; HapticMS = 0; }
+                    }
+                }else WaitForNext=true;
+            }else if (Alarms_Times[AlarmIndex] > 0){
+                if (Alarms_Playing[AlarmIndex] > 0){
+                    Alarms_Playing[AlarmIndex]--;
+                    if (Menu.SubItem > 0 && Menu.Item - GSR_MENU_ALARM1 == AlarmIndex){
+                        VibeTo(false);
+                        Alarms_Playing[AlarmIndex]=0;
+                        Alarms_Times[AlarmIndex]=0;
+                        UpdateDisp=true;
+                    }else{
+                        Used = true;
+                        Pulse = ((AlarmVBs[AlarmIndex] & Bits[Alarms_Playing[AlarmIndex] / 3]) != 0);
+                        VibeTo(Pulse);   // Turns Vibe on or off depending on bit state.
+                        if (Pulse) { Darkness.Last=M; HapticMS = 0; }
+                    }
+                    if (Alarms_Playing[AlarmIndex] == 0 && Alarms_Times[AlarmIndex] > 0){
+                        Alarms_Times[AlarmIndex]--;   // Decrease count, eventually this will all stop on it's own.
+                        WaitForNext = true;
+                        if (Alarms_Times[AlarmIndex] > 0) { Darkness.Last=M; Alarms_Playing[AlarmIndex] = 30; Used = true; } else UpdateDisp=true;
+                    }
+                }else WaitForNext = true;
+            }else WaitForNext = true;
+        }
+        AllowHaptic = !Used;
+        if (Used) HapticMS = 0;
+        M = (50-(millis() - M));
+        M += millis();
+        while (M > millis()) {
+            if (AllowHaptic && HapticMS > 0){
+              HapticMS--; VibeTo((HapticMS > 0));
+            }
+            delay(5);
+        }
     }
 }
 
@@ -1623,28 +1681,29 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   UpdateDisp = true;
                   SetTurbo();
               }else if (Menu.Item == GSR_MENU_TIMEDN){
-                  if (Menu.SubItem == 7){
+                  if (Menu.SubItem == 6){
                       if (TimerDown.Active){
                           TimerDown.Active=false;
                           DoHaptic = true;
                           UpdateDisp = true;  // Quick Update.
                           SetTurbo();
                       }else if ((TimerDown.MaxSecs + TimerDown.MaxMins + TimerDown.MaxHours) > 0){
-                          TimerDown.Secs = TimerDown.MaxSecs;
-                          TimerDown.Mins = TimerDown.MaxMins;
-                          TimerDown.Hours = TimerDown.MaxHours;
-                          UpdateUTC();
-                          TimerDown.LastUTC = WatchTime.UTC_RAW;
-                          TimerDown.StopAt = TimerDown.LastUTC + (3600 * TimerDown.Hours) + (60 * TimerDown.Mins) + TimerDown.Secs;
-                          TimerDown.Active = true;
+                          StartCD();
                           DoHaptic = true;
                           UpdateDisp = true;  // Quick Update.
                           SetTurbo();
                       }
                   }else{
                       Menu.SubItem++;
-                      if (TimerDown.MaxSecs + TimerDown.MaxMins + TimerDown.MaxHours == 0 && Menu.SubItem == 7) Menu.SubItem = 4; //Stop it from being startable.
-                      if (TimerDown.Active) Menu.SubItem = 7;
+                      if (TimerDown.MaxSecs + TimerDown.MaxMins + TimerDown.MaxHours == 0 && Menu.SubItem == 6) Menu.SubItem = 4; //Stop it from being startable.
+                      if (TimerDown.Active) Menu.SubItem = 6;
+                      DoHaptic = true;
+                      UpdateDisp = true;  // Quick Update.
+                      SetTurbo();
+                  }
+              }else if (Menu.Item == GSR_MENU_TMEDCF){
+                  if (Menu.SubItem < 2){
+                      Menu.SubItem++;
                       DoHaptic = true;
                       UpdateDisp = true;  // Quick Update.
                       SetTurbo();
@@ -1871,6 +1930,11 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               DoHaptic = true;
               UpdateDisp = true;  // Quick Update.
               SetTurbo();
+          }else if (Menu.Item == GSR_MENU_TMEDCF && Menu.SubItem > 0){
+              Menu.SubItem--;
+              DoHaptic = true;
+              UpdateDisp = true;  // Quick Update.
+              SetTurbo();
           }else if (Menu.Item == GSR_MENU_TIMEUP && Menu.SubItem > 0){
               Menu.SubItem = 0;
               DoHaptic = true;
@@ -2076,8 +2140,18 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
+              }
+          } else if (Menu.Item == GSR_MENU_TMEDCF && Menu.SubItem > 0){
+              switch (Menu.SubItem){
+              case 1:   // Repeatable
+                  TimerDown.Repeats = !TimerDown.Repeats;
+                  StopCD();
+                  Options.NeedsSaving = true;
+                  DoHaptic = true;
+                  UpdateDisp = true;  // Quick Update.
+                  SetTurbo();
                   break;
-              case 6:   //Repeats
+              case 2:   // Tone Repeats
                   TimerDown.MaxTones = roller(TimerDown.MaxTones - 1, (WatchTime.DeadRTC ? 4 : 0), 4);
                   StopCD();
                   Options.NeedsSaving = true;
@@ -2275,8 +2349,18 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
                   SetTurbo();
+              }
+          }else if (Menu.Item == GSR_MENU_TMEDCF && Menu.SubItem > 0){
+              switch (Menu.SubItem){
+              case 1:   // Repeatable
+                  TimerDown.Repeats = !TimerDown.Repeats;
+                  StopCD();
+                  Options.NeedsSaving = true;
+                  DoHaptic = true;
+                  UpdateDisp = true;  // Quick Update.
+                  SetTurbo();
                   break;
-              case 6:   //Repeats
+              case 2:   // Tone Repeats
                   TimerDown.MaxTones = roller(TimerDown.MaxTones + 1, (WatchTime.DeadRTC ? 4 : 0), 4);
                   StopCD();
                   Options.NeedsSaving = true;
@@ -2362,9 +2446,10 @@ void WatchyGSR::UpdateTimerDown(){
             TimerDown.Secs = (T % 60);
         }
         if (TimerDown.Hours == 0 && TimerDown.Mins == 0 && TimerDown.Secs == 0){
-            TimerDown.Tone = 24;
+            TimerDown.Tone = 22;
             TimerDown.ToneLeft = 255;
             TimerDown.Active = false;
+            if (TimerDown.Repeats) StartCD();
             Darkness.Last=millis();
             UpdateDisp = true;  // Quick Update.
         }
@@ -2375,7 +2460,7 @@ bool WatchyGSR::TimerAbuse(){
     bool A = ((TimerUp.Active && Menu.Item == GSR_MENU_TIMEUP) || (TimerDown.Active && Menu.Item == GSR_MENU_TIMEDN));
     unsigned long T = millis() / 1000;
     if (A){ if (Updates.LastSecond != T) { Updates.LastSecond = T; UpdateDisp=Showing(); } } // Make it update when a second happens.
-    return (A || (TimerDown.Active && (TimerDown.Hours + TimerDown.Mins + TimerDown.Secs) < 1));
+    return (A || (TimerDown.Active && ((TimerDown.Hours * 3600) + (TimerDown.Mins * 60) + TimerDown.Secs) < 61));
 }
 
 void WatchyGSR::UpdateUTC(){
@@ -2539,6 +2624,7 @@ void WatchyGSR::InsertWiFiEnding() {}
 void WatchyGSR::InsertAddWatchStyles() {}
 void WatchyGSR::InsertInitWatchStyle(uint8_t StyleID) {}
 void WatchyGSR::InsertDrawWatchStyle(uint8_t StyleID) {}
+bool WatchyGSR::InsertNeedAwake(bool GoingAsleep) { return false; }
 bool WatchyGSR::InsertHandlePressed(uint8_t SwitchNumber, bool &Haptic, bool &Refresh) { return false; }
 void WatchyGSR::OverrideDefaultMenu(bool Override) { MenuOverride = Override; }
 void WatchyGSR::ShowDefaultMenu() { if (MenuOverride && GuiMode == GSR_WATCHON) { GuiMode = GSR_MENUON; DoHaptic = true; UpdateDisp = true; SetTurbo(); } }
@@ -2657,7 +2743,11 @@ void WatchyGSR::CheckAlarm(int I){
 // Counts the active (255) alarms/timers and after 3, sets them to lower values.
 void WatchyGSR::CalculateTones(){
     uint8_t Count = 0;
+    float Downgrade = 1.0;
+    uint32_t TimeDown;
     WatchTime.NextAlarm = 99; CheckAlarm(0); CheckAlarm(1); CheckAlarm(2); CheckAlarm(3); UpdateTimerDown();
+    TimeDown = TimerDown.Hours * 3600 + TimerDown.Mins * 60 + TimerDown.Secs;
+    if (TimeDown < 11 && TimerDown.Repeats) Downgrade = gobig(0.2, TimeDown * 0.25);
     if (Alarms_Times[0] > 0) Count++;
     if (Alarms_Times[1] > 0) Count++;
     if (Alarms_Times[2] > 0) Count++;
@@ -2668,20 +2758,31 @@ void WatchyGSR::CalculateTones(){
         if (Alarms_Times[1] == 255) Alarms_Times[1] = 7 * Reduce[Alarms_Repeats[1]];
         if (Alarms_Times[2] == 255) Alarms_Times[2] = 7 * Reduce[Alarms_Repeats[2]];
         if (Alarms_Times[3] == 255) Alarms_Times[3] = 7 * Reduce[Alarms_Repeats[3]];
-        if (TimerDown.ToneLeft == 255) TimerDown.ToneLeft = 10 * Reduce[TimerDown.MaxTones];
+        if (TimerDown.ToneLeft == 255) TimerDown.ToneLeft = (10 * Downgrade) * Reduce[TimerDown.MaxTones];
     }else if (Count == 4){
         if (Alarms_Times[0] == 255) Alarms_Times[0] = 8 * Reduce[Alarms_Repeats[0]];
         if (Alarms_Times[1] == 255) Alarms_Times[1] = 8 * Reduce[Alarms_Repeats[1]];
         if (Alarms_Times[2] == 255) Alarms_Times[2] = 8 * Reduce[Alarms_Repeats[2]];
         if (Alarms_Times[3] == 255) Alarms_Times[3] = 8 * Reduce[Alarms_Repeats[3]];
-        if (TimerDown.ToneLeft == 255) TimerDown.ToneLeft = 12 * Reduce[TimerDown.MaxTones];
+        if (TimerDown.ToneLeft == 255) TimerDown.ToneLeft = (12 * Downgrade) * Reduce[TimerDown.MaxTones];
     }else{
         if (Alarms_Times[0] == 255) Alarms_Times[0] = 10 * Reduce[Alarms_Repeats[0]];
         if (Alarms_Times[1] == 255) Alarms_Times[1] = 10 * Reduce[Alarms_Repeats[1]];
         if (Alarms_Times[2] == 255) Alarms_Times[2] = 10 * Reduce[Alarms_Repeats[2]];
         if (Alarms_Times[3] == 255) Alarms_Times[3] = 10 * Reduce[Alarms_Repeats[3]];
-        if (TimerDown.ToneLeft == 255) TimerDown.ToneLeft = 15 * Reduce[TimerDown.MaxTones];
+        if (TimerDown.ToneLeft == 255) TimerDown.ToneLeft = (15 * Downgrade) * Reduce[TimerDown.MaxTones];
     }
+}
+
+void WatchyGSR::StartCD(){
+    TimerDown.Secs = TimerDown.MaxSecs;
+    TimerDown.Mins = TimerDown.MaxMins;
+    TimerDown.Hours = TimerDown.MaxHours;
+    UpdateUTC();
+    TimerDown.LastUTC = WatchTime.UTC_RAW;
+    TimerDown.StopAt = TimerDown.LastUTC + (3600 * TimerDown.Hours) + (60 * TimerDown.Mins) + TimerDown.Secs;
+    TimerDown.Repeating = TimerDown.Repeats;
+    TimerDown.Active = true;
 }
 
 void WatchyGSR::StopCD(){
@@ -2689,6 +2790,8 @@ void WatchyGSR::StopCD(){
         TimerDown.ToneLeft = 1;
         TimerDown.Tone = 1;
     }
+    if (TimerDown.Active) TimerDown.Active = false;
+    TimerDown.Repeating = false;
 }
 
 uint8_t WatchyGSR::getToneTimes(uint8_t ToneIndex){
@@ -3089,7 +3192,7 @@ String WatchyGSR::GetSettings(){
     V = (TimerDown.MaxTones << 5);
     I[J] = ((TimerDown.MaxHours) | V); J++;
     I[J] = (TimerDown.MaxMins); J++;
-    I[J] = (TimerDown.MaxSecs); J++;
+    I[J] = ((TimerDown.MaxSecs) | (TimerDown.Repeats ? 128 : 0)); J++;
 
     for (K = 0; K < 4; K++){
         V = (Alarms_Repeats[K] << 5);
@@ -3199,7 +3302,7 @@ void WatchyGSR::StoreSettings(String FromUser){
     }
     J++; if (L > J) TimerDown.MaxMins = constrain(O[J],0,59);
     if (NewV > 132){
-        J++; if (L > J) TimerDown.MaxSecs = constrain(O[J],0,59);
+        J++; if (L > J) { TimerDown.MaxSecs = constrain((O[J] & 127),0,59); TimerDown.Repeats = ((O[J] & 128) == 128); }
     }
 
     for (K = 0; K < 4; K++){

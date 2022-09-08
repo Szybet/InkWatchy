@@ -293,6 +293,12 @@ class LocaleGSR {
                       return "AM";
                    case 116:
                       return "Full";
+                   case 117:
+                      return "Once";
+                   case 118:
+                      return "Repeat";
+                   case 119:
+                      return "Countdown Options";
                 }
             }
         }

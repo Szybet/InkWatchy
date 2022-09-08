@@ -26,13 +26,14 @@
 #include "Fonts_GSR.h"
 #include "Icons_GSR.h"
 #include "ArduinoNvs.h"
+#include <esp32-hal.h>
 
 class WatchyGSR{
     public:
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.4.5";
+        static constexpr const char* Build = "1.4.6";
         enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
 
     public:
@@ -56,7 +57,7 @@ class WatchyGSR{
         IRAM_ATTR virtual void handleInterrupt() final;
         void drawChargeMe(bool Dark = false);
         void drawStatus();
-        virtual void VibeTo(bool Mode) final;
+        static void VibeTo(bool Mode);
         virtual String MakeTime(int Hour, int Minutes, bool& Alarm) final; // For Hour | 32 means no AM/PM, | 64 means add padding to <10 hour.
         virtual String MakeHour(uint8_t Hour) final;
         virtual String MakeMinutes(uint8_t Minutes) final;
@@ -72,6 +73,7 @@ class WatchyGSR{
         virtual void InsertAddWatchStyles();
         virtual void InsertDrawWatchStyle(uint8_t StyleID);
         virtual void InsertInitWatchStyle(uint8_t StyleID);
+        virtual bool InsertNeedAwake(bool GoingAsleep);
         virtual bool InsertHandlePressed(uint8_t SwitchNumber, bool &Haptic, bool &Refresh);
         virtual void OverrideDefaultMenu(bool Override);
         virtual void ShowDefaultMenu() final;
@@ -98,6 +100,7 @@ class WatchyGSR{
         void UpdateClock();
         void UpdateTimerDown();
         bool TimerAbuse();
+        static void SoundAlarms(void * parameter);
         void ManageTime();
         void _rtcConfig();
         void _bmaConfig();
@@ -110,8 +113,9 @@ class WatchyGSR{
         String MakeSteps(uint32_t uSteps);
         void CheckAlarm(int I);
         void CalculateTones();
+        void StartCD();
         void StopCD();
-        uint8_t getToneTimes(uint8_t ToneIndex);
+        static uint8_t getToneTimes(uint8_t ToneIndex);
         String getReduce(uint8_t Amount);
         void monitorSteps();
         uint8_t getButtonPins();
@@ -141,7 +145,7 @@ class WatchyGSR{
         bool BedTime();
         bool UpRight();
         bool DarkWait();
-        bool Showing();
+        static bool Showing();
         void RefreshCPU();
         void RefreshCPU(int Value);
         bool OTA();
