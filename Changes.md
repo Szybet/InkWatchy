@@ -132,3 +132,10 @@
 - **FIX:**  Fixed Countdown & Elapsed Timers to be second accurate.
 - **ADD:**  Countdown & Elapsed Timers will keep Watchy in "Active Mode" (always on) while viewing their current values when they are On.
 - **ADD:**  **BETA** Added 4 extra Button values when combining MENU and BACK with UP and DOWN (see Override Information for more).
+
+**Version 1.4.6:**
+- **FIX:**  Fixed font scaling in design of Watchface.
+- **FIX:**  Moved Haptic Feedback and Alarm Tones to new task to avoid conflicts and oddities.
+- **FIX:**  Removed BMA disable/enable around Vibration Motor usage, it caused no significant changes in operation.
+- **ADD:**  Added "Countdown Settings" where there is a Once/Repeat and the Tone length moved from "Countdown Timer", see **Usage** for more information.
+- **ADD:**  Added bool InsertNeedAwake(bool GoingAsleep) in 3 places on the single loop for usage to run code along with stopping Watchy from Deep Sleep.
