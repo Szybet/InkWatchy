@@ -179,7 +179,7 @@ This is currently in **BETA** but the functionality is 100% stable, just the but
 
 **Version 1.4.6 Additions**
 
-`bool InsertNeedAwake(bool GoingAsleep) { return true/{false}; }` // This function runs 3 times per loop, lets you tell the Watchy to stay Awake (Active Mode), you can also run code in this as part of the main loop while in Active Mode.
+`bool InsertNeedAwake(bool GoingAsleep)` { return true/{false}; } // This function runs 3 times per loop, lets you tell the Watchy to stay Awake (Active Mode), you can also run code in this as part of the main loop while in Active Mode.
 
 **How to Make Your Own Version**
 
