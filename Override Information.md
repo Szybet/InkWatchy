@@ -61,7 +61,7 @@ Functions available for overriding:
 | drawDate() | Override to change the format of how the Date is drawn. |
 | drawYear() | Override to change the format of how the Year is drawn. |
 | drawChargeMe() | Override to change the format of how the Battery Status is drawn. |
-| drawStatus() | Override to change the format of how the current WiFi Status is drawn. |
+| drawStatus() | Override to change the format of how the current WiFi Status is drawn.  Also shows timer/alarms when running. |
  
 Functions for inserting extra code in places.
 
@@ -75,6 +75,7 @@ Functions for inserting extra code in places.
 | InsertWiFi() | This Function is called repeatedly in a loop only *IF* WiFi has been enabled and connected, only use this if you asked for it. |
 | InsertWiFiEnding() | This Function is called when WiFi has been turned off. |
 | InsertAddWatchStyles() | Use this function to add Watch Styles starting from Index 0 [`AllowDefaultWatchStyles(false)`] or from Index 2 if allowing default Watch Styles. |
+| InsertNeedAwake() | Set in 3 sections of the Active Mode loop, gives the overriding the ability to keep the Watchy Active and run code in the loop. |
 | InsertInitWatchStyle() | The init function as seen at the end of Watchy_GSR.cpp.  See **Version 1.4.2 Additions** below. |
 | InsertDrawWatchStyle() | The Draw function as seen at the bottom of Watchy_GSR.cpp. See **Version 1.4.2 Additions** below. |
 | InsertHandlePressed() | Allows you to intercept SW2 (SW1 requires `OverrideDefaultMenu(true)`) to SW4 when nothing else did anything with them, only when the menu isn't open. |
@@ -176,6 +177,9 @@ Locale and Menu Override are the main offerings available, instructions will be 
 getButtonPins() has 4 new values:  MENU + UP = 5, BACK + UP = 6, DOWN + MENU = 7 and DOWN + BACK = 8
 This is currently in **BETA** but the functionality is 100% stable, just the button press duration may be too short to catch both buttons properly.
 
+**Version 1.4.6 Additions**
+
+`bool InsertNeedAwake(bool GoingAsleep) { return true/{false}; }` // This function runs 3 times per loop, lets you tell the Watchy to stay Awake (Active Mode), you can also run code in this as part of the main loop while in Active Mode.
 
 **How to Make Your Own Version**
 
