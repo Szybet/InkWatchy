@@ -11,10 +11,10 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |**Steps** | Reset Time          | Reset Steps ... Use Menu information for more help. |
 |**Alarms** | Alarms #           |  HH:MM -> Full -> Days + Repeat + Active settings [^5] |
 |           | Tone Repeats       |  **{Full}** repeats.  Allows you to reduce the amount of alarm tones that repeat (80%-20% in 20% increments).  Resets the tone repeats for all alarms when you change this. |
-|**Timers** | Countdown Timer    | HH:MM -> {Full} -> On/**{Off}**  |
-|           | Countdown Settings | **{Once}**/Repeat and (Full, see Tone Repeats above for information).  Any changes to these reset the above Timer. |
+|**Timers** | Countdown Timer    | HH:MM:SS -> On/**{Off}** |
+|           | Countdown Settings | **{Once}**/Repeat -> {Full} (Full, see Tone Repeats above for information).  Any changes to these reset the above Timer. |
 |           | Elapsed Time       | HH:MM On/**{Off}** |
-|**Options** | Watch Style       | Choose between "Classic GSR" and "Ballsy" style.  (Overrides can change this.) |
+|**Options** | Watch Style       | Choose between "Classic GSR", "Ballsy" and "LCD" styles.  (Overrides can change this.) |
 |            | Display Style     | **{Light}** or Dark mode. |
 |            | Border Mode       | Border around the display:  **{Light}** (White) or Dark (Black). |
 |            | Dexterity         | Swap the Back/Menu with UP/DOWN for left-handed users. |
@@ -23,7 +23,7 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | Time Mode         | **{AM/PM}** or 24 Hour mode of time display. |
 |            | Feedback          | **{Enable}** or Disable haptic feedback on button presses (during use). |
 |            | Turbo Time        | How many seconds Watchy stays active after your last button press before sleeping. |
-|            | Screen Off        | **{Disabled}**, "Always", "Bed Time" [^6], "Double Tap On", "Double Tap Only".  [^7] Screen Blanking (which uses no cpu to update display, battery savings). |
+|            | Screen Off        | **{Disabled}**, "Always", "Bed Time" [^6], "Double Tap On", "Double Tap Only".  [^7] Screen Blanking (which updates the display every 30mins, battery savings). |
 |            | Performance       | Offers **{Turbo}**, Normal and Battery Saving [^3] options, reduces responsiveness as you go away from Turbo. |
 |            | WiFi Tx Power     | Allows the user to lower the default WiFi Transmission Power to save battery life during WiFi operations. |
 |            | Information       | Shows the current Watchy_GSR Version and current Battery Voltage when you press "MENU". |
@@ -38,8 +38,8 @@ This Watchy "face" contains the following heiarchy of options and settings:
             
 Button usage:
 
-- "Menu" (SW1):  Activates/Toggles items, for Alarms, Timers and Step, advances forward where HH:MM is shown.  In Turbo Time increases seconds.
-- "Back" (SW2):  Backs out of an item or backs up to previous section when in HH:MM areas.
+- "Menu" (SW1):  Activates/Toggles items, for Alarms, Timers and Step, advances forward where HH:MM:SS is shown.  In Turbo Time increases seconds.
+- "Back" (SW2):  Backs out of an item or backs up to previous section when in HH:MM:SS areas.
 -  "UP"  (SW3):  Moves menu selection up.  When inside HH:MM it increases selected value (these cycle if above max value).
 - "DOWN" (SW4):  Moves menu selection down.  When inside HH:MM it decrease selected value (these also cycle if below 0).
 
@@ -59,8 +59,8 @@ ALARMS:  (WHITE settings means "ON", Black is "OFF")
 
 TIMERS:
 
-- Countdown Timer will count down from the HH:MM you set.  On/Off will reset the HH:MM when pressed.
-- Elapsed Timer will count up when started (On) and will stop **{Off}** when stopped.  Starting again resets to 00:00.
+- Countdown Timer will count down from the HH:MM:SS you set.  On/Off will reset the HH:MM when pressed.
+- Elapsed Timer will count up when started (On) and will stop **{Off}** when stopped.  Starting again resets to 00:00:00.
 
 ALARMS & COUNTDOWN TIMER PULSES:
 
