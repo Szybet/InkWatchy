@@ -59,8 +59,8 @@ ALARMS:  (WHITE settings means "ON", Black is "OFF")
 
 TIMERS:
 
-- Countdown Timer will count down from the HH:MM:SS you set.  On/Off will reset the HH:MM when pressed.
-- Elapsed Timer will count up when started (On) and will stop **{Off}** when stopped.  Starting again resets to 00:00:00.
+- Countdown Timer will count down from the HH:MM:SS you set.  On/Off will reset the HH:MM when pressed. [^8]
+- Elapsed Timer will count up when started (On) and will stop **{Off}** when stopped.  Starting again resets to 00:00:00. [^8]
 
 ALARMS & COUNTDOWN TIMER PULSES:
 
@@ -112,3 +112,4 @@ WiFi options in the Options menu will not be available if the low battery indica
 [^5]:  With the invention of SmallRTC's atMinuteWake, all Screen Blanking will now use atMinuteWake for on the hour (0 minute) and 30 minutes past the hour, Alarms will now *WORK* in all Screen Blanking modes and will properly fire.  The only change is, the Countdown Timer will *NOT* allow the atMinuteWake to happen, but normal nextMinuteWakes until it finishes.  SmallRTC's atMinuteWake will cause the Watchy to only wake 2 (plus Alarms) times an hour, massively reducing battery usage.
 [^6]:  Double Tap works while in Bed Time, as do the buttons.
 [^7]:  While your wrist is "Up", the Watchy will sit in Active Mode (battery usage), until you lower or tilt your wrist to cause the screen to go out again.
+[^8]:  In non-RTC mode, timers will not display seconds correctly, Countdown Timer will ignore seconds completely.
