@@ -95,6 +95,7 @@ Functions available for communication:
 | MakeTime(int Hour, int Minutes, bool &**Alarm**) | Use a variable in **Alarm** parameter always.  When **Alarm** is set to `false` you'll get normal Hour & Minutes format based on Options, **Alarm** will be `true` for PM.  Setting **Alarm** to `true` for Alarm format.  Returns a String. |
 | MakeHour(uint8_t Hour) | Return the hour formatted in a String using 12 or 24hr format. |
 | MakeMinutes(uint8_t Minutes) | Returns a string of the Minutes. |
+| ClockSeconds() | Updates the raw UTC and also converts it to the local time (WatchTime.Local) but doesn't interfere with minute updates. |
 | ForeColor() | Returns the current Fore (font) color for usage with current style. |
 | BackColor() | Returns the current Background color for usage with current style. |
 | AskForWiFi() | Tells the Watchy_GSR that your code wants WiFi, when it connects, you will see InsertWiFi() called, make sure you keep track of this yourself. |
