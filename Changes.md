@@ -139,3 +139,7 @@
 - **FIX:**  Removed BMA disable/enable around Vibration Motor usage, it caused no significant changes in operation.
 - **ADD:**  Added "Countdown Settings" where there is a Once/Repeat and the Tone length moved from "Countdown Timer", see **Usage** for more information.
 - **ADD:**  Added bool InsertNeedAwake(bool GoingAsleep) in 3 places on the single loop for usage to run code along with stopping Watchy from Deep Sleep.
+
+**Version 1.4.6:**
+- **FIX:**  Fixed UTC update not confusing minute changes when Countdown or Elapsed Timer is/are in use.
+- **ADD:**  Added a function for override use called ClockSeconds(), updates the WatchTime.UTC and WatchTime.Local with current time.
