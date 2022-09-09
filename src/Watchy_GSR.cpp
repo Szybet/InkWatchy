@@ -962,7 +962,7 @@ void WatchyGSR::drawMenu(){
     }else if (Menu.Item == GSR_MENU_TIMERS){  // Timers
         O = LGSR.GetID(Options.LanguageID,66);
     }else if (Menu.Item == GSR_MENU_TIMEDN){ // Countdown
-        if (TimerDown.Active) UpdateUTC();
+        if (TimerDown.Active && !WatchTime.DeadRTC) UpdateUTC(true);
         S=MakeMinutes(TimerDown.Active ? TimerDown.Mins : TimerDown.MaxMins);
         T=MakeMinutes(TimerDown.Active ? TimerDown.Secs : TimerDown.MaxSecs);
         switch (Menu.SubItem){
@@ -1005,7 +1005,7 @@ void WatchyGSR::drawMenu(){
                 O = LGSR.GetID(Options.LanguageID,62);
                 break;
             case 1:
-                if (TimerUp.Active) { UpdateUTC(); U = (WatchTime.UTC_RAW - TimerUp.SetAt); } else U = (TimerUp.StopAt - TimerUp.SetAt);
+                if (TimerUp.Active) { if(!WatchTime.DeadRTC) UpdateUTC(true); U = (WatchTime.UTC_RAW - TimerUp.SetAt); } else U = (TimerUp.StopAt - TimerUp.SetAt);
                 y1 = U / 3600; x1 = (U - (y1 * 3600)) / 60; z1 = U % 60;
                 O = String(y1) + ":" + MakeMinutes(x1) + ":" + MakeMinutes(z1) + " [" + LGSR.GetID(Options.LanguageID, (TimerUp.Active ? 68 : 69)) + "]";
         }
@@ -2438,14 +2438,14 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
 void WatchyGSR::UpdateTimerDown(){
     uint16_t T;
     if (TimerDown.Active){
-        UpdateUTC(); T = (TimerDown.StopAt - WatchTime.UTC_RAW);
+        UpdateUTC(true); T = (TimerDown.StopAt - WatchTime.UTC_RAW);
         if (T > -1){
             TimerDown.Hours = (T / 3600);
             T = T - (TimerDown.Hours * 3600);
             TimerDown.Mins = (T / 60);
             TimerDown.Secs = (T % 60);
         }
-        if (TimerDown.Hours == 0 && TimerDown.Mins == 0 && TimerDown.Secs == 0){
+        if (TimerDown.Hours == 0 && TimerDown.Mins == 0 && (WatchTime.DeadRTC || TimerDown.Secs == 0)){
             TimerDown.Tone = 22;
             TimerDown.ToneLeft = 255;
             TimerDown.Active = false;
@@ -2460,14 +2460,14 @@ bool WatchyGSR::TimerAbuse(){
     bool A = ((TimerUp.Active && Menu.Item == GSR_MENU_TIMEUP) || (TimerDown.Active && Menu.Item == GSR_MENU_TIMEDN));
     unsigned long T = millis() / 1000;
     if (A){ if (Updates.LastSecond != T) { Updates.LastSecond = T; UpdateDisp=Showing(); } } // Make it update when a second happens.
-    return (A || (TimerDown.Active && ((TimerDown.Hours * 3600) + (TimerDown.Mins * 60) + TimerDown.Secs) < 61));
+    return (A || (TimerDown.Active && ((TimerDown.Hours * 3600) + (TimerDown.Mins * 60) + TimerDown.Secs) < 60));
 }
 
-void WatchyGSR::UpdateUTC(){
+void WatchyGSR::UpdateUTC(bool OnlyRead){
     if (!WatchTime.DeadRTC){
         SRTC.read(WatchTime.UTC);
         WatchTime.UTC_RAW = SRTC.MakeTime(WatchTime.UTC) + (NTPData.TimeTest ? 0 : WatchTime.Drifting);
-        WatchTime.EPSMS = (millis() + (1000 * (60 - (WatchTime.UTC.Second + (NTPData.TimeTest ? 0 : WatchTime.Drifting)))));
+        if (!OnlyRead) WatchTime.EPSMS = (millis() + (1000 * (60 - (WatchTime.UTC.Second + (NTPData.TimeTest ? 0 : WatchTime.Drifting)))));
     }
     SRTC.BreakTime(WatchTime.UTC_RAW,WatchTime.UTC);
 }
@@ -2696,6 +2696,8 @@ String WatchyGSR::MakeMinutes(uint8_t Minutes){
     return (Minutes < 10 ? "0" : "") + String(Minutes);
 }
 
+void WatchyGSR::ClockSeconds(){ UpdateUTC(true); UpdateClock(); }
+
 String WatchyGSR::MakeSteps(uint32_t uSteps){
     String S, T, X;
     int I, C;
@@ -2790,7 +2792,7 @@ void WatchyGSR::StopCD(){
         TimerDown.ToneLeft = 1;
         TimerDown.Tone = 1;
     }
-    if (TimerDown.Active) TimerDown.Active = false;
+    TimerDown.Active = false;
     TimerDown.Repeating = false;
 }
 

@@ -33,7 +33,7 @@ class WatchyGSR{
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.4.6";
+        static constexpr const char* Build = "1.4.6A";
         enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
 
     public:
@@ -61,6 +61,7 @@ class WatchyGSR{
         virtual String MakeTime(int Hour, int Minutes, bool& Alarm) final; // For Hour | 32 means no AM/PM, | 64 means add padding to <10 hour.
         virtual String MakeHour(uint8_t Hour) final;
         virtual String MakeMinutes(uint8_t Minutes) final;
+        virtual void ClockSeconds() final;
         virtual uint16_t ForeColor() final;
         virtual uint16_t BackColor() final;
         virtual void InsertPost();
@@ -96,7 +97,7 @@ class WatchyGSR{
         void GoDark();
         void detectBattery();
         void ProcessNTP();
-        void UpdateUTC();
+        void UpdateUTC(bool OnlyRead = false);
         void UpdateClock();
         void UpdateTimerDown();
         bool TimerAbuse();
