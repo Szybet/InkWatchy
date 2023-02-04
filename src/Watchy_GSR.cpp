@@ -1492,10 +1492,10 @@ void WatchyGSR::VibeTo(bool Mode){
     if (Mode != VibeMode){
         if (Mode){
 //            SBMA.enableFeature(BMA423_WAKEUP, false);
-            pinMode(VIB_MOTOR_PIN, OUTPUT);
-            digitalWrite(VIB_MOTOR_PIN, true);
+            pinMode(GSR_VIB_MOTOR_PIN, OUTPUT);
+            digitalWrite(GSR_VIB_MOTOR_PIN, true);
         }else{
-            digitalWrite(VIB_MOTOR_PIN, false);
+            digitalWrite(GSR_VIB_MOTOR_PIN, false);
 //            SBMA.enableFeature(BMA423_WAKEUP,(Options.SleepStyle == 2 && WatchTime.BedTime) || (Options.SleepStyle > 2 && Options.SleepStyle != 4));
         }
         VibeMode = Mode;
