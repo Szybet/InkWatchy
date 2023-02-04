@@ -95,7 +95,7 @@
 #define EPD_DC 10
 #define EPD_RESET 9
 #define EPD_BUSY 19
-#define VIB_MOTOR_PIN 13
+#define GSR_VIB_MOTOR_PIN 13
 #define GSR_MENU_PIN 26
 #define GSR_BACK_PIN 25
 #define GSR_DOWN_PIN 4
