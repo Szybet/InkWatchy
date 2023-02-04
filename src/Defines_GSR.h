@@ -90,7 +90,7 @@
 #define GSR_AlarmSetup 1234567890
 
 //pins
-#define RTC_INT_PIN GPIO_NUM_27
+#define GSR_RTC_INT_PIN 27  // GPIO_NUM_27
 #define EPD_CS 5
 #define EPD_DC 10
 #define EPD_RESET 9
@@ -102,7 +102,7 @@
 #define GSR_MENU_MASK GPIO_SEL_26
 #define GSR_BACK_MASK GPIO_SEL_25
 #define GSR_DOWN_MASK GPIO_SEL_4
-#define ACC_INT_MASK GPIO_SEL_14
+#define GSR_ACC_INT_MASK 14 // GPIO_SEL_14
 
 //SetCPU defines.
 #define GSR_CPUMAX 65280
