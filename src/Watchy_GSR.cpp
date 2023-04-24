@@ -1220,7 +1220,7 @@ void WatchyGSR::deepSleep(){
 
   if (DM){
     D = WatchTime.Local.Wday + 1; // 2.1
-    H - WatchTime.Local.Hour;   // 2.1
+    H = WatchTime.Local.Hour;   // 2.1
     BatOk = (Battery.Last == 0 || Battery.Last > Battery.LowLevel);
     BT = (Options.SleepStyle == 2 && WatchTime.BedTime);
     B = (((Options.SleepStyle == 1 || (Options.SleepStyle > 2 && Options.SleepStyle != 4)) || BT) && BatOk);
