@@ -28,7 +28,8 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | WiFi Tx Power     | Allows the user to lower the default WiFi Transmission Power to save battery life during WiFi operations. |
 |            | Information       | Shows the current Watchy_GSR Version and current Battery Voltage when you press "MENU". |
 |            | Sync Watchy       | Sync Watchy RTC by Time, TimeZone, TimeZone & Time |
-|            | Watchy Connect    | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. "BACK" to immediately exit |
+|            | Weather Interval  | (Only visible if Watchface asks for Weather) Set the interval between Weather requests. |
+|            | Watchy Connect    | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. "BACK" to immediately exit. |
 |            | OTA Update        | Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.) |
 |            | OTA Website       | Website offers Backup & Restore of Settings, WiFi AP Settings and WiFi OTA upload of a bin file.  (ESCAPE by holding "BACK" for 10 seconds.) |
 |**Troubleshoot** | Reset Screen     | Reset screen if artifacting or ghosting is happening. |
