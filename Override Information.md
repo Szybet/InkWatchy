@@ -86,7 +86,7 @@ Functions for inserting extra code in places.
 | InsertNeedAwake() | Used at the end of the Active Mode loop, gives the overriding the ability to keep the Watchy Active and run code in the loop. |
 | InsertInitWatchStyle(uint8_t StyleID) | The init function as seen at the end of Watchy_GSR.cpp.  See **Version 1.4.2 Additions** below. |
 | InsertDrawWatchStyle(uint8_t StyleID) | The Draw function as seen at the bottom of Watchy_GSR.cpp. See **Version 1.4.2 Additions** below. |
-| InsertDrawWeather(uint8_t StyleID) | This function is always used to draw weather elements for a WatchFace. |
+| InsertDrawWeather(uint8_t StyleID, bool Status) | This function is always used to draw weather elements for a WatchFace. Status bool is true if drawStatus() had nothing to draw and asks to have the InsertDrawWeather place the weather over top of the status area, if you're not using this for the status area, use a return to exit. |
 | InsertHandlePressed(uint8_t SwitchNumber, bool &Haptic, bool &Refresh) | Allows you to intercept SW2 (SW1 requires `OverrideDefaultMenu(true)`) to SW4 when nothing else did anything with them, only when the menu isn't open. SwitchNumber is the SW # ORed with another (if pressed together), Haptic and Refresh are returns to tell the system you want the display refreshed and want Haptic feedback to happen. |
 | OverrideSleepBitmap() | Allows you to replace the drawing of this bitmap with either your own or nothing at all, send `false` on return to tell it not to draw the Design.Face.SleepBitmap. |
  
