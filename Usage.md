@@ -34,7 +34,7 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | OTA Website       | Website offers Backup & Restore of Settings, WiFi AP Settings and WiFi OTA upload of a bin file.  (ESCAPE by holding "BACK" for 10 seconds.) |
 |**Troubleshoot** | Reset Screen     | Reset screen if artifacting or ghosting is happening. |
 |                 | Watchy Reboot    | Reboot the Watchy in the event something stops working. |
-|                 | Detect Drift     | Detect drift in RTC clock (takes 2 minutes). Excessive drift enters non-RTC mode. [^1] |
+|                 | Edit RTC         | Detect drift in RTC clock (requires 2 edits one to start, one at battery low level). Excessive drift enters non-RTC mode. [^1] |
 |                 | Storage Settings | Allows you to disable Non-Volatile Storage of settings for this Watchy face (or re-enable them). [^4] |
             
 Button usage:
@@ -106,7 +106,7 @@ WiFi entries can be edited from Watchy's Options -> OTA Website, surf to the Wat
 
 WiFi options in the Options menu will not be available if the low battery indicator is on.
 
-[^1]:  If non-RTC mode is entered, the entry for "Detect Drift" will be replaced with "Return to RTC" when backed away from the results, which will state the RTC as bad.  The Watchy will then turn off a variety (and some will be locked) of settings to ensure better battery life, reducing timer and alarm announcements and will force the screen to blank unless you press a button.  While non-RTC mode is active, menus will not keep the screen on (constant "Bed Time" mode), so be sure to increase your "Screen Auto-Off" to adjust it's frequency.
+[^1]:  Edit RTC has "Use RTC" (enabled/disabled) and "Drift Management" (to start Drift calculation) and when you do it again when the battery is low, you'll see Edit RTC to set the time right again, then "Calculate Drift", you'll then be greeted with a number /(+-)1.  Up will let you start the "Drift Management" again or see the current seconds between corrected second (+/-) to keep the RTC in time.  During "Drift Management" all NTP requests will go unanswered, until "Calculate Drift" is done, but should be done as late in the battery life as possible to maximize calculation accuracy.
 [^2]:  "Always" mode is used during non-RTC mode, with the exception that menus are ignored (acting like "Bed Time" mode).
 [^3]:  "Battery Saving" is forced on when using non-RTC mode.
 [^4]:  Disabling Non-Volatile Storage will ask for you to select you want to proceed, if you proceed the NVS will have the settings removed, Watchy will reboot and will continue to not store any settings in the NVS.
