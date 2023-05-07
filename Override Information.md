@@ -111,7 +111,7 @@ Functions available for communication:
 | ForeColor() | Returns the current Fore (font) color for usage with current style. |
 | BackColor() | Returns the current Background color for usage with current style. |
 | SetFontColor(uint16_t Color) | Sets the FontColor to the value you want, OR, use `GSR_AutoFore` for automatic (same as ForeColor()). |
-| AskForWiFi() | Tells the Watchy_GSR that your code wants WiFi, when it connects, you will see InsertWiFi() called, make sure you keep track of this yourself. |
+| AskForWiFi() | Tells the Watchy_GSR that your code wants WiFi, when it connects, you will see InsertWiFi() called, make sure you keep track of this yourself.  See **NOTES ON WiFi** below. |
 | currentWiFi() | Returns `WL_CONNECTED` when connected or `WL_CONNECT_FAILED` when not, InsertWiFi() is only called when `WL_CONNECTED` happens and no other process is using it. |
 | endWiFi() | Tell Watchy_GSR that you're finished with the WiFi, only do this *IF* you asked for it. |
 | AllowDefaultWatchStyles(bool Allow) | Will state if you want (**{true}**/false) the original Watch Styles (Index 0 (Classic GSR) to be used first). |
@@ -121,7 +121,7 @@ Functions available for communication:
 | CurrentSteps() | Will return a uint32_t value of the current steps taken.  Do not access the SBMA directly as the base code now keeps a recording of them prior to restarts and each minute, so reboots don't lose progress. |
 | YesterdaySteps() | Will return a uint32_t value of yesterday's steps taken. |
 | CurrentSteps(bool Yesterday = false) | Returns a formatted string of CurrentSteps optionally **{true}** with (Yesterday's) steps added. |
-| void SetWeatherScale(bool Metric) | Set temperature & wind scale being used, **{Fahrenheit}** or Metric.  Weather settings are not specific to any WatchFace. |
+| void SetWeatherScale(bool Metric) | Set temperature & wind scale being used, **{Imperial}** or Metric.  Weather settings are not specific to any WatchFace. |
 | bool IsWeatherAvailable() | Returns **true** if there is available Weather Data. |
 | int GetWeatherTemperature() | Gets the current Temperature in the requested Scale. |
 | int GetWeatherTemperatureFeelsLike() | Gets the current "Feels Like" Temperature in the requested Scale. |
