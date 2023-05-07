@@ -128,7 +128,7 @@ Functions available for communication:
 | int GetWeatherID() | Gets the OpenWeatherMap Condition ID. |
 | String GetWeatherIcon() | Gets the OpenWeatherMap Condition Icon String ID. |
 | uint8_t GetWeatherHumidity() | Gets the OpenWeatherMap Humidity percentage. |
-| float GetWeatherWindSpeed() | Gets the current wind speed in the requested Scale. |
+| float GetWeatherWindSpeed() | Gets the current Wind Speed in the requested Scale. |
 | float GetWeatherWindDirection() | Gets the current Wind Gust direction (see OpenWeatherMap information for how to use this value). |
 | float GetWeatherWindGust() | Gets the current Wind Gust speed in the requested Scale. |
 | bool GetWebAvailable() | Returns **true** if the AskForWeb function is available for use. |
