@@ -119,7 +119,23 @@ Functions available for communication:
 | getAngle(uint16_t Angle, uint8_t Width, uint8_t Height, uint8_t &X, uint8_t &Y) | Give it an Angle, Width and Height, X and Y will have those values, useful for Analog displays |
 | CurrentSteps() | Will return a uint32_t value of the current steps taken.  Do not access the SBMA directly as the base code now keeps a recording of them prior to restarts and each minute, so reboots don't lose progress. |
 | YesterdaySteps() | Will return a uint32_t value of yesterday's steps taken. |
-| CurrentSteps(bool Yesterday = false) | Returns a formatted string of CurrentSteps optionally **{true}** with (Yesterday's) steps added.
+| CurrentSteps(bool Yesterday = false) | Returns a formatted string of CurrentSteps optionally **{true}** with (Yesterday's) steps added. |
+| void SetWeatherScale(bool Metric) | Set temperature & wind scale being used, **{Fahrenheit}** or Metric.  Weather settings are not specific to any WatchFace. |
+| bool IsWeatherAvailable() | Returns **true** if there is available Weather Data. |
+| int GetWeatherTemperature() | Gets the current Temperature in the requested Scale. |
+| int GetWeatherTemperatureFeelsLike() | Gets the current "Feels Like" Temperature in the requested Scale. |
+| int GetWeatherID() | Gets the OpenWeatherMap Condition ID. |
+| String GetWeatherIcon() | Gets the OpenWeatherMap Condition Icon String ID. |
+| uint8_t GetWeatherHumidity() | Gets the OpenWeatherMap Humidity percentage. |
+| float GetWeatherWindSpeed() | Gets the current wind speed in the requested Scale. |
+| float GetWeatherWindDirection() | Gets the current Wind Gust direction (see OpenWeatherMap information for how to use this value). |
+| float GetWeatherWindGust() | Gets the current wind gust speed in the requested Scale. |
+| bool GetWebAvailable() | Returns **true** if the AskForWeb function is available for use. |
+| bool GetWebReady() | Returns **true** if data has come back. |
+| int GetWebResponse() | Returns the HTTP response code from the last AskForWeb response. |
+| String GetWebData() | Returns the HTTP response data from the last AskForWeb response. |
+| bool AskForWeb(String website, uint8_t Timeout) | Ask website for data, allowing Timeout in seconds. |
+
 
 ***#*** Functions specific to AddOns:
 
