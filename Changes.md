@@ -140,6 +140,39 @@
 - **ADD:**  Added "Countdown Settings" where there is a Once/Repeat and the Tone length moved from "Countdown Timer", see **Usage** for more information.
 - **ADD:**  Added bool InsertNeedAwake(bool GoingAsleep) in 3 places on the single loop for usage to run code along with stopping Watchy from Deep Sleep.
 
-**Version 1.4.6:**
+**Version 1.4.6A:**
 - **FIX:**  Fixed UTC update not confusing minute changes when Countdown or Elapsed Timer is/are in use.
 - **ADD:**  Added a function for override use called ClockSeconds(), updates the WatchTime.UTC and WatchTime.Local with current time.
+
+**Version 1.4.7:**
+- **FIX:**  Redesign main loop to be single passthrough instead of multiple, reduced code and made stable.
+- **ADD:**  Added Inverts for Design to allow Status and Battery to be inverted from current ForeColor.
+- **ADD:**  Added (and fixed the default Design) GSR_AutoFore which replaces the GxEPD_BLACK on Design elements, allowing Design elements to follow current ForeColor automatically.
+- **ADD:**  OpenWeatherMap functionality, OTA Website will offer a spot to enter your API Key.  The API Key is required for StartWeather() to work.
+- **ADD:**  InsertDrawWeather(bool Small) is called when drawWeather() is called during WatchFace display.
+- **FIX:**  Menu Overrides only works for the WatchFaces that ask for it, others do not.
+- **FIX:**  WiFi Indicator will stay active until all requests are finished.
+- **FIX:**  Fix Display Update during heavy timer and Edit RTC usage (1 second enforcement per update).  Moving through elements will be 1 second apart.
+- **FIX:**  Display Sleeping incorrectly ignoring MENU state and not updating time onscreen.
+- **FIX:**  SmallRTC2.2 replaces "next minute" from DS3231M with atMinuteWake with specific minute to avoid "it doesn't feel like minute counting".
+- **FIX:**  Fixed Interrupt handling for button presses, should now respond better than it was with less overhead.
+- **FIX:**  Internet connectivity speed increased greatly, IP address should happen within a second of connection.
+- **FIX:**  TimeZone, NTP and Weather should all collect data within a few seconds instead of close to 15 seconds.
+- **FIX:**  Screen Blanking not honoring current state with new smaller loop, now properly behaves.  Button presses while screen is blanked, just turns it on.
+- **FIX:**  Reduced code segments and unnecessary tests in a variety of places (more will come later).
+- **ADD:**  Built in Geo-Locate code, will now be used in conjunction with OWM to get Geo-Location weather data (OWM 2.5+).
+- **ADD:**  Threaded AskForWeb function with companion functions to ask a website for returned data.  Used with StartWeather() for both Geo-Locate & OWM.
+- **ADD:**  Functions to retrieve Weather data and to tell if it has been ever received.
+- **ADD:**  Functions to allow WatchFace AddOns to be included easily with a simple \#include in GSR.ino allowing collections up to 32 WatchFaces.
+- **FIX:**  Fixed system debounce for buttons to avoid repeated presses.
+- **FIX:**  BUTTON MIXING is no longer BETA.
+- **FIX:**  Bitmap and SleepBitmap to no longer follow the ForeGround color, will always use GxEPD_WHITE (Fore) and GxEPD_BLACK (Back).
+- **ADD:**  Menuing system now includes a cursor to show position and offers toggles for certain options (White is on, Black is off in some cases).
+- **FIX:**  Threaded Alarm & Haptic Feedback system fixed to reduce interference with Watchy operation.  Reboots cause Haptic feedback.
+- **ADD:**  Step Counter now is stored each minute to NVS, so upon a reboot, progress shouldn't be lost.
+- **ADD:**  NTP and Weather can now wake the Watchy on interval while Screen Blanking is active, to run their respective requests.
+- **FIX:**  Included current PinMode setup before DeepSleep.
+- **FIX:**  Cleaned up DeepSleep function, so that less work is done.
+- **FIX:**  InsertNeedAwake is only in 1 place in the main loop to reduce code execution per loop.
+- **FIX:**  WiFi requests are terminated if WatchFace is changed during use to avoid cross-contamination between WatchFaces.
+- **FIX:**  Default Design style for Watchy_GSR is now used in initWatchFaceStyle to avoid accidental WatchFaces having no Design elements and winding up with a blank screen with no fonts.
