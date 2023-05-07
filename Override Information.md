@@ -75,9 +75,9 @@ Functions for inserting extra code in places.
 
 | Function Name | Usage |
 | ------------- | --------------------------------- |
-| InsertPost() | This Function offers a post "boot" insert, so you can make changes after settings are loaded. |
+| ***!*** InsertPost() | This Function offers a post "boot" insert, so you can make changes after settings are loaded. |
 | InsertNTPServer() | Use this to return "your favorite NTP Server". See **Version 1.4.3 Additions** below. |
-| InsertDefaults() | This Function is done at the end of setupDefaults(), so you can add your own defaults. |
+| ***!*** InsertDefaults() | This Function is done at the end of setupDefaults(), so you can add your own defaults. |
 | OverrideBitmap() | Allows you to replace the drawing of this bitmap with either your own or nothing at all, send `false` on return to tell it not to draw the Design.Face.Bitmap. |
 | InsertOnMinute() | This Function is called once the Clock has been updated to the new minute but before the screen is drawn. |
 | InsertWiFi() | This Function is called repeatedly in a loop only *IF* WiFi has been enabled and connected, only use this if you asked for it. |
@@ -94,6 +94,7 @@ Functions available for communication:
 
 | Function Name | Usage |
 | ------------- | --------------------------------- |
+| CurrentStyleID() | Returns the current WatchFace StyleID (uint8_t) for use in functions that don't give it. |
 | handleButtonPress(uint8_t Pressed) | Accepts Switch # from 1 to 4, can "fake" a button press. |
 | getButtonPins() | Returns the current pressed button or buttons (see **BUTTON MIXING** below). |
 | CheckButtons() | Sets the Button pressed to 0 (none) 1=MENU, 2=BACK, 3=UP, 4=DOWN (or a combination) for the switch(s) pressed at the moment, observes button debounce and button mixing  See **BUTTON MIXING** below. This function isn't necessary to be called unless overriding. |
@@ -135,23 +136,21 @@ Functions available for communication:
 | int GetWebResponse() | Returns the HTTP response code from the last AskForWeb response. |
 | String GetWebData() | Returns the HTTP response data from the last AskForWeb response. |
 | bool AskForWeb(String website, uint8_t Timeout) | Ask website for data, allowing Timeout in seconds. |
+| String CleanJSON(JSONVAR& value) | Can be used instead of JSON.stringify with the same data to retrieve a cleaned (no quotes and trimmed) String. |\
 
-
-***#*** Functions specific to AddOns:
+***#*** Required functions specific to AddOns:
 
 | Function Name | Usage |
 | ------------- | --------------------------------- |
 | RegisterWatchFaces() | This is used by the AddOn to add it's Watchfaces to the list, currently only 32 Watch Styles are available. |
-| initAddOn(this) | This is the function within the Constructor of the AddOn class that registers the AddOn class to be called up to RegisterWatchFaces().  Do not edit the function in the AddOn. |
+| initAddOn(this) | This is the function within the Constructor of the AddOn class that registers the AddOn class to be called up to RegisterWatchFaces().  Except for the class name, do not edit the function in the AddOn. |
 
 
 **NOTES ON WiFi**
 
-If you plan to use WiFi, remember, users will want to actually keep using the Watchy_GSR underneath while you're using WiFi, so while it is nice to pack everything in at once, the `InsertWiFi()` function is repeatedly called until you tell it you're done by saying `EndWiFi()`, you may see another `InsertWiFi()` after doing so, just be sure to ignore any `InsertWiFi()` calls you didn't ask for.
+If you plan to use WiFi, remember, users will want to actually keep using the Watchy_GSR underneath while you're using WiFi, so while it is nice to pack everything in at once, the `InsertWiFi()` function is repeatedly called until you tell it you're done by saying `EndWiFi()`.
 
-Breaking up your WiFi functions so that they're only done in parts is best.  Anything you have to wait for, make an int that tells you where you are in your work and when `InsertWiFi()` returns, continue where you left off.  When you're finished, make sure you `EndWiFi()` and make note you finished on your end by zeroing your int.
-
-Recommend an int variable being set to 1 when you `AskForWiFi()`, then when `InsertWiFi()` is called, you do part of the work, ++ the int, when it returns again, repeat until you're finished.  When you finish, call `EndWiFi()` and set your int to 0.  When you receive an `InsertWiFiEnd()`, set your int to 0, this way, your code will always work properly.  You can even test in `InsertOnMinute()` if your int is 0 before commencing so you don't try twice.  Only `AskForWiFi()` once and only call `EndWiFi()` once or any other operation using WiFi may be cancelled.
+Breaking up your WiFi functions so that they're only done in parts is best.  Anything you have to wait for, make an int that tells you where you are in your work and when `InsertWiFi()` returns, continue where you left off.  Recommend an int variable being set to 1 when you `AskForWiFi()`, then when `InsertWiFi()` is called, you do part of the work, ++ the int and exit the function, when `InsertWiFi()` returns again, repeat until you're finished.  When you finish, call `EndWiFi()`.  When you receive an `InsertWiFiEnd()`, set your int to 0 after cleaning up anything you need to, this way, your code will always work properly.  You can even test in `InsertOnMinute()` if your int is 0 before commencing so you don't try twice.  `AskForWiFi()` and `EndWiFi()` will only work once per WatchFace, if the WatchFace is changed mid-WiFi use, `EndWiFi()` will be called between the switching to the new WatchFace.
 
 | TIME Structure | Contents |
 | -------------------- | ------------------ |
