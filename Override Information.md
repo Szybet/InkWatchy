@@ -130,13 +130,13 @@ Functions available for communication:
 | uint8_t GetWeatherHumidity() | Gets the OpenWeatherMap Humidity percentage. |
 | float GetWeatherWindSpeed() | Gets the current wind speed in the requested Scale. |
 | float GetWeatherWindDirection() | Gets the current Wind Gust direction (see OpenWeatherMap information for how to use this value). |
-| float GetWeatherWindGust() | Gets the current wind gust speed in the requested Scale. |
+| float GetWeatherWindGust() | Gets the current Wind Gust speed in the requested Scale. |
 | bool GetWebAvailable() | Returns **true** if the AskForWeb function is available for use. |
 | bool GetWebReady() | Returns **true** if data has come back. |
 | int GetWebResponse() | Returns the HTTP response code from the last AskForWeb response. |
 | String GetWebData() | Returns the HTTP response data from the last AskForWeb response. |
 | bool AskForWeb(String website, uint8_t Timeout) | Ask website for data, allowing Timeout in seconds. |
-| String CleanJSON(JSONVAR& value) | Can be used instead of JSON.stringify with the same data to retrieve a cleaned (no quotes and trimmed) String. |\
+| String CleanJSON(JSONVar& value) | Can be used instead of JSON.stringify with the same data to retrieve a cleaned (no quotes and trimmed) String. |\
 
 ***#*** Required functions specific to AddOns:
 
