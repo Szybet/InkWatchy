@@ -1,82 +1,12 @@
-// Place all of your data and variables here.
-
-//RTC_DATA_ATTR uint8_t MyStyle;  // Remember RTC_DATA_ATTR for your variables so they don't get wiped on deep sleep.
 RTC_DATA_ATTR int MyBallsyFace;	// Watchface ID #.
-int MyBallsyFaceState = 0;
-unsigned long MyBallsyFacePaws;
 
 class GSRWatchFaceBallsy : public WatchyGSR {
-/*
- * Keep your functions inside the class, but at the bottom to avoid confusion.
- * Be sure to visit https://github.com/GuruSR/Watchy_GSR/blob/main/Override%20Information.md for full information on how to override
- * including functions that are available to your override to enhance functionality.
-*/
     public:
     GSRWatchFaceBallsy() : WatchyGSR() { initAddOn(this); } // *** DO NOT EDIT THE CONTENTS OF THIS FUNCTION ***
 
-/*
-    void InsertPost(){
-    };
-*/
-
-/*
-    String InsertNTPServer() {
-    };
-*/
-
-/*
-    void InsertDefaults(){
-    };
-*/
-
-/*
-    bool OverrideBitmap(){
-      return false;
-    };
-*/
-
-/*
-    void InsertOnMinute(){
-    };
-*/
-
-/*
-    void InsertWiFi(){
-       switch (MyFaceState){
-         case 0:
-           if (!Geo.beginGeoFromWeb()) MyFaceState = 2;
-           MyFacePaws = millis() + 2000;  // 2 second wait.
-           MyFaceState++;
-           break;
-         case 1:
-           if (Geo.gotGeoFromWeb()) MyFaceState = 3;
-           else if (millis() > MyFacePaws) MyFaceState++;
-           break;
-         case 2:
-           Geo.endGeoFromWeb();
-           MyFaceState = 0;
-           endWiFi();
-           break;
-         case 3:
-           Geo.endGeoFromWeb();
-           display.setCursor(0,32);
-           display.println(Geo.City);
-           display.println(Geo.Longitude);
-           display.println(Geo.Latitude);
-           display.display(true);
-           // Do the next stuff for your app here.
-           MyFaceState = 0;
-           endWiFi();
-       }
-    };
-*/
-
-/*
-    void InsertWiFiEnding(){
-    };
-*/
-
-// The next 3 functions allow you to add your own WatchFaces, there are examples that do work below.
+    void RegisterWatchFaces(){  // Add WatchStyles here (this is done pre-boot, post init)
+        MyBallsyFace = AddWatchStyle("Ballsy",this);
+   };
 
     void InsertInitWatchStyle(uint8_t StyleID){
       if (StyleID == MyBallsyFace){ // Ballsy
@@ -144,47 +74,8 @@ class GSRWatchFaceBallsy : public WatchyGSR {
                 if (WatchTime.Local.Hour < 12) display.fillCircle(X + 21, Y + 21, 3, BackColor());
             }
             if (NoMenu()) drawYear();
-            drawWeather();
       }
     };
-
-// Below is the Weather drawing called by drawWeather, do your weather drawing work here.
-/*
-    void InsertDrawWeather(uint8_t StyleID){
-    };
-*/
-
-/*
-    bool InsertHandlePressed(uint8_t SwitchNumber, bool &Haptic, bool &Refresh) {
-      switch (SwitchNumber){
-        case 2: //Back
-          return true;  // Respond with "I used a button", so the WatchyGSR knows you actually did something with a button.
-          break;
-        case 3: //Up
-          MyFaceState = 0;
-          AskForWiFi();
-          Haptic = true;  // Cause Haptic feedback if set to true.
-          Refresh = true; // Cause the screen to be refreshed (redrawn).
-          return true;
-          break;
-        case 4: //Down
-          display.setCursor(0,16);
-          display.print("Down");
-          display.display(true);
-          return true;
-      }
-      return false;
-    };
-*/
-
-/*
-    bool OverrideSleepBitmap(){
-   };
-*/
-
-    void RegisterWatchFaces(){	// Add WatchStyles here (this is done pre-boot, post init)
-        MyBallsyFace = AddWatchStyle("Ballsy",this);
-   };
 };
 
 GSRWatchFaceBallsy MyBallsy;
