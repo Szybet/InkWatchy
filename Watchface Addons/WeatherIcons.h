@@ -9,7 +9,7 @@ const unsigned char WeatherIcon_Celsius [] PROGMEM = {
     0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x7f, 0xc0, 0x00, 0x00, 0x3f, 0xc0
 };
 // 'Celcius-Small', 13x10px
-const unsigned char WeatherIcon_Celcius_Small [] PROGMEM = {
+const unsigned char WeatherIcon_Celsius_Small [] PROGMEM = {
     0x78, 0x78, 0x84, 0x80, 0x84, 0x80, 0x84, 0x80, 0x84, 0x80, 0x78, 0x80, 0x00, 0x80, 0x00, 0x80, 
     0x00, 0x80, 0x00, 0x78
 };
@@ -212,6 +212,7 @@ const unsigned char WeatherIcon_Thunderstorm_Small [] PROGMEM = {
 };
 
 const unsigned char* getWeatherIcon(uint16_t Condition, bool Small = false);
+const unsigned char* getTemperatureScaleIcon(bool Metric, bool Small = false);
 
 const unsigned char* getWeatherIcon(uint16_t Condition, bool Small){
 if(Condition > 801){ return (Small ? WeatherIcon_Cloudy_Small : WeatherIcon_Cloudy); // Cloudy
@@ -223,4 +224,6 @@ if(Condition > 801){ return (Small ? WeatherIcon_Cloudy_Small : WeatherIcon_Clou
     }else if(Condition >=300){ return (Small ? WeatherIcon_Drizzle_Small : WeatherIcon_Drizzle); // Drizzle
     }else if(Condition >=200){ return (Small ? WeatherIcon_Thunderstorm_Small : WeatherIcon_Thunderstorm); } // Thunderstorm
     return nullptr;
-}
+};
+
+const unsigned char* getTemperatureScaleIcon(bool Metric, bool Small) { if (Metric) return (Small ? WeatherIcon_Celsius_Small : WeatherIcon_Celsius); else (Small ? WeatherIcon_Fahrenheit_Small : WeatherIcon_Fahrenheit); };
