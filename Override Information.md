@@ -100,6 +100,7 @@ Functions available for communication:
 | CheckButtons() | Sets the Button pressed to 0 (none) 1=MENU, 2=BACK, 3=UP, 4=DOWN (or a combination) for the switch(s) pressed at the moment, observes button debounce and button mixing  See **BUTTON MIXING** below. This function isn't necessary to be called unless overriding. |
 | OverrideDefaultMenu(bool Override) | Set whether or not the default menu is overridden for the *CURRENT* WatchFace (true/**{false}**).  Use this in InsertInitWatchStyle(). This setting defaults to **{false}** when not called. |
 | WantWeather(bool Wanting) | Set to true (defaults to **{false}** when not called) to request wanting Weather Updates for the *CURRENT* WatchFace, use in InsertInitWatchStyle(). |
+| NoStatus(bool NoStats) | Set to true (defaults to **{false}** when not called) to stop the drawChargeMe and drawStatus functions from being called after InsertDrawWatchStyle(). |
 | ShowDefaultMenu() | Will show the Default Menu when called only if the menu is being overridden and not already open. |
 | float getBatteryVoltage() | Returns a cleaned battery voltage. |
 | IsDark() | Is the screen currently black (Screen Off has triggered from settings). |
