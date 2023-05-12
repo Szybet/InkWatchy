@@ -31,7 +31,7 @@ This Watchy "face" contains the following heiarchy of options and settings:
 |            | Weather Interval  | (Only visible if Watchface asks for Weather) Set the interval between Weather requests. |
 |            | Watchy Connect    | Used to give the WiFi "X" credentials to Watchy.  "X" WiFi is the last "good" connected WiFi. "BACK" to immediately exit. |
 |            | OTA Update        | Used with Arduino (and platformio) to upload a compile to Watchy via WiFi.  (ESCAPE by holding "BACK" for 10 seconds.) |
-|            | OTA Website       | Website offers Backup & Restore of Settings, WiFi AP Settings and WiFi OTA upload of a bin file.  (ESCAPE by holding "BACK" for 10 seconds.) |
+|            | OTA Website       | Website offers Backup & Restore of Settings, WiFi AP Settings and WiFi OTA upload of a bin file and OpenWeatherMap API Key setting.  (ESCAPE by holding "BACK" for 10 seconds.) |
 |**Troubleshoot** | Reset Screen     | Reset screen if artifacting or ghosting is happening. |
 |                 | Watchy Reboot    | Reboot the Watchy in the event something stops working. |
 |                 | Edit RTC         | Detect drift in RTC clock (requires 2 edits one to start, one at battery low level). Excessive drift enters non-RTC mode. [^1] |
