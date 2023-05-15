@@ -155,7 +155,6 @@
 - **FIX:**  Fix Display Update during heavy timer and Edit RTC usage (1 second enforcement per update).  Moving through elements will be 1 second apart.
 - **FIX:**  Display Sleeping incorrectly ignoring MENU state and not updating time onscreen.
 - **FIX:**  SmallRTC2.2 replaces "next minute" from DS3231M with atMinuteWake with specific minute to avoid "it doesn't feel like minute counting".
-- **FIX:**  Fixed Interrupt handling for button presses, should now respond better than it was with less overhead.
 - **FIX:**  Internet connectivity speed increased greatly, IP address should happen within a second of connection.
 - **FIX:**  TimeZone, NTP and Weather should all collect data within a few seconds instead of close to 15 seconds.
 - **FIX:**  Screen Blanking not honoring current state with new smaller loop, now properly behaves.  Button presses while screen is blanked, just turns it on.
@@ -163,11 +162,12 @@
 - **ADD:**  Built in Geo-Locate code, will now be used in conjunction with OWM to get Geo-Location weather data (OWM 2.5+).
 - **ADD:**  Threaded AskForWeb function with companion functions to ask a website for returned data.  Used with StartWeather() for both Geo-Locate & OWM.
 - **ADD:**  Functions to retrieve Weather data and to tell if it has been ever received.
-- **ADD:**  Functions to allow WatchFace AddOns to be included easily with a simple \#include in GSR.ino allowing collections up to 32 WatchFaces.
+- **ADD:**  Functions to allow WatchFace AddOns to be included easily with a simple \#include in GSR.ino allowing collections up to 96 WatchFaces.
 - **FIX:**  Fixed system debounce for buttons to avoid repeated presses.
 - **FIX:**  BUTTON MIXING is no longer BETA.
 - **FIX:**  Bitmap and SleepBitmap to no longer follow the ForeGround color, will always use GxEPD_WHITE (Fore) and GxEPD_BLACK (Back).
 - **ADD:**  Menuing system now includes a cursor to show position and offers toggles for certain options (White is on, Black is off in some cases).
+- **ADD:**  NTP Auto Sync, allows the Watchy_GSR to wake the Watchy up for an NTP Sync.  NTP Syncs do *NOT* work when Drift Calculation is in progress.
 - **FIX:**  Threaded Alarm & Haptic Feedback system fixed to reduce interference with Watchy operation.  Reboots cause Haptic feedback.
 - **ADD:**  Step Counter now is stored each minute to NVS, so upon a reboot, progress shouldn't be lost.
 - **ADD:**  NTP and Weather can now wake the Watchy on interval while Screen Blanking is active, to run their respective requests.
@@ -176,3 +176,4 @@
 - **FIX:**  InsertNeedAwake is only in 1 place in the main loop to reduce code execution per loop.
 - **FIX:**  WiFi requests are terminated if WatchFace is changed during use to avoid cross-contamination between WatchFaces.
 - **FIX:**  Default Design style for Watchy_GSR is now used in initWatchFaceStyle to avoid accidental WatchFaces having no Design elements and winding up with a blank screen with no fonts.
+- **FIX:**  Removed attachInterrupts, they were responsible for causing the brownouts by causing large amounts of interrupts, even when using RISING as a means to detect the button presses.
