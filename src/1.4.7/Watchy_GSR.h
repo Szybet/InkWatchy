@@ -32,7 +32,7 @@ class WatchyGSR{
         static SmallRTC SRTC;
         static SmallNTP SNTP;
         static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-        static constexpr const char* Build = "1.4.7";
+        static constexpr const char* Build = "1.4.7A";
         enum DesOps {dSTATIC, dLEFT, dRIGHT, dCENTER};
 
     public:
