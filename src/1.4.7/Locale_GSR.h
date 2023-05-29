@@ -304,7 +304,15 @@ class LocaleGSR {
                    case 121:
                       return "Drift Managment";
                    case 122:
+                      return "Weather Settings";
+                   case 123:
                       return "Weather Interval";
+                   case 124:
+                      return "Weather Scale";
+                   case 125:
+                      return "Metric";
+                   case 126:
+                      return "Imperial";
                 }
             }
         }

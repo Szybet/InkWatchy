@@ -57,6 +57,7 @@ class WatchyGSR{
         uint8_t getButtonPins();
         void drawChargeMe(bool Dark = false);
         void drawStatus();
+        virtual bool IsBatteryHidden() final;
         static void VibeTo(bool Mode);
         virtual String MakeTime(int Hour, int Minutes, bool& Alarm) final; // For Hour | 32 means no AM/PM, | 64 means add padding to <10 hour.
         virtual String MakeHour(uint8_t Hour) final;
@@ -112,6 +113,7 @@ class WatchyGSR{
         virtual int GetWeatherTemperature() final;
         virtual int GetWeatherTemperatureFeelsLike() final;
         virtual void SetWeatherScale(bool Metric) final;
+        virtual bool IsMetric() final;
         virtual int GetWeatherID() final;
         virtual String GetWeatherIcon() final;
         virtual uint8_t GetWeatherHumidity() final;
@@ -123,7 +125,7 @@ class WatchyGSR{
         virtual int GetWebResponse() final;
         virtual String GetWebData() final;
         virtual bool AskForWeb(String URL, uint8_t Timeout = 5) final;
-        virtual String CleanJSON(const JSONVar& value) final;
+        virtual String CleanString(String Clean) final;
         virtual void initWatchFaceStyle() final;
         virtual void drawWatchFaceStyle() final;
         virtual void initAddOn(WatchyGSR *NewAddon) final;

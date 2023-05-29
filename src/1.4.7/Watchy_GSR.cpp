@@ -476,6 +476,7 @@ void WatchyGSR::init(String datetime){
               if (currentWiFi() == WL_CONNECTED && NTPData.State == 0 && WeatherData.State == 0 && !OTAUpdate && !WatchyAPOn) { if (WatchStyles.AddOn[Options.WatchFaceStyle] == nullptr) InsertWiFi(); else WatchStyles.AddOn[Options.WatchFaceStyle]->InsertWiFi(); }
 
 /* NTP */
+
               if (Battery.Last > Battery.MinLevel && WatchTime.UTC_RAW >= WeatherData.LastCall) StartWeather();
               if (NTPData.State && WeatherData.State < 2 && !WatchyAPOn && !OTAUpdate){
                 if (NTPData.Pause == 0) ProcessNTP(); else NTPData.Pause--;
@@ -487,6 +488,7 @@ void WatchyGSR::init(String datetime){
 
 /* Weather */
               if (WeatherData.State && NTPData.State < 2 && !WatchyAPOn && !OTAUpdate){
+
                 if (WeatherData.Pause == 0) ProcessWeather(); else WeatherData.Pause--;
                 if (WatchTime.NewMinute){
                   WeatherData.Wait++;
@@ -927,7 +929,9 @@ void WatchyGSR::drawMenu(){
             O = LGSR.GetID(Options.LanguageID,(Menu.SubItem != 4 ? 47 : 107));
             break;
         case GSR_MENU_WEAT: // Weather Interval
-            O = LGSR.GetID(Options.LanguageID,122);
+            if (Menu.SubItem == 0) O = LGSR.GetID(Options.LanguageID,122);
+            else if (Menu.SubItem < 3) O = LGSR.GetID(Options.LanguageID,123);
+            else O = LGSR.GetID(Options.LanguageID,124);
             break;
         case GSR_MENU_WIFI:
             O = LGSR.GetID(Options.LanguageID,48);
@@ -1158,7 +1162,7 @@ void WatchyGSR::drawMenu(){
     }else if (Menu.Item == GSR_MENU_WEAT){ // Weather Interval
         /* DO WEATHER TIME HERE */
         if (Menu.SubItem == 0) O = LGSR.GetID(Options.LanguageID,67);
-        else {
+        else if (Menu.SubItem > 0 && Menu.SubItem < 3){
                 D = WeatherData.Interval * 300;
                 L = D/3600; O = ""; V=String(L); B = V.length();
                 Updates.Indexing.Offset = ((Menu.SubItem == 1 || L == 0) ? 0 : 2 + B);
@@ -1166,7 +1170,7 @@ void WatchyGSR::drawMenu(){
                 Updates.Indexing.Active = true;
                 if (L) O=MakeHour(L) + "H:";
                 D-=(L*3600); O+=MakeMinutes(D/60) + "M";
-        }
+        }else O = LGSR.GetID(Options.LanguageID,(IsMetric() ? 125 : 126));
     }else if (Menu.Item == GSR_MENU_WIFI){ // Reset Steps.
         if (Menu.SubItem == 0){
             O = LGSR.GetID(Options.LanguageID,97);
@@ -1333,7 +1337,7 @@ void WatchyGSR::deepSleep(){
     BatOk = (Battery.Last == 0 || Battery.Last > Battery.LowLevel);
     BT = (Options.SleepStyle == 2 && WatchTime.BedTime);
     B = (((Options.SleepStyle == 1 || (Options.SleepStyle > 2 && Options.SleepStyle != 4)) || BT) && BatOk);
-    if (Battery.Direction == 1) N = (WatchTime.UTC.Minute - (WatchTime.UTC.Minute%5) + 5); else N = (WatchTime.UTC.Minute < 30 ? 30 : 60);
+    if (Battery.Direction == 1 || Battery.State == 3) N = (WatchTime.UTC.Minute - (WatchTime.UTC.Minute % 5) + 5) % 60; else N = (WatchTime.UTC.Minute < 30 ? 30 : 60);
     if (WatchTime.NextAlarm != 99){ if (Alarms_Minutes[WatchTime.NextAlarm] > WatchTime.Local.Minute && Alarms_Minutes[WatchTime.NextAlarm] < N) N = Alarms_Minutes[WatchTime.NextAlarm]; }
     if (TimerDown.Active){
       CT=localtime(&TimerDown.StopAt);
@@ -1362,7 +1366,7 @@ void WatchyGSR::deepSleep(){
 
 void WatchyGSR::GoDark(bool DeepSleeping){
   if (Options.SleepStyle == 0 || (Options.SleepStyle == 2 && !WatchTime.BedTime) || GuiMode == GSR_MENUON) return;
-  if ((Updates.Drawn || Battery.Direction != Battery.DarkDirection || Battery.State != Battery.DarkDirection || !Darkness.Went) && (DeepSleeping || !Showing()))
+  if ((Updates.Drawn || Battery.Direction != Battery.DarkDirection || Battery.State != Battery.DarkState || !Darkness.Went) && (DeepSleeping || !Showing()))
   {
     Darkness.Went=true;
     Darkness.Woke=false;
@@ -1581,14 +1585,14 @@ void WatchyGSR::drawStatus(){
   uint8_t X = Design.Status.WIFIx;
   uint16_t C = (Design.Status.Inverted ? BackColor() : ForeColor());
   bool Ok = true;
+  display.setFont(&Bronova_Regular13pt7b);
+  display.setTextColor(C);
   if (WatchyStatus > ""){
       Ok = false;
-      display.setFont(&Bronova_Regular13pt7b);
       if (WatchyStatus.startsWith("WiFi")){
           display.drawBitmap(X, Design.Status.WIFIy - 18, iWiFi, 19, 19, C);
           if (WatchyStatus.length() > 4){
               display.setCursor(X + 17, Design.Status.WIFIy);
-              display.setTextColor(C);
               display.print(WatchyStatus.substring(4));
           }
       }
@@ -1600,18 +1604,18 @@ void WatchyGSR::drawStatus(){
       else if (WatchyStatus == "NC")  display.drawBitmap(X, Design.Status.WIFIy - 18, iNoClock, 19, 19, C);
       else if (Alarms_Times[1] > 0 || Alarms_Times[2] > 0 || Alarms_Times[3] > 0 || Alarms_Times[4] > 0 || TimerDown.ToneLeft > 0) Ok = true;
       else{
-          display.setTextColor(C);
           display.setCursor(X, Design.Status.WIFIy);
           display.print(WatchyStatus);
       }
   }
+
   if (Ok){
     if (TimerDown.ToneLeft > 0) { display.drawBitmap(X, Design.Status.WIFIy - 15, Tone_C, 12, 14, C); X += 13; Ok = false; }
     if (Alarms_Times[0] > 0) { display.drawBitmap(X, Design.Status.WIFIy - 15, Tone_1, 12, 14, C); X += 13; Ok = false; }
     if (Alarms_Times[1] > 0) { display.drawBitmap(X, Design.Status.WIFIy - 15, Tone_2, 12, 14, C); X += 13; Ok = false; }
     if (Alarms_Times[2] > 0) { display.drawBitmap(X, Design.Status.WIFIy - 15, Tone_3, 12, 14, C); X += 13; Ok = false; }
     if (Alarms_Times[3] > 0) { display.drawBitmap(X, Design.Status.WIFIy - 15, Tone_4, 12, 14, C); Ok = false; }
-    if (Ok && WatchStyles.WantWeather[Options.WatchFaceStyle]) drawWeather(true);
+    if (Ok && WeatherData.Ready && WatchStyles.WantWeather[Options.WatchFaceStyle]) drawWeather(true);
   }
 }
 
@@ -1624,6 +1628,8 @@ void WatchyGSR::setStatus(String Status){
       UpdateDisp|=Showing();
     }
 }
+
+bool WatchyGSR::IsBatteryHidden() { return (Battery.State == 0); }
 
 void WatchyGSR::VibeTo(bool Mode){
     if (Mode != VibeMode){
@@ -1922,7 +1928,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
                       StartNTP(NTPData.UpdateUTC, NTPData.TimeZone);
                       SetTurbo();
                   }
-              }else if (Menu.Item == GSR_MENU_WEAT && Menu.SubItem < 2){  // Weather
+              }else if (Menu.Item == GSR_MENU_WEAT && Menu.SubItem < 3){  // Weather
                   if (Menu.SubItem == 0) Menu.SubItem = 2; else Menu.SubItem++;
                   DoHaptic = true;
                   UpdateDisp = true;  // Quick Update.
@@ -2147,7 +2153,7 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               SetTurbo();
           }else if (Menu.Item == GSR_MENU_WEAT && Menu.SubItem > 0){  // Weather
               Menu.SubItem--;
-              if (((WeatherData.Interval * 300)/3600) == 0) Menu.SubItem--;
+              if (Menu.SubItem == 1 && ((WeatherData.Interval * 300)/3600) == 0) Menu.SubItem--;
               DoHaptic = true;
               UpdateDisp = true;  // Quick Update.
               SetTurbo();
@@ -2434,9 +2440,12 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               UpdateDisp = true;  // Quick Update.
               SetTurbo();
           }else if (Menu.Item == GSR_MENU_WEAT && Menu.SubItem > 0){  // Weather
-              I = (Menu.SubItem == 1 ? 12 : 1);
-              WeatherData.Interval = roller(WeatherData.Interval + I, 1, 144);
-              WeatherData.LastCall = WatchTime.UTC_RAW - (WatchTime.UTC_RAW % 60) + (WeatherData.Interval * 300); // 15 minutes.
+              if (Menu.SubItem == 3) SetWeatherScale(!IsMetric());
+              else {
+                  I = (Menu.SubItem == 1 ? 12 : 1);
+                  WeatherData.Interval = roller(WeatherData.Interval + I, 1, 144);
+                  WeatherData.LastCall = WatchTime.UTC_RAW - (WatchTime.UTC_RAW % 60) + (WeatherData.Interval * 300); // 15 minutes.
+              }
               Options.NeedsSaving = true;
               DoHaptic = true;
               UpdateDisp = true;  // Quick Update.
@@ -2709,9 +2718,12 @@ void WatchyGSR::handleButtonPress(uint8_t Pressed){
               UpdateDisp = true;  // Quick Update.
               SetTurbo();
           }else if (Menu.Item == GSR_MENU_WEAT && Menu.SubItem > 0){  // Weather
-              I = (Menu.SubItem == 1 ? 12 : 1);
-              WeatherData.Interval = roller(WeatherData.Interval - I, 1, 144);
-              WeatherData.LastCall = WatchTime.UTC_RAW - (WatchTime.UTC_RAW % 60) + (WeatherData.Interval * 300); // 15 minutes.
+              if (Menu.SubItem == 3) SetWeatherScale(!IsMetric());
+              else {
+                  I = (Menu.SubItem == 1 ? 12 : 1);
+                  WeatherData.Interval = roller(WeatherData.Interval - I, 1, 144);
+                  WeatherData.LastCall = WatchTime.UTC_RAW - (WatchTime.UTC_RAW % 60) + (WeatherData.Interval * 300); // 15 minutes.
+              }
               Options.NeedsSaving = true;
               DoHaptic = true;
               UpdateDisp = true;  // Quick Update.
@@ -3277,7 +3289,7 @@ uint8_t WatchyGSR::getSWValue(bool SW1, bool SW2, bool SW3, bool SW4){
     return 0;
 }
 
-void WatchyGSR::AskForWiFi(){ if (!WatchStyles.AskForWiFi[Options.WatchFaceStyle]) { WatchStyles.AskForWiFi[Options.WatchFaceStyle] = true; GSRWiFi.Requests++; } }
+void WatchyGSR::AskForWiFi(){ WatchStyles.AskForWiFi[Options.WatchFaceStyle] = true; GSRWiFi.Requests++; }
 void WatchyGSR::endWiFi(){
     if (!WatchStyles.AskForWiFi[Options.WatchFaceStyle]) return;
     if (GSRWiFi.Requests - 1 <= 0){
@@ -3601,6 +3613,7 @@ String WatchyGSR::GetSettings(){
     // Version 130.
     I[J] = (getTXOffset(GSRWiFi.TransmitPower)); J++;
     K  = Options.BedTimeOrientation ? 1 : 0;
+    K |= WeatherData.Metric ? 2 : 0;
     I[J] = (K); J++;
     // Emd Version 130.
     // Version 131.
@@ -3711,7 +3724,7 @@ void WatchyGSR::StoreSettings(String FromUser){
          J++; if (L > J) Options.SleepEnd = constrain(O[J],0,23);
          if (NewV > 129){
             J++; if (L > J){ V = constrain(O[J],0,10); GSRWiFi.TransmitPower = RawWiFiTX[V]; }
-            J++; if (L > J){ V = O[J]; Options.BedTimeOrientation = (V & 1) ? true : false; }
+            J++; if (L > J){ V = O[J]; Options.BedTimeOrientation = (V & 1) ? true : false; WeatherData.Metric = (V & 2) ? true : false; }
          }
          if (NewV > 130){
             J++; if (L > J){ V = constrain(O[J],0,WatchStyles.Count - 1); Options.WatchFaceStyle = V; }
@@ -3960,6 +3973,7 @@ int WatchyGSR::GetWeatherTemperatureFeelsLike(){
   return T;
 }
 void WatchyGSR::SetWeatherScale(bool Metric) { WeatherData.Metric = Metric; }
+bool WatchyGSR::IsMetric() { return WeatherData.Metric; }
 int WatchyGSR::GetWeatherID() { return WeatherData.Weather.ID; }
 String WatchyGSR::GetWeatherIcon() { return WeatherData.Weather.Icon; }
 uint8_t WatchyGSR::GetWeatherHumidity() { return WeatherData.Weather.Humidity; }
@@ -3978,11 +3992,10 @@ bool WatchyGSR::AskForWeb(String website, uint8_t Timeout){
   return (GSRHandle != NULL);
 }
 
-String WatchyGSR::CleanJSON(const JSONVar& value){
-  String S = JSON.stringify(&value);
-  S.replace('"',' ');
-  S.trim();
-  return S;
+String WatchyGSR::CleanString(String Clean){
+  Clean.replace('"',' ');
+  Clean.trim();
+  return Clean;
 }
 
 void WatchyGSR::ProcessWeather(){
@@ -4046,8 +4059,8 @@ void WatchyGSR::ProcessWeather(){
         WeatherData.Pause = 0;
         payload = GetWebData();
         root = JSON.parse(payload);
-        T = CleanJSON(root["lat"]);
-        S = CleanJSON(root["lon"]);
+        T = CleanString(JSON.stringify(root["lat"]));
+        S = CleanString(JSON.stringify(root["lon"]));
         if ((S + T) != ""){
           WeatherData.State++;
           WeatherData.LastLon = S.toDouble();
@@ -4091,25 +4104,25 @@ void WatchyGSR::ProcessWeather(){
         WeatherData.Pause = 0;
         payload = GetWebData();
         root = JSON.parse(payload);
-        S = CleanJSON(root["cod"]);
+        S = CleanString(JSON.stringify(root["cod"]));
         int E = S.toInt();
         if (E == 401){ for(int I = 0; I < 32; I++) WeatherData.APIKey[I] = 0; Options.NeedsSaving = true; }
-        if (E == 200){
-            S = CleanJSON(root["main"]["temp"]);
+        else if (E == 200){
+            S = CleanString(JSON.stringify(root["main"]["temp"]));
             WeatherData.Weather.Temperature.Current = (S.toFloat()) - 273.15;
-            S = CleanJSON(root["main"]["feels_like"]);
+            S = CleanString(JSON.stringify(root["main"]["feels_like"]));
             WeatherData.Weather.Temperature.FeelsLike = (S.toFloat()) - 273.15;
-            S = CleanJSON(root["main"]["humidity"]);
+            S = CleanString(JSON.stringify(root["main"]["humidity"]));
             WeatherData.Weather.Humidity = uint8_t(S.toInt());
-            S = CleanJSON(root["weather"][0]["id"]);
+            S = CleanString(JSON.stringify(root["weather"][0]["id"]));
             WeatherData.Weather.ID = S.toFloat();
-            S = CleanJSON(root["weather"][0]["icon"]);
+            S = CleanString(JSON.stringify(root["weather"][0]["icon"]));
             strncpy(&WeatherData.Weather.Icon[0],S.c_str(),3);
-            S = CleanJSON(root["wind"]["speed"]);
+            S = CleanString(JSON.stringify(root["wind"]["speed"]));
             WeatherData.Weather.WindSpeed = S.toFloat();
-            S = CleanJSON(root["wind"]["gust"]);
+            S = CleanString(JSON.stringify(root["wind"]["gust"]));
             WeatherData.Weather.WindGust = S.toFloat();
-            S = CleanJSON(root["wind"]["deg"]);
+            S = CleanString(JSON.stringify(root["wind"]["deg"]));
             WeatherData.Weather.WindDirection = S.toInt();
             WeatherData.Ready = true;
         }
@@ -4187,7 +4200,7 @@ void WatchyGSR::WatchFaceStart(uint8_t NewFace){
     Options.WatchFaceStyle = NewFace;
     if (Options.WatchFaceStyle > WatchStyles.Count - 1) Options.WatchFaceStyle = 0;
     WatchStyles.AskForWiFi[Options.WatchFaceStyle] = false;
-    if (WatchStyles.AddOn[Options.WatchFaceStyle] == nullptr) initWatchFaceStyle(); else WatchStyles.AddOn[Options.WatchFaceStyle]->initWatchFaceStyle();
+    initWatchFaceStyle();
 }
 
 void WatchyGSR::WatchFaceEnd(){
@@ -4246,6 +4259,7 @@ void WatchyGSR::initWatchFaceStyle(){
   Design.Status.BatteryInverted = false;
    if (DefaultWatchStyles) { if (Options.WatchFaceStyle > BasicWatchStyles && Options.WatchFaceStyle != 255) { if (WatchStyles.AddOn[Options.WatchFaceStyle] == nullptr) InsertInitWatchStyle(Options.WatchFaceStyle); else WatchStyles.AddOn[Options.WatchFaceStyle]->InsertInitWatchStyle(Options.WatchFaceStyle); return; } }
    else if (WatchStyles.Count > 0 && BasicWatchStyles == -1) { if (WatchStyles.AddOn[Options.WatchFaceStyle] == nullptr) InsertInitWatchStyle(Options.WatchFaceStyle); else WatchStyles.AddOn[Options.WatchFaceStyle]->InsertInitWatchStyle(Options.WatchFaceStyle); return; }
+   InsertInitWatchStyle(Options.WatchFaceStyle);  // Allow for Overrides to do this.
 }
 
 void WatchyGSR::drawWatchFaceStyle(){
@@ -4268,6 +4282,7 @@ void WatchyGSR::drawWatchFaceStyle(){
 
 void WatchyGSR::drawWeather(bool Status){
     uint8_t Style = Options.WatchFaceStyle;
+    if (!WeatherData.Ready) return;
     if (DefaultWatchStyles) { if (Style > BasicWatchStyles && Style != 255) { if (WatchStyles.AddOn[Style] == nullptr) InsertDrawWeather(Style,Status); else WatchStyles.AddOn[Style]->InsertDrawWeather(Style,Status); return; } }
     else if (WatchStyles.Count > 0 && BasicWatchStyles == -1) { if (WatchStyles.AddOn[Style] == nullptr) InsertDrawWeather(Style,Status); else WatchStyles.AddOn[Style]->InsertDrawWeather(Style,Status); return; }
     InsertDrawWeather(Style,Status);
