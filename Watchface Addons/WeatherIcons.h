@@ -226,4 +226,4 @@ if(Condition > 801){ return (Small ? WeatherIcon_Cloudy_Small : WeatherIcon_Clou
     return nullptr;
 };
 
-const unsigned char* getTemperatureScaleIcon(bool Metric, bool Small) { if (Metric) return (Small ? WeatherIcon_Celsius_Small : WeatherIcon_Celsius); else (Small ? WeatherIcon_Fahrenheit_Small : WeatherIcon_Fahrenheit); };
+const unsigned char* getTemperatureScaleIcon(bool Metric, bool Small) { if (Metric) { return (Small ? WeatherIcon_Celsius_Small : WeatherIcon_Celsius); } else { return (Small ? WeatherIcon_Fahrenheit_Small : WeatherIcon_Fahrenheit); } };
