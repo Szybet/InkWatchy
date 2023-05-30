@@ -104,6 +104,8 @@ Functions available for communication:
 | ShowDefaultMenu() | Will show the Default Menu when called only if the menu is being overridden and not already open. |
 | float getBatteryVoltage() | Returns a cleaned battery voltage. |
 | IsDark() | Is the screen currently black (Screen Off has triggered from settings). |
+| IsBatteryHidden() | Returns **true** if the battery indicator isn't visible. |
+| IsMetric() | Returns **true** if the current weather scale is Metric. |
 | VibeTo(bool Mode) | Set VibeTo to `true` to enable vibration motor, `false` to stop it. |
 | MakeTime(int Hour, int Minutes, bool &**Alarm**) | Use a variable in **Alarm** parameter always.  When **Alarm** is set to `false` you'll get normal Hour & Minutes format based on Options, **Alarm** will be `true` for PM.  Setting **Alarm** to `true` for Alarm format.  Returns a String. |
 | MakeHour(uint8_t Hour) | Return the hour formatted in a String using 12 or 24hr format. |
@@ -137,7 +139,7 @@ Functions available for communication:
 | int GetWebResponse() | Returns the HTTP response code from the last AskForWeb response. |
 | String GetWebData() | Returns the HTTP response data from the last AskForWeb response. |
 | bool AskForWeb(String website, uint8_t Timeout) | Ask website for data, allowing Timeout in seconds. |
-| String CleanJSON(JSONVar& value) | Can be used instead of JSON.stringify with the same data to retrieve a cleaned (no quotes and trimmed) String. |\
+| String CleanString(String) | Can be used to clean strings from JSON data. |\
 
 ***#*** Required functions specific to AddOns:
 
