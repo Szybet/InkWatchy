@@ -4200,7 +4200,7 @@ void WatchyGSR::WatchFaceStart(uint8_t NewFace){
     Options.WatchFaceStyle = NewFace;
     if (Options.WatchFaceStyle > WatchStyles.Count - 1) Options.WatchFaceStyle = 0;
     WatchStyles.AskForWiFi[Options.WatchFaceStyle] = false;
-    initWatchFaceStyle();
+    if (WatchStyles.AddOn[Options.WatchFaceStyle] == nullptr) initWatchFaceStyle(); else WatchStyles.AddOn[Options.WatchFaceStyle]->initWatchFaceStyle();
 }
 
 void WatchyGSR::WatchFaceEnd(){
