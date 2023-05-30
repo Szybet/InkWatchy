@@ -177,3 +177,10 @@
 - **FIX:**  WiFi requests are terminated if WatchFace is changed during use to avoid cross-contamination between WatchFaces.
 - **FIX:**  Default Design style for Watchy_GSR is now used in initWatchFaceStyle to avoid accidental WatchFaces having no Design elements and winding up with a blank screen with no fonts.
 - **FIX:**  Removed attachInterrupts, they were responsible for causing the brownouts by causing large amounts of interrupts, even when using RISING as a means to detect the button presses.
+
+**Version 1.4.7A:**
+- **FIX:**  Fixed the battery indicator on screen blanking.
+- **FIX:**  Fixed the AskForWiFi not allowing multiple requests from one watch face.
+- **FIX:**  Removed CleanJSON that was interfering with JSON data requests.
+- **ADD:**  Added CleanString for JSON data.
+- **ADD:**  IsMetric function to find out of the weather scale is Metric or not.
