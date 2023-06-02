@@ -9,6 +9,6 @@
 [Mac Paint](https://github.com/sqfmi/Watchy/tree/master/examples/WatchFaces/MacPaint) and
 [Mario](https://github.com/sqfmi/Watchy/tree/master/examples/WatchFaces/Mario).
           
-Starry Horizon is very CPU intensive and will be hard on battery life.\
+Starry Horizon is very CPU intensive and will be hard on battery life.
 
 Be sure to like the watch faces on their original Githubs to show the apprecation of the work done.
