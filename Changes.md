@@ -184,3 +184,12 @@
 - **FIX:**  Removed CleanJSON that was interfering with JSON data requests.
 - **ADD:**  Added CleanString for JSON data.
 - **ADD:**  IsMetric function to find out of the weather scale is Metric or not.
+
+**Version 1.4.7A:**
+- **FIX:**  Fixed the battery indicator on screen blanking FINALLY!
+- **FIX:**  Fixed the OTA Website and OTA Update so that they don't try to connect too fast via WiFi (which can cause a crash or brownout if done too fast).
+- **ADD:**  drawStatus() now has a Screen Blanking method that also now includes (for both), a Joystick icon showing the current active game "wants your attention".
+- **ADD:**  The missing weather information (Clouds, Sunrise, Sunset, Pressure and Visibility) converted (if possible) to the unit selection currently in use.
+- **ADD:**  A function for changing the current Watchface forward or backward through the list, will return true if it actually switched.
+- **ADD:**  Migrated all the settings for Watchface Styles into 1 byte instead of 4 bools to save RTC Memory space, which includes new functions to set and retrieve those states.
+- **FIX:**  AskForWiFi() won't attempt to start the WiFi interface while the notification motor is active to avoid brownouts.
