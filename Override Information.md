@@ -118,7 +118,7 @@ Functions available for communication:
 | currentWiFi() | Returns `WL_CONNECTED` when connected or `WL_CONNECT_FAILED` when not, InsertWiFi() is only called when `WL_CONNECTED` happens and no other process is using it. |
 | endWiFi() | Tell Watchy_GSR that you're finished with the WiFi, only do this *IF* you asked for it. |
 | AllowDefaultWatchStyles(bool Allow) | Will state if you want (**{true}**/false) the original Watch Styles (Index 0 (Classic GSR) to be used first). |
-| AddWatchStyle(String StyleName **\[, CLASS OBJECT\]**) | Will return the Index of the added Watch Style (255 = error), 30 character max limit on Watch Style name.  **CLASS OBJECT:** This is [REQUIRED] inside RegisterWatchFaces() within an AddOn. Simply pass `this` as a **CLASS OBJECT**.  Do **NOT** include a CLASS OBJECT when calling from GSR.ino. |
+| AddWatchStyle(String StyleName **\[, CLASS OBJECT\]**, bool IsGame == false) | Will return the Index of the added Watch Style (255 = error), 30 character max limit on Watch Style name.  **CLASS OBJECT:** This is [REQUIRED] inside RegisterWatchFaces() within an AddOn. Simply pass `this` as a **CLASS OBJECT**.  Do **NOT** include a CLASS OBJECT when calling from GSR.ino.  **OPTIONAL:** Now offers saying **true** to "IsGame" to register the Addon as a game. |
 | NoMenu() | This returns `true` if the Menu **isn't** open. |
 | getAngle(uint16_t Angle, uint8_t Width, uint8_t Height, uint8_t &X, uint8_t &Y) | Give it an Angle, Width and Height, X and Y will have those values, useful for Analog displays |
 | CurrentSteps() | Will return a uint32_t value of the current steps taken.  Do not access the SBMA directly as the base code now keeps a recording of them prior to restarts and each minute, so reboots don't lose progress. |
@@ -130,6 +130,11 @@ Functions available for communication:
 | int GetWeatherTemperatureFeelsLike() | Gets the current "Feels Like" Temperature in the requested Scale. |
 | int GetWeatherID() | Gets the OpenWeatherMap Condition ID. |
 | String GetWeatherIcon() | Gets the OpenWeatherMap Condition Icon String ID. |
+| uint8_t GetWeatherClouds() |	Returns the Cloud %. |
+| time_t GetWeatherSunRise() |	Returns the SunRise time in Seconds (POSIX) |
+| time_t GetWeatherSunSet() |	Returns the SunSet time in Seconds (POSIX) |
+| uint16_t GetWeatherPressure() |	Returns the current pressure value unaltered (no measurement change). |
+| uint32_t GetWeatherVisibility() |	Returns the current visibility (miles or km). |
 | uint8_t GetWeatherHumidity() | Gets the OpenWeatherMap Humidity percentage. |
 | float GetWeatherWindSpeed() | Gets the current Wind Speed in the requested Scale. |
 | float GetWeatherWindDirection() | Gets the current Wind Gust direction (see OpenWeatherMap information for how to use this value). |
@@ -139,7 +144,25 @@ Functions available for communication:
 | int GetWebResponse() | Returns the HTTP response code from the last AskForWeb response. |
 | String GetWebData() | Returns the HTTP response data from the last AskForWeb response. |
 | bool AskForWeb(String website, uint8_t Timeout) | Ask website for data, allowing Timeout in seconds. |
-| String CleanString(String) | Can be used to clean strings from JSON data. |\
+| String CleanString(String) | Can be used to clean strings from JSON data. |
+| bool ChangeWatchFace(bool Up = true) | Returns true if the Watchface changed, this needs to be used to change watchfaces to avoid picking games. |
+| wl_status_t WiFiStatus() | Returns the filtered WiFi status based on the current Watchface Style's AskForWiFi state. |
+| bool GetAskWiFi() | Returns true if the current Watchface Style has done AskForWiFi. |
+| bool GetWantWeather() | Returns true if the current Watchface Style wants weather. |
+| bool GetNoStatus() | Returns true if the current Watchface Style wants No Status displayed. |
+| bool GetMenuOverride() | Returns true if the current Watchface Style wants Menu Override. |
+| uint16_t Debounce() | Gives the Debounce value in ms (from last input to avoid runaway buttons), set this and millis() to a value and test when millis is beyond that set value. |
+| uint8_t CurrentStyleID() | Gives the current Watchface Style ID for functions that don't give it. |
+| uint8_t CurrentGameID() | Gives the current Watchface Style ID slotted for the current game. |
+| NeedsSaving() | Tells Watchy GSR that your game's SaveProgress() function needs to be called. |
+| SaveProgress() | This is called when NeedsSaving() has been called, does an NVS commit afterwards.  The saving is done just before deep sleep to avoid performance issues. |
+| ShowGame() | Tell Watchy GSR that the GAME MODE is on. |
+| HideGame() | Tell Watchy GSR to exit GAME MODE. |
+| UpdateScreen() | Tell Watchy GSR that you need the screen updated. |
+| GameStatus(bool NeedAttention) | Set the Game Status icon visible (true/false). |
+| bool GameStatusOn() | Returns the Game Status (true/false). |
+| bool InGame() | Returns true if the current Watchface Style is actually a game. |
+| drawGame() | Is called to draw the game on-screen, typically you don't need to do this as the game will be automatically drawn when it's first shown and when you ask for updates to the screen. |\
 
 ***#*** Required functions specific to AddOns:
 
