@@ -1364,7 +1364,7 @@ void WatchyGSR::setFontFor(String O, const GFXfont *Normal, const GFXfont *Small
     display.setFont(Normal); display.getTextBounds(O, 0, 0, &x1, &y1, &w, &h);
     if (w > wi) { display.setFont(Small); display.getTextBounds(O, 0, 0, &x1, &y1, &w, &h); }
     if (w > wi) { display.setFont(Smaller); display.getTextBounds(O, 0, 0, &x1, &y1, &w, &h); }
- }
+}
 
 void WatchyGSR::setFontColor(uint16_t Color){
     bool B = (Color == GxEPD_BLACK || Color == GxEPD_WHITE);
