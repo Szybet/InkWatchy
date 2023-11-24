@@ -1,9 +1,5 @@
 #include "hardware.h"
 
-#include "defines/defines.h"
-#include <GxEPD2_BW.h>
-#include <SmallRTC.h>
-
 GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display(GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY));
 RTC_DATA_ATTR SmallRTC SRTC;
 
@@ -65,5 +61,10 @@ void dumpButtons()
         Serial.println("Down button pressed");
     }
 }
+
+void showSetupResults() {
+    
+}
+
 
 #endif
