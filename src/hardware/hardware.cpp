@@ -15,12 +15,21 @@ void setupHardware()
 
     display.init(0, true, 10, true);
     display.epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
+    /*
+    Here, to remove border you need to go to GxEPD2_154_D67::_InitDisplay()
+    and change the line under this:
+    _writeCommand(0x3C); // BorderWavefrom
+    to this:
+    _writeData(0x00);
+    */
+    // And we can do this from here! ( by using the magic script )
+    //display.epd2._writeCommand(0x3C);
+    //display.epd2._writeCommand(0x00);
+
     display.setFullWindow();
     display.display(FULL_UPDATE);
 
     SRTC.init();
-    SRTC.getRTCBattery();
-    SRTC.getRTCBattery(true);
 
     HWVer = SRTC.getWatchyHWVer();
     if (SRTC.getType() == PCF8563)
@@ -62,9 +71,16 @@ void dumpButtons()
     }
 }
 
-void showSetupResults() {
-    
+void showSetupResults()
+{
+    Serial.print("Get RTC battery level: ");
+    Serial.println(SRTC.getRTCBattery(false));
+    Serial.print("Get critical RTC battery level: ");
+    Serial.println(SRTC.getRTCBattery(true));
+    Serial.print("Up button pin number: ");
+    Serial.println(UP_PIN);
+    Serial.print("Hardware version: ");
+    Serial.println(HWVer);
 }
-
 
 #endif
