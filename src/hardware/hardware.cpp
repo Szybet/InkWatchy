@@ -10,7 +10,7 @@ void setupHardware()
 {
 #if DEBUG
     Serial.begin(230400);
-    Serial.println("Watchy is starting!");
+    log("Watchy is starting!");
 #endif
 
     display.init(0, true, 10, true);
@@ -25,8 +25,9 @@ void setupHardware()
     // And we can do this from here! ( by using the magic script )
     //display.epd2._writeCommand(0x3C);
     //display.epd2._writeCommand(0x00);
-
     display.setFullWindow();
+    display.fillScreen(GxEPD_WHITE);
+    display.setTextColor(GxEPD_BLACK);
     display.display(FULL_UPDATE);
 
     SRTC.init();
@@ -55,32 +56,28 @@ void dumpButtons()
 {
     if (digitalRead(MENU_PIN) == 1)
     {
-        Serial.println("Menu button pressed");
+        log("Menu button pressed");
     }
     else if (digitalRead(BACK_PIN) == 1)
     {
-        Serial.println("Back button pressed");
+        log("Back button pressed");
     }
     else if (digitalRead(UP_PIN) == 1)
     {
-        Serial.println("Up button pressed");
+        log("Up button pressed");
     }
     else if (digitalRead(DOWN_PIN) == 1)
     {
-        Serial.println("Down button pressed");
+        log("Down button pressed");
     }
 }
 
 void showSetupResults()
 {
-    Serial.print("Get RTC battery level: ");
-    Serial.println(SRTC.getRTCBattery(false));
-    Serial.print("Get critical RTC battery level: ");
-    Serial.println(SRTC.getRTCBattery(true));
-    Serial.print("Up button pin number: ");
-    Serial.println(UP_PIN);
-    Serial.print("Hardware version: ");
-    Serial.println(HWVer);
+    log("Get RTC battery level: " + String(SRTC.getRTCBattery(false)));
+    log("Get critical RTC battery level: " + String(SRTC.getRTCBattery(true)));
+    log("Up button pin number: " + String(UP_PIN));
+    log("Hardware version: " + String(HWVer));
+    log("Screen size: " + String(display.width()) + "x" + String(display.height()));
 }
-
 #endif
