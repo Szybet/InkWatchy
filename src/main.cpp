@@ -4,15 +4,19 @@
 void setup()
 {
   setupHardware();
+  initBattery();
+  initDebugDisplay();
 }
 
 void loop()
-{
+{  
+  loopBattery();
+
+  log(BOOL_STR(true));
+
+  loopDebugDisplay();
 #if DEBUG
   dumpButtons();
   showSetupResults();
 #endif
-  display.display(FULL_UPDATE);
-  display.setFullWindow();
-  delay(10000);
 }

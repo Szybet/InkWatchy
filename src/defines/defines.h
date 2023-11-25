@@ -8,5 +8,10 @@
 #include "macros.h"
 
 #include "../hardware/hardware.h"
+#include "../hardware/battery.h"
+#include "../ui/debug.h"
+#include "../functions.h"
+#include "../ui/debug.h"
+
 
 #endif

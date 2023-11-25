@@ -9,4 +9,6 @@
 #define isDebug(...) NULL
 #endif
 
+#define BOOL_STR(b) ((b) ? "True" : "False")
+
 #endif
