@@ -15,5 +15,6 @@ extern RTC_DATA_ATTR SmallRTC SRTC;
 
 extern RTC_DATA_ATTR float HWVer;
 extern int UP_PIN;
+extern uint64_t UP_MASK;
 
 #endif

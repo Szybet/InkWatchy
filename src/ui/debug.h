@@ -3,6 +3,10 @@
 
 #include "../defines/defines.h"
 
+#if DEBUG
+void showEinkCounter();
+#endif
+
 struct debugDisplay {
     batteryInfo battery;
 };

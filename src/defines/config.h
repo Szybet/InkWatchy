@@ -38,6 +38,8 @@
 
 // Advanced
 #define DEBUG 1
+#define SLEEP_AT_START 1 // Goes to sleep at restart
+#define EINK_COUNTER 1 // Shows a counter somewhere on screen
 
 // Display init magic ;)
 #define EPD_CS 5
@@ -52,7 +54,11 @@
 #define MENU_PIN 26
 #define BACK_PIN 25
 #define DOWN_PIN 4
-#define DOWN_PIN 4
+
+// Button masks (for wake up)
+#define MENU_MASK GPIO_SEL_26
+#define BACK_MASK GPIO_SEL_25
+#define DOWN_MASK GPIO_SEL_4
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
