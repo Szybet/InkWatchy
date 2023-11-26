@@ -15,6 +15,7 @@ void loop()
 #if DEBUG
   dumpButtons();
   showSetupResults();
+  debugRTC();
 #endif
   delay(LOOP_DELAY);
 }

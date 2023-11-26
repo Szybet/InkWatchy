@@ -13,6 +13,7 @@
 
 #include "../hardware/hardware.h"
 #include "../hardware/battery.h"
+#include "../hardware/RTC.h"
 #include "../functions.h"
 #include "../ui/functionsUi.h"
 #include "../ui/debug.h"
