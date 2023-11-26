@@ -15,6 +15,7 @@ void setupHardware()
     display.epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
     /*
     Here, to remove border you need to go to GxEPD2_154_D67::_InitDisplay()
+    .pio/libdeps/watchy/GxEPD2/src/epd/GxEPD2_154_D67.cpp
     and change the line under this:
     _writeCommand(0x3C); // BorderWavefrom
     to this:
