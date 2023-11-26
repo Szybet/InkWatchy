@@ -78,5 +78,7 @@ void showSetupResults()
     log("Up button pin number: " + String(UP_PIN));
     log("Hardware version: " + String(HWVer));
     log("Screen size: " + String(display.width()) + "x" + String(display.height()));
+    log("SRTC.isOperating: " + BOOL_STR(SRTC.isOperating()));
+    log("SRTC.getADCPin: " + String(SRTC.getADCPin()));
 }
 #endif
