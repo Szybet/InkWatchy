@@ -30,10 +30,27 @@ void initBattery()
     bat.maxV = BATTERY_MAX_VOLTAGE;
     bat.critV = BATTERY_CRIT_VOLTAGE;
 #endif
+
     bat.curV = getBatteryVoltage();
+    if (bat.curV > bat.maxV)
+    {
+        bat.isCharging == true;
+    }
+    else
+    {
+        bat.isCharging == false;
+    }
 }
 
 void loopBattery()
 {
     bat.curV = getBatteryVoltage();
+    if (bat.curV > bat.maxV)
+    {
+        bat.isCharging == true;
+    }
+    else
+    {
+        bat.isCharging == false;
+    }
 }

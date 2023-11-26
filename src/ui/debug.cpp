@@ -4,6 +4,7 @@ debugDisplay ui;
 
 int cursorX = 0;
 int currentVoltageHeight;
+int ChargingHeight;
 #define textSize 1
 
 void initDebugDisplay()
@@ -33,6 +34,9 @@ void initDebugDisplay()
     writeLine("Maximum batt V: " + String(ui.battery.maxV), cursorX, &currentHeight);
 
     writeLine("Critical batt V: " + String(ui.battery.critV), cursorX, &currentHeight);
+
+    writeLine("Charging: " + BOOL_STR(ui.battery.isCharging), cursorX, &currentHeight);
+    ChargingHeight = currentHeight - maxHeight;
     display.display(PARTIAL_UPDATE);
 }
 
@@ -51,6 +55,21 @@ void loopDebugDisplay()
         }
 
         writeTextReplaceBack("Current batt V: " + battVoltageStr, cursorX, currentVoltageHeight);
+        display.display(PARTIAL_UPDATE);
+    }
+    if (ui.battery.isCharging != bat.isCharging)
+    {
+        ui.battery.isCharging = bat.isCharging;
+        display.setCursor(cursorX, ChargingHeight);
+        setTextSize(textSize);
+
+        String chargingStr = BOOL_STR(bat.isCharging);
+        while (chargingStr.length() < 5)
+        {
+            chargingStr = chargingStr + " ";
+        }
+
+        writeTextReplaceBack("Charging: " + chargingStr, cursorX, ChargingHeight);
         display.display(PARTIAL_UPDATE);
     }
 }

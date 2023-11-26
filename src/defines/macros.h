@@ -13,6 +13,6 @@
 #define isDebug(...) NULL
 #endif
 
-#define BOOL_STR(b) ((b) ? "True" : "False")
+#define BOOL_STR(b) ((b) ? String("True") : String("False"))
 
 #endif
