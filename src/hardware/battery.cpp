@@ -34,11 +34,11 @@ void initBattery()
     bat.curV = getBatteryVoltage();
     if (bat.curV > bat.maxV)
     {
-        bat.isCharging == true;
+        bat.isCharging = true;
     }
     else
     {
-        bat.isCharging == false;
+        bat.isCharging = false;
     }
 }
 
@@ -47,10 +47,10 @@ void loopBattery()
     bat.curV = getBatteryVoltage();
     if (bat.curV > bat.maxV)
     {
-        bat.isCharging == true;
+        bat.isCharging = true;
     }
     else
     {
-        bat.isCharging == false;
+        bat.isCharging = false;
     }
 }
