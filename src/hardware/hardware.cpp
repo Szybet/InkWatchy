@@ -8,10 +8,8 @@ int UP_PIN = 32;
 
 void setupHardware()
 {
-#if DEBUG
-    Serial.begin(230400);
+    isDebug(Serial.begin(230400));
     log("Watchy is starting!");
-#endif
 
     display.init(0, true, 10, true);
     display.epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
