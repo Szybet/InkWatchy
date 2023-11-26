@@ -5,6 +5,7 @@ RTC_DATA_ATTR SmallRTC SRTC;
 
 RTC_DATA_ATTR float HWVer;
 int UP_PIN = 32;
+uint64_t UP_MASK = GPIO_SEL_32;
 
 void setupHardware()
 {
@@ -24,10 +25,11 @@ void setupHardware()
     // And we can do this from here! ( by using the magic script )
     //display.epd2._writeCommand(0x3C);
     //display.epd2._writeCommand(0x00);
+
     display.setFullWindow();
     display.fillScreen(GxEPD_WHITE);
     display.setTextColor(GxEPD_BLACK);
-    display.display(FULL_UPDATE);
+    //display.display(FULL_UPDATE);
 
     SRTC.init();
 
@@ -37,10 +39,12 @@ void setupHardware()
         if (HWVer == 1.5)
         {
             UP_PIN = 32;
+            UP_MASK = GPIO_SEL_32;
         }
         else
         {
             UP_PIN = 35;
+            UP_MASK = GPIO_SEL_35;
         }
     }
 

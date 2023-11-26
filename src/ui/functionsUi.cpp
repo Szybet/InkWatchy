@@ -22,7 +22,7 @@ void writeLine(String strToWrite, int cursorX, uint16_t* currentHeight) {
 }
 
 void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor, int tolerance) {
-    log("Drawing bitmap with text: " + str);
+    log("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
 
     uint16_t w, h;
     int16_t xt, yt; // tmp, don't need it
