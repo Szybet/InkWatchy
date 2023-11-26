@@ -33,18 +33,20 @@ void initDebugDisplay()
     writeLine("Maximum batt V: " + String(ui.battery.maxV), cursorX, &currentHeight);
 
     writeLine("Critical batt V: " + String(ui.battery.critV), cursorX, &currentHeight);
+    display.display(PARTIAL_UPDATE);
 }
 
 void loopDebugDisplay()
 {
-    // if (ui.battery.curV != bat.curV)
+    if (ui.battery.curV > bat.curV + 0.01 || ui.battery.curV < bat.curV - 0.01)
     {
         ui.battery.curV = bat.curV;
         display.setCursor(cursorX, currentVoltageHeight);
         setTextSize(textSize);
 
         String battVoltageStr = String(bat.curV);
-        while(battVoltageStr.length() < 5) {
+        while (battVoltageStr.length() < 5)
+        {
             battVoltageStr = battVoltageStr + " ";
         }
 

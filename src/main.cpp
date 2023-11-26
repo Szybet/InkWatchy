@@ -16,4 +16,5 @@ void loop()
   dumpButtons();
   showSetupResults();
 #endif
+  delay(LOOP_DELAY);
 }

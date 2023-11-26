@@ -3,6 +3,7 @@
 
 // Basics
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // GSR uses higher, RTC based minimum voltage levels. Change this to 1 if you have problems at lower battery levels
+#define LOOP_DELAY 10 // Speed of the device basically
 
 // Advanced
 #define DEBUG 1
@@ -22,7 +23,9 @@
 #define DOWN_PIN 4
 #define DOWN_PIN 4
 
-#define VOLTAGE_AVG_COUNT 5 // Voltage reading average 
+// Voltage reading average
+#define VOLTAGE_AVG_COUNT 20
+#define VOLTAGE_AVG_DELAY 5
 
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3

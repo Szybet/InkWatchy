@@ -13,6 +13,7 @@ double getBatteryVoltage()
     for (int i = 0; i < VOLTAGE_AVG_COUNT; i++)
     {
         sum += BatteryRead() - 0.0125;
+        delay(VOLTAGE_AVG_DELAY);
     }
 
     return sum / VOLTAGE_AVG_COUNT;
