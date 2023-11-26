@@ -1,5 +1,5 @@
 #include "functions.h"
 
-void log(String message) {
-    Serial.println(message);
+void logFunction(String file, int line, String func, String message) {
+    Serial.println(file + ":" + String(line) + " " + func + ": " + message);
 }

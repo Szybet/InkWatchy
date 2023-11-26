@@ -1,5 +1,4 @@
 #include "defines/defines.h"
-#include "defines/macros.h"
 
 void setup()
 {
@@ -11,8 +10,6 @@ void setup()
 void loop()
 {  
   loopBattery();
-
-  log(BOOL_STR(true));
 
   loopDebugDisplay();
 #if DEBUG

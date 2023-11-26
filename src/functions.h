@@ -3,5 +3,6 @@
 
 #include "defines/defines.h"
 
-void log(String message);
+void logFunction(String file, int line, String func, String message);
+
 #endif

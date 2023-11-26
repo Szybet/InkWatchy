@@ -2,8 +2,6 @@
 #define HARDWARE_H
 
 #include "defines/defines.h"
-#include <GxEPD2_BW.h>
-#include <SmallRTC.h>
 
 void setupHardware();
 
