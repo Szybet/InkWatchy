@@ -2,10 +2,8 @@
 #define RTC_H
 #include "defines/defines.h"
 
-#include <SmallRTC.h>
-
 #ifdef DEBUG
-void debugRTC ();
+void debugRTC();
 #endif
 
 #endif

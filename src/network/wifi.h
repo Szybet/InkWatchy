@@ -3,8 +3,12 @@
 
 #include "defines/defines.h"
 
-bool connectToWiFi(const char *ssid, const char *password);
+void initWifi();
 void turnOnWifi();
+void turnOffWifi();
 
+#if DEBUG
+String wifiStatus();
+#endif
 
 #endif
