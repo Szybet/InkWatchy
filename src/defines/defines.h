@@ -16,6 +16,7 @@
 #include "../hardware/battery.h"
 #include "../hardware/RTC.h"
 #include "../hardware/sleep.h"
+#include "../hardware/buttons.h"
 #include "../functions.h"
 #include "../ui/functionsUi.h"
 #include "../ui/debug.h"

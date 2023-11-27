@@ -4,8 +4,6 @@ GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display(GxEPD2_154_D67(EPD_CS,
 RTC_DATA_ATTR SmallRTC SRTC;
 
 RTC_DATA_ATTR float HWVer;
-int UP_PIN = 32;
-uint64_t UP_MASK = GPIO_SEL_32;
 
 void setupHardware()
 {
@@ -34,47 +32,9 @@ void setupHardware()
     SRTC.init();
 
     HWVer = SRTC.getWatchyHWVer();
-    if (SRTC.getType() == PCF8563)
-    {
-        if (HWVer == 1.5)
-        {
-            UP_PIN = 32;
-            UP_MASK = GPIO_SEL_32;
-        }
-        else
-        {
-            UP_PIN = 35;
-            UP_MASK = GPIO_SEL_35;
-        }
-    }
-
-    pinMode(MENU_PIN, INPUT);
-    pinMode(BACK_PIN, INPUT);
-    pinMode(UP_PIN, INPUT);
-    pinMode(DOWN_PIN, INPUT);
 }
 
 #if DEBUG
-void dumpButtons()
-{
-    if (digitalRead(MENU_PIN) == 1)
-    {
-        log("Menu button pressed");
-    }
-    else if (digitalRead(BACK_PIN) == 1)
-    {
-        log("Back button pressed");
-    }
-    else if (digitalRead(UP_PIN) == 1)
-    {
-        log("Up button pressed");
-    }
-    else if (digitalRead(DOWN_PIN) == 1)
-    {
-        log("Down button pressed");
-    }
-}
-
 void showSetupResults()
 {
     log("Get RTC battery level: " + String(SRTC.getRTCBattery(false)));
