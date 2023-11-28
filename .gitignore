@@ -1,3 +1,4 @@
 .pio
 .vscode
 src/defines/images.h
+src/defines/confidential.h
