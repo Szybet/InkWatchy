@@ -7,10 +7,4 @@
 void showEinkCounter();
 #endif
 
-struct debugDisplay {
-    batteryInfo battery;
-};
-
-void loopDebugDisplay();
-void initDebugDisplay();
 #endif

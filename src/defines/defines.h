@@ -21,6 +21,7 @@
 #include "../functions.h"
 #include "../ui/functionsUi.h"
 #include "../ui/debug.h"
+#include "../ui/batteryDebug.h"
 #include "../network/wifi.h"
 
 #endif
