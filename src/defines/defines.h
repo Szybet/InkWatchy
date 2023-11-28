@@ -9,6 +9,7 @@
 #include "WiFiManager.h"
 
 #include "config.h" // Needs to be first!
+#include "confidential.h"
 #include "macros.h"
 #include "images.h"
 

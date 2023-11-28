@@ -5,37 +5,6 @@
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // GSR uses higher, RTC based minimum voltage levels. Change this to 1 if you have problems at lower battery levels
 #define LOOP_DELAY 10                 // Speed of the device basically
 
-// Wifi
-#define WIFI_SSID1 "dragonn"
-#define WIFI_PASS1 "ca9hi6HX"
-
-#define WIFI_SSID2 "dragonn2"
-#define WIFI_PASS2 "Twb3MRYd"
-
-#define WIFI_SSID3 ""
-#define WIFI_PASS3 ""
-
-#define WIFI_SSID4 ""
-#define WIFI_PASS4 ""
-
-#define WIFI_SSID5 ""
-#define WIFI_PASS5 ""
-
-#define WIFI_SSID6 ""
-#define WIFI_PASS6 ""
-
-#define WIFI_SSID7 ""
-#define WIFI_PASS7 ""
-
-#define WIFI_SSID8 ""
-#define WIFI_PASS8 ""
-
-#define WIFI_SSID9 ""
-#define WIFI_PASS9 ""
-
-#define WIFI_SSID10 ""
-#define WIFI_PASS10 ""
-
 // Advanced
 #define DEBUG 1
 #define SLEEP_AT_START 1 // Goes to sleep at restart
