@@ -69,7 +69,7 @@ void turnOffWifi()
     WiFi.mode(WIFI_OFF);
 }
 
-#ifdef DEBUG
+#if DEBUG == 1 || DEBUG_MENUS == 1
 String wifiStatus()
 {
     switch (WiFi.status())
@@ -94,11 +94,16 @@ String wifiStatus()
         return "UNKNOWN_STATUS";
     }
 }
+#endif
 
-bool connectToWiFi()
+bool isWifiConnected()
 {
+    // TODO: Is asking 2 times time consuming?
+    log("Milis before asking time status: " + String(millis()));
     log("wifi status: " + wifiStatus());
-    if (wifiStatus() == "WL_CONNECTED")
+    wl_status_t status = WiFi.status();
+    log("Milis after asking time status: " + String(millis()));
+    if (status == WL_CONNECTED)
     {
         return true;
     }
@@ -107,4 +112,3 @@ bool connectToWiFi()
         return false;
     }
 }
-#endif

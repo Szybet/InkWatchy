@@ -8,6 +8,9 @@
 #include "Fonts/FreeSansBold9pt7b.h"
 #include "WiFiManager.h"
 
+#define PARTIAL_UPDATE true
+#define FULL_UPDATE false
+
 #include "config.h" // Needs to be first!
 #include "confidential.h"
 #include "macros.h"

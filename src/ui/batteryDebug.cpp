@@ -5,7 +5,7 @@ debugDisplay ui;
 int cursorX = 0;
 int currentVoltageHeight;
 int ChargingHeight;
-#define textSize 1
+#define batteryTextSize 1
 
 void initDebugDisplay()
 {
@@ -13,7 +13,7 @@ void initDebugDisplay()
     uint16_t w, h;
     ui.battery = bat;
     setFont(&FreeSansBold9pt7b);
-    setTextSize(textSize);
+    setTextSize(batteryTextSize);
     display.setCursor(cursorX, 1);
     String menuName = "Debug Menu: Batt";
     display.getTextBounds(menuName, cursorX, 1, &x, &y, &w, &h);
@@ -46,7 +46,7 @@ void loopDebugDisplay()
     {
         ui.battery.curV = bat.curV;
         display.setCursor(cursorX, currentVoltageHeight);
-        setTextSize(textSize);
+        setTextSize(batteryTextSize);
 
         String battVoltageStr = String(bat.curV);
         while (battVoltageStr.length() < 5)
@@ -61,7 +61,7 @@ void loopDebugDisplay()
     {
         ui.battery.isCharging = bat.isCharging;
         display.setCursor(cursorX, ChargingHeight);
-        setTextSize(textSize);
+        setTextSize(batteryTextSize);
 
         String chargingStr = BOOL_STR(bat.isCharging);
         while (chargingStr.length() < 5)
