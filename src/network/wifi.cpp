@@ -94,4 +94,17 @@ String wifiStatus()
         return "UNKNOWN_STATUS";
     }
 }
+
+bool connectToWiFi()
+{
+    log("wifi status: " + wifiStatus());
+    if (wifiStatus() == "WL_CONNECTED")
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
 #endif
