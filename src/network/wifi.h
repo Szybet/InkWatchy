@@ -11,4 +11,6 @@ void turnOffWifi();
 String wifiStatus();
 #endif
 
+bool isWifiConnected();
+
 #endif

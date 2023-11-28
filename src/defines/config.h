@@ -4,6 +4,7 @@
 // Basics
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // GSR uses higher, RTC based minimum voltage levels. Change this to 1 if you have problems at lower battery levels
 #define LOOP_DELAY 10                 // Speed of the device basically
+#define DEBUG_MENUS 1// Includes debug menus for various things
 
 // Advanced
 #define DEBUG 1
@@ -15,9 +16,6 @@
 #define EPD_DC 10
 #define EPD_RESET 9
 #define EPD_BUSY 19
-
-#define PARTIAL_UPDATE true
-#define FULL_UPDATE false
 
 // Button pins
 #define MENU_PIN 26
@@ -36,6 +34,6 @@
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3
 #define BATTERY_CRIT_VOLTAGE 3.15
-#define BATTERY_MAX_VOLTAGE 4.25 // For calculating percentages, upper limit
+#define BATTERY_MAX_VOLTAGE 4.21 // For calculating percentages, upper limit
 
 #endif

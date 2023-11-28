@@ -4,6 +4,14 @@ int UP_PIN = 32;
 uint64_t UP_MASK = GPIO_SEL_32;
 buttonState buttonPressed = None;
 
+buttonState useButton() {
+    buttonState buttonPressedTmp = buttonPressed;
+    buttonPressed = None;
+    // TODO: make a switch funtion and use it for logs to show which button was returned here
+    // log here.
+    return buttonPressedTmp;
+}
+
 void initButtons()
 {
     // Skopiuj tu te wartosci UP_PIN i UP_MASK

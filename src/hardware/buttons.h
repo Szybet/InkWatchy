@@ -5,6 +5,7 @@
 
 void initButtons();
 void buttonsLoop();
+buttonState useButton();
 
 #if DEBUG
 void dumpButtons();
