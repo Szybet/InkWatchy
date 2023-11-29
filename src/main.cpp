@@ -22,15 +22,13 @@ void setup()
 
   setupHardware();
   initBattery();
-  
-  initDebugDisplay();
+  initWifiDebugDisplay();
 }
 
 void loop()
 {
   loopBattery();
 
-  loopDebugDisplay();
 
 #if DEBUG && EINK_COUNTER
   showEinkCounter();

@@ -4,11 +4,12 @@ int UP_PIN = 32;
 uint64_t UP_MASK = GPIO_SEL_32;
 buttonState buttonPressed = None;
 
-buttonState useButton() {
+buttonState useButton()
+{
     buttonState buttonPressedTmp = buttonPressed;
     buttonPressed = None;
     // TODO: make a switch funtion and use it for logs to show which button was returned here
-    // log here.
+    log("Used button by UI: " + getButtonString(buttonPressedTmp));
     return buttonPressedTmp;
 }
 
@@ -73,6 +74,23 @@ void dumpButtons()
     else if (digitalRead(DOWN_PIN) == 1)
     {
         log("Down button pressed");
+    }
+}
+
+String getButtonString(buttonState state)
+{
+    switch (state)
+    {
+    case None:
+        return "None";
+    case Back:
+        return "Back";
+    case Menu:
+        return "Menu";
+    case Up:
+        return "Up";
+    case Down:
+        return "Down";
     }
 }
 #endif

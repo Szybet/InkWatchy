@@ -39,3 +39,16 @@ void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, ui
     canvasTmp.print(str);
     display.drawBitmap(x, y - h + (tolerance / 3), canvasTmp.getBuffer(), w, h, frColor, bgColor);
 }
+
+void centerText(String text, uint16_t* currentHeight, int x) {
+  int16_t x1, y1;
+  uint16_t w, h;
+  display.getTextBounds(text.c_str(), 0, 0, &x1, &y1, &w, &h);
+  if (x == -1) {
+    x = (display.width() - w) / 2;
+  }
+  display.setCursor(x, *currentHeight);
+  display.print(text);
+  *currentHeight = *currentHeight + maxHeight;
+}
+
