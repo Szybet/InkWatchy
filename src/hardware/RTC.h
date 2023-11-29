@@ -2,7 +2,7 @@
 #define RTC_H
 #include "defines/defines.h"
 
-#ifdef DEBUG
+#if DEBUG
 void debugRTC();
 #endif
 

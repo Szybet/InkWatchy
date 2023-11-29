@@ -3,7 +3,7 @@
 tmElements_t UTC;
 
 
-#ifdef DEBUG
+#if DEBUG
 void debugRTC () {
     SRTC.read(UTC);
     log("Second: " + String(UTC.Second));

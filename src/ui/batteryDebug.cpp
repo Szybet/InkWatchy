@@ -1,7 +1,7 @@
 #include "batteryDebug.h"
 
+#if DEBUG == 1 || DEBUG_MENUS == 1
 debugDisplay ui;
-
 int cursorX = 0;
 int currentVoltageHeight;
 int ChargingHeight;
@@ -74,3 +74,4 @@ void loopDebugDisplay()
     }
 }
 
+#endif
