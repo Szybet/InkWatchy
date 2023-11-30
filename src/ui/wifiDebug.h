@@ -4,5 +4,6 @@
 #include "defines/defines.h"
 
 void initWifiDebugDisplay();
+void loopWifiDebugDisplay();
 
 #endif

@@ -23,10 +23,13 @@ void setup()
   setupHardware();
   initBattery();
   initWifiDebugDisplay();
+  initWifi();
+  turnOnWifi();
 }
 
 void loop()
 {
+  loopWifiDebugDisplay();
   loopBattery();
 
 
