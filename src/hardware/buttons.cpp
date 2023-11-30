@@ -92,5 +92,6 @@ String getButtonString(buttonState state)
     case Down:
         return "Down";
     }
+    return "None";
 }
 #endif

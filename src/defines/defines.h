@@ -6,7 +6,8 @@
 #include <GxEPD2_BW.h>
 #include <SmallRTC.h>
 #include "Fonts/FreeSansBold9pt7b.h"
-#include "WiFiManager.h"
+#include <WiFi.h>
+#include <WiFiMulti.h>
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
