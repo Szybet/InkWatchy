@@ -3,9 +3,15 @@
 #if DEBUG == 1 || DEBUG_MENUS == 1
 int cursorXwifi = 0;
 int StatusHeight;
+int IPHeight;
+int SSIDHeight;
+
 #define TextSize 1
 
 uint16_t wifiStatusLength;
+uint16_t ipAddressLength;
+uint16_t ssidLength;
+String wifiStatusLastStr;
 
 void initWifiDebugDisplay()
 {
@@ -14,7 +20,7 @@ void initWifiDebugDisplay()
     display.setCursor(cursorXwifi, 1);
     String menuName = "Debug Menu: Wifi";
     getTextBounds(menuName, NULL, NULL, NULL, &maxHeight);
-    //maxHeight = h;
+    // maxHeight = h;
 
     uint16_t currentHeight = maxHeight;
     display.setCursor(cursorXwifi, currentHeight - 3);
@@ -26,10 +32,14 @@ void initWifiDebugDisplay()
 
     String wifiStatusStr = wifiStatus();
     getTextBounds(wifiStatusStr, NULL, NULL, &wifiStatusLength, NULL);
-    //wifiStatusLength = w;
+    // wifiStatusLength = w;
 
     centerText(wifiStatusStr, &currentHeight);
     StatusHeight = currentHeight - maxHeight;
+    writeLine("IP: " + WiFi.localIP().toString(), cursorXwifi, &currentHeight);
+    IPHeight = currentHeight - maxHeight;
+    writeLine("SSID: " + WiFi.SSID(), cursorXwifi, &currentHeight);
+    SSIDHeight = currentHeight - maxHeight;
 
     display.fillRect(0, currentHeight - maxHeight / 2 - 2, display.width(), 1, GxEPD_BLACK);
     currentHeight = currentHeight + 5;
@@ -40,22 +50,51 @@ void initWifiDebugDisplay()
 
 void loopWifiDebugDisplay()
 {
-    setFont(&FreeSansBold9pt7b);
-    setTextSize(TextSize);
-
     String wifiStatusStr = wifiStatus();
     uint16_t w;
-    getTextBounds(wifiStatusStr, NULL, NULL, &w, NULL);
-    log("w: " + String(w) + " wifiStatusLength: " + String(wifiStatusLength));
-    while (w < wifiStatusLength)
+    if (wifiStatusStr != wifiStatusLastStr)
     {
-        wifiStatusStr = " " + wifiStatusStr + " ";
+        wifiStatusStr = wifiStatus();
+        setFont(&FreeSansBold9pt7b);
+        setTextSize(TextSize);
+
         getTextBounds(wifiStatusStr, NULL, NULL, &w, NULL);
+        log("w: " + String(w) + " wifiStatusLength: " + String(wifiStatusLength));
+        while (w < wifiStatusLength)
+        {
+            wifiStatusStr = " " + wifiStatusStr + " ";
+            getTextBounds(wifiStatusStr, NULL, NULL, &w, NULL);
+        }
+        wifiStatusLength = w;
+
+        writeTextCenterReplaceBack(wifiStatusStr, StatusHeight);
+
+        String ipAddressStr = "IP: " + WiFi.localIP().toString();
+        uint16_t ipWidth;
+        getTextBounds(ipAddressStr, NULL, NULL, &ipWidth, NULL);
+        log("w: " + String(ipWidth) + " ipAddressLength: " + String(ipAddressLength));
+        while (ipWidth < ipAddressLength)
+        {
+            ipAddressStr = " " + ipAddressStr + " ";
+            getTextBounds(ipAddressStr, NULL, NULL, &ipWidth, NULL);
+        }
+        ipAddressLength = ipWidth;
+
+        writeTextReplaceBack(ipAddressStr, cursorXwifi, IPHeight);
+
+        String ssidStr = "SSID: " + WiFi.SSID();
+        uint16_t ssidWidth;
+        getTextBounds(ssidStr, NULL, NULL, &ssidWidth, NULL);
+        log("w: " + String(ssidWidth) + " ssidLength: " + String(ssidLength));
+        while (ssidWidth < ssidLength)
+        {
+            ssidStr = " " + ssidStr + " ";
+            getTextBounds(ssidStr, NULL, NULL, &ssidWidth, NULL);
+        }
+        ssidLength = ssidWidth;
+
+        writeTextReplaceBack(ssidStr, cursorXwifi, SSIDHeight);
     }
-    wifiStatusLength = w;
-
-    writeTextCenterReplaceBack(wifiStatusStr, StatusHeight);
-
-    display.display(PARTIAL_UPDATE);
+    wifiStatusLastStr = wifiStatus();
 }
 #endif

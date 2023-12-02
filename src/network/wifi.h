@@ -4,7 +4,8 @@
 #include "defines/defines.h"
 
 void initWifi();
-void turnOnWifi();
+void turnOnWifiTask();
+void turnOnWifi(void *parameter);
 void turnOffWifi();
 
 #if DEBUG
