@@ -60,6 +60,7 @@ void goSleep()
 
     display.hibernate();
     ForceInputs();
+    turnOffWifi();
     esp_sleep_enable_ext1_wakeup(UP_MASK | DOWN_MASK | MENU_MASK | BACK_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); // Enable deep sleep wake on button press
     esp_deep_sleep_start();
 }

@@ -24,9 +24,9 @@ void setup()
 #if DEBUG && DUMP_INIT_DEBUG
   initHardwareDebug();
 #endif
-  
-  turnOnWifiTask();
+  // Init first
   initWifi();
+  turnOnWifiTask();
 }
 
 void loop()
