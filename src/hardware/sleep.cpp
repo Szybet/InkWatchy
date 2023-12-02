@@ -18,14 +18,16 @@ void ForceInputs()
                         /* BUTTONS */
     pinMode(26, INPUT); /* BTN1     */
     pinMode(25, INPUT); /* BTN2     */
-    if (UP_PIN != 32) {
+    if (UP_PIN != 32)
+    {
         pinMode(32, INPUT); /* BTN3     */
     }
-    if (UP_PIN != 35 && P != 35) {
+    if (UP_PIN != 35 && P != 35)
+    {
         pinMode(35, INPUT); /* ADC/BTN3 */
     }
-    pinMode(4, INPUT);      /* BTN4     */
-                            /* BATTERY */
+    pinMode(4, INPUT); /* BTN4     */
+                       /* BATTERY */
     // pinMode(27,INPUT);  /* INT      */
     // if (P != 33) pinMode(33,INPUT);  /* ADC      */
     // if (P != 34) pinMode(34,INPUT);  /* ADC      */
@@ -46,6 +48,16 @@ void ForceInputs()
 
 void goSleep()
 {
+    log("goSleep activated");
+    
+#if DEBUG && SCREEN_SLEEP_INFO
+    display.setCursor(50, 190);
+    display.setFont();
+    display.setTextSize(2);
+    display.print("Sleeping");
+    display.display(PARTIAL_UPDATE);
+#endif
+
     display.hibernate();
     ForceInputs();
     esp_sleep_enable_ext1_wakeup(UP_MASK | DOWN_MASK | MENU_MASK | BACK_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); // Enable deep sleep wake on button press

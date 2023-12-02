@@ -1,10 +1,10 @@
 #include "buttons.h"
 
-int UP_PIN = 32;
-uint64_t UP_MASK = GPIO_SEL_32;
+int RTC_DATA_ATTR UP_PIN = 32;
+uint64_t RTC_DATA_ATTR UP_MASK = GPIO_SEL_32;
 buttonState buttonPressed = None;
 
-buttonState useButton()
+buttonState useButton(buttonState button)
 {
     buttonState buttonPressedTmp = buttonPressed;
     buttonPressed = None;
@@ -34,6 +34,11 @@ void initButtons()
     pinMode(BACK_PIN, INPUT);
     pinMode(UP_PIN, INPUT);
     pinMode(DOWN_PIN, INPUT);
+}
+
+void setButton(buttonState button) {
+    buttonPressed = button;
+    resetSleepDelay();
 }
 
 void buttonsLoop()

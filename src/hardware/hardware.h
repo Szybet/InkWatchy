@@ -3,16 +3,16 @@
 
 #include "defines/defines.h"
 
-void setupHardware();
+extern RTC_DATA_ATTR float HWVer;
+extern int sleepDelayMs;
+
+void initAllHardware();
+void initWakeUpHardware(bool isFromWakeUp);
+void resetSleepDelay();
 
 #if DEBUG
-void dumpButtons();
-void showSetupResults();
+void initHardwareDebug();
+void loopHardwareDebug();
 #endif
-
-extern GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-extern RTC_DATA_ATTR SmallRTC SRTC;
-
-extern RTC_DATA_ATTR float HWVer;
 
 #endif

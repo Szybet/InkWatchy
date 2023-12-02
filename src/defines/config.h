@@ -3,13 +3,16 @@
 
 // Basics
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // GSR uses higher, RTC based minimum voltage levels. Change this to 1 if you have problems at lower battery levels
-#define LOOP_DELAY 10                 // Speed of the device basically
-#define DEBUG_MENUS 1// Includes debug menus for various things
+#define DEBUG_MENUS 1                 // Includes debug menus for various things
 
 // Advanced
 #define DEBUG 1
-#define SLEEP_AT_START 1 // Goes to sleep at restart
-#define EINK_COUNTER 1 // Shows a counter somewhere on screen
+#define EINK_COUNTER 1       // Shows a counter somewhere on screen
+#define SLEEP_EVERY_MS 180000 // Goes to sleep timer, is resetted by button presses
+#define LOOP_DELAY 10        // Speed of the device basically
+#define DUMP_INIT_DEBUG 1    // If debug, shows at init init information
+#define DUMP_LOOP_DEBUG 0    // If debug, at every loop iteration dump hardware values that can change
+#define SCREEN_SLEEP_INFO 1 // Shows information on screen when the device goes to screen
 
 // Display init magic ;)
 #define EPD_CS 5
