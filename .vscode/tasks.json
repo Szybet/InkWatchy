@@ -1,0 +1,15 @@
+{
+    // Used extension: actboy168.tasks
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Reset Watchy",
+            "type": "shell",
+            "command": "esptool.py --after hard_reset chip_id",
+            "icon": {
+                "id": "refresh",
+                "color": "terminal.ansiGreen"
+              }
+        }
+    ]
+}

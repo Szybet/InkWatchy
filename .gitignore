@@ -1,4 +1,5 @@
 .pio
-.vscode
+.vscode/*
+!.vscode/tasks.json
 src/defines/images.h
 src/defines/confidential.h
