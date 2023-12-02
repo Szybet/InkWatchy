@@ -13,12 +13,13 @@ typedef enum
 } buttonState;
 
 extern buttonState buttonPressed;
-extern int UP_PIN;
-extern uint64_t UP_MASK;
+extern int RTC_DATA_ATTR UP_PIN;
+extern uint64_t RTC_DATA_ATTR UP_MASK;
 
 buttonState useButton();
 void initButtons();
 void buttonsLoop();
+void setButton(buttonState button);
 
 #if DEBUG
 void dumpButtons();

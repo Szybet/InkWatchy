@@ -6,7 +6,7 @@ bool randomChoosed = false;
 int counterX;
 int counterY;
 int countSkip = SKIP_CYCLES;
-int counter = 0;
+int RTC_DATA_ATTR counter = 0;
 void showEinkCounter()
 {
     log("countSkip: " + String(countSkip));

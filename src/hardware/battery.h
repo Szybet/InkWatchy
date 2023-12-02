@@ -12,7 +12,7 @@ struct batteryInfo {
     bool isCharging;
 };
 
-extern batteryInfo bat;
+extern RTC_DATA_ATTR batteryInfo bat;
 
 double getBatteryVoltage();
 
