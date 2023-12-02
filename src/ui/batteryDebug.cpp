@@ -2,22 +2,20 @@
 
 #if DEBUG == 1 || DEBUG_MENUS == 1
 debugDisplay ui;
-int cursorX = 0;
+#define cursorX 0
 int currentVoltageHeight;
 int ChargingHeight;
 #define batteryTextSize 1
 
-void initDebugDisplay()
+void initBatteryDebugDisplay()
 {
-    int16_t x, y;
-    uint16_t w, h;
+    uint16_t h;
     ui.battery = bat;
     setFont(&FreeSansBold9pt7b);
     setTextSize(batteryTextSize);
     display.setCursor(cursorX, 1);
     String menuName = "Debug Menu: Batt";
-    display.getTextBounds(menuName, cursorX, 1, &x, &y, &w, &h);
-    // log("Menu string cord: " + String(x) + "x" + String(y) + " " + String(w) + "x" = String(h));
+    getTextBounds(menuName, NULL, NULL, NULL, &h);
     maxHeight = h;
     uint16_t currentHeight = maxHeight;
     display.setCursor(cursorX, currentHeight - 3);
@@ -40,7 +38,7 @@ void initDebugDisplay()
     display.display(FULL_UPDATE);
 }
 
-void loopDebugDisplay()
+void loopBatteryDebugDisplay()
 {
     if (ui.battery.curV > bat.curV + 0.01 || ui.battery.curV < bat.curV - 0.01)
     {
@@ -64,7 +62,7 @@ void loopDebugDisplay()
         setTextSize(batteryTextSize);
 
         String chargingStr = BOOL_STR(bat.isCharging);
-        while (chargingStr.length() < 5)
+        while (chargingStr.length() < 6)
         {
             chargingStr = chargingStr + " ";
         }

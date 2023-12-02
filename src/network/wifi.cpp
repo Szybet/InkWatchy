@@ -59,8 +59,8 @@ void initWifi()
 void turnOnWifi()
 {
     WiFi.mode(WIFI_STA);
-    WiFi.setSleep(WIFI_PS_NONE);
-    wifiMulti.run(1);
+    //WiFi.setSleep(WIFI_PS_NONE);
+    wifiMulti.run(10);
 }
 
 void turnOffWifi()
