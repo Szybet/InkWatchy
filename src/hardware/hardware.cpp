@@ -44,5 +44,6 @@ void showSetupResults()
     log("Screen size: " + String(display.width()) + "x" + String(display.height()));
     log("SRTC.isOperating: " + BOOL_STR(SRTC.isOperating()));
     log("SRTC.getADCPin: " + String(SRTC.getADCPin()));
+    log("SRTC.temperature(): " + String(SRTC.temperature()));
 }
 #endif

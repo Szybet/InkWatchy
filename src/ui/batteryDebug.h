@@ -7,7 +7,7 @@ struct debugDisplay {
     batteryInfo battery;
 };
 
-void loopDebugDisplay();
-void initDebugDisplay();
+void loopBatteryDebugDisplay();
+void initBatteryDebugDisplay();
 #endif
 #endif

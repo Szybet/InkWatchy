@@ -34,6 +34,6 @@
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3
 #define BATTERY_CRIT_VOLTAGE 3.15
-#define BATTERY_MAX_VOLTAGE 4.21 // For calculating percentages, upper limit
+#define BATTERY_MAX_VOLTAGE 4.24 // For calculating percentages, upper limit
 
 #endif

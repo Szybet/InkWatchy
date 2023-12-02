@@ -2,7 +2,7 @@
 
 GFXcanvas1 canvas(200, 200);
 const GFXfont *font;
-int maxHeight;
+uint16_t maxHeight;
 int textSize;
 
 void setTextSize(int i)
@@ -24,17 +24,13 @@ void writeLine(String strToWrite, int cursorX, uint16_t *currentHeight)
   *currentHeight = *currentHeight + maxHeight;
 }
 
-void centerText(String text, uint16_t *currentHeight, int x)
+void centerText(String str, uint16_t *currentHeight)
 {
-  int16_t x1, y1;
-  uint16_t w, h;
-  display.getTextBounds(text.c_str(), 0, 0, &x1, &y1, &w, &h);
-  if (x == -1)
-  {
-    x = (display.width() - w) / 2;
-  }
+  uint16_t w;
+  getTextBounds(str, NULL, NULL, &w, NULL);
+  int x = (display.width() - w) / 2;
   display.setCursor(x, *currentHeight);
-  display.print(text);
+  display.print(str);
   *currentHeight = *currentHeight + maxHeight;
 }
 
@@ -43,13 +39,11 @@ void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, ui
   log("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
 
   uint16_t w, h;
-  int16_t xt, yt; // tmp, don't need it
-  display.getTextBounds(str, 1, 100, &xt, &yt, &w, &h);
+  getTextBounds(str, NULL, NULL, &w, &h);
   log("w: " + String(w));
   log("h: " + String(h));
   w = w + tolerance;
   GFXcanvas1 canvasTmp(w, h);
-  canvasTmp.fillScreen(false); // Clear canvas
   canvasTmp.setFont(font);
   canvasTmp.setTextSize(textSize);
   canvasTmp.setCursor(0, h - 1);
@@ -60,12 +54,10 @@ void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, ui
 void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16_t bgColor, int tolerance)
 {
   uint16_t w, h;
-  int16_t xt, yt; // tmp, don't need it
-  display.getTextBounds(str, 1, 100, &xt, &yt, &w, &h);
+  getTextBounds(str, NULL, NULL, &w, &h);
 
   w = w + tolerance;
   GFXcanvas1 canvasTmp(w, h);
-  canvasTmp.fillScreen(false); // Clear canvas
   canvasTmp.setFont(font);
   canvasTmp.setTextSize(textSize);
   int16_t x = (display.width() - w) / 2;
@@ -79,4 +71,27 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
   display.display(PARTIAL_UPDATE);
 }
 
-
+int16_t xS;
+int16_t yS;
+uint16_t wS;
+uint16_t hS;
+void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t *ha, int16_t cxa, int16_t cya)
+{
+  xS = 0;
+  yS = 0;
+  wS = 0;
+  hS = 0;
+  display.getTextBounds(str, cxa, cya, &xS, &yS, &wS, &hS);
+  if(xa != NULL) {
+    *xa = xS;
+  }
+  if(ya != NULL) {
+    *ya = yS;
+  }
+  if(wa != NULL) {
+    *wa = wS;
+  }
+  if(ha != NULL) {
+    *ha = hS;
+  }
+}
