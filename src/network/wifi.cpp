@@ -1,6 +1,8 @@
 #include "wifi.h"
 
 WiFiMulti wifiMulti;
+TaskHandle_t wifiTask;
+bool isWifiTaskRunning = false;
 
 void initWifi()
 {
@@ -56,11 +58,34 @@ void initWifi()
     }
 }
 
-void turnOnWifi()
+void turnOnWifiTask()
 {
+    xTaskCreatePinnedToCore(
+        turnOnWifi, /* Function to implement the task */
+        "wifiTask", /* Name of the task */
+        10000,      /* Stack size in words */
+        NULL,       /* Task input parameter */
+        0,          /* Priority of the task */
+        &wifiTask,  /* Task handle. */
+        0);         /* Core where the task should run */
+}
+
+void turnOnWifi(void *parameter)
+{
+    log("Turning wifi on");
+    isWifiTaskRunning = true;
     WiFi.mode(WIFI_STA);
-    //WiFi.setSleep(WIFI_PS_NONE);
-    wifiMulti.run(10);
+    // WiFi.setSleep(WIFI_PS_NONE);
+    WiFi.setAutoConnect(true);
+    WiFi.setAutoReconnect(true);
+    while (WiFi.isConnected() == false)
+    {
+        wifiMulti.run(500000);
+    }
+    while (true)
+    {
+        delay(300);
+    }
 }
 
 void turnOffWifi()
@@ -97,13 +122,17 @@ String wifiStatus()
 
 bool isWifiConnected()
 {
-    // TODO: Is asking 2 times time consuming?
+    // TODO: Is asking 2 times time consuming? The answer is no
     log("Milis before asking time status: " + String(millis()));
     log("wifi status: " + wifiStatus());
     wl_status_t status = WiFi.status();
     log("Milis after asking time status: " + String(millis()));
     if (status == WL_CONNECTED)
     {
+        if(isWifiTaskRunning == true) {
+            isWifiTaskRunning = false;
+            vTaskDelete(wifiTask);
+        }
         return true;
     }
     else
@@ -111,3 +140,9 @@ bool isWifiConnected()
         return false;
     }
 }
+
+#if DEBUG
+void loopwifiDebug()
+{
+}
+#endif
