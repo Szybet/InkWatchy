@@ -2,7 +2,7 @@
 
 WiFiMulti wifiMulti;
 TaskHandle_t wifiTask;
-bool isWifiTaskRunning = false;
+bool isWifiTaskFinished = false;
 
 void initWifi()
 {
@@ -73,15 +73,16 @@ void turnOnWifiTask()
 void turnOnWifi(void *parameter)
 {
     log("Turning wifi on");
-    isWifiTaskRunning = true;
+    isWifiTaskFinished = false;
     WiFi.mode(WIFI_STA);
     // WiFi.setSleep(WIFI_PS_NONE);
     WiFi.setAutoConnect(true);
     WiFi.setAutoReconnect(true);
     while (WiFi.isConnected() == false)
     {
-        wifiMulti.run(500000);
+        wifiMulti.run(9999999);
     }
+    isWifiTaskFinished = true;
     while (true)
     {
         delay(300);
@@ -90,6 +91,7 @@ void turnOnWifi(void *parameter)
 
 void turnOffWifi()
 {
+    WiFi.disconnect();
     WiFi.mode(WIFI_OFF);
 }
 
@@ -129,8 +131,13 @@ bool isWifiConnected()
     log("Milis after asking time status: " + String(millis()));
     if (status == WL_CONNECTED)
     {
-        if(isWifiTaskRunning == true) {
-            isWifiTaskRunning = false;
+        if (isWifiTaskFinished == true)
+        {
+#if DEBUG
+            log("Wifi connected, killing the wifi task");
+            //delay(10000);
+#endif
+            isWifiTaskFinished = false;
             vTaskDelete(wifiTask);
         }
         return true;
