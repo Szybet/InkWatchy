@@ -31,6 +31,11 @@ void setup()
 
 void loop()
 {
+
+  display.drawImage(pistolImg, int16_t(0), int16_t(0), int16_t(10), int16_t(10));
+  display.display(FULL_UPDATE);
+  delay(100000);
+
   loopBattery();
   loopWifiDebugDisplay();
 

@@ -5,12 +5,13 @@ int cursorXwifi = 0;
 int StatusHeight;
 int IPHeight;
 int SSIDHeight;
-
+int SignalStrengthHeight;
 #define TextSize 1
 
 uint16_t wifiStatusLength;
 uint16_t ipAddressLength;
 uint16_t ssidLength;
+uint16_t signalLength;
 String wifiStatusLastStr;
 
 void initWifiDebugDisplay()
@@ -40,6 +41,8 @@ void initWifiDebugDisplay()
     IPHeight = currentHeight - maxHeight;
     writeLine("SSID: " + WiFi.SSID(), cursorXwifi, &currentHeight);
     SSIDHeight = currentHeight - maxHeight;
+    writeLine("Wifi signal: " + String(getSignalStrength()) + "%", cursorXwifi, &currentHeight);
+    SignalStrengthHeight = currentHeight - maxHeight;
 
     display.fillRect(0, currentHeight - maxHeight / 2 - 2, display.width(), 1, GxEPD_BLACK);
     currentHeight = currentHeight + 5;
@@ -96,5 +99,30 @@ void loopWifiDebugDisplay()
         writeTextReplaceBack(ssidStr, cursorXwifi, SSIDHeight);
     }
     wifiStatusLastStr = wifiStatus();
+
+    setFont(&FreeSansBold9pt7b);
+    setTextSize(TextSize);
+
+    String signalStr = "Wifi signal: " + String(getSignalStrength()) + "%";
+    uint16_t signalWidth;
+    getTextBounds(signalStr, NULL, NULL, &signalWidth, NULL);
+    log("w: " + String(signalWidth) + " signalLength: " + String(signalLength));
+    while (signalWidth < signalLength)
+    {
+        signalStr = " " + signalStr + " ";
+        getTextBounds(signalStr, NULL, NULL, &signalWidth, NULL);
+    }
+    signalLength = signalWidth;
+
+    writeTextReplaceBack(signalStr, cursorXwifi, SignalStrengthHeight);
+
+/*
+    buttonState clicked = useButton();
+    if(clicked != None) {
+        if(clicked == UP) {
+
+        }
+    }
+    */
 }
 #endif

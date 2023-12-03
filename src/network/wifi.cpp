@@ -95,6 +95,25 @@ void turnOffWifi()
     WiFi.mode(WIFI_OFF);
 }
 
+#define MIN_RSSI -100
+#define MAX_RSSI -40
+int getSignalStrength() {
+    int rssi = WiFi.RSSI();
+    log("Pure RSSI:" + String(rssi));
+    if(rssi == 0) {
+        return 0;
+    }
+
+    if (rssi < MIN_RSSI) {
+        rssi = MIN_RSSI;
+    } else if (rssi > MAX_RSSI) {
+        rssi = MAX_RSSI;
+    }
+
+    int percentage = map(rssi, MIN_RSSI, MAX_RSSI, 0, 100);
+    return percentage;
+}
+
 #if DEBUG == 1 || DEBUG_MENUS == 1
 String wifiStatus()
 {
