@@ -17,7 +17,7 @@ do
 
     echo "Processing $f" # always double quote "$f" filename
 
-    convert $f h:- | sed 's/MagickImage/'$fne'/g' | tail -n +4 >> images.h
+    convert $f -colorspace gray h:- | sed 's/MagickImage/'$fne'/g' | tail -n +4 >> images.h
     echo -e '' >> images.h
 
 done
