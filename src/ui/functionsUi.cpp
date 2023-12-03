@@ -1,5 +1,6 @@
 #include "functionsUi.h"
 
+// Default values... are set in screen
 GFXcanvas1 canvas(200, 200);
 const GFXfont *font;
 uint16_t maxHeight;
@@ -82,16 +83,33 @@ void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t
   wS = 0;
   hS = 0;
   display.getTextBounds(str, cxa, cya, &xS, &yS, &wS, &hS);
-  if(xa != NULL) {
+  if (xa != NULL)
+  {
     *xa = xS;
   }
-  if(ya != NULL) {
+  if (ya != NULL)
+  {
     *ya = yS;
   }
-  if(wa != NULL) {
+  if (wa != NULL)
+  {
     *wa = wS;
   }
-  if(ha != NULL) {
+  if (ha != NULL)
+  {
     *ha = hS;
   }
+}
+
+// Use the image pack here to make it easier
+// Like that:
+// writeImageN(100, 100, testSomethiongImgPack);
+void writeImageN(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t h, uint16_t frColor, uint16_t bgColor)
+{
+  int16_t cx = display.getCursorX();
+  int16_t cy = display.getCursorY();
+  display.setCursor(0, 0);
+  display.drawBitmap(x, y, bitmap, w, h, frColor, bgColor);
+  display.refresh(PARTIAL_UPDATE);
+  display.setCursor(cx, cy);
 }
