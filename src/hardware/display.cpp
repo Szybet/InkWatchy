@@ -23,6 +23,9 @@ void initDisplay(bool isFromWakeUp)
     display.fillScreen(GxEPD_WHITE);
     display.setTextColor(GxEPD_BLACK);
 
+    // Default values
+    setFont(&FreeSansBold9pt7b);
+    setTextSize(3);
     // display.display(FULL_UPDATE);
 }
 

@@ -9,15 +9,27 @@ echo -e '' >> images.h
 
 for f in *
 do
-    if [[ $f == *".sh"* ]] || [[ $f == *".h"* ]]; then
+    if [[ $f == *".sh"* ]] || [[ $f == *".h"* ]] || [[ $f == "eink-2color.png" ]]; then
         continue
     fi
 
+    echo "Processing $f" # always double quote "$f" filename
+    
     fne="${f%.*}Img"
 
-    echo "Processing $f" # always double quote "$f" filename
+    #convert $f -compress none -monochrome -colors 2 -depth 1 h:- | sed 's/MagickImage/'$fne'/g' | tail -n +4 >> images.h
 
-    convert $f -colorspace gray h:- | sed 's/MagickImage/'$fne'/g' | tail -n +4 >> images.h
+    echo -e "#define ${fne}Pack ${fne},${fne}Width,${fne}Height" >> images.h
+
+    identify -ping -format '#define '${fne}'Width %w' $f >> images.h
+    echo -e '' >> images.h
+
+    identify -ping -format '#define '${fne}'Height %h' $f >> images.h
+    echo -e '' >> images.h
+
+    # On arch linux install xxd-standalone
+
+    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- | xxd -i -n $fne | sed 's/unsigned/const unsigned/g' | sed '/_len = /d' >> images.h
     echo -e '' >> images.h
 
 done
