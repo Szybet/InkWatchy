@@ -6,13 +6,16 @@
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 
 // Advanced
-#define DEBUG 1
-#define EINK_COUNTER 0       // Shows a counter somewhere on screen
 #define SLEEP_EVERY_MS 180000 // Goes to sleep timer, is resetted by button presses
 #define LOOP_DELAY 10        // Speed of the device basically
+
+// Debugging help
+#define DEBUG 1
+#define EINK_COUNTER 0       // Shows a counter somewhere on screen
 #define DUMP_INIT_DEBUG 1    // If debug, shows at init init information
 #define DUMP_LOOP_DEBUG 0    // If debug, at every loop iteration dump hardware values that can change
 #define SCREEN_SLEEP_INFO 1 // Shows information on screen when the device goes to screen
+#define DRAW_DEBUG_RECT 1 // Shows rectangles where custom functions write bitmaps
 
 // Display init magic ;)
 #define EPD_CS 5
@@ -37,6 +40,6 @@
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3
 #define BATTERY_CRIT_VOLTAGE 3.15
-#define BATTERY_MAX_VOLTAGE 4.24 // For calculating percentages, upper limit
+#define BATTERY_MAX_VOLTAGE 4.27 // For calculating percentages, upper limit
 
 #endif
