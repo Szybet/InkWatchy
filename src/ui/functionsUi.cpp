@@ -35,41 +35,72 @@ void centerText(String str, uint16_t *currentHeight)
   *currentHeight = *currentHeight + maxHeight;
 }
 
-void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor, int tolerance)
+void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor)
 {
   log("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
-
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
   log("w: " + String(w));
   log("h: " + String(h));
-  w = w + tolerance;
-  GFXcanvas1 canvasTmp(w, h);
-  canvasTmp.setFont(font);
-  canvasTmp.setTextSize(textSize);
-  canvasTmp.setCursor(0, h - 1);
-  canvasTmp.print(str);
-  display.drawBitmap(x, y - h + (tolerance / 3), canvasTmp.getBuffer(), w, h, frColor, bgColor); // this is fucking relative to the cursor.
+  w = w + 5;
+  if (containsBelowChar(str) == true)
+  {
+    GFXcanvas1 canvasTmp(w, h + 3);
+    canvasTmp.setFont(font);
+    canvasTmp.setTextSize(textSize);
+    canvasTmp.setCursor(0, h - 3);
+    canvasTmp.print(str);
+    display.drawBitmap(x, y - h + 3, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
+#if DRAW_DEBUG_RECT
+    display.drawRect(x, y - h + 3, w, h + 3, frColor);
+#endif
+  }
+  else
+  {
+    GFXcanvas1 canvasTmp(w, h + 3);
+    canvasTmp.setFont(font);
+    canvasTmp.setTextSize(textSize);
+    canvasTmp.setCursor(0, h);
+    canvasTmp.print(str);
+    display.drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
+#if DRAW_DEBUG_RECT
+    display.drawRect(x, y - h, w, h + 3, frColor);
+#endif
+  }
 }
 
-void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16_t bgColor, int tolerance)
+void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16_t bgColor)
 {
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
-
-  w = w + tolerance;
-  GFXcanvas1 canvasTmp(w, h);
-  canvasTmp.setFont(font);
-  canvasTmp.setTextSize(textSize);
+  log("w: " + String(w));
+  log("h: " + String(h));
+  w = w + 5;
   int16_t x = (display.width() - w) / 2;
-  canvasTmp.setCursor(0, h - 1);
-  canvasTmp.print(str);
-  canvasTmp.endWrite();
-
-  log("Drawing bitmap with text: " + str + " with size: " + String(w) + "x" + String(h) + " at " + String(x) + "x" + String(y - h + (tolerance / 3)));
-
-  display.drawBitmap(x, y - h + (tolerance / 3), canvasTmp.getBuffer(), w, h, frColor, bgColor); // this is fucking relative to the cursor.
-  display.display(PARTIAL_UPDATE);
+  if (containsBelowChar(str) == true)
+  {
+    GFXcanvas1 canvasTmp(w, h + 3);
+    canvasTmp.setFont(font);
+    canvasTmp.setTextSize(textSize);
+    canvasTmp.setCursor(0, h - 3);
+    canvasTmp.print(str);
+    display.drawBitmap(x, y - h + 3, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
+#if DRAW_DEBUG_RECT
+    display.drawRect(x, y - h + 3, w, h + 3, frColor);
+#endif
+  }
+  else
+  {
+    GFXcanvas1 canvasTmp(w, h + 3);
+    canvasTmp.setFont(font);
+    canvasTmp.setTextSize(textSize);
+    canvasTmp.setCursor(0, h);
+    canvasTmp.print(str);
+    display.drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
+#if DRAW_DEBUG_RECT
+    display.drawRect(x, y - h, w, h + 3, frColor);
+#endif
+  }
 }
 
 int16_t xS;
@@ -80,7 +111,7 @@ void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t
 {
   int16_t cx = display.getCursorX();
   int16_t cy = display.getCursorY();
-  display.setCursor(10,100);
+  display.setCursor(10, 100);
   xS = 0;
   yS = 0;
   wS = 0;
@@ -120,5 +151,4 @@ void writeImageN(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t
 
 void drawButton()
 {
-
 }

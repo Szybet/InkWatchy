@@ -119,7 +119,6 @@ void loopWifiDebugDisplay()
         display.display(PARTIAL_UPDATE);
         int guwno;
     }
-    return void();
     int wifiSignal = getSignalStrength();
     if (wifiSignal != wifiSignalLast)
     {
