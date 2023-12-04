@@ -78,6 +78,9 @@ uint16_t wS;
 uint16_t hS;
 void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t *ha, int16_t cxa, int16_t cya)
 {
+  int16_t cx = display.getCursorX();
+  int16_t cy = display.getCursorY();
+  display.setCursor(10,100);
   xS = 0;
   yS = 0;
   wS = 0;
@@ -99,6 +102,7 @@ void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t
   {
     *ha = hS;
   }
+  display.setCursor(cx, cy);
 }
 
 // Use the image pack here to make it easier
@@ -112,4 +116,9 @@ void writeImageN(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t
   display.drawBitmap(x, y, bitmap, w, h, frColor, bgColor);
   display.refresh(PARTIAL_UPDATE);
   display.setCursor(cx, cy);
+}
+
+void drawButton()
+{
+
 }

@@ -25,7 +25,6 @@ void setup()
   initHardwareDebug();
 #endif
   // Init first
-  initWifi();
   turnOnWifiTask();
 }
 

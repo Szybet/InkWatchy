@@ -3,6 +3,7 @@
 WiFiMulti wifiMulti;
 TaskHandle_t wifiTask;
 bool isWifiTaskFinished = false;
+bool isWifiTaskRunning = false;
 
 void initWifi()
 {
@@ -73,14 +74,25 @@ void turnOnWifiTask()
 void turnOnWifi(void *parameter)
 {
     log("Turning wifi on");
+    isWifiTaskRunning = true;
     isWifiTaskFinished = false;
-    WiFi.mode(WIFI_STA);
-    // WiFi.setSleep(WIFI_PS_NONE);
-    WiFi.setAutoConnect(true);
-    WiFi.setAutoReconnect(true);
-    while (WiFi.isConnected() == false)
+    for (int i = 0; i < 15; i++)
     {
-        wifiMulti.run(9999999);
+        WiFi.mode(WIFI_STA);
+        WiFi.setSleep(WIFI_PS_NONE);
+        WiFi.setAutoConnect(true);
+        WiFi.setAutoReconnect(true);
+        initWifi();
+        wifiMulti.run(17000);
+        if (WiFi.status() == WL_CONNECTED)
+        {
+            break;
+        }
+        else
+        {
+            log("Wifi failed to connect, retrying...");
+            turnOffWifi();
+        }
     }
     isWifiTaskFinished = true;
     while (true)
@@ -97,16 +109,21 @@ void turnOffWifi()
 
 #define MIN_RSSI -100
 #define MAX_RSSI -40
-int getSignalStrength() {
+int getSignalStrength()
+{
     int rssi = WiFi.RSSI();
     log("Pure RSSI:" + String(rssi));
-    if(rssi == 0) {
+    if (rssi == 0)
+    {
         return 0;
     }
 
-    if (rssi < MIN_RSSI) {
+    if (rssi < MIN_RSSI)
+    {
         rssi = MIN_RSSI;
-    } else if (rssi > MAX_RSSI) {
+    }
+    else if (rssi > MAX_RSSI)
+    {
         rssi = MAX_RSSI;
     }
 
@@ -144,21 +161,24 @@ String wifiStatus()
 bool isWifiConnected()
 {
     // TODO: Is asking 2 times time consuming? The answer is no
-    log("Milis before asking time status: " + String(millis()));
-    log("wifi status: " + wifiStatus());
+    // log("Milis before asking time status: " + String(millis()));
+    log("Wifi status: " + wifiStatus());
     wl_status_t status = WiFi.status();
-    log("Milis after asking time status: " + String(millis()));
+    // log("Milis after asking time status: " + String(millis()));
+
+    if (isWifiTaskFinished == true)
+    {
+#if DEBUG
+        log("Wifi connected, killing the wifi task");
+#endif
+        isWifiTaskFinished = false;
+        isWifiTaskRunning = false;
+        vTaskDelete(wifiTask);
+    }
+
     if (status == WL_CONNECTED)
     {
-        if (isWifiTaskFinished == true)
-        {
-#if DEBUG
-            log("Wifi connected, killing the wifi task");
-            //delay(10000);
-#endif
-            isWifiTaskFinished = false;
-            vTaskDelete(wifiTask);
-        }
+
         return true;
     }
     else

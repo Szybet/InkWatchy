@@ -7,7 +7,7 @@
 
 // Advanced
 #define DEBUG 1
-#define EINK_COUNTER 1       // Shows a counter somewhere on screen
+#define EINK_COUNTER 0       // Shows a counter somewhere on screen
 #define SLEEP_EVERY_MS 180000 // Goes to sleep timer, is resetted by button presses
 #define LOOP_DELAY 10        // Speed of the device basically
 #define DUMP_INIT_DEBUG 1    // If debug, shows at init init information
