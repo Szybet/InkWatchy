@@ -8,6 +8,7 @@ void turnOnWifiTask();
 void turnOnWifi(void *parameter);
 void turnOffWifi();
 int getSignalStrength();
+extern bool isWifiTaskRunning;
 
 #if DEBUG
 String wifiStatus();
