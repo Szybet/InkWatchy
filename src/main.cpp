@@ -32,6 +32,8 @@ void setup()
 void loop()
 {
   loopBattery();
+  loopButtons();
+
   //loopWifiDebugDisplay();
   loopBatteryDebugDisplay();
 

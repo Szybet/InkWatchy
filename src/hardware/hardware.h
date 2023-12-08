@@ -10,6 +10,8 @@ void initAllHardware();
 void initWakeUpHardware(bool isFromWakeUp);
 void resetSleepDelay();
 
+void vibrateMotor(int vTime = VIBRATION_BUTTON_TIME);
+
 #if DEBUG
 void initHardwareDebug();
 void loopHardwareDebug();

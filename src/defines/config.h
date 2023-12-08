@@ -4,6 +4,7 @@
 // Basics
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // GSR uses higher, RTC based minimum voltage levels. Change this to 1 if you have problems at lower battery levels
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
+#define VIBRATION_BUTTON_TIME 35 // Time in ms to the motor to vibrate after clicking a button. 0 means none 
 
 // Advanced
 #define SLEEP_EVERY_MS 180000 // Goes to sleep timer, is resetted by button presses
@@ -41,5 +42,8 @@
 #define BATTERY_MIN_VOLTAGE 3.3
 #define BATTERY_CRIT_VOLTAGE 3.15
 #define BATTERY_MAX_VOLTAGE 4.27 // For calculating percentages, upper limit
+
+// Other
+#define VIB_MOTOR_PIN 13 // Vibration motor
 
 #endif

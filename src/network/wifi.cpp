@@ -61,14 +61,13 @@ void initWifi()
 
 void turnOnWifiTask()
 {
-    xTaskCreatePinnedToCore(
-        turnOnWifi, /* Function to implement the task */
-        "wifiTask", /* Name of the task */
-        10000,      /* Stack size in words */
-        NULL,       /* Task input parameter */
-        0,          /* Priority of the task */
-        &wifiTask,  /* Task handle. */
-        0);         /* Core where the task should run */
+    xTaskCreate(
+        turnOnWifi,
+        "wifiTask",
+        10000,
+        NULL,
+        0,
+        &wifiTask);
 }
 
 void turnOnWifi(void *parameter)

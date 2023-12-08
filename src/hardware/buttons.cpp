@@ -41,27 +41,29 @@ void initButtons()
 }
 
 void setButton(buttonState button) {
+    log("setButton called: " + getButtonString(button));
+    vibrateMotor();
     buttonPressed = button;
     resetSleepDelay();
 }
 
-void buttonsLoop()
+void loopButtons()
 {
     if (digitalRead(BACK_PIN) == HIGH)
     {
-        buttonPressed = Back;
+        setButton(Back);
     }
     else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back)
     {
-        buttonPressed = Menu;
+        setButton(Menu);
     }
     else if (digitalRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back)
     {
-        buttonPressed = Up;
+        setButton(Up);
     }
     else if (digitalRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back)
     {
-        buttonPressed = Down;
+        setButton(Down);
     }
 }
 
