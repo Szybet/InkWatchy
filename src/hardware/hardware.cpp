@@ -58,19 +58,26 @@ void loopHardwareDebug()
 
 TaskHandle_t motorTask;
 int vibrateTime;
+bool vibrateTaskRunning = false;
 void vibrateMotorTaskFun(void *parameter)
 {
+    vibrateTaskRunning = true;
     log("Motor on");
-    digitalWrite(VIB_MOTOR_PIN, true);
-    delayTask(vibrateTime);
+    for (int i = 0; i < vibrateTime / 2; i++)
+    {
+        digitalWrite(VIB_MOTOR_PIN, true);
+        delayTask(1);
+        digitalWrite(VIB_MOTOR_PIN, false);
+        delayTask(1);
+    }
     log("Motor off");
-    digitalWrite(VIB_MOTOR_PIN, false);
+    vibrateTaskRunning = false;
     vTaskDelete(NULL);
 }
 
 void vibrateMotor(int vTime)
 {
-    if (vibrateMotor != 0)
+    if (vibrateMotor != 0 && vibrateTaskRunning == false)
     {
         vibrateTime = vTime;
         xTaskCreate(
