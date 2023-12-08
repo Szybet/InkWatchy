@@ -38,9 +38,9 @@ void loop()
   loopBatteryDebugDisplay();
 
   // Needs to run forever because it deletes the wifi task. Use other conditions to determine if we need to do something with wifi too
-  if(isWifiConnected() == true) {
+  //if(isWifiConnected() == true) {
 
-  }
+  //}
 
 #if DEBUG && EINK_COUNTER
   showEinkCounter();
