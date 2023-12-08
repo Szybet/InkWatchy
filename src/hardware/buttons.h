@@ -18,7 +18,7 @@ extern uint64_t RTC_DATA_ATTR UP_MASK;
 
 buttonState useButton(bool allButtons = false);
 void initButtons();
-void buttonsLoop();
+void loopButtons();
 void setButton(buttonState button);
 
 #if DEBUG

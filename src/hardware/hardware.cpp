@@ -8,7 +8,10 @@ void initAllHardware()
 {
     initRTC();
     initBattery();
+
+    // To wake up?
     initButtons();
+    pinMode(VIB_MOTOR_PIN, OUTPUT);
 
     initWakeUpHardware(false);
 }
@@ -52,3 +55,30 @@ void loopHardwareDebug()
     dumpButtons();
 }
 #endif
+
+TaskHandle_t motorTask;
+int vibrateTime;
+void vibrateMotorTaskFun(void *parameter)
+{
+    log("Motor on");
+    digitalWrite(VIB_MOTOR_PIN, true);
+    delayTask(vibrateTime);
+    log("Motor off");
+    digitalWrite(VIB_MOTOR_PIN, false);
+    vTaskDelete(NULL);
+}
+
+void vibrateMotor(int vTime)
+{
+    if (vibrateMotor != 0)
+    {
+        vibrateTime = vTime;
+        xTaskCreate(
+            vibrateMotorTaskFun,
+            "motorTask",
+            2000,
+            NULL,
+            0,
+            &motorTask);
+    }
+}
