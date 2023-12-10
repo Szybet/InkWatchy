@@ -75,7 +75,7 @@ void vibrateMotorTaskFun(void *parameter)
     vTaskDelete(NULL);
 }
 
-void vibrateMotor(int vTime)
+void vibrateMotor(int vTime, bool add)
 {
     if (vibrateMotor != 0 && vibrateTaskRunning == false)
     {
@@ -87,5 +87,9 @@ void vibrateMotor(int vTime)
             NULL,
             0,
             &motorTask);
+    }
+    if(add == true && vibrateMotor != 0 && vibrateTaskRunning == true) {
+        log("Adding time to motor");
+        vibrateTime = vibrateTime + vTime;
     }
 }

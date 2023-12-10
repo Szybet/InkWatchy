@@ -1,7 +1,6 @@
 #include "functionsUi.h"
 
 // Default values... are set in screen
-GFXcanvas1 canvas(200, 200);
 const GFXfont *font;
 uint16_t maxHeight;
 int textSize;
@@ -149,6 +148,94 @@ void writeImageN(int16_t x, int16_t y, const uint8_t *bitmap, int16_t w, int16_t
   display.setCursor(cx, cy);
 }
 
-void drawButton()
+sizeInfo drawButton(int16_t x, int16_t y, String str, const uint8_t *bitmap, int16_t bw, int16_t bh, bool invert, int tolerance, bool border, int borderWidth, uint16_t frColor, uint16_t bgColor)
 {
+  sizeInfo size = {0};
+  int toleranceSize = tolerance * 2 + borderWidth * 2;
+  size.w = toleranceSize;
+  size.h = toleranceSize;
+
+  uint16_t tw = 0;
+  uint16_t th = 0;
+  if (str != "")
+  {
+    getTextBounds(str, NULL, NULL, &tw, &th);
+    size.w += tw;
+    size.w += 1;
+  }
+
+  if (bitmap != NULL)
+  {
+    size.w += bw;
+  }
+
+  if (bitmap != NULL && str != "")
+  {
+    size.w += tolerance;
+  }
+
+  uint16_t mainH;
+  if (bitmap != NULL && bh > th)
+  {
+    size.h += bh;
+    mainH = bh;
+  }
+  else
+  {
+    size.h += th;
+    mainH = th;
+  }
+
+  log("Final size.h is: " + String(size.h));
+  log("Final size.w is: " + String(size.w));
+
+  GFXcanvas1 canvasTmp(size.w, size.h);
+  canvasTmp.setFont(font);
+  canvasTmp.setTextSize(textSize);
+  canvasTmp.setCursor(tolerance + borderWidth, tolerance + borderWidth);
+  if (bitmap != NULL)
+  {
+    canvasTmp.drawBitmap(tolerance + borderWidth, tolerance + borderWidth, bitmap, bw, bh, frColor, bgColor);
+    if (str != "")
+    {
+      canvasTmp.setCursor(canvasTmp.getCursorX() + tolerance + bw, canvasTmp.getCursorY());
+    }
+  }
+  if (str != "")
+  {
+    canvasTmp.setCursor(canvasTmp.getCursorX(), size.h - ((size.h - th) / 2) - 1); // -1 for reasons?
+    log("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()));
+    canvasTmp.print(str);
+  }
+
+  int16_t canvasCursorXTmp = canvasTmp.getCursorX();
+  int16_t canvasCursorYTmp = canvasTmp.getCursorY();
+  int16_t rectOffset = 0;
+  canvasTmp.setCursor(0, 0);
+  uint16_t borderColor = bgColor;
+  if(invert == true) {
+    borderColor = frColor;
+  }
+  for (int16_t i = 0; i < borderWidth; i++)
+  {
+    log("Drawing border in button");
+    canvasTmp.drawRect(i + rectOffset, i + rectOffset, size.w - rectOffset, size.h - rectOffset, borderColor);
+  }
+  canvasTmp.setCursor(canvasCursorXTmp, canvasCursorYTmp);
+
+  int16_t cx = display.getCursorX();
+  int16_t cy = display.getCursorY();
+  display.setCursor(0, 0);
+  if (invert == false)
+  {
+    log("Drawing non inverted button");
+    display.drawBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, frColor, bgColor); // why inverted?
+  }
+  else
+  {
+    display.drawBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, bgColor, frColor);
+    // display.drawInvertedBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, frColor);
+  }
+  display.setCursor(cx, cy);
+  return size;
 }

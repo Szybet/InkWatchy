@@ -2,7 +2,6 @@
 
 WiFiMulti wifiMulti;
 TaskHandle_t wifiTask;
-bool isWifiTaskFinished = false;
 bool isWifiTaskRunning = false;
 
 void initWifi()
@@ -59,22 +58,10 @@ void initWifi()
     }
 }
 
-void turnOnWifiTask()
-{
-    xTaskCreate(
-        turnOnWifi,
-        "wifiTask",
-        10000,
-        NULL,
-        0,
-        &wifiTask);
-}
-
-void turnOnWifi(void *parameter)
+void turnOnWifiTask(void *parameter)
 {
     log("Turning wifi on");
     isWifiTaskRunning = true;
-    isWifiTaskFinished = false;
     for (int i = 0; i < 15; i++)
     {
         WiFi.mode(WIFI_STA);
@@ -93,15 +80,31 @@ void turnOnWifi(void *parameter)
             turnOffWifi();
         }
     }
-    isWifiTaskFinished = true;
-    while (true)
+    isWifiTaskRunning = false;
+    vTaskDelete(NULL);
+}
+
+void turnOnWifi()
+{
+    if (isWifiTaskRunning == false)
     {
-        delay(300);
+        xTaskCreate(
+            turnOnWifiTask,
+            "wifiTask",
+            10000,
+            NULL,
+            0,
+            &wifiTask);
     }
 }
 
 void turnOffWifi()
 {
+    if (isWifiTaskRunning == true)
+    {
+        vTaskDelete(wifiTask);
+        isWifiTaskRunning = false;
+    }
     WiFi.disconnect();
     WiFi.mode(WIFI_OFF);
 }
@@ -164,16 +167,6 @@ bool isWifiConnected()
     log("Wifi status: " + wifiStatus());
     wl_status_t status = WiFi.status();
     // log("Milis after asking time status: " + String(millis()));
-
-    if (isWifiTaskFinished == true)
-    {
-#if DEBUG
-        log("Wifi connected, killing the wifi task");
-#endif
-        isWifiTaskFinished = false;
-        isWifiTaskRunning = false;
-        vTaskDelete(wifiTask);
-    }
 
     if (status == WL_CONNECTED)
     {
