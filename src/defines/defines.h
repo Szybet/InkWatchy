@@ -32,5 +32,6 @@
 #include "../ui/wifiDebug.h"
 #include "../network/wifi.h"
 #include "../network/ntp.h"
+#include "../network/weather.h"
 
 #endif
