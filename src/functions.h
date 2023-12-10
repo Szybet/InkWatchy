@@ -6,5 +6,6 @@
 void logFunction(String file, int line, String func, String message);
 bool containsBelowChar(String str);
 void delayTask(int timeMs);
+void checkMaxMin(int *value, int max, int min = 0);
 
 #endif

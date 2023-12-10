@@ -24,18 +24,19 @@ void setup()
   initHardwareDebug();
 #endif
 
-  //turnOnWifiTask();
-  //initWifiDebugDisplay();
-  initBatteryDebugDisplay();
+  turnOnWifi();
+  initWifiDebugDisplay();
+  //initBatteryDebugDisplay();
+
+  loopButtons();
 }
 
 void loop()
 {
   loopBattery();
-  loopButtons();
 
-  //loopWifiDebugDisplay();
-  loopBatteryDebugDisplay();
+  loopWifiDebugDisplay();
+  //loopBatteryDebugDisplay();
 
   // Needs to run forever because it deletes the wifi task. Use other conditions to determine if we need to do something with wifi too
   //if(isWifiConnected() == true) {

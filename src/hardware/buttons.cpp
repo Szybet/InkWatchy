@@ -3,23 +3,23 @@
 int RTC_DATA_ATTR UP_PIN = 32;
 uint64_t RTC_DATA_ATTR UP_MASK = GPIO_SEL_32;
 buttonState buttonPressed = None;
+TaskHandle_t buttonTask;
 
 buttonState useButton(bool allButtons)
 {
-    if(allButtons == false && buttonPressed == Back) {
+    if (allButtons == false && buttonPressed == Back)
+    {
         return None;
     }
     buttonState buttonPressedTmp = buttonPressed;
     buttonPressed = None;
-    
-    // TODO: make a switch funtion and use it for logs to show which button was returned here
+
     log("Used button by UI: " + getButtonString(buttonPressedTmp));
     return buttonPressedTmp;
 }
 
 void initButtons()
 {
-    // Skopiuj tu te wartosci UP_PIN i UP_MASK
     if (SRTC.getType() == PCF8563)
     {
         if (HWVer == 1.5)
@@ -40,31 +40,52 @@ void initButtons()
     pinMode(DOWN_PIN, INPUT);
 }
 
-void setButton(buttonState button) {
+void setButton(buttonState button)
+{
     log("setButton called: " + getButtonString(button));
     vibrateMotor();
     buttonPressed = button;
     resetSleepDelay();
 }
 
+#define ADD_BUTTON_DELAY 4
+void loopButtonsTask(void *parameter)
+{
+    while (true)
+    {
+        if (digitalRead(BACK_PIN) == HIGH)
+        {
+            setButton(Back);
+            delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
+        }
+        else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back)
+        {
+            setButton(Menu);
+            delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
+        }
+        else if (digitalRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back)
+        {
+            setButton(Up);
+            delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
+        }
+        else if (digitalRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back)
+        {
+            setButton(Down);
+            delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
+        }
+        delayTask(BUTTON_TASK_DELAY);
+    }
+}
+
 void loopButtons()
 {
-    if (digitalRead(BACK_PIN) == HIGH)
-    {
-        setButton(Back);
-    }
-    else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back)
-    {
-        setButton(Menu);
-    }
-    else if (digitalRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back)
-    {
-        setButton(Up);
-    }
-    else if (digitalRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back)
-    {
-        setButton(Down);
-    }
+    xTaskCreate(
+        loopButtonsTask,
+        "buttonTask",
+        2000,
+        NULL,
+        0,
+        &buttonTask);
 }
 
 #if DEBUG

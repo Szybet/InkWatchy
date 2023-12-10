@@ -1,6 +1,12 @@
 #include "wifiDebug.h"
 
 #if DEBUG == 1 || DEBUG_MENUS == 1
+#define SEL_ON 0
+#define SEL_OFF 1
+// Copy from file to file...
+#define SEL_MAX 1
+int selUi = 0;
+
 #define cursorXwifi 0
 int StatusHeight;
 int IPHeight;
@@ -16,6 +22,8 @@ uint16_t signalLength;
 uint16_t taskStatusLenght;
 String wifiStatusLastStr;
 String taskStatusLastStr;
+cordInfo onButtonCord;
+cordInfo offButtonCord;
 int wifiSignalLast;
 
 void initWifiDebugDisplay()
@@ -27,6 +35,7 @@ void initWifiDebugDisplay()
     getTextBounds(menuName, NULL, NULL, NULL, &maxHeight);
 
     uint16_t currentHeight = maxHeight;
+    log("maxHeight for wifi debug menu: " + String(maxHeight));
     maxHeight = maxHeight + 1; // Add here for more space between lines
     display.setCursor(cursorXwifi, currentHeight - 3);
     display.print(menuName);
@@ -61,12 +70,42 @@ void initWifiDebugDisplay()
     writeLine("Connecting: " + taskStatusLastStr, cursorXwifi, &currentHeight);
     TaskStatusHeight = currentHeight - maxHeight;
 
-    display.fillRect(0, currentHeight - maxHeight / 2 - 2, display.width(), 1, GxEPD_BLACK);
-    currentHeight = currentHeight + 5;
+    currentHeight = currentHeight - maxHeight + 6;
+    display.fillRect(0, currentHeight, display.width(), 1, GxEPD_BLACK);
+    currentHeight = currentHeight + 8;
 
-    writeLine("Turn wifi on", cursorXwifi, &currentHeight);
-    writeLine("Turn wifi off", cursorXwifi, &currentHeight);
+    onButtonCord.x = 3;
+    onButtonCord.y = currentHeight;
+    offButtonCord.x = 70;
+    offButtonCord.y = currentHeight;
+    drawButton(onButtonCord.x, onButtonCord.y, "ON", acceptImgPack, true);
+    drawButton(offButtonCord.x, offButtonCord.y, "OFF", crossImgPack);
+
     display.display(FULL_UPDATE);
+}
+
+void drawSelUi()
+{
+    // Is there a better solution?
+    bool offBut = false;
+    bool onBut = false;
+
+    switch (selUi)
+    {
+    case SEL_ON:
+    {
+        onBut = true;
+        break;
+    }
+    case SEL_OFF:
+    {
+        offBut = true;
+        break;
+    }
+    }
+    drawButton(onButtonCord.x, onButtonCord.y, "ON", acceptImgPack, onBut);
+    drawButton(offButtonCord.x, offButtonCord.y, "OFF", crossImgPack, offBut);
+    display.display(PARTIAL_UPDATE);
 }
 
 void loopWifiDebugDisplay()
@@ -164,13 +203,43 @@ void loopWifiDebugDisplay()
         writeTextReplaceBack(TaskStatusStr, cursorXwifi, TaskStatusHeight);
         display.display(PARTIAL_UPDATE);
     }
-    /*
-        buttonState clicked = useButton();
-        if(clicked != None) {
-            if(clicked == UP) {
 
-            }
+    log("selected: " + String(selUi));
+    switch (useButton())
+    {
+    case Up:
+    {
+        selUi += 1;
+        checkMaxMin(&selUi, SEL_MAX);
+        drawSelUi();
+        break;
+    }
+    case Down:
+    {
+        selUi -= 1;
+        checkMaxMin(&selUi, SEL_MAX);
+        drawSelUi();
+        break;
+    }
+    case Menu:
+    {
+        switch (selUi)
+        {
+        case SEL_ON:
+        {
+            turnOnWifi();
+            vibrateMotor(VIBRATION_ACTION_TIME, true);
+            break;
         }
-        */
+        case SEL_OFF:
+        {
+            turnOffWifi();
+            vibrateMotor(VIBRATION_ACTION_TIME, true);
+            break;
+        }
+        }
+        break;
+    }
+    }
 }
 #endif

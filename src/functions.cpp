@@ -19,3 +19,12 @@ void delayTask(int timeMs) {
     log("Going to sleep for " + String(timeMs) + " Ms. In ticks that is: " + String(xDelay));
     vTaskDelay(xDelay);
 }
+
+void checkMaxMin(int *value, int max, int min) {
+    if(*value > max) {
+        *value = min;
+    }
+    if(*value < min) {
+        *value = max;
+    }
+}

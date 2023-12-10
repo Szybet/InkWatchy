@@ -4,8 +4,7 @@
 #include "defines/defines.h"
 
 void initWifi();
-void turnOnWifiTask();
-void turnOnWifi(void *parameter);
+void turnOnWifi();
 void turnOffWifi();
 int getSignalStrength();
 extern bool isWifiTaskRunning;
