@@ -81,6 +81,7 @@ void turnOnWifiTask(void *parameter)
         }
     }
     syncNtp();
+    syncWeather();
     isWifiTaskRunning = false;
     vTaskDelete(NULL);
 }
