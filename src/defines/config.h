@@ -15,7 +15,7 @@
 
 // Debugging help
 #define DEBUG 1
-#define EINK_COUNTER 0      // Shows a counter somewhere on screen
+#define EINK_COUNTER 1      // Shows a counter somewhere on screen
 #define DUMP_INIT_DEBUG 1   // If debug, shows at init init information
 #define DUMP_LOOP_DEBUG 0   // If debug, at every loop iteration dump hardware values that can change
 #define SCREEN_SLEEP_INFO 1 // Shows information on screen when the device goes to screen

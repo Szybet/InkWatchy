@@ -5,4 +5,8 @@
 
 void syncWeather();
 
+#if DEBUG
+void dumpWeather();
+#endif
+
 #endif

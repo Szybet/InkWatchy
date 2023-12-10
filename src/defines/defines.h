@@ -9,7 +9,9 @@
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <NTPClient.h>
-#include <OpenWeatherOneCall.h>
+
+#include <JSON_Decoder.h>
+#include <OpenWeather.h>
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
