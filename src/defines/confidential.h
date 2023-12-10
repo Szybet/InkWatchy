@@ -38,7 +38,9 @@
 #define WIFI_PASS10 ""
 
 #define OPEN_WEATHER_API_KEY ""
-#define CITY_ID 0
-#define METRIC_WEATHER true
+#define WEATHER_LATIT ""
+#define WEATHER_LONGTIT ""
+#define WEATHER_UNIT "metric"
+#define WEATHER_LANG "en"
 
 #endif
