@@ -16,7 +16,7 @@ bool containsBelowChar(String str) {
 void delayTask(int timeMs) {
     TickType_t xDelay = (TickType_t)timeMs;
     xDelay = xDelay / portTICK_PERIOD_MS;
-    log("Going to sleep for " + String(timeMs) + " Ms. In ticks that is: " + String(xDelay));
+    //log("Going to sleep for " + String(timeMs) + " Ms. In ticks that is: " + String(xDelay));
     vTaskDelay(xDelay);
 }
 

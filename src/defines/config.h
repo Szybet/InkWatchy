@@ -4,21 +4,22 @@
 // Basics
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // GSR uses higher, RTC based minimum voltage levels. Change this to 1 if you have problems at lower battery levels
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
-#define VIBRATION_BUTTON_TIME 35 // Time in ms to the motor to vibrate after clicking a button. 0 means none
-#define VIBRATION_ACTION_TIME 60 // Time in ms to the motor to vibrate when the UI receives an action
+#define VIBRATION_BUTTON_TIME 35      // Time in ms to the motor to vibrate after clicking a button. 0 means none
+#define VIBRATION_ACTION_TIME 60      // Time in ms to the motor to vibrate when the UI receives an action
+#define TIME_OFFSET_S 3600            // Time offset in seconds, use this as timezones
 
 // Advanced
 #define SLEEP_EVERY_MS 180000 // Goes to sleep timer, is resetted by button presses
-#define LOOP_DELAY 10        // Speed of the device basically
+#define LOOP_DELAY 10         // Speed of the device basically
 #define BUTTON_TASK_DELAY 140 // In ms, lower means faster button detection but more cpu usage
 
 // Debugging help
 #define DEBUG 1
-#define EINK_COUNTER 0       // Shows a counter somewhere on screen
-#define DUMP_INIT_DEBUG 1    // If debug, shows at init init information
-#define DUMP_LOOP_DEBUG 0    // If debug, at every loop iteration dump hardware values that can change
+#define EINK_COUNTER 0      // Shows a counter somewhere on screen
+#define DUMP_INIT_DEBUG 1   // If debug, shows at init init information
+#define DUMP_LOOP_DEBUG 0   // If debug, at every loop iteration dump hardware values that can change
 #define SCREEN_SLEEP_INFO 1 // Shows information on screen when the device goes to screen
-#define DRAW_DEBUG_RECT 0 // Shows rectangles where custom functions write bitmaps
+#define DRAW_DEBUG_RECT 0   // Shows rectangles where custom functions write bitmaps
 
 // Display init magic ;)
 #define EPD_CS 5

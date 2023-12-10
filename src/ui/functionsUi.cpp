@@ -36,11 +36,11 @@ void centerText(String str, uint16_t *currentHeight)
 
 void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor)
 {
-  log("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
+  //log("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
-  log("w: " + String(w));
-  log("h: " + String(h));
+  //log("w: " + String(w));
+  //log("h: " + String(h));
   w = w + 5;
   if (containsBelowChar(str) == true)
   {
@@ -72,8 +72,8 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
 {
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
-  log("w: " + String(w));
-  log("h: " + String(h));
+  //log("w: " + String(w));
+  //log("h: " + String(h));
   w = w + 5;
   int16_t x = (display.width() - w) / 2;
   if (containsBelowChar(str) == true)
