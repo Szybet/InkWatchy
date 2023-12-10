@@ -111,7 +111,7 @@ void drawSelUi()
 void loopWifiDebugDisplay()
 {
     String wifiStatusStr = wifiStatus();
-    log("Status here is: " + wifiStatusStr);
+    //log("Status here is: " + wifiStatusStr);
     uint16_t w;
     if (wifiStatusStr != wifiStatusLastStr)
     {
@@ -181,7 +181,7 @@ void loopWifiDebugDisplay()
         display.display(PARTIAL_UPDATE);
     }
     String wifiTaskStatus = BOOL_STR(isWifiTaskRunning);
-    log(wifiTaskStatus);
+    //log(wifiTaskStatus);
     if (wifiTaskStatus != taskStatusLastStr)
     {
         taskStatusLastStr = wifiTaskStatus;
@@ -204,7 +204,7 @@ void loopWifiDebugDisplay()
         display.display(PARTIAL_UPDATE);
     }
 
-    log("selected: " + String(selUi));
+    //log("selected: " + String(selUi));
     switch (useButton())
     {
     case Up:

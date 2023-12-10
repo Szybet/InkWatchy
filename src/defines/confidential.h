@@ -7,7 +7,7 @@
 // git update-index --assume-unchanged src/defines/confidential.h
 // https://stackoverflow.com/questions/71263349/vscode-ignore-files-without-using-gitignore
 
-#define WIFI_SSID1 "asdsadsa"
+#define WIFI_SSID1 ""
 #define WIFI_PASS1 ""
 
 #define WIFI_SSID2 ""
@@ -36,5 +36,7 @@
 
 #define WIFI_SSID10 ""
 #define WIFI_PASS10 ""
+
+#define OPEN_WEATHER_API_KEY ""
 
 #endif

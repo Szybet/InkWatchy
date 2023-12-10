@@ -80,6 +80,7 @@ void turnOnWifiTask(void *parameter)
             turnOffWifi();
         }
     }
+    syncNtp();
     isWifiTaskRunning = false;
     vTaskDelete(NULL);
 }
@@ -114,7 +115,7 @@ void turnOffWifi()
 int getSignalStrength()
 {
     int rssi = WiFi.RSSI();
-    log("Pure RSSI:" + String(rssi));
+    //log("Pure RSSI:" + String(rssi));
     if (rssi == 0)
     {
         return 0;

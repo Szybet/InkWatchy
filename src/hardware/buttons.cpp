@@ -14,7 +14,7 @@ buttonState useButton(bool allButtons)
     buttonState buttonPressedTmp = buttonPressed;
     buttonPressed = None;
 
-    log("Used button by UI: " + getButtonString(buttonPressedTmp));
+    //log("Used button by UI: " + getButtonString(buttonPressedTmp));
     return buttonPressedTmp;
 }
 

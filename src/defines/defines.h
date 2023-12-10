@@ -8,6 +8,8 @@
 #include "Fonts/FreeSansBold9pt7b.h"
 #include <WiFi.h>
 #include <WiFiMulti.h>
+#include <NTPClient.h>
+#include <OpenWeatherOneCall.h>
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
@@ -29,5 +31,6 @@
 #include "../ui/batteryDebug.h"
 #include "../ui/wifiDebug.h"
 #include "../network/wifi.h"
+#include "../network/ntp.h"
 
 #endif
