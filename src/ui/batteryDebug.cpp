@@ -5,6 +5,7 @@ debugDisplay ui;
 #define cursorX 0
 int currentVoltageHeight;
 int ChargingHeight;
+int PercentageHeight;
 #define batteryTextSize 1
 
 void initBatteryDebugDisplay()
@@ -34,9 +35,12 @@ void initBatteryDebugDisplay()
 
     writeLine("Critical batt V: " + String(ui.battery.critV), cursorX, &currentHeight);
 
+    writeLine("Battery Percentage: " + String(ui.battery.percentage), cursorX, &currentHeight);
+    PercentageHeight = currentHeight - maxHeight;
+
     writeLine("Charging: " + BOOL_STR(ui.battery.isCharging), cursorX, &currentHeight);
     ChargingHeight = currentHeight - maxHeight;
-    display.display(FULL_UPDATE);
+    display.display(PARTIAL_UPDATE);
 }
 
 void loopBatteryDebugDisplay()
@@ -69,6 +73,21 @@ void loopBatteryDebugDisplay()
         }
 
         writeTextReplaceBack("Charging: " + chargingStr, cursorX, ChargingHeight);
+        display.display(PARTIAL_UPDATE);
+    }
+    if (ui.battery.percentage != bat.percentage)
+    {
+        ui.battery.percentage = bat.percentage;
+        display.setCursor(cursorX, PercentageHeight);
+        setTextSize(batteryTextSize);
+
+        String percentageStr = BOOL_STR(bat.percentage);
+        while (percentageStr.length() < 6)
+        {
+            percentageStr = percentageStr + " ";
+        }
+
+        writeTextReplaceBack("Battery Percentage: " + percentageStr, cursorX, PercentageHeight);
         display.display(PARTIAL_UPDATE);
     }
 }
