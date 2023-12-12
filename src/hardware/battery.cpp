@@ -45,6 +45,7 @@ void initBattery()
 void loopBattery()
 {
     bat.curV = getBatteryVoltage();
+    bat.percentage = ((bat.curV - bat.minV) / (bat.maxV - bat.minV)) * 100.0;
     if (bat.curV > bat.maxV)
     {
         bat.isCharging = true;

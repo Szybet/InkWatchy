@@ -10,6 +10,7 @@ struct batteryInfo {
     float critV;
     float maxV;
     bool isCharging;
+    int percentage;
 };
 
 extern RTC_DATA_ATTR batteryInfo bat;
