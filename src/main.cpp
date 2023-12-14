@@ -24,18 +24,23 @@ void setup()
   initHardwareDebug();
 #endif
 
-  turnOnWifi();
-  initWifiDebugDisplay();
+  //turnOnWifi();
+  //initWifiDebugDisplay();
   //initBatteryDebugDisplay();
 
   loopButtons();
+  display.clearScreen();
+  display.setTextSize(2);
+  sizeInfo inf = drawButton(0,0,"ABCDEFGJ");
+  display.display(FULL_UPDATE);
+  log("width and height: " + String(inf.w) + " " + String(inf.h));
 }
 
 void loop()
 {
   loopBattery();
 
-  loopWifiDebugDisplay();
+  //loopWifiDebugDisplay();
   //loopBatteryDebugDisplay();
 
   // Needs to run forever because it deletes the wifi task. Use other conditions to determine if we need to do something with wifi too

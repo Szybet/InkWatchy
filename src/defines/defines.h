@@ -16,6 +16,12 @@
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
 
+struct ImageDef {
+    const uint8_t *bitmap;
+    int16_t bw;
+    int16_t bh;
+};
+
 #include "config.h" // Needs to be first!
 #include "confidential.h"
 #include "macros.h"
@@ -32,6 +38,7 @@
 #include "../ui/debug.h"
 #include "../ui/batteryDebug.h"
 #include "../ui/wifiDebug.h"
+#include "../ui/menu.h"
 #include "../network/wifi.h"
 #include "../network/ntp.h"
 #include "../network/weather.h"
