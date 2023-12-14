@@ -25,7 +25,7 @@ void initDisplay(bool isFromWakeUp)
 
     // Default values
     setFont(&FreeSansBold9pt7b);
-    setTextSize(3);
+    setTextSize(1);
     // display.display(FULL_UPDATE);
 }
 
