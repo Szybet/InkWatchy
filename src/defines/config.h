@@ -7,6 +7,7 @@
 #define VIBRATION_BUTTON_TIME 35      // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_ACTION_TIME 60      // Time in ms to the motor to vibrate when the UI receives an action
 #define TIME_OFFSET_S 3600            // Time offset in seconds, use this as timezones
+#define MENU_LINES false // Option to show lines between buttons in menus
 
 // Advanced
 #define SLEEP_EVERY_MS 180000 // Goes to sleep timer, is resetted by button presses

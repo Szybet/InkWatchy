@@ -148,7 +148,7 @@ void writeImageN(int16_t x, int16_t y,const ImageDef image, uint16_t frColor, ui
   display.setCursor(cx, cy);
 }
 
-sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool invert, int tolerance, bool border, int borderWidth, uint16_t frColor, uint16_t bgColor)
+sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor)
 {
   sizeInfo size = {0};
   int toleranceSize = tolerance * 2 + borderWidth * 2;
@@ -186,8 +186,8 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
     mainH = th;
   }
 
-  log("Final size.h is: " + String(size.h));
-  log("Final size.w is: " + String(size.w));
+  //log("Final size.h is: " + String(size.h));
+  //log("Final size.w is: " + String(size.w));
 
   GFXcanvas1 canvasTmp(size.w, size.h);
   canvasTmp.setFont(font);
@@ -204,7 +204,7 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
   if (str != "")
   {
     canvasTmp.setCursor(canvasTmp.getCursorX(), size.h - ((size.h - th) / 2) - 1); // -1 for reasons?
-    log("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()));
+    //log("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()));
     canvasTmp.print(str);
   }
 
@@ -218,7 +218,7 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
   }
   for (int16_t i = 0; i < borderWidth; i++)
   {
-    log("Drawing border in button");
+    //log("Drawing border in button");
     canvasTmp.drawRect(i + rectOffset, i + rectOffset, size.w - rectOffset, size.h - rectOffset, borderColor);
   }
   canvasTmp.setCursor(canvasCursorXTmp, canvasCursorYTmp);
@@ -228,7 +228,7 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
   display.setCursor(0, 0);
   if (invert == false)
   {
-    log("Drawing non inverted button");
+    //log("Drawing non inverted button");
     display.drawBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, frColor, bgColor); // why inverted?
   }
   else

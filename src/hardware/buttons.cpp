@@ -15,6 +15,11 @@ buttonState useButton(bool allButtons)
     buttonPressed = None;
 
     //log("Used button by UI: " + getButtonString(buttonPressedTmp));
+    if (buttonPressedTmp != None)
+    {
+      log("Used button by UI: " + getButtonString(buttonPressedTmp));
+    }
+    
     return buttonPressedTmp;
 }
 
@@ -77,7 +82,7 @@ void loopButtonsTask(void *parameter)
     }
 }
 
-void loopButtons()
+void initButtonTask()
 {
     xTaskCreate(
         loopButtonsTask,

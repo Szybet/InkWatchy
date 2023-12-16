@@ -20,8 +20,14 @@ struct menuData
   int linesThick;
   entryMenu entryList[MAX_MENU_ITEMS];
   int currentPage;
+  int itemsOnPage;
+  int currentButton;
+  uint16_t maxHeight;
 };
 
 void initMenu(entryMenu entryList[MAX_MENU_ITEMS], int totalMenus, String menuName, int textSize = 1, int linesThick = 0);
 
+void showMenu();
+
+void menuLoop();
 #endif
