@@ -22,6 +22,8 @@ struct ImageDef {
     int16_t bh;
 };
 
+const ImageDef emptyImgPack = {NULL, 0, 0};
+
 #include "config.h" // Needs to be first!
 #include "confidential.h"
 #include "macros.h"

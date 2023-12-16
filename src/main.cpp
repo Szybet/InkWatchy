@@ -2,6 +2,7 @@
 
 void setup()
 {
+
   esp_sleep_wakeup_cause_t wakeUpReason = esp_sleep_get_wakeup_cause();
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
   // ESP_SLEEP_WAKEUP_EXT1 Button press
@@ -24,27 +25,37 @@ void setup()
   initHardwareDebug();
 #endif
 
-  //turnOnWifi();
-  //initWifiDebugDisplay();
-  //initBatteryDebugDisplay();
+  // turnOnWifi();
+  // initWifiDebugDisplay();
+  // initBatteryDebugDisplay();
 
-  loopButtons();
+  initButtonTask();
+
   display.clearScreen();
-  display.setTextSize(2);
-  sizeInfo inf = drawButton(0,0,"ABCDEFGJ");
-  display.display(FULL_UPDATE);
-  log("width and height: " + String(inf.w) + " " + String(inf.h));
+  entryMenu button0 = {"text0", crossImgPack, NULL};
+  entryMenu button1 = {"text1", acceptImgPack, NULL};
+  entryMenu button2 = {"text2", emptyImgPack, NULL};
+  entryMenu button3 = {"text3", emptyImgPack, NULL};
+  entryMenu button4 = {"text4", emptyImgPack, NULL};
+  entryMenu button5 = {"text5", emptyImgPack, NULL};
+  entryMenu button6 = {"text6", emptyImgPack, NULL};
+  entryMenu button7 = {"text7", emptyImgPack, NULL};
+
+
+  entryMenu buttons[7] = {button0, button1, button2, button3, button4, button5, button6};
+  initMenu(buttons, 7, "MDKNCMIUEjqi",2);
 }
 
 void loop()
 {
+  menuLoop();
   loopBattery();
 
-  //loopWifiDebugDisplay();
-  //loopBatteryDebugDisplay();
+  // loopWifiDebugDisplay();
+  // loopBatteryDebugDisplay();
 
   // Needs to run forever because it deletes the wifi task. Use other conditions to determine if we need to do something with wifi too
-  //if(isWifiConnected() == true) {
+  // if(isWifiConnected() == true) {
 
   //}
 
