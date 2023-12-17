@@ -55,6 +55,32 @@ void setButton(buttonState button)
 
 #define ADD_BUTTON_DELAY 4
 #define SMALL_BUTTON_DELAY_MS 25
+void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton)
+{
+    int startime = millis();
+    int elapsedtime = 0;
+    while (digitalRead(buttonPin) == HIGH && elapsedtime < BUTTON_LONG_PRESS_MS)
+    {
+        delayTask(SMALL_BUTTON_DELAY_MS);
+        elapsedtime = millis() - startime;
+    }
+    log("elapsed time: " + String(elapsedtime) + " BUTTON_LONG_PRESS_MS:" + String(BUTTON_LONG_PRESS_MS));
+    if (elapsedtime > BUTTON_LONG_PRESS_MS)
+    {
+        setButton(longButton);
+        vibrateMotor(VIBRATION_BUTTON_TIME * 1.7, true);
+        while (digitalRead(buttonPin) == HIGH)
+        {
+            delayTask(SMALL_BUTTON_DELAY_MS);
+        }
+    }
+    else
+    {
+        setButton(normalButton);
+    }
+    delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
+}
+
 void loopButtonsTask(void *parameter)
 {
     while (true)
@@ -62,46 +88,19 @@ void loopButtonsTask(void *parameter)
         delayTask(BUTTON_TASK_DELAY);
         if (digitalRead(BACK_PIN) == HIGH)
         {
-            /// setButton(Back);
-            // delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
-            int startime = millis();
-            int elapsedtime = 0;
-
-            while (digitalRead(BACK_PIN) == HIGH && elapsedtime < BUTTON_LONG_PRESS_MS)
-            {
-                delayTask(SMALL_BUTTON_DELAY_MS);
-                elapsedtime = millis() - startime;
-            }
-            log("elapsed time: " + String(elapsedtime) + " BUTTON_LONG_PRESS_MS:" + String(BUTTON_LONG_PRESS_MS));
-            if (elapsedtime > BUTTON_LONG_PRESS_MS)
-            {
-                setButton(LongBack);
-                while (digitalRead(BACK_PIN) == HIGH)
-                {
-                    delayTask(SMALL_BUTTON_DELAY_MS);
-                }
-                continue;
-            }
-            if (digitalRead(BACK_PIN) == HIGH)
-            {
-                setButton(Back);
-                continue;
-            }
+            longButtonCheck(BACK_PIN, Back, LongBack);
         }
         else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back)
         {
-            setButton(Menu);
-            delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
+            longButtonCheck(MENU_PIN, Menu, LongMenu);
         }
         else if (digitalRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back)
         {
-            setButton(Up);
-            delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
+            longButtonCheck(UP_PIN, Up, LongUp);
         }
         else if (digitalRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back)
         {
-            setButton(Down);
-            delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
+            longButtonCheck(DOWN_PIN, Down, LongDown);
         }
     }
 }
@@ -155,8 +154,13 @@ String getButtonString(buttonState state)
     case LongBack:
         return "LongBack";
     case LongMenu:
-        return "LongBack";
+        return "LongMenu";
+    case LongUp:
+        return "LongUp";
+    case LongDown:
+        return "LongDown";
+    default:
+        return "None";
     }
-    return "None";
 }
 #endif

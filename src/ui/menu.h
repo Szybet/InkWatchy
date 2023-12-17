@@ -19,7 +19,6 @@ struct menuData
   String menuName;
   int linesThick;
   entryMenu entryList[MAX_MENU_ITEMS];
-  int currentPage;
   int itemsOnPage;
   int currentButton;
   uint16_t maxHeight;
