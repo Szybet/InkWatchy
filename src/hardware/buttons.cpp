@@ -14,12 +14,12 @@ buttonState useButton(bool allButtons)
     buttonState buttonPressedTmp = buttonPressed;
     buttonPressed = None;
 
-    //log("Used button by UI: " + getButtonString(buttonPressedTmp));
+    // log("Used button by UI: " + getButtonString(buttonPressedTmp));
     if (buttonPressedTmp != None)
     {
-      log("Used button by UI: " + getButtonString(buttonPressedTmp));
+        log("Used button by UI: " + getButtonString(buttonPressedTmp));
     }
-    
+
     return buttonPressedTmp;
 }
 
@@ -54,14 +54,39 @@ void setButton(buttonState button)
 }
 
 #define ADD_BUTTON_DELAY 4
+#define SMALL_BUTTON_DELAY_MS 25
 void loopButtonsTask(void *parameter)
 {
     while (true)
     {
+        delayTask(BUTTON_TASK_DELAY);
         if (digitalRead(BACK_PIN) == HIGH)
         {
-            setButton(Back);
-            delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
+            /// setButton(Back);
+            // delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
+            int startime = millis();
+            int elapsedtime = 0;
+
+            while (digitalRead(BACK_PIN) == HIGH && elapsedtime < BUTTON_LONG_PRESS_MS)
+            {
+                delayTask(SMALL_BUTTON_DELAY_MS);
+                elapsedtime = millis() - startime;
+            }
+            log("elapsed time: " + String(elapsedtime) + " BUTTON_LONG_PRESS_MS:" + String(BUTTON_LONG_PRESS_MS));
+            if (elapsedtime > BUTTON_LONG_PRESS_MS)
+            {
+                setButton(LongBack);
+                while (digitalRead(BACK_PIN) == HIGH)
+                {
+                    delayTask(SMALL_BUTTON_DELAY_MS);
+                }
+                continue;
+            }
+            if (digitalRead(BACK_PIN) == HIGH)
+            {
+                setButton(Back);
+                continue;
+            }
         }
         else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back)
         {
@@ -78,7 +103,6 @@ void loopButtonsTask(void *parameter)
             setButton(Down);
             delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
         }
-        delayTask(BUTTON_TASK_DELAY);
     }
 }
 
@@ -128,6 +152,10 @@ String getButtonString(buttonState state)
         return "Up";
     case Down:
         return "Down";
+    case LongBack:
+        return "LongBack";
+    case LongMenu:
+        return "LongBack";
     }
     return "None";
 }

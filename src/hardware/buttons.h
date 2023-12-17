@@ -10,6 +10,10 @@ typedef enum
     Menu,
     Up,
     Down,
+    LongBack,
+    LongMenu,
+    LongUp,
+    LongDown,
 } buttonState;
 
 extern buttonState buttonPressed;
