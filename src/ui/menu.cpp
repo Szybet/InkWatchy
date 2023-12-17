@@ -11,7 +11,6 @@ void initMenu(entryMenu entryList[MAX_MENU_ITEMS], int totalMenus, String menuNa
   data.textSize = textSize;
   data.menuName = menuName;
   data.linesThick = linesThick;
-  data.currentPage = 0;
   data.currentButton = 0;
 
   if (textSize == 1)
@@ -27,13 +26,13 @@ void initMenu(entryMenu entryList[MAX_MENU_ITEMS], int totalMenus, String menuNa
   showMenu();
 }
 
+int pageNumber = 0;
+int currentPage = 0;
 void showMenu()
 {
   display.fillScreen(GxEPD_WHITE);
 
   uint16_t pageStringWidth;
-  int pageNumber = 1;
-  int currentPage = 0;
   uint16_t textHeight;
   uint16_t currentHeight;
   int startingButton = 0;
@@ -42,16 +41,15 @@ void showMenu()
   display.setCursor(1, 1);
   getTextBounds(data.menuName, NULL, NULL, NULL, &textHeight);
 
-  currentPage = data.currentButton / data.itemsOnPage + 1;
-
+  currentPage = data.currentButton / data.itemsOnPage;
   pageNumber = ceil(float(data.totalMenus) / float(data.itemsOnPage));
 
-  String pageString = String(currentPage) + "/" + String(pageNumber);
+  String pageString = String(currentPage + 1) + "/" + String(pageNumber);
   log(pageString);
-  getTextBounds(pageString,NULL,NULL,&pageStringWidth,NULL);
+  getTextBounds(pageString, NULL, NULL, &pageStringWidth, NULL);
   log("Page string width: " + String(pageStringWidth));
   currentHeight = textHeight + 1; // +1 to offset between edge of screen and menu name
-  display.setCursor(display.width() - pageStringWidth - 10,currentHeight);
+  display.setCursor(display.width() - pageStringWidth - 10, currentHeight);
 
   display.print(pageString);
 
@@ -62,7 +60,6 @@ void showMenu()
 
   display.fillRect(0, currentHeight, display.width(), 1, GxEPD_BLACK);
   currentHeight = currentHeight + 4; // +2 to offset line and button
-
 
   while (startingButton + data.itemsOnPage <= data.currentButton)
   {
@@ -110,6 +107,24 @@ void menuLoop()
   }
   case Menu:
   {
+
+    break;
+  }
+  case LongUp:
+  {
+    currentPage -= 1;
+    checkMaxMin(&currentPage, pageNumber - 1);
+    data.currentButton = currentPage * data.itemsOnPage;
+    showMenu();
+    break;
+    break;
+  }
+  case LongDown:
+  {
+    currentPage += 1;
+    checkMaxMin(&currentPage, pageNumber - 1);
+    data.currentButton = currentPage * data.itemsOnPage;
+    showMenu();
     break;
   }
   }
