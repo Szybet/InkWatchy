@@ -9,7 +9,7 @@ int countSkip = SKIP_CYCLES;
 int RTC_DATA_ATTR counter = 0;
 void showEinkCounter()
 {
-    log("countSkip: " + String(countSkip));
+    debugLog("countSkip: " + String(countSkip));
     if (countSkip == SKIP_CYCLES)
     {
         countSkip = 0;
@@ -22,7 +22,7 @@ void showEinkCounter()
         }
         display.setCursor(counterX, counterY);
         counter = counter + 1;
-        log("Showing einkCounter: " + String(counter));
+        debugLog("Showing einkCounter: " + String(counter));
         writeTextReplaceBack(String(counter), counterX, counterY);
         display.display(PARTIAL_UPDATE);
     }

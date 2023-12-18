@@ -10,7 +10,7 @@ int PercentageHeight;
 
 void initBatteryDebugDisplay()
 {
-    log("initBatteryDebugDisplay called");
+    debugLog("initBatteryDebugDisplay called");
     uint16_t h;
     ui.battery = bat;
     setFont(&FreeSansBold9pt7b);

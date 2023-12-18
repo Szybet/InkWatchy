@@ -4,7 +4,7 @@ GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display(GxEPD2_154_D67(EPD_CS,
 
 void initDisplay(bool isFromWakeUp)
 {
-    log("initDisplay called:" + BOOL_STR(isFromWakeUp));
+    debugLog("initDisplay called:" + BOOL_STR(isFromWakeUp));
     display.init(0, !isFromWakeUp, 10, true);
     display.epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
     /*
@@ -33,7 +33,7 @@ void initDisplay(bool isFromWakeUp)
 
 void initDisplayDebug()
 {
-    log("Screen size: " + String(display.width()) + "x" + String(display.height()));
+    debugLog("Screen size: " + String(display.width()) + "x" + String(display.height()));
 }
 
 #endif

@@ -19,7 +19,7 @@ void syncWeather()
   {
     initWeather();
     bool status = ow.getForecast(forecast, OPEN_WEATHER_API_KEY, WEATHER_LATIT, WEATHER_LONGTIT, WEATHER_UNIT, WEATHER_LANG, false);
-    log("Weather forecast finished: " + BOOL_STR(status));
+    debugLog("Weather forecast finished: " + BOOL_STR(status));
     if (status == true)
     {
       isWeatherAvailable = true;
@@ -39,37 +39,37 @@ void syncWeather()
 #if DEBUG
 void dumpWeather()
 {
-  log("City name:  " + forecast->city_name);
-  log("Latitude:  " + String(ow.lat));
-  log("Longitude:  " + String(ow.lon));
-  log("Timezone:  " + forecast->timezone);
+  debugLog("City name:  " + forecast->city_name);
+  debugLog("Latitude:  " + String(ow.lat));
+  debugLog("Longitude:  " + String(ow.lon));
+  debugLog("Timezone:  " + forecast->timezone);
 
   if (forecast)
   {
     for (int i = 0; i < (MAX_DAYS * 8); i++)
     {
-      log("dt_txt: " + forecast->dt_txt[i]);
-      log("temp: " + String(forecast->temp[i]));
-      log("temp.min: " + String(forecast->temp_min[i]));
-      log("temp.max: " + String(forecast->temp_max[i]));
+      debugLog("dt_txt: " + forecast->dt_txt[i]);
+      debugLog("temp: " + String(forecast->temp[i]));
+      debugLog("temp.min: " + String(forecast->temp_min[i]));
+      debugLog("temp.max: " + String(forecast->temp_max[i]));
 
-      log("pressure: " + String(forecast->pressure[i]));
-      log("sea_level: " + String(forecast->sea_level[i]));
-      log("grnd_level: " + String(forecast->grnd_level[i]));
-      log("humidity: " + String(forecast->humidity[i]));
+      debugLog("pressure: " + String(forecast->pressure[i]));
+      debugLog("sea_level: " + String(forecast->sea_level[i]));
+      debugLog("grnd_level: " + String(forecast->grnd_level[i]));
+      debugLog("humidity: " + String(forecast->humidity[i]));
 
-      log("clouds: " + String(forecast->clouds_all[i]));
-      log("wind_speed: " + String(forecast->wind_speed[i]));
-      log("wind_deg: " + String(forecast->wind_deg[i]));
-      log("wind_gust: " + String(forecast->wind_gust[i]));
+      debugLog("clouds: " + String(forecast->clouds_all[i]));
+      debugLog("wind_speed: " + String(forecast->wind_speed[i]));
+      debugLog("wind_deg: " + String(forecast->wind_deg[i]));
+      debugLog("wind_gust: " + String(forecast->wind_gust[i]));
 
-      log("visibility: " + String(forecast->visibility[i]));
-      log("pop: " + String(forecast->pop[i]));
+      debugLog("visibility: " + String(forecast->visibility[i]));
+      debugLog("pop: " + String(forecast->pop[i]));
 
-      log("id: " + String(forecast->id[i]));
-      log("main: " + forecast->main[i]);
-      log("description: " + forecast->description[i]);
-      log("icon: " + forecast->icon[i]);
+      debugLog("id: " + String(forecast->id[i]));
+      debugLog("main: " + forecast->main[i]);
+      debugLog("description: " + forecast->description[i]);
+      debugLog("icon: " + forecast->icon[i]);
     }
   }
 }

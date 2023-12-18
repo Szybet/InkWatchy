@@ -23,25 +23,25 @@ void readRTC()
 #if DEBUG
 void initRTCDebug()
 {
-    log("Get RTC battery level: " + String(SRTC.getRTCBattery(false)));
-    log("Get critical RTC battery level: " + String(SRTC.getRTCBattery(true)));
+    debugLog("Get RTC battery level: " + String(SRTC.getRTCBattery(false)));
+    debugLog("Get critical RTC battery level: " + String(SRTC.getRTCBattery(true)));
 }
 
 void loopRTCDebug()
 {
-    log("SRTC.isOperating: " + BOOL_STR(SRTC.isOperating()));
-    log("SRTC.getADCPin: " + String(SRTC.getADCPin()));
-    log("SRTC.temperature(): " + String(SRTC.temperature()));
+    debugLog("SRTC.isOperating: " + BOOL_STR(SRTC.isOperating()));
+    debugLog("SRTC.getADCPin: " + String(SRTC.getADCPin()));
+    debugLog("SRTC.temperature(): " + String(SRTC.temperature()));
 }
 
 void dumpRTCTime()
 {
     readRTC();
-    log("Second: " + String(timeRTC.Second));
-    log("Minute: " + String(timeRTC.Minute));
-    log("Hour: " + String(timeRTC.Hour));
-    log("Day: " + String(timeRTC.Day));
-    log("Month: " + String(timeRTC.Month));
-    log("Year: " + String(timeRTC.Year));
+    debugLog("Second: " + String(timeRTC.Second));
+    debugLog("Minute: " + String(timeRTC.Minute));
+    debugLog("Hour: " + String(timeRTC.Hour));
+    debugLog("Day: " + String(timeRTC.Day));
+    debugLog("Month: " + String(timeRTC.Month));
+    debugLog("Year: " + String(timeRTC.Year));
 }
 #endif

@@ -23,11 +23,11 @@ void initWakeUpHardware(bool isFromWakeUp)
 #if DEBUG
     if (isFromWakeUp == false)
     {
-        log("Watchy is starting!");
+        debugLog("Watchy is starting!");
     }
     else
     {
-        log("Watchy is waking up!");
+        debugLog("Watchy is waking up!");
     }
 #endif
     initDisplay(isFromWakeUp);
@@ -43,8 +43,8 @@ void resetSleepDelay()
 void initHardwareDebug()
 {
     initRTCDebug();
-    log("Hardware version: " + String(HWVer));
-    log("Up button pin number: " + String(UP_PIN));
+    debugLog("Hardware version: " + String(HWVer));
+    debugLog("Up button pin number: " + String(UP_PIN));
     initDisplayDebug();
 }
 
@@ -62,7 +62,7 @@ bool vibrateTaskRunning = false;
 void vibrateMotorTaskFun(void *parameter)
 {
     vibrateTaskRunning = true;
-    log("Motor on");
+    debugLog("Motor on");
     for (int i = 0; i < vibrateTime / 2; i++)
     {
         digitalWrite(VIB_MOTOR_PIN, true);
@@ -70,7 +70,7 @@ void vibrateMotorTaskFun(void *parameter)
         digitalWrite(VIB_MOTOR_PIN, false);
         delayTask(1);
     }
-    log("Motor off");
+    debugLog("Motor off");
     vibrateTaskRunning = false;
     vTaskDelete(NULL);
 }
@@ -89,7 +89,7 @@ void vibrateMotor(int vTime, bool add)
             &motorTask);
     }
     if(add == true && vibrateMotor != 0 && vibrateTaskRunning == true) {
-        log("Adding time to motor");
+        debugLog("Adding time to motor");
         vibrateTime = vibrateTime + vTime;
     }
 }

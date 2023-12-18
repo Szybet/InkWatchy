@@ -14,10 +14,10 @@ buttonState useButton(bool allButtons)
     buttonState buttonPressedTmp = buttonPressed;
     buttonPressed = None;
 
-    // log("Used button by UI: " + getButtonString(buttonPressedTmp));
+    // debugLog("Used button by UI: " + getButtonString(buttonPressedTmp));
     if (buttonPressedTmp != None)
     {
-        log("Used button by UI: " + getButtonString(buttonPressedTmp));
+        debugLog("Used button by UI: " + getButtonString(buttonPressedTmp));
     }
 
     return buttonPressedTmp;
@@ -47,7 +47,7 @@ void initButtons()
 
 void setButton(buttonState button)
 {
-    log("setButton called: " + getButtonString(button));
+    debugLog("setButton called: " + getButtonString(button));
     vibrateMotor();
     buttonPressed = button;
     resetSleepDelay();
@@ -64,7 +64,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
         delayTask(SMALL_BUTTON_DELAY_MS);
         elapsedtime = millis() - startime;
     }
-    log("elapsed time: " + String(elapsedtime) + " BUTTON_LONG_PRESS_MS:" + String(BUTTON_LONG_PRESS_MS));
+    debugLog("elapsed time: " + String(elapsedtime) + " BUTTON_LONG_PRESS_MS:" + String(BUTTON_LONG_PRESS_MS));
     if (elapsedtime > BUTTON_LONG_PRESS_MS)
     {
         setButton(longButton);
@@ -121,19 +121,19 @@ void dumpButtons()
 {
     if (digitalRead(MENU_PIN) == 1)
     {
-        log("Menu button pressed");
+        debugLog("Menu button pressed");
     }
     else if (digitalRead(BACK_PIN) == 1)
     {
-        log("Back button pressed");
+        debugLog("Back button pressed");
     }
     else if (digitalRead(UP_PIN) == 1)
     {
-        log("Up button pressed");
+        debugLog("Up button pressed");
     }
     else if (digitalRead(DOWN_PIN) == 1)
     {
-        log("Down button pressed");
+        debugLog("Down button pressed");
     }
 }
 

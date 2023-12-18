@@ -41,6 +41,7 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #include "../ui/batteryDebug.h"
 #include "../ui/wifiDebug.h"
 #include "../ui/menu.h"
+#include "../ui/chart.h"
 #include "../network/wifi.h"
 #include "../network/ntp.h"
 #include "../network/weather.h"
