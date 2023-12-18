@@ -45,9 +45,9 @@ void showMenu()
   pageNumber = ceil(float(data.totalMenus) / float(data.itemsOnPage));
 
   String pageString = String(currentPage + 1) + "/" + String(pageNumber);
-  log(pageString);
+  debugLog(pageString);
   getTextBounds(pageString, NULL, NULL, &pageStringWidth, NULL);
-  log("Page string width: " + String(pageStringWidth));
+  debugLog("Page string width: " + String(pageStringWidth));
   currentHeight = textHeight + 1; // +1 to offset between edge of screen and menu name
   display.setCursor(display.width() - pageStringWidth - 10, currentHeight);
 
@@ -65,12 +65,12 @@ void showMenu()
   {
     startingButton = startingButton + data.itemsOnPage;
   }
-  log("current button: " + String(data.currentButton));
-  log("starting button: " + String(startingButton));
+  debugLog("current button: " + String(data.currentButton));
+  debugLog("starting button: " + String(startingButton));
   setTextSize(data.textSize);
   for (int i = startingButton; i < startingButton + data.itemsOnPage && i < data.totalMenus; i++)
   {
-    log("iterating " + String(i));
+    debugLog("iterating " + String(i));
     bool invert = false;
     if (data.currentButton == i)
     {
@@ -129,3 +129,25 @@ void menuLoop()
   }
   }
 }
+
+/*
+// Menu testing code
+entryMenu button0 = {"text0", crossImgPack, NULL};
+entryMenu button1 = {"text1", acceptImgPack, NULL};
+entryMenu button2 = {"text2", emptyImgPack, NULL};
+entryMenu button3 = {"text3", emptyImgPack, NULL};
+entryMenu button4 = {"text4", emptyImgPack, NULL};
+entryMenu button5 = {"text5", emptyImgPack, NULL};
+entryMenu button6 = {"text6", emptyImgPack, NULL};
+entryMenu button7 = {"text7", emptyImgPack, NULL};
+entryMenu button8 = {"text8", emptyImgPack, NULL};
+entryMenu button9 = {"text9", emptyImgPack, NULL};
+entryMenu button10 = {"text10", emptyImgPack, NULL};
+entryMenu button11 = {"text11", emptyImgPack, NULL};
+entryMenu button12 = {"text12", emptyImgPack, NULL};
+entryMenu button13 = {"text13", emptyImgPack, NULL};
+entryMenu button14 = {"text14", emptyImgPack, NULL};
+
+entryMenu buttons[15] = {button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, button11, button12, button13, button14};
+initMenu(buttons, 15, "MDKNCMIUEjqi", 2);
+*/

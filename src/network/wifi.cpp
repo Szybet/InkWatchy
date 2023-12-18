@@ -8,59 +8,59 @@ void initWifi()
 {
     if (WIFI_SSID1 != "" && WIFI_PASS1 != "")
     {
-        log("Attempting to connect to WiFi " + String(WIFI_SSID1));
+        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID1));
         wifiMulti.addAP(WIFI_SSID1, WIFI_PASS1);
     }
     if (WIFI_SSID2 != "" && WIFI_PASS2 != "")
     {
-        log("Attempting to connect to WiFi " + String(WIFI_SSID2));
+        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID2));
         wifiMulti.addAP(WIFI_SSID2, WIFI_PASS2);
     }
     if (WIFI_SSID3 != "" && WIFI_PASS3 != "")
     {
-        log("Attempting to connect to WiFi " + String(WIFI_SSID3));
+        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID3));
         wifiMulti.addAP(WIFI_SSID3, WIFI_PASS3);
     }
     if (WIFI_SSID4 != "" && WIFI_PASS4 != "")
     {
-        log("Attempting to connect to WiFi " + String(WIFI_SSID4));
+        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID4));
         wifiMulti.addAP(WIFI_SSID4, WIFI_PASS4);
     }
     if (WIFI_SSID5 != "" && WIFI_PASS5 != "")
     {
-        log("Attempting to connect to WiFi " + String(WIFI_SSID5));
+        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID5));
         wifiMulti.addAP(WIFI_SSID5, WIFI_PASS5);
     }
     if (WIFI_SSID6 != "" && WIFI_PASS6 != "")
     {
-        log("Attempting to connect to WiFi " + String(WIFI_SSID6));
+        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID6));
         wifiMulti.addAP(WIFI_SSID7, WIFI_PASS7);
     }
     if (WIFI_SSID7 != "" && WIFI_PASS7 != "")
     {
-        log("Attempting to connect to WiFi " + String(WIFI_SSID7));
+        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID7));
         wifiMulti.addAP(WIFI_SSID7, WIFI_PASS7);
     }
     if (WIFI_SSID8 != "" && WIFI_PASS8 != "")
     {
-        log("Attempting to connect to WiFi " + String(WIFI_SSID8));
+        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID8));
         wifiMulti.addAP(WIFI_SSID8, WIFI_PASS8);
     }
     if (WIFI_SSID9 != "" && WIFI_PASS9 != "")
     {
-        log("Attempting to connect to WiFi " + String(WIFI_SSID9));
+        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID9));
         wifiMulti.addAP(WIFI_SSID9, WIFI_PASS9);
     }
     if (WIFI_SSID10 != "" && WIFI_PASS10 != "")
     {
-        log("Attempting to connect to WiFi " + String(WIFI_SSID10));
+        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID10));
         wifiMulti.addAP(WIFI_SSID10, WIFI_PASS10);
     }
 }
 
 void turnOnWifiTask(void *parameter)
 {
-    log("Turning wifi on");
+    debugLog("Turning wifi on");
     isWifiTaskRunning = true;
     for (int i = 0; i < 15; i++)
     {
@@ -76,7 +76,7 @@ void turnOnWifiTask(void *parameter)
         }
         else
         {
-            log("Wifi failed to connect, retrying...");
+            debugLog("Wifi failed to connect, retrying...");
             turnOffWifi();
         }
     }
@@ -116,7 +116,7 @@ void turnOffWifi()
 int getSignalStrength()
 {
     int rssi = WiFi.RSSI();
-    //log("Pure RSSI:" + String(rssi));
+    //debugLog("Pure RSSI:" + String(rssi));
     if (rssi == 0)
     {
         return 0;
@@ -165,10 +165,10 @@ String wifiStatus()
 bool isWifiConnected()
 {
     // TODO: Is asking 2 times time consuming? The answer is no
-    // log("Milis before asking time status: " + String(millis()));
-    log("Wifi status: " + wifiStatus());
+    // debugLog("Milis before asking time status: " + String(millis()));
+    debugLog("Wifi status: " + wifiStatus());
     wl_status_t status = WiFi.status();
-    // log("Milis after asking time status: " + String(millis()));
+    // debugLog("Milis after asking time status: " + String(millis()));
 
     if (status == WL_CONNECTED)
     {

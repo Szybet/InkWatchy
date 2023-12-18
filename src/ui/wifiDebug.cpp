@@ -35,7 +35,7 @@ void initWifiDebugDisplay()
     getTextBounds(menuName, NULL, NULL, NULL, &maxHeight);
 
     uint16_t currentHeight = maxHeight;
-    log("maxHeight for wifi debug menu: " + String(maxHeight));
+    debugLog("maxHeight for wifi debug menu: " + String(maxHeight));
     maxHeight = maxHeight + 1; // Add here for more space between lines
     display.setCursor(cursorXwifi, currentHeight - 3);
     display.print(menuName);
@@ -111,7 +111,7 @@ void drawSelUi()
 void loopWifiDebugDisplay()
 {
     String wifiStatusStr = wifiStatus();
-    //log("Status here is: " + wifiStatusStr);
+    //debugLog("Status here is: " + wifiStatusStr);
     uint16_t w;
     if (wifiStatusStr != wifiStatusLastStr)
     {
@@ -120,7 +120,7 @@ void loopWifiDebugDisplay()
         setTextSize(TextSize);
 
         getTextBounds(wifiStatusStr, NULL, NULL, &w, NULL);
-        log("w: " + String(w) + " wifiStatusLength: " + String(wifiStatusLength));
+        debugLog("w: " + String(w) + " wifiStatusLength: " + String(wifiStatusLength));
         while (w < wifiStatusLength)
         {
             wifiStatusStr = " " + wifiStatusStr + " ";
@@ -133,7 +133,7 @@ void loopWifiDebugDisplay()
         String ipAddressStr = "IP: " + WiFi.localIP().toString();
         uint16_t ipWidth;
         getTextBounds(ipAddressStr, NULL, NULL, &ipWidth, NULL);
-        log("w: " + String(ipWidth) + " ipAddressLength: " + String(ipAddressLength));
+        debugLog("w: " + String(ipWidth) + " ipAddressLength: " + String(ipAddressLength));
         while (ipWidth < ipAddressLength)
         {
             ipAddressStr = ipAddressStr + " ";
@@ -146,7 +146,7 @@ void loopWifiDebugDisplay()
         String ssidStr = "SSID: " + WiFi.SSID();
         uint16_t ssidWidth;
         getTextBounds(ssidStr, NULL, NULL, &ssidWidth, NULL);
-        log("w: " + String(ssidWidth) + " ssidLength: " + String(ssidLength));
+        debugLog("w: " + String(ssidWidth) + " ssidLength: " + String(ssidLength));
         while (ssidWidth < ssidLength)
         {
             ssidStr = ssidStr + " ";
@@ -169,7 +169,7 @@ void loopWifiDebugDisplay()
         String signalStr = "Wifi signal: " + String(wifiSignal) + "%";
         uint16_t signalWidth;
         getTextBounds(signalStr, NULL, NULL, &signalWidth, NULL);
-        log("w: " + String(signalWidth) + " signalLength: " + String(signalLength));
+        debugLog("w: " + String(signalWidth) + " signalLength: " + String(signalLength));
         while (signalWidth < signalLength)
         {
             signalStr = signalStr + " ";
@@ -181,7 +181,7 @@ void loopWifiDebugDisplay()
         display.display(PARTIAL_UPDATE);
     }
     String wifiTaskStatus = BOOL_STR(isWifiTaskRunning);
-    //log(wifiTaskStatus);
+    //debugLog(wifiTaskStatus);
     if (wifiTaskStatus != taskStatusLastStr)
     {
         taskStatusLastStr = wifiTaskStatus;
@@ -192,7 +192,7 @@ void loopWifiDebugDisplay()
         String TaskStatusStr = "Connecting: " + wifiTaskStatus; // Replace with actual function or variable
         uint16_t taskStatusWidth;
         getTextBounds(TaskStatusStr, NULL, NULL, &taskStatusWidth, NULL);
-        log("w: " + String(taskStatusWidth) + " signalLength: " + String(taskStatusLenght));
+        debugLog("w: " + String(taskStatusWidth) + " signalLength: " + String(taskStatusLenght));
         while (taskStatusWidth < taskStatusLenght)
         {
             TaskStatusStr = TaskStatusStr + " ";
@@ -204,7 +204,7 @@ void loopWifiDebugDisplay()
         display.display(PARTIAL_UPDATE);
     }
 
-    //log("selected: " + String(selUi));
+    //debugLog("selected: " + String(selUi));
     switch (useButton())
     {
     case Up:

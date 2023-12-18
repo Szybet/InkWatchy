@@ -36,11 +36,11 @@ void centerText(String str, uint16_t *currentHeight)
 
 void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor)
 {
-  //log("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
+  //debugLog("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
-  //log("w: " + String(w));
-  //log("h: " + String(h));
+  //debugLog("w: " + String(w));
+  //debugLog("h: " + String(h));
   w = w + 5;
   if (containsBelowChar(str) == true)
   {
@@ -72,8 +72,8 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
 {
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
-  //log("w: " + String(w));
-  //log("h: " + String(h));
+  //debugLog("w: " + String(w));
+  //debugLog("h: " + String(h));
   w = w + 5;
   int16_t x = (display.width() - w) / 2;
   if (containsBelowChar(str) == true)
@@ -186,8 +186,8 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
     mainH = th;
   }
 
-  //log("Final size.h is: " + String(size.h));
-  //log("Final size.w is: " + String(size.w));
+  //debugLog("Final size.h is: " + String(size.h));
+  //debugLog("Final size.w is: " + String(size.w));
 
   GFXcanvas1 canvasTmp(size.w, size.h);
   canvasTmp.setFont(font);
@@ -204,7 +204,7 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
   if (str != "")
   {
     canvasTmp.setCursor(canvasTmp.getCursorX(), size.h - ((size.h - th) / 2) - 1); // -1 for reasons?
-    //log("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()));
+    //debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()));
     canvasTmp.print(str);
   }
 
@@ -218,7 +218,7 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
   }
   for (int16_t i = 0; i < borderWidth; i++)
   {
-    //log("Drawing border in button");
+    //debugLog("Drawing border in button");
     canvasTmp.drawRect(i + rectOffset, i + rectOffset, size.w - rectOffset, size.h - rectOffset, borderColor);
   }
   canvasTmp.setCursor(canvasCursorXTmp, canvasCursorYTmp);
@@ -228,7 +228,7 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
   display.setCursor(0, 0);
   if (invert == false)
   {
-    //log("Drawing non inverted button");
+    //debugLog("Drawing non inverted button");
     display.drawBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, frColor, bgColor); // why inverted?
   }
   else

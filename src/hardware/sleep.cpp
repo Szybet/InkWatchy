@@ -48,7 +48,7 @@ void ForceInputs()
 
 void goSleep()
 {
-    log("goSleep activated");
+    debugLog("goSleep activated");
     
 #if DEBUG && SCREEN_SLEEP_INFO
     display.setCursor(50, 190);
