@@ -83,6 +83,7 @@ void turnOnWifiTask(void *parameter)
     syncNtp();
     syncWeather();
     isWifiTaskRunning = false;
+    turnOffWifi();
     vTaskDelete(NULL);
 }
 
@@ -107,6 +108,7 @@ void turnOffWifi()
         vTaskDelete(wifiTask);
         isWifiTaskRunning = false;
     }
+    debugLog("Turning wifi off");
     WiFi.disconnect();
     WiFi.mode(WIFI_OFF);
 }

@@ -23,9 +23,10 @@ void setup()
 
 #if DEBUG && DUMP_INIT_DEBUG
   initHardwareDebug();
+  loopHardwareDebug();
 #endif
 
-  // turnOnWifi();
+  turnOnWifi();
   // initWifiDebugDisplay();
   // initBatteryDebugDisplay();
 
