@@ -53,6 +53,7 @@ void loopHardwareDebug()
     loopRTCDebug();
     dumpRTCTime();
     dumpButtons();
+    dumpBattery();
 }
 #endif
 

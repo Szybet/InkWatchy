@@ -21,4 +21,10 @@ void loopBattery();
 void initBattery();
 
 uint32_t analogReadMilliVolts(uint8_t pin);
+
+
+#if DEBUG
+void dumpBattery();
+#endif
+
 #endif

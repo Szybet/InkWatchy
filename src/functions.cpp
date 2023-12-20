@@ -28,3 +28,9 @@ void checkMaxMin(int *value, int max, int min) {
         *value = max;
     }
 }
+
+String strTime(time_t unixTime)
+{
+  unixTime += TIME_OFFSET_S;
+  return ctime(&unixTime);
+}
