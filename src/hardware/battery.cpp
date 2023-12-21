@@ -23,7 +23,7 @@ void initBattery()
 {
 #if GSR_MINIMUM_BATTERY_VOLTAGE
     bat.minV = SRTC.getRTCBattery(false);
-    bat.maxV = BATTERY_MAX_VOLTAGE;
+    bat.maxV = BATTERY_CHARGE_VOLTAGE;
     bat.critV = SRTC.getRTCBattery(true);
 #else
     bat.minV = BATTERY_MIN_VOLTAGE;
