@@ -25,6 +25,6 @@ void showChart()
   auto opts = plot_options.bar_filled(true).set_axis(6, 12, gunpowder);
 
   // bar plot max temperatures using temperature as a color
-  full_screen.set_boundaries({0.1, 0.999}, {0.005, 0.89});
+ // full_screen.set_boundaries({0.1, 0.999}, {0.005, 0.89});
   plot.bar(x, min_temps, min_temps, full_screen, opts);
 }

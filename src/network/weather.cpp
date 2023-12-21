@@ -31,6 +31,7 @@ void syncWeather()
           weatherDataDays[i][j].pop = forecast->pop[c] * 100;
           weatherDataDays[i][j].sunrise = forecast->sunrise;
           weatherDataDays[i][j].sunset = forecast->sunset;
+          weatherDataDays[i][j].minTemp = forecast->temp_min[c];
           c = c + 1;
         }
       }
@@ -73,6 +74,7 @@ void dumpWeather()
       debugLog("Probability of precipitation: " + String(weatherDataDays[i][j].pop) + "%");
       debugLog("Sunrise: " + strTime(weatherDataDays[i][j].sunrise));
       debugLog("Sunset: " + strTime(weatherDataDays[i][j].sunset));
+      debugLog("Minimal temperature: " + strTime(weatherDataDays[i][j].minTemp));
     }
   }
   /*

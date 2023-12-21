@@ -33,13 +33,15 @@ void setup()
   initButtonTask();
 
   display.clearScreen();
-  showChart();
+  //showChart();
+  initBatteryDebugDisplay();
   display.display();
 }
 
 void loop()
 {
   loopBattery();
+  loopBatteryDebugDisplay;
 
   // loopWifiDebugDisplay();
   // loopBatteryDebugDisplay();

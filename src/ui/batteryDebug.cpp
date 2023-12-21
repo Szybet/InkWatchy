@@ -26,16 +26,16 @@ void initBatteryDebugDisplay()
     display.fillRect(0, currentHeight, display.width(), 3, GxEPD_BLACK);
     currentHeight = currentHeight + maxHeight;
 
-    writeLine("Current batt V: " + String(ui.battery.curV), cursorX, &currentHeight);
+    writeLine("Current V: " + String(ui.battery.curV), cursorX, &currentHeight);
     currentVoltageHeight = currentHeight - maxHeight;
 
-    writeLine("Minimum batt V: " + String(ui.battery.minV), cursorX, &currentHeight);
+    writeLine("Minimum V: " + String(ui.battery.minV), cursorX, &currentHeight);
 
-    writeLine("Maximum batt V: " + String(ui.battery.maxV), cursorX, &currentHeight);
+    writeLine("Maximum V: " + String(ui.battery.maxV), cursorX, &currentHeight);
 
-    writeLine("Critical batt V: " + String(ui.battery.critV), cursorX, &currentHeight);
+    writeLine("Critical V: " + String(ui.battery.critV), cursorX, &currentHeight);
 
-    writeLine("Battery Percentage: " + String(ui.battery.percentage), cursorX, &currentHeight);
+    writeLine("Level %: " + String(ui.battery.percentage), cursorX, &currentHeight);
     PercentageHeight = currentHeight - maxHeight;
 
     writeLine("Charging: " + BOOL_STR(ui.battery.isCharging), cursorX, &currentHeight);
@@ -57,7 +57,7 @@ void loopBatteryDebugDisplay()
             battVoltageStr = battVoltageStr + " ";
         }
 
-        writeTextReplaceBack("Current batt V: " + battVoltageStr, cursorX, currentVoltageHeight);
+        writeTextReplaceBack("Current V: " + battVoltageStr, cursorX, currentVoltageHeight);
         display.display(PARTIAL_UPDATE);
     }
     if (ui.battery.isCharging != bat.isCharging)
@@ -87,7 +87,7 @@ void loopBatteryDebugDisplay()
             percentageStr = percentageStr + " ";
         }
 
-        writeTextReplaceBack("Battery Percentage: " + percentageStr, cursorX, PercentageHeight);
+        writeTextReplaceBack("Level %: " + percentageStr, cursorX, PercentageHeight);
         display.display(PARTIAL_UPDATE);
     }
 }
