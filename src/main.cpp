@@ -41,7 +41,7 @@ void setup()
 void loop()
 {
   loopBattery();
-  loopBatteryDebugDisplay;
+  loopBatteryDebugDisplay();
 
   // loopWifiDebugDisplay();
   // loopBatteryDebugDisplay();

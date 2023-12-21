@@ -81,7 +81,7 @@ void loopBatteryDebugDisplay()
         display.setCursor(cursorX, PercentageHeight);
         setTextSize(batteryTextSize);
 
-        String percentageStr = BOOL_STR(bat.percentage);
+        String percentageStr = String(bat.percentage);
         while (percentageStr.length() < 6)
         {
             percentageStr = percentageStr + " ";
