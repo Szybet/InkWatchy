@@ -16,6 +16,7 @@ struct savedWeatherData {
     uint8_t pop; // Probability of precipitation in percents
     uint32_t sunrise;
     uint32_t sunset;
+    float minTemp;
 };
 
 #define WEATHER_PER_DAY 8

@@ -86,19 +86,19 @@ void loopButtonsTask(void *parameter)
     while (true)
     {
         delayTask(BUTTON_TASK_DELAY);
-        if (digitalRead(BACK_PIN) == HIGH)
+        if (digitalRead(BACK_PIN) == HIGH && buttonPressed != LongBack)
         {
             longButtonCheck(BACK_PIN, Back, LongBack);
         }
-        else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back)
+        else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu)
         {
             longButtonCheck(MENU_PIN, Menu, LongMenu);
         }
-        else if (digitalRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back)
+        else if (digitalRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu && buttonPressed != LongUp)
         {
             longButtonCheck(UP_PIN, Up, LongUp);
         }
-        else if (digitalRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back)
+        else if (digitalRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongUp && buttonPressed != LongBack && buttonPressed != LongDown && buttonPressed != LongMenu)
         {
             longButtonCheck(DOWN_PIN, Down, LongDown);
         }
