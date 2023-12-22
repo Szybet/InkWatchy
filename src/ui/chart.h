@@ -3,6 +3,6 @@
 
 #include "../defines/defines.h"
 
-void showChart();
+void showDoubleDataBarChart(float* data1Max, float* data2Min, uint dataCount, String chartName);
 
 #endif

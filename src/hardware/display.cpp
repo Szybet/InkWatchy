@@ -21,6 +21,7 @@ void initDisplay(bool isFromWakeUp)
 
     display.setFullWindow();
     display.fillScreen(GxEPD_WHITE);
+    display.clearScreen();
     display.setTextColor(GxEPD_BLACK);
 
     // Default values
