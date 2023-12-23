@@ -26,22 +26,26 @@ void setup()
   loopHardwareDebug();
 #endif
 
-  // turnOnWifi();
+  turnOnWifi();
   // initWifiDebugDisplay();
   // initBatteryDebugDisplay();
 
   initButtonTask();
 
-  float cambridge_max_temp_22[] = {68.23, 29.87, 42.11, 91.5, 10.78, 50.32, 75.44, 84.69, 9.14, 61.98, 17.82, 98.63};
-  float cambridge_min_temp_22[] = {61.42, 19.34, 26.08, 79.72, 6.91, 45.77, 62.46, 77.85, 3.74, 47.53, 14.25, 90.04};
+  //float cambridge_max_temp_22[] = {68.23, 29.87, 42.11, 91.5, 10.78, 50.32, 75.44, 84.69, 9.14, 61.98, 17.82, 98.63};
+  //float cambridge_min_temp_22[] = {61.42, 19.34, 26.08, 79.72, 6.91, 45.77, 62.46, 77.85, 3.74, 47.53, 14.25, 90.04};
 
-  showDoubleDataBarChart(cambridge_max_temp_22, cambridge_min_temp_22, 12, "asdasd");
-  display.display(PARTIAL_UPDATE);
+  //showDoubleDataBarChart(cambridge_max_temp_22, cambridge_min_temp_22, 12, "asdasd");
+  //display.display(PARTIAL_UPDATE);
   // initBatteryDebugDisplay();
+  initGeneralDebugDisplay();
+  GeneralDebug();
 }
 
 void loop()
 {
+  GeneralDebugLoop();
+  loopGeneralDebugDisplay();
   loopBattery();
   // loopBatteryDebugDisplay();
 
