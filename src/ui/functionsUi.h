@@ -25,7 +25,7 @@ void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t
 void writeImageN(int16_t x, int16_t y, const ImageDef image, uint16_t frColor = GxEPD_WHITE, uint16_t bgColor = GxEPD_BLACK);
 sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image = {0}, bool invert = false, int tolerance = 2, int borderWidth = 1, uint16_t frColor = GxEPD_BLACK, uint16_t bgColor = GxEPD_WHITE);
 
-extern const GFXfont *f;
+extern const GFXfont *font;
 extern uint16_t maxHeight;
 extern int textSize;
 
