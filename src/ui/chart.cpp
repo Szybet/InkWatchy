@@ -4,29 +4,85 @@
 Grafici plot{display};
 
 const ColorMapArray<2> really_black{
-	black,
-	black
-};
+    black,
+    black};
 
-#define X_MINIMUM_VALUE_OFFSET -0.55
+#define X_MINIMUM_VALUE_OFFSET -0.5
 #define X_MAX_VALUE_OFFSET -0.5
+#define CELL_VERTICAL_COUNT 6
 
-void showDoubleDataBarChart(float* data1Max, float* data2Min, uint dataCount, String chartName) {
-  // wrong! get the max value and then replace datacount in some places
-  DataArray<float> data1Arr {data1Max, dataCount, {0, float(dataCount)}};
-  DataArray<float> data2Arr {data2Min, dataCount, {0, float(dataCount)}};
+// Values in data1 need to be higher that in data2 in the same index
+void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, String chartName)
+{
+  display.fillScreen(GxEPD_WHITE);
+  float highNum = findHighest(data1Max, dataCount);
+  float lowNum = findLowest(data2Min, dataCount);
+
+  DataArray<float> data1Arr{data1Max, dataCount, {lowNum, highNum}};
+  DataArray<float> data2Arr{data2Min, dataCount, {lowNum, highNum}};
 
   DataLinear x{dataCount, {0.0 + X_MINIMUM_VALUE_OFFSET, float(dataCount + X_MAX_VALUE_OFFSET)}};
 
   plot.set_color_map(really_black);
-  PlotOptions opts = plot_options.bar_filled(true).set_axis(6, dataCount, black);
+  PlotOptions opts = plot_options.bar_filled(true).set_axis(CELL_VERTICAL_COUNT, dataCount, black);
   Window size = Window({0.1, 0.999}, {0.005, 0.89});
 
   plot.bar(x, data1Arr, data2Arr, size, opts);
-
   plot.bar(x, data2Arr, white, size, opts);
-}
 
+  display.setCursor(1, 1);
+  setTextSize(1);
+  uint16_t y;
+  getTextBounds(chartName, NULL, NULL, NULL, &y);
+  writeTextCenterReplaceBack(chartName, y - 3);
+
+  int bothSize = dataCount * 2;
+  float bothList[bothSize];
+  concatenateFloatLists(data1Max, dataCount, data2Min, dataCount, bothList);
+  sortList(bothList, bothSize);
+
+  debugLog(String(bothList[0]));
+  debugLog(String(bothList[bothSize - 1]));
+
+  int stepper = ceil(float((bothSize - 1)) / float(CELL_VERTICAL_COUNT));
+  debugLog("Stepper: " + String(stepper));
+  debugLog("bothSize: " + String(bothSize));
+
+  display.setFont();
+  float currentHeight = display.height() - 23;
+  for (int i = 0; i < bothSize - 1; i += stepper)
+  {
+    display.setCursor(0, round(currentHeight));
+    debugLog("i: " + String(i));
+    String number = String(bothList[i]);
+    if (number.length() > 3)
+    {
+      if (isDecimalZero(bothList[i]) == true && String(int(bothList[i])).length() <= 3)
+      {
+        display.print(String(int(bothList[i])));
+      }
+      else
+      {
+        String part1 = number.substring(0, 3);
+        String part2 = number.substring(3);
+        if(part2.length() > 3) {
+          part2 = part2.substring(0, 3);
+        }
+        display.println(part1);
+        display.print(part2);
+      }
+    }
+    else
+    {
+      display.print(number);
+    }
+
+    currentHeight = currentHeight - ((display.height() / (CELL_VERTICAL_COUNT + 1)) + 1.3);
+  }
+  setFont(font);
+
+  debugLog("Finished printing things");
+}
 
 // Clear example
 /*
