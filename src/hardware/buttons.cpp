@@ -5,9 +5,19 @@ uint64_t RTC_DATA_ATTR UP_MASK = GPIO_SEL_32;
 buttonState buttonPressed = None;
 TaskHandle_t buttonTask;
 
-buttonState useButton(bool allButtons)
+buttonState useButtonBack()
 {
-    if (allButtons == false && buttonPressed == Back)
+    if (buttonPressed == Back || buttonPressed == LongBack) {
+        buttonState buttonPressedTmp = buttonPressed;
+        buttonPressed = None;
+        return buttonPressedTmp;
+    }
+    return None;
+}
+
+buttonState useButton()
+{
+    if (buttonPressed == Back)
     {
         return None;
     }

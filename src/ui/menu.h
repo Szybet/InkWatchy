@@ -9,7 +9,7 @@
 struct entryMenu {
     String text;
     const ImageDef image;
-    void* function;
+    void (*function)();
 };
 
 struct menuData
@@ -21,12 +21,11 @@ struct menuData
   entryMenu entryList[MAX_MENU_ITEMS];
   int itemsOnPage;
   int currentButton;
-  uint16_t maxHeight;
 };
 
 void initMenu(entryMenu entryList[MAX_MENU_ITEMS], int totalMenus, String menuName, int textSize = 1, int linesThick = 0);
 
 void showMenu();
 
-void menuLoop();
+void loopMenu();
 #endif

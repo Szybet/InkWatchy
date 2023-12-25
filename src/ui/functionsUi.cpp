@@ -36,11 +36,11 @@ void centerText(String str, uint16_t *currentHeight)
 
 void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor)
 {
-  //debugLog("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
+  // debugLog("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
-  //debugLog("w: " + String(w));
-  //debugLog("h: " + String(h));
+  // debugLog("w: " + String(w));
+  // debugLog("h: " + String(h));
   w = w + 5;
   if (containsBelowChar(str) == true)
   {
@@ -72,8 +72,8 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
 {
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
-  //debugLog("w: " + String(w));
-  //debugLog("h: " + String(h));
+  // debugLog("w: " + String(w));
+  // debugLog("h: " + String(h));
   w = w + 5;
   int16_t x = (display.width() - w) / 2;
   if (containsBelowChar(str) == true)
@@ -138,7 +138,7 @@ void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t
 // Use the image pack here to make it easier
 // Like that:
 // writeImageN(100, 100, testSomethiongImgPack);
-void writeImageN(int16_t x, int16_t y,const ImageDef image, uint16_t frColor, uint16_t bgColor)
+void writeImageN(int16_t x, int16_t y, const ImageDef image, uint16_t frColor, uint16_t bgColor)
 {
   int16_t cx = display.getCursorX();
   int16_t cy = display.getCursorY();
@@ -148,7 +148,7 @@ void writeImageN(int16_t x, int16_t y,const ImageDef image, uint16_t frColor, ui
   display.setCursor(cx, cy);
 }
 
-sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor)
+sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor)
 {
   sizeInfo size = {0};
   int toleranceSize = tolerance * 2 + borderWidth * 2;
@@ -186,8 +186,8 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
     mainH = th;
   }
 
-  //debugLog("Final size.h is: " + String(size.h));
-  //debugLog("Final size.w is: " + String(size.w));
+  // debugLog("Final size.h is: " + String(size.h));
+  // debugLog("Final size.w is: " + String(size.w));
 
   GFXcanvas1 canvasTmp(size.w, size.h);
   canvasTmp.setFont(font);
@@ -203,8 +203,13 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
   }
   if (str != "")
   {
-    canvasTmp.setCursor(canvasTmp.getCursorX(), size.h - ((size.h - th) / 2) - 1); // -1 for reasons?
-    //debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()));
+    int yCursorTmp = size.h - ((size.h - th) / 2) - 1;
+    if (containsBelowChar(str) == true)
+    {
+      yCursorTmp = yCursorTmp - 3;
+    }
+    canvasTmp.setCursor(canvasTmp.getCursorX(), yCursorTmp); // -1 for reasons? -3 for cutted j g etc.
+    // debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()));
     canvasTmp.print(str);
   }
 
@@ -213,12 +218,13 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
   int16_t rectOffset = 0;
   canvasTmp.setCursor(0, 0);
   uint16_t borderColor = bgColor;
-  if(invert == true) {
+  if (invert == true)
+  {
     borderColor = frColor;
   }
   for (int16_t i = 0; i < borderWidth; i++)
   {
-    //debugLog("Drawing border in button");
+    // debugLog("Drawing border in button");
     canvasTmp.drawRect(i + rectOffset, i + rectOffset, size.w - rectOffset, size.h - rectOffset, borderColor);
   }
   canvasTmp.setCursor(canvasCursorXTmp, canvasCursorYTmp);
@@ -228,7 +234,7 @@ sizeInfo drawButton(int16_t x, int16_t y, String str,const ImageDef image, bool 
   display.setCursor(0, 0);
   if (invert == false)
   {
-    //debugLog("Drawing non inverted button");
+    // debugLog("Drawing non inverted button");
     display.drawBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, frColor, bgColor); // why inverted?
   }
   else

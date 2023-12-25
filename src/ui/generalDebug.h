@@ -5,8 +5,10 @@
 
 void initGeneralDebugDisplay();
 void loopGeneralDebugDisplay();
-void GeneralDebugLoop();
-void GeneralDebug();
 
+#if DEBUG
+void loopGeneralDebug();
+void initGeneralDebug();
+#endif
 
 #endif
