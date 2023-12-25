@@ -8,7 +8,7 @@
 
 struct entryMenu {
     String text;
-    const ImageDef image;
+    const ImageDef* image;
     void (*function)();
 };
 
@@ -23,6 +23,7 @@ struct menuData
   int currentButton;
 };
 
+extern String lastMenuSelected;
 void initMenu(entryMenu entryList[MAX_MENU_ITEMS], int totalMenus, String menuName, int textSize = 1, int linesThick = 0);
 
 void showMenu();

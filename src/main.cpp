@@ -1,5 +1,9 @@
 #include "defines/defines.h"
 
+#if DEBUG
+int loopDumpDelayMs = 0;
+#endif
+
 void setup()
 {
 
@@ -10,13 +14,16 @@ void setup()
   if (wakeUpReason == ESP_SLEEP_WAKEUP_EXT0 || wakeUpReason == ESP_SLEEP_WAKEUP_EXT1)
   {
     wakedUpFromSleep = true;
-    #if DEBUG
-    if(wakeUpReason == ESP_SLEEP_WAKEUP_EXT0) {
+#if DEBUG
+    if (wakeUpReason == ESP_SLEEP_WAKEUP_EXT0)
+    {
       debugLog("Waked up because of RTC");
-    } else if(wakeUpReason == ESP_SLEEP_WAKEUP_EXT1) {
+    }
+    else if (wakeUpReason == ESP_SLEEP_WAKEUP_EXT1)
+    {
       debugLog("Waked up because of buttons");
     }
-    #endif
+#endif
   }
 
   if (wakedUpFromSleep == true)
@@ -34,34 +41,31 @@ void setup()
   loopHardwareDebug();
 #endif
 
-  // turnOnWifi();
-  // initWifiDebugDisplay();
-  // initBatteryDebugDisplay();
-
+  turnOnWifi();
   initButtonTask();
-  // initBatteryDebugDisplay();
 }
 
 void loop()
 {
   loopBattery();
   loopManager();
-  // loopBatteryDebugDisplay();
-
-  // loopWifiDebugDisplay();
-  // loopBatteryDebugDisplay();
-
-  // Needs to run forever because it deletes the wifi task. Use other conditions to determine if we need to do something with wifi too
-  // if(isWifiConnected() == true) {
-
-  //}
 
 #if DEBUG && EINK_COUNTER
   showEinkCounter();
 #endif
 
-#if DEBUG && DUMP_LOOP_DEBUG
-  loopHardwareDebug();
+#if DEBUG && (DUMP_LOOP_DEBUG || DUMP_LOOP_SOFTWARE_DEBUG)
+  if (millis() - loopDumpDelayMs > DUMP_LOOP_DELAY)
+  {
+    loopDumpDelayMs = millis();
+#if DUMP_LOOP_DEBUG
+    loopHardwareDebug();
+#endif
+#if DUMP_LOOP_SOFTWARE_DEBUG
+    loopGeneralDebug();
+#endif
+  }
+
 #endif
 
   delay(LOOP_DELAY);

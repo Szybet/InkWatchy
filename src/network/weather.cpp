@@ -21,6 +21,7 @@ void syncWeather()
         {
           weatherDataDays[i][j].dt = forecast->dt[c];
           weatherDataDays[i][j].temp = forecast->feels_like[c];
+          weatherDataDays[i][j].minTemp = forecast->temp_min[c];
           weatherDataDays[i][j].pressure = forecast->pressure[c];
           weatherDataDays[i][j].humidity = forecast->humidity[c];
           weatherDataDays[i][j].weatherConditionId = forecast->id[c];
@@ -31,7 +32,6 @@ void syncWeather()
           weatherDataDays[i][j].pop = forecast->pop[c] * 100;
           weatherDataDays[i][j].sunrise = forecast->sunrise;
           weatherDataDays[i][j].sunset = forecast->sunset;
-          weatherDataDays[i][j].minTemp = forecast->temp_min[c];
           c = c + 1;
         }
       }
@@ -59,11 +59,17 @@ void dumpWeather()
   debugLog("Timezone: " + String(forecast->timezone));
   for (int i = 0; i < MAX_DAYS; i++)
   {
+    Serial.println("");
     debugLog("Day number: " + String(i + 1) + " weather info:");
     for (int j = 0; j < WEATHER_PER_DAY; j++)
     {
-      debugLog("Information for time: " + strTime(weatherDataDays[i][j].dt));
+      Serial.println("");
+      debugLog("Information for day " + String(i) + " number " + String(j));
+      String time = strTime(weatherDataDays[i][j].dt);
+      time.remove(time.length() - 1);
+      debugLog("Information for time: " + time);
       debugLog("Temperature: " + String(weatherDataDays[i][j].temp) + "C");
+      debugLog("Minimal temperature: " + String(weatherDataDays[i][j].minTemp));
       debugLog("Pressure: " + String(weatherDataDays[i][j].pressure) + "hPa");
       debugLog("Humidity: " + String(weatherDataDays[i][j].humidity) + "%");
       debugLog("Weather condition: " + weatherConditionIdToStr(weatherDataDays[i][j].weatherConditionId));
@@ -72,9 +78,12 @@ void dumpWeather()
       debugLog("Wind guts: " + String(weatherDataDays[i][j].windGusts) + "m/s");
       debugLog("Visibility: " + String(weatherDataDays[i][j].visibility) + "km");
       debugLog("Probability of precipitation: " + String(weatherDataDays[i][j].pop) + "%");
-      debugLog("Sunrise: " + strTime(weatherDataDays[i][j].sunrise));
-      debugLog("Sunset: " + strTime(weatherDataDays[i][j].sunset));
-      debugLog("Minimal temperature: " + strTime(weatherDataDays[i][j].minTemp));
+      String sunrise = strTime(weatherDataDays[i][j].sunrise);
+      sunrise.remove(sunrise.length() - 1);
+      debugLog("Sunrise: " + sunrise);
+      String sunset = strTime(weatherDataDays[i][j].sunset);
+      sunset.remove(sunset.length() - 1);
+      debugLog("Sunset: " + sunset);
     }
   }
   /*

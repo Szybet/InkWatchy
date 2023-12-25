@@ -5,7 +5,14 @@ menuData data = {0};
 
 void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSize, int linesThick)
 {
-  memcpy(data.entryList, entryList, sizeof(entryList[0]) * totalMenus);
+  // A lot of funny problems right here!
+  // memcpy(data.entryList, entryList, sizeof(entryList[0]) * totalMenus);
+  for (int i = 0; i < totalMenus; i++)
+  {
+    data.entryList[i].text = entryList[i].text;
+    data.entryList[i].image = entryList[i].image;
+    data.entryList[i].function = entryList[i].function;
+  }
 
   data.totalMenus = totalMenus;
   data.textSize = textSize;
@@ -68,13 +75,14 @@ void showMenu()
   setTextSize(data.textSize);
   for (int i = startingButton; i < startingButton + data.itemsOnPage && i < data.totalMenus; i++)
   {
-    debugLog("iterating " + String(i));
+    // debugLog("iterating " + String(i));
     bool invert = false;
     if (data.currentButton == i)
     {
       invert = true;
     }
-    sizeInfo buttonSize = drawButton(1, currentHeight, data.entryList[i].text, data.entryList[i].image, invert, 2, 0);
+    debugLog("Menu entry text is: " + data.entryList[i].text);
+    sizeInfo buttonSize = drawButton(1, currentHeight, data.entryList[i].text, *data.entryList[i].image, invert, 2, 0);
     debugLog("Button h in menu: " + String(buttonSize.h));
     if (invert == true)
     {
@@ -91,6 +99,7 @@ void showMenu()
   disUp(true);
 }
 
+String lastMenuSelected;
 void loopMenu()
 {
   switch (useButton())
@@ -113,10 +122,12 @@ void loopMenu()
   {
     if (data.entryList[data.currentButton].function != nullptr)
     {
+      lastMenuSelected = data.entryList[data.currentButton].text;
       data.entryList[data.currentButton].function();
-    } 
+    }
 #if DEBUG
-    else {
+    else
+    {
       debugLog("Menu entry item has a invalid function: " + data.entryList[data.currentButton].text);
     }
 #endif

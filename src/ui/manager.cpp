@@ -87,6 +87,22 @@ void loopManager()
     case textDialog:
     {
         managerLaunchFunc(textDialog, NULL, useButtonBlank);
+        break;
+    }
+    case weatherMenu:
+    {
+        managerLaunchFunc(weatherMenu, initWeatherMenu, loopMenu);
+        break;
+    }
+    case weatherConditionMenu:
+    {
+        managerLaunchFunc(weatherConditionMenu, initWeatherConditionMenu, loopMenu);
+        break;
+    }
+    case ChartPlace:
+    {
+        managerLaunchFunc(ChartPlace, NULL, useButtonBlank);
+        break;
     }
     }
 }
