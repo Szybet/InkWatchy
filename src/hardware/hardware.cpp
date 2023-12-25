@@ -12,8 +12,8 @@ void initAllHardware()
     // To wake up?
     initButtons();
     
-    pinMode(VIB_MOTOR_PIN, INPUT); // To reset the motor button if esp crashed when it was vibrating
     pinMode(VIB_MOTOR_PIN, OUTPUT);
+    digitalWrite(VIB_MOTOR_PIN, false); // To reset the motor button if esp crashed when it was vibrating
 
     initWakeUpHardware(false);
 }
@@ -48,6 +48,7 @@ void initHardwareDebug()
     debugLog("Hardware version: " + String(HWVer));
     debugLog("Up button pin number: " + String(UP_PIN));
     initDisplayDebug();
+    initGeneralDebug();
 }
 
 void loopHardwareDebug()
@@ -56,6 +57,7 @@ void loopHardwareDebug()
     dumpRTCTime();
     dumpButtons();
     dumpBattery();
+    loopGeneralDebug();
 }
 #endif
 

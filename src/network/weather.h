@@ -6,6 +6,7 @@
 struct savedWeatherData {
     uint32_t dt; // Use strTime
     float temp;
+    float minTemp;
     float pressure;
     uint8_t humidity;
     uint16_t weatherConditionId; // Use weatherConditionIdToStr
@@ -16,7 +17,6 @@ struct savedWeatherData {
     uint8_t pop; // Probability of precipitation in percents
     uint32_t sunrise;
     uint32_t sunset;
-    float minTemp;
 };
 
 #define WEATHER_PER_DAY 8

@@ -38,6 +38,15 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
 
   int bothSize = dataCount * 2;
   float bothList[bothSize];
+
+#if DEBUG
+  for (int i = 0; i < dataCount; i++)
+  {
+    debugLog("for i" + String(i) + " in max equals: " + String(data1Max[i]));
+    debugLog("for i" + String(i) + " in min equals: " + String(data1Max[i]));
+  }
+#endif
+
   concatenateFloatLists(data1Max, dataCount, data2Min, dataCount, bothList);
   sortList(bothList, bothSize);
 
@@ -45,6 +54,13 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
   debugLog(String(bothList[bothSize - 1]));
 
   int stepper = ceil(float((bothSize - 1)) / float(CELL_VERTICAL_COUNT));
+
+  // To make sure good ommount of text is shown
+  while (bothSize / stepper < CELL_VERTICAL_COUNT)
+  {
+    bothSize = bothSize + 1;
+  }
+
   debugLog("Stepper: " + String(stepper));
   debugLog("bothSize: " + String(bothSize));
 
@@ -55,6 +71,13 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
     display.setCursor(0, round(currentHeight));
     debugLog("i: " + String(i));
     String number = String(bothList[i]);
+    if(number[1] == '.') {
+      number.remove(number.length() - 1);
+      if(number[2] == '0') {
+        number.remove(number.length() - 1);
+        number.remove(number.length() - 1);
+      }
+    }
     if (number.length() > 3)
     {
       if (isDecimalZero(bothList[i]) == true && String(int(bothList[i])).length() <= 3)

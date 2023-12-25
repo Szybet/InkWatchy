@@ -3,7 +3,7 @@
 
 #include "../defines/defines.h"
 
-#define FIRST_PLACE watchface
+#define FIRST_PLACE mainMenu
 #define PLACE_TREE_MAX_DEPTH 30
 
 typedef enum 
@@ -15,6 +15,9 @@ typedef enum
     batteryDebug,
     wifiDebug,
     textDialog, // So nothing, really
+    weatherMenu,
+    weatherConditionMenu,
+    ChartPlace,
     NoPlace,
 } UiPlace;
 
@@ -28,6 +31,7 @@ void loopManager();
 // Manager functions
 void initMainMenu();
 void initDebugMenu();
+void initWeatherMenu();
 
 // Manager switches
 void generalSwitch(UiPlace place);
@@ -37,6 +41,20 @@ void switchDebugMenu();
 void switchGeneralDebug();
 void switchBatteryDebug();
 void switchWifiDebug();
-void initWeatherMenu();
+void switchWeatherMenu();
+void switchWeatherSelectorMenu();
+extern int weatherDayChoosed;
+void initWeatherConditionMenu();
+
+// Switches for weather
+void showTemp();
+void showPressure();
+void showHumidity();
+void showWeatherCond();
+void showClouds();
+void showWindSpeed();
+void showWindGuts();
+void showVisibility();
+void showPop();
 
 #endif
