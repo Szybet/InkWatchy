@@ -53,7 +53,7 @@ void initGeneralDebugDisplay()
 
     writeLine("Used Heap KB: " + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024), cursorX, &currentHeight);
     memoryHeight = currentHeight - maxHeight;
-    display.display(PARTIAL_UPDATE);
+    disUp(true);
 }
 
 void loopGeneralDebugDisplay()
@@ -77,8 +77,10 @@ void loopGeneralDebugDisplay()
         usedHeapLenght = usedHeapWidth;
 
         writeTextReplaceBack(usedHeapStr, cursorX, memoryHeight);
-        display.display(PARTIAL_UPDATE);
+        dUChange = true;
     }
+    useButtonBlank();
+    disUp();
 }
 
 #if DEBUG

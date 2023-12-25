@@ -22,6 +22,8 @@ extern uint64_t RTC_DATA_ATTR UP_MASK;
 
 buttonState useButtonBack();
 buttonState useButton();
+void useButtonBlank();
+
 void initButtons();
 void initButtonTask();
 void setButton(buttonState button);

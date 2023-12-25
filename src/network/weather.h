@@ -20,6 +20,7 @@ struct savedWeatherData {
 };
 
 #define WEATHER_PER_DAY 8
+extern RTC_DATA_ATTR bool isWeatherAvailable;
 extern RTC_DATA_ATTR savedWeatherData weatherDataDays[MAX_DAYS][WEATHER_PER_DAY]; // Days / Data for these days
 
 void syncWeather();

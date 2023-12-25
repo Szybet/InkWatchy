@@ -40,7 +40,7 @@ void initBatteryDebugDisplay()
 
     writeLine("Charging: " + BOOL_STR(ui.battery.isCharging), cursorX, &currentHeight);
     ChargingHeight = currentHeight - maxHeight;
-    display.display(PARTIAL_UPDATE);
+    disUp(true);
 }
 
 void loopBatteryDebugDisplay()
@@ -58,7 +58,7 @@ void loopBatteryDebugDisplay()
         }
 
         writeTextReplaceBack("Current V: " + battVoltageStr, cursorX, currentVoltageHeight);
-        display.display(PARTIAL_UPDATE);
+        dUChange = true;
     }
     if (ui.battery.isCharging != bat.isCharging)
     {
@@ -73,7 +73,7 @@ void loopBatteryDebugDisplay()
         }
 
         writeTextReplaceBack("Charging: " + chargingStr, cursorX, ChargingHeight);
-        display.display(PARTIAL_UPDATE);
+        dUChange = true;
     }
     if (ui.battery.percentage != bat.percentage)
     {
@@ -88,8 +88,10 @@ void loopBatteryDebugDisplay()
         }
 
         writeTextReplaceBack("Level %: " + percentageStr, cursorX, PercentageHeight);
-        display.display(PARTIAL_UPDATE);
+        dUChange = true;
     }
+    useButtonBlank();
+    disUp();
 }
 
 #endif

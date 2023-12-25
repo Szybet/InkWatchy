@@ -44,6 +44,7 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #include "../ui/menu.h"
 #include "../ui/chart.h"
 #include "../ui/manager.h"
+#include "../ui/watchface/watchface.h"
 #include "../network/wifi.h"
 #include "../network/ntp.h"
 #include "../network/weather.h"

@@ -17,7 +17,7 @@ buttonState useButtonBack()
 
 buttonState useButton()
 {
-    if (buttonPressed == Back)
+    if (buttonPressed == Back || buttonPressed == LongBack)
     {
         return None;
     }
@@ -31,6 +31,13 @@ buttonState useButton()
     }
 
     return buttonPressedTmp;
+}
+
+// To unlock the button
+void useButtonBlank() {
+    if(buttonPressed != Back && buttonPressed != LongBack) {
+        buttonPressed = None;
+    }
 }
 
 void initButtons()
