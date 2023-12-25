@@ -86,6 +86,10 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
 
 // Clear example
 /*
+
+// float cambridge_max_temp_22[] = {68.23, 29.87, 42.11, -20.5, 10.78, 50.32, 75.44, 84.69, 9.14, 61.98, 17.82, 98.63};
+// float cambridge_min_temp_22[] = {61.42, 19.34, 26.08, -30.72, 6.91, 45.77, 62.46, 77.85, 3.74, 47.53, 14.25, 90.04};
+
 float cambridge_max_temp_22[] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0};
 float cambridge_min_temp_22[] = {0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0};
 

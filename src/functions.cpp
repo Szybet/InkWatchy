@@ -6,7 +6,7 @@ void logFunction(String file, int line, String func, String message) {
 
 // Check if a function contains a character that has a line below like... g p q j
 bool containsBelowChar(String str) {
-    if(str.indexOf("g") > 0 || str.indexOf("p") > 0 || str.indexOf("q") > 0 || str.indexOf("j") > 0) {
+    if(str.indexOf("g") > 0 || str.indexOf("p") > 0 || str.indexOf("q") > 0 || str.indexOf("j") > 0 || str.indexOf("y") > 0) {
         return true;
     } else {
         return false;

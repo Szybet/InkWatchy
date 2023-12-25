@@ -9,6 +9,22 @@ SmallRTC rtc;
 uint16_t usedHeapWidth;
 uint16_t usedHeapLenght;
 
+String getRtcType()
+{
+    int rtcType = rtc.getType();
+    switch (rtcType)
+    {
+    case 0:
+        return "Unknown";
+    case 1:
+        return "DS3231";
+    case 2:
+        return "PCF8563";
+    default:
+        return "Invalid Type";
+    }
+}
+
 void initGeneralDebugDisplay()
 {
     debugLog("initGeneralDebugDisplay called");
@@ -25,27 +41,10 @@ void initGeneralDebugDisplay()
 
     display.fillRect(0, currentHeight, display.width(), 3, GxEPD_BLACK);
     currentHeight = currentHeight + maxHeight;
-    int rtcType = rtc.getType();
-    String RtcType;
-    if (rtcType == 0)
-    {
-        RtcType = "Unknown";
-    }
-    else if (rtcType == 1)
-    {
-        RtcType = "DS3231";
-    }
-    else if (rtcType == 2)
-    {
-        RtcType = "PCF8563";
-    }
-    else
-    {
-        RtcType = "Invalid Type";
-    }
+    String RtcType = getRtcType();
 
     centerText("Chip Model:", &currentHeight);
-    centerText(String(ESP.getChipModel()),&currentHeight);
+    centerText(String(ESP.getChipModel()), &currentHeight);
     writeLine("RTC type: " + String(RtcType), cursorX, &currentHeight);
 
     currentHeight = currentHeight + 2;
@@ -82,32 +81,21 @@ void loopGeneralDebugDisplay()
     }
 }
 
+#if DEBUG
 
-void GeneralDebug() {
-    int rtcType = rtc.getType();
-    String RtcType;
-    if (rtcType == 0)
-    {
-        RtcType = "Unknown";
-    }
-    else if (rtcType == 1)
-    {
-        RtcType = "DS3231";
-    }
-    else if (rtcType == 2)
-    {
-        RtcType = "PCF8563";
-    }
-    else
-    {
-        RtcType = "Invalid Type";
-    }
+void initGeneralDebug()
+{
     debugLog("Chip Model: " + String(ESP.getChipModel()));
-    debugLog("RTC type: " + String(RtcType));
+    debugLog("RTC type: " + String(getRtcType()));
     debugLog("Watchy version " + String(SRTC.getWatchyHWVer()));
     debugLog("Used Heap KB: " + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024));
 }
-void GeneralDebugLoop() {
+
+void loopGeneralDebug()
+{
     debugLog("Used Heap KB: " + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024));
 }
+
+#endif
+
 #endif

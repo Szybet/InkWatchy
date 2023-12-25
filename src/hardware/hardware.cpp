@@ -11,6 +11,8 @@ void initAllHardware()
 
     // To wake up?
     initButtons();
+    
+    pinMode(VIB_MOTOR_PIN, INPUT); // To reset the motor button if esp crashed when it was vibrating
     pinMode(VIB_MOTOR_PIN, OUTPUT);
 
     initWakeUpHardware(false);

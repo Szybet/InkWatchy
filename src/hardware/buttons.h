@@ -20,7 +20,8 @@ extern buttonState buttonPressed;
 extern int RTC_DATA_ATTR UP_PIN;
 extern uint64_t RTC_DATA_ATTR UP_MASK;
 
-buttonState useButton(bool allButtons = false);
+buttonState useButtonBack();
+buttonState useButton();
 void initButtons();
 void initButtonTask();
 void setButton(buttonState button);

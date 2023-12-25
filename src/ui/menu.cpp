@@ -1,9 +1,9 @@
 #include "menu.h"
 
 menuData data = {0};
-#define buttonsOffset 4;
+#define buttonsOffset 2;
 
-void initMenu(entryMenu entryList[MAX_MENU_ITEMS], int totalMenus, String menuName, int textSize, int linesThick)
+void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSize, int linesThick)
 {
   memcpy(data.entryList, entryList, sizeof(entryList[0]) * totalMenus);
 
@@ -16,12 +16,10 @@ void initMenu(entryMenu entryList[MAX_MENU_ITEMS], int totalMenus, String menuNa
   if (textSize == 1)
   {
     data.itemsOnPage = 7;
-    data.maxHeight = 19;
   }
   else
   {
     data.itemsOnPage = 5;
-    data.maxHeight = 32;
   }
   showMenu();
 }
@@ -76,18 +74,24 @@ void showMenu()
     {
       invert = true;
     }
-    drawButton(1, currentHeight, data.entryList[i].text, data.entryList[i].image, invert, 2, 0);
+    sizeInfo buttonSize = drawButton(1, currentHeight, data.entryList[i].text, data.entryList[i].image, invert, 2, 0);
+    debugLog("Button h in menu: " + String(buttonSize.h));
+    if (invert == true)
+    {
+      display.fillRect(1 + buttonSize.w, currentHeight, display.width() - buttonSize.w - 1, buttonSize.h, GxEPD_BLACK);
+    }
     if (i != startingButton && MENU_LINES == true)
     {
       display.fillRect(0, currentHeight - 2, display.width(), 2, GxEPD_BLACK);
     }
 
-    currentHeight = currentHeight + data.maxHeight + buttonsOffset;
+    // currentHeight = currentHeight + data.maxHeight + buttonsOffset;
+    currentHeight = currentHeight + buttonSize.h + buttonsOffset;
   }
   display.display(PARTIAL_UPDATE);
 }
 
-void menuLoop()
+void loopMenu()
 {
   switch (useButton())
   {
@@ -107,7 +111,10 @@ void menuLoop()
   }
   case Menu:
   {
-
+    if (data.entryList[data.currentButton].function != NULL)
+    {
+      data.entryList[data.currentButton].function();
+    }
     break;
   }
   case LongUp:
@@ -115,6 +122,7 @@ void menuLoop()
     currentPage -= 1;
     checkMaxMin(&currentPage, pageNumber - 1);
     data.currentButton = currentPage * data.itemsOnPage;
+    debugLog("data.currentButton: " + String(data.currentButton));
     showMenu();
     break;
     break;
@@ -124,6 +132,7 @@ void menuLoop()
     currentPage += 1;
     checkMaxMin(&currentPage, pageNumber - 1);
     data.currentButton = currentPage * data.itemsOnPage;
+    debugLog("data.currentButton: " + String(data.currentButton));
     showMenu();
     break;
   }
