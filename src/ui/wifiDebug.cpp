@@ -81,7 +81,7 @@ void initWifiDebugDisplay()
     drawButton(onButtonCord.x, onButtonCord.y, "ON", acceptImgPack, true);
     drawButton(offButtonCord.x, offButtonCord.y, "OFF", crossImgPack);
 
-    display.display(FULL_UPDATE);
+    disUp(true);
 }
 
 void drawSelUi()
@@ -105,7 +105,7 @@ void drawSelUi()
     }
     drawButton(onButtonCord.x, onButtonCord.y, "ON", acceptImgPack, onBut);
     drawButton(offButtonCord.x, offButtonCord.y, "OFF", crossImgPack, offBut);
-    display.display(PARTIAL_UPDATE);
+    dUChange = true;
 }
 
 void loopWifiDebugDisplay()
@@ -155,8 +155,7 @@ void loopWifiDebugDisplay()
         ssidLength = ssidWidth;
 
         writeTextReplaceBack(ssidStr, cursorXwifi, SSIDHeight);
-        display.display(PARTIAL_UPDATE);
-        int guwno;
+        dUChange = true;
     }
     int wifiSignal = getSignalStrength();
     if (wifiSignal != wifiSignalLast)
@@ -178,7 +177,7 @@ void loopWifiDebugDisplay()
         signalLength = signalWidth;
 
         writeTextReplaceBack(signalStr, cursorXwifi, SignalStrengthHeight);
-        display.display(PARTIAL_UPDATE);
+        dUChange = true;
     }
     String wifiTaskStatus = BOOL_STR(isWifiTaskRunning);
     //debugLog(wifiTaskStatus);
@@ -201,7 +200,7 @@ void loopWifiDebugDisplay()
         taskStatusLenght = taskStatusWidth;
 
         writeTextReplaceBack(TaskStatusStr, cursorXwifi, TaskStatusHeight);
-        display.display(PARTIAL_UPDATE);
+        dUChange = true;
     }
 
     //debugLog("selected: " + String(selUi));
@@ -241,5 +240,6 @@ void loopWifiDebugDisplay()
         break;
     }
     }
+    disUp();
 }
 #endif

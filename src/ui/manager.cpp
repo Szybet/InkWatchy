@@ -13,12 +13,19 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)())
 {
     if (currentPlace == place)
     {
-        loopFunc();
+        if (loopFunc != nullptr)
+        {
+            loopFunc();
+        }
     }
     else
     {
         currentPlace = place;
-        initFunc();
+        if (initFunc != nullptr)
+        {
+            display.fillScreen(GxEPD_WHITE);
+            initFunc();
+        }
     }
 }
 
@@ -33,8 +40,11 @@ void loopManager()
             {
                 placeTree[currentPlaceIndex] = NoPlace;
                 currentPlaceIndex -= 1;
-            } else if(backButton == LongBack) {
-                for(int i = 1; i < PLACE_TREE_MAX_DEPTH; i++) {
+            }
+            else if (backButton == LongBack)
+            {
+                for (int i = 1; i < PLACE_TREE_MAX_DEPTH; i++)
+                {
                     placeTree[i] = NoPlace;
                 }
                 currentPlaceIndex = 0;
@@ -46,7 +56,7 @@ void loopManager()
     {
     case watchface:
     {
-
+        managerLaunchFunc(watchface, initWatchfaceDisplay, loopWatchfaceLoop);
         break;
     }
     case mainMenu:
@@ -58,6 +68,25 @@ void loopManager()
     {
         managerLaunchFunc(debugMenu, initDebugMenu, loopMenu);
         break;
+    }
+    case generalDebug:
+    {
+        managerLaunchFunc(generalDebug, initGeneralDebugDisplay, loopGeneralDebugDisplay);
+        break;
+    }
+    case batteryDebug:
+    {
+        managerLaunchFunc(batteryDebug, initBatteryDebugDisplay, loopBatteryDebugDisplay);
+        break;
+    }
+    case wifiDebug:
+    {
+        managerLaunchFunc(wifiDebug, initWifiDebugDisplay, loopWifiDebugDisplay);
+        break;
+    }
+    case textDialog:
+    {
+        managerLaunchFunc(textDialog, NULL, useButtonBlank);
     }
     }
 }

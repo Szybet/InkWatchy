@@ -9,6 +9,7 @@
 #define TIME_OFFSET_S 3600            // Time offset in seconds, use this as timezones
 #define MENU_LINES false // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500 // Duration until long press registers in miliseconds
+#define FULL_DISPLAY_UPDATE_QUEUE 100 // Make a full display update after x of partial ones
 
 // Advanced
 #define SLEEP_EVERY_MS 180000 // Goes to sleep timer, is resetted by button presses

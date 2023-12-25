@@ -55,7 +55,7 @@ void goSleep()
     display.setFont();
     display.setTextSize(2);
     display.print("Sleeping");
-    display.display(PARTIAL_UPDATE);
+    disUp(true);
 #endif
 
     display.hibernate();

@@ -88,7 +88,7 @@ void showMenu()
     // currentHeight = currentHeight + data.maxHeight + buttonsOffset;
     currentHeight = currentHeight + buttonSize.h + buttonsOffset;
   }
-  display.display(PARTIAL_UPDATE);
+  disUp(true);
 }
 
 void loopMenu()
@@ -111,10 +111,15 @@ void loopMenu()
   }
   case Menu:
   {
-    if (data.entryList[data.currentButton].function != NULL)
+    if (data.entryList[data.currentButton].function != nullptr)
     {
       data.entryList[data.currentButton].function();
+    } 
+#if DEBUG
+    else {
+      debugLog("Menu entry item has a invalid function: " + data.entryList[data.currentButton].text);
     }
+#endif
     break;
   }
   case LongUp:

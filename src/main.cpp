@@ -10,6 +10,13 @@ void setup()
   if (wakeUpReason == ESP_SLEEP_WAKEUP_EXT0 || wakeUpReason == ESP_SLEEP_WAKEUP_EXT1)
   {
     wakedUpFromSleep = true;
+    #if DEBUG
+    if(wakeUpReason == ESP_SLEEP_WAKEUP_EXT0) {
+      debugLog("Waked up because of RTC");
+    } else if(wakeUpReason == ESP_SLEEP_WAKEUP_EXT1) {
+      debugLog("Waked up because of buttons");
+    }
+    #endif
   }
 
   if (wakedUpFromSleep == true)

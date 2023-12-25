@@ -65,7 +65,8 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
       {
         String part1 = number.substring(0, 3);
         String part2 = number.substring(3);
-        if(part2.length() > 3) {
+        if (part2.length() > 3)
+        {
           part2 = part2.substring(0, 3);
         }
         display.println(part1);
@@ -81,6 +82,7 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
   }
   setFont(font);
 
+  disUp(true);
   debugLog("Finished printing things");
 }
 

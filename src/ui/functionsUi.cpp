@@ -245,3 +245,9 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image, bool
   display.setCursor(cx, cy);
   return size;
 }
+
+void simpleCenterText(String text) {
+  display.fillScreen(GxEPD_WHITE);
+  writeTextCenterReplaceBack(text, display.height() / 2);
+  disUp(true);
+}

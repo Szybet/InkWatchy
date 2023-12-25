@@ -24,7 +24,7 @@ void showEinkCounter()
         counter = counter + 1;
         debugLog("Showing einkCounter: " + String(counter));
         writeTextReplaceBack(String(counter), counterX, counterY);
-        display.display(PARTIAL_UPDATE);
+        disUp(true);
     }
     countSkip = countSkip + 1;
 }

@@ -30,6 +30,26 @@ void initDisplay(bool isFromWakeUp)
     // display.display(FULL_UPDATE);
 }
 
+RTC_DATA_ATTR int updateCounter = 0;
+bool dUChange = false;
+// Display update
+void disUp(bool reallyUpdate)
+{
+    if(dUChange == true || reallyUpdate == true) {
+        dUChange = false;
+        if (updateCounter > FULL_DISPLAY_UPDATE_QUEUE)
+        {
+            updateCounter = 0;
+            display.display(FULL_UPDATE);
+        }
+        else
+        {
+            updateCounter += 1;
+            display.display(PARTIAL_UPDATE);
+        }
+    }
+}
+
 #if DEBUG
 
 void initDisplayDebug()
