@@ -10,6 +10,9 @@ const ColorMapArray<2> really_black{
 #define X_MINIMUM_VALUE_OFFSET -0.5
 #define X_MAX_VALUE_OFFSET -0.5
 #define CELL_VERTICAL_COUNT 6
+#define WALL_VALUE_OFFSET float(0.08)
+#define SIDE_TEXT_OFFSET 30
+#define SIDE_TEXT_REPAIR 14.5
 
 // Values in data1 need to be higher that in data2 in the same index
 void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, String chartName)
@@ -18,8 +21,15 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
   float highNum = findHighest(data1Max, dataCount);
   float lowNum = findLowest(data2Min, dataCount);
 
-  DataArray<float> data1Arr{data1Max, dataCount, {lowNum, highNum}};
-  DataArray<float> data2Arr{data2Min, dataCount, {lowNum, highNum}};
+  float offsetMin = WALL_VALUE_OFFSET;
+  float offsetMax = WALL_VALUE_OFFSET;
+  if(dataCount == 1) {
+    offsetMax = 0.0;
+    offsetMin = 0.5;
+  }
+
+  DataArray<float> data1Arr{data1Max, dataCount, {lowNum - offsetMin, highNum + offsetMax}};
+  DataArray<float> data2Arr{data2Min, dataCount, {lowNum - offsetMin, highNum + offsetMax}};
 
   DataLinear x{dataCount, {0.0 + X_MINIMUM_VALUE_OFFSET, float(dataCount + X_MAX_VALUE_OFFSET)}};
 
@@ -34,7 +44,11 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
   setTextSize(1);
   uint16_t y;
   getTextBounds(chartName, NULL, NULL, NULL, &y);
-  writeTextCenterReplaceBack(chartName, y - 3);
+  if (containsBelowChar(chartName) == true)
+  {
+    y = y - 3;
+  }
+  writeTextCenterReplaceBack(chartName, y);
 
   int bothSize = dataCount * 2;
   float bothList[bothSize];
@@ -43,48 +57,177 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
   for (int i = 0; i < dataCount; i++)
   {
     debugLog("for i" + String(i) + " in max equals: " + String(data1Max[i]));
-    debugLog("for i" + String(i) + " in min equals: " + String(data1Max[i]));
+    debugLog("for i" + String(i) + " in min equals: " + String(data2Min[i]));
   }
 #endif
 
   concatenateFloatLists(data1Max, dataCount, data2Min, dataCount, bothList);
+  
+  showSideText(bothList, bothSize);
+
+  disUp(true);
+  debugLog("Finished printing things");
+}
+
+void showChart(float *data, uint dataCount, String chartName)
+{
+  display.fillScreen(GxEPD_WHITE);
+  float highNum = findHighest(data, dataCount);
+  float lowNum = findLowest(data, dataCount);
+
+  float offsetMin = WALL_VALUE_OFFSET;
+  float offsetMax = WALL_VALUE_OFFSET;
+  if(dataCount == 1) {
+    offsetMax = 0.0;
+    offsetMin = 0.5;
+  }
+  DataArray<float> dataArr{data, dataCount, {lowNum - offsetMin, highNum + offsetMax}};
+
+  DataLinear x{dataCount, {0.0 + X_MINIMUM_VALUE_OFFSET, float(dataCount + X_MAX_VALUE_OFFSET)}};
+
+  plot.set_color_map(really_black);
+  PlotOptions opts = plot_options.bar_filled(true).set_axis(CELL_VERTICAL_COUNT, dataCount, black);
+  Window size = Window({0.1, 0.999}, {0.005, 0.89});
+
+  plot.bar(x, dataArr, black, size, opts);
+
+  display.setCursor(1, 1);
+  setTextSize(1);
+  uint16_t y;
+  getTextBounds(chartName, NULL, NULL, NULL, &y);
+  if (containsBelowChar(chartName) == true)
+  {
+    y = y - 3;
+  }
+  writeTextCenterReplaceBack(chartName, y);
+
+  int bothSize = dataCount;
+  float bothList[bothSize];
+
+  for (int i = 0; i < dataCount; i++)
+  {
+    bothList[i] = data[i];
+    debugLog("for i" + String(i) + " in data equals: " + String(data[i]));
+  }
+
+  showSideText(bothList, bothSize);
+
+  disUp(true);
+  debugLog("Finished printing things");
+}
+
+void showSideText(float *bothList, int bothSize) {
+
   sortList(bothList, bothSize);
 
   debugLog(String(bothList[0]));
   debugLog(String(bothList[bothSize - 1]));
 
-  int stepper = ceil(float((bothSize - 1)) / float(CELL_VERTICAL_COUNT));
-
-  // To make sure good ommount of text is shown
-  while (bothSize / stepper < CELL_VERTICAL_COUNT)
+  float stepper = float((bothSize)) / float(CELL_VERTICAL_COUNT);
+  if (int(round(stepper)) == 0)
   {
-    bothSize = bothSize + 1;
+    stepper = 1; // We can't divide by zero!
   }
 
   debugLog("Stepper: " + String(stepper));
   debugLog("bothSize: " + String(bothSize));
 
-  display.setFont();
-  float currentHeight = display.height() - 23;
-  for (int i = 0; i < bothSize - 1; i += stepper)
+  int valuesCount = -1;
+  float values[CELL_VERTICAL_COUNT] = {0};
+  for (float i = 0; i < bothSize; i += stepper)
   {
-    display.setCursor(0, round(currentHeight));
+    debugLog("Iterating: " + String(i));
+    // Insanity
+    int ti = int(floor(i));
+    if (String(bothList[ti]) != "0.00" && String(bothList[ti]) != "-0.00")
+    {
+      bool contains = false;
+      for (int j = 0; j < valuesCount + 1; j++)
+      {
+        if (values[j] == bothList[ti])
+        {
+          contains = true;
+        }
+      }
+      if (contains == false)
+      {
+        valuesCount = valuesCount + 1;
+        debugLog("Value to show is: " + String(bothList[ti]) + " at value: " + String(valuesCount));
+        values[valuesCount] = bothList[ti];
+      }
+      else
+      {
+        debugLog("duplicate");
+      }
+    }
+    else
+    {
+      debugLog("Weird 0");
+    }
+  }
+  valuesCount = valuesCount + 1; // To show actually the count
+  sortList(values, valuesCount);
+
+#if DEBUG
+  for (int i = 0; i < valuesCount; i++)
+  {
+    debugLog("for i: " + String(i) + " is: " + String(values[i]));
+  }
+#endif
+
+  debugLog("valuesCount: " + String(valuesCount));
+  debugLog("Highest value: " + String(values[valuesCount - 1]));
+  float currentHeightDown = display.height() - 23;
+  float currentHeightUp = SIDE_TEXT_OFFSET;
+
+  float offset = (display.height() - (SIDE_TEXT_OFFSET - SIDE_TEXT_REPAIR)) / valuesCount ;
+  bool down = false;
+  for (float i = 0; i < float(valuesCount) / 2; i += 0.5)
+  {
+    display.setFont();
+    int ji = int(floor(i));
     debugLog("i: " + String(i));
-    String number = String(bothList[i]);
-    if(number[1] == '.') {
+    debugLog("ji: " + String(ji));
+
+    if (down == true)
+    {
+      display.setCursor(0, round(currentHeightDown));
+    }
+    else
+    {
+      display.setCursor(0, round(currentHeightUp));
+    }
+
+    String number;
+    if (down == true)
+    {
+      number = String(values[ji]);
+    }
+    else
+    {
+      number = String(values[valuesCount - ji - 1]);
+    }
+    debugLog("Number is:" + number);
+    debugLog("Down is: " + BOOL_STR(down));
+
+    if (number[1] == '.')
+    {
       number.remove(number.length() - 1);
-      if(number[2] == '0') {
+      if (number[2] == '0')
+      {
         number.remove(number.length() - 1);
         number.remove(number.length() - 1);
       }
     }
     if (number.length() > 3)
     {
+      /*
       if (isDecimalZero(bothList[i]) == true && String(int(bothList[i])).length() <= 3)
       {
         display.print(String(int(bothList[i])));
       }
       else
+      */
       {
         String part1 = number.substring(0, 3);
         String part2 = number.substring(3);
@@ -101,12 +244,17 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
       display.print(number);
     }
 
-    currentHeight = currentHeight - ((display.height() / (CELL_VERTICAL_COUNT + 1)) + 1.3);
+    if (down == true)
+    {
+      currentHeightDown = currentHeightDown - offset;
+    }
+    else
+    {
+      currentHeightUp = currentHeightUp + offset;
+    }
+    down = !down;
   }
   setFont(font);
-
-  disUp(true);
-  debugLog("Finished printing things");
 }
 
 // Clear example
