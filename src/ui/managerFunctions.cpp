@@ -52,12 +52,16 @@ void initWeatherMenu()
     initMenu(buttons, MAX_DAYS, "Weather info", 1);
 }
 
-int weatherDayChoosed = 0;
+int weatherDayChoosed;
 void initWeatherConditionMenu()
 {
-    int dayIndex = lastMenuSelected.indexOf(".");
-    weatherDayChoosed = lastMenuSelected.substring(0, dayIndex).toInt();
-    debugLog("weatherDayChoosed: " + String(weatherDayChoosed));
+    // Check if the last menu item name is a date
+    if (lastMenuSelected.length() >= 5 && lastMenuSelected[2] == '.' && lastMenuSelected[5] == '.')
+    {
+        int dayIndex = lastMenuSelected.indexOf(".");
+        weatherDayChoosed = lastMenuSelected.substring(0, dayIndex).toInt();
+        debugLog("weatherDayChoosed: " + String(weatherDayChoosed));
+    }
 
     entryMenu buttons[9] = {{"Temperature", &emptyImgPack, showTemp}, {"Pressure", &emptyImgPack, showPressure}, {"Humidity", &emptyImgPack, showHumidity}, {"Weather conditions", &emptyImgPack, showWeatherCond}, {"Cloudiness", &emptyImgPack, showClouds}, {"Wind speed", &emptyImgPack, showWindSpeed}, {"Wind guts", &emptyImgPack, showWindGuts}, {"Visibility", &emptyImgPack, showVisibility}, {"% of precipitation", &emptyImgPack, showPop}};
     initMenu(buttons, 9, "Weather stat", 1);

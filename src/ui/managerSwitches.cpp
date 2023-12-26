@@ -46,8 +46,8 @@ void showTemp()
     debugLog("Launched");
     debugLog("weatherDayChoosed:" + String(weatherDayChoosed));
     int c = 0;
-    float tempMax[MAX_DAYS * WEATHER_PER_DAY];
-    float tempMin[MAX_DAYS * WEATHER_PER_DAY];
+    float tempMax[MAX_DAYS * WEATHER_PER_DAY] = {0};
+    float tempMin[MAX_DAYS * WEATHER_PER_DAY] = {0};
     tmElements_t times;
     for (int i = 0; i < MAX_DAYS; i++)
     {
@@ -73,13 +73,25 @@ void showTemp()
 
     for (int i = 0; i < c; i++)
     {
+        // Make sure its in the right order... feels like temp can be always flipper
         if(tempMax[i] < tempMin[i]) {
             float tmp = tempMax[i];
             tempMax[i] = tempMin[i];
             tempMin[i] = tmp;
         }
+        if(tempMax[i] == tempMin[i]) {
+            debugLog("The temperature IS THE SAME!");
+            tempMax[i] = tempMax[i] + 0.2;
+        }
     }
-    
+
+#if DEBUG
+    for(int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++) {
+        debugLog(String(i) + " : " + String(tempMax[i]));
+        debugLog(String(i) + " : " + String(tempMin[i]));
+    }
+#endif
+
     showDoubleDataBarChart(tempMax, tempMin, c, "Temperature");
     generalSwitch(ChartPlace);
 }
@@ -87,6 +99,38 @@ void showTemp()
 void showPressure()
 {
     debugLog("Launched");
+    int c = 0;
+    float pressure[MAX_DAYS * WEATHER_PER_DAY] = {0};
+    tmElements_t times;
+    for (int i = 0; i < MAX_DAYS; i++)
+    {
+        for (int j = 0; j < WEATHER_PER_DAY; j++)
+        {
+            breakTime(weatherDataDays[i][j].dt, times);
+            if (times.Day == weatherDayChoosed)
+            {
+                pressure[c] = weatherDataDays[i][j].pressure;
+                c = c + 1;
+            }
+            if (times.Day > weatherDayChoosed)
+            {
+                break;
+            }
+        }
+        if (times.Day > weatherDayChoosed)
+        {
+            break;
+        }
+    }
+
+#if DEBUG
+    for(int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++) {
+        debugLog(String(i) + " : " + String(pressure[i]));
+    }
+#endif
+
+    showChart(pressure, c, "Pressure");
+    generalSwitch(ChartPlace);
 }
 
 void showHumidity()
