@@ -24,9 +24,10 @@ struct menuData
 };
 
 extern String lastMenuSelected;
+extern int currentMenuItem;
+
 void initMenu(entryMenu entryList[MAX_MENU_ITEMS], int totalMenus, String menuName, int textSize = 1, int linesThick = 0);
-
 void showMenu();
-
 void loopMenu();
+
 #endif

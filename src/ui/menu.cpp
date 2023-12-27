@@ -2,6 +2,7 @@
 
 menuData data = {0};
 #define buttonsOffset 2;
+int currentMenuItem = 0;
 
 void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSize, int linesThick)
 {
@@ -18,7 +19,7 @@ void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSiz
   data.textSize = textSize;
   data.menuName = menuName;
   data.linesThick = linesThick;
-  data.currentButton = 0;
+  data.currentButton = currentMenuItem;
 
   if (textSize == 1)
   {
@@ -108,6 +109,7 @@ void loopMenu()
   {
     data.currentButton -= 1;
     checkMaxMin(&data.currentButton, data.totalMenus - 1);
+    currentMenuItem = data.currentButton;
     showMenu();
     break;
   }
@@ -115,6 +117,7 @@ void loopMenu()
   {
     data.currentButton += 1;
     checkMaxMin(&data.currentButton, data.totalMenus - 1);
+    currentMenuItem = data.currentButton;
     showMenu();
     break;
   }
@@ -138,6 +141,7 @@ void loopMenu()
     currentPage -= 1;
     checkMaxMin(&currentPage, pageNumber - 1);
     data.currentButton = currentPage * data.itemsOnPage;
+    currentMenuItem = data.currentButton;
     debugLog("data.currentButton: " + String(data.currentButton));
     showMenu();
     break;
@@ -148,6 +152,7 @@ void loopMenu()
     currentPage += 1;
     checkMaxMin(&currentPage, pageNumber - 1);
     data.currentButton = currentPage * data.itemsOnPage;
+    currentMenuItem = data.currentButton;
     debugLog("data.currentButton: " + String(data.currentButton));
     showMenu();
     break;

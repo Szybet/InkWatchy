@@ -13,6 +13,5 @@ float findHighest(float* numbers, int size);
 float findLowest(float* numbers, int size);
 void sortList(float* numbers, int size);
 void concatenateFloatLists(float* sourceList1, int size1, float* sourceList2, int size2, float* destinationList);
-bool isDecimalZero(float number, float tolerance = 0.15);
 
 #endif
