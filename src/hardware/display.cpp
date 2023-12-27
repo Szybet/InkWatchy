@@ -19,15 +19,17 @@ void initDisplay(bool isFromWakeUp)
     // display.epd2._writeCommand(0x3C);
     // display.epd2._writeCommand(0x00);
 
-    display.setFullWindow();
-    display.fillScreen(GxEPD_WHITE);
-    display.clearScreen();
+    if (isFromWakeUp == false)
+    {
+        //display.setFullWindow();
+        //display.fillScreen(GxEPD_WHITE);
+        //display.clearScreen();
+    }
     display.setTextColor(GxEPD_BLACK);
 
     // Default values
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
-    // display.display(FULL_UPDATE);
 }
 
 RTC_DATA_ATTR int updateCounter = 0;
@@ -35,7 +37,8 @@ bool dUChange = false;
 // Display update
 void disUp(bool reallyUpdate)
 {
-    if(dUChange == true || reallyUpdate == true) {
+    if (dUChange == true || reallyUpdate == true)
+    {
         dUChange = false;
         if (updateCounter > FULL_DISPLAY_UPDATE_QUEUE)
         {

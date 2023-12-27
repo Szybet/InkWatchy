@@ -28,6 +28,7 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #include "confidential.h"
 #include "macros.h"
 #include "images.h"
+#include "fonts.h"
 
 #include "../hardware/hardware.h"
 #include "../hardware/battery.h"

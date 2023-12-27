@@ -246,8 +246,45 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image, bool
   return size;
 }
 
-void simpleCenterText(String text) {
+void simpleCenterText(String text)
+{
   display.fillScreen(GxEPD_WHITE);
   writeTextCenterReplaceBack(text, display.height() / 2);
   disUp(true);
+}
+
+void textPage(String title, String *strList, int listCount)
+{
+  display.fillScreen(GxEPD_WHITE);
+
+  uint16_t h;
+  setFont(&FreeSansBold9pt7b);
+  setTextSize(1);
+  getTextBounds(title, NULL, NULL, NULL, &h);
+  if(containsBelowChar(title) == true) {
+      h = h - 3;
+
+  }
+  writeTextCenterReplaceBack(title, h);
+  h = h + 3;
+  display.fillRect(0, h, display.width(), 1, GxEPD_BLACK);
+  h = h + 3;
+  
+  display.setFont(&DisposableDroidBB9pt7b);
+
+  uint16_t textHeight;
+  getTextBounds(strList[0], NULL, NULL, NULL, &textHeight);
+  h = h + textHeight;
+  
+  
+  for (int i = 1; i < listCount; i++)
+  {
+    display.setCursor(0, h);
+    display.print(strList[i]);
+    h = h + textHeight;
+    h = h + 3;
+  }
+
+  disUp(true);
+  setFont(font);
 }

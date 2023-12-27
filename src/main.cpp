@@ -41,7 +41,7 @@ void setup()
   loopHardwareDebug();
 #endif
 
-  turnOnWifi();
+  //turnOnWifi();
   initButtonTask();
 }
 
