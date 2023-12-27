@@ -175,12 +175,11 @@ void showHumidity()
     generalSwitch(ChartPlace);
 }
 
-// huh todo
 void showWeatherCond()
 {
     debugLog("Launched");
     int c = 0;
-    float weatherCond[MAX_DAYS * WEATHER_PER_DAY] = {0};
+    String weatherCond[MAX_DAYS * WEATHER_PER_DAY];
     tmElements_t times;
     for (int i = 0; i < MAX_DAYS; i++)
     {
@@ -189,7 +188,7 @@ void showWeatherCond()
             breakTime(weatherDataDays[i][j].dt, times);
             if (times.Day == weatherDayChoosed)
             {
-                weatherCond[c] = weatherDataDays[i][j].weatherConditionId;
+                weatherCond[c] = weatherConditionIdToStr(weatherDataDays[i][j].weatherConditionId);
                 c = c + 1;
             }
             if (times.Day > weatherDayChoosed)
@@ -210,7 +209,7 @@ void showWeatherCond()
     }
 #endif
 
-    showChart(weatherCond, c, "Weather condition");
+    textPage("Weather conditions", weatherCond, c);
     generalSwitch(ChartPlace);
 }
 

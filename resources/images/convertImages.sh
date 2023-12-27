@@ -13,6 +13,10 @@ do
         continue
     fi
 
+    if [ ! -f "$f" ]; then
+        continue
+    fi
+
     echo "Processing $f" # always double quote "$f" filename
     
     fne="${f%.*}Img"
@@ -37,4 +41,4 @@ done
 
 echo "#endif" >> images.h
 
-mv images.h ../src/defines/
+mv images.h ../../src/defines/

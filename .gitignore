@@ -3,3 +3,4 @@
 !.vscode/tasks.json
 src/defines/images.h
 src/defines/confidential.h
+src/defines/fonts.h

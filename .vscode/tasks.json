@@ -10,6 +10,15 @@
                 "id": "refresh",
                 "color": "terminal.ansiGreen"
               }
+        },
+        {
+            "label": "Generate resources",
+            "type": "shell",
+            "command": "cd resources && ./generate.sh",
+            "icon": {
+                "id": "file-binary",
+                "color": "terminal.ansiGreen"
+              }
         }
     ]
 }

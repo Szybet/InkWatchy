@@ -21,7 +21,7 @@ void initAllHardware()
 // Also at boot, but on wake up too
 void initWakeUpHardware(bool isFromWakeUp)
 {
-    isDebug(Serial.begin(230400));
+    isDebug(Serial.begin(115200));
 #if DEBUG
     if (isFromWakeUp == false)
     {
