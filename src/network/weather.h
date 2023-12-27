@@ -4,19 +4,19 @@
 #include "defines/defines.h"
 
 struct savedWeatherData {
-    uint32_t dt; // Use strTime
-    float temp;
-    float minTemp;
-    float pressure;
-    uint8_t humidity;
+    uint32_t dt; // time, unix, use strTime
+    float temp; // C, depends
+    float minTemp; // C, depends
+    float pressure; // hPa
+    uint8_t humidity; // %
     uint16_t weatherConditionId; // Use weatherConditionIdToStr
     uint8_t cloudsPerc; // % of clouds
-    float windSpeed;
-    float windGusts;
+    float windSpeed; // m/s
+    float windGusts; // m/s
     uint32_t visibility;
-    uint8_t pop; // Probability of precipitation in percents
-    uint32_t sunrise;
-    uint32_t sunset;
+    uint8_t pop; // Probability of precipitation in %
+    uint32_t sunrise; // time, unix
+    uint32_t sunset; // time, unix
 };
 
 #define WEATHER_PER_DAY 8

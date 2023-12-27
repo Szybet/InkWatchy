@@ -83,8 +83,3 @@ void concatenateFloatLists(float* sourceList1, int size1, float* sourceList2, in
     destinationList[size1 + i] = sourceList2[i];
   }
 }
-
-bool isDecimalZero(float number, float tolerance) {
-    float decimalPart = number - static_cast<int>(number);
-    return (abs(decimalPart) < tolerance);
-}

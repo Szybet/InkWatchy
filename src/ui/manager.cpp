@@ -3,6 +3,8 @@
 RTC_DATA_ATTR int currentPlaceIndex = 0;
 RTC_DATA_ATTR UiPlace placeTree[PLACE_TREE_MAX_DEPTH] = {NoPlace};
 RTC_DATA_ATTR UiPlace currentPlace = NoPlace; // For loop manager for launching init or loop of a function
+int menuSelectedTree[PLACE_TREE_MAX_DEPTH] = {0};
+bool wasBacked = false;
 
 void initManager()
 {
@@ -21,6 +23,19 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)())
     else
     {
         currentPlace = place;
+        if (wasBacked == false)
+        {
+            debugLog("Saving to index " + String(currentPlaceIndex - 1) + " menu index " + String(currentMenuItem));
+            menuSelectedTree[currentPlaceIndex - 1] = currentMenuItem;
+            // currentMenuItem = menuSelectedTree[currentPlaceIndex]; // Hehe no, it goes to another menu on the same level
+            currentMenuItem = 0;
+        }
+        else
+        {
+            debugLog("Restoring menu of tree index " + String(currentMenuItem) + " value " + String(menuSelectedTree[currentPlaceIndex]));
+            currentMenuItem = menuSelectedTree[currentPlaceIndex];
+            wasBacked = false;
+        }
         if (initFunc != nullptr)
         {
             display.fillScreen(GxEPD_WHITE);
@@ -40,6 +55,7 @@ void loopManager()
             {
                 placeTree[currentPlaceIndex] = NoPlace;
                 currentPlaceIndex -= 1;
+                wasBacked = true;
             }
             else if (backButton == LongBack)
             {

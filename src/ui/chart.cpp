@@ -182,9 +182,9 @@ void showSideText(float *bothList, int bothSize) {
 
   float offset = (display.height() - (SIDE_TEXT_OFFSET - SIDE_TEXT_REPAIR)) / valuesCount ;
   bool down = false;
+  display.setFont();
   for (float i = 0; i < float(valuesCount) / 2; i += 0.5)
   {
-    display.setFont();
     int ji = int(floor(i));
     debugLog("i: " + String(i));
     debugLog("ji: " + String(ji));
@@ -210,15 +210,11 @@ void showSideText(float *bothList, int bothSize) {
     debugLog("Number is:" + number);
     debugLog("Down is: " + BOOL_STR(down));
 
-    if (number[1] == '.')
-    {
-      number.remove(number.length() - 1);
-      if (number[2] == '0')
-      {
-        number.remove(number.length() - 1);
-        number.remove(number.length() - 1);
-      }
+    int indexOfDecimal = number.indexOf(".");
+    if(number.length() - 1 > indexOfDecimal && number[indexOfDecimal + 1] == '0') {
+      number.remove(indexOfDecimal, number.length() - indexOfDecimal);
     }
+
     if (number.length() > 3)
     {
       /*
@@ -254,6 +250,12 @@ void showSideText(float *bothList, int bothSize) {
     }
     down = !down;
   }
+
+  if(values[0] == 0.0) {
+    display.setCursor(0, round(currentHeightUp));
+    display.print("0");
+  }
+
   setFont(font);
 }
 
