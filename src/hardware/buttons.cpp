@@ -3,11 +3,12 @@
 int RTC_DATA_ATTR UP_PIN = 32;
 uint64_t RTC_DATA_ATTR UP_MASK = GPIO_SEL_32;
 buttonState buttonPressed = None;
-TaskHandle_t buttonTask;
+TaskHandle_t buttonTask = NULL;
 
 buttonState useButtonBack()
 {
-    if (buttonPressed == Back || buttonPressed == LongBack) {
+    if (buttonPressed == Back || buttonPressed == LongBack)
+    {
         buttonState buttonPressedTmp = buttonPressed;
         buttonPressed = None;
         return buttonPressedTmp;
@@ -34,8 +35,10 @@ buttonState useButton()
 }
 
 // To unlock the button
-void useButtonBlank() {
-    if(buttonPressed != Back && buttonPressed != LongBack) {
+void useButtonBlank()
+{
+    if (buttonPressed != Back && buttonPressed != LongBack)
+    {
         buttonPressed = None;
     }
 }
@@ -131,6 +134,33 @@ void initButtonTask()
         NULL,
         0,
         &buttonTask);
+}
+
+void manageButtonWakeUp()
+{
+    vibrateMotor();
+    uint64_t wakeupBit;
+    wakeupBit = esp_sleep_get_ext1_wakeup_status();
+    if (wakeupBit & BACK_MASK)
+    {
+        buttonPressed = Back;
+        return;
+    }
+    if (wakeupBit & MENU_MASK)
+    {
+        buttonPressed = Menu;
+        return;
+    }
+    if (wakeupBit & DOWN_MASK)
+    {
+        buttonPressed = Down;
+        return;
+    }
+    if (wakeupBit & UP_MASK)
+    {
+        buttonPressed = Up;
+        return;
+    }
 }
 
 #if DEBUG

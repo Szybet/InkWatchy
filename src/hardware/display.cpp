@@ -21,9 +21,9 @@ void initDisplay(bool isFromWakeUp)
 
     if (isFromWakeUp == false)
     {
-        //display.setFullWindow();
-        //display.fillScreen(GxEPD_WHITE);
-        //display.clearScreen();
+        display.setFullWindow();
+        display.fillScreen(GxEPD_WHITE);
+        display.clearScreen();
     }
     display.setTextColor(GxEPD_BLACK);
 

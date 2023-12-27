@@ -145,7 +145,6 @@ void loopMenu()
     debugLog("data.currentButton: " + String(data.currentButton));
     showMenu();
     break;
-    break;
   }
   case LongDown:
   {

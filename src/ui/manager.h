@@ -3,10 +3,10 @@
 
 #include "../defines/defines.h"
 
-#define FIRST_PLACE mainMenu
+#define FIRST_PLACE watchface
 #define PLACE_TREE_MAX_DEPTH 30
 
-typedef enum 
+typedef enum
 {
     watchface,
     mainMenu,
@@ -21,9 +21,9 @@ typedef enum
     NoPlace,
 } UiPlace;
 
-extern RTC_DATA_ATTR int currentPlaceIndex;
-extern RTC_DATA_ATTR UiPlace placeTree[PLACE_TREE_MAX_DEPTH];
-extern RTC_DATA_ATTR UiPlace currentPlace;
+extern int currentPlaceIndex;
+extern UiPlace placeTree[PLACE_TREE_MAX_DEPTH];
+extern UiPlace currentPlace;
 
 void initManager();
 void loopManager();
