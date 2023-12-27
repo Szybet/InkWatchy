@@ -61,12 +61,12 @@ void loopHardwareDebug()
 }
 #endif
 
-TaskHandle_t motorTask;
+TaskHandle_t motorTask = NULL;
+bool motorTaskRunning = false;
 int vibrateTime;
-bool vibrateTaskRunning = false;
 void vibrateMotorTaskFun(void *parameter)
 {
-    vibrateTaskRunning = true;
+    motorTaskRunning = true;
     debugLog("Motor on");
     for (int i = 0; i < vibrateTime / 2; i++)
     {
@@ -76,13 +76,13 @@ void vibrateMotorTaskFun(void *parameter)
         delayTask(1);
     }
     debugLog("Motor off");
-    vibrateTaskRunning = false;
+    motorTaskRunning = false;
     vTaskDelete(NULL);
 }
 
 void vibrateMotor(int vTime, bool add)
 {
-    if (vibrateMotor != 0 && vibrateTaskRunning == false)
+    if (vibrateMotor != 0 && motorTaskRunning == false)
     {
         vibrateTime = vTime;
         xTaskCreate(
@@ -93,7 +93,7 @@ void vibrateMotor(int vTime, bool add)
             0,
             &motorTask);
     }
-    if(add == true && vibrateMotor != 0 && vibrateTaskRunning == true) {
+    if(add == true && vibrateMotor != 0 && motorTaskRunning == true) {
         debugLog("Adding time to motor");
         vibrateTime = vibrateTime + vTime;
     }

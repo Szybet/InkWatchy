@@ -19,10 +19,13 @@ typedef enum
 extern buttonState buttonPressed;
 extern int RTC_DATA_ATTR UP_PIN;
 extern uint64_t RTC_DATA_ATTR UP_MASK;
+extern TaskHandle_t buttonTask;
 
 buttonState useButtonBack();
 buttonState useButton();
 void useButtonBlank();
+void loopButtonsTask(void *parameter);
+void manageButtonWakeUp();
 
 void initButtons();
 void initButtonTask();

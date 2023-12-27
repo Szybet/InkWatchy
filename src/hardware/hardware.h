@@ -10,6 +10,8 @@ void initAllHardware();
 void initWakeUpHardware(bool isFromWakeUp);
 void resetSleepDelay();
 
+extern TaskHandle_t motorTask;
+extern bool motorTaskRunning;
 void vibrateMotor(int vTime = VIBRATION_BUTTON_TIME, bool add = false);
 
 #if DEBUG

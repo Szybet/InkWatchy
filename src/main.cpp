@@ -4,9 +4,9 @@
 int loopDumpDelayMs = 0;
 #endif
 
+bool almostSleep = false;
 void setup()
 {
-
   esp_sleep_wakeup_cause_t wakeUpReason = esp_sleep_get_wakeup_cause();
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
   // ESP_SLEEP_WAKEUP_EXT1 Button press
@@ -22,6 +22,7 @@ void setup()
     else if (wakeUpReason == ESP_SLEEP_WAKEUP_EXT1)
     {
       debugLog("Waked up because of buttons");
+      manageButtonWakeUp();
     }
 #endif
   }
@@ -33,7 +34,6 @@ void setup()
   else
   {
     initAllHardware();
-    initManager();
   }
 
 #if DEBUG && DUMP_INIT_DEBUG
@@ -41,7 +41,8 @@ void setup()
   loopHardwareDebug();
 #endif
 
-  //turnOnWifi();
+  // turnOnWifi();
+  initManager();
   initButtonTask();
 }
 
@@ -68,12 +69,22 @@ void loop()
 
 #endif
 
-  delay(LOOP_DELAY);
-  // Note for later: not all menus support waking up from wake ups because if they would, RTC_DATA_ATTR would be everywhere and we have only 8Kb
-
   if (millis() - sleepDelayMs > SLEEP_EVERY_MS)
   {
-    debugLog("SLEEP_EVERY_MS runned out, going to sleep");
-    goSleep();
+    if (almostSleep == false && currentPlace != FIRST_PLACE)
+    {
+      debugLog("SLEEP_EVERY_MS runned out, Showing watchface");
+      almostSleep = true;
+
+      currentPlace = NoPlace;
+      currentPlaceIndex = 0;
+
+      sleepDelayMs = sleepDelayMs + TIME_FOR_WATCHFACE_TO_SHOW_MS;
+    }
+    else
+    {
+      debugLog("SLEEP_EVERY_MS runned out, going to sleep");
+      goSleep();
+    }
   }
 }

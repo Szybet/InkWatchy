@@ -15,6 +15,7 @@
 #define SLEEP_EVERY_MS 10000 //180000 // Goes to sleep timer, is resetted by button presses
 #define LOOP_DELAY 10         // Speed of the device basically
 #define BUTTON_TASK_DELAY 140 // In ms, lower means faster button detection but more cpu usage
+#define TIME_FOR_WATCHFACE_TO_SHOW_MS 3000
 
 // Debugging help
 #define DEBUG 1

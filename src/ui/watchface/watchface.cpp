@@ -7,5 +7,30 @@ void initWatchfaceDisplay() {
 }
 
 void loopWatchfaceLoop() {
+  switch (useButton())
+  {
+  case Up:
+  {
+    break;
+  }
+  case Down:
+  {
+    break;
+  }
+  case Menu:
+  {
+    generalSwitch(mainMenu);
+    break;
+  }
+  case LongUp:
+  {
 
+    break;
+  }
+  case LongDown:
+  {
+
+    break;
+  }
+  }
 }

@@ -49,7 +49,7 @@ void ForceInputs()
 void goSleep()
 {
     debugLog("goSleep activated");
-    
+
 #if DEBUG && SCREEN_SLEEP_INFO
     display.setCursor(50, 190);
     display.setFont();
@@ -58,9 +58,22 @@ void goSleep()
     disUp(true);
 #endif
 
+    if (buttonTask != NULL)
+    {
+        debugLog("Shutting down button task");
+        vTaskDelete(buttonTask);
+    }
+
+    while (motorTaskRunning == true)
+    {
+        debugLog("Waiting for motor task");
+        delayTask(1); // not sure
+    }
+
     display.hibernate();
-    ForceInputs();
     turnOffWifi();
+    debugLog("Sleeping!");
+    ForceInputs();
     esp_sleep_enable_ext1_wakeup(UP_MASK | DOWN_MASK | MENU_MASK | BACK_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); // Enable deep sleep wake on button press
     esp_deep_sleep_start();
 }
