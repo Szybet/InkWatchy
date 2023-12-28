@@ -9,7 +9,7 @@ echo -e '' >> images.h
 
 for f in *
 do
-    if [[ $f == *".sh"* ]] || [[ $f == *".h"* ]] || [[ $f == "eink-2color.png" ]]; then
+    if [[ $f == *".sh"* ]] || [[ $f == *".h"* ]] || [[ $f == "eink-2color.png" ]] || [[ $f == *".txt"* ]]; then
         continue
     fi
 

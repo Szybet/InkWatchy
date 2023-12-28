@@ -4,7 +4,6 @@
 int loopDumpDelayMs = 0;
 #endif
 
-bool almostSleep = false;
 void setup()
 {
   esp_sleep_wakeup_cause_t wakeUpReason = esp_sleep_get_wakeup_cause();
@@ -71,10 +70,9 @@ void loop()
 
   if (millis() - sleepDelayMs > SLEEP_EVERY_MS)
   {
-    if (almostSleep == false && currentPlace != FIRST_PLACE)
+    if (currentPlace != FIRST_PLACE)
     {
       debugLog("SLEEP_EVERY_MS runned out, Showing watchface");
-      almostSleep = true;
 
       currentPlace = NoPlace;
       currentPlaceIndex = 0;
@@ -84,6 +82,7 @@ void loop()
     else
     {
       debugLog("SLEEP_EVERY_MS runned out, going to sleep");
+      resetSleepDelay();
       goSleep();
     }
   }

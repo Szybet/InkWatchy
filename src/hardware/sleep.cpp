@@ -2,6 +2,7 @@
 
 void ForceInputs()
 {
+    isDebug(Serial.end());
     uint8_t P = SRTC.getADCPin();
     /* Unused GPIO PINS */
     pinMode(0, INPUT);  /*  ??      */
@@ -50,6 +51,11 @@ void goSleep()
 {
     debugLog("goSleep activated");
 
+    if(WiFi.getMode() != WIFI_MODE_NULL) {
+        debugLog("Wifi is turned on, waiting...");
+        return void();
+    }
+
 #if DEBUG && SCREEN_SLEEP_INFO
     display.setCursor(50, 190);
     display.setFont();
@@ -71,7 +77,7 @@ void goSleep()
     }
 
     display.hibernate();
-    turnOffWifi();
+    turnOffWifi(); // To be sure only
     debugLog("Sleeping!");
     ForceInputs();
     esp_sleep_enable_ext1_wakeup(UP_MASK | DOWN_MASK | MENU_MASK | BACK_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); // Enable deep sleep wake on button press

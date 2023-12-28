@@ -8,7 +8,9 @@ extern RTC_DATA_ATTR SmallRTC SRTC;
 
 void initRTC();
 void saveRTC();
-void readRTC();
+void readRTC(bool force = false);
+
+String getHourMinute();
 
 #if DEBUG
 void initRTCDebug();
