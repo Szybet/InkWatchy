@@ -141,6 +141,7 @@ void initButtonTask()
 
 void manageButtonWakeUp()
 {
+    pinMode(VIB_MOTOR_PIN, OUTPUT);
     vibrateMotor();
     uint64_t wakeupBit;
     wakeupBit = esp_sleep_get_ext1_wakeup_status();
