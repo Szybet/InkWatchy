@@ -5,5 +5,6 @@
 
 void initWatchfaceDisplay();
 void loopWatchfaceLoop();
+int calculatePercentageOfDay(int hour, int minute);
 
 #endif

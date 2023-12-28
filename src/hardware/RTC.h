@@ -12,6 +12,8 @@ void readRTC();
 void alarmManageRTC();
 
 String getHourMinute();
+String getDayName(int date);
+String getMonthName(int monthNumber);
 
 #if DEBUG
 void initRTCDebug();

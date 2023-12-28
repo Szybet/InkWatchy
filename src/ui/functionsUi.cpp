@@ -261,22 +261,21 @@ void textPage(String title, String *strList, int listCount)
   setFont(&FreeSansBold9pt7b);
   setTextSize(1);
   getTextBounds(title, NULL, NULL, NULL, &h);
-  if(containsBelowChar(title) == true) {
-      h = h - 3;
-
+  if (containsBelowChar(title) == true)
+  {
+    h = h - 3;
   }
   writeTextCenterReplaceBack(title, h);
   h = h + 3;
   display.fillRect(0, h, display.width(), 1, GxEPD_BLACK);
   h = h + 3;
-  
+
   display.setFont(&DisposableDroidBB9pt7b);
 
   uint16_t textHeight;
   getTextBounds(strList[0], NULL, NULL, NULL, &textHeight);
   h = h + textHeight;
-  
-  
+
   for (int i = 1; i < listCount; i++)
   {
     display.setCursor(0, h);
@@ -287,4 +286,24 @@ void textPage(String title, String *strList, int listCount)
 
   disUp(true);
   setFont(font);
+}
+
+void drawProgressBar(int x, int y, int width, int height, int progress)
+{
+  progress = constrain(progress, 0, 100);
+
+  int filledWidth = map(progress, 0, 100, 0, width);
+
+  display.fillRect(x, y, width, height, GxEPD_WHITE); // clean
+  display.fillRect(x, y, filledWidth, height, GxEPD_BLACK);
+
+  for (int16_t i = filledWidth; i < width; i += 2)
+  {
+    for (int16_t j = 0; j < height; j += 2)
+    {
+      // Draw dots diagonally
+      display.drawPixel(x + i, y + j, GxEPD_BLACK);
+      display.drawPixel(x + i + 1, y + j + 1, GxEPD_BLACK);
+    }
+  }
 }

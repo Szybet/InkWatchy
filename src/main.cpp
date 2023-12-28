@@ -39,9 +39,14 @@ void setup()
     initAllHardware();
   }
 
-#if DEBUG && DUMP_INIT_DEBUG
+#if DEBUG
+#if DUMP_INIT_DEBUG
   initHardwareDebug();
   loopHardwareDebug();
+#endif
+#if DUMP_LOOP_SOFTWARE_DEBUG
+    loopGeneralDebug();
+#endif
 #endif
 
   // turnOnWifi();

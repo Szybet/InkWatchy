@@ -65,7 +65,7 @@ void turnOnWifiTask(void *parameter)
     for (int i = 0; i < 15; i++)
     {
         WiFi.mode(WIFI_STA);
-        WiFi.setSleep(WIFI_PS_NONE);
+        //WiFi.setSleep(WIFI_PS_NONE);
         WiFi.setAutoConnect(true);
         WiFi.setAutoReconnect(true);
         initWifi();

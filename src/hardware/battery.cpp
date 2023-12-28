@@ -2,7 +2,7 @@
 #include "battery.h"
 #include "../functions.h"
 
-batteryInfo RTC_DATA_ATTR bat;
+RTC_DATA_ATTR batteryInfo bat;
 
 float BatteryRead() { return analogReadMilliVolts(SRTC.getADCPin()) / 500.0f; } // Battery voltage goes through a 1/2 divider.
 
