@@ -9,9 +9,9 @@
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <NTPClient.h>
-
 #include <JSON_Decoder.h>
 #include <OpenWeather.h>
+#include <ArduinoNvs.h>
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
@@ -29,6 +29,9 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #include "macros.h"
 #include "images.h"
 #include "fonts.h"
+#if BOOK
+#include "book.h"
+#endif
 
 #include "../hardware/hardware.h"
 #include "../hardware/battery.h"
@@ -46,6 +49,9 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #include "../ui/chart.h"
 #include "../ui/manager.h"
 #include "../ui/watchface/watchface.h"
+#if BOOK
+#include "../ui/book/bookUi.h"
+#endif
 #include "../network/wifi.h"
 #include "../network/ntp.h"
 #include "../network/weather.h"

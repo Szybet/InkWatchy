@@ -4,3 +4,5 @@
 src/defines/images.h
 src/defines/confidential.h
 src/defines/fonts.h
+resources/books/*.txt
+src/defines/book.h

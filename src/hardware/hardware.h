@@ -22,6 +22,7 @@ typedef enum
 } cpuSpeed;
 
 void setCpuMhz(cpuSpeed speed);
+void initNvsManage();
 
 #if DEBUG
 void initHardwareDebug();

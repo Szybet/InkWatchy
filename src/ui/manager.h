@@ -17,6 +17,7 @@ typedef enum
     textDialog, // So nothing, really
     weatherMenu,
     weatherConditionMenu,
+    book,
     ChartPlace,
     NoPlace,
 } UiPlace;
@@ -32,6 +33,8 @@ void loopManager();
 void initMainMenu();
 void initDebugMenu();
 void initWeatherMenu();
+extern int weatherDayChoosed;
+void initWeatherConditionMenu();
 
 // Manager switches
 void generalSwitch(UiPlace place);
@@ -43,8 +46,7 @@ void switchBatteryDebug();
 void switchWifiDebug();
 void switchWeatherMenu();
 void switchWeatherSelectorMenu();
-extern int weatherDayChoosed;
-void initWeatherConditionMenu();
+void switchBook();
 
 // Switches for weather
 void showTemp();

@@ -123,5 +123,12 @@ void loopManager()
         managerLaunchFunc(ChartPlace, NULL, useButtonBlank);
         break;
     }
+    case book:
+    {
+#if BOOK
+        managerLaunchFunc(book, initBook, loopBook);
+#endif
+        break;
+    }
     }
 }

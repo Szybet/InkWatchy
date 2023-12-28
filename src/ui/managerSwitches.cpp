@@ -402,3 +402,7 @@ void showPop()
     showChart(pop, c, "% of precipitation");
     generalSwitch(ChartPlace);
 }
+
+void switchBook() {
+    generalSwitch(book);
+}
