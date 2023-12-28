@@ -1,10 +1,10 @@
 #include "display.h"
 
-GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display(GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY));
+RTC_DATA_ATTR GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display(GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY));
 
 void initDisplay(bool isFromWakeUp)
 {
-    debugLog("initDisplay called:" + BOOL_STR(isFromWakeUp));
+    debugLog("initDisplay called: " + BOOL_STR(isFromWakeUp));
     display.init(0, !isFromWakeUp, 10, true);
     display.epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
     /*
@@ -21,7 +21,7 @@ void initDisplay(bool isFromWakeUp)
 
     if (isFromWakeUp == false)
     {
-        display.setFullWindow();
+        debugLog("Clearing screen");
         display.fillScreen(GxEPD_WHITE);
         display.clearScreen();
     }
@@ -32,7 +32,7 @@ void initDisplay(bool isFromWakeUp)
     setTextSize(1);
 }
 
-RTC_DATA_ATTR int updateCounter = 0;
+int updateCounter = 0;
 bool dUChange = false;
 // Display update
 void disUp(bool reallyUpdate)

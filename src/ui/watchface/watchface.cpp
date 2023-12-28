@@ -1,26 +1,39 @@
 #include "watchface.h"
 
-#define TIME_CORD 10, 56
+#define TIME_CORD 10, 53
 #define DAY_NAME_CORD 16, 79
 #define DATE_CORD 8, 95
 #define MONTH_NAME_CORD 54, 97
 #define MONTH_NUMBER_1_CORD 89, 93
 #define MONTH_NUMBER_2_CORD 89, 102
 
-void initWatchfaceDisplay() {
-    writeImageN(0,0, watchfaceImgPack);
-    readRTC(true);
+#define TIME_FONT &JackInput40pt7b
+RTC_DATA_ATTR tmElements_t watchfaceTime;
 
-    setFont(&ticketing_regular40pt7b);
+void initWatchfaceDisplay() {
+    debugLog("Executing init watch face");
+    writeImageN(0,0, watchfaceImgPack);
+
+    setTextSize(1);
+    setFont(TIME_FONT);
     writeTextReplaceBack(getHourMinute(), TIME_CORD);
 
     disUp(true);
+    watchfaceTime = timeRTC;
 }
 
 void loopWatchfaceLoop() {
-  readRTC();
+  debugLog("Executing loop watch face");
+  if(watchfaceTime.Minute != timeRTC.Minute || watchfaceTime.Hour != timeRTC.Hour) {
 
+    setTextSize(1);
+    setFont(TIME_FONT);
+    writeTextReplaceBack(getHourMinute(), TIME_CORD);
 
+    watchfaceTime.Hour = timeRTC.Hour;
+    watchfaceTime.Minute = timeRTC.Minute;
+    dUChange = true;
+  }
 
   switch (useButton())
   {

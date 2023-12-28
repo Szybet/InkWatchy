@@ -122,6 +122,9 @@ void loopButtonsTask(void *parameter)
         {
             longButtonCheck(DOWN_PIN, Down, LongDown);
         }
+
+        // I don't want another task for this
+        alarmManageRTC();
     }
 }
 
