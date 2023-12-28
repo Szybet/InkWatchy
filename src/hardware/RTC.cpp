@@ -1,16 +1,16 @@
 #include "RTC.h"
 
-tmElements_t timeRTC;
+RTC_DATA_ATTR tmElements_t timeRTC;
 
 RTC_DATA_ATTR SmallRTC SRTC;
-RTC_DATA_ATTR int rtcDelayMs;
 
 void initRTC()
 {
     SRTC.init();
     HWVer = SRTC.getWatchyHWVer();
-    rtcDelayMs = millis();
-    readRTC(true);
+    readRTC();
+    SRTC.nextMinuteWake(true);
+    pinMode(RTC_INT_PIN, INPUT);
 }
 
 void saveRTC()
@@ -19,13 +19,20 @@ void saveRTC()
     SRTC.set(timeRTC);
 }
 
-void readRTC(bool force)
+void readRTC()
 {
-    if (millis() - rtcDelayMs > RTC_READ_DELAY_MS || force == true)
+    debugLog("Reading RTC");
+    SRTC.read(timeRTC);
+}
+
+void alarmManageRTC()
+{
+    if (digitalRead(RTC_INT_PIN) == LOW)
     {
-        debugLog("Reading RTC");
-        SRTC.read(timeRTC);
-        rtcDelayMs = millis();
+        debugLog("RTC PIN IS HIGH");
+        SRTC.clearAlarm();
+        SRTC.nextMinuteWake(true);
+        readRTC();
     }
 }
 
@@ -43,7 +50,9 @@ String getHourMinute()
         m = "0" + m;
     }
 
-    return h + ":" + m;
+    String answer = h + ":" + m;
+    debugLog("Answer: " + answer);
+    return answer;
 }
 
 #if DEBUG

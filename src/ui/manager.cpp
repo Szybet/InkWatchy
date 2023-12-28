@@ -1,8 +1,8 @@
 #include "manager.h"
 
 int currentPlaceIndex = 0;
-UiPlace placeTree[PLACE_TREE_MAX_DEPTH] = {NoPlace};
-UiPlace currentPlace = NoPlace; // For loop manager for launching init or loop of a function
+RTC_DATA_ATTR UiPlace placeTree[PLACE_TREE_MAX_DEPTH] = {NoPlace};
+RTC_DATA_ATTR UiPlace currentPlace = NoPlace; // For loop manager for launching init or loop of a function
 int menuSelectedTree[PLACE_TREE_MAX_DEPTH] = {0};
 bool wasBacked = false;
 

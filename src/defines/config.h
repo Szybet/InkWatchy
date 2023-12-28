@@ -12,18 +12,17 @@
 #define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
 
 // Advanced
-#define SLEEP_EVERY_MS 10000 //180000 // Goes to sleep timer, is resetted by button presses
+#define SLEEP_EVERY_MS 12000 //180000 // Goes to sleep timer, is resetted by button presses
 #define LOOP_DELAY 10         // Speed of the device basically
 #define BUTTON_TASK_DELAY 140 // In ms, lower means faster button detection but more cpu usage
-#define TIME_FOR_WATCHFACE_TO_SHOW_MS 3000
-#define RTC_READ_DELAY_MS 30000
+#define TIME_FOR_WATCHFACE_TO_SHOW_MS 1000
 
 // Debugging help
 #define DEBUG 1
 #define EINK_COUNTER 0      // Shows a counter somewhere on screen
-#define DUMP_INIT_DEBUG 1   // If debug, shows at init init information
+#define DUMP_INIT_DEBUG 0   // If debug, shows at init init information
 #define DUMP_LOOP_DEBUG 0   // If debug, at every loop iteration dump hardware values that can change
-#define DUMP_LOOP_SOFTWARE_DEBUG 1 // If debug, at every loop iteration dump software values that can change - no sense in using it with DUMP_LOOP_DEBUG
+#define DUMP_LOOP_SOFTWARE_DEBUG 0 // If debug, at every loop iteration dump software values that can change - no sense in using it with DUMP_LOOP_DEBUG
 #define SCREEN_SLEEP_INFO 0 // Shows information on screen when the device goes to screen
 #define DRAW_DEBUG_RECT 0   // Shows rectangles where custom functions write bitmaps
 #define DUMP_LOOP_DELAY 5000 // delay in ms of dumping loop data
@@ -57,5 +56,6 @@
 // Other
 #define VIB_MOTOR_PIN 13 // Vibration motor
 #define MAX_MENU_ITEMS 20
+#define RTC_INT_PIN 27
 
 #endif

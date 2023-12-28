@@ -4,26 +4,30 @@
 int loopDumpDelayMs = 0;
 #endif
 
+#define RTC_WAKEUP ESP_SLEEP_WAKEUP_EXT0
+#define BUTTON_WAKEUP ESP_SLEEP_WAKEUP_EXT1
+
+esp_sleep_wakeup_cause_t wakeUpReason;
 void setup()
 {
-  esp_sleep_wakeup_cause_t wakeUpReason = esp_sleep_get_wakeup_cause();
+  wakeUpReason = esp_sleep_get_wakeup_cause();
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
   // ESP_SLEEP_WAKEUP_EXT1 Button press
+  
   bool wakedUpFromSleep = false;
-  if (wakeUpReason == ESP_SLEEP_WAKEUP_EXT0 || wakeUpReason == ESP_SLEEP_WAKEUP_EXT1)
+  if (wakeUpReason == RTC_WAKEUP || wakeUpReason == BUTTON_WAKEUP)
   {
     wakedUpFromSleep = true;
-#if DEBUG
-    if (wakeUpReason == ESP_SLEEP_WAKEUP_EXT0)
+    if (wakeUpReason == RTC_WAKEUP)
     {
       debugLog("Waked up because of RTC");
+      alarmManageRTC();
     }
-    else if (wakeUpReason == ESP_SLEEP_WAKEUP_EXT1)
+    else if (wakeUpReason == BUTTON_WAKEUP)
     {
       debugLog("Waked up because of buttons");
       manageButtonWakeUp();
     }
-#endif
   }
 
   if (wakedUpFromSleep == true)
@@ -67,6 +71,11 @@ void loop()
   }
 
 #endif
+
+  if(wakeUpReason == RTC_WAKEUP) {
+    debugLog("Skipping timer");
+    sleepDelayMs = sleepDelayMs + SLEEP_EVERY_MS;
+  }
 
   if (millis() - sleepDelayMs > SLEEP_EVERY_MS)
   {
