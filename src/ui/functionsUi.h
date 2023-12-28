@@ -26,6 +26,7 @@ void writeImageN(int16_t x, int16_t y, const ImageDef image, uint16_t frColor = 
 sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image = {0}, bool invert = false, int tolerance = 2, int borderWidth = 1, uint16_t frColor = GxEPD_BLACK, uint16_t bgColor = GxEPD_WHITE);
 void simpleCenterText(String text);
 void textPage(String title, String *strList, int listCount);
+void drawProgressBar(int x, int y, int width, int height, int progress);
 
 extern const GFXfont *font;
 extern uint16_t maxHeight;

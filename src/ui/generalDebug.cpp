@@ -96,7 +96,8 @@ void initGeneralDebug()
 void loopGeneralDebug()
 {
     debugLog("Used Heap KB: " + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024));
-    //debugLog("Heap caps free size: " + String(heap_caps_get_free_size(MALLOC_CAP_8BIT)));
+    // debugLog("Heap caps free size: " + String(heap_caps_get_free_size(MALLOC_CAP_8BIT)));
+    debugLog("Current CPU frequency: " + String(getCpuFrequencyMhz()) + "Mhz");
 }
 
 #endif
