@@ -10,6 +10,7 @@
 #define MENU_LINES false // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500 // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
+#define BOOK 1
 
 // Advanced
 #define SLEEP_EVERY_MS 6000 //180000 // Goes to sleep timer, is resetted by button presses
@@ -17,7 +18,7 @@
 #define TIME_FOR_WATCHFACE_TO_SHOW_MS 1500
 
 // Debugging help
-#define DEBUG 0
+#define DEBUG 1
 #define EINK_COUNTER 0      // Shows a counter somewhere on screen
 #define DUMP_INIT_DEBUG 0   // If debug, shows at init init information
 #define DUMP_LOOP_DEBUG 0   // If debug, at every loop iteration dump hardware values that can change
@@ -56,5 +57,8 @@
 #define VIB_MOTOR_PIN 13 // Vibration motor
 #define MAX_MENU_ITEMS 20
 #define RTC_INT_PIN 27
+
+// NVS
+#define NVS_CURRENT_PAGE "crp"
 
 #endif
