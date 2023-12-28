@@ -36,7 +36,7 @@ void syncWeather()
         }
       }
       isWeatherAvailable = true;
-      dumpWeather();
+      isDebug(dumpWeather());
       delete forecast;
     }
     else
