@@ -3,21 +3,47 @@
 tmElements_t timeRTC;
 
 RTC_DATA_ATTR SmallRTC SRTC;
+RTC_DATA_ATTR int rtcDelayMs;
 
 void initRTC()
 {
     SRTC.init();
     HWVer = SRTC.getWatchyHWVer();
+    rtcDelayMs = millis();
+    readRTC(true);
 }
 
 void saveRTC()
 {
+
     SRTC.set(timeRTC);
 }
 
-void readRTC()
+void readRTC(bool force)
 {
-    SRTC.read(timeRTC);
+    if (millis() - rtcDelayMs > RTC_READ_DELAY_MS || force == true)
+    {
+        debugLog("Reading RTC");
+        SRTC.read(timeRTC);
+        rtcDelayMs = millis();
+    }
+}
+
+String getHourMinute()
+{
+    String h = String(timeRTC.Hour);
+    if (h.length() == 1)
+    {
+        h = "0" + h;
+    }
+
+    String m = String(timeRTC.Minute);
+    if (m.length() == 1)
+    {
+        m = "0" + m;
+    }
+
+    return h + ":" + m;
 }
 
 #if DEBUG
