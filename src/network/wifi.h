@@ -9,7 +9,7 @@ void turnOffWifi();
 int getSignalStrength();
 extern bool isWifiTaskRunning;
 
-#if DEBUG
+#if DEBUG || DEBUG_MENUS == 1
 String wifiStatus();
 #endif
 
