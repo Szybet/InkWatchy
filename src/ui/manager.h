@@ -25,6 +25,7 @@ typedef enum
 extern int currentPlaceIndex;
 extern RTC_DATA_ATTR UiPlace placeTree[PLACE_TREE_MAX_DEPTH];
 extern RTC_DATA_ATTR UiPlace currentPlace;
+extern RTC_DATA_ATTR void (*exitFunc)();
 
 void initManager();
 void loopManager();
