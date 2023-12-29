@@ -9,7 +9,7 @@
 #define TIME_OFFSET_S 3600            // Time offset in seconds, use this as timezones
 #define MENU_LINES false // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500 // Duration until long press registers in miliseconds
-#define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
+#define FULL_DISPLAY_UPDATE_QUEUE 45 // Make a full display update after x of partial ones
 #define BOOK 1
 #define ADD_SLEEP_DELAY_BOOK_MS 60000
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_UP 300

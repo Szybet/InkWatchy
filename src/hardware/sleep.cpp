@@ -51,11 +51,6 @@ void goSleep()
 {
     debugLog("goSleep activated");
 
-    if(WiFi.getMode() != WIFI_MODE_NULL) {
-        debugLog("Wifi is turned on, waiting...");
-        return void();
-    }
-
 #if DEBUG && SCREEN_SLEEP_INFO
     display.setCursor(50, 190);
     display.setFont();

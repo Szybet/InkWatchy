@@ -37,7 +37,6 @@ void initWatchfaceDisplay()
 
   setTextSize(1);
   setFont(DAY_NAME_FONT);
-  timeRTC.Day = timeRTC.Day - 1;
   String day = getDayName();
   day.toUpperCase();
   writeTextReplaceBack(day, DAY_NAME_CORD);

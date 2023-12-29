@@ -57,24 +57,28 @@ String getHourMinute()
 
 String getDayName()
 {
-  switch (weekday(makeTime(timeRTC)))
+  int unixTime = makeTime(timeRTC);
+  int weekDay = weekday(unixTime);
+  debugLog("unixTime: " + String(unixTime));
+  debugLog("weekDay reported: " + String(weekDay));
+  switch (weekDay)
   {
-  case 0:
-    return "Sun";
   case 1:
-    return "Mon";
+    return "Sun";
   case 2:
-    return "Tues";
+    return "Mon";
   case 3:
-    return "Wedne";
+    return "Tues";
   case 4:
-    return "Thurs";
+    return "Wedne";
   case 5:
-    return "Fri";
+    return "Thurs";
   case 6:
+    return "Fri";
+  case 7:
     return "Satur";
   default:
-    return "Inval";
+    return "How??";
   }
 }
 
