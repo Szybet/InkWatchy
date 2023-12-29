@@ -13,7 +13,7 @@ void setup()
   wakeUpReason = esp_sleep_get_wakeup_cause();
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
   // ESP_SLEEP_WAKEUP_EXT1 Button press
-  
+
   bool wakedUpFromSleep = false;
   if (wakeUpReason == RTC_WAKEUP || wakeUpReason == BUTTON_WAKEUP)
   {
@@ -45,7 +45,7 @@ void setup()
   loopHardwareDebug();
 #endif
 #if DUMP_LOOP_SOFTWARE_DEBUG
-    loopGeneralDebug();
+  loopGeneralDebug();
 #endif
 #endif
 
@@ -77,12 +77,15 @@ void loop()
 
 #endif
 
-  if(wakeUpReason == RTC_WAKEUP) {
+  if (wakeUpReason == RTC_WAKEUP)
+  {
     debugLog("Skipping timer");
-    sleepDelayMs = sleepDelayMs + SLEEP_EVERY_MS;
+    sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
   }
 
-  if (millis() - sleepDelayMs > SLEEP_EVERY_MS)
+  //debugLog("sleepDelayMs is:" + String(sleepDelayMs));
+  //debugLog("millis is:" + String(long(millis())));
+  if (long(millis()) - sleepDelayMs >= SLEEP_EVERY_MS)
   {
     if (currentPlace != FIRST_PLACE)
     {

@@ -1,7 +1,7 @@
 #include "hardware.h"
 
 RTC_DATA_ATTR float HWVer;
-int sleepDelayMs;
+long sleepDelayMs;
 
 // At boot, not on wake up
 void initAllHardware()

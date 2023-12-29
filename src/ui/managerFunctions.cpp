@@ -3,10 +3,10 @@
 void initMainMenu()
 {
 #if BOOK
-    entryMenu buttons[3] = {{"Debug", &debugImgPack, switchDebugMenu}, {"Weather", &emptyImgPack, switchWeatherMenu}, {"Book " + bookGetPages(), &emptyImgPack, switchBook}};
+    entryMenu buttons[3] = {{"Debug", &debugImgPack, switchDebugMenu}, {"Weather", &weatherImgPack, switchWeatherMenu}, {"Book " + bookGetPages(), &bookImgPack, switchBook}};
     initMenu(buttons, 3, "Main menu", 1);
 #else
-    entryMenu buttons[2] = {{"Debug", &debugImgPack, switchDebugMenu}, {"Weather", &emptyImgPack, switchWeatherMenu}};
+    entryMenu buttons[2] = {{"Debug", &debugImgPack, switchDebugMenu}, {"Weather", &weatherImgPack, switchWeatherMenu}};
     initMenu(buttons, 2, "Main menu", 1);
 #endif
 
