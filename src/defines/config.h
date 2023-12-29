@@ -12,6 +12,11 @@
 #define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
 #define BOOK 1
 #define ADD_SLEEP_DELAY_BOOK_MS 60000
+#define BOOK_AX_X_PAGE_CHANGE_VALUE_UP 300
+#define BOOK_AX_X_PAGE_CHANGE_VALUE_DOWN 250
+#define BOOK_AX_Z_BACK_VALUE 500
+#define BOOK_AX_Y_BACK_VALUE 500
+#define BOOK_AX_X_TOLERANCE 150
 
 // Advanced
 #define SLEEP_EVERY_MS 6000 //180000 // Goes to sleep timer, is resetted by button presses

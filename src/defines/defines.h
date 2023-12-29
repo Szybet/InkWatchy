@@ -12,6 +12,7 @@
 #include <JSON_Decoder.h>
 #include <OpenWeather.h>
 #include <ArduinoNvs.h>
+#include <StableBMA.h>
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
@@ -36,6 +37,7 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #include "../hardware/sleep.h"
 #include "../hardware/buttons.h"
 #include "../hardware/display.h"
+#include "../hardware/axc.h"
 #include "../functions.h"
 #include "../ui/functionsUi.h"
 #include "../ui/debug.h"
