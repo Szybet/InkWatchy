@@ -12,7 +12,7 @@ void readRTC();
 void alarmManageRTC();
 
 String getHourMinute();
-String getDayName(int date);
+String getDayName();
 String getMonthName(int monthNumber);
 
 #if DEBUG
