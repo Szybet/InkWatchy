@@ -1,6 +1,7 @@
 #include "../../defines/config.h"
 #if BOOK
 #include "bookUi.h"
+#include "../../defines/book.h"
 
 #define BOOK_FONT &monofonto_rg10pt7b
 
