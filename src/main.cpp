@@ -86,7 +86,12 @@ void loop()
   //debugLog("sleepDelayMs is:" + String(sleepDelayMs));
   //debugLog("millis is:" + String(long(millis())));
   if (long(millis()) - sleepDelayMs >= SLEEP_EVERY_MS)
-  {
+  { 
+    if(WiFi.getMode() != WIFI_MODE_NULL) {
+        debugLog("Wifi is turned on, waiting...");
+        sleepDelayMs = millis();
+        return void();
+    }
     if (currentPlace != FIRST_PLACE)
     {
       debugLog("SLEEP_EVERY_MS runned out, Showing watchface");

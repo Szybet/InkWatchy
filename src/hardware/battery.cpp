@@ -50,7 +50,7 @@ void loopBattery()
         // Charging
         bat.percentage = 100;
     }
-    if (bat.curV > bat.maxV)
+    if (bat.curV > BATTERY_CHARGE_VOLTAGE)
     {
         bat.isCharging = true;
     }
