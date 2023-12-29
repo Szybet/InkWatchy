@@ -29,9 +29,6 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #include "macros.h"
 #include "images.h"
 #include "fonts.h"
-#if BOOK
-#include "book.h"
-#endif
 
 #include "../hardware/hardware.h"
 #include "../hardware/battery.h"
