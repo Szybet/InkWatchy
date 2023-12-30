@@ -3,33 +3,23 @@
 RTC_DATA_ATTR float HWVer;
 long sleepDelayMs;
 
-// At boot, not on wake up
-void initAllHardware()
-{
-    initRTC();
-    initBattery();
-
-    // To wake up?
-    initButtons();
-
-    initWakeUpHardware(false);
-}
-
 // Also at boot, but on wake up too
-void initWakeUpHardware(bool isFromWakeUp)
+void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
-    setCpuMhz(minimalSpeed); // Implement a proper management for this
-    isDebug(Serial.begin(115200));
 #if DEBUG
     if (isFromWakeUp == false)
     {
         debugLog("Watchy is starting!");
+        initBattery();
     }
     else
     {
         debugLog("Watchy is waking up!");
     }
 #endif
+    setCpuMhz(minimalSpeed); // Implement a proper management for this
+    initRTC(isFromWakeUp, wakeUpReason);
+    initButtons(isFromWakeUp);
     /*
     // Not available :(
     esp_pm_config_esp32_t pm_config = {
@@ -135,8 +125,10 @@ void setCpuMhz(cpuSpeed speed)
 }
 
 bool isNvsInited = false;
-void initNvsManage() {
-    if(isNvsInited == false) {
+void initNvsManage()
+{
+    if (isNvsInited == false)
+    {
         NVS.begin();
         isNvsInited = true;
     }

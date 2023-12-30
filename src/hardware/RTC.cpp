@@ -4,18 +4,23 @@ RTC_DATA_ATTR tmElements_t timeRTC;
 
 RTC_DATA_ATTR SmallRTC SRTC;
 
-void initRTC()
+void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
-  SRTC.init();
-  HWVer = SRTC.getWatchyHWVer();
-  readRTC();
-  SRTC.nextMinuteWake(true);
   pinMode(RTC_INT_PIN, INPUT);
+  if (isFromWakeUp == false)
+  {
+    SRTC.init();
+    HWVer = SRTC.getWatchyHWVer();
+  }
+  if (wakeUpReason != RTC_WAKEUP_REASON)
+  {
+    readRTC();
+    wakeUpManageRTC();
+  }
 }
 
 void saveRTC()
 {
-
   SRTC.set(timeRTC);
 }
 
@@ -25,14 +30,28 @@ void readRTC()
   SRTC.read(timeRTC);
 }
 
+void wakeUpManageRTC()
+{
+  SRTC.clearAlarm();
+  if (NIGHT_SLEEP_FOR_M != 1 && (timeRTC.Hour >= NIGHT_SLEEP_AFTER_HOUR || timeRTC.Hour < NIGHT_SLEEP_BEFORE_HOUR))
+  {
+    debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
+    SRTC.atMinuteWake(timeRTC.Minute + NIGHT_SLEEP_FOR_M, true);
+  }
+  else
+  {
+    debugLog("Next minute wake up");
+    SRTC.nextMinuteWake(true);
+  }
+}
+
 void alarmManageRTC()
 {
   if (digitalRead(RTC_INT_PIN) == LOW)
   {
     debugLog("RTC PIN IS HIGH");
-    SRTC.clearAlarm();
-    SRTC.nextMinuteWake(true);
     readRTC();
+    wakeUpManageRTC();
   }
 }
 

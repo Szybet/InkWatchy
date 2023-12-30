@@ -82,6 +82,7 @@ void turnOnWifiTask(void *parameter)
     }
     syncNtp();
     syncWeather();
+    sleepDelayMs = millis(); // reset sleep delay
     isWifiTaskRunning = false;
     turnOffWifi();
     vTaskDelete(NULL);
