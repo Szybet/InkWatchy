@@ -18,7 +18,7 @@ It doesn't use the watchy sub-class but it uses the same libraries. With that in
 - Many configurable values via defines in config.h
 - Many debugging tools in config.h
 - Most UI is rendered only when needed / values it's showing changed. Good for battery life
-<sub>- Proper variable naming and camelCase everywhere</sub>
+- <sub> Proper variable naming and camelCase everywhere</sub>
 
 ## User features
 Apart from code things, here are the key features for now:
