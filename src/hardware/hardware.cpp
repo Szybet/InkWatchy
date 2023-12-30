@@ -20,6 +20,9 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     setCpuMhz(minimalSpeed); // Implement a proper management for this
     initRTC(isFromWakeUp, wakeUpReason);
     initButtons(isFromWakeUp);
+    if(isFromWakeUp == false) {
+        initBattery();
+    }
     /*
     // Not available :(
     esp_pm_config_esp32_t pm_config = {
