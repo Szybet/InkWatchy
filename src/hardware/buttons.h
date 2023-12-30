@@ -27,7 +27,7 @@ void useButtonBlank();
 void loopButtonsTask(void *parameter);
 void manageButtonWakeUp();
 
-void initButtons();
+void initButtons(bool isFromWakeUp);
 void initButtonTask();
 void setButton(buttonState button);
 

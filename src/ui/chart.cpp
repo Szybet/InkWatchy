@@ -139,7 +139,7 @@ void showSideText(float *bothList, int bothSize) {
     debugLog("Iterating: " + String(i));
     // Insanity
     int ti = int(floor(i));
-    if (String(bothList[ti]) != "0.00" && String(bothList[ti]) != "-0.00")
+    if (String(bothList[ti]) != "0.00" && String(bothList[ti]) != "-0.00" && String(bothList[ti]) != "0" && String(bothList[ti]) != "-0")
     {
       bool contains = false;
       for (int j = 0; j < valuesCount + 1; j++)

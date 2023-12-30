@@ -17,6 +17,9 @@
 #define BOOK_AX_Z_BACK_VALUE 500
 #define BOOK_AX_Y_BACK_VALUE 500
 #define BOOK_AX_X_TOLERANCE 150
+#define NIGHT_SLEEP_FOR_M 15 // If it's 1 it doesn't apply, In minutes
+#define NIGHT_SLEEP_AFTER_HOUR 23
+#define NIGHT_SLEEP_BEFORE_HOUR 5
 
 // Advanced
 #define SLEEP_EVERY_MS 6000 //180000 // Goes to sleep timer, is resetted by button presses
@@ -26,7 +29,7 @@
 // Debugging help
 #define DEBUG 0
 #define EINK_COUNTER 0      // Shows a counter somewhere on screen
-#define DUMP_INIT_DEBUG 0   // If debug, shows at init init information
+#define DUMP_INIT_DEBUG 1   // If debug, shows at init init information
 #define DUMP_LOOP_DEBUG 0   // If debug, at every loop iteration dump hardware values that can change
 #define DUMP_LOOP_SOFTWARE_DEBUG 0 // If debug, at every loop iteration dump software values that can change - no sense in using it with DUMP_LOOP_DEBUG
 #define SCREEN_SLEEP_INFO 0 // Shows information on screen when the device goes to screen

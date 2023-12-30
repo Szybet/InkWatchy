@@ -17,6 +17,9 @@
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
 
+#define RTC_WAKEUP_REASON ESP_SLEEP_WAKEUP_EXT0
+#define BUTTON_WAKEUP_REASON ESP_SLEEP_WAKEUP_EXT1
+
 struct ImageDef {
     const uint8_t *bitmap;
     int16_t bw;

@@ -43,19 +43,22 @@ void useButtonBlank()
     }
 }
 
-void initButtons()
+void initButtons(bool isFromWakeUp)
 {
-    if (SRTC.getType() == PCF8563)
+    if (isFromWakeUp == false)
     {
-        if (HWVer == 1.5)
+        if (SRTC.getType() == PCF8563)
         {
-            UP_PIN = 32;
-            UP_MASK = GPIO_SEL_32;
-        }
-        else
-        {
-            UP_PIN = 35;
-            UP_MASK = GPIO_SEL_35;
+            if (HWVer == 1.5)
+            {
+                UP_PIN = 32;
+                UP_MASK = GPIO_SEL_32;
+            }
+            else
+            {
+                UP_PIN = 35;
+                UP_MASK = GPIO_SEL_35;
+            }
         }
     }
 

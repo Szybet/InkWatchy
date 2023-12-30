@@ -6,9 +6,10 @@ extern RTC_DATA_ATTR tmElements_t timeRTC;
 
 extern RTC_DATA_ATTR SmallRTC SRTC;
 
-void initRTC();
+void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
 void saveRTC();
 void readRTC();
+void wakeUpManageRTC();
 void alarmManageRTC();
 
 String getHourMinute();
