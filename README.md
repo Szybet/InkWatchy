@@ -6,7 +6,7 @@ https://www.youtube.com/watch?v=gFOCqalJidQ
 
 ## Code features
 It doesn't use the watchy sub-class but it uses the same libraries. With that in mind, those are further diffrences from other firmwares:
-<sub>Every small text is a reason why I was mad about enough to rewrite everything myself...</sub>
+<sub>Every small text is a reason why I was mad enough to rewrite everything myself...</sub>
 - It's splitted into files and folders <sub>In my opinion a file that has 5k lines is heresy</sub>
 - It's function - not object based for the reason above and to make it easier for beginners to use
 - It uses free rtos tasks where needed
