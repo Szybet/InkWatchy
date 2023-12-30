@@ -13,7 +13,7 @@ It doesn't use the watchy sub-class but it uses the same libraries. With that in
 - All resources like images, fonts, books are converted into variables dynamically via scripts. Editing images, changing font spacing is just one click. <sub>I can't believe I was the first to make this that way</sub>
 - The Ui is dynamically written. There are functions to do it eassly. Adding a new menu is just a few lines for example<sub>It's not just a collection of drawBitmap</sub>
 - It has a "manager" and design for various apps to run eassly
-- Has logs via serial. They can be disabled with changing one define - and the code doesn't look bad because it's a macro. Amazing <sub>Yea, this is a feature compared to other ones I have looked at</sub>
+- Has logs via serial. They can be disabled that they don't get compiled with changing one define - and the code doesn't look bad because it's a macro. Amazing <sub>Yea, this is a feature compared to other ones I have looked at</sub>
 - Uses libraries instead of pure calls to NTP or open weather
 - Many configurable values via defines in config.h
 - Many debugging tools in config.h
