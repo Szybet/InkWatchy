@@ -29,6 +29,15 @@ int16_t staAx_Y;
 int16_t staAx_Z;
 bool waitForReturn = false;
 
+void resetStartAxc()
+{
+    bma4_accel accel;
+    SBMA.getAccel(accel);
+    staAx_X = accel.x;
+    staAx_Z = accel.z;
+    staAx_Y = accel.y;
+}
+
 void showPage(int page)
 {
     resetSleepDelayBook();
@@ -47,17 +56,13 @@ void initBook()
     initAxc();
     // SBMA.setAccelConfig();
     SBMA.enableAccel();
-
-    bma4_accel accel;
-    SBMA.getAccel(accel);
-    staAx_X = accel.x;
-    staAx_Z = accel.z;
-    staAx_Y = accel.y;
+    resetStartAxc();
 
     setFont(BOOK_FONT);
     setTextSize(1);
     getTextBounds(test, NULL, NULL, NULL, &startHeight);
-    startHeight = startHeight - 3;
+    //startHeight = startHeight - 3;
+    startHeight = startHeight + 2;
     display.setTextWrap(true);
 
     int currPage = getPageNumber();
@@ -84,11 +89,13 @@ void loopBook()
     {
     case Up:
     {
+        resetStartAxc();
         changePageUp();
         break;
     }
     case Down:
     {
+        resetStartAxc();
         changePageDown();
         break;
     }
@@ -109,9 +116,9 @@ void loopBook()
     bma4_accel accel;
     if (SBMA.getAccel(accel))
     {
-        //debugLog("x: " + String(accel.x));
-        //debugLog("y: " + String(accel.y));
-        //debugLog("z: " + String(accel.z));
+        // debugLog("x: " + String(accel.x));
+        // debugLog("y: " + String(accel.y));
+        // debugLog("z: " + String(accel.z));
         if (staAx_Y + BOOK_AX_Y_BACK_VALUE < accel.y || staAx_Y - BOOK_AX_Y_BACK_VALUE > accel.y)
         {
             if (staAx_Z + BOOK_AX_Z_BACK_VALUE < accel.z || staAx_Z - BOOK_AX_Z_BACK_VALUE > accel.z)
