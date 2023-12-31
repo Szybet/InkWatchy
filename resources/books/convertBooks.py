@@ -45,5 +45,5 @@ def split_and_store(file_path, chunk_size, output_file, output_path):
 file_path = 'book.txt'
 output_file_path = 'book.h'
 output_path = '../../src/defines/' 
-split_and_store(file_path, 160, output_file_path, output_path)
+split_and_store(file_path, 159, output_file_path, output_path)
 print(f"Newlines removed in {file_path}. book saved to {output_path}{output_file_path}.")
