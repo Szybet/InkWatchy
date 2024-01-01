@@ -37,7 +37,7 @@ def split_and_store(file_path, chunk_size, output_file, output_path):
         file.write(cpp_list + "\n\n")
         file.write("#endif // BOOK_H\n")
 
-    if os.path.exists(output_path):
+    if os.path.exists(output_path + output_file):
         os.remove(output_path + output_file)
     shutil.move(output_file, output_path)
 
@@ -45,5 +45,8 @@ def split_and_store(file_path, chunk_size, output_file, output_path):
 file_path = 'book.txt'
 output_file_path = 'book.h'
 output_path = '../../src/defines/' 
-split_and_store(file_path, 159, output_file_path, output_path)
-print(f"Newlines removed in {file_path}. book saved to {output_path}{output_file_path}.")
+if os.path.exists(file_path):
+    split_and_store(file_path, 159, output_file_path, output_path)
+    print(f"Newlines removed in {file_path}. book saved to {output_path}{output_file_path}.")
+else:
+    print(file_path + " doesn't exist - skipping book generation")
