@@ -28,6 +28,12 @@ Apart from code things, here are the key features for now:
 - Debug menus to check on things on the fly
 - Configuring the watch to not wake up every minute at night - adjustable hours and minutes - good for battery life
 
+## Compiling
+1. You need to run the generate.sh file. As mentioned before it will convert images and fonts on the fly to header files
+2. Adjust values in config.h and confidential.h to your needs.
+   - You propably want to disable BOOK to make the code compile without it
+   - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
+
 ## Donations
 This was the first thing I have written and asked myself if I should release it for free. Well here we are - I also write other open source things - check my profile for more eink stuff. Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a option.
 
