@@ -37,7 +37,8 @@ void initWeatherMenu()
         for (int j = 0; j < WEATHER_PER_DAY; j++)
         {
             tmElements_t times;
-            breakTime(weatherDataDays[i][j].dt, times);
+            time_t dtTime = weatherDataDays[i][j].dt;
+            SRTC.BreakTime(dtTime, times);
             if (day != times.Day)
             {
                 day = times.Day;

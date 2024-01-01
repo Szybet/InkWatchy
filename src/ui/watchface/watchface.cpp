@@ -33,7 +33,12 @@ void initWatchfaceDisplay()
 
   setTextSize(1);
   setFont(DATE_FONT);
-  writeTextReplaceBack(String(wFTime.Day), DATE_CORD);
+  String dayDate = String(wFTime.Day);
+  if (dayDate.length() < 2)
+  {
+    dayDate = "0" + dayDate;
+  }
+  writeTextReplaceBack(dayDate, DATE_CORD);
 
   setTextSize(1);
   setFont(DAY_NAME_FONT);
@@ -73,7 +78,12 @@ void loopWatchfaceLoop()
     {
       wFTime.Day = timeRTC.Day;
       setFont(DATE_FONT);
-      writeTextReplaceBack(String(wFTime.Day), DATE_CORD);
+      String dayDate = String(wFTime.Day);
+      if (dayDate.length() < 2)
+      {
+        dayDate = "0" + dayDate;
+      }
+      writeTextReplaceBack(dayDate, DATE_CORD);
 
       setFont(DAY_NAME_FONT);
       String day = getDayName();
@@ -98,7 +108,8 @@ void loopWatchfaceLoop()
     }
   }
 
-  if(batteryPercantageWF != bat.percentage) {
+  if (batteryPercantageWF != bat.percentage)
+  {
     batteryPercantageWF = bat.percentage;
     drawProgressBar(BATT_BAR_CORD, TO_DAY_BAR_SIZE, batteryPercantageWF);
     dUChange = true;
