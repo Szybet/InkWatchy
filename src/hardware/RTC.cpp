@@ -76,7 +76,7 @@ String getHourMinute()
 
 String getDayName()
 {
-  int unixTime = makeTime(timeRTC);
+  int unixTime = SRTC.MakeTime(timeRTC);
   int weekDay = weekday(unixTime);
   debugLog("unixTime: " + String(unixTime));
   debugLog("weekDay reported: " + String(weekDay));
@@ -103,31 +103,32 @@ String getDayName()
 
 String getMonthName(int monthNumber)
 {
+  debugLog("Month gived: " + String(monthNumber));
   switch (monthNumber)
   {
-  case 1:
+  case 0:
     return "Jan";
-  case 2:
+  case 1:
     return "Feb";
-  case 3:
+  case 2:
     return "Mar";
-  case 4:
+  case 3:
     return "Apr";
-  case 5:
+  case 4:
     return "May";
-  case 6:
+  case 5:
     return "Jun";
-  case 7:
+  case 6:
     return "Jul";
-  case 8:
+  case 7:
     return "Aug";
-  case 9:
+  case 8:
     return "Sep";
-  case 10:
+  case 9:
     return "Oct";
-  case 11:
+  case 10:
     return "Nov";
-  case 12:
+  case 11:
     return "Dec";
   default:
     return "Inv";

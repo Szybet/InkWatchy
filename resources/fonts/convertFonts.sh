@@ -1,11 +1,11 @@
 #!/bin/bash
 
-fontconvert="../../.pio/libdeps/watchy/Adafruit GFX Library/fontconvert/fontconvert"
+fontconvert="../../.pio/libdeps/InkWatchy/Adafruit GFX Library/fontconvert/fontconvert"
 if [ -e "$fontconvert" ]; then
     echo "fontconvert exists"
 else
     echo "fontconvert does not exist, creating it..."
-    cd ../../.pio/libdeps/watchy/Adafruit\ GFX\ Library/fontconvert/
+    cd ../../.pio/libdeps/InkWatchy/Adafruit\ GFX\ Library/fontconvert/
     make -j$(nproc)
     cd ../../../../../resources/fonts/
     if [ ! -e "$fontconvert" ]; then
