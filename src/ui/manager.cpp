@@ -66,6 +66,7 @@ void loopManager()
     buttonState backButton = useButtonBack();
     if (backButton != None)
     {
+        debugLog("Button is back, manager got it");
         if (currentPlaceIndex > 0)
         {
             if (backButton == Back)

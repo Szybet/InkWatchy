@@ -47,8 +47,9 @@ void disUp(bool reallyUpdate, bool ignoreCounter)
         }
         else
         {
-            if(ignoreCounter == true) {
-               updateCounter += 1;
+            if (ignoreCounter == false)
+            {
+                updateCounter += 1;
             }
             display.display(PARTIAL_UPDATE);
         }
