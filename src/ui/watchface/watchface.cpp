@@ -142,10 +142,11 @@ void loopWatchfaceLoop()
   }
   }
   
-  if(dUChange == false) {
-  debugLog("No change in watchface, skipping timer");
-    sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
-  }
+  //if(dUChange == false) {
+  //debugLog("No change in watchface, skipping timer");
+  // Always go to sleep in watchface after loop
+  sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
+  //}
 
   disUp(dUChange, true);
 }
