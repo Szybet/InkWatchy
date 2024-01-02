@@ -68,12 +68,6 @@ void loop()
 
 #endif
 
-  if (wakeUpReason == RTC_WAKEUP_REASON)
-  {
-    debugLog("Skipping timer");
-    sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
-  }
-
   //debugLog("sleepDelayMs is:" + String(sleepDelayMs));
   //debugLog("millis is:" + String(long(millis())));
   if (long(millis()) - sleepDelayMs >= SLEEP_EVERY_MS)
