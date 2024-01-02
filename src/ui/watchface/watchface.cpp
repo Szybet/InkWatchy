@@ -147,7 +147,7 @@ void loopWatchfaceLoop()
     sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
   }
 
-  disUp();
+  disUp(dUChange, true);
 }
 
 int calculatePercentageOfDay(int hour, int minute)
