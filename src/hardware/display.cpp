@@ -32,22 +32,24 @@ void initDisplay(bool isFromWakeUp)
     setTextSize(1);
 }
 
-int updateCounter = 0;
+RTC_DATA_ATTR int updateCounter = 0;
 bool dUChange = false;
 // Display update
-void disUp(bool reallyUpdate)
+void disUp(bool reallyUpdate, bool ignoreCounter)
 {
     if (dUChange == true || reallyUpdate == true)
     {
         dUChange = false;
-        if (updateCounter > FULL_DISPLAY_UPDATE_QUEUE)
+        if (updateCounter > FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
         {
             updateCounter = 0;
             display.display(FULL_UPDATE);
         }
         else
         {
-            updateCounter += 1;
+            if(ignoreCounter == true) {
+               updateCounter += 1;
+            }
             display.display(PARTIAL_UPDATE);
         }
     }
