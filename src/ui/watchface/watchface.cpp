@@ -115,6 +115,7 @@ void loopWatchfaceLoop()
     dUChange = true;
   }
 
+  bool buttonClicked = false;
   switch (useButton())
   {
   case Up:
@@ -127,6 +128,7 @@ void loopWatchfaceLoop()
   }
   case Menu:
   {
+    buttonClicked = true;
     generalSwitch(mainMenu);
     break;
   }
@@ -141,11 +143,14 @@ void loopWatchfaceLoop()
     break;
   }
   }
-  
-  //if(dUChange == false) {
-  //debugLog("No change in watchface, skipping timer");
+
+  // if(dUChange == false) {
+  // debugLog("No change in watchface, skipping timer");
   // Always go to sleep in watchface after loop
-  sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
+  if (buttonClicked == false)
+  {
+    sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
+  }
   //}
 
   disUp(dUChange, true);
