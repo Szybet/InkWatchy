@@ -38,7 +38,7 @@ do
             continue
         fi
         echo "Processing file $f"
-        ./"$fontconvert" $f $d >> fonts.h
+        ./"$fontconvert" $f $d | sed 's/PROGMEM //g'>> fonts.h
         echo -e '' >> fonts.h
     done
 done
