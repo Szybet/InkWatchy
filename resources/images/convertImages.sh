@@ -19,22 +19,22 @@ do
 
     echo "Processing $f" # always double quote "$f" filename
     
-    fne="${f%.*}Img"
+    fnel="${f%.*}Img"
+    fne=$(echo ${f%.*}_IMG | tr a-z A-Z)
 
     #convert $f -compress none -monochrome -colors 2 -depth 1 h:- | sed 's/MagickImage/'$fne'/g' | tail -n +4 >> images.h
 
     #echo -e "#define ${fne}Pack ${fne},${fne}Width,${fne}Height" >> images.h
 
-    identify -ping -format '#define '${fne}'Width %w' $f >> images.h
+    identify -ping -format '#define '${fne}'_WIDTH %w' $f >> images.h
     echo -e '' >> images.h
 
-    identify -ping -format '#define '${fne}'Height %h' $f >> images.h
+    identify -ping -format '#define '${fne}'_HEIGHT %h' $f >> images.h
     echo -e '' >> images.h
 
     # On arch linux install xxd-standalone
-
-    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- | xxd -i -n $fne | sed 's/unsigned/const unsigned/g' | sed '/_len = /d' >> images.h
-    echo -e "const ImageDef ${fne}Pack = {${fne}, ${fne}Width, ${fne}Height};" >> images.h
+    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- | xxd -i -n $fnel | sed 's/unsigned/const unsigned/g' | sed '/_len = /d' >> images.h
+    echo -e "const ImageDef ${fnel}Pack = {${fnel}, ${fne}_WIDTH, ${fne}_HEIGHT};" >> images.h
     echo -e '' >> images.h
 
 done
