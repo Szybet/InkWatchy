@@ -15,6 +15,4 @@
 
 #define BOOL_STR(b) ((b) ? String("True") : String("False"))
 
-#define NULL_PACK NULL,0,0
-
 #endif
