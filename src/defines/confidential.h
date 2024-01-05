@@ -43,4 +43,6 @@
 #define WEATHER_UNIT "metric"
 #define WEATHER_LANG "en"
 
+#define VAULT_PASSWORD ""
+
 #endif
