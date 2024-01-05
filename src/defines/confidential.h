@@ -43,6 +43,6 @@
 #define WEATHER_UNIT "metric"
 #define WEATHER_LANG "en"
 
-#define VAULT_PASSWORD ""
+#define VAULT_PASSWORD "" // This must be a numerical PIN
 
 #endif
