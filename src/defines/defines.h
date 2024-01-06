@@ -54,6 +54,9 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #if BOOK
 #include "../ui/book/bookUi.h"
 #endif
+#if VAULT
+#include "../ui/vault/vaultUi.h"
+#endif
 #include "../network/wifi.h"
 #include "../network/ntp.h"
 #include "../network/weather.h"
