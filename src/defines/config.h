@@ -10,7 +10,7 @@
 #define MENU_LINES false // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500 // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
-#define BOOK 1
+#define BOOK 0
 #define ADD_SLEEP_DELAY_BOOK_MS 60000
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_UP 300
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_DOWN 250
@@ -20,6 +20,7 @@
 #define NIGHT_SLEEP_FOR_M 15 // If it's 1 it doesn't apply, In minutes
 #define NIGHT_SLEEP_AFTER_HOUR 23
 #define NIGHT_SLEEP_BEFORE_HOUR 5
+#define VAULT 1
 
 // Advanced
 #define SLEEP_EVERY_MS 6000 //180000 // Goes to sleep timer, is resetted by button presses
@@ -27,7 +28,7 @@
 #define TIME_FOR_WATCHFACE_TO_SHOW_MS 1500
 
 // Debugging help
-#define DEBUG 0
+#define DEBUG 1
 #define EINK_COUNTER 0      // Shows a counter somewhere on screen
 #define DUMP_INIT_DEBUG 0   // If debug, shows at init init information
 #define DUMP_LOOP_DEBUG 0   // If debug, at every loop iteration dump hardware values that can change
