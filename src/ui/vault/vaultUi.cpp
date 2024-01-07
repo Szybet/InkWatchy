@@ -3,19 +3,220 @@
 #include "vaultUi.h"
 
 #include "../../defines/vault.h"
-#include "Cipher.h"
-#include "mbedtls/base64.h"
 
-RTC_DATA_ATTR int key = String(VAULT_PASSWORD).toInt();
+#include "mbedtls/base64.h"
+#include "mbedtls/aes.h"
+
+long long int key = 0;
+
+String keyToString()
+{
+    String keyStr = String(key);
+    while (keyStr.length() < 16)
+    {
+        // keyStr = "0" + keyStr;
+        keyStr = keyStr + "0";
+    }
+    debugLog("keyStr: " + keyStr);
+    return keyStr;
+}
+
+bool checkKey()
+{
+    debugLog("Starting decrypting: " + String(millis()));
+
+    unsigned char *realImage = new unsigned char[encryptionCheck_len];
+
+    size_t written = 0;
+
+    debugLog("Before base64 encoding");
+    Serial.flush();
+
+    int baseResult = mbedtls_base64_decode(realImage, encryptionCheck_len, &written, encryptionCheck, encryptionCheck_len);
+
+    debugLog("Written base64 bytes: " + String(written));
+    debugLog("base64 result: " + String(baseResult));
+
+    debugLog("Original base64 image:");
+    for (size_t i = 0; i < written; i++)
+    {
+        Serial.print(String(realImage[i], HEX));
+        Serial.print(" ");
+    }
+    Serial.println("");
+    Serial.flush();
+
+    mbedtls_aes_context aes;
+
+    unsigned char keyChar[17] = {0};
+
+    String keyString = keyToString();
+    memcpy(keyChar, keyString.c_str(), keyString.length() + 1);
+
+    unsigned char iv[16] = {0};
+    hexStringToByteArray(VAULT_SAULT, iv, 16);
+
+    mbedtls_aes_init(&aes);
+    int resultKey = mbedtls_aes_setkey_dec(&aes, keyChar, 128);
+    debugLog("resultKey: " + String(resultKey));
+    unsigned char *realImageEmpty = new unsigned char[written];
+
+    int resultCrypt = mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, written, iv, realImage, realImageEmpty);
+    debugLog("resultCrypt: " + String(resultCrypt));
+
+    debugLog("Finished decrypting: " + String(millis()));
+
+    mbedtls_aes_free(&aes);
+
+    debugLog("Decrypted image:");
+    for (size_t i = 0; i < written; i++)
+    {
+        Serial.print(String(realImageEmpty[i]));
+        Serial.print(" ");
+    }
+    Serial.println("");
+    Serial.flush();
+
+    delete[] realImage;
+    delete[] realImageEmpty;
+    return false;
+}
 
 void initVault()
 {
+    debugLog("initVault key: " + String(key));
+    // key = String(VAULT_PASSWORD).toDouble();
+    if (key == 0)
+    {
+        pinInputVar = &key;
+        generalSwitch(inputPinPlace);
+    }
+    else
+    {
+        // checkKey(); // doesnt work :(
+        int foundMenuIndex = -1;
+        for (int i = 0; i < VAULT_ITEMS; i++)
+        {
+            if (lastMenuSelected == vaultListNames[i])
+            {
+                foundMenuIndex = i;
+                break;
+            }
+        }
+
+        if (foundMenuIndex == -1)
+        {
+            entryMenu buttons[VAULT_ITEMS];
+
+            for (int i = 0; i < VAULT_ITEMS; i++)
+            {
+                buttons[i] = {vaultListNames[i], &emptyImgPack, switchBack};
+            }
+
+            initMenu(buttons, VAULT_ITEMS, "Vault", 1);
+            generalSwitch(generalMenuPlace);
+        } else {
+            showVaultImage(foundMenuIndex);
+            generalSwitch(imagePlace);
+            lastMenuSelected = "";
+        }
+    }
 }
 
 void loopVault()
 {
+
 }
 
+void exitVault() {
+    debugLog("Exiting vault");
+    if(currentPlace == FIRST_PLACE) {
+        debugLog("Cleaning key");
+        key = -1;
+        key = 0;
+    }
+}
+
+void showVaultImage(int index)
+{
+    if (key != 0)
+    {
+        debugLog("Starting decrypting: " + String(millis()));
+        debugLog("vaultListLength[index]: " + String(vaultListLength[index]));
+
+        unsigned char *realImage = new unsigned char[vaultListLength[index]];
+
+        size_t written = 0;
+
+        debugLog("Before base64 encoding");
+        Serial.flush();
+
+        int baseResult = mbedtls_base64_decode(realImage, vaultListLength[index], &written, vaultList[index].bitmap, vaultListLength[index]);
+
+        debugLog("Written base64 bytes: " + String(written));
+        debugLog("base64 result: " + String(baseResult));
+
+        mbedtls_aes_context aes;
+
+        unsigned char keyChar[17] = {0};
+
+        String keyString = keyToString();
+        memcpy(keyChar, keyString.c_str(), keyString.length() + 1);
+
+        unsigned char iv[16] = {0};
+        hexStringToByteArray(VAULT_SAULT, iv, 16);
+
+        mbedtls_aes_init(&aes);
+        int resultKey = mbedtls_aes_setkey_dec(&aes, keyChar, 128);
+        debugLog("resultKey: " + String(resultKey));
+        int resultCrypt = mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, written, iv, realImage, realImage);
+        debugLog("resultCrypt: " + String(resultCrypt));
+
+        debugLog("Finished decrypting: " + String(millis()));
+
+        mbedtls_aes_free(&aes);
+
+        ImageDef newImage = {realImage, 200, 200};
+        writeImageN(0, 0, newImage);
+        disUp(true);
+
+        delete[] realImage;
+
+        /*
+        debugLog("Decrypted image in base64:");
+        for (size_t i = 0; i < written; i++)
+        {
+            Serial.print(String(realImage[i], HEX));
+            Serial.print(" ");
+        }
+        Serial.println("");
+        Serial.flush();
+
+        debugLog("Original base64 image:");
+        for (size_t i = 0; i < testImgVaultImg_len; i++)
+        {
+            Serial.print(String(testImgVaultImg[i], HEX));
+            Serial.print(" ");
+        }
+        Serial.println("");
+        Serial.flush();
+        */
+    }
+    else
+    {
+        debugLog("key is not available");
+    }
+}
+
+void hexStringToByteArray(const char *hexString, unsigned char *byteArray, size_t byteArraySize)
+{
+    for (size_t i = 0; i < byteArraySize; i++)
+    {
+        byteArray[i] = strtoul(hexString + 2 * i, NULL, 16);
+    }
+}
+
+/*
 void printHex(const unsigned char *data, size_t len)
 {
     for (size_t i = 0; i < len; i++)
@@ -29,85 +230,7 @@ void printHex(const unsigned char *data, size_t len)
     }
     Serial.println();
 }
-
-#define KEY_LENGTH 16
-void showVaultImage(int index)
-{
-    // if (key != 0)
-    if (true == true)
-    {
-        debugLog("Starting decrypting: " + String(millis()));
-
-        unsigned char realImage[testImgVaultImg_len] = {0};
-
-        /*
-        for (size_t i = 0; i < VAULT_IMAGE_LIST_SIZE; i++)
-        {
-            realImage[i] = vaultList[index].bitmap[i];
-        }
-        */
-        // base64::decode(realImage, vaultList[index].bitmap, 5024);
-        size_t written;
-        int whoa = mbedtls_base64_decode(realImage, testImgVaultImg_len, &written, testImgVaultImg, testImgVaultImg_len);
-
-        debugLog("Written bytes: " + String(written));
-        debugLog("base64 result: " + String(whoa));
-
-        mbedtls_aes_context aes;
-
-        const unsigned char key[16] = {0x6B, 0x65, 0x79, 0x6B, 0x65, 0x79, 0x6B, 0x65, 0x79, 0x79, 0x6B, 0x65, 0x79, 0x6B, 0x65, 0x79};
-        unsigned char iv[16] = {0x6B, 0x65, 0x79, 0x6B, 0x65, 0x79, 0x6B, 0x65, 0x79, 0x79, 0x6B, 0x65, 0x79, 0x6B, 0x65, 0x79};
-        // debugLog("Key: " + key));
-
-        mbedtls_aes_init(&aes);
-        int resultKey = mbedtls_aes_setkey_dec(&aes, key, 128);
-
-        mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, written, iv, realImage, realImage);
-        //mbedtls_aes_crypt_ecb(&aes, MBEDTLS_AES_DECRYPT, realImage, realImage);
-
-        /*
-        // Iterate over each block
-        for (size_t i = 0; i < num_blocks; i++)
-        {
-            int result = mbedtls_aes_crypt_ecb(&aes, MBEDTLS_AES_DECRYPT, realImage + i * 16, realImage + i * 16);
-
-            if (result != 0)
-            {
-                debugLog("Result key is: " + String(result)); // 0 means good
-                return;
-            }
-        }
-        */
-
-        debugLog("Decrypted image in base64:");
-        for (size_t i = 0; i < written; i++)
-        {
-            Serial.print(String(realImage[i], HEX));
-            Serial.print(" ");
-        }
-        Serial.println("");
-        Serial.flush();
-
-        mbedtls_aes_free(&aes);
-
-        ImageDef newImage = {realImage, 200, 200};
-        writeImageN(0, 0, newImage);
-        disUp(true);
-
-        debugLog("Original base64 image:");
-        for (size_t i = 0; i < testImgVaultImg_len; i++)
-        {
-            Serial.print(String(testImgVaultImg[i], HEX));
-            Serial.print(" ");
-        }
-        Serial.println("");
-        Serial.flush();
-    }
-    else
-    {
-        debugLog("key is not available");
-    }
-}
+*/
 
 #endif
 

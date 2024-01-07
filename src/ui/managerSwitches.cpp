@@ -41,6 +41,14 @@ void switchWeatherSelectorMenu()
     generalSwitch(weatherConditionMenu);
 }
 
+void switchVault() {
+    generalSwitch(vault);
+}
+
+void switchBack() {
+    setButton(Back);
+}
+
 void showTemp()
 {
     debugLog("Launched");

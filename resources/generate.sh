@@ -16,3 +16,9 @@ echo "Processing book"
 cd books/
 ./convertBooks.py
 cd ../
+
+echo -e ''
+echo "Processing vault"
+cd vault/
+./convertImagesVault.sh
+cd ../

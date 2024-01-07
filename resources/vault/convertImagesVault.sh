@@ -1,22 +1,32 @@
 #!/bin/bash
 
 count=0
+vault_list_length="const unsigned int vaultListLength[] = {"
 vault_list="const ImageDef vaultList[] = {"
 vault_list_names="const String vaultListNames[] = {"
 config_file="../../src/defines/confidential.h"
 vault_password=$(grep '#define VAULT_PASSWORD' "$config_file" | awk '{print $3}' | tr -d '"')
-echo "Using password: \"$vault_password\""
 
+if [[ $vault_password == 0* ]]; then
+    echo "Passwords starts with 0 - that's not allowed"
+    exit
+fi
 
 if [[ $vault_password =~ ^[0-9]+$ ]]; then
     echo "Password is valid"
+    if [ ${#vault_password} -lt 16 ]; then
+        echo "Password is too small, adding 0 at the end of it"
+    fi
+    while [ ${#vault_password} -lt 16 ]; do
+        vault_password="${vault_password}0"
+    done
 else
     echo "Password is invalid or doesn't exist"
-    #exit
+    exit
 fi
 
-: '
-# Not needed anymore
+echo "Using password: \"$vault_password\""
+
 random_salt=$(openssl rand -hex 16)
 echo "Random Salt: $random_salt"
 random_salt_define="#define VAULT_SAULT \"$random_salt\""
@@ -28,16 +38,12 @@ if grep -q "$search_line" "$config_file"; then
 else
     sed -i "/$after_line/a\\$random_salt_define" "$config_file"
 fi
-'
 
 rm vault.h 1>/dev/null 2>/dev/null
 touch vault.h
 
 echo -e "#ifndef VAULT_H" >> vault.h
 echo -e "#define VAULT_H" >> vault.h
-echo -e '' >> vault.h
-
-echo '#define VAULT_IMAGE_LIST_SIZE 5000' >> vault.h
 echo -e '' >> vault.h
 
 for f in *
@@ -76,27 +82,33 @@ do
     
     #xxd -i -n $fnel encrypted_data.bin | sed 's/unsigned/const unsigned/g' >> vault.h
 
-    iv=$(echo -n "$vault_password" | xxd -p -c 16)
+    rm -f *.bin
 
-    echo "iv is: $iv"
-
-    # Encrypt the data using AES-128-CBC with the hashed vault password as the IV
-    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap ../images/eink-2color.png -depth 1 gray:- | openssl enc -aes-128-cbc -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$iv" -base64 > encrypted_data_base64.bin
+    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap ../images/eink-2color.png -depth 1 gray:- | openssl enc -aes-128-cbc -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$random_salt" -base64 > encrypted_data_base64.bin
 
     cat encrypted_data_base64.bin | base64 -d > encrypted_data.bin
 
-    # Decrypt the data using AES-128-CBC with the same hashed vault password as the IV
-    cat encrypted_data.bin | openssl enc -aes-128-cbc -d -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$iv" | xxd > decrypted_image.bin
+    cat encrypted_data.bin | openssl enc -aes-128-cbc -d -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$random_salt" | xxd > decrypted_image.bin
 
-    # Generate the header file with the encrypted data
     xxd -i -n $fnel encrypted_data_base64.bin | sed 's/unsigned/const unsigned/g' >> vault.h
 
     echo -e "const ImageDef ${fnel}Pack = {${fnel}, 200, 200};" >> vault.h
 
     vault_list="$vault_list${fnel}Pack, "
     vault_list_names="$vault_list_names\"${f%.*}\", "
+    vault_list_length="$vault_list_length${fnel}_len, "
     ((count++))
 done
+
+
+echo -e '' >> vault.h
+echo -n "encryption worked i think i suppose" | xxd -p | openssl enc -aes-128-cbc -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$random_salt" -base64 > encrypted_check.bin
+
+xxd -i -n "encryptionCheck" encrypted_check.bin | sed 's/unsigned/const unsigned/g' >> vault.h
+
+#cat encrypted_check.bin | base64 -d | openssl enc -aes-128-cbc -d -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$random_salt"
+
+rm -f *.bin
 
 vault_list_repaired="${vault_list%??}"
 vault_list_repaired="$vault_list_repaired};"
@@ -104,7 +116,12 @@ vault_list_repaired="$vault_list_repaired};"
 vault_list_names_repaired="${vault_list_names%??}"
 vault_list_names_repaired="$vault_list_names_repaired};"
 
+vault_list_length_repaired="${vault_list_length%??}"
+vault_list_length_repaired="$vault_list_length_repaired};"
+
 echo -e '' >> vault.h
+echo "#define VAULT_ITEMS $count" >> vault.h
+echo $vault_list_length_repaired >> vault.h
 echo $vault_list_names_repaired >> vault.h
 echo -e $vault_list_repaired >> vault.h
 echo -e '' >> vault.h

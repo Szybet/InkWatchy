@@ -14,10 +14,15 @@ typedef enum
     generalDebug,
     batteryDebug,
     wifiDebug,
-    textDialog, // So nothing, really
     weatherMenu,
     weatherConditionMenu,
     book,
+    vault,
+    // General places now:
+    inputPinPlace,
+    generalMenuPlace,
+    imagePlace,
+    textDialog,
     ChartPlace,
     NoPlace,
 } UiPlace;
@@ -48,6 +53,8 @@ void switchWifiDebug();
 void switchWeatherMenu();
 void switchWeatherSelectorMenu();
 void switchBook();
+void switchVault();
+void switchBack();
 
 // Switches for weather
 void showTemp();
