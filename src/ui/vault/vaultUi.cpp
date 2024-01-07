@@ -38,6 +38,7 @@ bool checkKey()
     debugLog("base64 result: " + String(baseResult));
 
     debugLog("Original base64 image:");
+#if DEBUG
     for (size_t i = 0; i < written; i++)
     {
         Serial.print(String(realImage[i], HEX));
@@ -45,6 +46,7 @@ bool checkKey()
     }
     Serial.println("");
     Serial.flush();
+#endif
 
     mbedtls_aes_context aes;
 
@@ -59,9 +61,8 @@ bool checkKey()
     mbedtls_aes_init(&aes);
     int resultKey = mbedtls_aes_setkey_dec(&aes, keyChar, 128);
     debugLog("resultKey: " + String(resultKey));
-    unsigned char *realImageEmpty = new unsigned char[written];
 
-    int resultCrypt = mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, written, iv, realImage, realImageEmpty);
+    int resultCrypt = mbedtls_aes_crypt_ecb(&aes, MBEDTLS_AES_DECRYPT, realImage, realImage);
     debugLog("resultCrypt: " + String(resultCrypt));
 
     debugLog("Finished decrypting: " + String(millis()));
@@ -69,17 +70,30 @@ bool checkKey()
     mbedtls_aes_free(&aes);
 
     debugLog("Decrypted image:");
+#if DEBUG
     for (size_t i = 0; i < written; i++)
     {
-        Serial.print(String(realImageEmpty[i]));
+        Serial.print(String(realImage[i], HEX));
         Serial.print(" ");
     }
     Serial.println("");
     Serial.flush();
+#endif
+
+    String decryptedAnswer = String(realImage, 16);
+    debugLog("Decrypted string is: " + decryptedAnswer);
 
     delete[] realImage;
-    delete[] realImageEmpty;
-    return false;
+    if (decryptedAnswer == ENCRY_CHECK_STR)
+    {
+        debugLog("Key is correct");
+        return true;
+    }
+    else
+    {
+        debugLog("Key is wrong");
+        return false;
+    }
 }
 
 void initVault()
@@ -93,7 +107,20 @@ void initVault()
     }
     else
     {
-        // checkKey(); // doesnt work :(
+        if (checkKey() == false)
+        {
+
+            debugLog("Cleaning key, launching text dialog");
+            key = -1;
+            key = 0;
+            generalSwitch(textDialog);
+            display.fillScreen(GxEPD_WHITE);
+            setFont(&FreeSansBold9pt7b);
+            setTextSize(1);
+            simpleCenterText("Key is incorrect");
+            disUp(true);
+            return;
+        }
         int foundMenuIndex = -1;
         for (int i = 0; i < VAULT_ITEMS; i++)
         {
@@ -115,7 +142,9 @@ void initVault()
 
             initMenu(buttons, VAULT_ITEMS, "Vault", 1);
             generalSwitch(generalMenuPlace);
-        } else {
+        }
+        else
+        {
             showVaultImage(foundMenuIndex);
             generalSwitch(imagePlace);
             lastMenuSelected = "";
@@ -125,12 +154,13 @@ void initVault()
 
 void loopVault()
 {
-
 }
 
-void exitVault() {
+void exitVault()
+{
     debugLog("Exiting vault");
-    if(currentPlace == FIRST_PLACE) {
+    if (currentPlace == FIRST_PLACE)
+    {
         debugLog("Cleaning key");
         key = -1;
         key = 0;

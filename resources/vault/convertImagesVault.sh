@@ -102,9 +102,13 @@ done
 
 
 echo -e '' >> vault.h
-echo -n "encryption worked i think i suppose" | xxd -p | openssl enc -aes-128-cbc -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$random_salt" -base64 > encrypted_check.bin
+#echo -n "encryption worked i think i suppose" | xxd -p | openssl enc -aes-128-cbc -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$random_salt" -base64 > encrypted_check.bin
 
-xxd -i -n "encryptionCheck" encrypted_check.bin | sed 's/unsigned/const unsigned/g' >> vault.h
+echo -n "encryptionworked" | openssl enc -aes-128-ecb -nosalt -K "$(echo -n "$vault_password" | xxd -p -c 16)" -base64 | xxd -i -n "encryptionCheck" | sed 's/unsigned/const unsigned/g' >> vault.h
+echo -n "#define ENCRY_CHECK_STR \"encryptionworked\"" >> vault.h
+echo -e '' >> vault.h
+
+#echo -n "dpnjNowhalK8/5STdUoi37UEwWP7CQ2HqmY/XJMsjn0=" | xxd -i -n "encryptionCheck" | sed 's/unsigned/const unsigned/g' >> vault.h
 
 #cat encrypted_check.bin | base64 -d | openssl enc -aes-128-cbc -d -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$random_salt"
 
