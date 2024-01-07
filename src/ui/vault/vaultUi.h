@@ -10,8 +10,6 @@ void loopVault();
 void showVaultImage(int index);
 void exitVault();
 
-#if DEBUG
 void hexStringToByteArray(const char* hexString, unsigned char* byteArray, size_t byteArraySize);
-#endif
 
 #endif
