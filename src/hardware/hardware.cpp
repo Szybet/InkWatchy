@@ -17,7 +17,11 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
         debugLog("Watchy is waking up!");
     }
 #endif
-    setCpuMhz(minimalSpeed); // Implement a proper management for this
+#if DEBUG
+    setCpuMhz(maxSpeed); // Implement a proper management for this
+#else
+    setCpuMhz(minimalSpeed);
+#endif
     initRTC(isFromWakeUp, wakeUpReason);
     initButtons(isFromWakeUp);
     if(isFromWakeUp == false) {

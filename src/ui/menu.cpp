@@ -8,14 +8,19 @@ void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSiz
 {
   // A lot of funny problems right here!
   // memcpy(data.entryList, entryList, sizeof(entryList[0]) * totalMenus);
+  int realTotalMenus = 0;
   for (int i = 0; i < totalMenus; i++)
   {
-    data.entryList[i].text = entryList[i].text;
-    data.entryList[i].image = entryList[i].image;
-    data.entryList[i].function = entryList[i].function;
+    if (entryList[i].text != "")
+    {
+      data.entryList[realTotalMenus].text = entryList[i].text;
+      data.entryList[realTotalMenus].image = entryList[i].image;
+      data.entryList[realTotalMenus].function = entryList[i].function;
+      realTotalMenus = realTotalMenus + 1;
+    }
   }
 
-  data.totalMenus = totalMenus;
+  data.totalMenus = realTotalMenus;
   data.textSize = textSize;
   data.menuName = menuName;
   data.linesThick = linesThick;

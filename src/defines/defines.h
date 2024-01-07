@@ -57,6 +57,7 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #if VAULT
 #include "../ui/vault/vaultUi.h"
 #endif
+#include "../ui/pinInput/pinInput.h"
 #include "../network/wifi.h"
 #include "../network/ntp.h"
 #include "../network/weather.h"

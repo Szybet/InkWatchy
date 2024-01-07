@@ -40,19 +40,18 @@ void setup()
 #endif
 #endif
 
-  // turnOnWifi();
   initManager();
-  if(wakeUpReason != RTC_WAKEUP_REASON) {
+  if (wakeUpReason != RTC_WAKEUP_REASON)
+  {
     initButtonTask();
   }
 
-  showVaultImage(0);
 }
 
 void loop()
 {
   loopBattery();
-  //loopManager();
+  loopManager();
 
 #if DEBUG && EINK_COUNTER
   showEinkCounter();

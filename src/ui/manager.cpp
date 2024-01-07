@@ -40,23 +40,21 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
             currentMenuItem = menuSelectedTree[currentPlaceIndex];
             wasBacked = false;
         }
-        if (exitFunc != nullptr)
+
+        if (exitFuncGlob != nullptr)
         {
-            exitFuncGlob = exitFunc;
-        }
-        else
-        {
-            if (exitFuncGlob != nullptr)
-            {
-                debugLog("Executing exit func");
-                exitFuncGlob();
-                exitFuncGlob = nullptr;
-            }
+            debugLog("Executing exit func");
+            exitFuncGlob();
+            exitFuncGlob = nullptr;
         }
         if (initFunc != nullptr)
         {
             display.fillScreen(GxEPD_WHITE);
             initFunc();
+            if (exitFunc != nullptr)
+            {
+                exitFuncGlob = exitFunc;
+            }
         }
     }
 }
@@ -143,6 +141,28 @@ void loopManager()
 #if BOOK
         managerLaunchFunc(book, initBook, loopBook, exitBook);
 #endif
+        break;
+    }
+    case vault:
+    {
+#if VAULT
+        managerLaunchFunc(vault, initVault, loopVault, exitVault);
+#endif
+        break;
+    }
+    case imagePlace:
+    {
+        managerLaunchFunc(imagePlace, NULL, useButtonBlank);
+        break;
+    }
+    case inputPinPlace:
+    {
+        managerLaunchFunc(inputPinPlace, initPinInput, loopPinInput, exitPinInput);
+        break;
+    }
+    case generalMenuPlace:
+    {
+        managerLaunchFunc(generalMenuPlace, NULL, loopMenu);
         break;
     }
     }
