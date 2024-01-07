@@ -73,6 +73,7 @@ void initPinInput()
     {
         debugLog("pinInputVar is NULL, that's bad");
     }
+    newPin = "";
     currentPinButton = 5;
     setFont(&JackInput17pt7b);
     showPin();
