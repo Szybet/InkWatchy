@@ -27,7 +27,7 @@ Apart from code things, here are the key features for now:
 - Working, uncomplete watchface
 - Debug menus to check on things on the fly
 - Configuring the watch to not wake up every minute at night - adjustable hours and minutes - good for battery life
-- A "vault" which allows to save encrypted images to the watchy and view them if provided the correct PIN. All generated dynamically via a script. Uses AES128 cbc/ecb. I use it for as a backup phonebook
+- A "vault" which allows to save encrypted images to the watchy and view them if provided the correct PIN. All generated dynamically via a script. Uses AES128 cbc/ecb. Example use is a backup phone book
 
 ## Compiling
 1. You need to run the generate.sh file. As mentioned before it will convert images and fonts on the fly to header files
