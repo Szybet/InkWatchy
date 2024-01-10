@@ -19,6 +19,15 @@
                 "id": "file-binary",
                 "color": "terminal.ansiGreen"
               }
-        }
+        },
+        {
+            "label": "Patch wifi tool",
+            "type": "shell",
+            "command": "cd resources/other/wifiTool/ && ./patch.sh",
+            "icon": {
+                "id": "flame",
+                "color": "terminal.ansiGreen"
+              }
+        },
     ]
 }
