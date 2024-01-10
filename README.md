@@ -31,11 +31,11 @@ Apart from code things, here are the key features for now:
 - I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.
 
 ## Compiling
-1. You need to run the generate.sh file. As mentioned before it will convert images and fonts on the fly to header files
-   - Run it from the same directory it is placed in
+1. You need to run the generate.sh file in the resources folder. As mentioned before it will convert images and fonts on the fly to header files
+   - Run it from the same directory it is placed in via ```cd resources && ./generate.sh```
    - Look at the output if you need to install any packages
       - Don't assumie pio will download them. no.
-      - You need at least `2023-09-01` for xxd version to run
+      - You need xxd version '2023-09-01' or later to run generate.sh successfully.
 3. Adjust values in config.h and confidential.h to your needs.
    - You propably want to disable BOOK to make the code compile without it
    - You can also disable vault and wifi_tool - if not, you need to configure them
