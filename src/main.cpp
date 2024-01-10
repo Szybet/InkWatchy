@@ -81,6 +81,14 @@ void loop()
       sleepDelayMs = millis();
       return void();
     }
+#if WIFI_TOOL
+    if (wifiToolRunning == true)
+    {
+      debugLog("Wifi tool is running, waiting...");
+      sleepDelayMs = millis();
+      return void();
+    }
+#endif
     if (currentPlace != FIRST_PLACE)
     {
       debugLog("SLEEP_EVERY_MS runned out, Showing watchface");

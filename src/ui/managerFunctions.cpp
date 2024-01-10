@@ -3,7 +3,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[4];
+    entryMenu buttons[5];
 
     {
         count = count + 1;
@@ -22,7 +22,19 @@ void initMainMenu()
 #if VAULT
     {
         count = count + 1;
-        buttons[count] = {"Vault", &emptyImgPack, switchVault};
+        buttons[count] = {"Vault", &vaultImgPack, switchVault};
+    }
+#endif
+#if WIFI_TOOL
+    {
+        count = count + 1;
+        void (*wifiToolFunc)();
+        if(wifiToolRunning == true) {
+            wifiToolFunc = stopWifiTool;
+        } else {
+            wifiToolFunc = initWifiTool;
+        }
+        buttons[count] = {"Wifi tool: " + wifiToolStatus(), &wifiToolImgPack, wifiToolFunc};
     }
 #endif
 

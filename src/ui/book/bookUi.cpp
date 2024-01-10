@@ -7,7 +7,7 @@
 
 void resetSleepDelayBook()
 {
-    sleepDelayMs = millis() + ADD_SLEEP_DELAY_BOOK_MS;
+    sleepDelayMs = millis() + BOOK_ADD_SLEEP_DELAY_MS;
     debugLog("sleepDelayMs is:" + String(sleepDelayMs));
     debugLog("millis is:" + String(millis()));
 }
