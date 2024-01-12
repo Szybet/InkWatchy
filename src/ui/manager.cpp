@@ -16,6 +16,7 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
 {
     if (currentPlace == place)
     {
+        //debugLog("Executing loop function?");
         if (loopFunc != nullptr)
         {
             loopFunc();
@@ -49,10 +50,12 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
         }
         if (initFunc != nullptr)
         {
+            debugLog("Executing init function");
             display.fillScreen(GxEPD_WHITE);
             initFunc();
             if (exitFunc != nullptr)
             {
+                debugLog("Saving exit func");
                 exitFuncGlob = exitFunc;
             }
         }
@@ -84,6 +87,7 @@ void loopManager()
         }
     }
 
+    // Don't forget break...
     switch (placeTree[currentPlaceIndex])
     {
     case watchface:
@@ -147,6 +151,13 @@ void loopManager()
     {
 #if VAULT
         managerLaunchFunc(vault, initVault, loopVault, exitVault);
+#endif
+        break;
+    }
+    case apple:
+    {
+#if APPLE_JOKE
+        managerLaunchFunc(apple, initAppleJoke, loopAppleJoke, exitAppleJoke);
 #endif
         break;
     }

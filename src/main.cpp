@@ -89,6 +89,14 @@ void loop()
       return void();
     }
 #endif
+#if APPLE_JOKE
+    if (appleJokeRunning == true)
+    {
+      debugLog("Apple joke is running, waiting...");
+      sleepDelayMs = millis();
+      return void();
+    }
+#endif
     if (currentPlace != FIRST_PLACE)
     {
       debugLog("SLEEP_EVERY_MS runned out, Showing watchface");

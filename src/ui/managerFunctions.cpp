@@ -3,7 +3,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[5];
+    entryMenu buttons[6];
 
     {
         count = count + 1;
@@ -35,6 +35,12 @@ void initMainMenu()
             wifiToolFunc = initWifiTool;
         }
         buttons[count] = {"Wifi tool: " + wifiToolStatus(), &wifiToolImgPack, wifiToolFunc};
+    }
+#endif
+#if APPLE_JOKE
+    {
+        count = count + 1;
+        buttons[count] = {"Eating apples", &appleImgPack, switchApple};
     }
 #endif
 
