@@ -18,6 +18,7 @@ typedef enum
     weatherConditionMenu,
     book,
     vault,
+    apple,
     // General places now:
     inputPinPlace,
     generalMenuPlace,
@@ -55,6 +56,7 @@ void switchWeatherSelectorMenu();
 void switchBook();
 void switchVault();
 void switchBack();
+void switchApple();
 
 // Switches for weather
 void showTemp();

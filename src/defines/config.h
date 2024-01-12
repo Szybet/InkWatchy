@@ -29,9 +29,13 @@
 // Vault
 #define VAULT 1
 
+// Now external tools, so they are configured in platformio.ini
 // Wifi tool
-// Set via platformio env
-// #define WIFI_TOOL 0
+// In platformio!
+
+// Apple joke
+#define APPLE_JOKE_DEVICE_NAME "Airpods"
+#define APPLE_JOKE_DELAY 800 // The default one, it's changeable via up/down buttons
 
 // Advanced
 #define BUTTON_TASK_DELAY 140 // In ms, lower means faster button detection but more cpu usage

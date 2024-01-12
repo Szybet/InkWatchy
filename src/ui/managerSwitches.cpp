@@ -49,6 +49,10 @@ void switchBack() {
     setButton(Back);
 }
 
+void switchApple() {
+    generalSwitch(apple);
+}
+
 void showTemp()
 {
     debugLog("Launched");

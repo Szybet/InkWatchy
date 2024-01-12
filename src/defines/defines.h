@@ -60,6 +60,9 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #if WIFI_TOOL
 #include "../other/wifiTool/wifiTool.h"
 #endif
+#if APPLE_JOKE
+#include "../ui/appleJoke/appleJoke.h"
+#endif
 #include "../ui/pinInput/pinInput.h"
 #include "../network/wifi.h"
 #include "../network/ntp.h"
