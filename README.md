@@ -28,11 +28,17 @@ Apart from code things, here are the key features for now:
 - Debug menus to check on things on the fly
 - Configuring the watch to not wake up every minute at night - adjustable hours and minutes - good for battery life
 - A "vault" which allows to save encrypted images to the watchy and view them if provided the correct PIN. All generated dynamically via a script. Uses AES128 cbc/ecb. Example use is a backup phone book
+- I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.
 
 ## Compiling
-1. You need to run the generate.sh file. As mentioned before it will convert images and fonts on the fly to header files
-2. Adjust values in config.h and confidential.h to your needs.
+1. You need to run the generate.sh file in the resources folder. As mentioned before it will convert images and fonts on the fly to header files
+   - Run it from the same directory it is placed in via ```cd resources && ./generate.sh```
+   - Look at the output if you need to install any packages
+      - Don't assumie pio will download them. no.
+      - You need xxd version '2023-09-01' or later to run generate.sh successfully.
+3. Adjust values in config.h and confidential.h to your needs.
    - You propably want to disable BOOK to make the code compile without it
+   - You can also disable vault and wifi_tool - if not, you need to configure them
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
 
 ## Donations
