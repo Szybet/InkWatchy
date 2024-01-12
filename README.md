@@ -41,7 +41,7 @@ Apart from code things, here are the key features for now:
    - You propably want to disable BOOK to make the code compile without it
    - You can also disable vault and wifi_tool - if not, you need to configure them
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
-3. Read platformio.ini and choose your env. Don't use the default ones for reasons
+3. Read platformio.ini and choose your env. Don't use the default one for reasons
 
 ## Donations
 This was the first thing I have written and asked myself if I should release it for free. Well here we are - I also write other open source things - check my profile for more eink stuff. Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a option.
