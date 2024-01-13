@@ -10,6 +10,7 @@
 #define MENU_LINES false // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500 // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
+#define LONG_BACK_FULL_REFRESH 1 // Make a full refresh at long back button clicked
 
 // Book things
 #define BOOK 1
@@ -19,12 +20,19 @@
 #define BOOK_AX_Z_BACK_VALUE 500
 #define BOOK_AX_Y_BACK_VALUE 500
 #define BOOK_AX_X_TOLERANCE 150
+#define BOOK_ON_EXIT_GO_PAGE_BACK 1
 
 // Power savings
-#define NIGHT_SLEEP_FOR_M 15 // If it's 1 it doesn't apply, In minutes
+#define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
 #define NIGHT_SLEEP_AFTER_HOUR 23
 #define NIGHT_SLEEP_BEFORE_HOUR 5
 #define SLEEP_EVERY_MS 6000 //180000 // Goes to sleep timer, is resetted by button presses and other things
+#define POWER_SAVING_AFTER 60 // Turn on power saving features after a certain battery percantage.
+#define LOOP_NO_SCREEN_WRITE_DELAY_MS 200 // Go to sleep for 200 ms if the device is woken up ( in a menu for example )
+// For now those features are:
+// DISABLE_BUTTON_VIBRATION
+// DISABLE_WAKE_UP - don't wake up - at all
+// Those are also editable via vns storage
 
 // Vault
 #define VAULT 1
@@ -83,6 +91,8 @@
 #define RTC_INT_PIN 27
 
 // NVS
-#define NVS_CURRENT_PAGE "crp"
+#define NVS_BOOK_CURRENT_PAGE "crp"
+#define NVS_DISABLE_ALL_VIBRATION "dbv"
+#define NVS_DISABLE_WAKE_UP "dwu"
 
 #endif

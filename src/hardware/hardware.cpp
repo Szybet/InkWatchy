@@ -25,6 +25,7 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     initRTC(isFromWakeUp, wakeUpReason);
     initButtons(isFromWakeUp);
     if(isFromWakeUp == false) {
+        loadAllStorage();
         initBattery();
     }
     /*
@@ -90,6 +91,11 @@ void vibrateMotorTaskFun(void *parameter)
 
 void vibrateMotor(int vTime, bool add)
 {
+    if(disableAllVibration == true) {
+        debugLog("Vibrations are disabled");
+        return void();
+    }
+
     if (vibrateMotor != 0 && motorTaskRunning == false)
     {
         vibrateTime = vTime;
