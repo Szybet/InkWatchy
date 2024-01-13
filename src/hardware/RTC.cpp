@@ -33,15 +33,20 @@ void readRTC()
 void wakeUpManageRTC()
 {
   SRTC.clearAlarm();
-  if (NIGHT_SLEEP_FOR_M != 1 && (timeRTC.Hour >= NIGHT_SLEEP_AFTER_HOUR || timeRTC.Hour < NIGHT_SLEEP_BEFORE_HOUR))
+  if (disableWakeUp == false)
   {
-    debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
-    SRTC.atMinuteWake(timeRTC.Minute + NIGHT_SLEEP_FOR_M, true);
-  }
-  else
-  {
-    debugLog("Next minute wake up");
-    SRTC.nextMinuteWake(true);
+    if (NIGHT_SLEEP_FOR_M != 1 && (timeRTC.Hour >= NIGHT_SLEEP_AFTER_HOUR || timeRTC.Hour < NIGHT_SLEEP_BEFORE_HOUR))
+    {
+      debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
+      SRTC.atMinuteWake(timeRTC.Minute + NIGHT_SLEEP_FOR_M, true);
+    }
+    else
+    {
+      debugLog("Next minute wake up");
+      SRTC.nextMinuteWake(true);
+    }
+  } else {
+    debugLog("Not waking up, at all!");
   }
 }
 

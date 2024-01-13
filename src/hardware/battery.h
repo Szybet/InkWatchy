@@ -14,6 +14,7 @@ struct batteryInfo {
 };
 
 extern RTC_DATA_ATTR batteryInfo bat;
+extern RTC_DATA_ATTR bool isBatterySaving;
 
 double getBatteryVoltage();
 

@@ -82,6 +82,11 @@ void loopManager()
                 {
                     placeTree[i] = NoPlace;
                 }
+                if(LONG_BACK_FULL_REFRESH == true) {
+                    debugLog("Forcing full update because of long back button");
+                    dUChange = true;
+                    updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
+                }
                 currentPlaceIndex = 0;
             }
         }
@@ -133,6 +138,11 @@ void loopManager()
     case weatherConditionMenu:
     {
         managerLaunchFunc(weatherConditionMenu, initWeatherConditionMenu, loopMenu);
+        break;
+    }
+    case powerMenu:
+    {
+        managerLaunchFunc(powerMenu, initpowerMenu, loopMenu, saveAllStorage);
         break;
     }
     case ChartPlace:
