@@ -88,6 +88,9 @@ void loopWatchfaceLoop()
       setFont(DAY_NAME_FONT);
       String day = getDayName();
       day.toUpperCase();
+      while(day.length() < 5) {
+        day = day + " ";
+      }
       writeTextReplaceBack(day, DAY_NAME_CORD);
     }
 
