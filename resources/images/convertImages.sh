@@ -33,8 +33,24 @@ do
     echo -e '' >> images.h
 
     # On arch linux install xxd-standalone
-    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- | xxd -i -n $fnel | sed 's/unsigned/const unsigned/g' | sed '/_len = /d' >> images.h
-    echo -e "const ImageDef ${fnel}Pack = {${fnel}, ${fne}_WIDTH, ${fne}_HEIGHT};" >> images.h
+
+    echo -e -n "const unsigned char " >>images.h
+    echo -n "${fnel}" >>images.h
+    echo -e -n "[] = {\n" >>images.h
+
+    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- |  xxd -i  >> images.h
+
+    echo -e "};\n" >> images.h
+    echo -n "const unsigned int " >>images.h
+    echo -n -e "${fnel}" >> images.h
+    echo -n "d = " >>images.h
+    echo -n "(sizeof(" >>images.h
+    echo -n -e "$fnel" >>images.h
+    echo -n ")/sizeof(" >>images.h
+    echo -n -e "${fnel}" >>images.h
+    echo -n -e "[0])) ;\n" >>images.h
+
+    echo -n -e "const ImageDef ${fnel}Pack = {${fnel}, ${fne}_WIDTH, ${fne}_HEIGHT};" >> images.h
     echo -e '' >> images.h
 
 done
