@@ -33,6 +33,7 @@ do
     echo -e '' >> images.h
 
     # On arch linux install xxd-standalone
+    xxd_img_legacy() {
 
     echo -e -n "const unsigned char  ${fnel} [] = {\n" >>images.h
 
@@ -40,6 +41,9 @@ do
     echo -e "};\nconst unsigned int ${fnel}d =(sizeof($fnel)/sizeof(${fnel}[0])) ;\n"   >> images.h
 
     echo -n -e "const ImageDef ${fnel}Pack = {${fnel}, ${fne}_WIDTH, ${fne}_HEIGHT};\n" >> images.h
+    }
+
+    xxd_img_legacy
 
 done
 
