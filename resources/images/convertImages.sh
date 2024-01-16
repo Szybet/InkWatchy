@@ -35,7 +35,12 @@ do
     echo -e '' >> images.h
 
     # On arch linux install xxd-standalone
-     xxd_img_legacy $f $fnel $fne  images.h
+    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- |  xxd -i | xxd_wrapper $fnel $fne >>images.h
+
+
+
+
+     #xxd_img_legacy $f $fnel $fne  images.h
 
 done
 
