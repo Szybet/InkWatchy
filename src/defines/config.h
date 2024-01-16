@@ -12,7 +12,7 @@
 #define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
 
 // Book things
-#define BOOK 1
+#define BOOK 0
 #define BOOK_ADD_SLEEP_DELAY_MS 60000
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_UP 300
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_DOWN 250
@@ -27,11 +27,11 @@
 #define SLEEP_EVERY_MS 6000 //180000 // Goes to sleep timer, is resetted by button presses and other things
 
 // Vault
-#define VAULT 1
+#define VAULT 0
 
 // Wifi tool
 // Set via platformio env
-// #define WIFI_TOOL 0
+//#define WIFI_TOOL 0
 
 // Advanced
 #define BUTTON_TASK_DELAY 140 // In ms, lower means faster button detection but more cpu usage
