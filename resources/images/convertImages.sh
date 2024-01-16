@@ -1,4 +1,6 @@
 #!/bin/bash
+source $(dirname "$0")/../xxd_legacy.sh
+
 
 rm images.h 1>/dev/null 2>/dev/null
 touch images.h
@@ -33,17 +35,7 @@ do
     echo -e '' >> images.h
 
     # On arch linux install xxd-standalone
-    xxd_img_legacy() {
-
-    echo -e -n "const unsigned char  ${fnel} [] = {\n" >>images.h
-
-    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- |  xxd -i  >> images.h
-    echo -e "};\nconst unsigned int ${fnel}d =(sizeof($fnel)/sizeof(${fnel}[0])) ;\n"   >> images.h
-
-    echo -n -e "const ImageDef ${fnel}Pack = {${fnel}, ${fne}_WIDTH, ${fne}_HEIGHT};\n" >> images.h
-    }
-
-    xxd_img_legacy
+     xxd_img_legacy $f $fnel $fne  images.h
 
 done
 
