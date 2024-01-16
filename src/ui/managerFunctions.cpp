@@ -3,7 +3,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[5];
+    entryMenu buttons[8];
 
     {
         count = count + 1;
@@ -12,6 +12,10 @@ void initMainMenu()
     {
         count = count + 1;
         buttons[count] = {"Weather", &weatherImgPack, switchWeatherMenu};
+    }
+    {
+        count = count + 1;
+        buttons[count] = {"Power settings", &batteryImgPack, switchPowerMenu};
     }
 #if BOOK
     {
@@ -35,6 +39,13 @@ void initMainMenu()
             wifiToolFunc = initWifiTool;
         }
         buttons[count] = {"Wifi tool: " + wifiToolStatus(), &wifiToolImgPack, wifiToolFunc};
+    }
+#endif
+#if APPLE_JOKE
+    {
+        debugLog("Adding apple joke to menu");
+        count = count + 1;
+        buttons[count] = {"Eating apples", &appleImgPack, switchApple};
     }
 #endif
 
@@ -117,4 +128,47 @@ void initWeatherConditionMenu()
 
     entryMenu buttons[9] = {{"Temperature", &emptyImgPack, showTemp}, {"Pressure", &emptyImgPack, showPressure}, {"Humidity", &emptyImgPack, showHumidity}, {"Weather conditions", &emptyImgPack, showWeatherCond}, {"Cloudiness", &emptyImgPack, showClouds}, {"Wind speed", &emptyImgPack, showWindSpeed}, {"Wind guts", &emptyImgPack, showWindGuts}, {"Visibility", &emptyImgPack, showVisibility}, {"% of precipitation", &emptyImgPack, showPop}};
     initMenu(buttons, 9, "Weather stat", 1);
+}
+
+void toggleDisableVibrationsEntry() {
+    toggleAllVibration();
+    initpowerMenu();
+}
+
+void toggleWakeUpEntry() {
+    toggleWakeUp();
+    if(disableWakeUp == false) {
+        wakeUpManageRTC();
+    } else {
+        SRTC.clearAlarm(); 
+    }
+    initpowerMenu();
+}
+
+void initpowerMenu() {
+    int count = -1;
+    entryMenu buttons[2];
+
+    {
+        count = count + 1;
+        const ImageDef* image;
+        if(disableAllVibration == true) {
+            image = &acceptImgPack;
+        } else {
+            image = &crossImgPack;
+        }
+        buttons[count] = {"Vibrations disabled", image, toggleDisableVibrationsEntry};
+    }
+    {
+        count = count + 1;
+        const ImageDef* image;
+        if(disableWakeUp == true) {
+            image = &acceptImgPack;
+        } else {
+            image = &crossImgPack;
+        }
+        buttons[count] = {"Wake up disabled", image, toggleWakeUpEntry};
+    }
+    count = count + 1;
+    initMenu(buttons, count, "Power menu", 1);
 }

@@ -42,6 +42,7 @@ void initBattery()
     }
 }
 
+bool isBatterySaving = false;
 void loopBattery()
 {
     bat.curV = getBatteryVoltage();
@@ -57,6 +58,17 @@ void loopBattery()
     else
     {
         bat.isCharging = false;
+    }
+
+    if(isBatterySaving == false && bat.percentage < POWER_SAVING_AFTER) {
+        debugLog("Turning on power settings");
+        isBatterySaving = true;
+        disableAllVibration = true;
+        disableWakeUp = true;
+    } else if(isBatterySaving == true && bat.percentage + 5 > POWER_SAVING_AFTER) {
+        debugLog("Turning off power settings");
+        isBatterySaving = false;
+        loadAllStorage();
     }
 }
 
