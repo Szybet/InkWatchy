@@ -14,12 +14,12 @@ void resetSleepDelayBook()
 
 int getPageNumber()
 {
-    return NVS.getInt(NVS_CURRENT_PAGE, 0);
+    return NVS.getInt(NVS_BOOK_CURRENT_PAGE, 0);
 }
 
 void setPageNumber(int page)
 {
-    NVS.setInt(NVS_CURRENT_PAGE, page, false); // We commit in exit
+    NVS.setInt(NVS_BOOK_CURRENT_PAGE, page, false); // We commit in exit
 }
 
 String test = "jqyQRTY";
@@ -78,6 +78,10 @@ void initBook()
 
 void exitBook()
 {
+    if(BOOK_ON_EXIT_GO_PAGE_BACK == true) {
+        debugLog("Going page back because of BOOK_ON_EXIT_GO_PAGE_BACK");
+        changePageDown();
+    }
     bool comm = NVS.commit();
     debugLog("Commit status: " + BOOL_STR(comm));
     deInitAxc();

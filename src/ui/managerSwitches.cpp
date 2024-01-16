@@ -41,12 +41,20 @@ void switchWeatherSelectorMenu()
     generalSwitch(weatherConditionMenu);
 }
 
+void switchPowerMenu() {
+    generalSwitch(powerMenu);
+}
+
 void switchVault() {
     generalSwitch(vault);
 }
 
 void switchBack() {
     setButton(Back);
+}
+
+void switchApple() {
+    generalSwitch(apple);
 }
 
 void showTemp()

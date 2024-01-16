@@ -58,7 +58,7 @@ void initWatchfaceDisplay()
   batteryPercantageWF = bat.percentage;
   drawProgressBar(BATT_BAR_CORD, TO_DAY_BAR_SIZE, batteryPercantageWF);
 
-  disUp(true);
+  disUp(true, false, true);
 }
 
 void loopWatchfaceLoop()
@@ -88,6 +88,9 @@ void loopWatchfaceLoop()
       setFont(DAY_NAME_FONT);
       String day = getDayName();
       day.toUpperCase();
+      while(day.length() < 5) {
+        day = day + " ";
+      }
       writeTextReplaceBack(day, DAY_NAME_CORD);
     }
 
@@ -153,7 +156,7 @@ void loopWatchfaceLoop()
   }
   //}
 
-  disUp(dUChange, true);
+  disUp(dUChange, true, true);
 }
 
 int calculatePercentageOfDay(int hour, int minute)

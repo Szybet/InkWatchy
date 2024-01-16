@@ -1,6 +1,10 @@
 #!/bin/sh
 if [ $# -lt 1 ]; then
     file=../../../.pio/build/ink_watchy_wifi_tool/firmware.elf
+    if [ ! -e "$file" ]; then
+        echo "File doesn't exist, using max path"
+        file=../../../.pio/build/max/firmware.elf
+    fi
 else
     file=$1
 fi

@@ -16,6 +16,7 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
 {
     if (currentPlace == place)
     {
+        //debugLog("Executing loop function?");
         if (loopFunc != nullptr)
         {
             loopFunc();
@@ -49,10 +50,12 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
         }
         if (initFunc != nullptr)
         {
+            debugLog("Executing init function");
             display.fillScreen(GxEPD_WHITE);
             initFunc();
             if (exitFunc != nullptr)
             {
+                debugLog("Saving exit func");
                 exitFuncGlob = exitFunc;
             }
         }
@@ -79,11 +82,17 @@ void loopManager()
                 {
                     placeTree[i] = NoPlace;
                 }
+                if(LONG_BACK_FULL_REFRESH == true) {
+                    debugLog("Forcing full update because of long back button");
+                    dUChange = true;
+                    updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
+                }
                 currentPlaceIndex = 0;
             }
         }
     }
 
+    // Don't forget break...
     switch (placeTree[currentPlaceIndex])
     {
     case watchface:
@@ -131,6 +140,11 @@ void loopManager()
         managerLaunchFunc(weatherConditionMenu, initWeatherConditionMenu, loopMenu);
         break;
     }
+    case powerMenu:
+    {
+        managerLaunchFunc(powerMenu, initpowerMenu, loopMenu, saveAllStorage);
+        break;
+    }
     case ChartPlace:
     {
         managerLaunchFunc(ChartPlace, NULL, useButtonBlank);
@@ -147,6 +161,13 @@ void loopManager()
     {
 #if VAULT
         managerLaunchFunc(vault, initVault, loopVault, exitVault);
+#endif
+        break;
+    }
+    case apple:
+    {
+#if APPLE_JOKE
+        managerLaunchFunc(apple, initAppleJoke, loopAppleJoke, exitAppleJoke);
 #endif
         break;
     }

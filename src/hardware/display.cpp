@@ -35,15 +35,18 @@ void initDisplay(bool isFromWakeUp)
 RTC_DATA_ATTR int updateCounter = 0;
 bool dUChange = false;
 // Display update
-void disUp(bool reallyUpdate, bool ignoreCounter)
+void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
 {
+    debugLog("dis up executed");
+    bool updatedScreen = false;
     if (dUChange == true || reallyUpdate == true)
     {
         dUChange = false;
-        if (updateCounter > FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
+        if (updateCounter >= FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
         {
             updateCounter = 0;
             display.display(FULL_UPDATE);
+            updatedScreen = true;
         }
         else
         {
@@ -52,7 +55,12 @@ void disUp(bool reallyUpdate, bool ignoreCounter)
                 updateCounter += 1;
             }
             display.display(PARTIAL_UPDATE);
+            updatedScreen = true;
         }
+    }
+    if(ignoreSleep == false && updatedScreen == false) {
+        debugLog("Sleeping task because display had no update");
+        delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
     }
 }
 

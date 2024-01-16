@@ -16,8 +16,10 @@ typedef enum
     wifiDebug,
     weatherMenu,
     weatherConditionMenu,
+    powerMenu,
     book,
     vault,
+    apple,
     // General places now:
     inputPinPlace,
     generalMenuPlace,
@@ -41,6 +43,7 @@ void initDebugMenu();
 void initWeatherMenu();
 extern int weatherDayChoosed;
 void initWeatherConditionMenu();
+void initpowerMenu();
 
 // Manager switches
 void generalSwitch(UiPlace place);
@@ -52,9 +55,12 @@ void switchBatteryDebug();
 void switchWifiDebug();
 void switchWeatherMenu();
 void switchWeatherSelectorMenu();
+void switchPowerMenu();
+
 void switchBook();
 void switchVault();
 void switchBack();
+void switchApple();
 
 // Switches for weather
 void showTemp();

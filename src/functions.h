@@ -6,7 +6,7 @@
 void logFunction(String file, int line, String func, String message);
 bool containsBelowChar(String str);
 void delayTask(int timeMs);
-void checkMaxMin(int *value, int max, int min = 0);
+void checkMaxMin(int *value, int max, int min = 0, bool wrapback = true);
 String strTime(time_t unixTime);
 
 float findHighest(float* numbers, int size);
