@@ -37,6 +37,7 @@ do
     # On arch linux install xxd-standalone
     convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- |  xxd -i | xxd_wrapper $fnel $fne >>images.h
 
+    echo -n -e "const ImageDef ${fnel}Pack = {${fnel}, ${fne}_WIDTH, ${fne}_HEIGHT};\n" >>images.h 
 
 
 
