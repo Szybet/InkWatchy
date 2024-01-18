@@ -1,12 +1,6 @@
 #ifndef CONFIDETNIAL_H
 #define CONFIDETNIAL_H
 
-// To update this file in remote repository, remove your changes, then
-// git update-index --no-assume-unchanged src/defines/confidential.h
-// Commit your changes, then to avoid accidentally pushing sensitive data:
-// git update-index --assume-unchanged src/defines/confidential.h
-// https://stackoverflow.com/questions/71263349/vscode-ignore-files-without-using-gitignore
-
 #define WIFI_SSID1 ""
 #define WIFI_PASS1 ""
 
