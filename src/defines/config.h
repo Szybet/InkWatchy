@@ -13,7 +13,7 @@
 #define LONG_BACK_FULL_REFRESH 1 // Make a full refresh at long back button clicked
 
 // Book things
-#define BOOK 1
+#define BOOK 0
 #define BOOK_ADD_SLEEP_DELAY_MS 60000
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_UP 300
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_DOWN 250
@@ -35,7 +35,7 @@
 // Those are also editable via vns storage
 
 // Vault
-#define VAULT 1
+#define VAULT 0
 
 // Now external tools, so they are configured in platformio.ini
 // Wifi tool

@@ -1,4 +1,5 @@
 #!/bin/bash
+source ../global_functions.sh
 
 rm images.h 1>/dev/null 2>/dev/null
 touch images.h
@@ -33,7 +34,8 @@ do
     echo -e '' >> images.h
 
     # On arch linux install xxd-standalone
-    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- | xxd -i -n $fnel | sed 's/unsigned/const unsigned/g' | sed '/_len = /d' >> images.h
+    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- | xxd_wrapper -i -n $fnel >> images.h
+
     echo -e "const ImageDef ${fnel}Pack = {${fnel}, ${fne}_WIDTH, ${fne}_HEIGHT};" >> images.h
     echo -e '' >> images.h
 
