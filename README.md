@@ -1,7 +1,7 @@
 # InkWatchy
 A new **firmware** written for the [watchy](https://watchy.sqfmi.com/) written by the second developer of [InkBox OS](https://inkbox.ddns.net/)
 
-### Demo
+### Outdated demo
 https://www.youtube.com/watch?v=gFOCqalJidQ
 
 ## Code features
@@ -36,11 +36,11 @@ Apart from code things, here are the key features for now:
 - https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.
 
 ## Compiling
-1. You need to run the `generate.sh` in the resources folder. As mentioned before it will convert images and fonts on the fly to header files
+1. You need to run the `generate.sh` in the `resources` folder. As mentioned before it will convert images and fonts on the fly to header files
    - Run it from the same directory it is placed in via, for example `cd resources && ./generate.sh`
    - Look at the output if you need to install any packages
       - Don't assumie pio will download them. no.
-3. Run `generate_config.sh` also in the resource folder. After that you can just values in `config.h` and `confidential.h` (in `/src/defines/` directory) to your needs.
+3. Run `generate_config.sh` also in the `resources` folder. After that you can just values in `config.h` and `confidential.h` (in `/src/defines/` directory) to your needs.
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
 4. Read platformio.ini and choose your env. Don't use the default one for reasons. You propably want to select the `min` one.
 
