@@ -1,11 +1,14 @@
 #!/bin/bash
+source ../global_functions.sh
 
-fontconvert="../../.pio/libdeps/InkWatchy/Adafruit GFX Library/fontconvert/fontconvert"
+pio_env=$(get_pio_env)
+
+fontconvert="../../.pio/libdeps/$pio_env/Adafruit GFX Library/fontconvert/fontconvert"
 if [ -e "$fontconvert" ]; then
     echo "fontconvert exists"
 else
     echo "fontconvert does not exist, creating it..."
-    cd ../../.pio/libdeps/InkWatchy/Adafruit\ GFX\ Library/fontconvert/
+    cd ../../.pio/libdeps/$pio_env/Adafruit\ GFX\ Library/fontconvert/
     make -j$(nproc)
     cd ../../../../../resources/fonts/
     if [ ! -e "$fontconvert" ]; then

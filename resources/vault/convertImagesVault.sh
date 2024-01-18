@@ -1,4 +1,5 @@
 #!/bin/bash
+source ../global_functions.sh
 
 count=0
 vault_list_length="const unsigned int vaultListLength[] = {"
