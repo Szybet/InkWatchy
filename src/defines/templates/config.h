@@ -11,6 +11,8 @@
 #define BUTTON_LONG_PRESS_MS 500 // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
 #define LONG_BACK_FULL_REFRESH 1 // Make a full refresh at long back button clicked
+#define SYNC_WIFI 1 // Sync wifi - only if it's being charger and after the delay below
+#define SYNC_WIFI_SINCE_LAST_DELAY_S 72000 // 20h
 
 // Book things
 #define BOOK 0
@@ -58,6 +60,7 @@
 #define SCREEN_SLEEP_INFO 0 // Shows information on screen when the device goes to screen
 #define DRAW_DEBUG_RECT 0   // Shows rectangles where custom functions write bitmaps
 #define DUMP_LOOP_DELAY 5000 // delay in ms of dumping loop data
+#define SPEED_THROUGH_TIME 0 // Speeds up time for watchface programming
 
 // Display init magic ;)
 #define EPD_CS 5

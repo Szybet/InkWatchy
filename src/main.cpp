@@ -45,16 +45,46 @@ void setup()
   {
     initButtonTask();
   }
-
 }
 
 void loop()
 {
   loopBattery();
+  regularSync();
   loopManager();
 
 #if DEBUG && EINK_COUNTER
   showEinkCounter();
+#endif
+
+#if DEBUG && SPEED_THROUGH_TIME
+  debugLog("Speeding time");
+  timeRTC.Minute = timeRTC.Minute + 1;
+  if (String(timeRTC.Minute).indexOf("5") != -1)
+  {
+    timeRTC.Hour = timeRTC.Hour + 1;
+    timeRTC.Day = timeRTC.Day + 1;
+    //timeRTC.Month = timeRTC.Month + 1; // We rely on previous day to clean up so this makes things break
+  }
+  if (timeRTC.Minute == 60)
+  {
+    timeRTC.Minute = 0;
+    timeRTC.Hour = timeRTC.Hour + 1;
+  }
+  if (timeRTC.Hour == 24)
+  {
+    timeRTC.Hour = 0;
+  }
+  if (timeRTC.Day == 32)
+  {
+    timeRTC.Day = 1;
+  }
+  if (timeRTC.Month == 12)
+  {
+    timeRTC.Month = 0;
+  }
+  saveRTC();
+  return;
 #endif
 
 #if DEBUG && (DUMP_LOOP_DEBUG || DUMP_LOOP_SOFTWARE_DEBUG)

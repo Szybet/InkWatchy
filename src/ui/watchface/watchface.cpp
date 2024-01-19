@@ -1,6 +1,10 @@
 #include "watchface.h"
 
-#define TIME_CORD 10, 53
+#define TIME_LETTERS_SPACING 32 // It differs, see below - so not it's static
+#define TIME_CORD_X 11
+#define TIME_CORD_Y 53
+#define TIME_CORD TIME_CORD_X, TIME_CORD_Y
+
 #define DAY_NAME_CORD 13, 87
 #define DATE_CORD 8, 113
 #define MONTH_NAME_CORD 48, 109
@@ -21,10 +25,92 @@ RTC_DATA_ATTR tmElements_t wFTime;
 RTC_DATA_ATTR int percentOfDay;
 RTC_DATA_ATTR int batteryPercantageWF;
 
+/*
+// Even with monospaced font, it differs a bit...
+{
+  String who = "1234567890:";
+  uint16_t ww;
+  for (int i = 0; i < who.length(); i++)
+  {
+    String hh = String(who[i]);
+    getTextBounds(hh, NULL, NULL, &ww, NULL);
+    debugLog(hh + " " + String(ww));
+  }
+}
+
+: 1 29
+: 2 32
+: 3 32
+: 4 32
+: 5 32
+: 6 31
+: 7 30
+: 8 31
+: 9 31
+: 0 31
+: : 12
+*/
+
+void writeTimeMinimal()
+{
+  debugLog("Called");
+  setTextSize(1);
+  setFont(TIME_FONT);
+  String oldTime = getHourMinute(&wFTime);
+  String newTime = getHourMinute();
+
+  for (int i = 0; i < 5; i++)
+  {
+    if (oldTime[i] != newTime[i])
+    {
+      String toWrite = String(newTime[i]);
+      String oldWrite = String(oldTime[i]);
+      String beforeString = oldTime.substring(0, i);
+      String afterString = oldTime.substring(0, i + 1);
+      //debugLog("beforeString: " + beforeString);
+      //debugLog("afterString: " + afterString);
+
+      //uint16_t wBefore;
+      //getTextBounds(beforeString, NULL, NULL, &wBefore, NULL);
+      //debugLog("wBefore: " + String(wBefore));
+
+      uint16_t wAfter;
+      getTextBounds(afterString, NULL, NULL, &wAfter, NULL);
+      //debugLog("wAfter: " + String(wAfter));
+
+      uint16_t wToWrite;
+      uint16_t hToWrite;
+      getTextBounds(oldWrite, NULL, NULL, &wToWrite, &hToWrite);
+      //debugLog("wToWrite: " + String(wToWrite));
+      //debugLog("hToWrite: " + String(hToWrite));
+
+      uint16_t finalWidthStart = wAfter - wToWrite;
+      //debugLog("finalWidthStart: " + String(finalWidthStart));
+
+      //debugLog("Writing to screen: " + toWrite);
+      display.fillRect(TIME_CORD_X + finalWidthStart, TIME_CORD_Y - hToWrite, TIME_LETTERS_SPACING, hToWrite, GxEPD_WHITE); // Clear things up
+      writeTextReplaceBack(toWrite, TIME_CORD_X + finalWidthStart, TIME_CORD_Y);
+    }
+  }
+
+  wFTime.Minute = timeRTC.Minute;
+  wFTime.Hour = timeRTC.Hour;
+}
+
 void initWatchfaceDisplay()
 {
   debugLog("Executing init watch face");
-  wFTime = timeRTC;
+  // Idk?
+  // wFTime = timeRTC;
+  wFTime.Second = timeRTC.Second;
+  wFTime.Minute = timeRTC.Minute;
+  wFTime.Hour = timeRTC.Hour;
+  wFTime.Day = timeRTC.Day;
+  wFTime.Month = timeRTC.Month;
+  wFTime.Year = timeRTC.Year;
+  //dumpRTCTime(wFTime);
+  //dumpRTCTime(timeRTC);
+
   writeImageN(0, 0, watchfaceImgPack);
 
   setTextSize(1);
@@ -67,12 +153,8 @@ void loopWatchfaceLoop()
   if (wFTime.Minute != timeRTC.Minute)
   {
     dUChange = true;
-    wFTime.Minute = timeRTC.Minute;
-    wFTime.Hour = timeRTC.Hour;
 
-    setTextSize(1);
-    setFont(TIME_FONT);
-    writeTextReplaceBack(getHourMinute(), TIME_CORD);
+    writeTimeMinimal();
 
     if (wFTime.Day != timeRTC.Day)
     {
@@ -88,9 +170,13 @@ void loopWatchfaceLoop()
       setFont(DAY_NAME_FONT);
       String day = getDayName();
       day.toUpperCase();
-      while(day.length() < 5) {
-        day = day + " ";
-      }
+
+      String previousDay = getDayName(-1);
+      previousDay.toUpperCase();
+      uint16_t wDay;
+      uint16_t hDay;
+      getTextBounds(previousDay, NULL, NULL, &wDay, &hDay);
+      display.fillRect(DAY_NAME_CORD - hDay, wDay + 1, hDay + 1, GxEPD_WHITE); // Clear things up
       writeTextReplaceBack(day, DAY_NAME_CORD);
     }
 

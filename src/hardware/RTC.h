@@ -12,14 +12,16 @@ void readRTC();
 void wakeUpManageRTC();
 void alarmManageRTC();
 
-String getHourMinute();
-String getDayName();
+// Not using reference made it... really broken
+String getHourMinute(tmElements_t* timeEl = &timeRTC);
+String getDayName(int offset = 0);
 String getMonthName(int monthNumber);
+long getUnixTime();
 
 #if DEBUG
 void initRTCDebug();
 void loopRTCDebug();
-void dumpRTCTime();
+void dumpRTCTime(tmElements_t* timeEl = &timeRTC);
 #endif
 
 #endif

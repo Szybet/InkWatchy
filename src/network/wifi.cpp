@@ -58,6 +58,7 @@ void initWifi()
     }
 }
 
+RTC_DATA_ATTR long lastSyncUnix = 0;
 void turnOnWifiTask(void *parameter)
 {
     debugLog("Turning wifi on");
@@ -65,7 +66,7 @@ void turnOnWifiTask(void *parameter)
     for (int i = 0; i < 15; i++)
     {
         WiFi.mode(WIFI_STA);
-        //WiFi.setSleep(WIFI_PS_NONE);
+        // WiFi.setSleep(WIFI_PS_NONE);
         WiFi.setAutoConnect(true);
         WiFi.setAutoReconnect(true);
         initWifi();
@@ -80,8 +81,12 @@ void turnOnWifiTask(void *parameter)
             turnOffWifi();
         }
     }
-    syncNtp();
-    syncWeather();
+    if (WiFi.status() == WL_CONNECTED)
+    {
+        syncNtp();
+        syncWeather();
+        lastSyncUnix = getUnixTime();
+    }
     sleepDelayMs = millis(); // reset sleep delay
     isWifiTaskRunning = false;
     turnOffWifi();
@@ -119,7 +124,7 @@ void turnOffWifi()
 int getSignalStrength()
 {
     int rssi = WiFi.RSSI();
-    //debugLog("Pure RSSI:" + String(rssi));
+    // debugLog("Pure RSSI:" + String(rssi));
     if (rssi == 0)
     {
         return 0;
@@ -136,6 +141,15 @@ int getSignalStrength()
 
     int percentage = map(rssi, MIN_RSSI, MAX_RSSI, 0, 100);
     return percentage;
+}
+
+void regularSync() {
+    if(SYNC_WIFI == 1 && (getUnixTime() - lastSyncUnix > SYNC_WIFI_SINCE_LAST_DELAY_S) && bat.isCharging == true) {
+        debugLog("Regular sync going on");
+        turnOnWifi();
+    } else {
+        debugLog("Not doing regular sync: " + String(getUnixTime() - lastSyncUnix) + " " + BOOL_STR(bat.isCharging));
+    }
 }
 
 #if DEBUG == 1 || DEBUG_MENUS == 1
