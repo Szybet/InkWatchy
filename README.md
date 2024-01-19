@@ -1,7 +1,7 @@
 # InkWatchy
 A new **firmware** written for the [watchy](https://watchy.sqfmi.com/) written by the second developer of [InkBox OS](https://inkbox.ddns.net/)
 
-### Demo
+### Outdated demo
 https://www.youtube.com/watch?v=gFOCqalJidQ
 
 ## Code features
@@ -36,16 +36,13 @@ Apart from code things, here are the key features for now:
 - https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.
 
 ## Compiling
-1. You need to run the generate.sh file in the resources folder. As mentioned before it will convert images and fonts on the fly to header files
-   - Run it from the same directory it is placed in via ```cd resources && ./generate.sh```
+1. You need to run the `generate.sh` in the `resources` folder. As mentioned before it will convert images and fonts on the fly to header files
+   - Run it from the same directory it is placed in via, for example `cd resources && ./generate.sh`
    - Look at the output if you need to install any packages
       - Don't assumie pio will download them. no.
-      - You need xxd version '2023-09-01' or later to run generate.sh successfully.
-2. Adjust values in config.h and confidential.h to your needs.
-   - You propably want to disable BOOK to make the code compile without it
-   - You can also disable vault and wifi_tool - if not, you need to configure them
+3. Run `generate_config.sh` also in the `resources` folder. After that you can ajust values in `config.h` and `confidential.h` (in `/src/defines/` directory) to your needs.
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
-3. Read platformio.ini and choose your env. Don't use the default one for reasons
+4. Read platformio.ini and choose your env. Don't use the default one for reasons. You propably want to select the `min` one.
 
 ## Donations
 This was the first thing I have written and asked myself if I should release it for free. Well here we are - I also write other open source things - check my profile for more eink stuff. Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a option.
