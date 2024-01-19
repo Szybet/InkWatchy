@@ -39,7 +39,7 @@ void wakeUpManageRTC()
     if (NIGHT_SLEEP_FOR_M != 1 && (timeRTC.Hour >= NIGHT_SLEEP_AFTER_HOUR || timeRTC.Hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
       debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
-      dumpRTCTime();
+      isDebug(dumpRTCTime());
       SRTC.atMinuteWake(timeRTC.Minute + NIGHT_SLEEP_FOR_M, true);
     }
     else
