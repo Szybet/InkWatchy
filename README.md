@@ -40,7 +40,7 @@ Apart from code things, here are the key features for now:
    - Run it from the same directory it is placed in via, for example `cd resources && ./generate.sh`
    - Look at the output if you need to install any packages
       - Don't assumie pio will download them. no.
-3. Run `generate_config.sh` also in the `resources` folder. After that you can just values in `config.h` and `confidential.h` (in `/src/defines/` directory) to your needs.
+3. Run `generate_config.sh` also in the `resources` folder. After that you can ajust values in `config.h` and `confidential.h` (in `/src/defines/` directory) to your needs.
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
 4. Read platformio.ini and choose your env. Don't use the default one for reasons. You propably want to select the `min` one.
 
