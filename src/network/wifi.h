@@ -3,11 +3,13 @@
 
 #include "defines/defines.h"
 
+extern bool isWifiTaskRunning;
+
 void initWifi();
 void turnOnWifi();
 void turnOffWifi();
 int getSignalStrength();
-extern bool isWifiTaskRunning;
+void regularSync();
 
 #if DEBUG || DEBUG_MENUS == 1
 String wifiStatus();

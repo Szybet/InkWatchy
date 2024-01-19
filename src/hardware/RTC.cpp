@@ -35,9 +35,11 @@ void wakeUpManageRTC()
   SRTC.clearAlarm();
   if (disableWakeUp == false)
   {
+    debugLog("timeRTC.Hour: " + String(timeRTC.Hour));
     if (NIGHT_SLEEP_FOR_M != 1 && (timeRTC.Hour >= NIGHT_SLEEP_AFTER_HOUR || timeRTC.Hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
       debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
+      dumpRTCTime();
       SRTC.atMinuteWake(timeRTC.Minute + NIGHT_SLEEP_FOR_M, true);
     }
     else
@@ -45,7 +47,9 @@ void wakeUpManageRTC()
       debugLog("Next minute wake up");
       SRTC.nextMinuteWake(true);
     }
-  } else {
+  }
+  else
+  {
     debugLog("Not waking up, at all!");
   }
 }
@@ -60,15 +64,16 @@ void alarmManageRTC()
   }
 }
 
-String getHourMinute()
+String getHourMinute(tmElements_t *timeEl)
 {
-  String h = String(timeRTC.Hour);
+  isDebug(dumpRTCTime(timeEl));
+  String h = String(timeEl->Hour);
   if (h.length() == 1)
   {
     h = "0" + h;
   }
 
-  String m = String(timeRTC.Minute);
+  String m = String(timeEl->Minute);
   if (m.length() == 1)
   {
     m = "0" + m;
@@ -79,12 +84,14 @@ String getHourMinute()
   return answer;
 }
 
-String getDayName()
+String getDayName(int offset)
 {
-  int unixTime = SRTC.MakeTime(timeRTC);
+  long unixTime = SRTC.MakeTime(timeRTC);
   int weekDay = weekday(unixTime);
   debugLog("unixTime: " + String(unixTime));
   debugLog("weekDay reported: " + String(weekDay));
+  weekDay = weekDay + offset;
+  checkMaxMin(&weekDay, 7, 1);
   switch (weekDay)
   {
   case 1:
@@ -104,6 +111,11 @@ String getDayName()
   default:
     return "How??";
   }
+}
+
+long getUnixTime()
+{
+  return SRTC.MakeTime(timeRTC);
 }
 
 String getMonthName(int monthNumber)
@@ -135,6 +147,12 @@ String getMonthName(int monthNumber)
     return "Nov";
   case 11:
     return "Dec";
+  case 255:
+  {
+    // How?
+    timeRTC.Month = 0;
+    return "Jan";
+  }
   default:
     return "Inv";
   }
@@ -154,14 +172,14 @@ void loopRTCDebug()
   debugLog("SRTC.temperature(): " + String(SRTC.temperature()));
 }
 
-void dumpRTCTime()
+void dumpRTCTime(tmElements_t *timeEl)
 {
   readRTC();
-  debugLog("Second: " + String(timeRTC.Second));
-  debugLog("Minute: " + String(timeRTC.Minute));
-  debugLog("Hour: " + String(timeRTC.Hour));
-  debugLog("Day: " + String(timeRTC.Day));
-  debugLog("Month: " + String(timeRTC.Month));
-  debugLog("Year: " + String(timeRTC.Year));
+  debugLog("Second: " + String(timeEl->Second));
+  debugLog("Minute: " + String(timeEl->Minute));
+  debugLog("Hour: " + String(timeEl->Hour));
+  debugLog("Day: " + String(timeEl->Day));
+  debugLog("Month: " + String(timeEl->Month));
+  debugLog("Year: " + String(timeEl->Year));
 }
 #endif
