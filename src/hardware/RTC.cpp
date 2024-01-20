@@ -36,6 +36,8 @@ void wakeUpManageRTC()
   if (disableWakeUp == false)
   {
     debugLog("timeRTC.Hour: " + String(timeRTC.Hour));
+    // Watchy 2.0 has problems here... Idk?
+    readRTC();
     if (NIGHT_SLEEP_FOR_M != 1 && (timeRTC.Hour >= NIGHT_SLEEP_AFTER_HOUR || timeRTC.Hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
       debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
@@ -163,6 +165,7 @@ void initRTCDebug()
 {
   debugLog("Get RTC battery level: " + String(SRTC.getRTCBattery(false)));
   debugLog("Get critical RTC battery level: " + String(SRTC.getRTCBattery(true)));
+  debugLog("Get RTC type used: " + String(SRTC.getType()));
 }
 
 void loopRTCDebug()
