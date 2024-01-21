@@ -1,8 +1,13 @@
 #include "RTC.h"
 
-RTC_DATA_ATTR tmElements_t timeRTC;
+tmElements_t* timeRTC;
 
 RTC_DATA_ATTR SmallRTC SRTC;
+
+void setupTimeStructure() {
+  debugLog("Created time memory");
+  timeRTC = new tmElements_t;
+}
 
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
@@ -14,6 +19,7 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
   }
   if (wakeUpReason != RTC_WAKEUP_REASON)
   {
+    setupTimeStructure();
     readRTC();
     wakeUpManageRTC();
   }
@@ -21,13 +27,13 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 
 void saveRTC()
 {
-  SRTC.set(timeRTC);
+  SRTC.set(*timeRTC);
 }
 
 void readRTC()
 {
   debugLog("Reading RTC");
-  SRTC.read(timeRTC);
+  SRTC.read(*timeRTC);
 }
 
 void wakeUpManageRTC()
@@ -35,14 +41,15 @@ void wakeUpManageRTC()
   SRTC.clearAlarm();
   if (disableWakeUp == false)
   {
-    debugLog("timeRTC.Hour: " + String(timeRTC.Hour));
+    isDebug(dumpRTCTime());
+    int hour = timeRTC->Hour;
+    debugLog("timeRTC->Hour: " + String(hour));
     // Watchy 2.0 has problems here... Idk?
-    readRTC();
-    if (NIGHT_SLEEP_FOR_M != 1 && (timeRTC.Hour >= NIGHT_SLEEP_AFTER_HOUR || timeRTC.Hour < NIGHT_SLEEP_BEFORE_HOUR))
+    if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
       debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
       isDebug(dumpRTCTime());
-      SRTC.atMinuteWake(timeRTC.Minute + NIGHT_SLEEP_FOR_M, true);
+      SRTC.atMinuteWake(timeRTC->Minute + NIGHT_SLEEP_FOR_M, true);
     }
     else
     {
@@ -88,7 +95,7 @@ String getHourMinute(tmElements_t *timeEl)
 
 String getDayName(int offset)
 {
-  long unixTime = SRTC.MakeTime(timeRTC);
+  long unixTime = SRTC.MakeTime(*timeRTC);
   int weekDay = weekday(unixTime);
   debugLog("unixTime: " + String(unixTime));
   debugLog("weekDay reported: " + String(weekDay));
@@ -117,7 +124,7 @@ String getDayName(int offset)
 
 long getUnixTime()
 {
-  return SRTC.MakeTime(timeRTC);
+  return SRTC.MakeTime(*timeRTC);
 }
 
 String getMonthName(int monthNumber)
@@ -152,7 +159,7 @@ String getMonthName(int monthNumber)
   case 255:
   {
     // How?
-    timeRTC.Month = 0;
+    timeRTC->Month = 0;
     return "Jan";
   }
   default:

@@ -4,6 +4,30 @@ menuData data = {0};
 #define buttonsOffset 2;
 int currentMenuItem = 0;
 
+bool showedMenuName = false;
+String previousPageNumber = "";
+struct buttonCheck
+{
+  bool inverted;
+  String text;
+};
+#define MAX_BUTTONS 8
+buttonCheck previousButtons[MAX_BUTTONS];
+sizeInfo buttonSize;
+
+void resetPreviousItems() {
+  // Clear variables
+  showedMenuName = false;
+  previousPageNumber = "";
+  for (int i = 0; i < MAX_BUTTONS; ++i)
+  {
+    previousButtons[i].inverted = false;
+    previousButtons[i].text = "";
+  }
+  buttonSize.h = 0;
+  buttonSize.w = 0;
+}
+
 void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSize, int linesThick)
 {
   // A lot of funny problems right here!
@@ -34,15 +58,18 @@ void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSiz
   {
     data.itemsOnPage = 5;
   }
+
+  resetPreviousItems();
+
+  display.fillScreen(GxEPD_WHITE);
   showMenu();
 }
 
 int pageNumber = 0;
 int currentPage = 0;
+
 void showMenu()
 {
-  display.fillScreen(GxEPD_WHITE);
-
   uint16_t pageStringWidth;
   uint16_t textHeight;
   uint16_t currentHeight;
@@ -62,11 +89,29 @@ void showMenu()
   currentHeight = textHeight + 1; // +1 to offset between edge of screen and menu name
   display.setCursor(display.width() - pageStringWidth - 10, currentHeight);
 
-  display.print(pageString);
+  if (previousPageNumber != pageString)
+  {
+    //uint16_t hTmp;
+    //uint16_t wTmp;
+    //getTextBounds(previousPageNumber, NULL, NULL, &wTmp, &hTmp);
+    //display.fillRect(display.width() - pageStringWidth - 10, currentHeight - hTmp, wTmp, hTmp, GxEPD_WHITE);
+    
+    display.fillScreen(GxEPD_WHITE);
+    resetPreviousItems();
+
+    display.print(pageString);
+    previousPageNumber = pageString;
+    debugLog("Printing page numbers");
+  }
 
   display.setCursor(1, currentHeight);
+  if (showedMenuName == false)
+  {
+    display.print(data.menuName);
+    showedMenuName = true;
+    debugLog("Printing menu name");
+  }
 
-  display.print(data.menuName);
   currentHeight = currentHeight + 4; // +2 to offset between line and menu name
 
   display.fillRect(0, currentHeight, display.width(), 1, GxEPD_BLACK);
@@ -82,24 +127,41 @@ void showMenu()
   for (int i = startingButton; i < startingButton + data.itemsOnPage && i < data.totalMenus; i++)
   {
     // debugLog("iterating " + String(i));
+    // debugLog("iterating list" + String(i % data.itemsOnPage));
+
     bool invert = false;
     if (data.currentButton == i)
     {
       invert = true;
     }
-    debugLog("Menu entry text is: " + data.entryList[i].text);
-    sizeInfo buttonSize = drawButton(1, currentHeight, data.entryList[i].text, *data.entryList[i].image, invert, 2, 0);
-    debugLog("Button h in menu: " + String(buttonSize.h));
-    if (invert == true)
+    bool draw = false;
+
+    if (data.entryList[i].text != previousButtons[i % data.itemsOnPage].text || previousButtons[i % data.itemsOnPage].inverted != invert)
     {
-      display.fillRect(1 + buttonSize.w, currentHeight, display.width() - buttonSize.w - 1, buttonSize.h, GxEPD_BLACK);
-    }
-    if (i != startingButton && MENU_LINES == true)
-    {
-      display.fillRect(0, currentHeight - 2, display.width(), 2, GxEPD_BLACK);
+      draw = true;
+      previousButtons[i % data.itemsOnPage].text = data.entryList[i].text;
+      previousButtons[i % data.itemsOnPage].inverted = invert;
+      debugLog("Printing button: " + String(i % data.itemsOnPage));
     }
 
-    // currentHeight = currentHeight + data.maxHeight + buttonsOffset;
+    debugLog("Menu entry text is: " + data.entryList[i].text);
+    buttonSize = drawButton(1, currentHeight, data.entryList[i].text, *data.entryList[i].image, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
+    debugLog("Button h in menu: " + String(buttonSize.h));
+    if (draw == true)
+    {
+      if (invert == true)
+      {
+        display.fillRect(1 + buttonSize.w, currentHeight, display.width() - buttonSize.w - 1, buttonSize.h, GxEPD_BLACK);
+      }
+      else
+      {
+        display.fillRect(1 + buttonSize.w, currentHeight, display.width() - buttonSize.w - 1, buttonSize.h, GxEPD_WHITE);
+      }
+      if (i != startingButton && MENU_LINES == true)
+      {
+        display.fillRect(0, currentHeight - 2, display.width(), 2, GxEPD_BLACK);
+      }
+    }
     currentHeight = currentHeight + buttonSize.h + buttonsOffset;
   }
   disUp(true);

@@ -109,12 +109,12 @@ void turnOnWifi()
 
 void turnOffWifi()
 {
+    debugLog("Turning wifi off");
     if (isWifiTaskRunning == true)
     {
         vTaskDelete(wifiTask);
         isWifiTaskRunning = false;
     }
-    debugLog("Turning wifi off");
     WiFi.disconnect();
     WiFi.mode(WIFI_OFF);
 }
@@ -143,12 +143,19 @@ int getSignalStrength()
     return percentage;
 }
 
-void regularSync() {
-    if(SYNC_WIFI == 1 && (getUnixTime() - lastSyncUnix > SYNC_WIFI_SINCE_LAST_DELAY_S) && bat.isCharging == true) {
-        debugLog("Regular sync going on");
-        turnOnWifi();
-    } else {
-        debugLog("Not doing regular sync: " + String(getUnixTime() - lastSyncUnix) + " " + BOOL_STR(bat.isCharging));
+void regularSync()
+{
+    if (SYNC_WIFI == 1 && (getUnixTime() - lastSyncUnix > SYNC_WIFI_SINCE_LAST_DELAY_S) && bat.isCharging == true)
+    {
+        if (isWifiTaskRunning == false)
+        {
+            debugLog("Regular sync going on");
+            turnOnWifi();
+        }
+    }
+    else
+    {
+        //debugLog("Not doing regular sync: " + String(getUnixTime() - lastSyncUnix) + " " + BOOL_STR(bat.isCharging));
     }
 }
 

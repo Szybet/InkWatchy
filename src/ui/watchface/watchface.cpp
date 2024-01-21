@@ -93,8 +93,8 @@ void writeTimeMinimal()
     }
   }
 
-  wFTime.Minute = timeRTC.Minute;
-  wFTime.Hour = timeRTC.Hour;
+  wFTime.Minute = timeRTC->Minute;
+  wFTime.Hour = timeRTC->Hour;
 }
 
 void initWatchfaceDisplay()
@@ -102,12 +102,12 @@ void initWatchfaceDisplay()
   debugLog("Executing init watch face");
   // Idk?
   // wFTime = timeRTC;
-  wFTime.Second = timeRTC.Second;
-  wFTime.Minute = timeRTC.Minute;
-  wFTime.Hour = timeRTC.Hour;
-  wFTime.Day = timeRTC.Day;
-  wFTime.Month = timeRTC.Month;
-  wFTime.Year = timeRTC.Year;
+  wFTime.Second = timeRTC->Second;
+  wFTime.Minute = timeRTC->Minute;
+  wFTime.Hour = timeRTC->Hour;
+  wFTime.Day = timeRTC->Day;
+  wFTime.Month = timeRTC->Month;
+  wFTime.Year = timeRTC->Year;
   //dumpRTCTime(wFTime);
   //dumpRTCTime(timeRTC);
 
@@ -150,15 +150,15 @@ void initWatchfaceDisplay()
 void loopWatchfaceLoop()
 {
   debugLog("Executing loop watch face");
-  if (wFTime.Minute != timeRTC.Minute)
+  if (wFTime.Minute != timeRTC->Minute)
   {
     dUChange = true;
 
     writeTimeMinimal();
 
-    if (wFTime.Day != timeRTC.Day)
+    if (wFTime.Day != timeRTC->Day)
     {
-      wFTime.Day = timeRTC.Day;
+      wFTime.Day = timeRTC->Day;
       setFont(DATE_FONT);
       String dayDate = String(wFTime.Day);
       if (dayDate.length() < 2)
@@ -180,9 +180,9 @@ void loopWatchfaceLoop()
       writeTextReplaceBack(day, DAY_NAME_CORD);
     }
 
-    if (wFTime.Month != timeRTC.Month)
+    if (wFTime.Month != timeRTC->Month)
     {
-      wFTime.Month = timeRTC.Month;
+      wFTime.Month = timeRTC->Month;
       setFont(MONTH_NAME_FONT);
       String month = getMonthName(wFTime.Month);
       month.toUpperCase();

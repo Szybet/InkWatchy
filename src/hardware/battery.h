@@ -20,6 +20,7 @@ double getBatteryVoltage();
 
 void loopBattery();
 void initBattery();
+void loopPowerSavings();
 
 uint32_t analogReadMilliVolts(uint8_t pin);
 

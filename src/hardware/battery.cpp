@@ -47,7 +47,8 @@ void loopBattery()
 {
     bat.curV = getBatteryVoltage();
     bat.percentage = ((bat.curV - bat.minV) / (bat.maxV - bat.minV)) * 100.0;
-    if(bat.percentage > 100) {
+    if (bat.percentage > 100)
+    {
         // Charging
         bat.percentage = 100;
     }
@@ -59,13 +60,19 @@ void loopBattery()
     {
         bat.isCharging = false;
     }
+}
 
-    if(isBatterySaving == false && bat.percentage < POWER_SAVING_AFTER) {
+void loopPowerSavings()
+{
+    if (isBatterySaving == false && bat.percentage < POWER_SAVING_AFTER)
+    {
         debugLog("Turning on power settings");
         isBatterySaving = true;
         disableAllVibration = true;
         disableWakeUp = true;
-    } else if(isBatterySaving == true && bat.percentage + 5 > POWER_SAVING_AFTER) {
+    }
+    else if (isBatterySaving == true && bat.percentage + 5 > POWER_SAVING_AFTER)
+    {
         debugLog("Turning off power settings");
         isBatterySaving = false;
         loadAllStorage();
@@ -73,7 +80,8 @@ void loopBattery()
 }
 
 #if DEBUG
-void dumpBattery() {
+void dumpBattery()
+{
     loopBattery();
     debugLog("Battery voltage: " + String(bat.curV));
 }
