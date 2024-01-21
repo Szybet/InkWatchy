@@ -46,6 +46,8 @@ void setup()
   {
     initButtonTask();
   }
+
+  regularSync();
 }
 
 void loop()
@@ -53,7 +55,6 @@ void loop()
   alarmManageRTC();
   loopBattery();
   loopPowerSavings();
-  regularSync();
   loopManager();
 
 #if DEBUG && EINK_COUNTER

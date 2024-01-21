@@ -73,10 +73,9 @@ void goSleep()
     }
 
     display.hibernate();
-
     turnOffWifi(); // To be sure only
-    debugLog("Sleeping!");
     alarmManageRTC(); // To be sure too...
+    debugLog("Sleeping!");
     isDebug(Serial.flush());
     ForceInputs();
     esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
