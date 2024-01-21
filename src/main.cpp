@@ -19,6 +19,7 @@ void setup()
     if (wakeUpReason == RTC_WAKEUP_REASON)
     {
       debugLog("Waked up because of RTC");
+      setupTimeStructure();
       alarmManageRTC();
     }
     else if (wakeUpReason == BUTTON_WAKEUP_REASON)
@@ -49,7 +50,9 @@ void setup()
 
 void loop()
 {
+  alarmManageRTC();
   loopBattery();
+  loopPowerSavings();
   regularSync();
   loopManager();
 

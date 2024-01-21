@@ -16,7 +16,7 @@ void syncNtp() {
     */
     time_t epochTime = timeClient.getEpochTime();
 
-    SRTC.BreakTime(epochTime, timeRTC);
+    SRTC.BreakTime(epochTime, *timeRTC);
     saveRTC();
     timeClient.end();
     wakeUpManageRTC(); // After syncing time, remake the alarm

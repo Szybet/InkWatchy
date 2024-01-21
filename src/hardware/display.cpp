@@ -37,7 +37,7 @@ bool dUChange = false;
 // Display update
 void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
 {
-    debugLog("dis up executed");
+    //debugLog("dis up executed");
     bool updatedScreen = false;
     if (dUChange == true || reallyUpdate == true)
     {

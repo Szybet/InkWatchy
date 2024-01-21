@@ -148,7 +148,7 @@ void writeImageN(int16_t x, int16_t y, const ImageDef image, uint16_t frColor, u
   display.setCursor(cx, cy);
 }
 
-sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor)
+sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor, bool draw)
 {
   sizeInfo size = {0};
   int toleranceSize = tolerance * 2 + borderWidth * 2;
@@ -188,6 +188,10 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image, bool
 
   // debugLog("Final size.h is: " + String(size.h));
   // debugLog("Final size.w is: " + String(size.w));
+
+  if(draw == false) {
+    return size;
+  }
 
   GFXcanvas1 canvasTmp(size.w, size.h);
   canvasTmp.setFont(font);
