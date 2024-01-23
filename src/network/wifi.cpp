@@ -85,7 +85,6 @@ void turnOnWifiTask(void *parameter)
     {
         syncNtp();
         syncWeather();
-        lastSyncUnix = getUnixTime();
     }
     sleepDelayMs = millis(); // reset sleep delay
     isWifiTaskRunning = false;
@@ -151,6 +150,7 @@ void regularSync()
         {
             debugLog("Regular sync going on");
             turnOnWifi();
+            lastSyncUnix = getUnixTime();
         }
     }
     else
