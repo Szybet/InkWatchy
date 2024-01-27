@@ -109,7 +109,7 @@ void loop()
   // debugLog("millis is:" + String(long(millis())));
   if (long(millis()) - sleepDelayMs >= SLEEP_EVERY_MS)
   {
-    if (WiFi.getMode() != WIFI_MODE_NULL)
+    if (isWifiTaskRunning == true)
     {
       debugLog("Wifi is turned on, waiting...");
       sleepDelayMs = millis();

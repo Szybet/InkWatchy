@@ -3,9 +3,13 @@
 WiFiMulti wifiMulti;
 TaskHandle_t wifiTask;
 bool isWifiTaskRunning = false;
+bool initWifiMultiDone = false;
 
 void initWifi()
 {
+    if(initWifiMultiDone == true) {
+        return void();
+    }
     if (WIFI_SSID1 != "" && WIFI_PASS1 != "")
     {
         debugLog("Attempting to connect to WiFi " + String(WIFI_SSID1));
@@ -56,6 +60,7 @@ void initWifi()
         debugLog("Attempting to connect to WiFi " + String(WIFI_SSID10));
         wifiMulti.addAP(WIFI_SSID10, WIFI_PASS10);
     }
+    initWifiMultiDone = true;
 }
 
 RTC_DATA_ATTR long lastSyncUnix = 0;
@@ -65,6 +70,7 @@ void turnOnWifiTask(void *parameter)
     isWifiTaskRunning = true;
     for (int i = 0; i < 15; i++)
     {
+        debugLog("Running wifi loop: " + String(i));
         WiFi.mode(WIFI_STA);
         // WiFi.setSleep(WIFI_PS_NONE);
         WiFi.setAutoConnect(true);
@@ -78,17 +84,21 @@ void turnOnWifiTask(void *parameter)
         else
         {
             debugLog("Wifi failed to connect, retrying...");
-            turnOffWifi();
+            //turnOffWifi();
+            turnOffWifiMinimal();
+            delayTask(1500);
         }
     }
+    delayTask(300);
     if (WiFi.status() == WL_CONNECTED)
     {
         syncNtp();
         syncWeather();
+        lastSyncUnix = getUnixTime();
     }
     sleepDelayMs = millis(); // reset sleep delay
     isWifiTaskRunning = false;
-    turnOffWifi();
+    turnOffWifiMinimal();
     vTaskDelete(NULL);
 }
 
@@ -106,6 +116,11 @@ void turnOnWifi()
     }
 }
 
+void turnOffWifiMinimal() {
+    WiFi.disconnect();
+    WiFi.mode(WIFI_OFF);
+}
+
 void turnOffWifi()
 {
     debugLog("Turning wifi off");
@@ -114,8 +129,7 @@ void turnOffWifi()
         vTaskDelete(wifiTask);
         isWifiTaskRunning = false;
     }
-    WiFi.disconnect();
-    WiFi.mode(WIFI_OFF);
+    turnOffWifiMinimal();
 }
 
 #define MIN_RSSI -100
