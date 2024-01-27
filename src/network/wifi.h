@@ -7,6 +7,7 @@ extern bool isWifiTaskRunning;
 
 void initWifi();
 void turnOnWifi();
+void turnOffWifiMinimal();
 void turnOffWifi();
 int getSignalStrength();
 void regularSync();
