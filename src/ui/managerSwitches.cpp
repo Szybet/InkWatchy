@@ -57,6 +57,10 @@ void switchApple() {
     generalSwitch(apple);
 }
 
+void switchApple2() {
+    generalSwitch(apple2);
+}
+
 void showTemp()
 {
     debugLog("Launched");

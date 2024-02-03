@@ -171,6 +171,13 @@ void loopManager()
 #endif
         break;
     }
+    case apple2:
+    {
+#if APPLE_JOKE
+        managerLaunchFunc(apple2, initAppleSour, loopAppleSour, exitAppleSour);
+#endif
+        break;
+    }
     case imagePlace:
     {
         managerLaunchFunc(imagePlace, NULL, useButtonBlank);
