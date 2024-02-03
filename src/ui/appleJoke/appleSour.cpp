@@ -7,6 +7,8 @@
 NimBLEAdvertising *NimPAdvertising;
 NimBLEServer *NimPServer;
 
+// https://github.com/RapierXbox/ESP32-Sour-Apple
+
 NimBLEAdvertisementData getOAdvertisementData() {
   NimBLEAdvertisementData randomAdvertisementData = NimBLEAdvertisementData();
   uint8_t packet[17];
