@@ -4,6 +4,7 @@
 #include "../../defines/book.h"
 
 #define BOOK_FONT &monofonto_rg10pt7b
+bool isBookOk = false;
 
 void resetSleepDelayBook()
 {
@@ -12,14 +13,21 @@ void resetSleepDelayBook()
     debugLog("millis is:" + String(millis()));
 }
 
-int getPageNumber()
-{
-    return NVS.getInt(NVS_BOOK_CURRENT_PAGE, 0);
-}
-
 void setPageNumber(int page)
 {
     NVS.setInt(NVS_BOOK_CURRENT_PAGE, page, false); // We commit in exit
+}
+
+int getPageNumber()
+{
+    if(isBookOk == false) {
+        if(NVS.getString(NVS_BOOK_HASH) != BOOK_HASH) {
+            setPageNumber(0);
+            NVS.setString(NVS_BOOK_HASH, BOOK_HASH, true);
+        }
+        isBookOk = true;
+    }
+    return NVS.getInt(NVS_BOOK_CURRENT_PAGE, 0);
 }
 
 String test = "jqyQRTY";

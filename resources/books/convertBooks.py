@@ -2,6 +2,7 @@
 import os
 import shutil
 from unidecode import unidecode
+import hashlib
 
 def remove_special_characters(text):
     return unidecode(text)
@@ -13,7 +14,6 @@ def split_and_store(file_path, chunk_size, output_file, output_path):
     content_clean = remove_special_characters(content)
 
     content_clean = content_clean.replace('\n', ' ')
-
     content_clean = content_clean.replace('"', ' ')
     content_clean = content_clean.replace('„', '<')
     content_clean = content_clean.replace('”', '>')
@@ -23,23 +23,34 @@ def split_and_store(file_path, chunk_size, output_file, output_path):
     content_clean = content_clean.replace("   ", ' ')
     content_clean = content_clean.replace("  ", ' ')
 
-    chunks = [content_clean[i:i + chunk_size] for i in range(0, len(content_clean),chunk_size)]
-    # Using String list causes esp_core_dump_flash: Core dump flash config is corrupted! CRC=0x7bd5c66f instead of 0x0
-    # And uses a lot of memory... My god...
+    # Calculate SHA1 hash
+    sha1 = hashlib.sha1(content_clean.encode()).hexdigest()
+
+    # Use only the first 8 characters of the hash
+    hash_prefix = sha1[:8]
+
+    chunks = [content_clean[i:i + chunk_size] for i in range(0, len(content_clean), chunk_size)]
+
     cpp_list = "const char bookList[BOOK_PAGES][" + str(chunk_size + 1) + "] = {"
     cpp_list += ", ".join(f'"{chunk}"' for chunk in chunks)
     cpp_list += "};"
     cpp_list_count = f"#define BOOK_PAGES {len(chunks)}\n"
+    
+    # Save hash in the header file
+    cpp_list_hash = f"#define BOOK_HASH \"{hash_prefix}\"\n"
+
     with open(output_file, 'w') as file:
         file.write("#ifndef BOOK_H\n")
         file.write("#define BOOK_H\n\n")
         file.write(cpp_list_count + "\n")
+        file.write(cpp_list_hash + "\n")
         file.write(cpp_list + "\n\n")
         file.write("#endif // BOOK_H\n")
 
     if os.path.exists(output_path + output_file):
         os.remove(output_path + output_file)
     shutil.move(output_file, output_path)
+
 
 
 file_path = 'book.txt'

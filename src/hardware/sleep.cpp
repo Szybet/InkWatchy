@@ -59,12 +59,7 @@ void goSleep()
     disUp(true);
 #endif
 
-    // We can check here for NULL because it should be always running
-    if (buttonTask != NULL)
-    {
-        debugLog("Shutting down button task");
-        vTaskDelete(buttonTask);
-    }
+    deInitButtonTask();
 
     while (motorTaskRunning == true)
     {

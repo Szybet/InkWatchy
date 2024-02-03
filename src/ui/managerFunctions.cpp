@@ -47,6 +47,11 @@ void initMainMenu()
         count = count + 1;
         buttons[count] = {"Eating apples", &appleImgPack, switchApple};
     }
+        {
+        debugLog("Adding apple joke to menu");
+        count = count + 1;
+        buttons[count] = {"Smashing apples", &appleImgPack, switchApple2};
+    }
 #endif
 
     count = count + 1;

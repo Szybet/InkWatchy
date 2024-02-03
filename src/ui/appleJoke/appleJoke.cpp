@@ -167,6 +167,9 @@ void exitAppleJoke()
     delete pServer;
     BLEDevice::deinit(true);
 
+    deInitButtonTask(); // We need to go to sleep because this exit function is not complete, i quess
+    setButton(LongBack);
+    sleepDelayMs = sleepDelayMs + SLEEP_EVERY_MS;
     appleJokeRunning = false;
 }
 

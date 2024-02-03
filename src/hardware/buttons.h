@@ -29,6 +29,7 @@ void manageButtonWakeUp();
 
 void initButtons(bool isFromWakeUp);
 void initButtonTask();
+void deInitButtonTask();
 void setButton(buttonState button);
 
 #if DEBUG

@@ -139,6 +139,15 @@ void initButtonTask()
         &buttonTask);
 }
 
+void deInitButtonTask() {
+    if (buttonTask != NULL)
+    {
+        debugLog("Shutting down button task");
+        vTaskDelete(buttonTask);
+        buttonTask = NULL;
+    }
+}
+
 void manageButtonWakeUp()
 {
     pinMode(VIB_MOTOR_PIN, OUTPUT);

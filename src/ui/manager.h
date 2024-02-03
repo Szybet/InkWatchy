@@ -20,6 +20,7 @@ typedef enum
     book,
     vault,
     apple,
+    apple2,
     // General places now:
     inputPinPlace,
     generalMenuPlace,
@@ -61,6 +62,7 @@ void switchBook();
 void switchVault();
 void switchBack();
 void switchApple();
+void switchApple2();
 
 // Switches for weather
 void showTemp();

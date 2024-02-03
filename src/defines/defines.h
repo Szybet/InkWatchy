@@ -62,6 +62,7 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #endif
 #if APPLE_JOKE
 #include "../ui/appleJoke/appleJoke.h"
+#include "../ui/appleJoke/appleSour.h"
 #endif
 #include "../ui/pinInput/pinInput.h"
 #include "../ui/settings/nvsSettings.h"
