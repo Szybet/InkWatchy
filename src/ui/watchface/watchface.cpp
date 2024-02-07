@@ -147,6 +147,7 @@ void initWatchfaceDisplay()
   disUp(true, false, true);
 }
 
+bool wentToSleep = false; // Don't go to sleep after one try of noClickedButton - maybe a sync is going on?
 void loopWatchfaceLoop()
 {
   debugLog("Executing loop watch face");
@@ -236,9 +237,10 @@ void loopWatchfaceLoop()
   // if(dUChange == false) {
   // debugLog("No change in watchface, skipping timer");
   // Always go to sleep in watchface after loop
-  if (buttonClicked == false)
+  if (buttonClicked == false && wentToSleep == false)
   {
     sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
+    wentToSleep = true;
   }
   //}
 

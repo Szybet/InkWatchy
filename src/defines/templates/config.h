@@ -23,6 +23,9 @@
 #define BOOK_AX_Y_BACK_VALUE 500
 #define BOOK_AX_X_TOLERANCE 150
 #define BOOK_ON_EXIT_GO_PAGE_BACK 1
+#define BOOK_AXC_LINE 1
+#define BOOK_AXC_LINE_WIDTH 5
+#define BOOK_AXC_DIFFERENCE_CHANGE 10
 
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
@@ -30,7 +33,7 @@
 #define NIGHT_SLEEP_BEFORE_HOUR 5
 #define SLEEP_EVERY_MS 6000 //180000 // Goes to sleep timer, is resetted by button presses and other things
 #define POWER_SAVING_AFTER 60 // Turn on power saving features after a certain battery percantage.
-#define LOOP_NO_SCREEN_WRITE_DELAY_MS 200 // Go to sleep for 200 ms if the device is woken up ( in a menu for example )
+#define LOOP_NO_SCREEN_WRITE_DELAY_MS 250 // Go to sleep for 200 ms if the device is woken up ( in a menu for example )
 // For now those features are:
 // DISABLE_BUTTON_VIBRATION
 // DISABLE_WAKE_UP - don't wake up - at all
