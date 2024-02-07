@@ -59,7 +59,7 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
         }
     }
     if(ignoreSleep == false && updatedScreen == false) {
-        debugLog("Sleeping task because display had no update");
+        //debugLog("Sleeping task because display had no update");
         delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
     }
 }

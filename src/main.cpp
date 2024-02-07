@@ -105,14 +105,15 @@ void loop()
 
 #endif
 
-  // debugLog("sleepDelayMs is:" + String(sleepDelayMs));
-  // debugLog("millis is:" + String(long(millis())));
+  //debugLog("sleepDelayMs is:" + String(sleepDelayMs));
+  //debugLog("millis is:" + String(long(millis())));
   if (long(millis()) - sleepDelayMs >= SLEEP_EVERY_MS)
   {
     if (isWifiTaskRunning == true)
     {
       debugLog("Wifi is turned on, waiting...");
       sleepDelayMs = millis();
+      //debugLog("sleepDelayMs is after change:" + String(sleepDelayMs));
       return void();
     }
 #if WIFI_TOOL
