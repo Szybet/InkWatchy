@@ -24,8 +24,8 @@
 #define BOOK_AX_X_TOLERANCE 150
 #define BOOK_ON_EXIT_GO_PAGE_BACK 1
 #define BOOK_AXC_LINE 1
-#define BOOK_AXC_LINE_WIDTH 5
-#define BOOK_AXC_DIFFERENCE_CHANGE 10
+#define BOOK_AXC_LINE_WIDTH 3
+#define BOOK_AXC_DIFFERENCE_CHANGE 15
 
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
