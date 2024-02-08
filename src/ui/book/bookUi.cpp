@@ -248,7 +248,7 @@ void loopBook()
             if(waitForReturn == false) {
                 display.fillRect(0, 0, newFilledWidth, BOOK_AXC_LINE_WIDTH, GxEPD_BLACK);
             } else {
-                drawProgressBar(0, 0, newFilledWidth, BOOK_AXC_LINE_WIDTH, 0);
+                drawProgressBar(0, 0, newFilledWidth, BOOK_AXC_LINE_WIDTH - 1, 0);
             }
             if(dUChange == false && updateCounter > 0) {
                 updateCounter = updateCounter - 1;
