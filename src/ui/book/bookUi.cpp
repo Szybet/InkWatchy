@@ -245,7 +245,14 @@ void loopBook()
             // display.drawFastHLine(0, 1, 200, GxEPD_WHITE);
             // display.drawFastHLine(0, 1, filledAxcLine, GxEPD_BLACK);
             display.fillRect(0, 0, 200, BOOK_AXC_LINE_WIDTH, GxEPD_WHITE);
-            display.fillRect(0, 0, newFilledWidth, BOOK_AXC_LINE_WIDTH, GxEPD_BLACK);
+            if(waitForReturn == false) {
+                display.fillRect(0, 0, newFilledWidth, BOOK_AXC_LINE_WIDTH, GxEPD_BLACK);
+            } else {
+                drawProgressBar(0, 0, newFilledWidth, BOOK_AXC_LINE_WIDTH, 0);
+            }
+            if(dUChange == false && updateCounter > 0) {
+                updateCounter = updateCounter - 1;
+            }
             dUChange = true;
         }
 #endif
