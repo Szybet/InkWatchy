@@ -64,6 +64,7 @@
 #define DRAW_DEBUG_RECT 0   // Shows rectangles where custom functions write bitmaps
 #define DUMP_LOOP_DELAY 5000 // delay in ms of dumping loop data
 #define SPEED_THROUGH_TIME 0 // Speeds up time for watchface programming
+#define NO_SYNC 1 // If debug and this is both true, it will not try to sync up automatically
 
 // Display init magic ;)
 #define EPD_CS 5
