@@ -46,8 +46,9 @@ void setup()
   {
     initButtonTask();
   }
-
+#if !DEBUG || !NO_SYNC
   regularSync();
+#endif
 }
 
 void loop()
