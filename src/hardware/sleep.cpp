@@ -72,6 +72,7 @@ void goSleep()
     alarmManageRTC(); // To be sure too...
     debugLog("Sleeping!");
     isDebug(Serial.flush());
+    deInitWatchdogTask();
     ForceInputs();
     esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
     esp_sleep_enable_ext1_wakeup(UP_MASK | DOWN_MASK | MENU_MASK | BACK_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); // Enable deep sleep wake on button press

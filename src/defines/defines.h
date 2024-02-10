@@ -69,5 +69,6 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #include "../network/wifi.h"
 #include "../network/ntp.h"
 #include "../network/weather.h"
+#include "../other/watchdogTask/watchdogTask.h"
 
 #endif

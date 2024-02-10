@@ -39,6 +39,7 @@ void setup()
 #if DUMP_LOOP_SOFTWARE_DEBUG
   loopGeneralDebug();
 #endif
+  readFlashMessage();
 #endif
 
   initManager();
@@ -49,10 +50,13 @@ void setup()
 #if !DEBUG || !NO_SYNC
   regularSync();
 #endif
+
+  initWatchdogTask();
 }
 
 void loop()
 {
+  watchdogPing();
   alarmManageRTC();
   loopBattery();
   loopPowerSavings();

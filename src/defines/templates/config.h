@@ -13,6 +13,7 @@
 #define LONG_BACK_FULL_REFRESH 1 // Make a full refresh at long back button clicked
 #define SYNC_WIFI 1 // Sync wifi - only if it's being charger and after the delay below
 #define SYNC_WIFI_SINCE_LAST_DELAY_S 72000 // 20h
+#define WATCHDOG_TASK 1 // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
 
 // Book things
 #define BOOK 0
@@ -101,5 +102,6 @@
 #define NVS_BOOK_CURRENT_PAGE "crp"
 #define NVS_DISABLE_ALL_VIBRATION "dbv"
 #define NVS_DISABLE_WAKE_UP "dwu"
+#define NVS_WATCHDOG_DEBUG_DATA "wdd"
 
 #endif

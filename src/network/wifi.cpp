@@ -109,7 +109,7 @@ void turnOnWifi()
         xTaskCreate(
             turnOnWifiTask,
             "wifiTask",
-            50000,
+            40000,
             NULL,
             0,
             &wifiTask);

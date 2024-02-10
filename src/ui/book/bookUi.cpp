@@ -326,6 +326,10 @@ void loopBook()
             }
         }
         debugLog("newFilledWidth: " + String(newFilledWidth));
+        if(newFilledWidth < 0 || newFilledWidth > 200) {
+            newFilledWidth = 0;
+            leaveFlashMessage("newFilledWidth is wrong");
+        }
         if (abs(newFilledWidth - filledAxcLine) > BOOK_AXC_DIFFERENCE_CHANGE)
         {
             filledAxcLine = newFilledWidth;
