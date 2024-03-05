@@ -48,7 +48,12 @@ Apart from code things, here are the key features for now:
 ## Donations
 This was the first thing I have written and asked myself if I should release it for free. Well here we are - I also write other open source things - check my profile for more eink stuff. Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a option.
 
+## Sister projects
+https://github.com/Szybet/E-Watch-FOSS
+
 ## Some credits
 - [GuruSR](https://github.com/GuruSR/Watchy_GSR) - I used some of his awesome libraries and looked at the code for how the watchy hardware should be handled. Also answered a few questions on discord. Thanks!
 - [Prokuon](https://github.com/Prokuon/watchy-starfield/) - I really liked the design of this watchface and almost coppied it. Thanks! - well the code is completly diffrent
 
+## Questions
+Create a github issue or get in touch with me on Watchy or InkBox discord server ( Or other discord communication channels )
