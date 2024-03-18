@@ -4,5 +4,6 @@
 #include "defines/defines.h"
 
 void syncNtp();
+void checkDrift();
 
 #endif

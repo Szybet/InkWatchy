@@ -5,6 +5,7 @@
 
 #define BOOK_FONT &monofonto_rg10pt7b
 bool isBookOk = false;
+bool excOn = true;
 
 #define MAX_AXC_VALUE 1000
 #define MIN_AXC_VALUE -1000
@@ -114,6 +115,7 @@ void showPage(int page)
 
 void initBook()
 {
+    resetSleepDelayBook();
     initNvsManage();
     initAxc();
     // SBMA.setAccelConfig();
@@ -186,6 +188,13 @@ void loopBook()
     {
         break;
     }
+    case LongMenu:
+    {
+        excOn = !excOn;
+        display.fillRect(0, 0, 200, BOOK_AXC_LINE_WIDTH, GxEPD_WHITE);
+        dUChange = true;
+        break;
+    }
     case LongUp:
     {
         break;
@@ -197,7 +206,7 @@ void loopBook()
     }
 
     bma4_accel accel;
-    if (SBMA.getAccel(accel))
+    if (excOn == true && SBMA.getAccel(accel))
     {
         // for button change...
         if (changedPageAxis == 0)
@@ -354,7 +363,9 @@ void loopBook()
     }
     else
     {
-        debugLog("Failed to get accel");
+        if(excOn == true) {
+            debugLog("Failed to get accel");
+        }
     }
     disUp();
 }

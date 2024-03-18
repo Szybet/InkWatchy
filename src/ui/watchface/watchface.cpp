@@ -100,6 +100,7 @@ void writeTimeMinimal()
 void initWatchfaceDisplay()
 {
   debugLog("Executing init watch face");
+  readRTC(); // For returning from book, for example
   // Idk?
   // wFTime = timeRTC;
   wFTime.Second = timeRTC->Second;

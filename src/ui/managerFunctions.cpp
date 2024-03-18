@@ -4,25 +4,24 @@ void initMainMenu()
 {
     int count = -1;
     entryMenu buttons[8];
-
-    {
-        count = count + 1;
-        buttons[count] = {"Debug", &debugImgPack, switchDebugMenu};
-    }
-    {
-        count = count + 1;
-        buttons[count] = {"Weather", &weatherImgPack, switchWeatherMenu};
-    }
-    {
-        count = count + 1;
-        buttons[count] = {"Power settings", &batteryImgPack, switchPowerMenu};
-    }
 #if BOOK
     {
         count = count + 1;
         buttons[count] = {"Book " + bookGetPages(), &bookImgPack, switchBook};
     }
 #endif
+    {
+        count = count + 1;
+        buttons[count] = {"Weather", &weatherImgPack, switchWeatherMenu};
+    }
+    {
+        count = count + 1;
+        buttons[count] = {"Debug", &debugImgPack, switchDebugMenu};
+    }
+    {
+        count = count + 1;
+        buttons[count] = {"Power settings", &batteryImgPack, switchPowerMenu};
+    }
 #if VAULT
     {
         count = count + 1;

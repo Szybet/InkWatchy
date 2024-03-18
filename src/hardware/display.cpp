@@ -30,6 +30,11 @@ void initDisplay(bool isFromWakeUp)
     // Default values
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
+    if(isFromWakeUp == false) {
+        display.setCursor(100, 100);
+        display.print("Reset.");
+        display.display(FULL_UPDATE);
+    }
 }
 
 RTC_DATA_ATTR int updateCounter = 0;
