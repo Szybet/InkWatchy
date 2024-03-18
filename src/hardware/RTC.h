@@ -18,6 +18,7 @@ String getHourMinute(tmElements_t* timeEl = timeRTC);
 String getDayName(int offset = 0);
 String getMonthName(int monthNumber);
 long getUnixTime();
+String getFormattedTime(time_t rawTime);
 
 #if DEBUG
 void initRTCDebug();
