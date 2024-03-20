@@ -4,7 +4,6 @@ RTC_DATA_ATTR time_t previousNTPTimeFull = 0; // Full latest NTP sync time
 RTC_DATA_ATTR time_t previousNTPTimeDifference = 0; // The delay between 2 previous NTP syncs 
 RTC_DATA_ATTR int ntpDriftCorrection = 0; // The drift
 RTC_DATA_ATTR time_t previousNTPCorrection = 0; // UNIX time of previous drift correction
-// #define ACCEPTABLE_DRIFT 15 // In S
 
 bool firstNTPSync = true;
 time_t initialRTCTime = 0;
@@ -61,12 +60,12 @@ void syncNtp() {
             debugLog("Drift calc - NTP time: " + getFormattedTime(epochTime));
             debugLog("Drift calc - RTC time: " + getFormattedTime(currentTime));
             int ntpDriftCorrectionTmp = currentTime - epochTime;
-            //if(ntpDriftCorrection == 0 || ntpDriftCorrectionTmp > ACCEPTABLE_DRIFT) {
+            if(ntpDriftCorrection == 0 || abs(ntpDriftCorrectionTmp) > ACCEPTABLE_DRIFT) {
                 previousNTPTimeDifference = epochTime - previousNTPTimeFull;
                 ntpDriftCorrection = ntpDriftCorrectionTmp;
-            //} else {
+            } else {
                 //debugLog("Drift correction for delay: " + String(previousNTPTimeDifference) + " is fine");
-            //}
+            }
             debugLog("Drift calc - ntpDriftCorrection:" + String(ntpDriftCorrection));
 
             previousNTPTimeFull = epochTime;

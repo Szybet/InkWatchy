@@ -14,6 +14,7 @@
 #define SYNC_WIFI 1 // Sync wifi - only if it's being charger and after the delay below
 #define SYNC_WIFI_SINCE_LAST_DELAY_S 72000 // 20h
 #define WATCHDOG_TASK 1 // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
+#define ACCEPTABLE_DRIFT 40 // In S
 
 // Book things
 #define BOOK 0
@@ -54,8 +55,8 @@
 // Advanced
 #define BUTTON_TASK_DELAY 140 // In ms, lower means faster button detection but more cpu usage
 #define TIME_FOR_WATCHFACE_TO_SHOW_MS 1500
-#define ADD_BUTTON_DELAY 4
-#define SMALL_BUTTON_DELAY_MS 25
+#define ADD_BUTTON_DELAY 1.5
+#define SMALL_BUTTON_DELAY_MS 15
 
 // Debugging help
 #define DEBUG 0
@@ -104,6 +105,7 @@
 #define NVS_BOOK_CURRENT_PAGE "crp"
 #define NVS_DISABLE_ALL_VIBRATION "dbv"
 #define NVS_DISABLE_WAKE_UP "dwu"
+#define NVS_BOOK_HASH "bhs"
 #define NVS_WATCHDOG_DEBUG_DATA "wdd"
 
 #endif
