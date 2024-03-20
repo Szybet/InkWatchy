@@ -24,6 +24,7 @@ String getFormattedTime(time_t rawTime);
 void initRTCDebug();
 void loopRTCDebug();
 void dumpRTCTime(tmElements_t* timeEl = timeRTC);
+void dumpRTCTimeSmall(tmElements_t *timeEl);
 #endif
 
 #endif
