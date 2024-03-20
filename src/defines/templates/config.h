@@ -54,6 +54,8 @@
 // Advanced
 #define BUTTON_TASK_DELAY 140 // In ms, lower means faster button detection but more cpu usage
 #define TIME_FOR_WATCHFACE_TO_SHOW_MS 1500
+#define ADD_BUTTON_DELAY 4
+#define SMALL_BUTTON_DELAY_MS 25
 
 // Debugging help
 #define DEBUG 0

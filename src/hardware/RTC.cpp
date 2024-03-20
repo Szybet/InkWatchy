@@ -28,11 +28,23 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 void saveRTC()
 {
   SRTC.set(*timeRTC);
+
+  // Test
+  /*
+  debugLog("Time test:");
+  SRTC.read(*timeRTC);
+  dumpRTCTimeSmall(timeRTC);
+  delay(1000);
+  SRTC.read(*timeRTC);
+  dumpRTCTimeSmall(timeRTC);
+  SRTC.read(*timeRTC);
+  dumpRTCTimeSmall(timeRTC);
+  */
 }
 
 void readRTC()
 {
-  debugLog("Reading RTC");
+  //debugLog("Reading RTC");
   SRTC.read(*timeRTC);
   checkDrift();
 }
@@ -42,19 +54,19 @@ void wakeUpManageRTC()
   SRTC.clearAlarm();
   if (disableWakeUp == false)
   {
-    isDebug(dumpRTCTime());
+    //isDebug(dumpRTCTime());
     int hour = timeRTC->Hour;
-    debugLog("timeRTC->Hour: " + String(hour));
+    //debugLog("timeRTC->Hour: " + String(hour));
     // Watchy 2.0 has problems here... Idk?
     if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
-      debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
-      isDebug(dumpRTCTime());
+      //debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
+      //isDebug(dumpRTCTime());
       SRTC.atMinuteWake(timeRTC->Minute + NIGHT_SLEEP_FOR_M, true);
     }
     else
     {
-      debugLog("Next minute wake up");
+      //debugLog("Next minute wake up");
       SRTC.nextMinuteWake(true);
     }
   }
@@ -76,7 +88,7 @@ void alarmManageRTC()
 
 String getHourMinute(tmElements_t *timeEl)
 {
-  isDebug(dumpRTCTime(timeEl));
+  //isDebug(dumpRTCTime(timeEl));
   String h = String(timeEl->Hour);
   if (h.length() == 1)
   {
@@ -198,12 +210,16 @@ void loopRTCDebug()
 
 void dumpRTCTime(tmElements_t *timeEl)
 {
-  readRTC();
   debugLog("Second: " + String(timeEl->Second));
   debugLog("Minute: " + String(timeEl->Minute));
   debugLog("Hour: " + String(timeEl->Hour));
   debugLog("Day: " + String(timeEl->Day));
   debugLog("Month: " + String(timeEl->Month));
   debugLog("Year: " + String(timeEl->Year));
+}
+
+void dumpRTCTimeSmall(tmElements_t *timeEl)
+{
+  debugLog("Time: " + String(timeEl->Minute) + ":" + String(timeEl->Second));
 }
 #endif

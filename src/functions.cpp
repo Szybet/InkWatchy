@@ -2,7 +2,12 @@
 
 void logFunction(String file, int line, String func, String message)
 {
+  int bytes = file.length();
+  while(bytes > Serial.availableForWrite()) {
+    delay(100);
+  }
   Serial.println(file + ":" + String(line) + " " + func + ": " + message);
+  Serial.flush();
 }
 
 // Check if a function contains a character that has a line below like... g p q j

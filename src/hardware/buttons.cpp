@@ -76,8 +76,6 @@ void setButton(buttonState button)
     resetSleepDelay();
 }
 
-#define ADD_BUTTON_DELAY 4
-#define SMALL_BUTTON_DELAY_MS 25
 void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton)
 {
     int startime = millis();
