@@ -5,5 +5,6 @@
 
 void syncNtp();
 void checkDrift();
+void manageDriftTiming(time_t *timeDifference, int *drift);
 
 #endif
