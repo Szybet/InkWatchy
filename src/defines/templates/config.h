@@ -14,7 +14,7 @@
 #define SYNC_WIFI 1 // Sync wifi - only if it's being charger and after the delay below
 #define SYNC_WIFI_SINCE_LAST_DELAY_S 72000 // 20h
 #define WATCHDOG_TASK 1 // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
-#define ACCEPTABLE_DRIFT 10 // In S
+#define REPAIR_TIME_S 600 // 10 minutes, makes the time drift repair the time every 10 minutes no matter the delay between syncs
 
 // Book things
 #define BOOK 0
