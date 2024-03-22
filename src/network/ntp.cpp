@@ -1,9 +1,9 @@
 #include "ntp.h"
 
 RTC_DATA_ATTR time_t previousNTPTimeFull = 0;       // Full latest NTP sync time
-RTC_DATA_ATTR time_t previousNTPTimeDifference = 0; // The delay between 2 previous NTP syncs
+RTC_DATA_ATTR float previousNTPTimeDifference = 0; // The delay between 2 previous NTP syncs, float because of division of bigger delays
 RTC_DATA_ATTR int ntpDriftCorrection = 0;           // The drift
-RTC_DATA_ATTR time_t previousNTPCorrection = 0;     // UNIX time of previous drift correction
+RTC_DATA_ATTR float previousNTPCorrection = 0;     // UNIX time of previous drift correction, float because of division of bigger delays
 
 bool firstNTPSync = true;
 time_t initialRTCTime = 0;
@@ -106,7 +106,7 @@ void checkDrift()
     debugLog("currentTime: " + String(currentTime));
     debugLog("previousNTPCorrection: " + String(previousNTPCorrection));
     debugLog("previousNTPTimeDifference: " + String(previousNTPTimeDifference));
-    while (previousNTPCorrection != 0 && ntpDriftCorrection != 0 && abs(currentTime - previousNTPCorrection) >= previousNTPTimeDifference)
+    while (previousNTPCorrection != 0 && ntpDriftCorrection != 0 && abs(float(currentTime) - previousNTPCorrection) >= previousNTPTimeDifference)
     {
         previousNTPCorrection = previousNTPCorrection + previousNTPTimeDifference;
         debugLog("Doing drift correction!");
@@ -121,16 +121,16 @@ void checkDrift()
 }
 
 #define MAX_TRIES 200
-void manageDriftTiming(time_t *timeDifference, int *drift)
+void manageDriftTiming(float *timeDifference, int *drift)
 {
-    time_t timeDifferenceVar = *timeDifference;
+    float timeDifferenceVar = *timeDifference;
     int driftVar = *drift;
 
     bool done = false;
     for (int d = 2; d < MAX_TRIES; d++)
     {
         time_t newDrift = driftVar / d;
-        time_t newTimeDifference = timeDifferenceVar / d;
+        float newTimeDifference = timeDifferenceVar / d;
 
         if(newTimeDifference <= REPAIR_TIME_S && newDrift * d == driftVar) {
             debugLog("Stopped at divison: " + String(d));
@@ -147,6 +147,7 @@ void manageDriftTiming(time_t *timeDifference, int *drift)
 
     if(done == false) {
         debugLog("FAILED to minimase drift :(");
+        return;
     }
 
     *timeDifference = timeDifferenceVar;
