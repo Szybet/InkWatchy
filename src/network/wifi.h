@@ -3,19 +3,25 @@
 
 #include "defines/defines.h"
 
-extern bool isWifiTaskRunning;
-
 void initWifi();
 void turnOnWifi();
+void turnOnWifiPersistent();
 void turnOffWifiMinimal();
 void turnOffWifi();
 int getSignalStrength();
 void regularSync();
+bool isWifiTaskCheck();
 
 #if DEBUG || DEBUG_MENUS == 1
 String wifiStatus();
 #endif
 
-bool isWifiConnected();
+typedef enum {
+    WifiOff,
+    WifiOn,
+    WifiConnected,
+} wifiStatusSimple;
+
+wifiStatusSimple wifiStatusWrap();
 
 #endif

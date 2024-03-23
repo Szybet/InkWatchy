@@ -151,7 +151,11 @@ void initWatchfaceDisplay()
 bool wentToSleep = false; // Don't go to sleep after one try of noClickedButton - maybe a sync is going on?
 void loopWatchfaceLoop()
 {
-  debugLog("Executing loop watch face");
+  if(bat.isCharging == true) { // Here should be a checker if its in these hours when wakeups are disabled, otherwise in main wakeup manage will read it, but this is fine too
+    readRTC(); // It's really only needed when wifi is on and its charging
+  }
+
+  // debugLog("Executing loop watch face");
   if (wFTime.Minute != timeRTC->Minute)
   {
     dUChange = true;
@@ -238,7 +242,8 @@ void loopWatchfaceLoop()
   // if(dUChange == false) {
   // debugLog("No change in watchface, skipping timer");
   // Always go to sleep in watchface after loop
-  if (buttonClicked == false && wentToSleep == false)
+  // Well not if it's charging
+  if (buttonClicked == false && wentToSleep == false && (bat.isCharging == false || SYNC_WIFI == 0))
   {
     sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
     wentToSleep = true;

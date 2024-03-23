@@ -39,6 +39,7 @@ void setup()
 #if DUMP_LOOP_SOFTWARE_DEBUG
   loopGeneralDebug();
 #endif
+  debugLog("readFlashMessage outside");
   readFlashMessage();
 #endif
 
@@ -47,9 +48,6 @@ void setup()
   {
     initButtonTask();
   }
-#if !DEBUG || !NO_SYNC
-  regularSync();
-#endif
 
   initWatchdogTask();
 }
@@ -61,6 +59,10 @@ void loop()
   loopBattery();
   loopPowerSavings();
   loopManager();
+
+#if !DEBUG || !NO_SYNC
+  regularSync();
+#endif
 
 #if DEBUG && EINK_COUNTER
   showEinkCounter();
@@ -107,50 +109,6 @@ void loop()
     loopGeneralDebug();
 #endif
   }
-
 #endif
-
-  //debugLog("sleepDelayMs is:" + String(sleepDelayMs));
-  //debugLog("millis is:" + String(long(millis())));
-  if (long(millis()) - sleepDelayMs >= SLEEP_EVERY_MS)
-  {
-    if (isWifiTaskRunning == true)
-    {
-      debugLog("Wifi is turned on, waiting...");
-      sleepDelayMs = millis();
-      //debugLog("sleepDelayMs is after change:" + String(sleepDelayMs));
-      return void();
-    }
-#if WIFI_TOOL
-    if (wifiToolRunning == true)
-    {
-      debugLog("Wifi tool is running, waiting...");
-      sleepDelayMs = millis();
-      return void();
-    }
-#endif
-#if APPLE_JOKE
-    if (appleJokeRunning == true)
-    {
-      debugLog("Apple joke is running, waiting...");
-      sleepDelayMs = millis();
-      return void();
-    }
-#endif
-    if (currentPlace != FIRST_PLACE)
-    {
-      debugLog("SLEEP_EVERY_MS runned out, Showing watchface");
-
-      currentPlace = NoPlace;
-      currentPlaceIndex = 0;
-
-      sleepDelayMs = sleepDelayMs + TIME_FOR_WATCHFACE_TO_SHOW_MS;
-    }
-    else
-    {
-      debugLog("SLEEP_EVERY_MS runned out, going to sleep");
-      resetSleepDelay();
-      goSleep();
-    }
-  }
+  manageSleep();
 }

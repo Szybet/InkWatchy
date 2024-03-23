@@ -1,13 +1,14 @@
 #include "functions.h"
 
+std::mutex serialWrite;
+
 void logFunction(String file, int line, String func, String message)
 {
-  int bytes = file.length();
-  while(bytes > Serial.availableForWrite()) {
-    delay(100);
-  }
+  serialWrite.lock();
+  Serial.flush();
   Serial.println(file + ":" + String(line) + " " + func + ": " + message);
   Serial.flush();
+  serialWrite.unlock();
 }
 
 // Check if a function contains a character that has a line below like... g p q j
@@ -36,19 +37,24 @@ void checkMaxMin(int *value, int max, int min, bool wrapback)
   if (*value > max)
   {
     debugLog("The value is max");
-    if(wrapback == false) {
+    if (wrapback == false)
+    {
       *value = max;
-    } else {
+    }
+    else
+    {
       *value = min;
     }
-    
   }
   if (*value < min)
   {
     debugLog("The value is min");
-    if(wrapback == false) {
+    if (wrapback == false)
+    {
       *value = min;
-    } else {
+    }
+    else
+    {
       *value = max;
     }
   }
@@ -122,4 +128,18 @@ void concatenateFloatLists(float *sourceList1, int size1, float *sourceList2, in
   {
     destinationList[size1 + i] = sourceList2[i];
   }
+}
+
+// https://stackoverflow.com/questions/70221264/how-do-i-set-the-precision-of-a-float-variable-in-c
+float precision(float f, int places)
+{
+  float n = std::pow(10.0f, places);
+  return std::round(f * n) / n;
+}
+
+void setBoolMutex(std::mutex *theMutex, bool *theBool, bool boolValue)
+{
+  theMutex->lock();
+  *theBool = boolValue;
+  theMutex->unlock();
 }

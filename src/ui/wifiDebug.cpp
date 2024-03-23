@@ -65,7 +65,7 @@ void initWifiDebugDisplay()
     writeLine("Wifi signal: " + String(getSignalStrength()) + "%", cursorXwifi, &currentHeight);
     SignalStrengthHeight = currentHeight - maxHeight;
 
-    taskStatusLastStr = BOOL_STR(isWifiTaskRunning);
+    taskStatusLastStr = BOOL_STR(isWifiTaskCheck());
     getTextBounds("Connecting: " + taskStatusLastStr, NULL, NULL, &taskStatusLenght, NULL);
     writeLine("Connecting: " + taskStatusLastStr, cursorXwifi, &currentHeight);
     TaskStatusHeight = currentHeight - maxHeight;
@@ -179,7 +179,7 @@ void loopWifiDebugDisplay()
         writeTextReplaceBack(signalStr, cursorXwifi, SignalStrengthHeight);
         dUChange = true;
     }
-    String wifiTaskStatus = BOOL_STR(isWifiTaskRunning);
+    String wifiTaskStatus = BOOL_STR(isWifiTaskCheck());
     //debugLog(wifiTaskStatus);
     if (wifiTaskStatus != taskStatusLastStr)
     {

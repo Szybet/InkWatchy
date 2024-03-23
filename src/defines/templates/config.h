@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 // Basics
-#define GSR_MINIMUM_BATTERY_VOLTAGE 0 // GSR uses higher, RTC based minimum voltage levels. Change this to 1 if you have problems at lower battery levels
+#define GSR_MINIMUM_BATTERY_VOLTAGE 0 // GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you have problems at lower battery levels
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 #define VIBRATION_BUTTON_TIME 35      // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_ACTION_TIME 60      // Time in ms to the motor to vibrate when the UI receives an action
@@ -11,10 +11,16 @@
 #define BUTTON_LONG_PRESS_MS 500 // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
 #define LONG_BACK_FULL_REFRESH 1 // Make a full refresh at long back button clicked
-#define SYNC_WIFI 1 // Sync wifi - only if it's being charger and after the delay below
-#define SYNC_WIFI_SINCE_LAST_DELAY_S 72000 // 20h
 #define WATCHDOG_TASK 1 // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
+
+// Drift & NTP & Syncing
 #define REPAIR_TIME_S 600 // 10 minutes, makes the time drift repair the time every 10 minutes no matter the delay between syncs
+#define SYNC_ON_CHARGING 1 // Keep wifi connected and sync NTP every few minutes because the RTC fucks up
+#define SYNC_WIFI 1 // Sync wifi - only if it's being charger and after the delay below
+#define SYNC_WIFI_SINCE_SUCC 72000 // 20h
+#define SYNC_WIFI_SINCE_FAIL 60 // 30 s
+#define SYNC_NTP_ON_CHARGING_DELAY 90000 // Sync NTP when charging every, in Ms. Default 1.5 minute
+#define VALID_PREVIOUS_SYNC_DELAY 300 // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
 
 // Book things
 #define BOOK 0
@@ -35,6 +41,7 @@
 #define NIGHT_SLEEP_BEFORE_HOUR 5
 #define SLEEP_EVERY_MS 6000 //180000 // Goes to sleep timer, is resetted by button presses and other things
 #define POWER_SAVING_AFTER 60 // Turn on power saving features after a certain battery percantage.
+#define POWER_SAVING_OFF_AFTER 20 // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
 #define LOOP_NO_SCREEN_WRITE_DELAY_MS 250 // Go to sleep for 200 ms if the device is woken up ( in a menu for example )
 // For now those features are:
 // DISABLE_BUTTON_VIBRATION
@@ -95,6 +102,10 @@
 #define BATTERY_CRIT_VOLTAGE 3.15
 #define BATTERY_CHARGE_VOLTAGE 4.24
 #define BATTERY_MAX_VOLTAGE 4.18 // For calculating percentages, upper limit
+#define BAD_BATTERY 0 // This true makes it use the values below, for when your battery doesn't hold the upper voltages anymore
+#define BAD_BATTERY_MAX_VOLTAGE 4.00
+#define BAD_BATTERY_CHARGE_VOLTAGE 4.00
+#define BATTERY_CHARGE_DETECTION_DIFFERENCE 0.10 // The minimum difference to detect that the battery is charging
 
 // Other
 #define VIB_MOTOR_PIN 13 // Vibration motor

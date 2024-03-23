@@ -5,5 +5,6 @@
 
 void goSleep();
 void ForceInputs();
+void manageSleep();
 
 #endif

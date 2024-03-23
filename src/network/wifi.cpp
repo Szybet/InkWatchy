@@ -2,12 +2,16 @@
 
 WiFiMulti wifiMulti;
 TaskHandle_t wifiTask;
-bool isWifiTaskRunning = false;
+
+std::mutex wifiTaskMutex;
+bool isWifiTaskRunning;
+
 bool initWifiMultiDone = false;
 
 void initWifi()
 {
-    if(initWifiMultiDone == true) {
+    if (initWifiMultiDone == true)
+    {
         return void();
     }
     if (WIFI_SSID1 != "" && WIFI_PASS1 != "")
@@ -64,19 +68,24 @@ void initWifi()
 }
 
 RTC_DATA_ATTR long lastSyncUnix = 0;
+RTC_DATA_ATTR long lastTryUnix = 0;
+int wifiConnectionTries = 0;
+bool stillBeConnected = false;
 void turnOnWifiTask(void *parameter)
 {
     debugLog("Turning wifi on");
-    isWifiTaskRunning = true;
-    for (int i = 0; i < 15; i++)
+    setBoolMutex(&wifiTaskMutex, &isWifiTaskRunning, true);
+    for (int i = 0; i < wifiConnectionTries; i++)
     {
         debugLog("Running wifi loop: " + String(i));
+        //debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
         WiFi.mode(WIFI_STA);
         // WiFi.setSleep(WIFI_PS_NONE);
         WiFi.setAutoConnect(true);
         WiFi.setAutoReconnect(true);
         initWifi();
         wifiMulti.run(17000);
+
         if (WiFi.status() == WL_CONNECTED)
         {
             break;
@@ -84,7 +93,7 @@ void turnOnWifiTask(void *parameter)
         else
         {
             debugLog("Wifi failed to connect, retrying...");
-            //turnOffWifi();
+            // turnOffWifi();
             turnOffWifiMinimal();
             delayTask(1500);
         }
@@ -96,15 +105,46 @@ void turnOnWifiTask(void *parameter)
         syncWeather();
         lastSyncUnix = getUnixTime();
     }
-    sleepDelayMs = millis(); // reset sleep delay
-    isWifiTaskRunning = false;
+    if (stillBeConnected == true)
+    {
+        while (WiFi.status() == WL_CONNECTED)
+        {
+            syncNtp(false);
+            int counter = 0;
+            while (counter < SYNC_NTP_ON_CHARGING_DELAY)
+            {
+                delayTask(1000);
+                counter = counter + 1000;
+                if (bat.isCharging == false)
+                {
+                    syncNtp(false);
+                    break;
+                }
+                if(WiFi.status() != WL_CONNECTED) {
+                    break;
+                }
+            }
+            lastTryUnix = getUnixTime();
+        }
+    }
     turnOffWifiMinimal();
+    if(stillBeConnected == false) {
+        resetSleepDelay(20000);
+    } else {
+        resetSleepDelay();
+    }
+    
+    debugLog("Setting isWifiTaskRunning to false NOW");
+    setBoolMutex(&wifiTaskMutex, &isWifiTaskRunning, false);
     vTaskDelete(NULL);
 }
 
 void turnOnWifi()
 {
-    if (isWifiTaskRunning == false)
+    // Regular turn on
+    wifiConnectionTries = 9;
+    stillBeConnected = false;
+    if (isWifiTaskCheck() == false)
     {
         xTaskCreate(
             turnOnWifiTask,
@@ -116,7 +156,25 @@ void turnOnWifi()
     }
 }
 
-void turnOffWifiMinimal() {
+void turnOnWifiPersistent()
+{
+    // Turn on but keep being connected and sync NTP
+    wifiConnectionTries = 3;
+    stillBeConnected = true;
+    if (isWifiTaskCheck() == false)
+    {
+        xTaskCreate(
+            turnOnWifiTask,
+            "wifiTask",
+            40000,
+            NULL,
+            0,
+            &wifiTask);
+    }
+}
+
+void turnOffWifiMinimal()
+{
     WiFi.disconnect();
     WiFi.mode(WIFI_OFF);
 }
@@ -124,10 +182,10 @@ void turnOffWifiMinimal() {
 void turnOffWifi()
 {
     debugLog("Turning wifi off");
-    if (isWifiTaskRunning == true)
+    if (isWifiTaskCheck() == true)
     {
         vTaskDelete(wifiTask);
-        isWifiTaskRunning = false;
+        setBoolMutex(&wifiTaskMutex, &isWifiTaskRunning, false);
     }
     turnOffWifiMinimal();
 }
@@ -158,18 +216,24 @@ int getSignalStrength()
 
 void regularSync()
 {
-    if (SYNC_WIFI == 1 && (getUnixTime() - lastSyncUnix > SYNC_WIFI_SINCE_LAST_DELAY_S) && bat.isCharging == true)
+    if (SYNC_WIFI == 1 && bat.isCharging == true && isWifiTaskCheck() == false)
     {
-        if (isWifiTaskRunning == false)
+        if (getUnixTime() - lastSyncUnix > SYNC_WIFI_SINCE_SUCC)
         {
             debugLog("Regular sync going on");
             turnOnWifi();
             lastSyncUnix = getUnixTime();
         }
+        else if (getUnixTime() - lastTryUnix > SYNC_WIFI_SINCE_FAIL)
+        {
+            debugLog("Persistent sync going on");
+            turnOnWifiPersistent();
+            lastTryUnix = getUnixTime();
+        }
     }
     else
     {
-        //debugLog("Not doing regular sync: " + String(getUnixTime() - lastSyncUnix) + " " + BOOL_STR(bat.isCharging));
+        // debugLog("Not doing regular sync: " + String(getUnixTime() - lastSyncUnix) + " " + BOOL_STR(bat.isCharging));
     }
 }
 
@@ -200,7 +264,7 @@ String wifiStatus()
 }
 #endif
 
-bool isWifiConnected()
+wifiStatusSimple wifiStatusWrap()
 {
     // TODO: Is asking 2 times time consuming? The answer is no
     // debugLog("Milis before asking time status: " + String(millis()));
@@ -210,13 +274,27 @@ bool isWifiConnected()
 
     if (status == WL_CONNECTED)
     {
-
-        return true;
+        return WifiConnected;
     }
     else
     {
-        return false;
+        if (WiFi.getMode() == WIFI_OFF)
+        {
+            return WifiOff;
+        }
+        else
+        {
+            return WifiOn;
+        }
     }
+}
+
+bool isWifiTaskCheck()
+{
+    wifiTaskMutex.lock();
+    bool tmp = isWifiTaskRunning;
+    wifiTaskMutex.unlock();
+    return tmp;
 }
 
 #if DEBUG

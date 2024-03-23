@@ -3,7 +3,7 @@
 
 #include "defines/defines.h"
 
-void syncNtp();
+void syncNtp(bool doDriftThings = true);
 void checkDrift();
 void manageDriftTiming(float *timeDifference, int *drift);
 

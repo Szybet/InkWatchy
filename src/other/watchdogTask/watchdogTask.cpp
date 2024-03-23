@@ -6,8 +6,11 @@ TaskHandle_t watchdogTask = NULL;
 #if WATCHDOG_TASK
 void loopWatchdogTask(void *parameter)
 {
+    debugLog("Watchdog starting");
     while(true) {
-        delayTask(60000);
+        delayTask(5000);
+        debugLog("Watchdog cycle");
+        dumpButtons();
         if(digitalRead(BACK_PIN) == HIGH && digitalRead(MENU_PIN) == HIGH && digitalRead(UP_PIN) == HIGH && digitalRead(DOWN_PIN) == HIGH) {
             debugLog("Detected all buttons high, resetting...");
             ESP.restart();
@@ -17,14 +20,16 @@ void loopWatchdogTask(void *parameter)
             ESP.restart();
         } else {
             everythingIsFine = false;
+            delayTask(3000);
         }
     }
 }
 
 void initWatchdogTask()
 {
+    debugLog("- done");
     xTaskCreate(
-        loopButtonsTask,
+        loopWatchdogTask,
         "watchdogTask",
         2000,
         NULL,
@@ -61,6 +66,7 @@ void leaveFlashMessage(String message)
 }
 
 void readFlashMessage() {
+    debugLog("readFlashMessage inside");
 #if DEBUG
     initNvsManage();
     String str = NVS.getString(NVS_WATCHDOG_DEBUG_DATA);
