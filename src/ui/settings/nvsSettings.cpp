@@ -5,14 +5,14 @@ bool RTC_DATA_ATTR disableWakeUp = false;
 
 void loadAllStorage() {
     initNvsManage();
-    debugLog("Loading nvs storage");
+    //debugLog("Loading nvs storage");
     disableAllVibration = NVS.getInt(NVS_DISABLE_ALL_VIBRATION, 0);
     disableWakeUp = NVS.getInt(NVS_DISABLE_WAKE_UP, 0);
 }
 
 void saveAllStorage() {
     initNvsManage();
-    debugLog("Saving nvs storage");
+    //debugLog("Saving nvs storage");
     NVS.setInt(NVS_DISABLE_ALL_VIBRATION, disableAllVibration);
     NVS.setInt(NVS_DISABLE_WAKE_UP, disableWakeUp);
     NVS.commit();

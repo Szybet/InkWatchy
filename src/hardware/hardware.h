@@ -7,7 +7,7 @@ extern RTC_DATA_ATTR float HWVer;
 extern long sleepDelayMs;
 
 void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
-void resetSleepDelay();
+void resetSleepDelay(int addMs = 0);
 
 extern TaskHandle_t motorTask;
 extern bool motorTaskRunning;

@@ -31,7 +31,7 @@ int minAxcelLimit(int value, int sub)
 
 void resetSleepDelayBook()
 {
-    sleepDelayMs = millis() + BOOK_ADD_SLEEP_DELAY_MS;
+    resetSleepDelay(BOOK_ADD_SLEEP_DELAY_MS);
     debugLog("sleepDelayMs is:" + String(sleepDelayMs));
     debugLog("millis is:" + String(millis()));
 }

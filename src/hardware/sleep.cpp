@@ -68,7 +68,7 @@ void goSleep()
     }
 
     display.hibernate();
-    turnOffWifi(); // To be sure only
+    turnOffWifi();    // To be sure only
     alarmManageRTC(); // To be sure too...
     debugLog("Sleeping!");
     isDebug(Serial.flush());
@@ -77,4 +77,52 @@ void goSleep()
     esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
     esp_sleep_enable_ext1_wakeup(UP_MASK | DOWN_MASK | MENU_MASK | BACK_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); // Enable deep sleep wake on button press
     esp_deep_sleep_start();
+}
+
+void manageSleep()
+{
+    // debugLog("sleepDelayMs is:" + String(sleepDelayMs));
+    // debugLog("millis is:" + String(long(millis())));
+    if (long(millis()) - sleepDelayMs >= SLEEP_EVERY_MS)
+    {
+        //debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
+        if (isWifiTaskCheck() == true)
+        {
+            debugLog("Wifi is turned on, waiting...");
+            resetSleepDelay();
+            // debugLog("sleepDelayMs is after change:" + String(sleepDelayMs));
+            return void();
+        }
+#if WIFI_TOOL
+        if (wifiToolRunning == true)
+        {
+            debugLog("Wifi tool is running, waiting...");
+            resetSleepDelay();
+            return void();
+        }
+#endif
+#if APPLE_JOKE
+        if (appleJokeRunning == true)
+        {
+            debugLog("Apple joke is running, waiting...");
+            resetSleepDelay();
+            return void();
+        }
+#endif
+        if (currentPlace != FIRST_PLACE)
+        {
+            debugLog("SLEEP_EVERY_MS runned out, Showing watchface");
+
+            currentPlace = NoPlace;
+            currentPlaceIndex = 0;
+
+            sleepDelayMs = sleepDelayMs + TIME_FOR_WATCHFACE_TO_SHOW_MS;
+        }
+        else
+        {
+            debugLog("SLEEP_EVERY_MS runned out, going to sleep");
+            resetSleepDelay();
+            goSleep();
+        }
+    }
 }

@@ -14,6 +14,8 @@
 #include <ArduinoNvs.h>
 #include <StableBMA.h>
 
+#include <mutex>
+
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
 

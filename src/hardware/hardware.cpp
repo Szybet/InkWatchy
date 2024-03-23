@@ -44,9 +44,9 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     digitalWrite(VIB_MOTOR_PIN, false); // To reset the motor button if esp crashed when it was vibrating
 }
 
-void resetSleepDelay()
+void resetSleepDelay(int addMs)
 {
-    sleepDelayMs = millis();
+    sleepDelayMs = millis() + addMs;
 }
 
 #if DEBUG
