@@ -9,8 +9,7 @@ void loopWatchdogTask(void *parameter)
     debugLog("Watchdog starting");
     while(true) {
         delayTask(5000);
-        debugLog("Watchdog cycle");
-        dumpButtons();
+        // debugLog("Watchdog cycle");
         if(digitalRead(BACK_PIN) == HIGH && digitalRead(MENU_PIN) == HIGH && digitalRead(UP_PIN) == HIGH && digitalRead(DOWN_PIN) == HIGH) {
             debugLog("Detected all buttons high, resetting...");
             ESP.restart();

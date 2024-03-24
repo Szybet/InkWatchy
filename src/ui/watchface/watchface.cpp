@@ -25,6 +25,49 @@ RTC_DATA_ATTR tmElements_t wFTime;
 RTC_DATA_ATTR int percentOfDay;
 RTC_DATA_ATTR int batteryPercantageWF;
 
+#define WATCHFACE_POSITIONS 2 // There is one "empty" on 0 too
+#define EMPTY_POS 0
+#define MODULE_POS 1
+RTC_DATA_ATTR int watchfacePos = 0;
+RTC_DATA_ATTR bool positionEngaged = false;
+
+void drawPosMarker()
+{
+  // First clean all Pos markers
+  display.drawPixel(190, 160, GxEPD_WHITE);
+  display.drawPixel(191, 160, GxEPD_WHITE);
+  display.drawPixel(191, 161, GxEPD_WHITE);
+
+  display.drawPixel(108, 60, GxEPD_WHITE);
+  display.drawPixel(109, 60, GxEPD_WHITE);
+  display.drawPixel(108, 59, GxEPD_WHITE);
+
+  // Then draw the one
+  if (watchfacePos == MODULE_POS)
+  {
+    // 190, 160
+    // 191, 160
+    // 191, 161
+    display.drawPixel(190, 160, GxEPD_BLACK);
+    display.drawPixel(191, 160, GxEPD_BLACK);
+    display.drawPixel(191, 161, GxEPD_BLACK);
+  } else if(watchfacePos == EMPTY_POS) {
+    // 108, 60
+    // 109, 60
+    // 108, 59
+    display.drawPixel(108, 60, GxEPD_BLACK);
+    display.drawPixel(109, 60, GxEPD_BLACK);
+    display.drawPixel(108, 59, GxEPD_BLACK);
+  }
+  dUChange = true;
+}
+
+void movePos(int add) {
+  watchfacePos = watchfacePos + add;
+  checkMaxMin(&watchfacePos, WATCHFACE_POSITIONS - 1);
+  drawPosMarker();
+}
+
 /*
 // Even with monospaced font, it differs a bit...
 {
@@ -67,27 +110,27 @@ void writeTimeMinimal()
       String oldWrite = String(oldTime[i]);
       String beforeString = oldTime.substring(0, i);
       String afterString = oldTime.substring(0, i + 1);
-      //debugLog("beforeString: " + beforeString);
-      //debugLog("afterString: " + afterString);
+      // debugLog("beforeString: " + beforeString);
+      // debugLog("afterString: " + afterString);
 
-      //uint16_t wBefore;
-      //getTextBounds(beforeString, NULL, NULL, &wBefore, NULL);
-      //debugLog("wBefore: " + String(wBefore));
+      // uint16_t wBefore;
+      // getTextBounds(beforeString, NULL, NULL, &wBefore, NULL);
+      // debugLog("wBefore: " + String(wBefore));
 
       uint16_t wAfter;
       getTextBounds(afterString, NULL, NULL, &wAfter, NULL);
-      //debugLog("wAfter: " + String(wAfter));
+      // debugLog("wAfter: " + String(wAfter));
 
       uint16_t wToWrite;
       uint16_t hToWrite;
       getTextBounds(oldWrite, NULL, NULL, &wToWrite, &hToWrite);
-      //debugLog("wToWrite: " + String(wToWrite));
-      //debugLog("hToWrite: " + String(hToWrite));
+      // debugLog("wToWrite: " + String(wToWrite));
+      // debugLog("hToWrite: " + String(hToWrite));
 
       uint16_t finalWidthStart = wAfter - wToWrite;
-      //debugLog("finalWidthStart: " + String(finalWidthStart));
+      // debugLog("finalWidthStart: " + String(finalWidthStart));
 
-      //debugLog("Writing to screen: " + toWrite);
+      // debugLog("Writing to screen: " + toWrite);
       display.fillRect(TIME_CORD_X + finalWidthStart, TIME_CORD_Y - hToWrite, TIME_LETTERS_SPACING, hToWrite, GxEPD_WHITE); // Clear things up
       writeTextReplaceBack(toWrite, TIME_CORD_X + finalWidthStart, TIME_CORD_Y);
     }
@@ -109,8 +152,8 @@ void initWatchfaceDisplay()
   wFTime.Day = timeRTC->Day;
   wFTime.Month = timeRTC->Month;
   wFTime.Year = timeRTC->Year;
-  //dumpRTCTime(wFTime);
-  //dumpRTCTime(timeRTC);
+  // dumpRTCTime(wFTime);
+  // dumpRTCTime(timeRTC);
 
   writeImageN(0, 0, watchfaceImgPack);
 
@@ -145,14 +188,24 @@ void initWatchfaceDisplay()
   batteryPercantageWF = bat.percentage;
   drawProgressBar(BATT_BAR_CORD, TO_DAY_BAR_SIZE, batteryPercantageWF);
 
+  drawPosMarker();
+
   disUp(true, false, true);
+}
+
+// Basically reasons for it to be not in normal mode (sleeping)
+bool isMoreActive()
+{
+  return bat.isCharging;
 }
 
 bool wentToSleep = false; // Don't go to sleep after one try of noClickedButton - maybe a sync is going on?
 void loopWatchfaceLoop()
 {
-  if(bat.isCharging == true) { // Here should be a checker if its in these hours when wakeups are disabled, otherwise in main wakeup manage will read it, but this is fine too
+  if (isMoreActive() == true)
+  {            // Here should be a checker if its in these hours when wakeups are disabled, otherwise in main wakeup manage will read it, but this is fine too
     readRTC(); // It's really only needed when wifi is on and its charging
+    wfModulesManage(None);
   }
 
   // debugLog("Executing loop watch face");
@@ -201,6 +254,8 @@ void loopWatchfaceLoop()
       percentOfDay = percentOfDayTmp;
       drawProgressBar(TO_DAY_BAR_CORD, TO_DAY_BAR_SIZE, percentOfDay);
     }
+
+    wfModulesManage(None);
   }
 
   if (batteryPercantageWF != bat.percentage)
@@ -211,20 +266,44 @@ void loopWatchfaceLoop()
   }
 
   bool buttonClicked = false;
-  switch (useButton())
+  buttonState bt = useButton();
+  if(bt == None) {
+    buttonClicked = true;
+  }
+  switch (bt)
   {
   case Up:
   {
+    if(positionEngaged == false) {
+      movePos(1);
+    } else {
+      if(watchfacePos == MODULE_POS) {
+        wfModuleSwitch(Right);
+        drawModuleCount();
+      }
+    }
     break;
   }
   case Down:
   {
+    if(positionEngaged == false) {
+      movePos(-1);
+    } else {
+      if(watchfacePos == MODULE_POS) {
+        wfModuleSwitch(Left);
+        drawModuleCount();
+      }
+    }
     break;
   }
   case Menu:
   {
-    buttonClicked = true;
-    generalSwitch(mainMenu);
+    if(watchfacePos == EMPTY_POS) {
+      generalSwitch(mainMenu);
+    } else if(watchfacePos == MODULE_POS) {
+      wfModulesManage(Menu);
+      drawModuleCount();
+    }
     break;
   }
   case LongUp:
@@ -235,6 +314,11 @@ void loopWatchfaceLoop()
   case LongDown:
   {
 
+    break;
+  }
+  case LongMenu:
+  {
+    positionEngaged = !positionEngaged;
     break;
   }
   }
