@@ -3,19 +3,6 @@
 
 #include "defines/defines.h"
 
-typedef enum 
-{
-    None,
-    Back,
-    Menu,
-    Up,
-    Down,
-    LongBack,
-    LongMenu,
-    LongUp,
-    LongDown,
-} buttonState;
-
 extern buttonState buttonPressed;
 extern int RTC_DATA_ATTR UP_PIN;
 extern uint64_t RTC_DATA_ATTR UP_MASK;

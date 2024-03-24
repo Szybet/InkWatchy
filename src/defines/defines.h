@@ -30,6 +30,31 @@ struct ImageDef {
 
 const ImageDef emptyImgPack = {NULL, 0, 0};
 
+typedef enum 
+{
+    None,
+    Back,
+    Menu,
+    Up,
+    Down,
+    LongBack,
+    LongMenu,
+    LongUp,
+    LongDown,
+} buttonState; // This needs to be here because watchface modules use it too and idk why it doesn't work if its in buttons.h :( send help
+
+typedef enum {
+    WifiOff,
+    WifiOn,
+    WifiConnected,
+} wifiStatusSimple; // This too
+
+struct wfModule {
+    bool show;
+    void (*checkShow)(bool* showBool, bool* redrawBool);
+    void (*requestShow)(buttonState button);
+}; // Madness -,-
+
 #include "config.h" // Needs to be first!
 #include "confidential.h"
 #include "macros.h"
@@ -44,6 +69,10 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #include "../hardware/display.h"
 #include "../hardware/axc.h"
 #include "../functions.h"
+#include "../network/wifi.h"
+#include "../network/ntp.h"
+#include "../network/weather.h"
+#include "../other/watchdogTask/watchdogTask.h"
 #include "../ui/functionsUi.h"
 #include "../ui/debug.h"
 #include "../ui/batteryDebug.h"
@@ -68,9 +97,8 @@ const ImageDef emptyImgPack = {NULL, 0, 0};
 #endif
 #include "../ui/pinInput/pinInput.h"
 #include "../ui/settings/nvsSettings.h"
-#include "../network/wifi.h"
-#include "../network/ntp.h"
-#include "../network/weather.h"
-#include "../other/watchdogTask/watchdogTask.h"
+#include "../ui/watchfaceModules/netMod/netMod.h"
+#include "../ui/watchfaceModules/emptyMod/emptyMod.h"
+#include "../ui/watchfaceModules/watchFaceModule.h"
 
 #endif

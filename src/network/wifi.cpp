@@ -268,7 +268,7 @@ wifiStatusSimple wifiStatusWrap()
 {
     // TODO: Is asking 2 times time consuming? The answer is no
     // debugLog("Milis before asking time status: " + String(millis()));
-    debugLog("Wifi status: " + wifiStatus());
+    // debugLog("Wifi status: " + wifiStatus());
     wl_status_t status = WiFi.status();
     // debugLog("Milis after asking time status: " + String(millis()));
 

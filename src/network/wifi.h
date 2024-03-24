@@ -16,12 +16,6 @@ bool isWifiTaskCheck();
 String wifiStatus();
 #endif
 
-typedef enum {
-    WifiOff,
-    WifiOn,
-    WifiConnected,
-} wifiStatusSimple;
-
 wifiStatusSimple wifiStatusWrap();
 
 #endif
