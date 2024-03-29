@@ -75,9 +75,13 @@
 #define DRAW_DEBUG_RECT 0   // Shows rectangles where custom functions write bitmaps
 #define DUMP_LOOP_DELAY 5000 // delay in ms of dumping loop data
 #define SPEED_THROUGH_TIME 0 // Speeds up time for watchface programming
-#define NO_SYNC 1 // If debug and this is both true, it will not try to sync up automatically
+#define NO_SYNC 0 // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0 // Prints voltage on the screen, really fast
 #define SCOM_TASK 1
+#if SCOM_TASK && DEBUG
+#define VIBRATION_BUTTON_TIME 800      // Time in ms to the motor to vibrate after clicking a button. 0 means none
+#define VIBRATION_ACTION_TIME 800      // Time in ms to the motor to vibrate when the UI receives an action
+#endif
 
 // Display init magic ;)
 #define EPD_CS 5
