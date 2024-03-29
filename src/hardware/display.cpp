@@ -39,6 +39,8 @@ void initDisplay(bool isFromWakeUp)
 
 RTC_DATA_ATTR int updateCounter = 0;
 bool dUChange = false;
+#if SCOM_TASK && DEBUG
+#endif
 // Display update
 void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
 {
@@ -46,6 +48,9 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
     bool updatedScreen = false;
     if (dUChange == true || reallyUpdate == true)
     {
+#if SCOM_TASK && DEBUG
+    scomChanged = true;
+#endif
         dUChange = false;
         if (updateCounter >= FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
         {

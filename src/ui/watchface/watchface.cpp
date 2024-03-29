@@ -329,7 +329,8 @@ void loopWatchfaceLoop()
   // Well not if it's charging
   if (buttonClicked == false && wentToSleep == false && (bat.isCharging == false || SYNC_WIFI == 0))
   {
-    sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
+    sleepDelayMs = sleepDelayMs - SLEEP_EVERY_MS;
+    // sleepDelayMs = long(millis()) - SLEEP_EVERY_MS;
     wentToSleep = true;
   }
   //}

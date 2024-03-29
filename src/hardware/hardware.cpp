@@ -76,12 +76,12 @@ void vibrateMotorTaskFun(void *parameter)
 {
     motorTaskRunning = true;
     debugLog("Motor on");
-    for (int i = 0; i < vibrateTime / 2; i++)
+    for (int i = 0; i < vibrateTime / 20; i++)
     {
         digitalWrite(VIB_MOTOR_PIN, true);
-        delayTask(1);
+        delayTask(10);
         digitalWrite(VIB_MOTOR_PIN, false);
-        delayTask(1);
+        delayTask(10);
     }
     debugLog("Motor off");
     motorTaskRunning = false;
@@ -95,18 +95,18 @@ void vibrateMotor(int vTime, bool add)
         return void();
     }
 
-    if (vibrateMotor != 0 && motorTaskRunning == false)
+    if (motorTaskRunning == false)
     {
         vibrateTime = vTime;
         xTaskCreate(
             vibrateMotorTaskFun,
             "motorTask",
-            2000,
+            1000,
             NULL,
             0,
             &motorTask);
     }
-    if (add == true && vibrateMotor != 0 && motorTaskRunning == true)
+    if (add == true && motorTaskRunning == true)
     {
         debugLog("Adding time to motor");
         vibrateTime = vibrateTime + vTime;

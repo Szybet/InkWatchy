@@ -11,7 +11,7 @@ void resetSleepDelay(int addMs = 0);
 
 extern TaskHandle_t motorTask;
 extern bool motorTaskRunning;
-void vibrateMotor(int vTime = VIBRATION_BUTTON_TIME, bool add = false);
+void vibrateMotor(int vTime = VIBRATION_BUTTON_TIME, bool add = true);
 
 typedef enum 
 {

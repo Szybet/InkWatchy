@@ -7,7 +7,7 @@ int loopDumpDelayMs = 0;
 esp_sleep_wakeup_cause_t wakeUpReason;
 void setup()
 {
-  isDebug(Serial.begin(115200));
+  isDebug(Serial.begin(921600));
   wakeUpReason = esp_sleep_get_wakeup_cause();
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
   // ESP_SLEEP_WAKEUP_EXT1 Button press
