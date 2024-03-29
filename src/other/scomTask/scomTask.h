@@ -4,6 +4,7 @@
 #include "defines/defines.h"
 
 #if SCOM_TASK && DEBUG
+extern bool scomChanged;
 void loopScomTask(void *parameter);
 void initScomTask();
 #endif
