@@ -3,6 +3,8 @@
 
 #include "defines/defines.h"
 
+extern std::mutex serialWrite;
+
 void logFunction(String file, int line, String func, String message);
 bool containsBelowChar(String str);
 void delayTask(int timeMs);

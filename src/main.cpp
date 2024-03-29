@@ -41,6 +41,21 @@ void setup()
 #endif
   debugLog("readFlashMessage outside");
   readFlashMessage();
+
+#if VOLTAGE_PRINT_ON
+    xTaskCreate(
+        dumpBatteryScreen,
+        "dumpBatteryTask",
+        2000,
+        NULL,
+        0,
+        nullptr);
+#endif
+
+#if SCOM_TASK
+  initScomTask();
+#endif
+
 #endif
 
   initManager();
