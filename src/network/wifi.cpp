@@ -79,8 +79,14 @@ void turnOnWifiTask(void *parameter)
     {
         debugLog("Running wifi loop: " + String(i));
         //debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
+        if(BAD_BATTERY == 1) {
+            WiFi.setSleep(WIFI_PS_MAX_MODEM);
+            debugLog("Setting sleep mode for wifi");
+        }
         WiFi.mode(WIFI_STA);
-        // WiFi.setSleep(WIFI_PS_NONE);
+
+        debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));
+
         WiFi.setAutoConnect(true);
         WiFi.setAutoReconnect(true);
         initWifi();
@@ -175,7 +181,7 @@ void turnOnWifiPersistent()
 
 void turnOffWifiMinimal()
 {
-    WiFi.disconnect();
+    WiFi.disconnect(true);
     WiFi.mode(WIFI_OFF);
 }
 

@@ -125,7 +125,7 @@ void checkDrift()
     // Checker
     int checker = (float(currentTime) - previousNTPCorrection) / previousNTPTimeDifference;
     debugLog("Checker is: " + String(checker));
-    if (previousNTPCorrection != 0 && ntpDriftCorrection != 0 && checker > 2000)
+    if (int(previousNTPCorrection) != 0 && int(ntpDriftCorrection) != 0 && checker > 2000)
     {
         debugLog("Checker is too high, do nothing");
         while (true)

@@ -32,6 +32,7 @@ uint32_t analogReadMilliVolts(uint8_t pin);
 
 #if DEBUG
 void dumpBattery();
+void dumpBatteryScreen(void *parameter);
 #endif
 
 #endif

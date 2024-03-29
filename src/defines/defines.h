@@ -72,7 +72,6 @@ struct wfModule {
 #include "../network/wifi.h"
 #include "../network/ntp.h"
 #include "../network/weather.h"
-#include "../other/watchdogTask/watchdogTask.h"
 #include "../ui/functionsUi.h"
 #include "../ui/debug.h"
 #include "../ui/batteryDebug.h"
@@ -90,6 +89,10 @@ struct wfModule {
 #endif
 #if WIFI_TOOL
 #include "../other/wifiTool/wifiTool.h"
+#endif
+#include "../other/watchdogTask/watchdogTask.h"
+#if SCOM_TASK && DEBUG
+#include "../other/scomTask/scomTask.h"
 #endif
 #if APPLE_JOKE
 #include "../ui/appleJoke/appleJoke.h"
