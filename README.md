@@ -45,6 +45,8 @@ Apart from code things, here are the key features for now:
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
 4. Read platformio.ini and choose your env. Don't use the default one for reasons. You propably want to select the `min` one.
 
+**Also latest stable commit: 027b93ca5a10f2e75d6e815241773df158a979b7** Go back to it for reasons
+
 ## Donations
 This was the first thing I have written and asked myself if I should release it for free. Well here we are - I also write other open source things - check my profile for more eink stuff. Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a option.
 
