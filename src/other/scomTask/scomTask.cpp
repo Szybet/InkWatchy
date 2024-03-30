@@ -13,52 +13,63 @@ void loopScomTask(void *parameter)
         // long-back-button:
         // back-button:
         String cmd = Serial.readStringUntil(':');
-        if (cmd != "" && cmd.lastIndexOf("button") != -1)
+        if (cmd != "")
         {
             serialWrite.unlock();
-            if (cmd.lastIndexOf("back") != -1)
+            if (cmd.lastIndexOf("button") != -1)
             {
-                if (cmd.lastIndexOf("long") != -1)
+                if (cmd.lastIndexOf("back") != -1)
                 {
-                    setButton(LongBack);
+                    if (cmd.lastIndexOf("long") != -1)
+                    {
+                        setButton(LongBack);
+                    }
+                    else
+                    {
+                        setButton(Back);
+                    }
                 }
-                else
+                else if (cmd.lastIndexOf("menu") != -1)
                 {
-                    setButton(Back);
+                    if (cmd.lastIndexOf("long") != -1)
+                    {
+                        setButton(LongMenu);
+                    }
+                    else
+                    {
+                        setButton(Menu);
+                    }
+                }
+                else if (cmd.lastIndexOf("up") != -1)
+                {
+                    if (cmd.lastIndexOf("long") != -1)
+                    {
+                        setButton(LongUp);
+                    }
+                    else
+                    {
+                        setButton(Up);
+                    }
+                }
+                else if (cmd.lastIndexOf("down") != -1)
+                {
+                    if (cmd.lastIndexOf("long") != -1)
+                    {
+                        setButton(LongDown);
+                    }
+                    else
+                    {
+                        setButton(Down);
+                    }
+                }
+                else if (cmd.lastIndexOf("screen") != -1)
+                {
+                    scomChanged = true;
                 }
             }
-            else if (cmd.lastIndexOf("menu") != -1)
+            else if (cmd.lastIndexOf("screen") != -1)
             {
-                if (cmd.lastIndexOf("long") != -1)
-                {
-                    setButton(LongMenu);
-                }
-                else
-                {
-                    setButton(Menu);
-                }
-            }
-            else if (cmd.lastIndexOf("up") != -1)
-            {
-                if (cmd.lastIndexOf("long") != -1)
-                {
-                    setButton(LongUp);
-                }
-                else
-                {
-                    setButton(Up);
-                }
-            }
-            else if (cmd.lastIndexOf("down") != -1)
-            {
-                if (cmd.lastIndexOf("long") != -1)
-                {
-                    setButton(LongDown);
-                }
-                else
-                {
-                    setButton(Down);
-                }
+                scomChanged = true;
             }
             serialWrite.lock();
         }
