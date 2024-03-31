@@ -44,7 +44,7 @@ Apart from code things, here are the key features for now:
    - You need also `xxd`, newer is better
 3. Run `generate_config.sh` also in the `resources` folder. After that you can ajust values in `config.h` and `confidential.h` (in `/src/defines/` directory) to your needs.
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
-4. Read platformio.ini and choose your env. Don't use the default one for reasons. You propably want to select the `min` one.
+4. Read platformio.ini and choose your env. Don't use the default one for reasons. You propably want to select the `min` one. Remember to do that too if you use platformio on the terminal
 
 **Also latest stable commit: 027b93ca5a10f2e75d6e815241773df158a979b7** Go back to it for reasons
 
