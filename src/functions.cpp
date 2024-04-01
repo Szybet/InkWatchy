@@ -5,6 +5,7 @@ std::mutex serialWrite;
 void logFunction(String file, int line, String func, String message)
 {
   serialWrite.lock();
+  Serial.flush(true);
   Serial.println(file + ":" + String(line) + " " + func + ": " + message);
   Serial.flush(true);
   serialWrite.unlock();

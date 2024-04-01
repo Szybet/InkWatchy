@@ -74,6 +74,7 @@ void setButton(buttonState button)
     vibrateMotor();
     buttonPressed = button;
     resetSleepDelay();
+    debugLog("setButton done");
 }
 
 void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton)

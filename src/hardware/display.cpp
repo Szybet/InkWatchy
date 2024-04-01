@@ -30,7 +30,8 @@ void initDisplay(bool isFromWakeUp)
     // Default values
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
-    if(isFromWakeUp == false) {
+    if (isFromWakeUp == false)
+    {
         display.setCursor(100, 100);
         display.print("Reset.");
         display.display(FULL_UPDATE);
@@ -44,13 +45,10 @@ bool dUChange = false;
 // Display update
 void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
 {
-    //debugLog("dis up executed");
+    // debugLog("dis up executed");
     bool updatedScreen = false;
     if (dUChange == true || reallyUpdate == true)
     {
-#if SCOM_TASK && DEBUG
-    scomChanged = true;
-#endif
         dUChange = false;
         if (updateCounter >= FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
         {
@@ -67,10 +65,16 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
             display.display(PARTIAL_UPDATE);
             updatedScreen = true;
         }
+#if SCOM_TASK && DEBUG
+        scomChanged = true;
+#endif
     }
-    if(ignoreSleep == false && updatedScreen == false) {
-        //debugLog("Sleeping task because display had no update");
+    if (ignoreSleep == false && updatedScreen == false)
+    {
+        // debugLog("Sleeping task because display had no update");
+#if DEBUG == false        
         delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
+#endif
     }
 }
 
