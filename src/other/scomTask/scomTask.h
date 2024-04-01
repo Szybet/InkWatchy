@@ -5,8 +5,14 @@
 
 #if SCOM_TASK && DEBUG
 extern bool scomChanged;
+extern TaskHandle_t mainTask;
+
+extern bool mainLoopWait;
+extern bool mainLoopWaiting;
+
 void loopScomTask(void *parameter);
 void initScomTask();
+void getMainTask();
 #endif
 
 #endif
