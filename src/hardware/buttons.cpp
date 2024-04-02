@@ -134,7 +134,7 @@ void initButtonTask()
         "buttonTask",
         2000,
         NULL,
-        0,
+        BUTTONS_PRIORITY,
         &buttonTask);
 }
 

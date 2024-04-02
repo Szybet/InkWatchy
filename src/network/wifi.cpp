@@ -148,7 +148,7 @@ void turnOnWifiTask(void *parameter)
 void turnOnWifi()
 {
     // Regular turn on
-    wifiConnectionTries = 9;
+    wifiConnectionTries = WIFI_CONNECTION_TRIES;
     stillBeConnected = false;
     if (isWifiTaskCheck() == false)
     {
@@ -157,7 +157,7 @@ void turnOnWifi()
             "wifiTask",
             40000,
             NULL,
-            0,
+            WIFI_PRIORITY,
             &wifiTask);
     }
 }
@@ -165,7 +165,7 @@ void turnOnWifi()
 void turnOnWifiPersistent()
 {
     // Turn on but keep being connected and sync NTP
-    wifiConnectionTries = 3;
+    wifiConnectionTries = WIFI_CONNECTION_TRIES_PERSISTENT;
     stillBeConnected = true;
     if (isWifiTaskCheck() == false)
     {
@@ -174,7 +174,7 @@ void turnOnWifiPersistent()
             "wifiTask",
             40000,
             NULL,
-            0,
+            WIFI_PRIORITY,
             &wifiTask);
     }
 }

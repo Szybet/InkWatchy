@@ -4,6 +4,17 @@
 int loopDumpDelayMs = 0;
 #endif
 
+bool loopTaskApplied = false;
+// The loop task runs in a task, which we want to change a few things
+void loopTaskSettings() {
+  if(loopTaskApplied == false) {
+    loopTaskApplied = true;
+    //UBaseType_t prio = uxTaskPriorityGet(NULL);
+    //debugLog("Main task priority: " + String(prio));
+    vTaskPrioritySet(NULL, MAIN_LOOP_PRIORITY);
+  }
+}
+
 esp_sleep_wakeup_cause_t wakeUpReason;
 void setup()
 {
@@ -68,7 +79,8 @@ void setup()
 
 void loop()
 {
-#if SCOM_TASK && DEBUG
+  loopTaskSettings();
+#if SCOM_TASK && DEBUG && true == false
   if(mainLoopWait == true) {
     mainLoopWaiting = true;
     while(mainLoopWait == true) {
