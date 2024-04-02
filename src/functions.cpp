@@ -1,6 +1,7 @@
 #include "functions.h"
 
 std::mutex serialWrite;
+#if DEBUG
 int savedLogsIndex = 0;
 char savedLogs[2000] = {0};
 bool areLogsSaved = false;
@@ -33,6 +34,7 @@ void logFunction(String file, int line, String func, String message)
     }
   }
 }
+#endif
 
 // Check if a function contains a character that has a line below like... g p q j
 bool containsBelowChar(String str)
