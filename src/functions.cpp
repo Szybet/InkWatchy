@@ -1,7 +1,7 @@
 #include "functions.h"
 
 std::mutex serialWrite;
-#if DEBUG
+#if DEBUG // For not creating the huge list
 int savedLogsIndex = 0;
 char savedLogs[2000] = {0};
 bool areLogsSaved = false;
@@ -15,7 +15,7 @@ void logFunction(String file, int line, String func, String message)
     if (areLogsSaved == true)
     {
       areLogsSaved = false;
-      debugLog("Printing out saved logs");
+      //debugLog("Printing out saved logs");
       Serial.print(savedLogs);
       Serial.flush(true);
       savedLogsIndex = 0;
@@ -23,6 +23,9 @@ void logFunction(String file, int line, String func, String message)
     Serial.print(log);
     Serial.flush(true);
     serialWrite.unlock();
+#if SCOM_TASK
+  printEndPacket = true;
+#endif
   }
   else
   {

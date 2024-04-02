@@ -4,6 +4,7 @@
 TaskHandle_t scomTask;
 TaskHandle_t mainTask;
 bool scomChanged = false;
+bool printEndPacket = false;
 bool mainTaskDone = false;
 int displayBufferSize = 0;
 
@@ -14,25 +15,33 @@ bool mainLoopWaiting = false;
 const uint8_t startPacket[START_END_PACKET_LENGTH] = {116, 104, 105, 115, 105, 115, 97, 115, 116, 97, 114, 116, 112, 97, 99, 107};
 const uint8_t endPacket[START_END_PACKET_LENGTH] = {116, 104, 105, 115, 105, 115, 97, 101, 110, 100, 100, 100, 112, 97, 99, 107};
 
-void printPacket(const uint8_t* packet) {
-  for (int i = 0; i < START_END_PACKET_LENGTH; i++) {
-    Serial.write(packet[i]);
-  }
+void printPacket(const uint8_t *packet)
+{
+    for (int i = 0; i < START_END_PACKET_LENGTH; i++)
+    {
+        Serial.write(packet[i]);
+    }
 }
 
 void loopScomTask(void *parameter)
 {
+    debugLog("display.width(): " + String(display.width()));
+    debugLog("display.height():" + String(display.height()));
+    displayBufferSize = (int(display.width()) / 8) * int(display.height()); // GxEPD2_Type::WIDTH / 8) * page_height
+    debugLog("Buffer size is:" + String(displayBufferSize));
+    Serial.setTimeout(300);
+
     delayTask(4500);
     resetSleepDelay(10000);
     while (true)
     {
+        //debugLog("iterating...");
         serialWrite.lock();
         // long-back-button:
         // back-button:
-        String cmd = Serial.readStringUntil(':');
-        debugLog("cmd here: " + cmd);
-        if (cmd != "")
+        if (Serial.available() > 1)
         {
+            String cmd = Serial.readStringUntil(':');
             serialWrite.unlock();
             if (cmd.lastIndexOf("button") != -1)
             {
@@ -102,12 +111,12 @@ void loopScomTask(void *parameter)
                 delayTask(10);
             }
             serialWrite.lock();
-            //vTaskSuspend(mainTask); // 
+            //vTaskSuspend(mainTask); //
             //memcpy(coppiedBuffer, display._buffer, displayBufferSize);
             for (int i = 0; i < displayBufferSize; i++)
             {
                 // (GxEPD2_Type::WIDTH / 8) * page_height
-                coppiedBuffer[i] = display._buffer[i]; 
+                coppiedBuffer[i] = display._buffer[i];
             }
             mainLoopWait = false;
             */
@@ -119,15 +128,18 @@ void loopScomTask(void *parameter)
             }
         }
         // Print EOF
-        printPacket(endPacket);
-        Serial.write('\n');
-        Serial.flush(true);
+        if(printEndPacket == true || scomDid == true) {
+            printEndPacket = false;
+            printPacket(endPacket);
+            Serial.write('\n');
+            Serial.flush(true);
+        }
 
         serialWrite.unlock();
         resetSleepDelay(1000);
         if (scomDid == true)
         {
-            delayTask(150);
+            delayTask(600);
         }
         else
         {
@@ -138,11 +150,6 @@ void loopScomTask(void *parameter)
 
 void initScomTask()
 {
-    debugLog("display.width(): " + String(display.width()));
-    debugLog("display.height():" + String(display.height()));
-    displayBufferSize = (int(display.width()) / 8) * int(display.height()); // GxEPD2_Type::WIDTH / 8) * page_height
-    debugLog("Buffer size is:" + String(displayBufferSize));
-
     debugLog("- done");
     xTaskCreate(
         loopScomTask,
@@ -153,8 +160,10 @@ void initScomTask()
         &scomTask);
 }
 
-void getMainTask() {
-    if(mainTaskDone == false) {
+void getMainTask()
+{
+    if (mainTaskDone == false)
+    {
         mainTaskDone = true;
         mainTask = xTaskGetCurrentTaskHandle();
         debugLog("Set main task done");

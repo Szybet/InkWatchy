@@ -5,6 +5,7 @@
 
 #if SCOM_TASK && DEBUG
 extern bool scomChanged;
+extern bool printEndPacket;
 extern TaskHandle_t mainTask;
 
 extern bool mainLoopWait;
