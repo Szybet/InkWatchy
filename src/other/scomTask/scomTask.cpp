@@ -15,6 +15,11 @@ bool mainLoopWaiting = false;
 const uint8_t startPacket[START_END_PACKET_LENGTH] = {116, 104, 105, 115, 105, 115, 97, 115, 116, 97, 114, 116, 112, 97, 99, 107};
 const uint8_t endPacket[START_END_PACKET_LENGTH] = {116, 104, 105, 115, 105, 115, 97, 101, 110, 100, 100, 100, 112, 97, 99, 107};
 
+/*
+To make this work, to compile go to your screen class definition, for me it's
+.pio/libdeps/max/GxEPD2/src/GxEPD2_BW.h (just right click at the display variable value definition )
+and move the _buffer from private to public
+*/
 void printPacket(const uint8_t *packet)
 {
     for (int i = 0; i < START_END_PACKET_LENGTH; i++)
