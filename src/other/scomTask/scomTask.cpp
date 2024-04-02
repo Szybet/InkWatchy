@@ -24,15 +24,13 @@ void loopScomTask(void *parameter)
 {
     delayTask(4500);
     resetSleepDelay(10000);
-    //debugLog("display.width(): " + String(display.width()));
-    //debugLog("display.height():" + String(display.height()));
-    delayTask(2000);
     while (true)
     {
         serialWrite.lock();
         // long-back-button:
         // back-button:
         String cmd = Serial.readStringUntil(':');
+        debugLog("cmd here: " + cmd);
         if (cmd != "")
         {
             serialWrite.unlock();
