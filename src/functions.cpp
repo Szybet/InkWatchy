@@ -1,14 +1,37 @@
 #include "functions.h"
 
 std::mutex serialWrite;
+int savedLogsIndex = 0;
+char savedLogs[2000] = {0};
+bool areLogsSaved = false;
 
 void logFunction(String file, int line, String func, String message)
 {
-  serialWrite.lock();
-  Serial.flush(true);
-  Serial.println(file + ":" + String(line) + " " + func + ": " + message);
-  Serial.flush(true);
-  serialWrite.unlock();
+  String log = file + ":" + String(line) + " " + func + ": " + message + "\n";
+  if (serialWrite.try_lock())
+  {
+    Serial.flush(true);
+    if (areLogsSaved == true)
+    {
+      areLogsSaved = false;
+      debugLog("Printing out saved logs");
+      Serial.print(savedLogs);
+      Serial.flush(true);
+      savedLogsIndex = 0;
+    }
+    Serial.print(log);
+    Serial.flush(true);
+    serialWrite.unlock();
+  }
+  else
+  {
+    if (savedLogsIndex + log.length() < 2000)
+    {
+      strcpy(savedLogs + savedLogsIndex, log.c_str());
+      savedLogsIndex += log.length();
+      areLogsSaved = true;
+    }
+  }
 }
 
 // Check if a function contains a character that has a line below like... g p q j

@@ -103,9 +103,9 @@ void vibrateMotor(int vTime, bool add)
         xTaskCreate(
             vibrateMotorTaskFun,
             "motorTask",
-            1000,
+            1500,
             NULL,
-            0,
+            MOTOR_PRIORITY,
             &motorTask);
     }
     if (add == true && motorTaskRunning == true)

@@ -82,10 +82,6 @@ void loopScomTask(void *parameter)
                         setButton(Down);
                     }
                 }
-                else if (cmd.lastIndexOf("screen") != -1)
-                {
-                    scomChanged = true;
-                }
             }
             else if (cmd.lastIndexOf("screen") != -1)
             {
@@ -101,6 +97,8 @@ void loopScomTask(void *parameter)
             scomDid = true;
             uint8_t coppiedBuffer[displayBufferSize] = {0};
             mainLoopWait = true;
+
+            /*
             serialWrite.unlock();
             while(mainLoopWaiting == false) {
                 delayTask(10);
@@ -114,13 +112,12 @@ void loopScomTask(void *parameter)
                 coppiedBuffer[i] = display._buffer[i]; 
             }
             mainLoopWait = false;
-            //vTaskResume(mainTask);
-            // Latin capital ligature OE
+            */
+
             printPacket(startPacket);
             for (int i = 0; i < displayBufferSize; i++)
             {
-                // GxEPD2_Type::WIDTH / 8) * page_height
-                Serial.write(coppiedBuffer[i]);
+                Serial.write(display._buffer[i]);
             }
         }
         // Print EOF
@@ -145,7 +142,7 @@ void initScomTask()
 {
     debugLog("display.width(): " + String(display.width()));
     debugLog("display.height():" + String(display.height()));
-    displayBufferSize = (int(display.width()) / 8) * int(display.height());
+    displayBufferSize = (int(display.width()) / 8) * int(display.height()); // GxEPD2_Type::WIDTH / 8) * page_height
     debugLog("Buffer size is:" + String(displayBufferSize));
 
     debugLog("- done");
@@ -154,7 +151,7 @@ void initScomTask()
         "scomTask",
         10000, // because of huge list we copy
         NULL,
-        0,
+        SCOM_PRIORITY,
         &scomTask);
 }
 
