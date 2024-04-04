@@ -4,7 +4,7 @@
 #include "defines/defines.h"
 #include <SmallRTC.h>
 
-#define PREV_VOLTAGE_SIZE 5
+#define PREV_VOLTAGE_SIZE 10
 struct batteryInfo {
     float curV;
     float minV;
@@ -14,7 +14,8 @@ struct batteryInfo {
     float prevV[PREV_VOLTAGE_SIZE];
     uint8_t prevVPos;
     bool isCharging;
-    int percentage;
+    uint8_t percentage;
+    float prevVOne;
 };
 
 extern RTC_DATA_ATTR batteryInfo bat;

@@ -226,7 +226,7 @@ void loopWifiDebugDisplay()
         {
         case SEL_ON:
         {
-            turnOnWifi();
+            turnOnWifiRegular();
             vibrateMotor(VIBRATION_ACTION_TIME, true);
             break;
         }
