@@ -16,6 +16,7 @@ struct batteryInfo {
     bool isCharging;
     uint8_t percentage;
     float prevVOne;
+    bool oneCheck; // Force check once even if no voltage changed
 };
 
 extern RTC_DATA_ATTR batteryInfo bat;

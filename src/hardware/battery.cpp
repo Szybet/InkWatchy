@@ -47,7 +47,9 @@ void initBattery()
         bat.prevV[i] = 0.0;
     }
 
+    bat.oneCheck = true;
     loopBattery();
+    bat.oneCheck = false;
 }
 
 #if DEBUG
@@ -103,7 +105,7 @@ void isChargingCheck()
 void loopBattery()
 {
     bat.curV = getBatteryVoltage();
-    if (abs(bat.prevVOne - bat.curV) > BAT_MINIMAL_DIFFERENCE)
+    if (abs(bat.prevVOne - bat.curV) > BAT_MINIMAL_DIFFERENCE || bat.oneCheck == true)
     {
         debugLog("Voltage changed changed, doing things...");
         debugLog("prevOne: " + String(bat.prevVOne) + " curV: " + String(bat.curV));

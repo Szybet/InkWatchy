@@ -3,7 +3,7 @@
 OW_Weather ow;
 bool isWeatherAvailable = false;
 OW_forecast *forecast = NULL;
-RTC_DATA_ATTR savedWeatherData weatherDataDays[MAX_DAYS][WEATHER_PER_DAY]; // Days / Data for these days
+savedWeatherData weatherDataDays[MAX_DAYS][WEATHER_PER_DAY]; // Days / Data for these days
 
 void syncWeather()
 {
