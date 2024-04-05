@@ -16,7 +16,7 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
 {
     if (currentPlace == place)
     {
-        //debugLog("Executing loop function?");
+        // debugLog("Executing loop function?");
         if (loopFunc != nullptr)
         {
             loopFunc();
@@ -64,30 +64,36 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
 
 void loopManager()
 {
-    buttonState backButton = useButtonBack();
-    if (backButton != None)
+    // We want watchface to be able to use
+    if (currentPlaceIndex != 0)
     {
-        debugLog("Button is back, manager got it");
-        if (currentPlaceIndex > 0)
+
+        buttonState backButton = useButtonBack();
+        if (backButton != None)
         {
-            if (backButton == Back)
+            debugLog("Button is back, manager got it");
+            if (currentPlaceIndex > 0)
             {
-                placeTree[currentPlaceIndex] = NoPlace;
-                currentPlaceIndex -= 1;
-                wasBacked = true;
-            }
-            else if (backButton == LongBack)
-            {
-                for (int i = 1; i < PLACE_TREE_MAX_DEPTH; i++)
+                if (backButton == Back)
                 {
-                    placeTree[i] = NoPlace;
+                    placeTree[currentPlaceIndex] = NoPlace;
+                    currentPlaceIndex -= 1;
+                    wasBacked = true;
                 }
-                if(LONG_BACK_FULL_REFRESH == true) {
-                    debugLog("Forcing full update because of long back button");
-                    dUChange = true;
-                    updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
+                else if (backButton == LongBack)
+                {
+                    for (int i = 1; i < PLACE_TREE_MAX_DEPTH; i++)
+                    {
+                        placeTree[i] = NoPlace;
+                    }
+                    if (LONG_BACK_FULL_REFRESH == true)
+                    {
+                        debugLog("Forcing full update because of long back button");
+                        dUChange = true;
+                        updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
+                    }
+                    currentPlaceIndex = 0;
                 }
-                currentPlaceIndex = 0;
             }
         }
     }

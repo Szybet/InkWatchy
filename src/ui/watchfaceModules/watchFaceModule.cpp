@@ -19,6 +19,10 @@ RTC_DATA_ATTR wfModule wfModulesList[MODULE_COUNT] = {
     wfEmpty,
 };
 
+void nothingModule() {
+    wfPlace.requestShow(None);
+}
+
 RTC_DATA_ATTR int currentModule = -1;
 void moveModule(direction where)
 {
@@ -116,7 +120,7 @@ void wfModuleSwitch(direction where)
     }
     else
     {
-        wfPlace.requestShow(None);
+        nothingModule();
         currentModule = -1;
     }
 }

@@ -1,43 +1,7 @@
 #include "modules.h"
 
-#define WATCHFACE_POSITIONS 2 // There is one "empty" on 0 too
-#define EMPTY_POS 0
-#define MODULE_POS 1
 RTC_DATA_ATTR int watchfacePos = 0;
-RTC_DATA_ATTR bool positionEngaged = false;
-
-void drawPosMarker()
-{
-    // First clean all Pos markers
-    display.drawPixel(190, 160, GxEPD_WHITE);
-    display.drawPixel(191, 160, GxEPD_WHITE);
-    display.drawPixel(191, 161, GxEPD_WHITE);
-
-    display.drawPixel(108, 60, GxEPD_WHITE);
-    display.drawPixel(109, 60, GxEPD_WHITE);
-    display.drawPixel(108, 59, GxEPD_WHITE);
-
-    // Then draw the one
-    if (watchfacePos == MODULE_POS)
-    {
-        // 190, 160
-        // 191, 160
-        // 191, 161
-        display.drawPixel(190, 160, GxEPD_BLACK);
-        display.drawPixel(191, 160, GxEPD_BLACK);
-        display.drawPixel(191, 161, GxEPD_BLACK);
-    }
-    else if (watchfacePos == EMPTY_POS)
-    {
-        // 108, 60
-        // 109, 60
-        // 108, 59
-        display.drawPixel(108, 60, GxEPD_BLACK);
-        display.drawPixel(109, 60, GxEPD_BLACK);
-        display.drawPixel(108, 59, GxEPD_BLACK);
-    }
-    dUChange = true;
-}
+RTC_DATA_ATTR bool positionEngaged = true;
 
 void movePos(int add)
 {
@@ -84,6 +48,7 @@ void modulesButtons(buttonState bt)
     }
     case Menu:
     {
+        debugLog("watchfacePos: " + String(watchfacePos));
         if (watchfacePos == EMPTY_POS)
         {
             generalSwitch(mainMenu);
@@ -108,6 +73,7 @@ void modulesButtons(buttonState bt)
     case LongMenu:
     {
         positionEngaged = !positionEngaged;
+        drawPosMarker();
         break;
     }
     }

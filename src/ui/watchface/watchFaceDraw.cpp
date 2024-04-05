@@ -122,6 +122,9 @@ void showFullWatchface()
 
     batteryPercantageWF = bat.percentage;
     drawProgressBar(BATT_BAR_CORD, TO_DAY_BAR_SIZE, batteryPercantageWF);
+
+    nothingModule();
+    drawModuleCount();
 }
 
 void drawDay()

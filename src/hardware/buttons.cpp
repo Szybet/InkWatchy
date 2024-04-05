@@ -105,6 +105,10 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
 
 void loopButtonsTask(void *parameter)
 {
+    // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
+    while(digitalRead(BACK_PIN) == HIGH || digitalRead(MENU_PIN) == HIGH || digitalRead(UP_PIN) == HIGH || digitalRead(DOWN_PIN) == HIGH) {
+        delayTask(SMALL_BUTTON_DELAY_MS);
+    }
     while (true)
     {
         delayTask(BUTTON_TASK_DELAY);
@@ -147,30 +151,44 @@ void deInitButtonTask() {
     }
 }
 
+void wakeUpLong(int pin, buttonState normal, buttonState hold) {
+    long timeTime = millis();
+    
+    while(digitalRead(pin) == HIGH && timeTime + BUTTON_LONG_PRESS_MS > millis()) {
+        delayTask(SMALL_BUTTON_DELAY_MS);
+    }
+    if(timeTime + BUTTON_LONG_PRESS_MS < millis()) {
+        buttonPressed = hold;
+    } else if(digitalRead(pin) == LOW) {
+        buttonPressed = normal;
+    }
+}
+
 void manageButtonWakeUp()
 {
     pinMode(VIB_MOTOR_PIN, OUTPUT);
     vibrateMotor();
+    initButtons(true);
     uint64_t wakeupBit;
     wakeupBit = esp_sleep_get_ext1_wakeup_status();
     if (wakeupBit & BACK_MASK)
     {
-        buttonPressed = Back;
+        wakeUpLong(BACK_PIN, Back, LongBack);
         return;
     }
     if (wakeupBit & MENU_MASK)
     {
-        buttonPressed = Menu;
+        wakeUpLong(MENU_PIN, Menu, LongMenu);
         return;
     }
     if (wakeupBit & DOWN_MASK)
     {
-        buttonPressed = Down;
+        wakeUpLong(DOWN_PIN, Down, LongDown);
         return;
     }
     if (wakeupBit & UP_MASK)
     {
-        buttonPressed = Up;
+        wakeUpLong(UP_PIN, Up, LongUp);
         return;
     }
 }
