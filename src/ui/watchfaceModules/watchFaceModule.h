@@ -21,8 +21,8 @@ typedef enum {
 extern RTC_DATA_ATTR int currentModule;
 
 void nothingModule();
-void drawModuleCount();
+void drawModuleCount(bool force = false);
 void wfModuleSwitch(direction where);
-void wfModulesManage(buttonState button);
+void wfModulesManage(buttonState button, bool forceRender = false);
 
 #endif

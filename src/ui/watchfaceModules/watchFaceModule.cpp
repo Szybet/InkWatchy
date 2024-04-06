@@ -52,7 +52,7 @@ void clearModuleArea()
 #define MC_H 8
 RTC_DATA_ATTR int previousModuleCount = -1;
 RTC_DATA_ATTR int previousCurrentModule = -1; // The translated one!
-void drawModuleCount()
+void drawModuleCount(bool force)
 {
     // debugLog("drawModuleCount executed");
     int counter = 0;
@@ -79,7 +79,7 @@ void drawModuleCount()
 
     //debugLog("counter: " + String(counter));
     //debugLog("currentModule: " + String(currentModuleTranslated));
-    if (previousModuleCount != counter || previousCurrentModule != currentModuleTranslated)
+    if (previousModuleCount != counter || previousCurrentModule != currentModuleTranslated || force == true)
     {
         previousModuleCount = counter;
         previousCurrentModule = currentModuleTranslated;
@@ -125,7 +125,7 @@ void wfModuleSwitch(direction where)
     }
 }
 
-void wfModulesManage(buttonState button)
+void wfModulesManage(buttonState button, bool forceRender)
 {
     // debugLog("Running wfModulesManage");
     if (button == Menu)
@@ -134,19 +134,31 @@ void wfModulesManage(buttonState button)
         wfModuleSwitch(Right);
         return;
     }
+    bool doIt = false;
     for (int i = 0; i < MODULE_COUNT; i++)
     {
         bool render = false;
         wfModulesList[i].checkShow(&wfModulesList[i].show, &render);
+        // Force management
+        if(forceRender == true && i == currentModule) {
+            doIt = true;
+        }
         if ((i == currentModule || currentModule == -1) && render == true)
         {
             if (currentModule == -1)
             {
                 currentModule = i;
             }
+            doIt = true;
+        }
+        if(doIt == true) {
             clearModuleArea();
             wfModulesList[i].requestShow(button);
+            break;
         }
+    }
+    if(doIt == false && forceRender == true) {
+        nothingModule();
     }
     drawModuleCount();
 }

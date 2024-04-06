@@ -65,6 +65,7 @@ void initDebugMenu()
 
 void initWeatherMenu()
 {
+    loadWeatherData();
     if (isWeatherAvailable == false)
     {
         display.fillScreen(GxEPD_WHITE);

@@ -35,8 +35,8 @@ void syncWeather()
           c = c + 1;
         }
       }
-      isWeatherAvailable = true;
-      //isDebug(dumpWeather());
+      saveWeatherData();
+      // isDebug(dumpWeather());
       delete forecast;
     }
     else
@@ -48,6 +48,30 @@ void syncWeather()
   {
     isWeatherAvailable = false;
   }
+}
+
+void saveWeatherData()
+{
+  initNvsManage();
+  size_t dataSize = sizeof(savedWeatherData) * MAX_DAYS * WEATHER_PER_DAY;
+  NVS.setBlob(NVS_WEATHER, (uint8_t *)weatherDataDays, dataSize, true);
+  isWeatherAvailable = true;
+}
+
+void loadWeatherData()
+{
+  initNvsManage();
+  size_t dataSize = sizeof(savedWeatherData) * MAX_DAYS * WEATHER_PER_DAY;
+  std::vector<uint8_t> serializedData = NVS.getBlob(NVS_WEATHER);
+
+  if (serializedData.size() != dataSize)
+  {
+    debugLog("Weather data size is wrong");
+    return;
+  }
+  memcpy(weatherDataDays, serializedData.data(), serializedData.size());
+  
+  isWeatherAvailable = true;
 }
 
 #if DEBUG
