@@ -99,6 +99,11 @@ void loopScomTask(void *parameter)
             {
                 scomChanged = true;
             }
+            else if (cmd.lastIndexOf("reset") != -1)
+            {
+                debugLog("Resetting the watchy because of scom request!");
+                ESP.restart();
+            }
             serialWrite.lock();
         }
 
