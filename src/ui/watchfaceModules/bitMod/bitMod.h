@@ -19,7 +19,7 @@ extern bool isBtcDataAvail;
 extern RTC_DATA_ATTR bool isBtcDataNew;
 
 
-extern wfModule wfBit;
+extern RTC_DATA_ATTR wfModule wfBit;
 void bitcoinSync();
 
 #endif

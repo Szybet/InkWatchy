@@ -119,6 +119,12 @@ void drawModuleCount(bool force)
 
 void wfModuleSwitch(direction where)
 {
+#if DEBUG && true == false
+    for (int i = 0; i < MODULE_COUNT; i++)
+    {
+        debugLog("Dump show values: " + String(i) + " " + BOOL_STR(wfModulesList[i].show));
+    }
+#endif
     moveModule(where);
     int counter = 0;
     while (wfModulesList[currentModule].show != true && counter < MODULE_COUNT * 2)
@@ -141,14 +147,16 @@ void wfModuleSwitch(direction where)
 // TODO: because of fallback, forcerender is not needed anymore?
 void wfModulesManage(buttonState button, bool forceRender)
 {
-    // debugLog("Running wfModulesManage, current module is: " + String(currentModule));
+    debugLog("Running wfModulesManage, current module is: " + String(currentModule));
     if (currentModule != -1 && button != None)
     {
         wfModulesList[currentModule].requestShow(button, &wfModulesList[currentModule].show);
         if (wfModulesList[currentModule].show == false)
         {
             currentModule = -1;
-        } else {
+        }
+        else
+        {
             return; // Don't do anything
         }
     }

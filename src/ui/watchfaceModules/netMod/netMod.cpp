@@ -46,7 +46,7 @@ void wfNetrequestShow(buttonState button, bool *showBool)
 }
 
 // Lambda doesn't work here
-wfModule wfNet = {
+RTC_DATA_ATTR wfModule wfNet = {
     false,
     wfNetcheckShow,
     wfNetrequestShow,
