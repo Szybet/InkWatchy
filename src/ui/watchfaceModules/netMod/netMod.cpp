@@ -1,11 +1,14 @@
 #include "netMod.h"
 
+#if WIFI_MODULE
+
 RTC_DATA_ATTR wifiStatusSimple previousWifiState = WifiOff;
 
 void wfNetcheckShow(bool *showBool, bool *redrawBool)
 {
     wifiStatusSimple wss = wifiStatusWrap();
-    if(wss != previousWifiState) {
+    if (wss != previousWifiState)
+    {
         debugLog("Wifi module should be shown and redrawn");
         previousWifiState = wss;
         *showBool = true;
@@ -13,18 +16,26 @@ void wfNetcheckShow(bool *showBool, bool *redrawBool)
     }
 }
 
+#define WIFI_IMG_X MODULE_RECT_X + 1
+#define WIFI_IMG_Y MODULE_RECT_Y + 1
 void wfNetrequestShow(buttonState button)
 {
-    // 18, 187
-    display.setCursor(18, 187);
-    setFont(&FreeSansBold9pt7b);
-    setTextSize(1);
-    if(previousWifiState == WifiOff) {
-        display.print("wifi off");
-    } else if(previousWifiState == WifiOn) {
-        display.print("wifi on");
-    } else if(previousWifiState == WifiConnected) {
-        display.print("wifi connected");
+    debugLog("Launched");
+    if (previousWifiState == WifiOff)
+    {
+        writeImageN(WIFI_IMG_X, WIFI_IMG_Y, wifiOffImgPack);
+    }
+    else if (previousWifiState == WifiOn)
+    {
+        writeImageN(WIFI_IMG_X, WIFI_IMG_Y, wifiOnImgPack);
+    }
+    else if (previousWifiState == WifiConnected)
+    {
+        writeImageN(WIFI_IMG_X, WIFI_IMG_Y, wifiConnectedImgPack);
+        display.setCursor(WIFI_IMG_X, WIFI_IMG_Y + 20);
+        setFont(&dogicapixel4pt7b);
+        setTextSize(1);
+        display.print(WiFi.SSID());
     }
     disUp(true);
 }
@@ -35,3 +46,4 @@ wfModule wfNet = {
     wfNetcheckShow,
     wfNetrequestShow,
 };
+#endif

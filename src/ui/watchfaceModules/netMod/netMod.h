@@ -3,7 +3,10 @@
 
 #include "../../../defines/defines.h"
 
+#if WIFI_MODULE
+
 extern RTC_DATA_ATTR wifiStatusSimple previousWifiState;
 extern wfModule wfNet;
 
+#endif
 #endif

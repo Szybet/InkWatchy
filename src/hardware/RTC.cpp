@@ -196,6 +196,17 @@ String getFormattedTime(time_t rawTime) {
   return hoursStr + ":" + minuteStr + ":" + secondStr;
 }
 
+String unixToDate(unsigned long unixTime) {
+  int gotDay = day(unixTime);
+  int gotMonth = month(unixTime);
+  int gotYear = year(unixTime);
+
+  char dateString[11];
+  sprintf(dateString, "%02d.%02d.%04d", gotDay, gotMonth, gotYear);
+  
+  return String(dateString);
+}
+
 #if DEBUG
 void initRTCDebug()
 {

@@ -104,5 +104,8 @@ struct wfModule {
 #include "../ui/watchfaceModules/netMod/netMod.h"
 #include "../ui/watchfaceModules/emptyMod/emptyMod.h"
 #include "../ui/watchfaceModules/watchFaceModule.h"
+#if BITCOIN_MODULE
+#include "../ui/watchfaceModules/bitMod/bitMod.h"
+#endif
 
 #endif
