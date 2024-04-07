@@ -19,6 +19,7 @@ void initWatchfaceDisplay()
 
   showFullWatchface();
 
+  wfModulesManage(None);
   drawPosMarker();
 
   disUp(true, false, true);
@@ -36,7 +37,9 @@ void loopWatchfaceLoop()
   if (isMoreActive() == true)
   {            // Here should be a checker if its in these hours when wakeups are disabled, otherwise in main wakeup manage will read it, but this is fine too
     readRTC(); // It's really only needed when wifi is on and its charging
+#if UPDATE_MODULE_IF_CHARGING
     wfModulesManage(None);
+#endif
   }
 
   // debugLog("Executing loop watch face");

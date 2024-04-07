@@ -106,7 +106,7 @@ void wfBitrequestShow(buttonState button, bool *showBool)
     disUp(true);
 }
 
-wfModule wfBit = {
+RTC_DATA_ATTR wfModule wfBit = {
     false,
     wfBitcheckShow,
     wfBitrequestShow,
