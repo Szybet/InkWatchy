@@ -56,7 +56,6 @@ void modulesButtons(buttonState bt)
         else if (watchfacePos == MODULE_POS)
         {
             wfModulesManage(Menu);
-            drawModuleCount();
         }
         break;
     }

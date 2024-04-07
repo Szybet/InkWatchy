@@ -18,8 +18,13 @@ void wfNetcheckShow(bool *showBool, bool *redrawBool)
 
 #define WIFI_IMG_X MODULE_RECT_X + 1
 #define WIFI_IMG_Y MODULE_RECT_Y + 1
-void wfNetrequestShow(buttonState button)
+void wfNetrequestShow(buttonState button, bool *showBool)
 {
+    if (button == Menu)
+    {
+        *showBool = false;
+        return;
+    }
     debugLog("Launched");
     if (previousWifiState == WifiOff)
     {
@@ -32,7 +37,7 @@ void wfNetrequestShow(buttonState button)
     else if (previousWifiState == WifiConnected)
     {
         writeImageN(WIFI_IMG_X, WIFI_IMG_Y, wifiConnectedImgPack);
-        display.setCursor(WIFI_IMG_X, WIFI_IMG_Y + 20);
+        display.setCursor(MODULE_RECT_X, WIFI_IMG_Y + 25);
         setFont(&dogicapixel4pt7b);
         setTextSize(1);
         display.print(WiFi.SSID());

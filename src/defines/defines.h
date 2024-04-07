@@ -52,7 +52,7 @@ typedef enum {
 struct wfModule {
     bool show;
     void (*checkShow)(bool* showBool, bool* redrawBool);
-    void (*requestShow)(buttonState button);
+    void (*requestShow)(buttonState button, bool* showBool);
 }; // Madness -,-
 
 #include "config.h" // Needs to be first!

@@ -20,6 +20,7 @@ String getMonthName(int monthNumber);
 long getUnixTime();
 String getFormattedTime(time_t rawTime);
 String unixToDate(unsigned long unixTime);
+long getHourDifference(time_t currentTime, time_t targetTime);
 
 #if DEBUG
 void initRTCDebug();

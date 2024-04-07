@@ -3,7 +3,8 @@
 RTC_DATA_ATTR long lastSyncUnix = 0;
 RTC_DATA_ATTR long lastTryUnix = 0;
 
-void wifiSyncModules() {
+void wifiSyncModules()
+{
     syncWeather();
 #if BITCOIN_MODULE
     bitcoinSync();
@@ -32,7 +33,8 @@ void wifiPersistent()
         }
         lastTryUnix = getUnixTime();
     }
-    if(WiFi.status() == WL_CONNECTED) {
+    if (WiFi.status() == WL_CONNECTED)
+    {
         syncNtp(false);
         lastTryUnix = getUnixTime();
     }
@@ -50,8 +52,15 @@ void turnOnWifiPersistent()
     createWifiTask(WIFI_CONNECTION_TRIES_PERSISTENT, wifiPersistent, WIFI_PRIORITY_PERSISTENT);
 }
 
+void turnOnWifiKindOfPersistent()
+{
+    createWifiTask(WIFI_CONNECTION_TRIES_PERSISTENT, wifiRegular, WIFI_PRIORITY_PERSISTENT);
+}
+
 void regularSync()
 {
+    // debugLog("Entering regular sync");
+    // debugLog("bat.isCharging:" + BOOL_STR(bat.isCharging));
     if (SYNC_WIFI == 1 && bat.isCharging == true && isWifiTaskCheck() == false)
     {
         if (getUnixTime() - lastSyncUnix > SYNC_WIFI_SINCE_SUCC)
@@ -62,8 +71,17 @@ void regularSync()
         }
         else if (getUnixTime() - lastTryUnix > SYNC_WIFI_SINCE_FAIL)
         {
-            debugLog("Persistent sync going on");
-            turnOnWifiPersistent();
+            // We dont want persistent without regular first, so we launch a "in between" mode
+            if (getUnixTime() - lastSyncUnix > SYNC_WIFI_SINCE_SUCC)
+            {
+                debugLog("Kind of persistent sync going on");
+                turnOnWifiKindOfPersistent();
+            }
+            else
+            {
+                debugLog("Persistent sync going on");
+                turnOnWifiPersistent();
+            }
             lastTryUnix = getUnixTime();
         }
     }

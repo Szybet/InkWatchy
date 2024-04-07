@@ -83,7 +83,7 @@ void isChargingCheck()
             bat.isCharging = false;
             return;
         }
-        // debugLog("The average previous voltage battery is: " + String(average));
+        debugLog("The average previous voltage battery is: " + String(average));
         if (bat.prevV[bat.prevVPos] - average >= BATTERY_CHARGE_DETECTION_DIFFERENCE || average >= bat.charV)
         {
             bat.isCharging = true;
