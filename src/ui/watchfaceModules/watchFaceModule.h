@@ -11,7 +11,7 @@
 #define MODULE_W 177
 #define MODULE_H 37
 
-extern RTC_DATA_ATTR wfModule wfModulesList[MODULE_COUNT];
+extern RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT];
 
 typedef enum {
     Right,
