@@ -3,11 +3,18 @@
 RTC_DATA_ATTR long lastSyncUnix = 0;
 RTC_DATA_ATTR long lastTryUnix = 0;
 
+void wifiSyncModules() {
+    syncWeather();
+#if BITCOIN_MODULE
+    bitcoinSync();
+#endif
+}
+
 void wifiRegular()
 {
     debugLog("Launching");
     syncNtp();
-    syncWeather();
+    wifiSyncModules();
     lastSyncUnix = getUnixTime();
 }
 

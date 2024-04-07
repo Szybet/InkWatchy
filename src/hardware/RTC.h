@@ -19,6 +19,7 @@ String getDayName(int offset = 0);
 String getMonthName(int monthNumber);
 long getUnixTime();
 String getFormattedTime(time_t rawTime);
+String unixToDate(unsigned long unixTime);
 
 #if DEBUG
 void initRTCDebug();

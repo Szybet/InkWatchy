@@ -6,9 +6,19 @@ wfModule wfEmpty = {
     [](buttonState button) {},
 };
 
+// Ugly but works... menu could be done in the same way, at least the main one
+// MAKE SURE HERE ARE ALL MODULES INSERTED
 RTC_DATA_ATTR wfModule wfModulesList[MODULE_COUNT] = {
+#if WIFI_MODULE
     wfNet,
+#else
     wfEmpty,
+#endif
+#if BITCOIN_MODULE
+    wfBit,
+#else
+    wfEmpty,
+#endif
     wfEmpty,
     wfEmpty,
     wfEmpty,
@@ -19,7 +29,16 @@ RTC_DATA_ATTR wfModule wfModulesList[MODULE_COUNT] = {
     wfEmpty,
 };
 
-void nothingModule() {
+void clearModuleArea()
+{
+    display.fillRect(MODULE_RECT_X, MODULE_RECT_Y, MODULE_W, MODULE_H, GxEPD_WHITE);
+    disUp(true);
+}
+
+void nothingModule()
+{
+    debugLog("Nothing module executed");
+    clearModuleArea();
     wfPlace.requestShow(None);
 }
 
@@ -36,12 +55,6 @@ void moveModule(direction where)
     }
     checkMaxMin(&currentModule, MODULE_COUNT - 1);
     debugLog("currentModule: " + String(currentModule));
-}
-
-void clearModuleArea()
-{
-    display.fillRect(MODULE_RECT_X, MODULE_RECT_Y, MODULE_W, MODULE_H, GxEPD_WHITE);
-    disUp(true);
 }
 
 #define MODULE_NUM_POS_X 185
@@ -77,8 +90,8 @@ void drawModuleCount(bool force)
         }
     }
 
-    //debugLog("counter: " + String(counter));
-    //debugLog("currentModule: " + String(currentModuleTranslated));
+    // debugLog("counter: " + String(counter));
+    // debugLog("currentModule: " + String(currentModuleTranslated));
     if (previousModuleCount != counter || previousCurrentModule != currentModuleTranslated || force == true)
     {
         previousModuleCount = counter;
@@ -116,7 +129,7 @@ void wfModuleSwitch(direction where)
 
     if (counter < MODULE_COUNT)
     {
-        wfModulesManage(None);
+        wfModulesManage(None, true);
     }
     else
     {
@@ -127,7 +140,7 @@ void wfModuleSwitch(direction where)
 
 void wfModulesManage(buttonState button, bool forceRender)
 {
-    // debugLog("Running wfModulesManage");
+    //debugLog("Running wfModulesManage, current module is: " + String(currentModule));
     if (button == Menu)
     {
         wfModulesList[currentModule].show = false;
@@ -138,9 +151,11 @@ void wfModulesManage(buttonState button, bool forceRender)
     for (int i = 0; i < MODULE_COUNT; i++)
     {
         bool render = false;
+        // debugLog("Checking if show for index: " + String(i));
         wfModulesList[i].checkShow(&wfModulesList[i].show, &render);
         // Force management
-        if(forceRender == true && i == currentModule) {
+        if (forceRender == true && i == currentModule)
+        {
             doIt = true;
         }
         if ((i == currentModule || currentModule == -1) && render == true)
@@ -151,14 +166,18 @@ void wfModulesManage(buttonState button, bool forceRender)
             }
             doIt = true;
         }
-        if(doIt == true) {
+        if (doIt == true)
+        {
             clearModuleArea();
+            debugLog("Launching module show request: " + String(i));
             wfModulesList[i].requestShow(button);
+            drawModuleCount();
             break;
         }
     }
-    if(doIt == false && forceRender == true) {
+    // debugLog("Exited for loop in wfModulesManage");
+    if (doIt == false && forceRender == true)
+    {
         nothingModule();
     }
-    drawModuleCount();
 }
