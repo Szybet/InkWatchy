@@ -6,7 +6,7 @@
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 #define VIBRATION_BUTTON_TIME 35      // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_ACTION_TIME 60      // Time in ms to the motor to vibrate when the UI receives an action
-#define TIME_OFFSET_S 3600            // Time offset in seconds, use this as timezones
+#define TIME_OFFSET_S 7200            // Time offset in seconds, use this as timezones
 #define MENU_LINES false // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500 // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
@@ -21,6 +21,24 @@
 #define SYNC_WIFI_SINCE_FAIL 60 // 30 s
 #define SYNC_NTP_ON_CHARGING_DELAY 90000 // Sync NTP when charging every, in Ms. Default 1.5 minute
 #define VALID_PREVIOUS_SYNC_DELAY 300 // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
+#define WIFI_CONNECTION_TRIES 3 // Regular sync, number of tries
+#define WIFI_CONNECTION_TRIES_PERSISTENT 1 // Persistent sync (SYNC_ON_CHARGING), number of tries
+#define WIFI_MULTI_SYNC_TIME 8000 // Ms, time for waiting to connect to wifi
+#define WIFI_MULTI_ERROR_TIME 1000 // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
+
+// Watchface modules
+#define MODULE_PERSISTENT 1 // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen
+#define WIFI_MODULE 1
+#define BITCOIN_MODULE 1 // Remember to define the api key for it in confidential.h
+
+// Priorities - max is 24
+#define MAIN_LOOP_PRIORITY 16
+#define WIFI_PRIORITY_REGULAR 12
+#define BUTTONS_PRIORITY 6
+#define WIFI_PRIORITY_PERSISTENT 5
+#define SCOM_PRIORITY 3
+#define MOTOR_PRIORITY 0
+#define WATCHDOG_PRIORITY 0
 
 // Book things
 #define BOOK 0
@@ -42,7 +60,9 @@
 #define SLEEP_EVERY_MS 6000 //180000 // Goes to sleep timer, is resetted by button presses and other things
 #define POWER_SAVING_AFTER 60 // Turn on power saving features after a certain battery percantage.
 #define POWER_SAVING_OFF_AFTER 20 // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
-#define LOOP_NO_SCREEN_WRITE_DELAY_MS 250 // Go to sleep for 200 ms if the device is woken up ( in a menu for example )
+#define LOOP_NO_SCREEN_WRITE_DELAY_MS 125 // Go to "sleep" for 200 ms if the device is woken up ( in a menu for example )
+#define HARDWARE_POWER_SAVINGS 1 // Like wifi modem in power saving mode
+
 // For now those features are:
 // DISABLE_BUTTON_VIBRATION
 // DISABLE_WAKE_UP - don't wake up - at all
@@ -60,10 +80,11 @@
 #define APPLE_JOKE_DELAY 800 // The default one, it's changeable via up/down buttons
 
 // Advanced
-#define BUTTON_TASK_DELAY 140 // In ms, lower means faster button detection but more cpu usage
+#define BUTTON_TASK_DELAY 60 // In ms, lower means faster button detection but more cpu usage
 #define TIME_FOR_WATCHFACE_TO_SHOW_MS 1500
 #define ADD_BUTTON_DELAY 1.5
 #define SMALL_BUTTON_DELAY_MS 15
+#define BAT_MINIMAL_DIFFERENCE 0.02
 
 // Debugging help
 #define DEBUG 0
@@ -78,6 +99,7 @@
 #define NO_SYNC 0 // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0 // Prints voltage on the screen, really fast
 #define SCOM_TASK 1
+#define SCOM_SLEEP_DISABLE 0 // Disable sleep when scom is enabled
 #if SCOM_TASK && DEBUG
 #define VIBRATION_BUTTON_TIME 800      // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_ACTION_TIME 800      // Time in ms to the motor to vibrate when the UI receives an action
@@ -106,11 +128,11 @@
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3
 #define BATTERY_CRIT_VOLTAGE 3.15
-#define BATTERY_CHARGE_VOLTAGE 4.24
+#define BATTERY_CHARGE_VOLTAGE 4.18
 #define BATTERY_MAX_VOLTAGE 4.18 // For calculating percentages, upper limit
 #define BAD_BATTERY 0 // This true makes it use the values below, for when your battery doesn't hold the upper voltages anymore
 #define BAD_BATTERY_MAX_VOLTAGE 4.00
-#define BAD_BATTERY_CHARGE_VOLTAGE 4.00
+#define BAD_BATTERY_CHARGE_VOLTAGE 4.05
 #define BATTERY_CHARGE_DETECTION_DIFFERENCE 0.10 // The minimum difference to detect that the battery is charging
 
 // Other
@@ -124,5 +146,7 @@
 #define NVS_DISABLE_WAKE_UP "dwu"
 #define NVS_BOOK_HASH "bhs"
 #define NVS_WATCHDOG_DEBUG_DATA "wdd"
+#define NVS_WEATHER "wtr"
+#define NVS_BITCOIN "btc"
 
 #endif

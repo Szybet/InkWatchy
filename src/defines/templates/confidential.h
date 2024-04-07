@@ -37,6 +37,8 @@
 #define WEATHER_UNIT "metric"
 #define WEATHER_LANG "en"
 
+#define COIN_LIB_API_KEY "" // It will work without it, just with less informations
+
 #define VAULT_PASSWORD "" // This must be a numerical PIN, don't start it with 0
 
 #endif
