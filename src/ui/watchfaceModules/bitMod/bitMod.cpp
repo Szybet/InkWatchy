@@ -7,6 +7,7 @@
 bitcoinData btcData = {0};
 bool isBtcDataAvail = false;
 RTC_DATA_ATTR bool isBtcDataNew = false;
+RTC_DATA_ATTR uint btcLastUpdate = 0;
 
 void saveBitcoinData()
 {
@@ -41,7 +42,7 @@ void wfBitcheckShow(bool *showBool, bool *redrawBool)
         *showBool = true;
     }
 #endif
-    if (isBtcDataNew == true && isBtcDataAvail == true)
+    if (isBtcDataAvail == true && (isBtcDataNew == true || getHourDifference(getUnixTime(), btcData.lastSyncUnix) != btcLastUpdate) )
     {
         *redrawBool = true;
     }
@@ -78,7 +79,8 @@ void wfBitrequestShow(buttonState button, bool *showBool)
     String lastSync = "Never";
     if (isBtcDataAvail == true)
     {
-        long diff = getHourDifference(getUnixTime(), btcData.lastSyncUnix);
+        uint diff = getHourDifference(getUnixTime(), btcData.lastSyncUnix);
+        btcLastUpdate = diff;
         debugLog("diff: " + String(diff));
         lastSync = String(diff) + "h ago";
     }
