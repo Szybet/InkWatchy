@@ -207,6 +207,10 @@ String unixToDate(unsigned long unixTime) {
   return String(dateString);
 }
 
+long getHourDifference(time_t currentTime, time_t targetTime) {
+  return abs((targetTime - currentTime) / 3600);
+}
+
 #if DEBUG
 void initRTCDebug()
 {

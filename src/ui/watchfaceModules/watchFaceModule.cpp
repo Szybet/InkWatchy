@@ -3,7 +3,7 @@
 wfModule wfEmpty = {
     false,
     [](bool *showBool, bool *redrawBool) {},
-    [](buttonState button) {},
+    [](buttonState button, bool *showBool) {},
 };
 
 // Ugly but works... menu could be done in the same way, at least the main one
@@ -31,15 +31,15 @@ RTC_DATA_ATTR wfModule wfModulesList[MODULE_COUNT] = {
 
 void clearModuleArea()
 {
+    debugLog("clearModuleArea: extecuted...");
     display.fillRect(MODULE_RECT_X, MODULE_RECT_Y, MODULE_W, MODULE_H, GxEPD_WHITE);
-    disUp(true);
 }
 
 void nothingModule()
 {
     debugLog("Nothing module executed");
     clearModuleArea();
-    wfPlace.requestShow(None);
+    wfPlace.requestShow(None, &wfPlace.show);
 }
 
 RTC_DATA_ATTR int currentModule = -1;
@@ -138,26 +138,35 @@ void wfModuleSwitch(direction where)
     }
 }
 
+// TODO: because of fallback, forcerender is not needed anymore?
 void wfModulesManage(buttonState button, bool forceRender)
 {
     //debugLog("Running wfModulesManage, current module is: " + String(currentModule));
-    if (button == Menu)
+    if (currentModule != -1 && button != None)
     {
-        wfModulesList[currentModule].show = false;
-        wfModuleSwitch(Right);
-        return;
+        wfModulesList[currentModule].requestShow(button, &wfModulesList[currentModule].show);
+        if (wfModulesList[currentModule].show == false)
+        {
+            currentModule = -1;
+        }
     }
     bool doIt = false;
+    bool isThereAShow = false;
     for (int i = 0; i < MODULE_COUNT; i++)
     {
         bool render = false;
         // debugLog("Checking if show for index: " + String(i));
         wfModulesList[i].checkShow(&wfModulesList[i].show, &render);
+        if (wfModulesList[i].show == true)
+        {
+            isThereAShow = true;
+        }
         // Force management
         if (forceRender == true && i == currentModule)
         {
             doIt = true;
         }
+        // if ((i == currentModule || currentModule == -1) && render == true)
         if ((i == currentModule || currentModule == -1) && render == true)
         {
             if (currentModule == -1)
@@ -170,14 +179,34 @@ void wfModulesManage(buttonState button, bool forceRender)
         {
             clearModuleArea();
             debugLog("Launching module show request: " + String(i));
-            wfModulesList[i].requestShow(button);
-            drawModuleCount();
+            wfModulesList[i].requestShow(button, &wfModulesList[i].show);
             break;
         }
     }
     // debugLog("Exited for loop in wfModulesManage");
-    if (doIt == false && forceRender == true)
+    //  Now a loop for if nothing was found because nothing wants to render but we need to show something and maybe there is something to show
+    if (isThereAShow == true && doIt == false && currentModule == -1)
     {
+        debugLog("Looking for fallback module to show");
+        for (int i = 0; i < MODULE_COUNT; i++)
+        {
+            bool render = false;
+            wfModulesList[i].checkShow(&wfModulesList[i].show, &render);
+            if (wfModulesList[i].show == true)
+            {
+                debugLog("Found fallback module to show");
+                currentModule = i;
+                doIt = true;
+                clearModuleArea();
+                wfModulesList[i].requestShow(button, &wfModulesList[i].show);
+                break;
+            }
+        }
+    }
+    if (doIt == false && button != None)
+    {
+        debugLog("Found nothing...");
         nothingModule();
     }
+    drawModuleCount();
 }

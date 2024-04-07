@@ -37,10 +37,12 @@ void loopScomTask(void *parameter)
     Serial.setTimeout(300);
 
     delayTask(4500);
+#if SCOM_SLEEP_DISABLE
     resetSleepDelay(10000);
+#endif
     while (true)
     {
-        //debugLog("iterating...");
+        // debugLog("iterating...");
         serialWrite.lock();
         // long-back-button:
         // back-button:
@@ -138,7 +140,8 @@ void loopScomTask(void *parameter)
             }
         }
         // Print EOF
-        if(printEndPacket == true || scomDid == true) {
+        if (printEndPacket == true || scomDid == true)
+        {
             printEndPacket = false;
             printPacket(endPacket);
             Serial.write('\n');
@@ -146,7 +149,9 @@ void loopScomTask(void *parameter)
         }
 
         serialWrite.unlock();
+#if SCOM_SLEEP_DISABLE
         resetSleepDelay(1000);
+#endif
         if (scomDid == true)
         {
             delayTask(600);

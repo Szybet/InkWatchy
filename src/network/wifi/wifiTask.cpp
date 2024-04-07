@@ -33,7 +33,7 @@ void turnOnWifiTask(void *parameter)
     {
         debugLog("Running wifi loop: " + String(i));
         // debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
-        if (BAD_BATTERY == 1)
+        if (HARDWARE_POWER_SAVINGS == 1)
         {
             WiFi.setSleep(WIFI_PS_MAX_MODEM);
             debugLog("Setting sleep mode for wifi");

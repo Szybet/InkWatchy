@@ -6,7 +6,7 @@ void wfPlacecheckShow(bool *showBool, bool *redrawBool)
     *redrawBool = false;
 }
 
-void wfPlacerequestShow(buttonState button)
+void wfPlacerequestShow(buttonState button, bool* showBool)
 {
     writeImageN(MODULE_RECT_X, MODULE_RECT_Y, moduleImgPack);
     disUp(true);
