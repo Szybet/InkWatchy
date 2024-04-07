@@ -6,27 +6,27 @@ wfModule wfEmpty = {
     [](buttonState button, bool *showBool) {},
 };
 
-// Ugly but works... menu could be done in the same way, at least the main one
+RTC_DATA_ATTR int currentModule = -1;
 // MAKE SURE HERE ARE ALL MODULES INSERTED
-RTC_DATA_ATTR wfModule wfModulesList[MODULE_COUNT] = {
+RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
 #if WIFI_MODULE
-    wfNet,
+    &wfNet,
 #else
-    wfEmpty,
+    &wfEmpty,
 #endif
 #if BITCOIN_MODULE
-    wfBit,
+    &wfBit,
 #else
-    wfEmpty,
+    &wfEmpty,
 #endif
-    wfEmpty,
-    wfEmpty,
-    wfEmpty,
-    wfEmpty,
-    wfEmpty,
-    wfEmpty,
-    wfEmpty,
-    wfEmpty,
+    &wfEmpty,
+    &wfEmpty,
+    &wfEmpty,
+    &wfEmpty,
+    &wfEmpty,
+    &wfEmpty,
+    &wfEmpty,
+    &wfEmpty,
 };
 
 void clearModuleArea()
@@ -42,7 +42,6 @@ void nothingModule()
     wfPlace.requestShow(None, &wfPlace.show);
 }
 
-RTC_DATA_ATTR int currentModule = -1;
 void moveModule(direction where)
 {
     if (where == Right)
@@ -73,7 +72,7 @@ void drawModuleCount(bool force)
     int listIndexer = 0;
     for (int i = 0; i < MODULE_COUNT; i++)
     {
-        if (wfModulesList[i].show == true)
+        if (wfModulesList[i]->show == true)
         {
             listShows[listIndexer] = i;
             listIndexer = listIndexer + 1;
@@ -119,15 +118,15 @@ void drawModuleCount(bool force)
 
 void wfModuleSwitch(direction where)
 {
-#if DEBUG && true == false
+#if DEBUG && true == true
     for (int i = 0; i < MODULE_COUNT; i++)
     {
-        debugLog("Dump show values: " + String(i) + " " + BOOL_STR(wfModulesList[i].show));
+        debugLog("Dump show values: " + String(i) + " " + BOOL_STR(wfModulesList[i]->show));
     }
 #endif
     moveModule(where);
     int counter = 0;
-    while (wfModulesList[currentModule].show != true && counter < MODULE_COUNT * 2)
+    while (wfModulesList[currentModule]->show != true && counter < MODULE_COUNT * 2)
     {
         moveModule(where);
         counter = counter + 1;
@@ -150,8 +149,8 @@ void wfModulesManage(buttonState button, bool forceRender)
     debugLog("Running wfModulesManage, current module is: " + String(currentModule));
     if (currentModule != -1 && button != None)
     {
-        wfModulesList[currentModule].requestShow(button, &wfModulesList[currentModule].show);
-        if (wfModulesList[currentModule].show == false)
+        wfModulesList[currentModule]->requestShow(button, &wfModulesList[currentModule]->show);
+        if (wfModulesList[currentModule]->show == false)
         {
             currentModule = -1;
         }
@@ -166,8 +165,8 @@ void wfModulesManage(buttonState button, bool forceRender)
     {
         bool render = false;
         // debugLog("Checking if show for index: " + String(i));
-        wfModulesList[i].checkShow(&wfModulesList[i].show, &render);
-        if (wfModulesList[i].show == true)
+        wfModulesList[i]->checkShow(&wfModulesList[i]->show, &render);
+        if (wfModulesList[i]->show == true)
         {
             isThereAShow = true;
         }
@@ -189,7 +188,7 @@ void wfModulesManage(buttonState button, bool forceRender)
         {
             clearModuleArea();
             debugLog("Launching module show request: " + String(i));
-            wfModulesList[i].requestShow(button, &wfModulesList[i].show);
+            wfModulesList[i]->requestShow(button, &wfModulesList[i]->show);
             break;
         }
     }
@@ -201,14 +200,14 @@ void wfModulesManage(buttonState button, bool forceRender)
         for (int i = 0; i < MODULE_COUNT; i++)
         {
             bool render = false;
-            wfModulesList[i].checkShow(&wfModulesList[i].show, &render);
-            if (wfModulesList[i].show == true)
+            wfModulesList[i]->checkShow(&wfModulesList[i]->show, &render);
+            if (wfModulesList[i]->show == true)
             {
                 debugLog("Found fallback module to show");
                 currentModule = i;
                 doIt = true;
                 clearModuleArea();
-                wfModulesList[i].requestShow(button, &wfModulesList[i].show);
+                wfModulesList[i]->requestShow(button, &wfModulesList[i]->show);
                 break;
             }
         }
