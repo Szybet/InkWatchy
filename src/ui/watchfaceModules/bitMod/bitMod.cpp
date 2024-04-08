@@ -5,7 +5,7 @@
 #include <blockClockClient.h>
 
 bitcoinData btcData = {0};
-bool isBtcDataAvail = false;
+RTC_DATA_ATTR bool isBtcDataAvail = false;
 RTC_DATA_ATTR bool isBtcDataNew = false;
 RTC_DATA_ATTR uint btcLastUpdate = 0;
 
@@ -26,6 +26,7 @@ void loadBitcoinData()
     if (serializedData.size() != dataSize)
     {
         debugLog("Bitcoin data size is wrong");
+        isBtcDataAvail = false;
         return;
     }
     memcpy(&btcData, serializedData.data(), dataSize);
@@ -42,8 +43,10 @@ void wfBitcheckShow(bool *showBool, bool *redrawBool)
         *showBool = true;
     }
 #endif
+    //if (isBtcDataAvail == true && (isBtcDataNew == true || btcLastUpdate + 1 != btcLastUpdate) )
     if (isBtcDataAvail == true && (isBtcDataNew == true || getHourDifference(getUnixTime(), btcData.lastSyncUnix) != btcLastUpdate) )
     {
+        debugLog("btc redraw bool is true!");
         *redrawBool = true;
     }
 }
@@ -80,6 +83,7 @@ void wfBitrequestShow(buttonState button, bool *showBool)
     if (isBtcDataAvail == true)
     {
         uint diff = getHourDifference(getUnixTime(), btcData.lastSyncUnix);
+        //uint diff = btcLastUpdate + 1;
         btcLastUpdate = diff;
         debugLog("diff: " + String(diff));
         lastSync = String(diff) + "h ago";

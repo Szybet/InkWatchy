@@ -15,7 +15,7 @@ struct bitcoinData {
     long lastSyncUnix;
 };
 extern bitcoinData btcData;
-extern bool isBtcDataAvail;
+extern bool RTC_DATA_ATTR isBtcDataAvail;
 extern RTC_DATA_ATTR bool isBtcDataNew;
 
 
