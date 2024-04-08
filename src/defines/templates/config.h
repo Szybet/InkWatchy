@@ -28,6 +28,7 @@
 
 // Watchface modules
 #define MODULE_PERSISTENT 1 // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen
+#define UPDATE_MODULE_IF_CHARGING 0 // Update modules very fast if its charging, not only every minute
 #define WIFI_MODULE 1
 #define BITCOIN_MODULE 1 // Remember to define the api key for it in confidential.h
 
