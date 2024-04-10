@@ -59,7 +59,7 @@ Apart from code things, here are the key features for now:
    - To enable all bitcoin data, you need a coinlib api key. If you can't create an account there because of no verification email, just create an account directly with google. I have already emailed them about the issue. If no api key is supplied, It will only show the block clock.
 4. Read platformio.ini and choose your env. Don't use the default one for reasons. You propably want to select the `min` one. Remember to do that too if you use platformio on the terminal
 
-**Also latest stable commit: aca9016ab7a91d860319e1a612e5d65b0eb34ad6** Go back to it if you encounter problems. It's also possible this commit is the latest commit in this repo
+<!-- **Also latest stable commit: None** Go back to it if you encounter problems. It's also possible this commit is the latest commit in this repo -->
 
 <details> 
 <summary><h2>So you are a interested developer?</h2></summary>
