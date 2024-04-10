@@ -11,3 +11,5 @@ resources/vault/*.png
 resources/vault/*.bin
 src/defines/config.h
 src/defines/confidential.h
+resources/ImageMagick
+resources/other/debian_magick_installed
