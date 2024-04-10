@@ -22,3 +22,17 @@ echo "Processing vault"
 cd vault/
 ./convertImagesVault.sh
 cd ../
+
+cd ../
+if [ ! -f "src/defines/config.h" ] || [ ! -f "src/defines/confidential.h" ]; then
+    echo -e ''
+    echo "Creating config template"
+    cd resources
+    ./generate_config.sh
+    cd ../
+fi
+
+echo -e ''
+cd resources/other
+./packages.sh
+cd ../../
