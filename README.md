@@ -48,16 +48,17 @@ Apart from code things, here are the key features for now:
 <details> 
 <summary><h2>Compiling</h2></summary>
    
-1. You need to run the `generate.sh` in the `resources` folder. As mentioned before it will convert images and fonts on the fly to header files
+1. Read `platformio.ini` and choose your env. Don't use the default one for reasons. You propably want to select the `min` one. Remember to do that too if you use platformio on the terminal. Select the platformio env before running `generate.sh`. If you are not using vscode, you will need to set `PLATFORMIO_ENV_NAME` as I can't detect it without vscode. You will be prompted for that anyway
+2. You need to run the `generate.sh` in the `resources` folder. As mentioned before it will convert images and fonts on the fly to header files
    - Run it from the same directory it is placed in via, for example `cd resources && ./generate.sh`
-   - Look at the output if you need to install any packages
+   - Look at the output if you need to install any packages - for debian you will be asked a few times for sudo, it should work automatically. Feel free too contribute for other distros
       - Don't assumie pio will download them. no.
-   - Version 6.9.11-60 of ImageMagick (`convert` command) doesn't work, gives black squares as a result. Version 7.1.1-27 works for me.
+   - Version 6.9.11-60 of ImageMagick (`convert` command) doesn't work, gives black squares as a result. Version 7.1.1-27 works for me. On debian as mentioned the script will try to overwrite it using an appimage
    - You need also `xxd`, newer is better
-3. Run `generate_config.sh` also in the `resources` folder. After that you can ajust values in `config.h` and `confidential.h` (in `/src/defines/` directory) to your needs.
+   - For more dependiecies look at `resources/other/packages.sh`
+3. After running `generate.sh`, it will create your personal config files. After that you can adjust values in `config.h` and `confidential.h` (in `src/defines/` directory) to your needs.
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
    - To enable all bitcoin data, you need a coinlib api key. If you can't create an account there because of no verification email, just create an account directly with google. I have already emailed them about the issue. If no api key is supplied, It will only show the block clock.
-4. Read platformio.ini and choose your env. Don't use the default one for reasons. You propably want to select the `min` one. Remember to do that too if you use platformio on the terminal
 
 <!-- **Also latest stable commit: None** Go back to it if you encounter problems. It's also possible this commit is the latest commit in this repo -->
 
