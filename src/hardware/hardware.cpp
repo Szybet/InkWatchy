@@ -17,9 +17,10 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     }
 #endif
 #if DEBUG
-    setCpuMhz(maxSpeed); // Implement a proper management for this
+    setCpuMhz(maxSpeed);
 #else
-    setCpuMhz(minimalSpeed);
+    // Not needed anymore, It's set in platformio.ini
+    //setCpuMhz(minimalSpeed);
 #endif
     initRTC(isFromWakeUp, wakeUpReason);
     initButtons(isFromWakeUp);
