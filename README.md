@@ -80,6 +80,16 @@ They need to be ramede, so before you touch it, repair them or I will do it
 
 </details>
 
+
+<details> 
+<summary><h2>Troubleshooting</h2></summary>
+   
+### Your newly uploaded firmware looks like this?
+![image](https://github.com/Szybet/InkWatchy/assets/53944559/c2424301-219d-41b3-9bef-9d2cc47a2fd4)
+- Your image magick (`convert` command) is too old. Check the compilation section once again. If you want, contribute support for you distro / clear bugs to help me make this issue appear less
+
+</details>
+
 ## Donations
 This was the first thing I have written and asked myself if I should release it for free. Well here we are - I also write other open source things - check my profile for more eink stuff. Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a option. 
 
@@ -93,7 +103,7 @@ Oh and as it seems bitcoin is also preferred, just contact me and ask me for an 
 - [GuruSR](https://github.com/GuruSR/Watchy_GSR) - I used some of his awesome libraries and looked at the code for how the watchy hardware should be handled. Also answered a few questions on discord. Thanks!
 - [Prokuon](https://github.com/Prokuon/watchy-starfield/) - I really liked the design of this watchface and almost coppied it. Thanks! - well the code is completly diffrent
 
-## Questions
+## Questions / Contact
 Create a github issue or get in touch with me on Watchy or Quill OS discord server ( Or other discord communication channels )
 
 or via matrix: @szybet:matrix.org
