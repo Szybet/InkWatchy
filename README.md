@@ -56,7 +56,7 @@ Apart from code things, here are the key features for now:
    - Version 6.9.11-60 of ImageMagick (`convert` command) doesn't work, gives black squares as a result. Version 7.1.1-27 works for me. On debian as mentioned the script will try to overwrite it using an appimage
    - You need also `xxd`, newer is better
    - For more dependiecies look at `resources/other/packages.sh`
-3. After running `generate.sh`, it will create your personal config files. After that you can adjust values in `config.h` and `confidential.h` (in `src/defines/` directory) to your needs.
+3. After running `generate.sh`, it will create your personal config files. After that you can adjust values in `config.h` and `confidential.h` (in `src/defines/` directory) to your needs. **DO NOT EDIT ANYTHING IN TEMPLATES DIRECTORY. IT WILL DO NOTHING :(** 
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
    - To enable all bitcoin data, you need a coinlib api key. If you can't create an account there because of no verification email, just create an account directly with google. I have already emailed them about the issue. If no api key is supplied, It will only show the block clock.
 
