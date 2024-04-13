@@ -99,7 +99,7 @@
 #define SPEED_THROUGH_TIME 0 // Speeds up time for watchface programming
 #define NO_SYNC 0 // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0 // Prints voltage on the screen, really fast
-#define SCOM_TASK 1
+#define SCOM_TASK 0
 #define SCOM_SLEEP_DISABLE 0 // Disable sleep when scom is enabled
 #if SCOM_TASK && DEBUG
 #define VIBRATION_BUTTON_TIME 800      // Time in ms to the motor to vibrate after clicking a button. 0 means none
