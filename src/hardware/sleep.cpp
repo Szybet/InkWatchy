@@ -79,6 +79,13 @@ void goSleep()
     esp_deep_sleep_start();
 }
 
+// Should be executed in every sleep cancelation which can happen without user interaction (no buttons clicked and the watchy is woken up by RTC, then the button task is not turned on because why would it)
+void checkIfButtonIsRunning() {
+    if(buttonTask == NULL) {
+        initButtonTask();
+    }
+}
+
 void manageSleep()
 {
     // debugLog("sleepDelayMs is:" + String(sleepDelayMs));
@@ -90,6 +97,7 @@ void manageSleep()
         {
             debugLog("Wifi is turned on, waiting...");
             resetSleepDelay();
+            checkIfButtonIsRunning();
             // debugLog("sleepDelayMs is after change:" + String(sleepDelayMs));
             return void();
         }

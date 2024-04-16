@@ -89,6 +89,7 @@
 
 // Debugging help
 #define DEBUG 0
+#define DEBUG_SLOWER 0 // Makes debug as slow as the regular build
 #define EINK_COUNTER 0      // Shows a counter somewhere on screen
 #define DUMP_INIT_DEBUG 0   // If debug, shows at init init information
 #define DUMP_LOOP_DEBUG 0   // If debug, at every loop iteration dump hardware values that can change
@@ -129,7 +130,7 @@
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3
 #define BATTERY_CRIT_VOLTAGE 3.15
-#define BATTERY_CHARGE_VOLTAGE 4.18
+#define BATTERY_CHARGE_VOLTAGE 4.14
 #define BATTERY_MAX_VOLTAGE 4.18 // For calculating percentages, upper limit
 #define BAD_BATTERY 0 // This true makes it use the values below, for when your battery doesn't hold the upper voltages anymore
 #define BAD_BATTERY_MAX_VOLTAGE 4.00
