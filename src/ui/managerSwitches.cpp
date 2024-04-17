@@ -74,7 +74,7 @@ void showTemp()
         for (int j = 0; j < WEATHER_PER_DAY; j++)
         {
             time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.BreakTime(dtTime, times);
+            SRTC.doBreakTime(dtTime, times);
             if (times.Day == weatherDayChoosed)
             {
                 tempMax[c] = weatherDataDays[i][j].temp;
@@ -131,7 +131,7 @@ void showPressure()
         for (int j = 0; j < WEATHER_PER_DAY; j++)
         {
             time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.BreakTime(dtTime, times);
+            SRTC.doBreakTime(dtTime, times);
             if (times.Day == weatherDayChoosed)
             {
                 pressure[c] = weatherDataDays[i][j].pressure;
@@ -170,7 +170,7 @@ void showHumidity()
         for (int j = 0; j < WEATHER_PER_DAY; j++)
         {
             time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.BreakTime(dtTime, times);
+            SRTC.doBreakTime(dtTime, times);
             if (times.Day == weatherDayChoosed)
             {
                 humidity[c] = weatherDataDays[i][j].humidity;
@@ -209,7 +209,7 @@ void showWeatherCond()
         for (int j = 0; j < WEATHER_PER_DAY; j++)
         {
             time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.BreakTime(dtTime, times);
+            SRTC.doBreakTime(dtTime, times);
             if (times.Day == weatherDayChoosed)
             {
                 weatherCond[c] = weatherConditionIdToStr(weatherDataDays[i][j].weatherConditionId);
@@ -248,7 +248,7 @@ void showClouds()
         for (int j = 0; j < WEATHER_PER_DAY; j++)
         {
             time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.BreakTime(dtTime, times);
+            SRTC.doBreakTime(dtTime, times);
             if (times.Day == weatherDayChoosed)
             {
                 clouds[c] = weatherDataDays[i][j].cloudsPerc;
@@ -287,7 +287,7 @@ void showWindSpeed()
         for (int j = 0; j < WEATHER_PER_DAY; j++)
         {
             time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.BreakTime(dtTime, times);
+            SRTC.doBreakTime(dtTime, times);
             if (times.Day == weatherDayChoosed)
             {
                 windSpeed[c] = weatherDataDays[i][j].windSpeed;
@@ -326,7 +326,7 @@ void showWindGuts()
         for (int j = 0; j < WEATHER_PER_DAY; j++)
         {
             time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.BreakTime(dtTime, times);
+            SRTC.doBreakTime(dtTime, times);
             if (times.Day == weatherDayChoosed)
             {
                 windGusts[c] = weatherDataDays[i][j].windGusts;
@@ -365,7 +365,7 @@ void showVisibility()
         for (int j = 0; j < WEATHER_PER_DAY; j++)
         {
             time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.BreakTime(dtTime, times);
+            SRTC.doBreakTime(dtTime, times);
             if (times.Day == weatherDayChoosed)
             {
                 visibility[c] = weatherDataDays[i][j].visibility;
@@ -404,7 +404,7 @@ void showPop()
         for (int j = 0; j < WEATHER_PER_DAY; j++)
         {
             time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.BreakTime(dtTime, times);
+            SRTC.doBreakTime(dtTime, times);
             if (times.Day == weatherDayChoosed)
             {
                 pop[c] = weatherDataDays[i][j].pop;

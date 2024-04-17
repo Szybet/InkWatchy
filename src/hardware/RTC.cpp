@@ -111,7 +111,7 @@ String getHourMinute(tmElements_t *timeEl)
 
 String getDayName(int offset)
 {
-  long unixTime = SRTC.MakeTime(*timeRTC);
+  long unixTime = SRTC.doMakeTime(*timeRTC);
   int weekDay = weekday(unixTime);
   debugLog("unixTime: " + String(unixTime));
   debugLog("weekDay reported: " + String(weekDay));
@@ -140,7 +140,7 @@ String getDayName(int offset)
 
 long getUnixTime()
 {
-  return SRTC.MakeTime(*timeRTC);
+  return SRTC.doMakeTime(*timeRTC);
 }
 
 String getMonthName(int monthNumber)

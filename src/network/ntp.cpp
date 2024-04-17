@@ -20,13 +20,13 @@ void syncNtp(bool doDriftThings)
         timeClient.setTimeOffset(TIME_OFFSET_S);
         time_t epochTime = timeClient.getEpochTime();
         SRTC.read(*timeRTC);
-        time_t currentTime = SRTC.MakeTime(*timeRTC); // Save the time to a var and update it afterwards for better accuracy
+        time_t currentTime = SRTC.doMakeTime(*timeRTC); // Save the time to a var and update it afterwards for better accuracy
         if (firstNTPSync == true)
         {
             debugLog("firstNTPSync is true, running again");
             firstNTPSync = false;
             initialRTCTime = currentTime;
-            SRTC.BreakTime(epochTime, *timeRTC);
+            SRTC.doBreakTime(epochTime, *timeRTC);
             saveRTC();
             timeClient.end();
             syncNtp();
@@ -39,7 +39,7 @@ void syncNtp(bool doDriftThings)
             if (difference > 5)
             {
                 debugLog("Difference too high, running ntp once more");
-                SRTC.BreakTime(epochTime, *timeRTC);
+                SRTC.doBreakTime(epochTime, *timeRTC);
                 saveRTC();
                 timeClient.end();
                 syncNtp();
@@ -56,7 +56,7 @@ void syncNtp(bool doDriftThings)
         I haven't looked at your code, but the make and break Time functions outside of SmallRTC don't follow time.h for values, so the day and month will increase.
         */
 
-        SRTC.BreakTime(epochTime, *timeRTC);
+        SRTC.doBreakTime(epochTime, *timeRTC);
         saveRTC();
 
         if (doDriftThings == true)
@@ -111,12 +111,12 @@ void syncNtp(bool doDriftThings)
 
 void checkDrift()
 {
-    time_t currentTime = SRTC.MakeTime(*timeRTC);
+    time_t currentTime = SRTC.doMakeTime(*timeRTC);
     if (currentTime < 0)
     {
         debugLog("SOMETHING IS WRONG :(");
         readRTC();
-        currentTime = SRTC.MakeTime(*timeRTC);
+        currentTime = SRTC.doMakeTime(*timeRTC);
     }
     debugLog("currentTime: " + String(currentTime));
     debugLog("previousNTPCorrection: " + String(previousNTPCorrection));
@@ -148,7 +148,7 @@ void checkDrift()
     }
     if (changed == true)
     {
-        SRTC.BreakTime(currentTime, *timeRTC);
+        SRTC.doBreakTime(currentTime, *timeRTC);
         saveRTC();
         wakeUpManageRTC();
     }
