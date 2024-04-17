@@ -47,7 +47,7 @@ void initButtons(bool isFromWakeUp)
 {
     if (isFromWakeUp == false)
     {
-        if (SRTC.getType() == PCF8563)
+        if (SRTC.getType() == RTC_PCF8563)
         {
             if (HWVer == 1.5)
             {

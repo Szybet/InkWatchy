@@ -31,6 +31,7 @@
 #define UPDATE_MODULE_IF_CHARGING 0 // Update modules very fast if its charging, not only every minute
 #define WIFI_MODULE 1
 #define BITCOIN_MODULE 1 // Remember to define the api key for it in confidential.h
+#define SMALL_BTC_MODULE 0 // At default, show the small btc module mode, if 0 show the bigger one
 
 // Priorities - max is 24
 #define MAIN_LOOP_PRIORITY 16
@@ -103,6 +104,8 @@
 #define SCOM_TASK 0
 #define SCOM_SLEEP_DISABLE 0 // Disable sleep when scom is enabled
 #if SCOM_TASK && DEBUG
+#undef VIBRATION_BUTTON_TIME
+#undef VIBRATION_ACTION_TIME
 #define VIBRATION_BUTTON_TIME 800      // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_ACTION_TIME 800      // Time in ms to the motor to vibrate when the UI receives an action
 #endif

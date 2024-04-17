@@ -1,5 +1,13 @@
 #include "functions.h"
 
+// This needs to be here for some reason
+// This clears the warning about const char to chat
+// This will be an issue when updating smallrtc maybe
+#ifdef RTCC_VERSION
+#undef RTCC_VERSION
+#define RTCC_VERSION (char*)"Pcf8563 v1.0.3"
+#endif
+
 std::mutex serialWrite;
 #if DEBUG // For not creating the huge list
 int savedLogsIndex = 0;

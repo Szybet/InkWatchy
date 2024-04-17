@@ -84,7 +84,7 @@ void initWeatherMenu()
         {
             tmElements_t times;
             time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.BreakTime(dtTime, times);
+            SRTC.doBreakTime(dtTime, times);
             if (day != times.Day)
             {
                 day = times.Day;

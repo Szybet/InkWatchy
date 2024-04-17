@@ -30,7 +30,7 @@
 #define HCCAPX_MAX_EAPOL_SIZE 256
 //@}
 
-static char *TAG = "hccapx_serializer";
+const char* TAG = "hccapx_serializer";
 
 /**
  * @brief Default values for hccapx buffer
