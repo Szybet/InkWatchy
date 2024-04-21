@@ -63,7 +63,7 @@ void setup()
         nullptr);
 #endif
 
-#if SCOM_TASK
+#if SCOM_TASK_ENABLED
   initScomTask();
 #endif
 #endif
@@ -80,15 +80,6 @@ void setup()
 void loop()
 {
   loopTaskSettings();
-#if SCOM_TASK && DEBUG && true == false
-  if(mainLoopWait == true) {
-    mainLoopWaiting = true;
-    while(mainLoopWait == true) {
-      delayTask(10);
-    }
-    mainLoopWaiting = false;
-  }
-#endif
 
   watchdogPing();
   alarmManageRTC();

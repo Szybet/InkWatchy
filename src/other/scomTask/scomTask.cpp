@@ -1,5 +1,5 @@
 #include "scomTask.h"
-#if SCOM_TASK && DEBUG
+#if SCOM_TASK_ENABLED
 
 TaskHandle_t scomTask;
 TaskHandle_t mainTask;
@@ -8,7 +8,6 @@ bool printEndPacket = false;
 bool mainTaskDone = false;
 int displayBufferSize = 0;
 
-bool mainLoopWait = false;
 bool mainLoopWaiting = false;
 
 #define START_END_PACKET_LENGTH 16
@@ -115,7 +114,6 @@ void loopScomTask(void *parameter)
             scomChanged = false;
             scomDid = true;
             uint8_t coppiedBuffer[displayBufferSize] = {0};
-            mainLoopWait = true;
 
             /*
             serialWrite.unlock();
@@ -130,7 +128,6 @@ void loopScomTask(void *parameter)
                 // (GxEPD2_Type::WIDTH / 8) * page_height
                 coppiedBuffer[i] = display._buffer[i];
             }
-            mainLoopWait = false;
             */
 
             printPacket(startPacket);

@@ -92,12 +92,15 @@ struct wfModule {
 #include "../other/wifiTool/wifiTool.h"
 #endif
 #include "../other/watchdogTask/watchdogTask.h"
-#if SCOM_TASK && DEBUG
+#if SCOM_TASK_ENABLED
 #include "../other/scomTask/scomTask.h"
 #endif
 #if APPLE_JOKE
 #include "../ui/appleJoke/appleJoke.h"
 #include "../ui/appleJoke/appleSour.h"
+#endif
+#if FONT_MENU_ENABLED
+#include "../other/fontPreview/fontPreview.h"
 #endif
 #include "../ui/pinInput/pinInput.h"
 #include "../ui/settings/nvsSettings.h"

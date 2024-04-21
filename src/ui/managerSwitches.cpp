@@ -61,6 +61,16 @@ void switchApple2() {
     generalSwitch(apple2);
 }
 
+#if FONT_MENU_ENABLED
+void switchFontsPreview() {
+    generalSwitch(fontPreview);
+}
+
+void switchFontsPreviewMenu() {
+    generalSwitch(fontPreviewMenu);
+}
+#endif
+
 void showTemp()
 {
     debugLog("Launched");

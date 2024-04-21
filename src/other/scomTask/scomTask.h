@@ -3,13 +3,10 @@
 
 #include "defines/defines.h"
 
-#if SCOM_TASK && DEBUG
+#if SCOM_TASK_ENABLED
 extern bool scomChanged;
 extern bool printEndPacket;
 extern TaskHandle_t mainTask;
-
-extern bool mainLoopWait;
-extern bool mainLoopWaiting;
 
 void loopScomTask(void *parameter);
 void initScomTask();

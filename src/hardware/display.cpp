@@ -40,8 +40,6 @@ void initDisplay(bool isFromWakeUp)
 
 RTC_DATA_ATTR int updateCounter = 0;
 bool dUChange = false;
-#if SCOM_TASK && DEBUG
-#endif
 // Display update
 void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
 {
@@ -65,7 +63,7 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
             display.display(PARTIAL_UPDATE);
             updatedScreen = true;
         }
-#if SCOM_TASK && DEBUG
+#if SCOM_TASK_ENABLED
         scomChanged = true;
 #endif
     }

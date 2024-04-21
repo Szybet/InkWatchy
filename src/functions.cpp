@@ -31,7 +31,7 @@ void logFunction(String file, int line, String func, String message)
     Serial.print(log);
     Serial.flush(true);
     serialWrite.unlock();
-#if SCOM_TASK
+#if SCOM_TASK_ENABLED
   printEndPacket = true;
 #endif
   }

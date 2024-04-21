@@ -184,6 +184,20 @@ void loopManager()
 #endif
         break;
     }
+    case fontPreview:
+    {
+#if FONT_MENU_ENABLED
+        managerLaunchFunc(fontPreview, initFontPreview, NULL, NULL);
+#endif
+        break;
+    }
+    case fontPreviewMenu:
+    {
+#if FONT_MENU_ENABLED
+        managerLaunchFunc(fontPreviewMenu, initFontMenu, loopMenu, NULL);
+#endif
+        break;
+    }
     case imagePlace:
     {
         managerLaunchFunc(imagePlace, NULL, useButtonBlank);

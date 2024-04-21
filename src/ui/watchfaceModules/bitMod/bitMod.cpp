@@ -113,7 +113,7 @@ void wfBitrequestShow(buttonState button, bool *showBool)
     else
     {
         display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + MODULE_H - 1);
-        setFont(&dimitri15pt7b);
+        setFont(&smileandwave20pt7b);
         setTextSize(1);
         display.print(btcData.height);
     }

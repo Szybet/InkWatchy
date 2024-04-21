@@ -101,13 +101,22 @@
 #define SPEED_THROUGH_TIME 0 // Speeds up time for watchface programming
 #define NO_SYNC 0 // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0 // Prints voltage on the screen, really fast
-#define SCOM_TASK 0
-#define SCOM_SLEEP_DISABLE 0 // Disable sleep when scom is enabled
-#if SCOM_TASK && DEBUG
+
+#define SCOM_TASK 0 // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
+#if SCOM_TASK == 1 && DEBUG == 1
+#define SCOM_TASK_ENABLED 1
+#endif
+#define SCOM_SLEEP_DISABLE 1 // Disable sleep when scom is enabled
+#if SCOM_TASK_ENABLED
 #undef VIBRATION_BUTTON_TIME
 #undef VIBRATION_ACTION_TIME
 #define VIBRATION_BUTTON_TIME 800      // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_ACTION_TIME 800      // Time in ms to the motor to vibrate when the UI receives an action
+#endif
+
+#define FONT_PREVIEW_MENU 1 // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
+#if FONT_PREVIEW_MENU == 1 && DEBUG == 1 && DEBUG_MENUS == 1
+#define FONT_MENU_ENABLED 1
 #endif
 
 // Display init magic ;)

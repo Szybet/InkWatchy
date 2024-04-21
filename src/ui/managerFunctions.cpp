@@ -32,9 +32,12 @@ void initMainMenu()
     {
         count = count + 1;
         void (*wifiToolFunc)();
-        if(wifiToolRunning == true) {
+        if (wifiToolRunning == true)
+        {
             wifiToolFunc = stopWifiTool;
-        } else {
+        }
+        else
+        {
             wifiToolFunc = initWifiTool;
         }
         buttons[count] = {"Wifi tool: " + wifiToolStatus(), &wifiToolImgPack, wifiToolFunc};
@@ -46,7 +49,7 @@ void initMainMenu()
         count = count + 1;
         buttons[count] = {"Eating apples", &appleImgPack, switchApple};
     }
-        {
+    {
         debugLog("Adding apple joke to menu");
         count = count + 1;
         buttons[count] = {"Smashing apples", &appleImgPack, switchApple2};
@@ -59,8 +62,33 @@ void initMainMenu()
 
 void initDebugMenu()
 {
-    entryMenu buttons[3] = {{"General", &emptyImgPack, switchGeneralDebug}, {"Battery", &emptyImgPack, switchBatteryDebug}, {"Wifi", &emptyImgPack, switchWifiDebug}};
-    initMenu(buttons, 3, "Debug menu", 1);
+    int count = -1;
+    entryMenu buttons[8];
+    {
+        debugLog("Adding general to menu");
+        count = count + 1;
+        buttons[count] = {"General", &emptyImgPack, switchGeneralDebug};
+    }
+    {
+        debugLog("Adding battery to menu");
+        count = count + 1;
+        buttons[count] = {"Battery", &emptyImgPack, switchBatteryDebug};
+    }
+    {
+        debugLog("Adding wifi to menu");
+        count = count + 1;
+        buttons[count] = {"Wifi", &emptyImgPack, switchWifiDebug};
+    }
+#if FONT_MENU_ENABLED
+    {
+        debugLog("Adding font preview to menu");
+        count = count + 1;
+        buttons[count] = {"Font preview", &emptyImgPack, switchFontsPreviewMenu};
+    }
+#endif
+    
+    count = count + 1;
+    initMenu(buttons, count, "Debug menu", 1);
 }
 
 void initWeatherMenu()
@@ -135,41 +163,53 @@ void initWeatherConditionMenu()
     initMenu(buttons, 9, "Weather stat", 1);
 }
 
-void toggleDisableVibrationsEntry() {
+void toggleDisableVibrationsEntry()
+{
     toggleAllVibration();
     initpowerMenu();
 }
 
-void toggleWakeUpEntry() {
+void toggleWakeUpEntry()
+{
     toggleWakeUp();
-    if(disableWakeUp == false) {
+    if (disableWakeUp == false)
+    {
         wakeUpManageRTC();
-    } else {
-        SRTC.clearAlarm(); 
+    }
+    else
+    {
+        SRTC.clearAlarm();
     }
     initpowerMenu();
 }
 
-void initpowerMenu() {
+void initpowerMenu()
+{
     int count = -1;
     entryMenu buttons[2];
 
     {
         count = count + 1;
-        const ImageDef* image;
-        if(disableAllVibration == true) {
+        const ImageDef *image;
+        if (disableAllVibration == true)
+        {
             image = &acceptImgPack;
-        } else {
+        }
+        else
+        {
             image = &crossImgPack;
         }
         buttons[count] = {"Vibrations disabled", image, toggleDisableVibrationsEntry};
     }
     {
         count = count + 1;
-        const ImageDef* image;
-        if(disableWakeUp == true) {
+        const ImageDef *image;
+        if (disableWakeUp == true)
+        {
             image = &acceptImgPack;
-        } else {
+        }
+        else
+        {
             image = &crossImgPack;
         }
         buttons[count] = {"Wake up disabled", image, toggleWakeUpEntry};
@@ -177,3 +217,19 @@ void initpowerMenu() {
     count = count + 1;
     initMenu(buttons, count, "Power menu", 1);
 }
+
+#if FONT_MENU_ENABLED
+void initFontMenu()
+{
+    entryMenu buttons[FONT_COUNT];
+    for (int i = 0; i < FONT_COUNT; i++)
+    {
+        String str = fontListStr[i];
+        if(str.length() > 20) {
+            str = str.substring(0, 20);
+        }
+        buttons[i] = {str, &emptyImgPack, switchFontsPreview};
+    }
+    initMenu(buttons, FONT_COUNT, "Preview fonts");
+}
+#endif
