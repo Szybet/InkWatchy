@@ -46,6 +46,34 @@ do
     done
 done
 
+words=$(grep -oP '(?<=GFXfont\s)\w+' fonts.h)
+font_count=$(grep -oP '(?<=GFXfont\s)\w+' fonts.h | wc -l)
+
+formatted_fonts_ref=""
+for word in $words; do
+    formatted_fonts_ref+="  $word,\n"
+done
+
+formatted_fonts_str=""
+for word in $words; do
+    formatted_fonts_str+="  \"$word\",\n"
+done
+
+
+echo -e "#if FONT_MENU_ENABLED" >> fonts.h
+echo -e "#define FONT_COUNT $font_count" >> fonts.h
+# Sadly I couldn't do references for some reason so we are stuck with this
+echo -e "const GFXfont fontListRef[FONT_COUNT] = {" >> fonts.h
+echo -e "$formatted_fonts_ref};" >> fonts.h
+
+echo -e '' >> fonts.h
+
+echo -e "const String fontListStr[FONT_COUNT] = {" >> fonts.h
+echo -e "$formatted_fonts_str};" >> fonts.h
+echo -e "#endif" >> fonts.h
+
+echo -e '' >> fonts.h
+
 echo "#endif" >> fonts.h
 
 mv fonts.h ../../src/defines/

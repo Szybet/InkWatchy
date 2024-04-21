@@ -21,6 +21,8 @@ typedef enum
     vault,
     apple,
     apple2,
+    fontPreview,
+    fontPreviewMenu,
     // General places now:
     inputPinPlace,
     generalMenuPlace,
@@ -45,6 +47,10 @@ void initWeatherMenu();
 extern int weatherDayChoosed;
 void initWeatherConditionMenu();
 void initpowerMenu();
+#if FONT_MENU_ENABLED
+void initFontMenu();
+void switchFontsPreviewMenu();
+#endif
 
 // Manager switches
 void generalSwitch(UiPlace place);
@@ -63,6 +69,9 @@ void switchVault();
 void switchBack();
 void switchApple();
 void switchApple2();
+#if FONT_MENU_ENABLED
+void switchFontsPreview();
+#endif
 
 // Switches for weather
 void showTemp();
