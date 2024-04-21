@@ -78,12 +78,13 @@ void vibrateMotorTaskFun(void *parameter)
 {
     motorTaskRunning = true;
     debugLog("Motor on");
-    for (int i = 0; i < vibrateTime / 20; i++)
+    int vibrateTimeout = vibrateTime / VIBRATION_DIVINE;
+    for (int i = 0; i < vibrateTime / VIBRATION_DIVINE; i++)
     {
         digitalWrite(VIB_MOTOR_PIN, true);
-        delayTask(10);
+        delayTask(vibrateTimeout);
         digitalWrite(VIB_MOTOR_PIN, false);
-        delayTask(10);
+        delayTask(vibrateTimeout);
     }
     debugLog("Motor off");
     motorTaskRunning = false;
