@@ -40,6 +40,13 @@ void wifiPersistent()
     }
 }
 
+void wifiKindOfPersistent() {
+    debugLog("Launching");
+    syncNtp(false); // Because we are connected to usb for some time now so the drift drifted too much in a bad way
+    wifiSyncModules();
+    lastSyncUnix = getUnixTime();
+}
+
 void turnOnWifiRegular()
 {
     // Regular turn on
@@ -54,7 +61,7 @@ void turnOnWifiPersistent()
 
 void turnOnWifiKindOfPersistent()
 {
-    createWifiTask(WIFI_CONNECTION_TRIES_PERSISTENT, wifiRegular, WIFI_PRIORITY_PERSISTENT);
+    createWifiTask(WIFI_CONNECTION_TRIES_PERSISTENT, wifiKindOfPersistent, WIFI_PRIORITY_PERSISTENT);
 }
 
 void regularSync()
