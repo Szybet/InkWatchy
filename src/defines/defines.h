@@ -102,6 +102,9 @@ struct wfModule {
 #if FONT_MENU_ENABLED
 #include "../other/fontPreview/fontPreview.h"
 #endif
+#if CONWAY
+#include "../other/conway/conway.h"
+#endif
 #include "../ui/pinInput/pinInput.h"
 #include "../ui/settings/nvsSettings.h"
 #include "../ui/watchfaceModules/netMod/netMod.h"
