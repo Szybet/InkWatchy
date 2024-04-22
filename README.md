@@ -63,6 +63,19 @@ Apart from code things, here are the key features for now:
 <!-- **Also latest stable commit: None** Go back to it if you encounter problems. It's also possible this commit is the latest commit in this repo -->
 
 <details> 
+<summary><h2>Updating the firmware to a newer commit</h2></summary>
+
+To update the firmware to a newer commit:
+- pull the repo obviously
+- Update your `config.h` and `confidential.h`:
+   - Use a diff tool and update the files with the new values
+   - Or if you don't care about your changes or didn't changed anything, just delete the files. The next step will regenerate them. Deleting one of them will update both of them. Update the scripts if you don't want this to work like that
+- Run Generate resources once more, to generate new fonts & images
+- Compile. If there are any compile errors referencing and "undefined" value, contact me. I might have forgot to update the template file
+
+</details>
+
+<details> 
 <summary><h2>So you are a interested developer?</h2></summary>
 
 Some informations which you could find helpfull:
