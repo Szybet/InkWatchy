@@ -113,5 +113,8 @@ struct wfModule {
 #if BITCOIN_MODULE
 #include "../ui/watchfaceModules/bitMod/bitMod.h"
 #endif
+#if CONWAY_MODULE_ENABLED
+#include "../ui/watchfaceModules/conwayMod/conwayMod.h"
+#endif
 
 #endif

@@ -20,6 +20,7 @@ typedef enum {
 
 extern RTC_DATA_ATTR int currentModule;
 
+void clearModuleArea();
 void nothingModule();
 void drawModuleCount(bool force = false);
 void wfModuleSwitch(direction where);

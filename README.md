@@ -35,6 +35,7 @@ Apart from code things, here are the key features for now:
         
         ![image](https://github.com/Szybet/InkWatchy/assets/53944559/01a01c95-f797-44e5-aac1-7a8f9458c5a6)
       - A simple net module which just shows wifi status and SSID. It's more of an example imlementation than a serious module (for now)
+      - A conway game of life module - which updates every minute
 - Debug menus to check on things on the fly
 - Battery life features:
    - Configurable wake up every x minutes at night

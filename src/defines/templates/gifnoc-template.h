@@ -29,12 +29,21 @@
 #define WIFI_MULTI_SYNC_TIME 8000          // Ms, time for waiting to connect to wifi
 #define WIFI_MULTI_ERROR_TIME 1000         // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
 
+// Conway
+#define CONWAY 1
+
 // Watchface modules
 #define MODULE_PERSISTENT 1         // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen
 #define UPDATE_MODULE_IF_CHARGING 0 // Update modules very fast if its charging, not only every minute
 #define WIFI_MODULE 1
 #define BITCOIN_MODULE 1   // Remember to define the api key for it in confidential.h
 #define SMALL_BTC_MODULE 1 // At default, show the small btc module mode, if 0 show the bigger one
+
+#define CONWAY_MODULE 1                  // Conway module. to make it enabled CONWAY itself needs to be enabled
+#define CONWAY_MODULE_GRID_PERCANTAGE 50 // Percentage of initial grid filling
+#if CONWAY && CONWAY_MODULE
+#define CONWAY_MODULE_ENABLED 1
+#endif
 
 // Priorities - max is 24
 #define MAIN_LOOP_PRIORITY 16
@@ -105,11 +114,11 @@
 #define NO_SYNC 0                  // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0         // Prints voltage on the screen, really fast
 
-#define SCOM_TASK 0 // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
+#define SCOM_TASK 0          // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
+#define SCOM_SLEEP_DISABLE 1 // Disable sleep when scom is enabled
 #if SCOM_TASK == 1 && DEBUG == 1
 #define SCOM_TASK_ENABLED 1
 #endif
-#define SCOM_SLEEP_DISABLE 1 // Disable sleep when scom is enabled
 #if SCOM_TASK_ENABLED
 #undef VIBRATION_BUTTON_TIME
 #undef VIBRATION_ACTION_TIME

@@ -19,7 +19,11 @@ RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
 #else
     &wfEmpty,
 #endif
+#if CONWAY_MODULE_ENABLED
+    &wfConway,
+#else
     &wfEmpty,
+#endif
     &wfEmpty,
     &wfEmpty,
     &wfEmpty,
