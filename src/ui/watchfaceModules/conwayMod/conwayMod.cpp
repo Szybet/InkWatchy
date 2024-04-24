@@ -2,7 +2,9 @@
 
 #if CONWAY_MODULE_ENABLED
 
-RTC_DATA_ATTR uint8_t timeChangeCheck = 0; // if 0, init the grid
+#define INIT_CONWAY_MOD_VAL 200
+
+RTC_DATA_ATTR uint8_t timeChangeCheck = INIT_CONWAY_MOD_VAL; // if 0, init the grid
 
 // Because of rules in conway.cpp
 #define CONWAY_MODULE_WIDTH 176
@@ -25,7 +27,7 @@ void initModuleConway()
 void wfConwaycheckShow(bool *showBool, bool *redrawBool)
 {
     *showBool = true;
-    if (timeChangeCheck == 0)
+    if (timeChangeCheck == INIT_CONWAY_MOD_VAL)
     {
         initModuleConway();
     }
