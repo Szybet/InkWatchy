@@ -113,7 +113,7 @@
 #define SPEED_THROUGH_TIME 0       // Speeds up time for watchface programming
 #define NO_SYNC 0                  // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0         // Prints voltage on the screen, really fast
-#define DISABLE_SLEEP 1 // Disable sleep, so it will never go to sleep. Good for SCOM_TASK
+#define DISABLE_SLEEP 0 // Disable sleep, so it will never go to sleep. Good for SCOM_TASK
 
 #define SCOM_TASK 0          // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
 #if SCOM_TASK == 1 && DEBUG == 1
