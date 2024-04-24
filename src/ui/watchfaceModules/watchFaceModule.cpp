@@ -168,9 +168,9 @@ void wfModulesManage(buttonState button, bool forceRender)
     for (int i = 0; i < MODULE_COUNT; i++)
     {
         bool render = false;
-        debugLog("Checking if show for index: " + String(i));
+        //debugLog("Checking if show for index: " + String(i));
         wfModulesList[i]->checkShow(&wfModulesList[i]->show, &render);
-        debugLog("Render is: " + BOOL_STR(render));
+        //debugLog("Render is: " + BOOL_STR(render));
         if (wfModulesList[i]->show == true)
         {
             isThereAShow = true;
