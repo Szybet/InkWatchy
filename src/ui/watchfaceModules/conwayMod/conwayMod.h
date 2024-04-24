@@ -5,7 +5,7 @@
 
 #if CONWAY_MODULE_ENABLED
 
-extern wfModule wfConway;
+extern RTC_DATA_ATTR wfModule wfConway;
 
 #endif
 

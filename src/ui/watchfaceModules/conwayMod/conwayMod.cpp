@@ -23,7 +23,6 @@ void initModuleConway()
 void wfConwaycheckShow(bool *showBool, bool *redrawBool)
 {
     *showBool = true;
-    *redrawBool = true;
     if (timeChangeCheck == 0)
     {
         initModuleConway();
@@ -50,8 +49,8 @@ void wfConwayrequestShow(buttonState button, bool *showBool)
     disUp(true);
 }
 
-wfModule wfConway = {
-    false,
+RTC_DATA_ATTR wfModule wfConway = {
+    true,
     wfConwaycheckShow,
     wfConwayrequestShow,
 };

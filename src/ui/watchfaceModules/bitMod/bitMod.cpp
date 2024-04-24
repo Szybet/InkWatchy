@@ -123,7 +123,11 @@ void wfBitrequestShow(buttonState button, bool *showBool)
 }
 
 RTC_DATA_ATTR wfModule wfBit = {
+#if MODULE_PERSISTENT
+    true,
+#else
     false,
+#endif
     wfBitcheckShow,
     wfBitrequestShow,
 };
