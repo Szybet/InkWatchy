@@ -136,5 +136,8 @@ void loop()
 #endif
   }
 #endif
+
+#if !DISABLE_SLEEP
   manageSleep();
+#endif
 }

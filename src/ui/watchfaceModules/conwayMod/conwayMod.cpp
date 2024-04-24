@@ -11,6 +11,8 @@ RTC_DATA_ATTR uint8_t timeChangeCheck = 0; // if 0, init the grid
 #define CONWAY_MODULE_OFFSET_X 1
 #define CONWAY_MODULE_OFFSET_Y 4
 
+#define CONWAY_MODULE_DEBUG 1 // speed up the module
+
 RTC_DATA_ATTR uint8_t conwayModuleGrid[CONWAY_MODULE_WIDTH / 8 * CONWAY_MODULE_HEIGHT];
 uint8_t conwayModuleNewGrid[CONWAY_MODULE_WIDTH / 8 * CONWAY_MODULE_HEIGHT]; // new grid doesn't need RTC_DATA_ATTR
 
@@ -32,6 +34,9 @@ void wfConwaycheckShow(bool *showBool, bool *redrawBool)
         timeChangeCheck = timeRTC->Minute;
         *redrawBool = true;
     }
+#if CONWAY_MODULE_DEBUG
+    *redrawBool = true;
+#endif
 }
 
 void wfConwayrequestShow(buttonState button, bool *showBool)
