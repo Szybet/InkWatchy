@@ -61,12 +61,14 @@ void modulesButtons(buttonState bt)
     }
     case LongUp:
     {
-
+        if (watchfacePos == MODULE_POS)
+        {
+            wfModulesManage(LongUp);
+        }
         break;
     }
     case LongDown:
     {
-
         break;
     }
     case LongMenu:

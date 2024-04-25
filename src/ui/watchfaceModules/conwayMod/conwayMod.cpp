@@ -24,6 +24,11 @@ void initModuleConway()
     initConwayGrid(conwayModuleGrid, CONWAY_MODULE_GRID_PERCANTAGE, CONWAY_MODULE_HEIGHT, CONWAY_MODULE_WIDTH);
 }
 
+void moduleConwayGeneration()
+{
+    computeNewGeneration(conwayModuleGrid, conwayModuleNewGrid, CONWAY_MODULE_HEIGHT, CONWAY_MODULE_WIDTH);
+}
+
 void wfConwaycheckShow(bool *showBool, bool *redrawBool)
 {
     *showBool = true;
@@ -34,6 +39,7 @@ void wfConwaycheckShow(bool *showBool, bool *redrawBool)
     if (timeChangeCheck != timeRTC->Minute)
     {
         timeChangeCheck = timeRTC->Minute;
+        moduleConwayGeneration();
         *redrawBool = true;
     }
 #if CONWAY_MODULE_DEBUG
@@ -46,12 +52,13 @@ void wfConwayrequestShow(buttonState button, bool *showBool)
     if (button != None)
     {
         clearModuleArea();
+        moduleConwayGeneration();
     }
     if (button == Menu)
     {
         initModuleConway();
     }
-    computeNewGeneration(conwayModuleGrid, conwayModuleNewGrid, CONWAY_MODULE_HEIGHT, CONWAY_MODULE_WIDTH);
+
     drawGrid(conwayModuleGrid, CONWAY_MODULE_HEIGHT, CONWAY_MODULE_WIDTH, MODULE_RECT_X + CONWAY_MODULE_OFFSET_X, MODULE_RECT_Y + CONWAY_MODULE_OFFSET_Y);
     disUp(true);
 }
