@@ -163,6 +163,7 @@ void wfModulesManage(buttonState button, bool forceRender)
             return; // Don't do anything
         }
     }
+    button = None; // Reset the button to not affect other modules, NOT SURE if it will work
     bool doIt = false;
     bool isThereAShow = false;
     for (int i = 0; i < MODULE_COUNT; i++)
