@@ -60,7 +60,7 @@ Apart from code things, here are the key features for now:
 3. After running `generate.sh`, it will create your personal config files. After that you can adjust values in `config.h` and `confidential.h` (in `src/defines/` directory) to your needs. **DO NOT EDIT ANYTHING IN TEMPLATES DIRECTORY. IT WILL DO NOTHING :(** 
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
    - To enable all bitcoin data, you need a coinlib api key. If you can't create an account there because of no verification email, just create an account directly with google. I have already emailed them about the issue. If no api key is supplied, It will only show the block clock.
-
+4. For further details and for usage instructions, go to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 <!-- **Also latest stable commit: None** Go back to it if you encounter problems. It's also possible this commit is the latest commit in this repo -->
 
 <details> 
