@@ -34,7 +34,7 @@ xxd_wrapper(){
 }
 
 get_pio_env() {
-    local json_file="../../.vscode/launch.json"
+    local json_file=$1
 
     if [ -f "$json_file" ]; then
         # Use jq to extract the projectEnvName from launch.json

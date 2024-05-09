@@ -1,7 +1,7 @@
 #!/bin/bash
 source ../global_functions.sh
 
-pio_env=$(get_pio_env)
+pio_env=$(get_pio_env ../../.vscode/launch.json)
 
 fontconvert="../../.pio/libdeps/$pio_env/Adafruit GFX Library/fontconvert/fontconvert"
 if [ -e "$fontconvert" ]; then

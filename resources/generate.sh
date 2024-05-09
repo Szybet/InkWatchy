@@ -1,5 +1,9 @@
 #!/bin/bash
 
+echo "Patching some libraries so you won't see warnings :D"
+./patchLibs.sh
+
+echo -e ''
 echo "Processing images"
 cd images/
 ./convertImages.sh
