@@ -13,6 +13,8 @@
 #include <OpenWeather.h>
 #include <ArduinoNvs.h>
 #include <StableBMA.h>
+#include "FS.h"
+#include <LittleFS.h>
 
 #include <mutex>
 
@@ -68,6 +70,7 @@ struct wfModule {
 #include "../hardware/buttons.h"
 #include "../hardware/display.h"
 #include "../hardware/axc.h"
+#include "../hardware/fs/littlefs.h"
 #include "../functions.h"
 #include "../network/wifi/wifiLogic.h"
 #include "../network/wifi/wifiTask.h"

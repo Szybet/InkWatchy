@@ -13,3 +13,6 @@ src/defines/config.h
 src/defines/confidential.h
 resources/ImageMagick
 resources/other/debian_magick_installed
+resources/fs/out/*
+resources/fs/mklittlefs
+resources/fs/littlefs/*

@@ -1,10 +1,10 @@
 #!/bin/bash
 
 function imagemagick_from_source() {
-    if [ ! -f "debian_magick_installed" ]; then
+    if [ ! -f "other/debian_magick_installed" ]; then
         echo "I will now try to install a newer version of imagemagick, it will overwrite /usr/bin/convert"
         read -r -p "Are you sure? Click enter to continue or Ctrl C to abort " response
-        touch "debian_magick_installed"
+        touch "other/debian_magick_installed"
 
         wget https://imagemagick.org/archive/binaries/magick
         chmod +x magick
@@ -51,3 +51,12 @@ else
     echo "Oh yea good luck :D"
 fi
 
+if [ ! -f "fs/mklittlefs" ]; then
+    echo "Downloading mklittlefs"
+    wget -q -O mklittlefs.tar.gz https://github.com/earlephilhower/mklittlefs/releases/download/3.2.0/x86_64-linux-gnu-mklittlefs-975bd0f.tar.gz
+    tar -xf mklittlefs.tar.gz
+    chmod +x mklittlefs/mklittlefs
+    mv mklittlefs/mklittlefs fs/
+    rm -rf mklittlefs
+    rm -rf mklittlefs.tar.gz
+fi
