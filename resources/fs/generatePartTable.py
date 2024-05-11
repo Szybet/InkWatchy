@@ -33,12 +33,12 @@ current_used_flash = current_used_flash + app_partition_size_bytes
 
 os.makedirs("out", exist_ok=True)
 
-with open("out/offset", "w") as f:
+with open("out/offset.txt", "w") as f:
     f.write(str(hex(current_used_flash)) + "\n")
 
 spiffs_partition_size_bytes = (flash_size_bytes - current_used_flash - 0xFFF) & ~0xFFF
 
-with open("out/size", "w") as f:
+with open("out/size.txt", "w") as f:
     f.write(str(spiffs_partition_size_bytes) + "\n")
 
 # Create the partition table as a list of strings

@@ -16,3 +16,5 @@ resources/other/debian_magick_installed
 resources/fs/out/*
 resources/fs/mklittlefs
 resources/fs/littlefs/*
+resources/fs/partitions.csv
+resources/fs/fsConfig.ini
