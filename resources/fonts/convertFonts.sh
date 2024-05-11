@@ -17,12 +17,7 @@ else
     fi
 fi
 
-rm fonts.h 1>/dev/null 2>/dev/null
-touch fonts.h
-
-echo -e "#ifndef FONTS_H" >> fonts.h
-echo -e "#define FONTS_H" >> fonts.h
-echo -e '' >> fonts.h
+mkdir -p out/
 
 for d in *
 do
@@ -41,39 +36,49 @@ do
             continue
         fi
         echo "Processing file $f"
-        ./"$fontconvert" $f $d | sed 's/PROGMEM //g'>> fonts.h
-        echo -e '' >> fonts.h
+        rm fonts.h 1>/dev/null 2>/dev/null
+        touch fonts.h
+
+        echo "#include <cstdint>" > fonts.h
+        echo 'typedef struct {' >> fonts.h
+        echo '  uint16_t bitmapOffset;' >> fonts.h
+        echo '  uint8_t width;' >> fonts.h
+        echo '  uint8_t height;' >> fonts.h
+        echo '  uint8_t xAdvance;' >> fonts.h
+        echo '  int8_t xOffset;' >> fonts.h
+        echo '  int8_t yOffset;' >> fonts.h
+        echo '} GFXglyph;' >> fonts.h
+
+        echo 'typedef struct {' >> fonts.h
+        echo '  uint8_t *bitmap;' >> fonts.h
+        echo '  GFXglyph *glyph;' >> fonts.h
+        echo '  uint16_t first;' >> fonts.h
+        echo '  uint16_t last;' >> fonts.h
+        echo '  uint8_t yAdvance;' >> fonts.h
+        echo '} GFXfont;' >> fonts.h
+
+
+        cp $f font.ttf
+        ./"$fontconvert" font.ttf $d | sed 's/PROGMEM //g'>> fonts.h
+
+        # Remove comments
+        sed -i '/^\/\//d;/^\/\*$/,/^\*\//d' fonts.h
+        sed -i 's,//.*$,,' fonts.h
+
+        # Remove font sizes
+        sed -i "s/${d}pt.*b//g" fonts.h
+
+        count=$(grep -o '0x' fonts.h | wc -l)
+        count=$((count - 2))
+
+        echo "#define BYTE_COUNT $count" >> fonts.h
+
+        g++ fontDumper.cpp -o out/fontDumper
+        # stat -c "%s" out/fontStruct.bin
+        rm out/fontBitmaps.bin 1>/dev/null 2>/dev/null
+        rm out/fontGlyphs.bin 1>/dev/null 2>/dev/null
+        rm out/fontStruct.bin 1>/dev/null 2>/dev/null
+        out/fontDumper
+
     done
 done
-
-words=$(grep -oP '(?<=GFXfont\s)\w+' fonts.h)
-font_count=$(grep -oP '(?<=GFXfont\s)\w+' fonts.h | wc -l)
-
-formatted_fonts_ref=""
-for word in $words; do
-    formatted_fonts_ref+="  $word,\n"
-done
-
-formatted_fonts_str=""
-for word in $words; do
-    formatted_fonts_str+="  \"$word\",\n"
-done
-
-
-echo -e "#if FONT_MENU_ENABLED" >> fonts.h
-echo -e "#define FONT_COUNT $font_count" >> fonts.h
-# Sadly I couldn't do references for some reason so we are stuck with this
-echo -e "const GFXfont fontListRef[FONT_COUNT] = {" >> fonts.h
-echo -e "$formatted_fonts_ref};" >> fonts.h
-
-echo -e '' >> fonts.h
-
-echo -e "const String fontListStr[FONT_COUNT] = {" >> fonts.h
-echo -e "$formatted_fonts_str};" >> fonts.h
-echo -e "#endif" >> fonts.h
-
-echo -e '' >> fonts.h
-
-echo "#endif" >> fonts.h
-
-mv fonts.h ../../src/defines/

@@ -18,3 +18,4 @@ resources/fs/mklittlefs
 resources/fs/littlefs/*
 resources/fs/partitions.csv
 resources/fs/fsConfig.ini
+resources/fonts/out
