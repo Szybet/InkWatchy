@@ -3,31 +3,69 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Reset Watchy",
+            "label": "Reset",
             "type": "shell",
-            "command": "esptool.py --after hard_reset chip_id",
+            "command": "esptool.py --before default_reset chip_id",
             "icon": {
-                "id": "refresh",
-                "color": "terminal.ansiGreen"
-              }
+                "id": "debug-restart",
+            },
+            "options": {
+                "statusbar": {
+                    "color": "#ff0000"
+                }
+            }
         },
         {
-            "label": "Generate resources",
+            "label": "Gen resources",
             "type": "shell",
             "command": "cd resources && ./generate.sh",
             "icon": {
-                "id": "file-binary",
-                "color": "terminal.ansiGreen"
-              }
+                "id": "folder-library",
+            },
+            "options": {
+                "statusbar": {
+                    "color": "#15ff00"
+                }
+            }
         },
         {
-            "label": "Patch wifi tool",
+            "label": "Patch wifi",
             "type": "shell",
             "command": "cd resources/other/wifiTool/ && ./patch.sh",
             "icon": {
-                "id": "flame",
-                "color": "terminal.ansiGreen"
-              }
+                "id": "debug",
+            },
+            "options": {
+                "statusbar": {
+                    "color": "#393939"
+                }
+            }
+        },
+        {
+            "label": "Gen partitions",
+            "type": "shell",
+            "command": "cd resources/fs/ && python3 generatePartTable.py",
+            "icon": {
+                "id": "layout-panel-right",
+            },
+            "options": {
+                "statusbar": {
+                    "color": "#aab8ff"
+                }
+            }
+        },
+        {
+            "label": "Flash filesystem",
+            "type": "shell",
+            "command": "cd resources/fs/ && ./flashFs.sh",
+            "icon": {
+                "id": "debug-step-into",
+            },
+            "options": {
+                "statusbar": {
+                    "color": "#8cc1d3"
+                }
+            }
         },
     ]
 }
