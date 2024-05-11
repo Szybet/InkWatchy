@@ -67,11 +67,11 @@ void wfBitrequestShow(buttonState button, bool *showBool)
     if (smallBtcData == true)
     {
 
-        writeImageN(MODULE_RECT_X, MODULE_RECT_Y, bitcoinImgPack);
-        writeImageN(MODULE_RECT_X, MODULE_RECT_Y + MODULE_H - PICKAXE_IMG_HEIGHT, pickaxeImgPack);
+        writeImageN(MODULE_RECT_X, MODULE_RECT_Y, getImg("bitcoin"));
+        writeImageN(MODULE_RECT_X, MODULE_RECT_Y + MODULE_H - getImgWidth("pickaxe"), getImg("pickaxe"));
         if (isBtcDataAvail == true)
         {
-            display.setCursor(MODULE_RECT_X + PICKAXE_IMG_WIDTH, MODULE_RECT_Y + MODULE_H - 1);
+            display.setCursor(MODULE_RECT_X + getImgWidth("pickaxe"), MODULE_RECT_Y + MODULE_H - 1);
             setFont(&dogicapixel4pt7b);
             setTextSize(1);
             display.print(btcData.height);
@@ -100,13 +100,13 @@ void wfBitrequestShow(buttonState button, bool *showBool)
 
         if (btcData.change1h != 0.0 || btcData.change24 != 0.0 || btcData.change7d != 0.0 || btcData.change30d != 0.0 || btcData.price != 00)
         {
-            display.setCursor(MODULE_RECT_X + BITCOIN_IMG_WIDTH, MODULE_RECT_Y + BITCOIN_IMG_HEIGHT - 2);
+            display.setCursor(MODULE_RECT_X + getImgWidth("bitcoin"), MODULE_RECT_Y + getImgHeight("bitcoin") - 2);
             setFont(&dogicapixel4pt7b);
             setTextSize(1);
             display.print(":" + String(btcData.price) + "$");
-            display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + BITCOIN_IMG_HEIGHT * 2);
+            display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + getImgHeight("bitcoin") * 2);
             display.print("1h:" + String(btcData.change1h) + "% 24h:" + String(btcData.change24) + "%");
-            display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + BITCOIN_IMG_HEIGHT * 3);
+            display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + getImgHeight("bitcoin") * 3);
             display.print("7d:" + String(btcData.change7d) + "% 30d:" + String(btcData.change30d) + "%");
         }
     }

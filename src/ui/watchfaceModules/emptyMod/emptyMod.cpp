@@ -8,7 +8,7 @@ void wfPlacecheckShow(bool *showBool, bool *redrawBool)
 
 void wfPlacerequestShow(buttonState button, bool* showBool)
 {
-    writeImageN(MODULE_RECT_X, MODULE_RECT_Y, moduleImgPack);
+    writeImageN(MODULE_RECT_X, MODULE_RECT_Y, getImg("module"));
     disUp(true);
 }
 

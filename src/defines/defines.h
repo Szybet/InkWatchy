@@ -15,7 +15,6 @@
 #include <StableBMA.h>
 #include "FS.h"
 #include <LittleFS.h>
-
 #include <mutex>
 
 #define PARTIAL_UPDATE true
@@ -25,12 +24,12 @@
 #define BUTTON_WAKEUP_REASON ESP_SLEEP_WAKEUP_EXT1
 
 struct ImageDef {
-    const uint8_t *bitmap;
+    uint8_t *bitmap;
     int16_t bw;
     int16_t bh;
 };
 
-const ImageDef emptyImgPack = {NULL, 0, 0};
+extern ImageDef emptyImgPack;
 
 typedef enum 
 {
@@ -60,7 +59,6 @@ struct wfModule {
 #include "config.h" // Needs to be first!
 #include "confidential.h"
 #include "macros.h"
-#include "images.h"
 #include "fonts.h"
 
 #include "../hardware/hardware.h"
