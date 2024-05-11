@@ -75,8 +75,6 @@ void setup()
   }
 
   initWatchdogTask();
-  
-  setupFsManager();
 }
 
 void loop()

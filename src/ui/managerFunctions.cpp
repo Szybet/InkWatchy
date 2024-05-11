@@ -7,25 +7,25 @@ void initMainMenu()
 #if BOOK
     {
         count = count + 1;
-        buttons[count] = {"Book " + bookGetPages(), &bookImgPack, switchBook};
+        buttons[count] = {"Book " + bookGetPages(), getImg("book"), switchBook};
     }
 #endif
     {
         count = count + 1;
-        buttons[count] = {"Weather", &weatherImgPack, switchWeatherMenu};
+        buttons[count] = {"Weather", getImg("weather"), switchWeatherMenu};
     }
     {
         count = count + 1;
-        buttons[count] = {"Debug", &debugImgPack, switchDebugMenu};
+        buttons[count] = {"Debug", getImg("debug"), switchDebugMenu};
     }
     {
         count = count + 1;
-        buttons[count] = {"Power settings", &batteryImgPack, switchPowerMenu};
+        buttons[count] = {"Power settings", getImg("battery"), switchPowerMenu};
     }
 #if VAULT
     {
         count = count + 1;
-        buttons[count] = {"Vault", &vaultImgPack, switchVault};
+        buttons[count] = {"Vault", getImg("vault"), switchVault};
     }
 #endif
 #if WIFI_TOOL
@@ -40,19 +40,19 @@ void initMainMenu()
         {
             wifiToolFunc = initWifiTool;
         }
-        buttons[count] = {"Wifi tool: " + wifiToolStatus(), &wifiToolImgPack, wifiToolFunc};
+        buttons[count] = {"Wifi tool: " + wifiToolStatus(), getImg("wifiTool"), wifiToolFunc};
     }
 #endif
 #if APPLE_JOKE
     {
         debugLog("Adding apple joke to menu");
         count = count + 1;
-        buttons[count] = {"Eating apples", &appleImgPack, switchApple};
+        buttons[count] = {"Eating apples", getImg("apple"), switchApple};
     }
     {
         debugLog("Adding apple joke to menu");
         count = count + 1;
-        buttons[count] = {"Smashing apples", &appleImgPack, switchApple2};
+        buttons[count] = {"Smashing apples", getImg("apple"), switchApple2};
     }
 #endif
 
@@ -190,27 +190,27 @@ void initpowerMenu()
 
     {
         count = count + 1;
-        const ImageDef *image;
+        ImageDef *image;
         if (disableAllVibration == true)
         {
-            image = &acceptImgPack;
+            image = getImg("accept");
         }
         else
         {
-            image = &crossImgPack;
+            image = getImg("cross");
         }
         buttons[count] = {"Vibrations disabled", image, toggleDisableVibrationsEntry};
     }
     {
         count = count + 1;
-        const ImageDef *image;
+        ImageDef *image;
         if (disableWakeUp == true)
         {
-            image = &acceptImgPack;
+            image = getImg("accept");
         }
         else
         {
-            image = &crossImgPack;
+            image = getImg("cross");
         }
         buttons[count] = {"Wake up disabled", image, toggleWakeUpEntry};
     }

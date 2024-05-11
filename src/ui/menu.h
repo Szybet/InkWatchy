@@ -8,7 +8,7 @@
 
 struct entryMenu {
     String text;
-    const ImageDef* image;
+    ImageDef* image;
     void (*function)();
 };
 

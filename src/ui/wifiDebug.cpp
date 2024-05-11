@@ -78,8 +78,8 @@ void initWifiDebugDisplay()
     onButtonCord.y = currentHeight;
     offButtonCord.x = 70;
     offButtonCord.y = currentHeight;
-    drawButton(onButtonCord.x, onButtonCord.y, "ON", acceptImgPack, true);
-    drawButton(offButtonCord.x, offButtonCord.y, "OFF", crossImgPack);
+    drawButton(onButtonCord.x, onButtonCord.y, "ON", getImg("accept"), true);
+    drawButton(offButtonCord.x, offButtonCord.y, "OFF", getImg("cross"));
 
     disUp(true);
 }
@@ -103,8 +103,8 @@ void drawSelUi()
         break;
     }
     }
-    drawButton(onButtonCord.x, onButtonCord.y, "ON", acceptImgPack, onBut);
-    drawButton(offButtonCord.x, offButtonCord.y, "OFF", crossImgPack, offBut);
+    drawButton(onButtonCord.x, onButtonCord.y, "ON", getImg("accept"), onBut);
+    drawButton(offButtonCord.x, offButtonCord.y, "OFF", getImg("cross"), offBut);
     dUChange = true;
 }
 

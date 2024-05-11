@@ -28,15 +28,15 @@ void wfNetrequestShow(buttonState button, bool *showBool)
     debugLog("Launched");
     if (previousWifiState == WifiOff)
     {
-        writeImageN(WIFI_IMG_X, WIFI_IMG_Y, wifiOffImgPack);
+        writeImageN(WIFI_IMG_X, WIFI_IMG_Y, getImg("wifiOff"));
     }
     else if (previousWifiState == WifiOn)
     {
-        writeImageN(WIFI_IMG_X, WIFI_IMG_Y, wifiOnImgPack);
+        writeImageN(WIFI_IMG_X, WIFI_IMG_Y, getImg("wifiOn"));
     }
     else if (previousWifiState == WifiConnected)
     {
-        writeImageN(WIFI_IMG_X, WIFI_IMG_Y, wifiConnectedImgPack);
+        writeImageN(WIFI_IMG_X, WIFI_IMG_Y, getImg("wifiConnected"));
         display.setCursor(MODULE_RECT_X, WIFI_IMG_Y + 25);
         setFont(&dogicapixel4pt7b);
         setTextSize(1);

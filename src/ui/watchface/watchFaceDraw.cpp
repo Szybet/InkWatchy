@@ -90,7 +90,7 @@ void drawTimeAfterApply()
 
 void showFullWatchface()
 {
-    writeImageN(0, 0, watchfaceImgPack);
+    writeImageN(0, 0, getImg("watchface"));
 
     setTextSize(1);
     setFont(TIME_FONT);

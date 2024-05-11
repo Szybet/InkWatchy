@@ -15,6 +15,4 @@
 
 #define BOOL_STR(b) ((b) ? String("True") : String("False"))
 
-#define fs LittleFS
-
 #endif

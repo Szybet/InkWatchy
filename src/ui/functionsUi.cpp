@@ -138,17 +138,17 @@ void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t
 // Use the image pack here to make it easier
 // Like that:
 // writeImageN(100, 100, testSomethiongImgPack);
-void writeImageN(int16_t x, int16_t y, const ImageDef image, uint16_t frColor, uint16_t bgColor)
+void writeImageN(int16_t x, int16_t y, ImageDef* image, uint16_t frColor, uint16_t bgColor)
 {
   int16_t cx = display.getCursorX();
   int16_t cy = display.getCursorY();
   display.setCursor(0, 0);
-  display.drawBitmap(x, y, image.bitmap, image.bw, image.bh, frColor, bgColor);
+  display.drawBitmap(x, y, image->bitmap, image->bw, image->bh, frColor, bgColor);
   display.refresh(PARTIAL_UPDATE);
   display.setCursor(cx, cy);
 }
 
-sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor, bool draw)
+sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef* image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor, bool draw)
 {
   sizeInfo size = {0};
   int toleranceSize = tolerance * 2 + borderWidth * 2;
@@ -164,21 +164,21 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image, bool
     size.w += 1;
   }
 
-  if (image.bitmap != NULL)
+  if (image->bitmap != NULL)
   {
-    size.w += image.bw;
+    size.w += image->bw;
   }
 
-  if (image.bitmap != NULL && str != "")
+  if (image->bitmap != NULL && str != "")
   {
     size.w += tolerance;
   }
 
   uint16_t mainH;
-  if (image.bitmap != NULL && image.bh > th)
+  if (image->bitmap != NULL && image->bh > th)
   {
-    size.h += image.bh;
-    mainH = image.bh;
+    size.h += image->bh;
+    mainH = image->bh;
   }
   else
   {
@@ -197,12 +197,12 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, const ImageDef image, bool
   canvasTmp.setFont(font);
   canvasTmp.setTextSize(textSize);
   canvasTmp.setCursor(tolerance + borderWidth, tolerance + borderWidth);
-  if (image.bitmap != NULL)
+  if (image->bitmap != NULL)
   {
-    canvasTmp.drawBitmap(tolerance + borderWidth, tolerance + borderWidth, image.bitmap, image.bw, image.bh, frColor, bgColor);
+    canvasTmp.drawBitmap(tolerance + borderWidth, tolerance + borderWidth, image->bitmap, image->bw, image->bh, frColor, bgColor);
     if (str != "")
     {
-      canvasTmp.setCursor(canvasTmp.getCursorX() + tolerance + image.bw, canvasTmp.getCursorY());
+      canvasTmp.setCursor(canvasTmp.getCursorX() + tolerance + image->bw, canvasTmp.getCursorY());
     }
   }
   if (str != "")

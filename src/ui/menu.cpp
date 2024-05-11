@@ -145,7 +145,7 @@ void showMenu()
     }
 
     debugLog("Menu entry text is: " + data.entryList[i].text);
-    buttonSize = drawButton(1, currentHeight, data.entryList[i].text, *data.entryList[i].image, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
+    buttonSize = drawButton(1, currentHeight, data.entryList[i].text, data.entryList[i].image, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
     debugLog("Button h in menu: " + String(buttonSize.h));
     if (draw == true)
     {

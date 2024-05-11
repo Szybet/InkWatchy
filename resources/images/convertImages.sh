@@ -1,12 +1,8 @@
 #!/bin/bash
 source ../global_functions.sh
 
-rm images.h 1>/dev/null 2>/dev/null
-touch images.h
-
-echo -e "#ifndef IMAGES_H" >> images.h
-echo -e "#define IMAGES_H" >> images.h
-echo -e '' >> images.h
+rm -rf img 1>/dev/null 2>/dev/null
+mkdir -p img
 
 for f in *
 do
@@ -18,29 +14,16 @@ do
         continue
     fi
 
-    echo "Processing $f" # always double quote "$f" filename
+    echo "Processing $f"
     
-    fnel="${f%.*}Img"
-    fne=$(echo ${f%.*}_IMG | tr a-z A-Z)
+    img_name="${f%.*}"
+    img_path="img/${img_name}"
+    img_info="img/${img_name}Inf"
 
-    #convert $f -compress none -monochrome -colors 2 -depth 1 h:- | sed 's/MagickImage/'$fne'/g' | tail -n +4 >> images.h
+    identify -ping -format '%w\n%h' $f > ${img_info}
 
-    #echo -e "#define ${fne}Pack ${fne},${fne}Width,${fne}Height" >> images.h
-
-    identify -ping -format '#define '${fne}'_WIDTH %w' $f >> images.h
-    echo -e '' >> images.h
-
-    identify -ping -format '#define '${fne}'_HEIGHT %h' $f >> images.h
-    echo -e '' >> images.h
-
-    # On arch linux install xxd-standalone
-    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- | xxd_wrapper -i -n $fnel >> images.h
-
-    echo -e "const ImageDef ${fnel}Pack = {${fnel}, ${fne}_WIDTH, ${fne}_HEIGHT};" >> images.h
-    echo -e '' >> images.h
+    convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap eink-2color.png -depth 1 gray:- > ${img_path}
 
 done
 
-echo "#endif" >> images.h
-
-mv images.h ../../src/defines/
+mv img ../fs/littlefs/

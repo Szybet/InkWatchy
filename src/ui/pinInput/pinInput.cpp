@@ -30,7 +30,7 @@ void showPin()
         {
             invert = true;
         }
-        sizeInfo size = drawButton(currentWidth, currentHeight, String(i), emptyImgPack, invert, TOLERANCE, 0);
+        sizeInfo size = drawButton(currentWidth, currentHeight, String(i), &emptyImgPack, invert, TOLERANCE, 0);
         currentWidth = currentWidth + size.w + TOLERANCE;
         if (i == 3 || i == 6)
         {
@@ -45,7 +45,7 @@ void showPin()
         {
             invert = true;
         }
-        drawButton(ZERO_CORD, "0", emptyImgPack, invert, TOLERANCE, 0);
+        drawButton(ZERO_CORD, "0", &emptyImgPack, invert, TOLERANCE, 0);
     }
     {
         bool invert = false;
@@ -53,7 +53,7 @@ void showPin()
         {
             invert = true;
         }
-        drawButton(REMOVE_CORD, "r", emptyImgPack, invert, TOLERANCE, 0);
+        drawButton(REMOVE_CORD, "r", &emptyImgPack, invert, TOLERANCE, 0);
     }
 
     disUp(true);
