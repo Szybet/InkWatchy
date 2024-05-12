@@ -221,6 +221,7 @@ void initpowerMenu()
 #if FONT_MENU_ENABLED
 void initFontMenu()
 {
+    /*
     entryMenu buttons[FONT_COUNT];
     for (int i = 0; i < FONT_COUNT; i++)
     {
@@ -231,5 +232,6 @@ void initFontMenu()
         buttons[i] = {str, &emptyImgPack, switchFontsPreview};
     }
     initMenu(buttons, FONT_COUNT, "Preview fonts");
+    */
 }
 #endif

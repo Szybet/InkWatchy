@@ -173,7 +173,7 @@ void dumpBatteryScreen(void *parameter)
 {
     while (true)
     {
-        display.setFont(&dogicapixel4pt7b);
+        display.setFont(getFont("dogicalpixel4"));
         display.setTextSize(1);
         display.fillRect(80, 80, 40, 40, GxEPD_WHITE);
         display.setCursor(85, 100);

@@ -6,6 +6,7 @@ void exitFontPreview() {
 }
 
 void initFontPreview() {
+    /*
     display.fillScreen(GxEPD_WHITE);
     for(int i = 0; i < FONT_COUNT; i++) {
         if(lastMenuSelected.indexOf(fontListStr[i]) != -1) {
@@ -22,6 +23,7 @@ void initFontPreview() {
     display.setCursor(0, h);
     display.print(preview);
     disUp(true);
+    */
 }
 
 void loopFontPreview() {

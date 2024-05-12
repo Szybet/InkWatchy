@@ -38,7 +38,7 @@ void wfNetrequestShow(buttonState button, bool *showBool)
     {
         writeImageN(WIFI_IMG_X, WIFI_IMG_Y, getImg("wifiConnected"));
         display.setCursor(MODULE_RECT_X, WIFI_IMG_Y + 25);
-        setFont(&dogicapixel4pt7b);
+        setFont(getFont("dogicapixel4"));
         setTextSize(1);
         display.print(WiFi.SSID());
     }

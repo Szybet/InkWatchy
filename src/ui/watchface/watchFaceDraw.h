@@ -3,10 +3,10 @@
 
 #include "../../defines/defines.h"
 
-#define TIME_FONT &JackInput40pt7b
-#define DATE_FONT &JackInput17pt7b
-#define DAY_NAME_FONT &Speculum13pt7b
-#define MONTH_NAME_FONT &Speculum9pt7b
+#define TIME_FONT getFont("JackInput40")
+#define DATE_FONT getFont("JackInput17")
+#define DAY_NAME_FONT getFont("Speculum13")
+#define MONTH_NAME_FONT getFont("Speculum9")
 
 #define DAY_NAME_CORD 13, 87
 #define DATE_CORD 8, 113
