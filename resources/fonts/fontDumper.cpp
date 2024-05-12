@@ -1,4 +1,4 @@
-#include "fonts.h"
+#include "out/fonts.h"
 
 #include <iostream>
 #include <fstream>

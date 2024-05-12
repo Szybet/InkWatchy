@@ -75,7 +75,7 @@ void initPinInput()
     }
     newPin = "";
     currentPinButton = 5;
-    setFont(&JackInput17pt7b);
+    setFont(getFont("JackInput17"));
     showPin();
 }
 

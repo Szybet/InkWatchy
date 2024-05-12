@@ -22,6 +22,11 @@ bool setupFsManager()
       {
         loadedImgNames[i] = "";
       }
+
+      for (int i = 0; i < FONT_COUNT; i++)
+      {
+        loadedFontNames[i] = "";
+      }
     }
   }
   return true;

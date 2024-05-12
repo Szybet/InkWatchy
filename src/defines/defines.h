@@ -59,7 +59,6 @@ struct wfModule {
 #include "config.h" // Needs to be first!
 #include "confidential.h"
 #include "macros.h"
-#include "fonts.h"
 
 #include "../hardware/hardware.h"
 #include "../hardware/battery.h"

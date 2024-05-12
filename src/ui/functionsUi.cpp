@@ -274,7 +274,7 @@ void textPage(String title, String *strList, int listCount)
   display.fillRect(0, h, display.width(), 1, GxEPD_BLACK);
   h = h + 3;
 
-  display.setFont(&DisposableDroidBB9pt7b);
+  display.setFont(getFont("DisposableDroidBB9"));
 
   uint16_t textHeight;
   getTextBounds(strList[0], NULL, NULL, NULL, &textHeight);

@@ -99,7 +99,7 @@ void drawModuleCount(bool force)
     {
         previousModuleCount = counter;
         previousCurrentModule = currentModuleTranslated;
-        setFont(&dogicapixel4pt7b);
+        setFont(getFont("dogicapixel4"));
         setTextSize(1);
 
         debugLog("Printing the current module");

@@ -72,16 +72,16 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         if (isBtcDataAvail == true)
         {
             display.setCursor(MODULE_RECT_X + getImgWidth("pickaxe"), MODULE_RECT_Y + MODULE_H - 1);
-            setFont(&dogicapixel4pt7b);
+            setFont(getFont("dogicapixel4"));
             setTextSize(1);
             display.print(btcData.height);
         }
-        setFont(&dogicapixel4pt7b);
+        setFont(getFont("dogicapixel4"));
         setTextSize(1);
         display.setCursor(MODULE_RECT_X + MODULE_W - 60, MODULE_RECT_Y + 7 - 1); // font is 7 pixels
         display.print("Last sync:");
 
-        setFont(&dogicapixel4pt7b);
+        setFont(getFont("dogicapixel4"));
         display.setCursor(MODULE_RECT_X + MODULE_W, MODULE_RECT_Y + 7);
         String lastSync = "Never";
         if (isBtcDataAvail == true)
@@ -101,7 +101,7 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         if (btcData.change1h != 0.0 || btcData.change24 != 0.0 || btcData.change7d != 0.0 || btcData.change30d != 0.0 || btcData.price != 00)
         {
             display.setCursor(MODULE_RECT_X + getImgWidth("bitcoin"), MODULE_RECT_Y + getImgHeight("bitcoin") - 2);
-            setFont(&dogicapixel4pt7b);
+            setFont(getFont("dogicapixel4"));
             setTextSize(1);
             display.print(":" + String(btcData.price) + "$");
             display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + getImgHeight("bitcoin") * 2);
@@ -113,7 +113,7 @@ void wfBitrequestShow(buttonState button, bool *showBool)
     else
     {
         display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + MODULE_H - 1);
-        setFont(&smileandwave20pt7b);
+        setFont(getFont("smileandwave20"));
         setTextSize(1);
         display.print(btcData.height);
     }
