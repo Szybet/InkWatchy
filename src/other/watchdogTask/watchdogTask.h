@@ -10,7 +10,5 @@ void initWatchdogTask();
 void deInitWatchdogTask();
 
 void watchdogPing();
-void leaveFlashMessage(String message);
-void readFlashMessage();
 
 #endif

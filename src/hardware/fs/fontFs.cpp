@@ -5,7 +5,7 @@ GFXfont loadedFont[FONT_COUNT];
 
 const GFXfont *getFont(String name)
 {
-    if (setupFsManager() == false)
+    if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
         return &FreeSansBold9pt7b;
@@ -45,6 +45,7 @@ const GFXfont *getFont(String name)
         debugLog("Failed to read the file: " + name + "Bitmap");
         return &FreeSansBold9pt7b;
     }
+    fileBitmap.close();
     // Glyph
     File fileGlyph = LittleFS.open("/font/" + name + "Glyphs");
     if (fileGlyph == false)
@@ -63,6 +64,7 @@ const GFXfont *getFont(String name)
         return &FreeSansBold9pt7b;
     }
     GFXglyph* glyphs = reinterpret_cast<GFXglyph*>(glyphBuf);
+    fileGlyph.close();
     // Struct
     File fileStruct = LittleFS.open("/font/" + name + "Struct");
     if (fileStruct == false)
@@ -78,6 +80,7 @@ const GFXfont *getFont(String name)
         debugLog("Failed to read the file: " + name + "Struct");
         return &FreeSansBold9pt7b;
     }
+    fileStruct.close();
     uint16_t first = ((uint16_t)structBuf[1] << 8) | structBuf[0];
     uint16_t last = ((uint16_t)structBuf[3] << 8) | structBuf[2];
     uint8_t yAdvance = structBuf[4];

@@ -11,7 +11,6 @@
 #include <NTPClient.h>
 #include <JSON_Decoder.h>
 #include <OpenWeather.h>
-#include <ArduinoNvs.h>
 #include <StableBMA.h>
 #include "FS.h"
 #include <LittleFS.h>
@@ -55,6 +54,13 @@ struct wfModule {
     void (*checkShow)(bool* showBool, bool* redrawBool);
     void (*requestShow)(buttonState button, bool* showBool);
 }; // Madness -,-
+
+struct bufSize {
+    uint8_t *buf;
+    int size;
+};
+
+extern bufSize emptyBuff;
 
 #include "config.h" // Needs to be first!
 #include "confidential.h"

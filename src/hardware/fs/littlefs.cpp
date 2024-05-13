@@ -2,7 +2,7 @@
 
 bool fsInitDone = false;
 
-bool setupFsManager()
+bool fsSetup()
 {
   if (fsInitDone == false)
   {
@@ -15,7 +15,6 @@ bool setupFsManager()
     else
     {
       debugLog("Mounted little fs");
-      isDebug(listDir("/", 0));
       fsInitDone = true;
 
       for (int i = 0; i < IMG_COUNT; i++)
@@ -27,13 +26,24 @@ bool setupFsManager()
       {
         loadedFontNames[i] = "";
       }
+
+      fsCreateDir("/conf");
+      isDebug(fsListDir("/", 0));
     }
   }
   return true;
 }
 
+void fsCreateDir(String path)
+{
+  if (LittleFS.mkdir(path) <= 0)
+  {
+    debugLog("Failed to create dir: " + path);
+  }
+}
+
 #if DEBUG
-void listDir(String dirname, uint8_t levels)
+void fsListDir(String dirname, uint8_t levels)
 {
   debugLog("Listing directory: " + dirname);
 
@@ -66,7 +76,7 @@ void listDir(String dirname, uint8_t levels)
       if (levels > 0)
       {
         debugLog("Going next level: " + String(levels));
-        listDir(String(file.path()), levels - 1);
+        fsListDir(String(file.path()), levels - 1);
       }
     }
     else

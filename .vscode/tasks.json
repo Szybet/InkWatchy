@@ -59,11 +59,24 @@
             "type": "shell",
             "command": "cd resources/fs/ && ./flashFs.sh",
             "icon": {
-                "id": "debug-step-into",
+                "id": "insert",
             },
             "options": {
                 "statusbar": {
                     "color": "#8cc1d3"
+                }
+            }
+        },
+        {
+            "label": "Get filesystem",
+            "type": "shell",
+            "command": "cd resources/fs/ && ./getFs.sh",
+            "icon": {
+                "id": "desktop-download",
+            },
+            "options": {
+                "statusbar": {
+                    "color": "#8cd398"
                 }
             }
         },

@@ -50,9 +50,6 @@ void setup()
 #if DUMP_LOOP_SOFTWARE_DEBUG
   loopGeneralDebug();
 #endif
-  debugLog("readFlashMessage outside");
-  readFlashMessage();
-
 #if VOLTAGE_PRINT_ON
     xTaskCreate(
         dumpBatteryScreen,

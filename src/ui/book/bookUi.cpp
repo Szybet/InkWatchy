@@ -116,7 +116,6 @@ void showPage(int page)
 void initBook()
 {
     resetSleepDelayBook();
-    initNvsManage();
     initAxc();
     // SBMA.setAccelConfig();
     SBMA.enableAccel();
@@ -372,7 +371,6 @@ void loopBook()
 
 String bookGetPages()
 {
-    initNvsManage();
     return String(getPageNumber()) + "/" + String(BOOK_PAGES - 1);
 }
 
