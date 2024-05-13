@@ -52,24 +52,22 @@ void syncWeather()
 
 void saveWeatherData()
 {
-  initNvsManage();
   size_t dataSize = sizeof(savedWeatherData) * MAX_DAYS * WEATHER_PER_DAY;
-  NVS.setBlob(NVS_WEATHER, (uint8_t *)weatherDataDays, dataSize, true);
+  fsSetBlob(CONF_WEATHER, (uint8_t *)weatherDataDays, dataSize);
   isWeatherAvailable = true;
 }
 
 void loadWeatherData()
 {
-  initNvsManage();
   size_t dataSize = sizeof(savedWeatherData) * MAX_DAYS * WEATHER_PER_DAY;
-  std::vector<uint8_t> serializedData = NVS.getBlob(NVS_WEATHER);
+  bufSize serializedData = fsGetBlob(CONF_WEATHER);
 
-  if (serializedData.size() != dataSize)
+  if (serializedData.size != dataSize)
   {
     debugLog("Weather data size is wrong");
     return;
   }
-  memcpy(weatherDataDays, serializedData.data(), serializedData.size());
+  memcpy(weatherDataDays, serializedData.buf, serializedData.size);
   
   isWeatherAvailable = true;
 }

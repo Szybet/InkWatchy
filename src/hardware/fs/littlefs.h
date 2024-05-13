@@ -3,7 +3,8 @@
 
 #include "defines/defines.h"
 
-bool setupFsManager();
+bool fsSetup();
+void fsCreateDir(String path);
 
 extern String loadedImgNames[IMG_COUNT];
 extern ImageDef loadedImg[IMG_COUNT];
@@ -17,8 +18,14 @@ extern GFXfont loadedFont[FONT_COUNT];
 
 const GFXfont *getFont(String name);
 
+bool fsIsConfig(String conf);
+String fsGetString(String conf, String defaultValue);
+void fsSetString(String conf, String value);
+bufSize fsGetBlob(String conf);
+void fsSetBlob(String conf, uint8_t* value, int size);
+
 #if DEBUG
-void listDir(String dirname, uint8_t levels);
+void fsListDir(String dirname, uint8_t levels);
 #endif
 
 #endif

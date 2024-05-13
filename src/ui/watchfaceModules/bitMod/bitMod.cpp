@@ -12,25 +12,23 @@ RTC_DATA_ATTR uint btcLastUpdate = 0;
 
 void saveBitcoinData()
 {
-    initNvsManage();
     size_t dataSize = sizeof(bitcoinData);
-    NVS.setBlob(NVS_BITCOIN, (uint8_t *)&btcData, dataSize, true);
+    fsSetBlob(CONF_BITCOIN, (uint8_t *)&btcData, dataSize);
     isBtcDataAvail = true;
 }
 
 void loadBitcoinData()
 {
-    initNvsManage();
     size_t dataSize = sizeof(bitcoinData);
-    std::vector<uint8_t> serializedData = NVS.getBlob(NVS_BITCOIN);
+    bufSize serializedData = fsGetBlob(CONF_BITCOIN);
 
-    if (serializedData.size() != dataSize)
+    if (serializedData.size != dataSize)
     {
         debugLog("Bitcoin data size is wrong");
         isBtcDataAvail = false;
         return;
     }
-    memcpy(&btcData, serializedData.data(), dataSize);
+    memcpy(&btcData, serializedData.buf, dataSize);
     isBtcDataAvail = true;
 }
 

@@ -168,11 +168,11 @@
 
 // NVS
 #define NVS_BOOK_CURRENT_PAGE "crp"
-#define NVS_DISABLE_ALL_VIBRATION "dbv"
-#define NVS_DISABLE_WAKE_UP "dwu"
+#define CONF_DISABLE_ALL_VIBRATION "dbv"
+#define CONF_DISABLE_WAKE_UP "dwu"
 #define NVS_BOOK_HASH "bhs"
 #define NVS_WATCHDOG_DEBUG_DATA "wdd"
-#define NVS_WEATHER "wtr"
-#define NVS_BITCOIN "btc"
+#define CONF_WEATHER "wtr"
+#define CONF_BITCOIN "btc"
 
 #endif

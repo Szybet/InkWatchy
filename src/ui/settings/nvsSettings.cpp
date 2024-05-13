@@ -4,18 +4,16 @@ bool RTC_DATA_ATTR disableAllVibration = false;
 bool RTC_DATA_ATTR disableWakeUp = false;
 
 void loadAllStorage() {
-    initNvsManage();
-    //debugLog("Loading nvs storage");
-    disableAllVibration = NVS.getInt(NVS_DISABLE_ALL_VIBRATION, 0);
-    disableWakeUp = NVS.getInt(NVS_DISABLE_WAKE_UP, 0);
+    disableAllVibration = bool(fsGetString(CONF_DISABLE_ALL_VIBRATION, "0"));
+    disableWakeUp = bool(fsGetString(CONF_DISABLE_WAKE_UP, "0"));
+
+    debugLog("disableAllVibration: " + BOOL_STR(disableAllVibration));
+    debugLog("disableWakeUp: " + BOOL_STR(disableWakeUp));
 }
 
 void saveAllStorage() {
-    initNvsManage();
-    //debugLog("Saving nvs storage");
-    NVS.setInt(NVS_DISABLE_ALL_VIBRATION, disableAllVibration);
-    NVS.setInt(NVS_DISABLE_WAKE_UP, disableWakeUp);
-    NVS.commit();
+    fsSetString(CONF_DISABLE_ALL_VIBRATION, String(disableAllVibration));
+    fsSetString(CONF_DISABLE_WAKE_UP, String(disableWakeUp));
 }
 
 void toggleAllVibration() {

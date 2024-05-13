@@ -5,7 +5,7 @@ ImageDef loadedImg[IMG_COUNT];
 
 ImageDef *getImg(String name)
 {
-    if (setupFsManager() == false)
+    if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
         return &emptyImgPack;
@@ -44,6 +44,7 @@ ImageDef *getImg(String name)
         debugLog("Failed to read the file: " + name);
         return &emptyImgPack;
     }
+    file.close();
     // Now the inf file
     File fileInf = LittleFS.open("/img/" + name + "Inf");
     if (fileInf == false)
@@ -59,6 +60,7 @@ ImageDef *getImg(String name)
         debugLog("Failed to read the file: " + name + "Inf");
         return &emptyImgPack;
     }
+    fileInf.close();
     String str = String((char *)InfBuf);
     str = str.substring(0, fileInfSize); // Because there is some garbage?
     debugLog("Bare inf str is: " + str);

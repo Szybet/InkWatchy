@@ -57,27 +57,6 @@ void watchdogPing()
     watchdogFine.unlock();
 }
 
-void leaveFlashMessage(String message)
-{
-    debugLog("leaveFlashMessage: " + message);
-    initNvsManage();
-    String str = NVS.getString(NVS_WATCHDOG_DEBUG_DATA);
-    if(str.indexOf(message) != -1) {
-        str = str + " " + message;
-        NVS.setString(NVS_WATCHDOG_DEBUG_DATA, str, true);
-        debugLog("Saving this message");
-    }
-}
-
-void readFlashMessage() {
-    debugLog("readFlashMessage inside");
-#if DEBUG
-    initNvsManage();
-    String str = NVS.getString(NVS_WATCHDOG_DEBUG_DATA);
-    debugLog("Flash message: " + str);
-#endif
-}
-
 #else
 void loopWatchdogTask(void *parameter)
 {
@@ -96,15 +75,6 @@ void deInitWatchdogTask()
 
 void watchdogPing()
 {
-    return void();
-}
-
-void leaveFlashMessage(String message)
-{
-    return void();
-}
-
-void readFlashMessage() {
     return void();
 }
 #endif

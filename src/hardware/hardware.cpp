@@ -140,13 +140,3 @@ void setCpuMhz(cpuSpeed speed)
     }
     }
 }
-
-bool isNvsInited = false;
-void initNvsManage()
-{
-    if (isNvsInited == false)
-    {
-        NVS.begin();
-        isNvsInited = true;
-    }
-}
