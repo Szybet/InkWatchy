@@ -2,14 +2,14 @@
 
 #define STR_ERROR "Failed to setup fs"
 
-bool fsIsConfig(String conf)
+bool fsIsConfig(String conf, String dir)
 {
     if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
         return false;
     }
-    File file = LittleFS.open("/conf/" + conf);
+    File file = LittleFS.open(dir + conf);
     if (file == false)
     {
         debugLog("There is no conf file: " + conf);
@@ -19,7 +19,7 @@ bool fsIsConfig(String conf)
     return true;
 }
 
-String fsGetString(String conf, String defaultValue)
+String fsGetString(String conf, String defaultValue, String dir)
 {
     if (fsSetup() == false)
     {
@@ -27,7 +27,7 @@ String fsGetString(String conf, String defaultValue)
         fsSetString(conf, defaultValue);
         return defaultValue;
     }
-    File file = LittleFS.open("/conf/" + conf);
+    File file = LittleFS.open(dir + conf);
     if (file == false)
     {
         debugLog("There is no conf file: " + conf);
@@ -49,14 +49,14 @@ String fsGetString(String conf, String defaultValue)
     return str;
 }
 
-void fsSetString(String conf, String value)
+void fsSetString(String conf, String value, String dir)
 {
     if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
         return;
     }
-    File file = LittleFS.open("/conf/" + conf, FILE_WRITE);
+    File file = LittleFS.open(dir + conf, FILE_WRITE);
     if (file == false)
     {
         debugLog("Failed to set conf: " + conf);
@@ -69,14 +69,14 @@ void fsSetString(String conf, String value)
     file.close();
 }
 
-bufSize fsGetBlob(String conf)
+bufSize fsGetBlob(String conf, String dir)
 {
     if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
         return emptyBuff;
     }
-    File file = LittleFS.open("/conf/" + conf);
+    File file = LittleFS.open(dir + conf);
     if (file == false)
     {
         debugLog("There is no conf file: " + conf);
@@ -96,14 +96,14 @@ bufSize fsGetBlob(String conf)
     return retBuf;
 }
 
-void fsSetBlob(String conf, uint8_t* value, int size)
+void fsSetBlob(String conf, uint8_t* value, int size, String dir)
 {
     if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
         return;
     }
-    File file = LittleFS.open("/conf/" + conf, FILE_WRITE);
+    File file = LittleFS.open(dir + conf, FILE_WRITE);
     if (file == false)
     {
         debugLog("Failed to set conf: " + conf);

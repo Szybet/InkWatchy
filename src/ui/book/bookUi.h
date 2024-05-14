@@ -6,6 +6,7 @@
 void initBook();
 void loopBook();
 String bookGetPages();
+int getLastPageNumber();
 void exitBook();
 void changePageDown();
 void changePageUp();

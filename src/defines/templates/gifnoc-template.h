@@ -167,7 +167,7 @@
 #define RTC_INT_PIN 27
 
 // NVS
-#define NVS_BOOK_CURRENT_PAGE "crp"
+#define CONF_BOOK_CURRENT_PAGE "crp"
 #define CONF_DISABLE_ALL_VIBRATION "dbv"
 #define CONF_DISABLE_WAKE_UP "dwu"
 #define NVS_BOOK_HASH "bhs"
