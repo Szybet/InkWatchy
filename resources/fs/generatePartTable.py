@@ -36,6 +36,8 @@ os.makedirs("out", exist_ok=True)
 with open("out/offset.txt", "w") as f:
     f.write(str(hex(current_used_flash)) + "\n")
 
+#print("current_used_flash: " + str(current_used_flash))
+#print("flash_size_bytes: " + str(flash_size_bytes))
 spiffs_partition_size_bytes = (flash_size_bytes - current_used_flash - 0xFFF) & ~0xFFF
 
 with open("out/size.txt", "w") as f:
