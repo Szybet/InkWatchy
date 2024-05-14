@@ -1,9 +1,8 @@
 #include "../../defines/config.h"
 #if BOOK
 #include "bookUi.h"
-#include "../../defines/book.h"
 
-#define BOOK_FONT &monofonto_rg10pt7b
+#define BOOK_FONT getFont("monofonto_rg10")
 bool isBookOk = false;
 bool excOn = true;
 
@@ -38,21 +37,50 @@ void resetSleepDelayBook()
 
 void setPageNumber(int page)
 {
-    NVS.setInt(NVS_BOOK_CURRENT_PAGE, page, false); // We commit in exit
+    fsSetString(CONF_BOOK_CURRENT_PAGE, String(page), "/book/");
 }
 
 int getPageNumber()
 {
-    if (isBookOk == false)
+    return fsGetString(CONF_BOOK_CURRENT_PAGE, "0", "/book/").toInt();
+}
+
+int bookPages = -1;
+int getLastPageNumber()
+{
+    if (bookPages != -1)
     {
-        if (NVS.getString(NVS_BOOK_HASH) != BOOK_HASH)
-        {
-            setPageNumber(0);
-            NVS.setString(NVS_BOOK_HASH, BOOK_HASH, true);
-        }
-        isBookOk = true;
+        return bookPages;
     }
-    return NVS.getInt(NVS_BOOK_CURRENT_PAGE, 0);
+    else
+    {
+        File root = LittleFS.open("/book/");
+        if (!root)
+        {
+            debugLog("Failed to open directory book");
+            return 0;
+        }
+        if (root.isDirectory() == false)
+        {
+            debugLog("Not a directory book?");
+            return 0;
+        }
+        File file = root.openNextFile();
+        while (file)
+        {
+            if (file.isDirectory() == false)
+            {
+                int fileNameNumber = String(file.name()).toInt();
+                debugLog("file name: " + String(file.name()) + " number: " + fileNameNumber);
+                if (fileNameNumber > bookPages)
+                {
+                    bookPages = fileNameNumber;
+                }
+            }
+            file = root.openNextFile();
+        }
+    }
+    return bookPages;
 }
 
 String test = "jqyQRTY";
@@ -109,7 +137,7 @@ void showPage(int page)
 
     display.setCursor(1, startHeight);
     display.fillScreen(GxEPD_WHITE);
-    display.print(bookList[page]);
+    display.print(fsGetString(String(getPageNumber()), "Failed to open page: " + String(getPageNumber()) + " book isin't probably in filesystem?", "/book/"));
     dUChange = true;
 }
 
@@ -117,7 +145,6 @@ void initBook()
 {
     resetSleepDelayBook();
     initAxc();
-    // SBMA.setAccelConfig();
     SBMA.enableAccel();
     resetStartAxc();
 
@@ -129,7 +156,7 @@ void initBook()
     display.setTextWrap(true);
 
     int currPage = getPageNumber();
-    if (currPage > BOOK_PAGES - 1 || currPage <= -1)
+    if (currPage > getLastPageNumber() || currPage <= -1)
     {
         setPageNumber(0);
         currPage = 0;
@@ -146,8 +173,6 @@ void exitBook()
         debugLog("Going page back because of BOOK_ON_EXIT_GO_PAGE_BACK");
         changePageDown();
     }
-    bool comm = NVS.commit();
-    debugLog("Commit status: " + BOOL_STR(comm));
     deInitAxc();
 }
 
@@ -260,7 +285,9 @@ void loopBook()
                 {
                     hasReturned = true;
                 }
-            } else {
+            }
+            else
+            {
                 debugLog("Oh no");
             }
             if (hasReturned == true)
@@ -334,9 +361,10 @@ void loopBook()
             }
         }
         debugLog("newFilledWidth: " + String(newFilledWidth));
-        if(newFilledWidth < 0 || newFilledWidth > 200) {
+        if (newFilledWidth < 0 || newFilledWidth > 200)
+        {
             newFilledWidth = 0;
-            leaveFlashMessage("newFilledWidth is wrong");
+            debugLog("newFilledWidth is wrong");
         }
         if (abs(newFilledWidth - filledAxcLine) > BOOK_AXC_DIFFERENCE_CHANGE)
         {
@@ -362,7 +390,8 @@ void loopBook()
     }
     else
     {
-        if(excOn == true) {
+        if (excOn == true)
+        {
             debugLog("Failed to get accel");
         }
     }
@@ -371,7 +400,7 @@ void loopBook()
 
 String bookGetPages()
 {
-    return String(getPageNumber()) + "/" + String(BOOK_PAGES - 1);
+    return String(getPageNumber() + 1) + "/" + String(getLastPageNumber() + 1);
 }
 
 void changePageUp()
@@ -379,7 +408,7 @@ void changePageUp()
     resetSleepDelayBook();
     int page = getPageNumber();
     page = page + 1;
-    if (page > BOOK_PAGES - 1)
+    if (page > getLastPageNumber())
     {
         return void();
     }

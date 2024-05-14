@@ -18,11 +18,11 @@ extern GFXfont loadedFont[FONT_COUNT];
 
 const GFXfont *getFont(String name);
 
-bool fsIsConfig(String conf);
-String fsGetString(String conf, String defaultValue);
-void fsSetString(String conf, String value);
-bufSize fsGetBlob(String conf);
-void fsSetBlob(String conf, uint8_t* value, int size);
+bool fsIsConfig(String conf, String dir = "/conf/");
+String fsGetString(String conf, String defaultValue, String dir = "/conf/");
+void fsSetString(String conf, String value, String dir = "/conf/");
+bufSize fsGetBlob(String conf, String dir = "/conf/");
+void fsSetBlob(String conf, uint8_t* value, int size, String dir = "/conf/");
 
 #if DEBUG
 void fsListDir(String dirname, uint8_t levels);

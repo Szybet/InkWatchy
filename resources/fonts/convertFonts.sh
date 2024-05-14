@@ -18,6 +18,7 @@ else
 fi
 
 mkdir -p out/
+rm -rf ../fs/littlefs/font/
 mkdir -p ../fs/littlefs/font/
 
 for d in *

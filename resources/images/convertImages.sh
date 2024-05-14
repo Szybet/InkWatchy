@@ -26,4 +26,5 @@ do
 
 done
 
+rm -rf ../fs/littlefs/img/
 mv img ../fs/littlefs/
