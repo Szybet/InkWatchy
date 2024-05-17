@@ -18,6 +18,7 @@ typedef enum
     weatherConditionMenu,
     powerMenu,
     book,
+    bookSelector,
     vault,
     apple,
     apple2,
@@ -65,6 +66,7 @@ void switchWeatherSelectorMenu();
 void switchPowerMenu();
 
 void switchBook();
+void switchBookSelector();
 void switchVault();
 void switchBack();
 void switchApple();

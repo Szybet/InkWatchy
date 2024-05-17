@@ -3,11 +3,15 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[8];
+    entryMenu buttons[9];
 #if BOOK
     {
         count = count + 1;
         buttons[count] = {"Book " + bookGetPages(), getImg("book"), switchBook};
+    }
+    {
+        count = count + 1;
+        buttons[count] = {"Select book", getImg("book"), switchBookSelector};
     }
 #endif
     {

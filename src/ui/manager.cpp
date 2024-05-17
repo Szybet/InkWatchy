@@ -163,6 +163,13 @@ void loopManager()
 #endif
         break;
     }
+    case bookSelector:
+    {
+#if BOOK
+        managerLaunchFunc(book, initBookSelector, loopMenu, NULL);
+#endif
+        break;
+    }
     case vault:
     {
 #if VAULT
