@@ -445,3 +445,7 @@ void showPop()
 void switchBook() {
     generalSwitch(book);
 }
+
+void switchBookSelector() {
+    generalSwitch(bookSelector);
+}

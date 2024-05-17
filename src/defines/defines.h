@@ -90,6 +90,7 @@ extern bufSize emptyBuff;
 #include "../ui/watchface/watchface.h"
 #if BOOK
 #include "../ui/book/bookUi.h"
+#include "../ui/book/bookSelector.h"
 #endif
 #if VAULT
 #include "../ui/vault/vaultUi.h"
