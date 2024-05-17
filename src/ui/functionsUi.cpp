@@ -1,9 +1,9 @@
 #include "functionsUi.h"
 
 // Default values... are set in screen
-const GFXfont *font;
-uint16_t maxHeight;
-int textSize;
+const GFXfont *font = &FreeSansBold9pt7b;
+uint16_t maxHeight = 0;
+int textSize = 1;
 
 void setTextSize(int i)
 {
@@ -138,7 +138,7 @@ void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t
 // Use the image pack here to make it easier
 // Like that:
 // writeImageN(100, 100, testSomethiongImgPack);
-void writeImageN(int16_t x, int16_t y, ImageDef* image, uint16_t frColor, uint16_t bgColor)
+void writeImageN(int16_t x, int16_t y, ImageDef *image, uint16_t frColor, uint16_t bgColor)
 {
   int16_t cx = display.getCursorX();
   int16_t cy = display.getCursorY();
@@ -148,20 +148,32 @@ void writeImageN(int16_t x, int16_t y, ImageDef* image, uint16_t frColor, uint16
   display.setCursor(cx, cy);
 }
 
-sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef* image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor, bool draw)
+sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor, bool draw)
 {
   sizeInfo size = {0};
   int toleranceSize = tolerance * 2 + borderWidth * 2;
   size.w = toleranceSize;
   size.h = toleranceSize;
 
+  int16_t tx = 0;
+  int16_t ty = 0;
   uint16_t tw = 0;
   uint16_t th = 0;
+  bool doubleLine = false;
   if (str != "")
   {
-    getTextBounds(str, NULL, NULL, &tw, &th);
+    display.setTextWrap(true);
+    getTextBounds(str, &tx, &ty, &tw, &th);
+    debugLog("tw: " + String(tw) + " th: " + String(th));
+    debugLog("tx: " + String(tx) + " ty: " + String(ty));
     size.w += tw;
     size.w += 1;
+    if(size.w > display.width() - toleranceSize) {
+      //th = th * 2;
+      doubleLine = true;
+      size.h = size.h + toleranceSize;
+      //debugLog("Second line in print button...");
+    }
   }
 
   if (image->bitmap != NULL)
@@ -174,26 +186,25 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef* image, bool inve
     size.w += tolerance;
   }
 
-  uint16_t mainH;
   if (image->bitmap != NULL && image->bh > th)
   {
     size.h += image->bh;
-    mainH = image->bh;
   }
   else
   {
     size.h += th;
-    mainH = th;
   }
 
   // debugLog("Final size.h is: " + String(size.h));
   // debugLog("Final size.w is: " + String(size.w));
 
-  if(draw == false) {
+  if (draw == false)
+  {
     return size;
   }
 
   GFXcanvas1 canvasTmp(size.w, size.h);
+  canvasTmp.setTextWrap(true);
   canvasTmp.setFont(font);
   canvasTmp.setTextSize(textSize);
   canvasTmp.setCursor(tolerance + borderWidth, tolerance + borderWidth);
@@ -207,13 +218,22 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef* image, bool inve
   }
   if (str != "")
   {
-    int yCursorTmp = size.h - ((size.h - th) / 2) - 1;
-    if (containsBelowChar(str) == true)
-    {
-      yCursorTmp = yCursorTmp - 3;
+    int yCursorTmp = 0;
+    if(doubleLine == false) {
+      //yCursorTmp = th;
+      yCursorTmp = size.h - ((size.h - th) / 2) - 1;
+      if (containsBelowChar(str) == true)
+      {
+        //debugLog("We are below char for string: " + str);
+        yCursorTmp = yCursorTmp - 3;
+      } else {
+        //debugLog("Below char not applied for string: " + str);
+      }
+    } else {
+      yCursorTmp = th / 2;
     }
     canvasTmp.setCursor(canvasTmp.getCursorX(), yCursorTmp); // -1 for reasons? -3 for cutted j g etc.
-    // debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()));
+    //debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()) + "x" + String(canvasTmp.getCursorY()));
     canvasTmp.print(str);
   }
 
