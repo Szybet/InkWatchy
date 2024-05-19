@@ -18,7 +18,7 @@ extern GFXfont loadedFont[FONT_COUNT];
 
 const GFXfont *getFont(String name);
 
-bool fsIsConfig(String conf, String dir = "/conf/");
+// bool fsIsConfig(String conf, String dir = "/conf/");
 String fsGetString(String conf, String defaultValue, String dir = "/conf/");
 void fsSetString(String conf, String value, String dir = "/conf/");
 bufSize fsGetBlob(String conf, String dir = "/conf/");

@@ -100,10 +100,8 @@ void initWeatherMenu()
     loadWeatherData();
     if (isWeatherAvailable == false)
     {
-        display.fillScreen(GxEPD_WHITE);
-        simpleCenterText("Weather not available");
-        disUp(true);
         overwriteSwitch(textDialog);
+        showTextDialog("Weather not available");
         return void();
     }
 

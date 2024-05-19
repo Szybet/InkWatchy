@@ -114,11 +114,7 @@ void initVault()
             key = -1;
             key = 0;
             generalSwitch(textDialog);
-            display.fillScreen(GxEPD_WHITE);
-            setFont(&FreeSansBold9pt7b);
-            setTextSize(1);
-            simpleCenterText("Key is incorrect");
-            disUp(true);
+            showTextDialog("Key is incorrect");
             return;
         }
         int foundMenuIndex = -1;

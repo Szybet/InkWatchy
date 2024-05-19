@@ -74,6 +74,7 @@ void switchApple2();
 #if FONT_MENU_ENABLED
 void switchFontsPreview();
 #endif
+void showTextDialog(String str);
 
 // Switches for weather
 void showTemp();

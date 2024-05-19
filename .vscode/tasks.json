@@ -68,7 +68,7 @@
             }
         },
         {
-            "label": "Get filesystem",
+            "label": "Get fs",
             "type": "shell",
             "command": "cd resources/fs/ && ./getFs.sh",
             "icon": {
@@ -77,6 +77,19 @@
             "options": {
                 "statusbar": {
                     "color": "#8cd398"
+                }
+            }
+        },
+        {
+            "label": "Flash personal fs",
+            "type": "shell",
+            "command": "cd resources/fs/ && ./flash_personal_fs.sh",
+            "icon": {
+                "id": "insert",
+            },
+            "options": {
+                "statusbar": {
+                    "color": "#9474e3"
                 }
             }
         },

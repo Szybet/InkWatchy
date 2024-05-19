@@ -143,6 +143,12 @@ void showPage(int page)
 
 void initBook()
 {
+    if(fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/") == "") {
+        debugLog("No book selected, going back");
+        overwriteSwitch(textDialog);
+        showTextDialog("Key is incorrect");
+        return;
+    }
     resetSleepDelayBook();
     initAxc();
     SBMA.enableAccel();

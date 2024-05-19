@@ -41,32 +41,39 @@ void switchWeatherSelectorMenu()
     generalSwitch(weatherConditionMenu);
 }
 
-void switchPowerMenu() {
+void switchPowerMenu()
+{
     generalSwitch(powerMenu);
 }
 
-void switchVault() {
+void switchVault()
+{
     generalSwitch(vault);
 }
 
-void switchBack() {
+void switchBack()
+{
     setButton(Back);
 }
 
-void switchApple() {
+void switchApple()
+{
     generalSwitch(apple);
 }
 
-void switchApple2() {
+void switchApple2()
+{
     generalSwitch(apple2);
 }
 
 #if FONT_MENU_ENABLED
-void switchFontsPreview() {
+void switchFontsPreview()
+{
     generalSwitch(fontPreview);
 }
 
-void switchFontsPreviewMenu() {
+void switchFontsPreviewMenu()
+{
     generalSwitch(fontPreviewMenu);
 }
 #endif
@@ -442,10 +449,22 @@ void showPop()
     generalSwitch(ChartPlace);
 }
 
-void switchBook() {
+void switchBook()
+{
     generalSwitch(book);
 }
 
-void switchBookSelector() {
+void switchBookSelector()
+{
     generalSwitch(bookSelector);
+}
+
+// call generalSwitch(textDialog); or overwriteSwitch(textDialog); before this
+void showTextDialog(String str)
+{
+    display.fillScreen(GxEPD_WHITE);
+    setFont(&FreeSansBold9pt7b);
+    setTextSize(1);
+    simpleCenterText(str);
+    disUp(true);
 }

@@ -128,10 +128,7 @@ void checkDrift()
     if (int(previousNTPCorrection) != 0 && int(ntpDriftCorrection) != 0 && checker > 2000)
     {
         debugLog("Checker is too high, do nothing");
-        while (true)
-        {
-            delay(1000);
-        }
+        return;
     }
     bool changed = false;
     while (previousNTPCorrection != 0 && ntpDriftCorrection != 0 && abs(float(currentTime) - previousNTPCorrection) >= previousNTPTimeDifference)

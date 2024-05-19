@@ -2,6 +2,8 @@
 
 #define STR_ERROR "Failed to setup fs"
 
+/*
+// Just use default value
 bool fsIsConfig(String conf, String dir)
 {
     if (fsSetup() == false)
@@ -18,20 +20,20 @@ bool fsIsConfig(String conf, String dir)
     file.close();
     return true;
 }
+*/
 
 String fsGetString(String conf, String defaultValue, String dir)
 {
     if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
-        fsSetString(conf, defaultValue);
         return defaultValue;
     }
     File file = LittleFS.open(dir + conf);
     if (file == false)
     {
         debugLog("There is no conf file: " + conf);
-        fsSetString(conf, defaultValue);
+        fsSetString(conf, defaultValue, dir);
         return defaultValue;
     }
     int fileSize = file.size();
@@ -39,7 +41,7 @@ String fsGetString(String conf, String defaultValue, String dir)
     if (file.read(buf, fileSize) < 0)
     {
         debugLog("Failed to read the file: " + conf);
-        fsSetString(conf, defaultValue);
+        fsSetString(conf, defaultValue, dir);
         return defaultValue;
     }
     String str = String((char *)buf);
