@@ -93,5 +93,22 @@
                 }
             }
         },
+        {
+            "label": "Backtrace resolver",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "args=$(dialog --inputbox \"Enter the backtrace\" 8 150 3>&1 1>&2 2>&3); clear; ./resources/other/backtrace_resolver.sh \"$args\""
+            ],            
+            "icon": {
+                "id": "debug-all",
+            },
+            "options": {
+                "statusbar": {
+                    "color": "#ffa7a7"
+                }
+            }
+        },
     ]
 }
