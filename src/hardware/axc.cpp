@@ -45,5 +45,6 @@ void initAxc()
 void deInitAxc()
 {
     debugLog("Launched");
+    // IT CRASHES HERE BECAUSE IT'S NOT YET TURNED ON UGH
     SBMA.shutDown();
 }
