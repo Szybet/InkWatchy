@@ -24,27 +24,36 @@ uint16_t writeRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t 
     return (0 != Wire.endTransmission());
 }
 
+bool initedAxc = false;
 void initAxc()
 {
     debugLog("Launched");
-    uint8_t Type = SRTC.getType();
-    if (SBMA.begin(readRegisterBMA, writeRegisterBMA, delay, Type) == false)
-    {
-        debugLog("Failed to init bma");
-        return;
-    }
+    if(initedAxc == false) {
+        uint8_t Type = SRTC.getType();
+        if (SBMA.begin(readRegisterBMA, writeRegisterBMA, delay, Type) == false)
+        {
+            debugLog("Failed to init bma");
+            return;
+        }
 
-    if (!SBMA.defaultConfig())
-    {
-        debugLog("Failed to init bma - default config");
+        if (!SBMA.defaultConfig())
+        {
+            debugLog("Failed to init bma - default config");
+            return;
+        }
+        initedAxc = true;
+    } else {
+        debugLog("Axc is already inited");
     }
-
-    // SBMA.enableFeature(BMA423_STEP_CNTR, true);
 }
 
 void deInitAxc()
 {
     debugLog("Launched");
-    // IT CRASHES HERE BECAUSE IT'S NOT YET TURNED ON UGH
-    SBMA.shutDown();
+    if(initedAxc == true) {
+        SBMA.shutDown();
+        initedAxc = false;
+    } else {
+        debugLog("Ignoring SBMA shutdown");
+    }
 }

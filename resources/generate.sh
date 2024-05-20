@@ -23,7 +23,7 @@ cd ../
 echo -e ''
 echo "Processing book"
 cd books/
-./convertBooks.py
+./convertBooks.sh
 cd ../
 
 echo -e ''

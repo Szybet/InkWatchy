@@ -2,8 +2,6 @@
 #if BOOK
 #include "bookUi.h"
 
-#define BOOK_FONT getFont("monofonto_rg10")
-bool isBookOk = false;
 bool excOn = true;
 
 #define MAX_AXC_VALUE 1000
@@ -35,14 +33,35 @@ void resetSleepDelayBook()
     debugLog("millis is:" + String(millis()));
 }
 
+String currentBook = "none";
+String getCurrentBook()
+{
+    if (currentBook == "none")
+    {
+        currentBook = fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/conf/");
+    }
+    return currentBook;
+}
+
 void setPageNumber(int page)
 {
-    fsSetString(CONF_BOOK_CURRENT_PAGE, String(page), "/book/");
+    String book = getCurrentBook();
+    if (book != "")
+    {
+        fsSetString(CONF_BOOK_CURRENT_PAGE + book, String(page), "/book/conf/");
+    }
 }
 
 int getPageNumber()
 {
-    return fsGetString(CONF_BOOK_CURRENT_PAGE, "0", "/book/").toInt();
+    String book = getCurrentBook();
+    if (book != "")
+    {
+        int page = fsGetString(CONF_BOOK_CURRENT_PAGE + book, "0", "/book/conf/").toInt();
+        debugLog("Got page number: " + String(page));
+        return page;
+    }
+    return 0;
 }
 
 int bookPages = -1;
@@ -54,32 +73,24 @@ int getLastPageNumber()
     }
     else
     {
-        File root = LittleFS.open("/book/");
-        if (!root)
+        File file = LittleFS.open("/book/" + getCurrentBook());
+        if (file.isDirectory() == true)
         {
-            debugLog("Failed to open directory book");
+            debugLog("This file is a dir: " + String("/book/") + getCurrentBook());
             return 0;
         }
-        if (root.isDirectory() == false)
+        if (file == false)
         {
-            debugLog("Not a directory book?");
+            debugLog("File is not available:" + String("/book/") + getCurrentBook());
             return 0;
         }
-        File file = root.openNextFile();
-        while (file)
-        {
-            if (file.isDirectory() == false)
-            {
-                int fileNameNumber = String(file.name()).toInt();
-                debugLog("file name: " + String(file.name()) + " number: " + fileNameNumber);
-                if (fileNameNumber > bookPages)
-                {
-                    bookPages = fileNameNumber;
-                }
-            }
-            file = root.openNextFile();
-        }
+        int fileSize = file.size();
+        debugLog("file size of this book: " + fileSize);
+        // bookPages = int(ceil(float(fileSize) / float(BOOK_CHARS_PER_PAGE)));
+        bookPages = fileSize;
+        file.close();
     }
+    debugLog("Final bookPages: " + String(bookPages));
     return bookPages;
 }
 
@@ -129,6 +140,8 @@ void resetStartAxc()
     axis_ZBott = minAxcelLimit(staAx_Z, BOOK_AX_Z_BACK_VALUE);
 }
 
+bool openedBook = false;
+File bookFile;
 void showPage(int page)
 {
     resetSleepDelayBook();
@@ -137,16 +150,43 @@ void showPage(int page)
 
     display.setCursor(1, startHeight);
     display.fillScreen(GxEPD_WHITE);
-    display.print(fsGetString(String(getPageNumber()), "Failed to open page: " + String(getPageNumber()) + " book isin't probably in filesystem?", "/book/"));
+    if (openedBook == false)
+    {
+        bookFile = LittleFS.open("/book/" + getCurrentBook());
+        if (bookFile.isDirectory() == true)
+        {
+            debugLog("This file is a dir: " + String("/book/") + getCurrentBook());
+            return;
+        }
+        if (bookFile == false)
+        {
+            debugLog("File is not available:" + String("/book/") + getCurrentBook());
+            return;
+        }
+        debugLog("book size: " + String(bookFile.size()));
+        openedBook = true;
+        debugLog("Opened book file...");
+    }
+    debugLog("Seeking the file to: " + String(page));
+    bookFile.seek(page, SeekSet);
+    uint8_t *buf = (uint8_t *)malloc(BOOK_CHARS_PER_PAGE * sizeof(uint8_t));
+    bookFile.read(buf, BOOK_CHARS_PER_PAGE);
+    String str = String((char *)buf);
+    str = str.substring(0, BOOK_CHARS_PER_PAGE);
+    free(buf);
+    debugLog("book str is now: " + str);
+    display.print(str);
+    // display.print(fsGetString(String(getPageNumber()), "Failed to open page: " + String(getPageNumber()) + " book isin't probably in filesystem?", "/book/"));
     dUChange = true;
 }
 
 void initBook()
 {
-    if(fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/") == "") {
+    if (getCurrentBook() == "")
+    {
         debugLog("No book selected, going back");
         overwriteSwitch(textDialog);
-        showTextDialog("Key is incorrect");
+        showTextDialog("No book selected");
         return;
     }
     resetSleepDelayBook();
@@ -162,11 +202,13 @@ void initBook()
     display.setTextWrap(true);
 
     int currPage = getPageNumber();
-    if (currPage > getLastPageNumber() || currPage <= -1)
+    /*
+    if (currPage > getLastPageNumber() && currPage >= 0)
     {
         setPageNumber(0);
         currPage = 0;
     }
+    */
 
     showPage(currPage);
     disUp(true);
@@ -179,6 +221,7 @@ void exitBook()
         debugLog("Going page back because of BOOK_ON_EXIT_GO_PAGE_BACK");
         changePageDown();
     }
+    resetBookVars();
     deInitAxc();
 }
 
@@ -406,14 +449,14 @@ void loopBook()
 
 String bookGetPages()
 {
-    return String(getPageNumber() + 1) + "/" + String(getLastPageNumber() + 1);
+    return String(getPageNumber() / BOOK_CHARS_PER_PAGE + 1) + "/" + String(getLastPageNumber() / BOOK_CHARS_PER_PAGE + 1);
 }
 
 void changePageUp()
 {
     resetSleepDelayBook();
     int page = getPageNumber();
-    page = page + 1;
+    page = page + BOOK_CHARS_PER_PAGE;
     if (page > getLastPageNumber())
     {
         return void();
@@ -426,13 +469,24 @@ void changePageDown()
 {
     resetSleepDelayBook();
     int page = getPageNumber();
-    page = page - 1;
+    page = page - BOOK_CHARS_PER_PAGE;
     if (page <= -1)
     {
         return void();
     }
     setPageNumber(page);
     showPage(page);
+}
+
+void resetBookVars()
+{
+    bookPages = -1;
+    currentBook = "none";
+    if (openedBook == true)
+    {
+        openedBook = false;
+        bookFile.close();
+    }
 }
 
 #endif

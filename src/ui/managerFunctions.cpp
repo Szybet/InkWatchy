@@ -5,9 +5,10 @@ void initMainMenu()
     int count = -1;
     entryMenu buttons[9];
 #if BOOK
-    {
+    String book = getCurrentBook();
+    if(book != ""){
         count = count + 1;
-        buttons[count] = {"Book " + bookGetPages(), getImg("book"), switchBook};
+        buttons[count] = {book + " " + bookGetPages(), getImg("book"), switchBook};
     }
     {
         count = count + 1;
