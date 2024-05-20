@@ -66,6 +66,8 @@
 #define BOOK_AXC_LINE 1
 #define BOOK_AXC_LINE_WIDTH 3
 #define BOOK_AXC_DIFFERENCE_CHANGE 15
+#define BOOK_CHARS_PER_PAGE 200 // This is dependent on the font. It must be Mono
+#define BOOK_FONT getFont("UbuntuMono-Regular10")
 
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
@@ -166,13 +168,16 @@
 #define MAX_MENU_ITEMS 20
 #define RTC_INT_PIN 27
 
-// NVS
-#define CONF_BOOK_CURRENT_PAGE "crp"
-#define CONF_DISABLE_ALL_VIBRATION "dbv"
-#define CONF_DISABLE_WAKE_UP "dwu"
-#define NVS_BOOK_HASH "bhs"
-#define NVS_WATCHDOG_DEBUG_DATA "wdd"
-#define CONF_WEATHER "wtr"
-#define CONF_BITCOIN "btc"
+// Other other
+#define IMG_COUNT 30
+#define FONT_COUNT 30
+
+// Config
+#define CONF_BOOK_CURRENT_PAGE "current_page_"
+#define CONF_BOOK_CURRENT_BOOK "current_book"
+#define CONF_DISABLE_ALL_VIBRATION "disable_all_vibrations"
+#define CONF_DISABLE_WAKE_UP "disable_wake_up"
+#define CONF_WEATHER "weather"
+#define CONF_BITCOIN "bitcoin"
 
 #endif
