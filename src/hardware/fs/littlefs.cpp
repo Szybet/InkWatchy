@@ -42,6 +42,24 @@ void fsCreateDir(String path)
   }
 }
 
+/*
+File *fsOpenFile(String path)
+{
+  File file = LittleFS.open(path);
+  if (file.isDirectory() == true)
+  {
+    debugLog("This file is a dir: " + path);
+    return NULL;
+  }
+  if (file == false)
+  {
+    debugLog("File is not available:" + path);
+    return NULL;
+  }
+  return &file;
+}
+*/
+
 #if DEBUG
 void fsListDir(String dirname, uint8_t levels)
 {
@@ -95,4 +113,5 @@ void fsListDir(String dirname, uint8_t levels)
     file = root.openNextFile();
   }
 }
+
 #endif

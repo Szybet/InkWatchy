@@ -2,7 +2,7 @@
 
 void initBookSelector()
 {
-    debugLog("Current book: " + fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/"));
+    debugLog("Current book: " + fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/conf/"));
     int books = 0;
     {
 
@@ -50,6 +50,7 @@ void selectedBook()
 {
     String latestBook = lastMenuSelected;
     debugLog("Called selectedBook: " + latestBook);
-    fsSetString(CONF_BOOK_CURRENT_BOOK, latestBook, "/book/");
+    fsSetString(CONF_BOOK_CURRENT_BOOK, latestBook, "/book/conf/");
     setButton(Back);
+    resetBookVars();
 }
