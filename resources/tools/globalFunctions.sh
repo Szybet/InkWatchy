@@ -51,6 +51,7 @@ get_pio_env() {
         echo "File $json_file not found. You are not using vscode. Trying to use env variable" >&2
         if [ -n "$PLATFORMIO_ENV_NAME" ]; then
             echo "PLATFORMIO_ENV_NAME is set with value: $PLATFORMIO_ENV_NAME" >&2
+            echo $PLATFORMIO_ENV_NAME
         else
             first_folder=$(ls ../../.pio/libdeps/ | head -n 1)
             echo "PLATFORMIO_ENV_NAME is not set. Using \"$first_folder\" env" >&2
