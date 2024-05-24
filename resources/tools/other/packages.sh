@@ -51,12 +51,12 @@ else
     echo "Oh yea good luck :D"
 fi
 
-if [ ! -f "fs/mklittlefs" ]; then
+if [ ! -f "fs/in/mklittlefs" ]; then
     echo "Downloading mklittlefs"
     wget -q -O mklittlefs.tar.gz https://github.com/earlephilhower/mklittlefs/releases/download/3.2.0/x86_64-linux-gnu-mklittlefs-975bd0f.tar.gz
     tar -xf mklittlefs.tar.gz
     chmod +x mklittlefs/mklittlefs
-    mv mklittlefs/mklittlefs fs/
+    mv mklittlefs/mklittlefs fs/in/
     rm -rf mklittlefs
     rm -rf mklittlefs.tar.gz
 fi
