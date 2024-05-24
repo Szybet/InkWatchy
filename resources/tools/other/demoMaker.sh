@@ -34,13 +34,13 @@ cd ../../../
 pio run -e min
 pio run -e min -t upload
 
-sleep 5
+sleep 10
 
 cd resources/tools/fs/
 ./flashFs.sh
 cd ../../../
 
-sleep 5
+sleep 10
 
 cd resources/tools/other/
 mkdir out/
