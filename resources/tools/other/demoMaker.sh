@@ -3,6 +3,7 @@ cp -r resources/demo/* resources/personal/
 cd resources/tools/
 export PLATFORMIO_ENV_NAME="min"
 ./generate.sh
+cd ../../
 
 old_string="#define VAULT_PASSWORD \"\""
 new_string="#define VAULT_PASSWORD \"1\""
