@@ -33,7 +33,7 @@ ImageDef *getImg(String name)
         return &emptyImgPack;
     }
     int fileSize = file.size();
-    debugLog("file size: " + String(fileSize));
+    //debugLog("file size: " + String(fileSize));
     if (fileSize <= 0)
     {
         debugLog("This file has size 0: " + name);
@@ -53,7 +53,7 @@ ImageDef *getImg(String name)
         return &emptyImgPack;
     }
     int fileInfSize = fileInf.size();
-    debugLog("File inf size: " + String(fileInfSize));
+    //debugLog("File inf size: " + String(fileInfSize));
     uint8_t *InfBuf = (uint8_t *)malloc(fileInfSize * sizeof(uint8_t));
     if (fileInf.read(InfBuf, fileInfSize) < 0)
     {
@@ -63,7 +63,7 @@ ImageDef *getImg(String name)
     fileInf.close();
     String str = String((char *)InfBuf);
     str = str.substring(0, fileInfSize); // Because there is some garbage?
-    debugLog("Bare inf str is: " + str);
+    //debugLog("Bare inf str is: " + str);
     int newlinePos = str.indexOf('\n');
     int16_t width = str.substring(0, newlinePos).toInt();
     int16_t height = str.substring(newlinePos + 1).toInt();

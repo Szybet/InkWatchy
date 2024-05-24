@@ -141,12 +141,12 @@ void showMenu()
       draw = true;
       previousButtons[i % data.itemsOnPage].text = data.entryList[i].text;
       previousButtons[i % data.itemsOnPage].inverted = invert;
-      debugLog("Printing button: " + String(i % data.itemsOnPage));
+      //debugLog("Printing button: " + String(i % data.itemsOnPage));
     }
 
     debugLog("Menu entry text is: " + data.entryList[i].text);
     buttonSize = drawButton(1, currentHeight, data.entryList[i].text, data.entryList[i].image, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
-    debugLog("Button h in menu: " + String(buttonSize.h));
+    //debugLog("Button h in menu: " + String(buttonSize.h));
     if (draw == true)
     {
       if (invert == true)

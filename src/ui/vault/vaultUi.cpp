@@ -2,8 +2,6 @@
 #if VAULT
 #include "vaultUi.h"
 
-#include "../../defines/vault.h"
-
 #include "mbedtls/base64.h"
 #include "mbedtls/aes.h"
 
@@ -23,16 +21,24 @@ String keyToString()
 
 bool checkKey()
 {
-    debugLog("Starting decrypting: " + String(millis()));
+    //debugLog("Starting decrypting: " + String(millis()));
 
-    unsigned char *realImage = new unsigned char[encryptionCheck_len];
+    String encCheck = fsGetString("check_enc", "", "/vault/conf/");
+    if (encCheck == "")
+    {
+        debugLog("There is no enc check!");
+        return false;
+    }
+    int encCheckLen = encCheck.length();
+
+    unsigned char *realImage = new unsigned char[encCheckLen];
 
     size_t written = 0;
 
     debugLog("Before base64 encoding");
     Serial.flush();
 
-    int baseResult = mbedtls_base64_decode(realImage, encryptionCheck_len, &written, encryptionCheck, encryptionCheck_len);
+    int baseResult = mbedtls_base64_decode(realImage, encCheckLen, &written, (const unsigned char *)encCheck.c_str(), encCheckLen);
 
     debugLog("Written base64 bytes: " + String(written));
     debugLog("base64 result: " + String(baseResult));
@@ -55,9 +61,6 @@ bool checkKey()
     String keyString = keyToString();
     memcpy(keyChar, keyString.c_str(), keyString.length() + 1);
 
-    unsigned char iv[16] = {0};
-    hexStringToByteArray(VAULT_SAULT, iv, 16);
-
     mbedtls_aes_init(&aes);
     int resultKey = mbedtls_aes_setkey_dec(&aes, keyChar, 128);
     debugLog("resultKey: " + String(resultKey));
@@ -65,7 +68,7 @@ bool checkKey()
     int resultCrypt = mbedtls_aes_crypt_ecb(&aes, MBEDTLS_AES_DECRYPT, realImage, realImage);
     debugLog("resultCrypt: " + String(resultCrypt));
 
-    debugLog("Finished decrypting: " + String(millis()));
+    //debugLog("Finished decrypting: " + String(millis()));
 
     mbedtls_aes_free(&aes);
 
@@ -84,7 +87,7 @@ bool checkKey()
     debugLog("Decrypted string is: " + decryptedAnswer);
 
     delete[] realImage;
-    if (decryptedAnswer == ENCRY_CHECK_STR)
+    if (decryptedAnswer == fsGetString("check_dec", "", "/vault/conf/"))
     {
         debugLog("Key is correct");
         return true;
@@ -94,6 +97,55 @@ bool checkKey()
         debugLog("Key is wrong");
         return false;
     }
+}
+
+String getSault()
+{
+    debugLog("Starting getSault");
+    String saultEnc = fsGetString("sault", "", "/vault/conf/");
+    if (saultEnc == "")
+    {
+        debugLog("There is no sault");
+        return "";
+    }
+    int saultLen = saultEnc.length();
+    debugLog("Sault is: " + saultEnc);
+
+    unsigned char *realImage = new unsigned char[saultLen];
+
+    size_t written = 0;
+
+    debugLog("Before base64 encoding");
+    Serial.flush();
+
+    int baseResult = mbedtls_base64_decode(realImage, saultLen, &written, (const unsigned char *)saultEnc.c_str(), saultLen);
+
+    debugLog("Written base64 bytes: " + String(written));
+    debugLog("base64 result: " + String(baseResult));
+
+    mbedtls_aes_context aes;
+
+    unsigned char keyChar[17] = {0};
+
+    String keyString = keyToString();
+    memcpy(keyChar, keyString.c_str(), keyString.length() + 1);
+
+    mbedtls_aes_init(&aes);
+    int resultKey = mbedtls_aes_setkey_dec(&aes, keyChar, 128);
+    debugLog("resultKey: " + String(resultKey));
+
+    int resultCrypt = mbedtls_aes_crypt_ecb(&aes, MBEDTLS_AES_DECRYPT, realImage, realImage);
+    debugLog("resultCrypt: " + String(resultCrypt));
+
+    //debugLog("Finished decrypting: " + String(millis()));
+
+    mbedtls_aes_free(&aes);
+
+    String decryptedAnswer = String(realImage, 16);
+    debugLog("Decrypted sault is: " + decryptedAnswer);
+
+    delete[] realImage;
+    return decryptedAnswer;
 }
 
 void initVault()
@@ -117,31 +169,56 @@ void initVault()
             showTextDialog("Key is incorrect");
             return;
         }
-        int foundMenuIndex = -1;
-        for (int i = 0; i < VAULT_ITEMS; i++)
+        int itemsInDir = fsItemsInDir("/vault/") - 1; // - conf
+        debugLog("items in vault: " + String(itemsInDir));
+        if (itemsInDir <= 0)
         {
-            if (lastMenuSelected == vaultListNames[i])
+            generalSwitch(textDialog);
+            showTextDialog("Vault is empty?");
+            return;
+        }
+        String foundMenuItemName = "";
+        File root = LittleFS.open("/vault/");
+        File file = root.openNextFile();
+        while (file)
+        {
+            String fileName = String(file.name());
+            debugLog("The vault filename: " + fileName);
+            if (lastMenuSelected == fileName)
             {
-                foundMenuIndex = i;
+                foundMenuItemName = fileName;
                 break;
             }
+            file = root.openNextFile();
         }
+        file.close();
+        root.close();
 
-        if (foundMenuIndex == -1)
+        if (foundMenuItemName == "")
         {
-            entryMenu buttons[VAULT_ITEMS];
+            entryMenu buttons[itemsInDir];
 
-            for (int i = 0; i < VAULT_ITEMS; i++)
+            File root = LittleFS.open("/vault/");
+            File file = root.openNextFile();
+            int counter = 0;
+            while (file)
             {
-                buttons[i] = {vaultListNames[i], &emptyImgPack, switchBack};
+                if (file.isDirectory() == false)
+                {
+                    buttons[counter] = {String(file.name()), &emptyImgPack, switchBack};
+                    counter = counter + 1;
+                }
+                file = root.openNextFile();
             }
+            file.close();
+            root.close();
 
-            initMenu(buttons, VAULT_ITEMS, "Vault", 1);
+            initMenu(buttons, itemsInDir, "Vault", 1);
             generalSwitch(generalMenuPlace);
         }
         else
         {
-            showVaultImage(foundMenuIndex);
+            showVaultImage(foundMenuItemName);
             generalSwitch(imagePlace);
             lastMenuSelected = "";
         }
@@ -163,21 +240,24 @@ void exitVault()
     }
 }
 
-void showVaultImage(int index)
+void showVaultImage(String file)
 {
     if (key != 0)
     {
-        debugLog("Starting decrypting: " + String(millis()));
-        debugLog("vaultListLength[index]: " + String(vaultListLength[index]));
+        debugLog("Showing vault image");
+        //debugLog("Starting decrypting: " + String(millis()));
 
-        unsigned char *realImage = new unsigned char[vaultListLength[index]];
+        bufSize vaultItem = fsGetBlob(file, "/vault/");
+        debugLog("VaultItem size: " + String(vaultItem.size));
+
+        unsigned char *realImage = new unsigned char[vaultItem.size];
 
         size_t written = 0;
 
         debugLog("Before base64 encoding");
         Serial.flush();
 
-        int baseResult = mbedtls_base64_decode(realImage, vaultListLength[index], &written, vaultList[index].bitmap, vaultListLength[index]);
+        int baseResult = mbedtls_base64_decode(realImage, vaultItem.size, &written, vaultItem.buf, vaultItem.size);
 
         debugLog("Written base64 bytes: " + String(written));
         debugLog("base64 result: " + String(baseResult));
@@ -190,7 +270,7 @@ void showVaultImage(int index)
         memcpy(keyChar, keyString.c_str(), keyString.length() + 1);
 
         unsigned char iv[16] = {0};
-        hexStringToByteArray(VAULT_SAULT, iv, 16);
+        hexStringToByteArray(getSault().c_str(), iv, 16);
 
         mbedtls_aes_init(&aes);
         int resultKey = mbedtls_aes_setkey_dec(&aes, keyChar, 128);
@@ -198,15 +278,16 @@ void showVaultImage(int index)
         int resultCrypt = mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, written, iv, realImage, realImage);
         debugLog("resultCrypt: " + String(resultCrypt));
 
-        debugLog("Finished decrypting: " + String(millis()));
+        //debugLog("Finished decrypting: " + String(millis()));
 
         mbedtls_aes_free(&aes);
 
         ImageDef newImage = {realImage, 200, 200};
-        writeImageN(0, 0, newImage);
+        writeImageN(0, 0, &newImage);
         disUp(true);
 
         delete[] realImage;
+        resetSleepDelay(30000);
 
         /*
         debugLog("Decrypted image in base64:");

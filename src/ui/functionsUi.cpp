@@ -164,8 +164,8 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
   {
     display.setTextWrap(true);
     getTextBounds(str, &tx, &ty, &tw, &th);
-    debugLog("tw: " + String(tw) + " th: " + String(th));
-    debugLog("tx: " + String(tx) + " ty: " + String(ty));
+    //debugLog("tw: " + String(tw) + " th: " + String(th));
+    //debugLog("tx: " + String(tx) + " ty: " + String(ty));
     size.w += tw;
     size.w += 1;
     if(size.w > display.width() - toleranceSize) {
