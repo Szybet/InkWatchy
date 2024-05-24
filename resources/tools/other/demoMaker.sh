@@ -1,6 +1,6 @@
 #!/bin/bash
 pio pkg install -e min
-rm -rf resources/demo/*
+rm -rf resources/personal/*
 cp -r resources/demo/* resources/personal/
 cd resources/tools/
 export PLATFORMIO_ENV_NAME="min"
