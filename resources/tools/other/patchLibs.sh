@@ -1,10 +1,10 @@
 #!/bin/bash
 
-source global_functions.sh
+source globalFunctions.sh
 
-pio_env=$(get_pio_env ../.vscode/launch.json)
+pio_env=$(get_pio_env ../../.vscode/launch.json)
 
-rtc_path="../.pio/libdeps/$pio_env/Rtc_Pcf8563/src/Rtc_Pcf8563.h"
+rtc_path="../../.pio/libdeps/$pio_env/Rtc_Pcf8563/src/Rtc_Pcf8563.h"
 
 wrong_st="#define RTCC_VERSION  \"Pcf8563 v1.0.3\""
 

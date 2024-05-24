@@ -4,7 +4,7 @@ import subprocess
 import math
 
 # Step 1: Read the configuration and get the needed values
-fs_config_path = "fsConfig.ini"
+fs_config_path = "in/fsConfig.ini"
 config = configparser.ConfigParser()
 config.optionxform = str  # Maintain case-sensitive keys
 config.read(fs_config_path)
@@ -13,12 +13,12 @@ tolerance_percentage = int(config["DEFAULT"]["tolerance"].strip())
 flash_size_mb = int(config["DEFAULT"]["flashSize"].strip())
 flash_size_bytes = flash_size_mb * 1024 * 1024  # Convert MB to bytes
 
-global_functions_path = "../global_functions.sh"
-cmd = f"source {global_functions_path} && get_pio_env"
+global_functions_path = "../globalFunctions.sh"
+cmd = f"source {global_functions_path} && get_pio_env ../../../.vscode/launch.json"
 result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 pio_env = result.stdout.decode().strip()
 
-firmware_path = f"../../.pio/build/{pio_env}/firmware.bin"
+firmware_path = f"../../../.pio/build/{pio_env}/firmware.bin"
 firmware_size_bytes = int(os.path.getsize(firmware_path))
 
 tolerance_fraction = tolerance_percentage / 100
@@ -31,16 +31,16 @@ current_used_flash = coredump_partition_size_bytes + app_partition_offset
 
 current_used_flash = current_used_flash + app_partition_size_bytes
 
-os.makedirs("out", exist_ok=True)
+os.makedirs("in", exist_ok=True)
 
-with open("out/offset.txt", "w") as f:
+with open("in/offset.txt", "w") as f:
     f.write(str(hex(current_used_flash)) + "\n")
 
 #print("current_used_flash: " + str(current_used_flash))
 #print("flash_size_bytes: " + str(flash_size_bytes))
 spiffs_partition_size_bytes = (flash_size_bytes - current_used_flash - 0xFFF) & ~0xFFF
 
-with open("out/size.txt", "w") as f:
+with open("in/size.txt", "w") as f:
     f.write(str(spiffs_partition_size_bytes) + "\n")
 
 # Create the partition table as a list of strings
@@ -55,7 +55,7 @@ partition_table.append(f"coredump,data,coredump,,0x{coredump_partition_size_byte
 partition_table.append(f"spiffs,data,spiffs,,{hex(spiffs_partition_size_bytes)},\n")
 
 # Write the partition table to a file
-partition_table_path = "partitions.csv"
+partition_table_path = "in/partitions.csv"
 
 with open(partition_table_path, 'w') as f:
     f.writelines(partition_table)

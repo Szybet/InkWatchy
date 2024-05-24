@@ -1,13 +1,14 @@
 #!/bin/bash
 
-rm -rf out/
+rm -rf out/ 1>/dev/null 2>/dev/null
 mkdir -p out/conf/
 touch out/conf/.keep # They ignore empty dirs...
 
-for file in *; do
+for file in ../../personal/books/*; do
     if [ ! -d "$file" ] && [[ "$file" =~ \.(epub|pdf)$ ]]; then
-        echo "Processing file: $file"
-        file_no_ext="${file%.*}"
+        file_name="${file##*/}"
+        echo "Processing file: $file_name"
+        file_no_ext="${file_name%.*}"
         mutool convert -F text -o "out/$file_no_ext" "$file"
         sed -i ':a;N;$!ba;s/\n/ /g;s/ \+/ /g' "out/$file_no_ext"
         cat "out/$file_no_ext" | python3 -c "import sys; from unidecode import unidecode; print(unidecode(sys.stdin.read().strip()))" > "out/tmp"
@@ -16,4 +17,4 @@ for file in *; do
 done
 
 rm -rf ../fs/littlefs/book 1>/dev/null 2>/dev/null
-cp -r out/ ../fs/littlefs/book
+mv out/ ../fs/littlefs/book/

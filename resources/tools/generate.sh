@@ -1,12 +1,14 @@
 #!/bin/bash
 
-./generate_config.sh
+git submodule update --init --recursive
+
+./other/generateConfig.sh
 
 echo -e ''
 ./other/packages.sh
 
 echo "Patching some libraries so you won't see warnings :D"
-./patchLibs.sh
+./other/patchLibs.sh
 
 echo -e ''
 echo "Processing images"

@@ -1,9 +1,9 @@
 #!/bin/bash
-source ../global_functions.sh
+source ../globalFunctions.sh
 
-pio_env=$(get_pio_env ../../.vscode/launch.json)
+pio_env=$(get_pio_env ../../../.vscode/launch.json)
 
-fontconvert="../../.pio/libdeps/$pio_env/Adafruit GFX Library/fontconvert/fontconvert"
+fontconvert="../../../.pio/libdeps/$pio_env/Adafruit GFX Library/fontconvert/fontconvert"
 if [ -e "$fontconvert" ]; then
     echo "fontconvert exists"
 else
@@ -17,11 +17,10 @@ else
     fi
 fi
 
+rm -rf out/ 1>/dev/null 2>/dev/null
 mkdir -p out/
-rm -rf ../fs/littlefs/font/
-mkdir -p ../fs/littlefs/font/
 
-for d in *
+for d in fnt/*
 do
     if [[ $d == *".sh"* ]] || [[ $d == *".h"* ]]; then
         continue
@@ -35,13 +34,15 @@ do
         continue
     fi
 
-    echo "Processing directory $d"
+    font_size="${d##*/}"
+    echo "Processing fonts of size $font_size"
     for f in "$d"/*
     do
         if [[ $f != *".ttf"* ]]; then
             continue
         fi
-        echo "Processing file $f"
+        f_name="${f##*/}"
+        echo "Processing file $f_name"
         rm out/fonts.h 1>/dev/null 2>/dev/null
         touch out/fonts.h
 
@@ -65,14 +66,13 @@ do
 
         rm out/font.ttf 1>/dev/null 2>/dev/null
         cp $f out/font.ttf
-        ./"$fontconvert" out/font.ttf $d | sed 's/PROGMEM //g'>> out/fonts.h
-
+        ./"$fontconvert" out/font.ttf $font_size | sed 's/PROGMEM //g'>> out/fonts.h
         # Remove comments
         sed -i '/^\/\//d;/^\/\*$/,/^\*\//d' out/fonts.h
         sed -i 's,//.*$,,' out/fonts.h
-
+        
         # Remove font sizes
-        sed -i "s/${d}pt.*b//g" out/fonts.h
+        sed -i "s/${font_size}pt.*b//g" out/fonts.h
 
         count=$(grep -o '0x' out/fonts.h | wc -l)
         count=$((count - 2))
@@ -86,11 +86,14 @@ do
         g++ -I out/ fontDumper.cpp -o out/fontDumper
         out/fontDumper
 
-        pure_name="${f/$d\/}"
+        pure_name="${f_name/font_size\/}"
         pure_name="${pure_name/".ttf"}"
-        mv out/fontBitmaps.bin ../fs/littlefs/font/${pure_name}${d}Bitmap
-        mv out/fontGlyphs.bin ../fs/littlefs/font/${pure_name}${d}Glyphs
-        mv out/fontStruct.bin ../fs/littlefs/font/${pure_name}${d}Struct
+        mv out/fontBitmaps.bin out/${pure_name}${font_size}Bitmap
+        mv out/fontGlyphs.bin out/${pure_name}${font_size}Glyphs
+        mv out/fontStruct.bin out/${pure_name}${font_size}Struct
     done
 done
-rm -f out/*
+
+rm -f out/font.ttf out/fonts.h
+rm -rf ../fs/littlefs/font/ 1>/dev/null 2>/dev/null
+mv out ../fs/littlefs/font/

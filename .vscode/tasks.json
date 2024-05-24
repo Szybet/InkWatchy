@@ -18,7 +18,7 @@
         {
             "label": "Gen resources",
             "type": "shell",
-            "command": "cd resources && ./generate.sh",
+            "command": "cd resources/tools/ && ./generate.sh",
             "icon": {
                 "id": "folder-library",
             },
@@ -31,7 +31,7 @@
         {
             "label": "Patch wifi",
             "type": "shell",
-            "command": "cd resources/other/wifiTool/ && ./patch.sh",
+            "command": "cd resources/tools/other/wifiTool/ && ./patch.sh",
             "icon": {
                 "id": "debug",
             },
@@ -44,7 +44,7 @@
         {
             "label": "Gen partitions",
             "type": "shell",
-            "command": "cd resources/fs/ && python3 generatePartTable.py",
+            "command": "cd resources/tools/fs/ && python3 generatePartTable.py",
             "icon": {
                 "id": "layout-panel-right",
             },
@@ -57,7 +57,7 @@
         {
             "label": "Flash filesystem",
             "type": "shell",
-            "command": "cd resources/fs/ && ./flashFs.sh",
+            "command": "cd resources/tools/fs/ && ./flashFs.sh",
             "icon": {
                 "id": "insert",
             },
@@ -70,7 +70,7 @@
         {
             "label": "Get fs",
             "type": "shell",
-            "command": "cd resources/fs/ && ./getFs.sh",
+            "command": "cd resources/tools/fs/ && ./getFs.sh",
             "icon": {
                 "id": "desktop-download",
             },
@@ -83,7 +83,7 @@
         {
             "label": "Flash personal fs",
             "type": "shell",
-            "command": "cd resources/fs/ && ./flash_personal_fs.sh",
+            "command": "cd resources/tools/fs/ && ./flashPersonalFs.sh",
             "icon": {
                 "id": "insert",
             },
@@ -99,7 +99,7 @@
             "command": "bash",
             "args": [
                 "-c",
-                "args=$(dialog --inputbox \"Enter the backtrace\" 8 150 3>&1 1>&2 2>&3); clear; ./resources/other/backtrace_resolver.sh \"$args\""
+                "args=$(dialog --inputbox \"Enter the backtrace\" 8 150 3>&1 1>&2 2>&3); clear; ./resources/tools/other/backtraceResolver.sh \"$args\""
             ],            
             "icon": {
                 "id": "debug-all",
