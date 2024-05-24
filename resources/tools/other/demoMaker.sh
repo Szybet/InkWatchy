@@ -1,4 +1,5 @@
 #!/bin/bash
+pio lib -e min install
 cp -r resources/demo/* resources/personal/
 cd resources/tools/
 export PLATFORMIO_ENV_NAME="min"
