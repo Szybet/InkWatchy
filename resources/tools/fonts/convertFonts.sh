@@ -8,9 +8,9 @@ if [ -e "$fontconvert" ]; then
     echo "fontconvert exists"
 else
     echo "fontconvert does not exist, creating it..."
-    cd ../../.pio/libdeps/$pio_env/Adafruit\ GFX\ Library/fontconvert/
+    cd ../../../.pio/libdeps/$pio_env/Adafruit\ GFX\ Library/fontconvert/
     make -j$(nproc)
-    cd ../../../../../resources/fonts/
+    cd ../../../../../resources/tools/fonts/
     if [ ! -e "$fontconvert" ]; then
         echo "Coudln't compile fontconvert, exiting"
         exit 1
