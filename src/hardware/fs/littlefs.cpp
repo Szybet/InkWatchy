@@ -60,6 +60,28 @@ File *fsOpenFile(String path)
 }
 */
 
+int fsItemsInDir(String dir) {
+  File root = LittleFS.open(dir);
+  if (!root)
+  {
+    debugLog("Failed to open directory");
+    return -1;
+  }
+  if (root.isDirectory() == false)
+  {
+    debugLog("Not a directory");
+    return -1;
+  }
+  int count = 0;
+  File file = root.openNextFile();
+  while (file)
+  {
+    file = root.openNextFile();
+    count = count + 1;
+  }
+  return count;
+}
+
 #if DEBUG
 void fsListDir(String dirname, uint8_t levels)
 {

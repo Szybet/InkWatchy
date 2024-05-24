@@ -34,7 +34,7 @@ const GFXfont *getFont(String name)
         return &FreeSansBold9pt7b;
     }
     int fileBitmapSize = fileBitmap.size();
-    debugLog("file size: " + String(fileBitmapSize));
+    //debugLog("file size: " + String(fileBitmapSize));
     if (fileBitmapSize <= 0)
     {
         debugLog("This file has size 0: " + name + "Bitmap");
@@ -73,7 +73,7 @@ const GFXfont *getFont(String name)
         return &FreeSansBold9pt7b;
     }
     int fileStructSize = fileStruct.size();
-    debugLog("fileStructSize: " + String(fileStructSize));
+    //debugLog("fileStructSize: " + String(fileStructSize));
     uint8_t *structBuf = (uint8_t *)malloc(fileStructSize * sizeof(uint8_t));
     if (fileStruct.read(structBuf, fileStructSize) < 0)
     {
