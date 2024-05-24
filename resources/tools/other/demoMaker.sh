@@ -1,6 +1,6 @@
 #!/bin/bash
 cp -r resources/demo/* resources/personal/
-cd resources/
+cd resources/tools/
 export PLATFORMIO_ENV_NAME="min"
 ./generate.sh
 
