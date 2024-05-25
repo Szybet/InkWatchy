@@ -1,0 +1,18 @@
+name: Create demo
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  create-demo:
+    name: Creates a demo
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Create demo
+      run: |
+        #!/bin/bash
+        # Your shell script commands here
+        echo "Hello, world! This is a sample shell script running as a GitHub Action."
