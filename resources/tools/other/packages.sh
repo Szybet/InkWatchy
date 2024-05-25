@@ -21,7 +21,7 @@ imagemagick_from_source
 
 if command -v dpkg &> /dev/null; then
     echo "Detected a debian based system"
-    debian_packages=("platformio" "xxd" "jq" "python3-unidecode" "libfreetype-dev" "libfreetype6" "libfreetype6-dev" "python3-venv" "imagemagick" "libltdl-dev" "make" "build-essential" "automake")
+    debian_packages=("xxd" "jq" "python3-unidecode" "libfreetype-dev" "libfreetype6" "libfreetype6-dev" "python3-venv" "imagemagick" "libltdl-dev" "make" "build-essential" "automake")
     missing_packages=()
 
     for pkg in "${debian_packages[@]}"; do
@@ -54,4 +54,8 @@ if [ ! -f "fs/in/mklittlefs" ]; then
     mv mklittlefs/mklittlefs fs/in/
     rm -rf mklittlefs
     rm -rf mklittlefs.tar.gz
+fi
+
+if command -v pio &> /dev/null; then
+    echo "install platformio (pio command). Exiting."
 fi
