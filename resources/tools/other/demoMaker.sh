@@ -2,6 +2,7 @@
 pio pkg install -e min
 rm -rf resources/personal/*
 cp -r resources/demo/* resources/personal/
+
 cd resources/tools/
 export PLATFORMIO_ENV_NAME="min"
 ./generate.sh
@@ -24,6 +25,12 @@ new_string="#define BOOK 1"
 filename="src/defines/config.h"
 
 sed -i "s/$old_string/$new_string/g" "$filename"
+
+# To apply those things
+cd resources/tools/
+export PLATFORMIO_ENV_NAME="min"
+./generate.sh
+cd ../../
 
 pio run -e min
 
