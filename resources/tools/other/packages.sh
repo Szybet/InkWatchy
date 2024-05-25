@@ -1,14 +1,10 @@
 #!/bin/bash
 
 function imagemagick_from_source() {
-    if [ ! -f "other/debian_magick_installed" ]; then
-        echo "I will now try to install a newer version of imagemagick, it will overwrite /usr/bin/convert"
-        read -r -p "Are you sure? Click enter to continue or Ctrl C to abort " response
-        touch "other/debian_magick_installed"
-
+    if [ ! -f "other/in/convert" ]; then
         wget https://imagemagick.org/archive/binaries/magick
         chmod +x magick
-        sudo mv magick /usr/bin/convert
+        mv magick other/in/convert
     fi
 
     # That's for libraries, fuck
@@ -20,6 +16,8 @@ function imagemagick_from_source() {
     #sudo ldconfig /usr/local/lib
     #cd ..
 }
+
+imagemagick_from_source
 
 if command -v dpkg &> /dev/null; then
     echo "Detected a debian based system"
@@ -34,7 +32,7 @@ if command -v dpkg &> /dev/null; then
 
     if [ ${#missing_packages[@]} -gt 0 ]; then
         echo "Installing missing packages: ${missing_packages[*]}"
-        sudo apt-get install -y "${missing_packages[@]}"
+        timeout 1m sudo apt-get install -y "${missing_packages[@]}"
         if [ $? -ne 0 ]; then
             echo "Failed to install some packages. Exiting."
             exit 1
@@ -42,9 +40,6 @@ if command -v dpkg &> /dev/null; then
     else
         echo "All required packages are already installed."
     fi
-
-    imagemagick_from_source
-
     exit 0
 else
     echo "I only managed to support debian based system, feel free to add other distros :)"

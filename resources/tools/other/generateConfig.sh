@@ -14,6 +14,8 @@ cd resources/tools/
 mkdir -p fs/in/
 mkdir -p fs/out/
 mkdir -p fs/littlefs
+mkdir -p other/out/
+mkdir -p other/in/
 
 if [ ! -f "fs/in/fsConfig.ini" ] || [ ! -f "fs/in/partitions.csv" ]; then
     echo -e ''
