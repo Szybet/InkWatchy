@@ -18,10 +18,10 @@ jobs:
       - name: Upload demo program
         uses: actions/upload-artifact@v4
         with:
-          name: demo
+          name: demo-program
           path: InkWatchy-demo/resources/tools/other/out/demo-program.bin
       - name: Upload demo source
         uses: actions/upload-artifact@v4
         with:
-          name: demo
+          name: demo-source
           path: InkWatchy-demo/resources/tools/other/out/demo-source.zip
