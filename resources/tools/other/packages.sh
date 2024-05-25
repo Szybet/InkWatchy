@@ -6,7 +6,7 @@ function imagemagick_from_source() {
         wget https://imagemagick.org/archive/binaries/magick
         chmod +x magick
         mv magick other/in/convert
-        rm magick* # Not sure
+        rm magick* 1>/dev/null 2>/dev/null # Not sure
     fi
 
     # That's for libraries, fuck
