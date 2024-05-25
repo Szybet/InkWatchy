@@ -8,7 +8,7 @@ on:
 jobs:
   create-demo:
     name: Creates a demo
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     
     steps:
     - name: Create demo
