@@ -2,9 +2,11 @@
 
 function imagemagick_from_source() {
     if [ ! -f "other/in/convert" ]; then
+        echo "Downloading image magick"
         wget https://imagemagick.org/archive/binaries/magick
         chmod +x magick
         mv magick other/in/convert
+        rm magick* # Not sure
     fi
 
     # That's for libraries, fuck
@@ -56,6 +58,18 @@ if [ ! -f "fs/in/mklittlefs" ]; then
     rm -rf mklittlefs.tar.gz
 fi
 
-if command -v pio &> /dev/null; then
-    echo "install platformio (pio command). Exiting."
+if [ ! -f "other/in/esptool" ]; then
+    echo "Downloading esptool"
+    mkdir esptool-download
+    cd esptool-download
+    wget -q -O esptool.zip https://github.com/espressif/esptool/releases/download/v4.7.0/esptool-v4.7.0-linux-amd64.zip
+    unzip esptool.zip
+    chmod +x esptool-linux-amd64/esptool
+    cp esptool-linux-amd64/esptool ../other/in/
+    cd ..
+    rm -rf esptool-download
+fi
+
+if ! command -v pio &> /dev/null; then
+    echo "install platformio (pio command). The rest will fail."
 fi
