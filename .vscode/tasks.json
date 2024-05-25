@@ -5,7 +5,7 @@
         {
             "label": "Reset",
             "type": "shell",
-            "command": "esptool.py --before default_reset chip_id",
+            "command": "resources/tools/other/in/esptool --before default_reset chip_id",
             "icon": {
                 "id": "debug-restart",
             },

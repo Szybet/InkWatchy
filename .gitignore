@@ -14,5 +14,6 @@ resources/personal/books/*.epub
 resources/personal/vault/*.png
 
 **/out/
+**/in/
 resources/tools/fs/littlefs
 resources/tools/fs/in

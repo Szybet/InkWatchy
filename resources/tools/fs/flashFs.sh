@@ -8,4 +8,4 @@ offset=$(<in/offset.txt tr -d '\n')
 # https://electronics.stackexchange.com/questions/588293/esp32-littlefs-change-block-size
 # Fuck
 ./in/mklittlefs --all-files -c littlefs -s $size out/fs.bin
-esptool.py write_flash $offset out/fs.bin
+../other/in/esptool write_flash $offset out/fs.bin
