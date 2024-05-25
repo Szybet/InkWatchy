@@ -53,7 +53,8 @@ get_pio_env() {
             echo "PLATFORMIO_ENV_NAME is set with value: $PLATFORMIO_ENV_NAME" >&2
             echo $PLATFORMIO_ENV_NAME
         else
-            first_folder=$(ls ../../.pio/libdeps/ | head -n 1)
+            pio_path="${json_file%%.vscode/*}.pio/"
+            first_folder=$(ls ${pio_path}libdeps/ | head -n 1)
             echo "PLATFORMIO_ENV_NAME is not set. Using \"$first_folder\" env" >&2
             echo $first_folder
         fi
