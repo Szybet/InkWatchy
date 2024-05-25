@@ -49,3 +49,5 @@ sleep 5
 esptool.py erase_flash
 sleep 5
 esptool.py write_flash 0x00000 out/demo.bin
+cd ../../../
+zip -r -9 resources/tools/other/out/demo-source.zip .
