@@ -5,19 +5,20 @@ on:
     branches: [ master ]
 
 jobs:
-  build_and_test:
+  demo:
     runs-on: self-hosted
-    - name: demo build
-      run: |
-        rm -rf InkWatchy-demo 1>/dev/null 2>/dev/null
-        git clone https://github.com/Szybet/InkWatchy.git InkWatchy-demo
-        cd InkWatchy-demo
-        ./resources/tools/other/demoMaker.sh
-        cd ..
-    - name: Upload demo files
-      uses: actions/upload-artifact@v4
-      with:
-        name: demo
-        path: |
-          InkWatchy-demo/resources/tools/other/out/demo-program.bin
-          InkWatchy-demo/resources/tools/other/out/demo-source.zip
+    steps:
+      - name: demo build
+        run: |
+          rm -rf InkWatchy-demo 1>/dev/null 2>/dev/null
+          git clone https://github.com/Szybet/InkWatchy.git InkWatchy-demo
+          cd InkWatchy-demo
+          ./resources/tools/other/demoMaker.sh
+          cd ..
+      - name: Upload demo files
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo
+          path: |
+            InkWatchy-demo/resources/tools/other/out/demo.bin
+            InkWatchy-demo/resources/tools/other/out/demo-source.zip
