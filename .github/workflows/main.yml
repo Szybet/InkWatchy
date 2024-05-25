@@ -1,18 +1,20 @@
-name: Create demo
+name: Build demo
 
-on:
-  push:
-    branches:
-      - master
+on: [push]
 
 jobs:
-  create-demo:
-    name: Creates a demo
+  build_and_test:
     runs-on: self-hosted
-    
     steps:
-    - name: Create demo
-      run: |
-        #!/bin/bash
-        # Your shell script commands here
-        echo "Hello, world! This is a sample shell script running as a GitHub Action."
+      - name: npm install, build, and test
+        run: |
+          rm -rf InkWatchy-demo 1>/dev/null 2>/dev/null
+          git clone https://github.com/Szybet/InkWatchy.git InkWatchy-demo
+          cd InkWatchy-demo
+          ./resources/tools/other/demoMaker.sh
+      - name: Upload demo files
+        uses: actions/upload-artifact@v4
+        with:
+          name: Demo files
+          path: |
+            InkWatchy-demo/resources/tools/other/out/*
