@@ -5,21 +5,14 @@ on:
     branches: [ master ]
 
 jobs:
-
   build_and_test:
     runs-on: self-hosted
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: npm install, build, and test
+    - name: demo build
       run: |
         rm -rf InkWatchy-demo 1>/dev/null 2>/dev/null
         git clone https://github.com/Szybet/InkWatchy.git InkWatchy-demo
         cd InkWatchy-demo
         ./resources/tools/other/demoMaker.sh
-
     - name: Upload demo files
       uses: actions/upload-artifact@v4
       with:
