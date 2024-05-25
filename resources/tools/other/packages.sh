@@ -36,13 +36,11 @@ if command -v dpkg &> /dev/null; then
         echo "Installing missing packages: ${missing_packages[*]}"
         timeout 1m sudo apt-get install -y "${missing_packages[@]}"
         if [ $? -ne 0 ]; then
-            echo "Failed to install some packages. Exiting."
-            exit 1
+            echo "Failed to install some packages. It will fail."
         fi
     else
         echo "All required packages are already installed."
     fi
-    exit 0
 else
     echo "I only managed to support debian based system, feel free to add other distros :)"
     echo "Oh yea good luck :D"
