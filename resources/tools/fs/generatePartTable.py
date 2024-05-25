@@ -15,8 +15,9 @@ flash_size_bytes = flash_size_mb * 1024 * 1024  # Convert MB to bytes
 
 global_functions_path = "../globalFunctions.sh"
 cmd = f"source {global_functions_path} && get_pio_env ../../../.vscode/launch.json"
-result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, executable='/bin/bash')
 pio_env = result.stdout.decode().strip()
+print(result.stderr.decode('utf-8'))
 
 firmware_path = f"../../../.pio/build/{pio_env}/firmware.bin"
 firmware_size_bytes = int(os.path.getsize(firmware_path))
