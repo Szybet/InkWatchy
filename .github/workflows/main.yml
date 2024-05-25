@@ -15,10 +15,13 @@ jobs:
           cd InkWatchy-demo
           ./resources/tools/other/demoMaker.sh
           cd ..
-      - name: Upload demo files
+      - name: Upload demo program
         uses: actions/upload-artifact@v4
         with:
           name: demo
-          path: |
-            InkWatchy-demo/resources/tools/other/out/demo.bin
-            InkWatchy-demo/resources/tools/other/out/demo-source.zip
+          path: InkWatchy-demo/resources/tools/other/out/demo-program.bin
+      - name: Upload demo source
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo
+          path: InkWatchy-demo/resources/tools/other/out/demo-source.zip
