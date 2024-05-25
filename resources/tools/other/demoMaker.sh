@@ -45,5 +45,7 @@ sleep 10
 cd resources/tools/other/
 mkdir out/
 esptool.py read_flash 0x00000 0x400000 out/demo.bin
-# esptool.py erase_flash
-# esptool.py write_flash 0x00000 <the_file>
+sleep 5
+esptool.py erase_flash
+sleep 5
+esptool.py write_flash 0x00000 out/demo.bin
