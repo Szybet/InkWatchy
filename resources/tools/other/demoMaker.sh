@@ -51,10 +51,10 @@ sleep 10
 
 cd resources/tools/other/
 mkdir out/
-in/esptool read_flash 0x00000 0x400000 out/demo.bin
+in/esptool read_flash 0x00000 0x400000 out/demo-program.bin
 sleep 5
 in/esptool erase_flash
 sleep 5
-in/esptool write_flash 0x00000 out/demo.bin
+in/esptool write_flash 0x00000 out/demo-program.bin
 cd ../../../
 zip -r -9 resources/tools/other/out/demo-source.zip .

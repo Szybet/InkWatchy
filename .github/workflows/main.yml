@@ -13,10 +13,11 @@ jobs:
         git clone https://github.com/Szybet/InkWatchy.git InkWatchy-demo
         cd InkWatchy-demo
         ./resources/tools/other/demoMaker.sh
+        cd ..
     - name: Upload demo files
       uses: actions/upload-artifact@v4
       with:
         name: demo
         path: |
-          InkWatchy-demo/resources/tools/other/out/demo.bin
+          InkWatchy-demo/resources/tools/other/out/demo-program.bin
           InkWatchy-demo/resources/tools/other/out/demo-source.zip
