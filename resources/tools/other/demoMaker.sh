@@ -35,7 +35,7 @@ cd ../../
 pio run -e min
 
 cd resources/tools/fs/
-python3 generatePartTable.py
+PLATFORMIO_ENV_NAME="min" python3 generatePartTable.py
 cd ../../../
 
 pio run -e min
