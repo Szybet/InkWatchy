@@ -2,4 +2,4 @@
 app,app,factory,0x10000,0x300000,
 coredump,data,coredump,,0x10000,
 nvs,data,nvs,,0x3000,
-littlefs,data,spiffs,,0x5000,
+spiffs,data,spiffs,,0x5000,
