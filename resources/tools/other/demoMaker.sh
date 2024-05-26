@@ -39,6 +39,7 @@ PLATFORMIO_ENV_NAME="min" python3 generatePartTable.py
 cd ../../../
 
 pio run -e min
+resources/tools/other/in/esptool erase_flash
 pio run -e min -t upload
 
 sleep 10
@@ -51,6 +52,7 @@ sleep 10
 
 cd resources/tools/other/
 in/esptool read_flash 0x00000 0x400000 out/demo-program.bin
+python ../fs/cleanNVS.py ../fs/in/partitions.csv out/demo-program.bin
 sleep 5
 in/esptool erase_flash
 sleep 5
