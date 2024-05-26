@@ -62,7 +62,8 @@ get_pio_env() {
 }
 
 extract_serial_port() {
+  local esptool_path=$1
   local output
-  output=$(esptool.py flash_id 2>&1)
+  output=$("$esptool_path" flash_id 2>&1)
   echo "$output" | grep "Serial port" | awk '{print $3}'
 }
