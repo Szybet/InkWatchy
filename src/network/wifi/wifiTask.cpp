@@ -38,6 +38,12 @@ void turnOnWifiTask(void *parameter)
             WiFi.setSleep(WIFI_PS_MAX_MODEM);
             debugLog("Setting sleep mode for wifi");
         }
+        // We don't have NVS anymore
+        //esp_wifi_set_storage(WIFI_STORAGE_RAM);
+        //WiFi.persistent(false);
+        // Won't work, fuck IDF for forcing that. We need a NVS partition
+        // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/partition-tables.html
+        // 0x3000 bytes we need
         WiFi.mode(WIFI_STA);
 
         debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));

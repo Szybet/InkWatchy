@@ -20,6 +20,7 @@ void setup()
 {
   isDebug(Serial.begin(115200));
   wakeUpReason = esp_sleep_get_wakeup_cause();
+  debugLog(String(CONFIG_ESP_PHY_CALIBRATION_AND_DATA_STORAGE));
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
   // ESP_SLEEP_WAKEUP_EXT1 Button press
 

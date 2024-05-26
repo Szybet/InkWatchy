@@ -1,6 +1,6 @@
 #!/bin/bash
 pio pkg install -e min
-rm -rf resources/personal/*
+rm -rf resources/personal/books/* resources/personal/vault/*
 cp -r resources/demo/* resources/personal/
 
 cd resources/tools/
