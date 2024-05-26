@@ -1,9 +1,6 @@
 #!/bin/bash
 source resources/tools/globalFunctions.sh
 
-serial_port=$(extract_serial_port)
-echo "Serial port detected: $serial_port"
-
 pio pkg install -e min
 rm -rf resources/personal/books/* resources/personal/vault/*
 cp -r resources/demo/* resources/personal/
@@ -12,6 +9,9 @@ cd resources/tools/
 export PLATFORMIO_ENV_NAME="min"
 ./generate.sh
 cd ../../
+
+serial_port=$(extract_serial_port resources/tools/other/in/esptool)
+echo "Serial port detected: $serial_port"
 
 old_string="#define VAULT_PASSWORD \"\""
 new_string="#define VAULT_PASSWORD \"1\""
