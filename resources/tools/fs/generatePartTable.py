@@ -2,6 +2,8 @@ import os
 import configparser
 import subprocess
 import math
+import shutil
+import sys
 
 # Step 1: Read the configuration and get the needed values
 fs_config_path = "in/fsConfig.ini"
@@ -20,15 +22,22 @@ pio_env = result.stdout.decode().strip()
 print(result.stderr.decode('utf-8'))
 
 firmware_path = f"../../../.pio/build/{pio_env}/firmware.bin"
+
+if not os.path.exists(firmware_path):
+    shutil.copy("templates/snoititrap-template.csv", "in/partitions.csv")
+    print("There is no firmware.bin file. I'm assuming you couldn't compile it because of the partition size. Copying the default partition file and exiting.")
+    sys.exit(0)
+
 firmware_size_bytes = int(os.path.getsize(firmware_path))
 
 tolerance_fraction = tolerance_percentage / 100
 app_partition_size_bytes = (firmware_size_bytes + int(firmware_size_bytes * tolerance_fraction) + 0xFFF) & ~0xFFF
 
 coredump_partition_size_bytes = 0x10000
+nvs_partition_size_bytes = 0x3000
 app_partition_offset = 0x10000
 
-current_used_flash = coredump_partition_size_bytes + app_partition_offset
+current_used_flash = coredump_partition_size_bytes + app_partition_offset + nvs_partition_size_bytes
 
 current_used_flash = current_used_flash + app_partition_size_bytes
 
@@ -53,7 +62,8 @@ partition_table.append("#Name, Type, SubType, Offset, Size, Flags\n")
 # Define the partitions
 partition_table.append(f"app,app,factory,0x{app_partition_offset:x},{hex(app_partition_size_bytes)},\n")
 partition_table.append(f"coredump,data,coredump,,0x{coredump_partition_size_bytes:x},\n")
-partition_table.append(f"spiffs,data,spiffs,,{hex(spiffs_partition_size_bytes)},\n")
+partition_table.append(f"nvs,data,nvs,,0x{nvs_partition_size_bytes:x},\n")
+partition_table.append(f"littlefs,data,spiffs,,{hex(spiffs_partition_size_bytes)},\n")
 
 # Write the partition table to a file
 partition_table_path = "in/partitions.csv"
