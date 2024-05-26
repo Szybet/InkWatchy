@@ -64,6 +64,9 @@ get_pio_env() {
 extract_serial_port() {
   local esptool_path=$1
   local output
+  local last_port
+
   output=$("$esptool_path" flash_id 2>&1)
-  echo "$output" | grep "Serial port" | awk '{print $3}'
+  last_port=$(echo "$output" | grep "Serial port" | awk '{print $3}' | tail -n 1)
+  echo -n "$last_port"
 }
