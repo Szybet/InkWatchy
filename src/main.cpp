@@ -18,9 +18,11 @@ void loopTaskSettings() {
 esp_sleep_wakeup_cause_t wakeUpReason;
 void setup()
 {
-  isDebug(Serial.begin(115200));
+#if DEBUG
+  delay(3000);
+  Serial.begin(115200);
+#endif
   wakeUpReason = esp_sleep_get_wakeup_cause();
-  debugLog(String(CONFIG_ESP_PHY_CALIBRATION_AND_DATA_STORAGE));
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
   // ESP_SLEEP_WAKEUP_EXT1 Button press
 

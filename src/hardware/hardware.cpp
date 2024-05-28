@@ -10,6 +10,14 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     if (isFromWakeUp == false)
     {
         debugLog("Watchy is starting!");
+        // This is because we want it to be cleared on boot and on the second one (the first boot is the in demo boot)
+        int firstBoot = fsGetString("firstBoot", "0").toInt();
+        if(firstBoot <= 2) {
+            fsSetString("firstBoot", String(firstBoot + 1));
+            debugLog("This is the first boot. Clearing core dump partition");
+            String res = String(esp_err_to_name(esp_core_dump_image_erase()));
+            debugLog("esp_core_dump_image_erase status: " + res);
+        }
     }
     else
     {

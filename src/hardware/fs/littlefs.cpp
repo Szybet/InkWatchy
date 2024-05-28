@@ -60,7 +60,8 @@ File *fsOpenFile(String path)
 }
 */
 
-int fsItemsInDir(String dir) {
+int fsItemsInDir(String dir)
+{
   File root = LittleFS.open(dir);
   if (!root)
   {
@@ -102,37 +103,32 @@ void fsListDir(String dirname, uint8_t levels)
   File file = root.openNextFile();
   while (file)
   {
-    if (file.isDirectory())
+    String theLog = "";
+    if (file.isDirectory() == true)
     {
-      Serial.print("  DIR : ");
-
-      Serial.print(file.path());
-      time_t t = file.getLastWrite();
-      struct tm *tmstruct = localtime(&t);
-      Serial.printf(
-          "  LAST WRITE: %d-%02d-%02d %02d:%02d:%02d\n", (tmstruct->tm_year) + 1900, (tmstruct->tm_mon) + 1, tmstruct->tm_mday, tmstruct->tm_hour,
-          tmstruct->tm_min, tmstruct->tm_sec);
-
-      if (levels > 0)
-      {
-        debugLog("Going next level: " + String(levels));
-        fsListDir(String(file.path()), levels - 1);
-      }
+      theLog = "Dir: ";
     }
     else
     {
-      Serial.print("  FILE: ");
-      Serial.print(file.name());
-      Serial.print("  SIZE: ");
-
-      Serial.print(file.size());
-      time_t t = file.getLastWrite();
-      struct tm *tmstruct = localtime(&t);
-      Serial.printf(
-          "  LAST WRITE: %d-%02d-%02d %02d:%02d:%02d\n", (tmstruct->tm_year) + 1900, (tmstruct->tm_mon) + 1, tmstruct->tm_mday, tmstruct->tm_hour,
-          tmstruct->tm_min, tmstruct->tm_sec);
+      theLog = "File: ";
     }
-    file = root.openNextFile();
+    theLog = theLog + String(file.name()) + " Size: " + String(file.size());
+    time_t t = file.getLastWrite();
+    struct tm *tmstruct = localtime(&t);
+
+    char buffer[50] = {0};
+    snprintf(buffer, sizeof(buffer), " Last write: %d-%02d-%02d %02d:%02d:%02d\n",
+             (tmstruct->tm_year) + 1900, (tmstruct->tm_mon) + 1, tmstruct->tm_mday,
+             tmstruct->tm_hour, tmstruct->tm_min, tmstruct->tm_sec);
+
+    theLog = theLog + String(buffer);
+    debugLog(theLog);
+    if (file.isDirectory() && levels > 0)
+    {
+      debugLog("Going next level: " + String(levels));
+      fsListDir(String(file.path()), levels - 1);
+    }
+    file = file.openNextFile();
   }
 }
 

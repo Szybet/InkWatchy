@@ -1,7 +1,11 @@
 #!/bin/bash
 
+source resources/tools/globalFunctions.sh
+
+pio_env=$(get_pio_env .vscode/tasks.json)
+
 XTENSA_ADDR2LINE="$HOME/.platformio/packages/toolchain-xtensa-esp32/bin/xtensa-esp32-elf-addr2line"
-ELF_FILE=".pio/build/max/firmware.elf"
+ELF_FILE=".pio/build/$pio_env/firmware.elf"
 
 IFS=' ' read -r -a BACKTRACES <<< "$1"
 

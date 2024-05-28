@@ -15,6 +15,7 @@
 #include "FS.h"
 #include <LittleFS.h>
 #include <mutex>
+#include <esp_core_dump.h>
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
