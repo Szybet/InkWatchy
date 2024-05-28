@@ -3,11 +3,11 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Reset",
+            "label": "ESP tasks",
             "type": "shell",
-            "command": "resources/tools/other/in/esptool --before default_reset chip_id",
+            "command": "resources/tools/other/tasks/taskerEsp.sh",
             "icon": {
-                "id": "debug-restart",
+                "id": "chip",
             },
             "options": {
                 "statusbar": {
@@ -16,9 +16,9 @@
             }
         },
         {
-            "label": "Gen resources",
+            "label": "Resource tasks",
             "type": "shell",
-            "command": "cd resources/tools/ && ./generate.sh",
+            "command": "resources/tools/other/tasks/taskerResources.sh",
             "icon": {
                 "id": "folder-library",
             },
@@ -29,84 +29,15 @@
             }
         },
         {
-            "label": "Patch wifi",
+            "label": "Other tasks",
             "type": "shell",
-            "command": "cd resources/tools/other/wifiTool/ && ./patch.sh",
+            "command": "resources/tools/other/tasks/taskerOther.sh",
             "icon": {
-                "id": "debug",
+                "id": "star-empty",
             },
             "options": {
                 "statusbar": {
-                    "color": "#393939"
-                }
-            }
-        },
-        {
-            "label": "Gen partitions",
-            "type": "shell",
-            "command": "cd resources/tools/fs/ && python3 generatePartTable.py",
-            "icon": {
-                "id": "layout-panel-right",
-            },
-            "options": {
-                "statusbar": {
-                    "color": "#aab8ff"
-                }
-            }
-        },
-        {
-            "label": "Flash filesystem",
-            "type": "shell",
-            "command": "cd resources/tools/fs/ && ./flashFs.sh",
-            "icon": {
-                "id": "insert",
-            },
-            "options": {
-                "statusbar": {
-                    "color": "#8cc1d3"
-                }
-            }
-        },
-        {
-            "label": "Get fs",
-            "type": "shell",
-            "command": "cd resources/tools/fs/ && ./getFs.sh",
-            "icon": {
-                "id": "desktop-download",
-            },
-            "options": {
-                "statusbar": {
-                    "color": "#8cd398"
-                }
-            }
-        },
-        {
-            "label": "Flash personal fs",
-            "type": "shell",
-            "command": "cd resources/tools/fs/ && ./flashPersonalFs.sh",
-            "icon": {
-                "id": "insert",
-            },
-            "options": {
-                "statusbar": {
-                    "color": "#9474e3"
-                }
-            }
-        },
-        {
-            "label": "Backtrace resolver",
-            "type": "shell",
-            "command": "bash",
-            "args": [
-                "-c",
-                "args=$(dialog --inputbox \"Enter the backtrace\" 8 150 3>&1 1>&2 2>&3); clear; ./resources/tools/other/backtraceResolver.sh \"$args\""
-            ],            
-            "icon": {
-                "id": "debug-all",
-            },
-            "options": {
-                "statusbar": {
-                    "color": "#ffa7a7"
+                    "color": "#00c8ff"
                 }
             }
         },
