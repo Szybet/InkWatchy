@@ -71,7 +71,10 @@ void goSleep()
     turnOffWifi();    // To be sure only
     alarmManageRTC(); // To be sure too...
     debugLog("Sleeping!");
-    isDebug(Serial.flush());
+#if DEBUG
+    logCleanup();
+    Serial.flush();
+#endif
     deInitWatchdogTask();
     ForceInputs();
     esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
@@ -80,8 +83,10 @@ void goSleep()
 }
 
 // Should be executed in every sleep cancelation which can happen without user interaction (no buttons clicked and the watchy is woken up by RTC, then the button task is not turned on because why would it)
-void checkIfButtonIsRunning() {
-    if(buttonTask == NULL) {
+void checkIfButtonIsRunning()
+{
+    if (buttonTask == NULL)
+    {
         initButtonTask();
     }
 }
@@ -92,7 +97,7 @@ void manageSleep()
     // debugLog("millis is:" + String(long(millis())));
     if (long(millis()) - sleepDelayMs >= SLEEP_EVERY_MS)
     {
-        //debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
+        // debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
         if (isWifiTaskCheck() == true)
         {
             debugLog("Wifi is turned on, waiting...");

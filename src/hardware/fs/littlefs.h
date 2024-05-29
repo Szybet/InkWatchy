@@ -6,6 +6,7 @@
 bool fsSetup();
 void fsCreateDir(String path);
 int fsItemsInDir(String dir);
+void fsAppendToFile(String path, String str);
 
 extern String loadedImgNames[IMG_COUNT];
 extern ImageDef loadedImg[IMG_COUNT];

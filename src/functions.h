@@ -4,8 +4,10 @@
 #include "defines/defines.h"
 
 extern std::mutex serialWrite;
-
+#if DEBUG
 void logFunction(String file, int line, String func, String message);
+void logCleanup();
+#endif
 bool containsBelowChar(String str);
 void delayTask(int timeMs);
 void checkMaxMin(int *value, int max, int min = 0, bool wrapback = true);

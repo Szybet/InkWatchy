@@ -6,25 +6,70 @@ int savedLogsIndex = 0;
 char savedLogs[2000] = {0};
 bool areLogsSaved = false;
 
+bool isLogFileOpened = false;
+File logFile;
+bool disableFsLogging = false; // We can't have trying to log to littlefs while trying to init it
+
+bool openLogFile()
+{
+  if (isLogFileOpened == false)
+  {
+    // this will lock it if it will not succed
+    disableFsLogging = true;
+    if (fsSetup() == false)
+    {
+      return false;
+    }
+    logFile = LittleFS.open("/logs.txt", FILE_APPEND);
+    if (!logFile)
+    {
+      debugLog("Failed to open logs"); // You can't call itself
+      return false;
+    }
+    if (logFile.isDirectory() == true)
+    {
+      debugLog("how");  // You can't call itself
+      return false;
+    }
+    isLogFileOpened = true;
+    disableFsLogging = false;
+  }
+  return true;
+}
+
+void flushSavedLogs()
+{
+  if (areLogsSaved == true)
+  {
+    areLogsSaved = false;
+    // debugLog("Printing out saved logs");
+    Serial.print(savedLogs);
+    Serial.flush(true);
+    savedLogsIndex = 0;
+  }
+}
+
+void logCleanup()
+{
+  if (disableFsLogging == false)
+  {
+    logFile.close();
+  }
+  flushSavedLogs();
+}
+
 void logFunction(String file, int line, String func, String message)
 {
   String log = file + ":" + String(line) + " " + func + ": " + message + "\n";
   if (serialWrite.try_lock())
   {
     Serial.flush(true);
-    if (areLogsSaved == true)
-    {
-      areLogsSaved = false;
-      //debugLog("Printing out saved logs");
-      Serial.print(savedLogs);
-      Serial.flush(true);
-      savedLogsIndex = 0;
-    }
+    flushSavedLogs();
     Serial.print(log);
     Serial.flush(true);
     serialWrite.unlock();
 #if SCOM_TASK_ENABLED
-  printEndPacket = true;
+    printEndPacket = true;
 #endif
   }
   else
@@ -36,6 +81,15 @@ void logFunction(String file, int line, String func, String message)
       areLogsSaved = true;
     }
   }
+#if PUT_LOGS_TO_FS
+  if (disableFsLogging == false)
+  {
+    if (openLogFile() == true)
+    {
+      logFile.print(log);
+    }
+  }
+#endif
 }
 #endif
 
