@@ -2,7 +2,8 @@
 
 OPTIONS=("1" "Reset ESP"
          "2" "Reset and monitor"
-         "3" "Backtrace resolver")
+         "3" "Backtrace resolver"
+         "4" "Get coredump")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -34,5 +35,9 @@ case $CHOICE in
         args=$(dialog --inputbox "Enter the backtrace" 8 150 3>&1 1>&2 2>&3)
         clear
         ./resources/tools/other/backtraceResolver.sh $args
+        ;;
+    4)
+        cd resources/tools/other
+        ./getCoreDump.sh
         ;;
 esac

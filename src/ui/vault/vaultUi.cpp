@@ -44,15 +44,6 @@ bool checkKey()
     debugLog("base64 result: " + String(baseResult));
 
     debugLog("Original base64 image:");
-#if DEBUG
-    for (size_t i = 0; i < written; i++)
-    {
-        Serial.print(String(realImage[i], HEX));
-        Serial.print(" ");
-    }
-    Serial.println("");
-    Serial.flush();
-#endif
 
     mbedtls_aes_context aes;
 
@@ -71,17 +62,6 @@ bool checkKey()
     //debugLog("Finished decrypting: " + String(millis()));
 
     mbedtls_aes_free(&aes);
-
-    debugLog("Decrypted image:");
-#if DEBUG
-    for (size_t i = 0; i < written; i++)
-    {
-        Serial.print(String(realImage[i], HEX));
-        Serial.print(" ");
-    }
-    Serial.println("");
-    Serial.flush();
-#endif
 
     String decryptedAnswer = String(realImage, 16);
     debugLog("Decrypted string is: " + decryptedAnswer);
