@@ -81,11 +81,9 @@ void dumpWeather()
   debugLog("Timezone: " + String(forecast->timezone));
   for (int i = 0; i < MAX_DAYS; i++)
   {
-    Serial.println("");
     debugLog("Day number: " + String(i + 1) + " weather info:");
     for (int j = 0; j < WEATHER_PER_DAY; j++)
     {
-      Serial.println("");
       debugLog("Information for day " + String(i) + " number " + String(j));
       String time = strTime(weatherDataDays[i][j].dt);
       time.remove(time.length() - 1);

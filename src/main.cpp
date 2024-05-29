@@ -6,11 +6,13 @@ int loopDumpDelayMs = 0;
 
 bool loopTaskApplied = false;
 // The loop task runs in a task, which we want to change a few things
-void loopTaskSettings() {
-  if(loopTaskApplied == false) {
+void loopTaskSettings()
+{
+  if (loopTaskApplied == false)
+  {
     loopTaskApplied = true;
-    //UBaseType_t prio = uxTaskPriorityGet(NULL);
-    //debugLog("Main task priority: " + String(prio));
+    // UBaseType_t prio = uxTaskPriorityGet(NULL);
+    // debugLog("Main task priority: " + String(prio));
     vTaskPrioritySet(NULL, MAIN_LOOP_PRIORITY);
   }
 }
@@ -18,6 +20,8 @@ void loopTaskSettings() {
 esp_sleep_wakeup_cause_t wakeUpReason;
 void setup()
 {
+  
+assert(0 == 1);
 #if DEBUG
   delay(3000);
   Serial.begin(115200);
@@ -54,13 +58,13 @@ void setup()
   loopGeneralDebug();
 #endif
 #if VOLTAGE_PRINT_ON
-    xTaskCreate(
-        dumpBatteryScreen,
-        "dumpBatteryTask",
-        2000,
-        NULL,
-        0,
-        nullptr);
+  xTaskCreate(
+      dumpBatteryScreen,
+      "dumpBatteryTask",
+      2000,
+      NULL,
+      0,
+      nullptr);
 #endif
 
 #if SCOM_TASK_ENABLED
@@ -101,7 +105,7 @@ void loop()
   {
     timeRTC.Hour = timeRTC.Hour + 1;
     timeRTC.Day = timeRTC.Day + 1;
-    //timeRTC.Month = timeRTC.Month + 1; // We rely on previous day to clean up so this makes things break
+    // timeRTC.Month = timeRTC.Month + 1; // We rely on previous day to clean up so this makes things break
   }
   if (timeRTC.Minute == 60)
   {
