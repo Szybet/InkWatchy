@@ -20,10 +20,10 @@ void loopTaskSettings()
 esp_sleep_wakeup_cause_t wakeUpReason;
 void setup()
 {
-  
-assert(0 == 1);
 #if DEBUG
+#if WAIT_FOR_MONITOR
   delay(3000);
+#endif
   Serial.begin(115200);
 #endif
   wakeUpReason = esp_sleep_get_wakeup_cause();

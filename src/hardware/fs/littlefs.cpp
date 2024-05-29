@@ -36,6 +36,10 @@ bool fsSetup()
 
 void fsCreateDir(String path)
 {
+  if (fsSetup() == false)
+  {
+    return;
+  }
   if (LittleFS.mkdir(path) <= 0)
   {
     debugLog("Failed to create dir: " + path);
@@ -62,6 +66,10 @@ File *fsOpenFile(String path)
 
 int fsItemsInDir(String dir)
 {
+  if (fsSetup() == false)
+  {
+    return 0;
+  }
   File root = LittleFS.open(dir);
   if (!root)
   {
@@ -83,9 +91,36 @@ int fsItemsInDir(String dir)
   return count;
 }
 
+void fsAppendToFile(String path, String str)
+{
+  if (fsSetup() == false)
+  {
+    return;
+  }
+  File file = LittleFS.open(path);
+  if (!file)
+  {
+    debugLog("Failed to open file: " + path);
+    return;
+  }
+  if (file.isDirectory() == true)
+  {
+    debugLog("Is a dir: " + path);
+    return;
+  }
+
+  file.println(str);
+
+  file.close();
+}
+
 #if DEBUG
 void fsListDir(String dirname, uint8_t levels)
 {
+  if (fsSetup() == false)
+  {
+    return;
+  }
   debugLog("Listing directory: " + dirname);
 
   File root = LittleFS.open(dirname);

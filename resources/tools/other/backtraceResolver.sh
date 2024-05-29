@@ -2,12 +2,12 @@
 
 source resources/tools/globalFunctions.sh
 
-pio_env=$(get_pio_env .vscode/tasks.json)
+pio_env=$(get_pio_env .vscode/launch.json)
 
 XTENSA_ADDR2LINE="$HOME/.platformio/packages/toolchain-xtensa-esp32/bin/xtensa-esp32-elf-addr2line"
 ELF_FILE=".pio/build/$pio_env/firmware.elf"
 
-IFS=' ' read -r -a BACKTRACES <<< "$1"
+IFS=' ' read -r -a BACKTRACES <<< "$@" # <<< "$1" 
 
 for BACKTRACE in "${BACKTRACES[@]}"; do
     echo "Processing backtrace: $BACKTRACE"
