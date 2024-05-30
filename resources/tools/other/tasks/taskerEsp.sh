@@ -3,7 +3,8 @@
 OPTIONS=("1" "Reset ESP"
          "2" "Reset and monitor"
          "3" "Backtrace resolver"
-         "4" "Get coredump")
+         "4" "Get coredump"
+         "5" "Erase ESP flash")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -39,5 +40,8 @@ case $CHOICE in
     4)
         cd resources/tools/other
         ./getCoreDump.sh
+        ;;
+    5)
+        resources/tools/other/in/esptool erase_flash
         ;;
 esac

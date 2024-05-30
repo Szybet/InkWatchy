@@ -24,6 +24,7 @@ void setup()
 #if WAIT_FOR_MONITOR
   delay(3000);
 #endif
+  initLogs();
   Serial.begin(115200);
 #endif
   wakeUpReason = esp_sleep_get_wakeup_cause();

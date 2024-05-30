@@ -13,16 +13,16 @@ void loopWatchdogTask(void *parameter)
         // debugLog("Watchdog cycle");
         if(digitalRead(BACK_PIN) == HIGH && digitalRead(MENU_PIN) == HIGH && digitalRead(UP_PIN) == HIGH && digitalRead(DOWN_PIN) == HIGH) {
             debugLog("Detected all buttons high, resetting...");
-            ESP.restart();
+            assert(true == false);
         }
         watchdogFine.lock();
         if(everythingIsFine == false) {
             debugLog("everythingIsFine is false, resetting...");
-            ESP.restart();
+            assert(true == false);
         } else {
             everythingIsFine = false;
             watchdogFine.unlock();
-            delayTask(6000);
+            delayTask(15000);
         }
     }
 }

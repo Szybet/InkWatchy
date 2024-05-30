@@ -4,22 +4,28 @@ int RTC_DATA_ATTR UP_PIN = 32;
 uint64_t RTC_DATA_ATTR UP_MASK = GPIO_SEL_32;
 buttonState buttonPressed = None;
 TaskHandle_t buttonTask = NULL;
+std::mutex buttMut;
 
 buttonState useButtonBack()
 {
+    buttMut.lock();
     if (buttonPressed == Back || buttonPressed == LongBack)
     {
         buttonState buttonPressedTmp = buttonPressed;
         buttonPressed = None;
+        buttMut.unlock();
         return buttonPressedTmp;
     }
+    buttMut.unlock();
     return None;
 }
 
 buttonState useButton()
 {
+    buttMut.lock();
     if (buttonPressed == Back || buttonPressed == LongBack)
     {
+        buttMut.unlock();
         return None;
     }
     buttonState buttonPressedTmp = buttonPressed;
@@ -30,17 +36,19 @@ buttonState useButton()
     {
         debugLog("Used button by UI: " + getButtonString(buttonPressedTmp));
     }
-
+    buttMut.unlock();
     return buttonPressedTmp;
 }
 
 // To unlock the button
 void useButtonBlank()
 {
+    buttMut.lock();
     if (buttonPressed != Back && buttonPressed != LongBack)
     {
         buttonPressed = None;
     }
+    buttMut.unlock();
 }
 
 void initButtons(bool isFromWakeUp)
@@ -70,9 +78,11 @@ void initButtons(bool isFromWakeUp)
 
 void setButton(buttonState button)
 {
+    buttMut.lock();
     debugLog("setButton called: " + getButtonString(button));
     vibrateMotor();
     buttonPressed = button;
+    buttMut.unlock();
     resetSleepDelay();
     debugLog("setButton done");
 }
@@ -106,28 +116,39 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
 void loopButtonsTask(void *parameter)
 {
     // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
-    while(digitalRead(BACK_PIN) == HIGH || digitalRead(MENU_PIN) == HIGH || digitalRead(UP_PIN) == HIGH || digitalRead(DOWN_PIN) == HIGH) {
+    while (digitalRead(BACK_PIN) == HIGH || digitalRead(MENU_PIN) == HIGH || digitalRead(UP_PIN) == HIGH || digitalRead(DOWN_PIN) == HIGH)
+    {
         delayTask(SMALL_BUTTON_DELAY_MS);
     }
     while (true)
     {
         delayTask(BUTTON_TASK_DELAY);
+        buttMut.lock();
         if (digitalRead(BACK_PIN) == HIGH && buttonPressed != LongBack)
         {
+            buttMut.unlock();
             longButtonCheck(BACK_PIN, Back, LongBack);
+            buttMut.lock();
         }
         else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu)
         {
+            buttMut.unlock();
             longButtonCheck(MENU_PIN, Menu, LongMenu);
+            buttMut.lock();
         }
         else if (digitalRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu && buttonPressed != LongUp)
         {
+            buttMut.unlock();
             longButtonCheck(UP_PIN, Up, LongUp);
+            buttMut.lock();
         }
         else if (digitalRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongUp && buttonPressed != LongBack && buttonPressed != LongDown && buttonPressed != LongMenu)
         {
+            buttMut.unlock();
             longButtonCheck(DOWN_PIN, Down, LongDown);
+            buttMut.lock();
         }
+        buttMut.unlock();
     }
 }
 
@@ -142,7 +163,8 @@ void initButtonTask()
         &buttonTask);
 }
 
-void deInitButtonTask() {
+void deInitButtonTask()
+{
     if (buttonTask != NULL)
     {
         debugLog("Shutting down button task");
@@ -151,17 +173,24 @@ void deInitButtonTask() {
     }
 }
 
-void wakeUpLong(int pin, buttonState normal, buttonState hold) {
+void wakeUpLong(int pin, buttonState normal, buttonState hold)
+{
     long timeTime = millis();
-    
-    while(digitalRead(pin) == HIGH && timeTime + BUTTON_LONG_PRESS_MS > millis()) {
+
+    while (digitalRead(pin) == HIGH && timeTime + BUTTON_LONG_PRESS_MS > millis())
+    {
         delayTask(SMALL_BUTTON_DELAY_MS);
     }
-    if(timeTime + BUTTON_LONG_PRESS_MS < millis()) {
+    buttMut.lock();
+    if (timeTime + BUTTON_LONG_PRESS_MS < millis())
+    {
         buttonPressed = hold;
-    } else if(digitalRead(pin) == LOW) {
+    }
+    else if (digitalRead(pin) == LOW)
+    {
         buttonPressed = normal;
     }
+    buttMut.unlock();
 }
 
 void manageButtonWakeUp()
