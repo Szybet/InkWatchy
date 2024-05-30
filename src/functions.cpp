@@ -3,13 +3,26 @@
 std::mutex serialWrite;
 #if DEBUG // For not creating the huge list
 int savedLogsIndex = 0;
-char savedLogs[2000] = {0};
-bool areLogsSaved = false;
+char *savedLogs; // [LOG_SERIAL_BUFFER_SIZE] = {0};
 
+std::mutex logFileWrite;
 bool isLogFileOpened = false;
 File logFile;
 bool disableFsLogging = false; // We can't have trying to log to littlefs while trying to init it
+int savedLogsFileIndex = 0;
+char *savedLogsFile; // [LOG_FILE_BUFFER_SIZE] = {0};
 
+void initLogs()
+{
+  savedLogs = (char *)malloc(LOG_SERIAL_BUFFER_SIZE * sizeof(char));
+  savedLogsFile = (char *)malloc(LOG_FILE_BUFFER_SIZE * sizeof(char));
+  memset(savedLogs, 0, LOG_SERIAL_BUFFER_SIZE);
+  memset(savedLogsFile, 0, LOG_FILE_BUFFER_SIZE);
+}
+
+#define LF1 "/logs1.txt"
+#define LF2 "/logs2.txt"
+#define CONF_PREVIOUS_FILE "previousLogFile"
 bool openLogFile()
 {
   if (isLogFileOpened == false)
@@ -20,15 +33,137 @@ bool openLogFile()
     {
       return false;
     }
-    logFile = LittleFS.open("/logs.txt", FILE_APPEND);
+    /*
+    MAYBE IT DOESN'T LIKE THAT THIS FILE IS OPENED SECOND TIME IN ANOTHER THREAD HUH
+    Processing backtrace: 0x4008eb2f:0x3ffcd8f0
+0x4008eb2f:0x3ffcd8f0: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/freertos/port/xtensa/xtensa_context.S:194
+
+Processing backtrace: 0x40082be1:0x3ffcd900
+0x40082be1:0x3ffcd900: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/spi_flash/spi_flash_os_func_app.c:71
+
+Processing backtrace: 0x4008eb2f:0x3ffcd920
+0x4008eb2f:0x3ffcd920: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/freertos/port/xtensa/xtensa_context.S:194
+
+Processing backtrace: 0x4008eb2f:0x3ffcd950
+0x4008eb2f:0x3ffcd950: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/freertos/port/xtensa/xtensa_context.S:194
+
+Processing backtrace: 0x4008eb2f:0x3ffcd970
+0x4008eb2f:0x3ffcd970: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/freertos/port/xtensa/xtensa_context.S:194
+
+Processing backtrace: 0x4008007d:0x3ffcd9a0
+0x4008007d:0x3ffcd9a0: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/freertos/port/xtensa/xtensa_vectors.S:1802
+
+Processing backtrace: 0x40082beb:0x3ffcd9c0
+0x40082beb:0x3ffcd9c0: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/spi_flash/spi_flash_os_func_app.c:100
+
+Processing backtrace: 0x40089315:0x3ffcd9e0
+0x40089315:0x3ffcd9e0: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/spi_flash/esp_flash_api.c:139
+
+Processing backtrace: 0x4008277a:0x3ffcda00
+0x4008277a:0x3ffcda00: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/spi_flash/esp_flash_api.c:841
+
+Processing backtrace: 0x40102c6b:0x3ffcda40
+0x40102c6b:0x3ffcda40: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/spi_flash/partition.c:424
+
+Processing backtrace: 0x4012e2f6:0x3ffcda70
+0x4012e2f6:0x3ffcda70: /Users/ficeto/Desktop/ESP32/ESP32S2/esp32-arduino-lib-builder/components/esp_littlefs/src/littlefs_api.c:21
+
+Processing backtrace: 0x4012e6c1:0x3ffcdaa0
+0x4012e6c1:0x3ffcdaa0: /Users/ficeto/Desktop/ESP32/ESP32S2/esp32-arduino-lib-builder/components/esp_littlefs/src/littlefs/lfs.c:116
+
+Processing backtrace: 0x4012e95d:0x3ffcdad0
+0x4012e95d:0x3ffcdad0: /Users/ficeto/Desktop/ESP32/ESP32S2/esp32-arduino-lib-builder/components/esp_littlefs/src/littlefs/lfs.c:1009
+
+Processing backtrace: 0x4012efc6:0x3ffcdb70
+0x4012efc6:0x3ffcdb70: /Users/ficeto/Desktop/ESP32/ESP32S2/esp32-arduino-lib-builder/components/esp_littlefs/src/littlefs/lfs.c:1394
+
+Processing backtrace: 0x40131c95:0x3ffcdbd0
+0x40131c95:0x3ffcdbd0: /Users/ficeto/Desktop/ESP32/ESP32S2/esp32-arduino-lib-builder/components/esp_littlefs/src/littlefs/lfs.c:3605
+
+Processing backtrace: 0x4012d800:0x3ffcdc20
+0x4012d800:0x3ffcdc20: /Users/ficeto/Desktop/ESP32/ESP32S2/esp32-arduino-lib-builder/components/esp_littlefs/src/esp_littlefs.c:1350
+
+Processing backtrace: 0x4010a9be:0x3ffcdd50
+0x4010a9be:0x3ffcdd50: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/vfs/vfs.c:580 (discriminator 3)
+
+Processing backtrace: 0x4018b791:0x3ffcdd70
+0x4018b791:0x3ffcdd70: /builds/idf/crosstool-NG/.build/xtensa-esp32-elf/src/newlib/newlib/libc/syscalls/sysstat.c:11
+
+Processing backtrace: 0x40183c0f:0x3ffcdd90
+0x40183c0f:0x3ffcdd90: /home/szybet/.platformio/packages/framework-arduinoespressif32@3.20011.230801/libraries/FS/src/vfs_api.cpp:44
+
+Processing backtrace: 0x400f46f5:0x3ffcde20
+0x400f46f5:0x3ffcde20: /home/szybet/.platformio/packages/framework-arduinoespressif32@3.20011.230801/libraries/FS/src/FS.cpp:234
+
+Processing backtrace: 0x400f4715:0x3ffcde50
+0x400f4715:0x3ffcde50: /home/szybet/.platformio/packages/framework-arduinoespressif32@3.20011.230801/libraries/FS/src/FS.cpp:225
+
+Processing backtrace: 0x400d7eda:0x3ffcde70
+0x400d7eda:0x3ffcde70: /mnt/data/projects/git/InkWatchy/src/hardware/fs/littlefs.cpp:123
+
+Processing backtrace: 0x400d3413:0x3ffcdef0
+0x400d3413:0x3ffcdef0: /mnt/data/projects/git/InkWatchy/src/functions.cpp:38 (discriminator 1)
+
+Processing backtrace: 0x400d3910:0x3ffcdf90
+0x400d3910:0x3ffcdf90: /mnt/data/projects/git/InkWatchy/src/functions.cpp:160
+
+Processing backtrace: 0x400d5678:0x3ffcdff0
+0x400d5678:0x3ffcdff0: /mnt/data/projects/git/InkWatchy/src/hardware/buttons.cpp:99 (discriminator 16)
+
+Processing backtrace: 0x400d57f9:0x3ffce080
+0x400d57f9:0x3ffce080: /mnt/data/projects/git/InkWatchy/src/hardware/buttons.cpp:148
+    */
+    String logFilePath = LF1;
+    if (fsGetFileSize(LF1) > MAX_LOG_FILE_SIZE_BYTES)
+    {
+      if (fsGetFileSize(LF2) > MAX_LOG_FILE_SIZE_BYTES)
+      {
+        String previousFile = fsGetString(CONF_PREVIOUS_FILE, LF1);
+        if (previousFile == LF1)
+        {
+          fsRemoveFile(LF2);
+          logFilePath = LF2;
+        }
+        else if (previousFile == LF2)
+        {
+          fsRemoveFile(LF1);
+          logFilePath = LF1;
+        }
+        else
+        {
+          debugLog("Something is wrong with log files");
+        }
+      }
+      else
+      {
+        logFilePath = LF2;
+      }
+    }
+    else
+    {
+      logFilePath = LF1;
+    }
+    fsSetString(CONF_PREVIOUS_FILE, logFilePath);
+
+    // FILE_APPEND
+    // FILE_WRITE
+    /*
+    String fileOpenMode = "w";
+    if (fsFileExists(logFilePath) == true)
+    {
+      fileOpenMode = "a";
+    }
+    */
+
+    logFile = LittleFS.open(logFilePath, FILE_APPEND);
     if (!logFile)
     {
-      debugLog("Failed to open logs"); // You can't call itself
+      debugLog("Failed to open logs");
       return false;
     }
     if (logFile.isDirectory() == true)
     {
-      debugLog("how");  // You can't call itself
+      debugLog("how");
       return false;
     }
     isLogFileOpened = true;
@@ -39,13 +174,13 @@ bool openLogFile()
 
 void flushSavedLogs()
 {
-  if (areLogsSaved == true)
+  if (savedLogsIndex > 0)
   {
-    areLogsSaved = false;
     // debugLog("Printing out saved logs");
     Serial.print(savedLogs);
     Serial.flush(true);
     savedLogsIndex = 0;
+    memset(savedLogs, 0, LOG_SERIAL_BUFFER_SIZE);
   }
 }
 
@@ -53,7 +188,12 @@ void logCleanup()
 {
   if (disableFsLogging == false)
   {
+    if (savedLogsFileIndex > 0)
+    {
+      logFile.print(savedLogsFile);
+    }
     logFile.close();
+    isLogFileOpened = false;
   }
   flushSavedLogs();
 }
@@ -61,6 +201,7 @@ void logCleanup()
 void logFunction(String file, int line, String func, String message)
 {
   String log = file + ":" + String(line) + " " + func + ": " + message + "\n";
+  int logLength = log.length();
   if (serialWrite.try_lock())
   {
     Serial.flush(true);
@@ -74,20 +215,40 @@ void logFunction(String file, int line, String func, String message)
   }
   else
   {
-    if (savedLogsIndex + log.length() < 2000)
+    if (savedLogsIndex + logLength < LOG_SERIAL_BUFFER_SIZE)
     {
-      strcpy(savedLogs + savedLogsIndex, log.c_str());
-      savedLogsIndex += log.length();
-      areLogsSaved = true;
+      // log.toCharArray(savedLogs, logLength, savedLogsIndex);
+      // strcpy(savedLogs + savedLogsIndex, log.c_str());
+      strncpy(savedLogs + savedLogsIndex, log.c_str(), logLength);
+      savedLogsIndex += logLength;
     }
   }
 #if PUT_LOGS_TO_FS
   if (disableFsLogging == false)
   {
-    if (openLogFile() == true)
+    logFileWrite.lock();
+    if (savedLogsFileIndex + logLength < LOG_FILE_BUFFER_SIZE)
     {
-      logFile.print(log);
+      // log.toCharArray(savedLogsFile, logLength, savedLogsFileIndex);
+      // strcpy(savedLogsFile + savedLogsFileIndex, log.c_str());
+      strncpy(savedLogsFile + savedLogsFileIndex, log.c_str(), logLength);
+      savedLogsFileIndex += logLength;
     }
+    else
+    {
+      if (openLogFile() == true)
+      {
+        // Serial.println("\nFile logs: " + String(savedLogsFile) + "\n End of file logs\n");
+        logFile.print(savedLogsFile);
+        logFile.print(log);
+        logFile.close();
+        isLogFileOpened = false;
+        // logFile.println("Saved to file: " + String(savedLogsFileIndex) + " bytes");
+        savedLogsFileIndex = 0;
+        memset(savedLogsFile, 0, LOG_FILE_BUFFER_SIZE);
+      }
+    }
+    logFileWrite.unlock();
   }
 #endif
 }

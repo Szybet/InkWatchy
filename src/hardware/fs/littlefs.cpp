@@ -7,7 +7,7 @@ bool fsSetup()
   if (fsInitDone == false)
   {
     debugLog("Trying to mount littleFS");
-    if (LittleFS.begin(false, "/littlefs", 65) == false)
+    if (LittleFS.begin(false, "/littlefs", 60) == false)
     {
       debugLog("Failed to mount littlefs");
       return false;
@@ -97,7 +97,7 @@ void fsAppendToFile(String path, String str)
   {
     return;
   }
-  File file = LittleFS.open(path);
+  File file = LittleFS.open(path, FILE_APPEND);
   if (!file)
   {
     debugLog("Failed to open file: " + path);
@@ -112,6 +112,62 @@ void fsAppendToFile(String path, String str)
   file.println(str);
 
   file.close();
+}
+
+size_t fsGetFileSize(String path)
+{
+  if (fsSetup() == false)
+  {
+    return 0;
+  }
+  File file = LittleFS.open(path);
+  if (!file)
+  {
+    debugLog("Failed to open file for size: " + path);
+    return 0;
+  }
+  if (file.isDirectory() == true)
+  {
+    debugLog("Is a dir: " + path);
+    return 0;
+  }
+  size_t size = file.size();
+  file.close();
+  return size;
+}
+
+void fsRemoveFile(String path)
+{
+  if (fsSetup() == false)
+  {
+    return;
+  }
+  if (LittleFS.remove(path) == false)
+  {
+    debugLog("Failed to remove file: " + path);
+  }
+}
+
+bool fsFileExists(String path)
+{
+  if (fsSetup() == false)
+  {
+    return false;
+  }
+  //bool ret = LittleFS.exists(path);
+  File f = LittleFS.open(path);
+  bool ret = false;
+  // Madness, idk
+  if (!f)
+  {
+    ret = false;
+  } else {
+    ret = true;
+    f.close();
+  }
+  
+  debugLog("File: " + path + " exists: " + BOOL_STR(ret));
+  return ret;
 }
 
 #if DEBUG
@@ -152,7 +208,7 @@ void fsListDir(String dirname, uint8_t levels)
     struct tm *tmstruct = localtime(&t);
 
     char buffer[50] = {0};
-    snprintf(buffer, sizeof(buffer), " Last write: %d-%02d-%02d %02d:%02d:%02d\n",
+    snprintf(buffer, sizeof(buffer), " Last write: %d-%02d-%02d %02d:%02d:%02d",
              (tmstruct->tm_year) + 1900, (tmstruct->tm_mon) + 1, tmstruct->tm_mday,
              tmstruct->tm_hour, tmstruct->tm_min, tmstruct->tm_sec);
 
@@ -163,7 +219,8 @@ void fsListDir(String dirname, uint8_t levels)
       debugLog("Going next level: " + String(levels));
       fsListDir(String(file.path()), levels - 1);
     }
-    file = file.openNextFile();
+    file.close();
+    file = root.openNextFile();
   }
 }
 

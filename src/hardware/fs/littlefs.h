@@ -7,6 +7,9 @@ bool fsSetup();
 void fsCreateDir(String path);
 int fsItemsInDir(String dir);
 void fsAppendToFile(String path, String str);
+size_t fsGetFileSize(String path);
+void fsRemoveFile(String path);
+bool fsFileExists(String path);
 
 extern String loadedImgNames[IMG_COUNT];
 extern ImageDef loadedImg[IMG_COUNT];
