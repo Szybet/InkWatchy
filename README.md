@@ -49,7 +49,10 @@ Apart from code things, here are the key features for now:
 <details> 
 <summary><h2>Compiling</h2></summary>
    
+> note: This only works on Debian.
+
 1. Read `platformio.ini` and choose your env. Don't use the default one for reasons. You propably want to select the `min` one. Remember to do that too if you use platformio on the terminal. Select the platformio env before running `generate.sh`. If you are not using vscode, you will need to set `PLATFORMIO_ENV_NAME` as I can't detect it without vscode. You will be prompted for that anyway
+1. a. In VS code, this is found on the platformio bar at the bottom of the window.
 2. You need to run the `generate.sh` in the `resources` folder. As mentioned before it will convert images and fonts on the fly to header files
    - Run it from the same directory it is placed in via, for example `cd resources && ./generate.sh`
    - Look at the output if you need to install any packages - for debian you will be asked a few times for sudo, it should work automatically. Feel free too contribute for other distros
@@ -61,8 +64,6 @@ Apart from code things, here are the key features for now:
    - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
    - To enable all bitcoin data, you need a coinlib api key. If you can't create an account there because of no verification email, just create an account directly with google. I have already emailed them about the issue. If no api key is supplied, It will only show the block clock.
 4. For further details and for usage instructions, go to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
-
-**Also latest stable commit: 01a3a0b68ac89ac11cbf13b9c2fe7c355e409229** Go back to it if you encounter problems. It's also possible this commit is the latest commit in this repo
 <!-- **Also latest stable commit: None** Go back to it if you encounter problems. It's also possible this commit is the latest commit in this repo -->
 
 <details> 
