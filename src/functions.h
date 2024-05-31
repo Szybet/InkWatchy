@@ -8,6 +8,7 @@ extern std::mutex serialWrite;
 void initLogs();
 void logFunction(String file, int line, String func, String message);
 void logCleanup();
+extern bool disableFsLogging;
 #endif
 bool containsBelowChar(String str);
 void delayTask(int timeMs);

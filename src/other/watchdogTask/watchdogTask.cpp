@@ -33,7 +33,7 @@ void initWatchdogTask()
     xTaskCreate(
         loopWatchdogTask,
         "watchdogTask",
-        1500,
+        2250,
         NULL,
         WATCHDOG_PRIORITY,
         &watchdogTask);
