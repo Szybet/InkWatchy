@@ -5,7 +5,7 @@
 
 void initBook();
 void loopBook();
-String bookGetPages();
+String bookGetPages(int charsPerPage = BOOK_CHARS_PER_PAGE);
 void resetBookVars();
 String getCurrentBook();
 int getLastPageNumber();

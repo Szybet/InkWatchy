@@ -40,6 +40,7 @@ String getCurrentBook()
     {
         currentBook = fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/conf/");
     }
+    debugLog("The current book is: \"" + currentBook + "\"");
     return currentBook;
 }
 
@@ -447,9 +448,9 @@ void loopBook()
     disUp();
 }
 
-String bookGetPages()
+String bookGetPages(int charsPerPage)
 {
-    return String(getPageNumber() / BOOK_CHARS_PER_PAGE + 1) + "/" + String(getLastPageNumber() / BOOK_CHARS_PER_PAGE + 1);
+    return String(getPageNumber() / charsPerPage + 1) + "/" + String(getLastPageNumber() / charsPerPage + 1);
 }
 
 void changePageUp()

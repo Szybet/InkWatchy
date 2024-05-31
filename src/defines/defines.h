@@ -124,5 +124,8 @@ extern bufSize emptyBuff;
 #if CONWAY_MODULE_ENABLED
 #include "../ui/watchfaceModules/conwayMod/conwayMod.h"
 #endif
+#if BOOK_MODULE_ENABLED
+#include "../ui/watchfaceModules/bookMod/bookMod.h"
+#endif
 
 #endif

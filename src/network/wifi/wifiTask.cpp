@@ -18,7 +18,7 @@ void createWifiTask(uint8_t tries, void (*functionToRunAfterConnection)(), uint8
         xTaskCreate(
             turnOnWifiTask,
             "wifiTask",
-            40000,
+            43000,
             NULL,
             wifiPriority,
             &wifiTask);

@@ -1,6 +1,10 @@
 #!/bin/bash
 
-OPTIONS=("1" "Patch wifi" "2" "Create demo image")
+source resources/tools/globalFunctions.sh
+
+OPTIONS=("1" "Patch wifi" 
+        "2" "Create demo image"
+        "3" "Launch watchy-scom")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -27,4 +31,9 @@ case $CHOICE in
     2)
         resources/tools/other/demoMaker.sh
         ;;
+    3)
+        baudrate=$(extract_monitor_speed platformio.ini)
+        device=$(extract_serial_port resources/tools/other/in/esptool)
+        cd ../watchy-scom/watchy-scom
+        cargo run --release -- -b $baudrate -p $device
 esac

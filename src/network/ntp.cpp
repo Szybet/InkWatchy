@@ -101,6 +101,7 @@ void syncNtp(bool doDriftThings)
     else
     {
         debugLog("NTP error");
+        timeClient.end();
         if (ntpTries < 10)
         {
             ntpTries = ntpTries + 1;
