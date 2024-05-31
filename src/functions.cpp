@@ -6,7 +6,6 @@ int savedLogsIndex = 0;
 char *savedLogs; // [LOG_SERIAL_BUFFER_SIZE] = {0};
 
 std::mutex logFileWrite;
-bool isLogFileOpened = false;
 File logFile;
 bool disableFsLogging = false; // We can't have trying to log to littlefs while trying to init it
 int savedLogsFileIndex = 0;
@@ -25,17 +24,15 @@ void initLogs()
 #define CONF_PREVIOUS_FILE "previousLogFile"
 bool openLogFile()
 {
-  if (isLogFileOpened == false)
+  // this will lock it if it will not succed
+  disableFsLogging = true;
+  if (fsSetup() == false)
   {
-    // this will lock it if it will not succed
-    disableFsLogging = true;
-    if (fsSetup() == false)
-    {
-      return false;
-    }
-    /*
-    MAYBE IT DOESN'T LIKE THAT THIS FILE IS OPENED SECOND TIME IN ANOTHER THREAD HUH
-    Processing backtrace: 0x4008eb2f:0x3ffcd8f0
+    return false;
+  }
+  /*
+  MAYBE IT DOESN'T LIKE THAT THIS FILE IS OPENED SECOND TIME IN ANOTHER THREAD HUH
+  Processing backtrace: 0x4008eb2f:0x3ffcd8f0
 0x4008eb2f:0x3ffcd8f0: /Users/ficeto/Desktop/ESP32/ESP32S2/esp-idf-public/components/freertos/port/xtensa/xtensa_context.S:194
 
 Processing backtrace: 0x40082be1:0x3ffcd900
@@ -112,63 +109,61 @@ Processing backtrace: 0x400d5678:0x3ffcdff0
 
 Processing backtrace: 0x400d57f9:0x3ffce080
 0x400d57f9:0x3ffce080: /mnt/data/projects/git/InkWatchy/src/hardware/buttons.cpp:148
-    */
-    String logFilePath = LF1;
-    if (fsGetFileSize(LF1) > MAX_LOG_FILE_SIZE_BYTES)
+  */
+  String logFilePath = LF1;
+  if (fsGetFileSize(LF1) > MAX_LOG_FILE_SIZE_BYTES)
+  {
+    if (fsGetFileSize(LF2) > MAX_LOG_FILE_SIZE_BYTES)
     {
-      if (fsGetFileSize(LF2) > MAX_LOG_FILE_SIZE_BYTES)
+      String previousFile = fsGetString(CONF_PREVIOUS_FILE, LF1);
+      if (previousFile == LF1)
       {
-        String previousFile = fsGetString(CONF_PREVIOUS_FILE, LF1);
-        if (previousFile == LF1)
-        {
-          fsRemoveFile(LF2);
-          logFilePath = LF2;
-        }
-        else if (previousFile == LF2)
-        {
-          fsRemoveFile(LF1);
-          logFilePath = LF1;
-        }
-        else
-        {
-          debugLog("Something is wrong with log files");
-        }
+        fsRemoveFile(LF2);
+        logFilePath = LF2;
+      }
+      else if (previousFile == LF2)
+      {
+        fsRemoveFile(LF1);
+        logFilePath = LF1;
       }
       else
       {
-        logFilePath = LF2;
+        debugLog("Something is wrong with log files");
       }
     }
     else
     {
-      logFilePath = LF1;
+      logFilePath = LF2;
     }
-    fsSetString(CONF_PREVIOUS_FILE, logFilePath);
-
-    // FILE_APPEND
-    // FILE_WRITE
-    /*
-    String fileOpenMode = "w";
-    if (fsFileExists(logFilePath) == true)
-    {
-      fileOpenMode = "a";
-    }
-    */
-
-    logFile = LittleFS.open(logFilePath, FILE_APPEND);
-    if (!logFile)
-    {
-      debugLog("Failed to open logs");
-      return false;
-    }
-    if (logFile.isDirectory() == true)
-    {
-      debugLog("how");
-      return false;
-    }
-    isLogFileOpened = true;
-    disableFsLogging = false;
   }
+  else
+  {
+    logFilePath = LF1;
+  }
+  fsSetString(CONF_PREVIOUS_FILE, logFilePath);
+
+  // FILE_APPEND
+  // FILE_WRITE
+  /*
+  String fileOpenMode = "w";
+  if (fsFileExists(logFilePath) == true)
+  {
+    fileOpenMode = "a";
+  }
+  */
+
+  logFile = LittleFS.open(logFilePath, FILE_APPEND);
+  if (!logFile)
+  {
+    debugLog("Failed to open logs");
+    return false;
+  }
+  if (logFile.isDirectory() == true)
+  {
+    debugLog("how");
+    return false;
+  }
+  disableFsLogging = false;
   return true;
 }
 
@@ -186,14 +181,13 @@ void flushSavedLogs()
 
 void logCleanup()
 {
-  if (disableFsLogging == false)
+  if (disableFsLogging == false && openLogFile() == true)
   {
     if (savedLogsFileIndex > 0)
     {
       logFile.print(savedLogsFile);
     }
     logFile.close();
-    isLogFileOpened = false;
   }
   flushSavedLogs();
 }
@@ -242,7 +236,6 @@ void logFunction(String file, int line, String func, String message)
         logFile.print(savedLogsFile);
         logFile.print(log);
         logFile.close();
-        isLogFileOpened = false;
         // logFile.println("Saved to file: " + String(savedLogsFileIndex) + " bytes");
         savedLogsFileIndex = 0;
         memset(savedLogsFile, 0, LOG_FILE_BUFFER_SIZE);

@@ -104,7 +104,7 @@ void vibrateMotor(int vTime, bool add)
     if (disableAllVibration == true)
     {
         debugLog("Vibrations are disabled");
-        return void();
+        return;
     }
 
     if (motorTaskRunning == false)
