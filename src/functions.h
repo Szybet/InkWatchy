@@ -7,7 +7,7 @@ extern std::mutex serialWrite;
 #if DEBUG
 void initLogs();
 void logFunction(String file, int line, String func, String message);
-void logCleanup();
+void logCleanup(bool serial = true, bool fs = true);
 extern bool disableFsLogging;
 #endif
 bool containsBelowChar(String str);
