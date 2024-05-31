@@ -12,7 +12,8 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
         debugLog("Watchy is starting!");
         // This is because we want it to be cleared on boot and on the second one (the first boot is the in demo boot)
         int firstBoot = fsGetString("firstBoot", "0").toInt();
-        if(firstBoot <= 2) {
+        if (firstBoot <= 2)
+        {
             fsSetString("firstBoot", String(firstBoot + 1));
             debugLog("This is the first boot. Clearing core dump partition");
             String res = String(esp_err_to_name(esp_core_dump_image_erase()));
@@ -124,6 +125,37 @@ void vibrateMotor(int vTime, bool add)
         vibrateTime = vibrateTime + vTime;
     }
     debugLog("Mottor task done");
+}
+
+String resetReasonToString(esp_reset_reason_t reason)
+{
+    switch (reason)
+    {
+    case ESP_RST_UNKNOWN:
+        return "ESP_RST_UNKNOWN"; // Reset reason cannot be determined
+    case ESP_RST_POWERON:
+        return "ESP_RST_POWERON"; // Reset due to power-on event
+    case ESP_RST_EXT:
+        return "ESP_RST_EXT"; // Reset by external pin (not applicable for ESP32)
+    case ESP_RST_SW:
+        return "ESP_RST_SW"; // Software reset via esp_restart
+    case ESP_RST_PANIC:
+        return "ESP_RST_PANIC"; // Software reset due to exception/panic
+    case ESP_RST_INT_WDT:
+        return "ESP_RST_INT_WDT"; // Reset (software or hardware) due to interrupt watchdog
+    case ESP_RST_TASK_WDT:
+        return "ESP_RST_TASK_WDT"; // Reset due to task watchdog
+    case ESP_RST_WDT:
+        return "ESP_RST_WDT"; // Reset due to other watchdogs
+    case ESP_RST_DEEPSLEEP:
+        return "ESP_RST_DEEPSLEEP"; // Reset after exiting deep sleep mode
+    case ESP_RST_BROWNOUT:
+        return "ESP_RST_BROWNOUT"; // Brownout reset (software or hardware)
+    case ESP_RST_SDIO:
+        return "ESP_RST_SDIO"; // Reset over SDIO
+    default:
+        return "UNKNOWN"; // Unknown reset reason
+    }
 }
 
 void setCpuMhz(cpuSpeed speed)
