@@ -12,6 +12,21 @@ void movePos(int add)
 
 void modulesButtons(buttonState bt)
 {
+    if (watchfacePos == MODULE_ENG_POS && positionEngaged == true && bt != None)
+    {
+        debugLog("Module eng entered");
+        if (bt != LongMenu)
+        {
+            wfModulesManage(bt);
+        }
+        else
+        {
+            debugLog("Dis engage mogule eng pos");
+            positionEngaged = false;
+            drawPosMarker();
+        }
+        return;
+    }
     switch (bt)
     {
     case Up:

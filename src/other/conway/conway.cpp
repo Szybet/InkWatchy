@@ -1,5 +1,6 @@
 #include "conway.h"
 
+#if CONWAY 
 // Stolen from https://github.com/delhoume/ssd1306_adafruit_game_of_life/blob/master/ssd1306_adafruit_game_of_life.ino
 
 #define CONWAY_APP_WIDTH 200
@@ -128,3 +129,4 @@ void loopConway()
     computeNewGeneration(conwayAppGrid, conwayAppNewGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH);
     drawGrid(conwayAppGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH, 0 , 0);
 }
+#endif
