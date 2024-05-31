@@ -37,6 +37,17 @@ void initDisplay(bool isFromWakeUp)
         setFont(getFont("dogicapixel4"));
         centerText(resetReasonToString(esp_reset_reason()), &h);
         display.display(FULL_UPDATE);
+        #if STOP_ON_RESET
+        for(int i = 0; i < 10; i++) {
+            Serial.println("Waiting for button input after reset...");
+            delay(100);
+        }
+        Serial.flush();
+        while(digitalRead(BACK_PIN) != HIGH && digitalRead(MENU_PIN) != HIGH && digitalRead(UP_PIN) != HIGH && digitalRead(DOWN_PIN) != HIGH) {
+            delay(1000);
+        }
+        Serial.println("Exiting the stopper...");
+        #endif
     }
     // Default values
     setFont(&FreeSansBold9pt7b);

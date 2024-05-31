@@ -1,6 +1,7 @@
 #include "watchface.h"
 
 RTC_DATA_ATTR tmElements_t wFTime;
+RTC_DATA_ATTR bool disableSomeDrawing = false;
 
 void initWatchfaceDisplay()
 {
@@ -52,29 +53,35 @@ void loopWatchfaceLoop()
     wFTime.Minute = timeRTC->Minute;
     wFTime.Hour = timeRTC->Hour;
 
-    drawTimeAfterApply();
-
-    if (wFTime.Day != timeRTC->Day)
+    if (disableSomeDrawing == false)
     {
-      wFTime.Day = timeRTC->Day;
-      drawDay();
-    }
+      drawTimeAfterApply();
 
-    if (wFTime.Month != timeRTC->Month)
-    {
-      wFTime.Month = timeRTC->Month;
-      drawMonth();
+      if (wFTime.Day != timeRTC->Day)
+      {
+        wFTime.Day = timeRTC->Day;
+        drawDay();
+      }
+
+      if (wFTime.Month != timeRTC->Month)
+      {
+        wFTime.Month = timeRTC->Month;
+        drawMonth();
+      }
     }
 
     wfModulesManage(None);
   }
 
   // Hmm this could be in the minute checker
-  if (batteryPercantageWF != bat.percentage)
+  if (disableSomeDrawing == false)
   {
-    batteryPercantageWF = bat.percentage;
-    drawBattery();
-    dUChange = true;
+    if (batteryPercantageWF != bat.percentage)
+    {
+      batteryPercantageWF = bat.percentage;
+      drawBattery();
+      dUChange = true;
+    }
   }
 
   buttonState bt = useButton();

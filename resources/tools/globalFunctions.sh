@@ -70,3 +70,13 @@ extract_serial_port() {
   last_port=$(echo "$output" | grep "Serial port" | awk '{print $3}' | tail -n 1)
   echo -n "$last_port"
 }
+
+extract_monitor_speed() {
+    local file_path="$1"
+    if [[ -f "$file_path" ]]; then
+        local result=$(grep 'monitor_speed' "$file_path" | awk '{print $3}')
+        echo -n "$result"
+    else
+        echo "File not found: $file_path"
+    fi
+}
