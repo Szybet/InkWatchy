@@ -27,15 +27,20 @@ void initDisplay(bool isFromWakeUp)
     }
     display.setTextColor(GxEPD_BLACK);
 
+    if (isFromWakeUp == false)
+    {
+        setFont(&FreeSansBold9pt7b);
+        setTextSize(1);
+        uint16_t h = 100;
+        centerText("Reset", &h);
+        h = h + 11;
+        setFont(getFont("dogicapixel4"));
+        centerText(resetReasonToString(esp_reset_reason()), &h);
+        display.display(FULL_UPDATE);
+    }
     // Default values
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
-    if (isFromWakeUp == false)
-    {
-        display.setCursor(100, 100);
-        display.print("Reset.");
-        display.display(FULL_UPDATE);
-    }
 }
 
 RTC_DATA_ATTR int updateCounter = 0;
@@ -70,7 +75,7 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
     if (ignoreSleep == false && updatedScreen == false)
     {
         // debugLog("Sleeping task because display had no update");
-#if DEBUG == false        
+#if DEBUG == false
         delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
 #endif
     }

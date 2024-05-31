@@ -13,7 +13,7 @@ extern TaskHandle_t motorTask;
 extern bool motorTaskRunning;
 void vibrateMotor(int vTime = VIBRATION_BUTTON_TIME, bool add = true);
 
-typedef enum 
+typedef enum
 {
     minimalSpeed,
     normalSpeed,
@@ -21,6 +21,7 @@ typedef enum
 } cpuSpeed;
 
 void setCpuMhz(cpuSpeed speed);
+String resetReasonToString(esp_reset_reason_t reason);
 
 #if DEBUG
 void initHardwareDebug();
