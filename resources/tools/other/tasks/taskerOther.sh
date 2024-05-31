@@ -4,7 +4,8 @@ source resources/tools/globalFunctions.sh
 
 OPTIONS=("1" "Patch wifi" 
         "2" "Create demo image"
-        "3" "Launch watchy-scom")
+        "3" "Launch watchy-scom"
+        "4" "Compile, Upload, Scom")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -36,4 +37,13 @@ case $CHOICE in
         device=$(extract_serial_port resources/tools/other/in/esptool)
         cd ../watchy-scom/watchy-scom
         cargo run --release -- -b $baudrate -p $device
+        ;;
+    4)
+        baudrate=$(extract_monitor_speed platformio.ini)
+        device=$(extract_serial_port resources/tools/other/in/esptool)
+        pio_env=$(get_pio_env .vscode/launch.json)
+        pio run -e $pio_env -t upload --upload-port $device
+        cd ../watchy-scom/watchy-scom
+        cargo run --release -- -b $baudrate -p $device
+        ;;
 esac
