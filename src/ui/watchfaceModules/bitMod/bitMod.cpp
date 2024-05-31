@@ -60,6 +60,10 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         return;
     }
 #endif
+    if(button == Down) {
+        smallBtcData = !smallBtcData;
+        clearModuleArea();
+    }
     debugLog("Launched");
     loadBitcoinData();
     if (smallBtcData == true)
@@ -110,6 +114,30 @@ void wfBitrequestShow(buttonState button, bool *showBool)
     }
     else
     {
+        // Sync time
+        setFont(getFont("dogicapixel4"));
+        setTextSize(1);
+        display.setCursor(MODULE_RECT_X + MODULE_W - 60, MODULE_RECT_Y + 7 - 1); // font is 7 pixels
+        display.print("Last sync:");
+
+        setFont(getFont("dogicapixel4"));
+        display.setCursor(MODULE_RECT_X + MODULE_W, MODULE_RECT_Y + 7);
+        String lastSync = "Never";
+        if (isBtcDataAvail == true)
+        {
+            uint diff = getHourDifference(getUnixTime(), btcData.lastSyncUnix);
+            // uint diff = btcLastUpdate + 1;
+            btcLastUpdate = diff;
+            debugLog("diff: " + String(diff));
+            lastSync = String(diff) + "h ago";
+        }
+        uint16_t h;
+        uint16_t w;
+        getTextBounds(lastSync, NULL, NULL, &w, &h);
+        display.setCursor(MODULE_RECT_X + MODULE_W - w - SYNC_INFO_OFFSET, MODULE_RECT_Y + 7 + h + SYNC_INFO_OFFSET);
+        display.print(lastSync);
+
+        // Bitclock
         display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + MODULE_H - 1);
         setFont(getFont("smileandwave20"));
         setTextSize(1);

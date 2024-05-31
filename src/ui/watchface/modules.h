@@ -3,9 +3,10 @@
 
 #include "../../defines/defines.h"
 
-#define WATCHFACE_POSITIONS 2 // There is one "empty" on 0 too
+#define WATCHFACE_POSITIONS 3 // There is one "empty" on 0 too ????????
 #define EMPTY_POS 0
 #define MODULE_POS 1
+#define MODULE_ENG_POS 2
 
 extern RTC_DATA_ATTR int watchfacePos;
 extern RTC_DATA_ATTR bool positionEngaged;
