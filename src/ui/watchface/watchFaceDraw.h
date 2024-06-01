@@ -28,4 +28,10 @@ void drawBattery();
 
 void showFullWatchface();
 
+#define SOME_RECT_X 0
+#define SOME_RECT_Y 62
+#define SOME_RECT_W 200
+#define SOME_RECT_H 138
+void cleanSomeDrawing(); // disableSomeDrawing
+
 #endif

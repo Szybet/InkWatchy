@@ -10,7 +10,11 @@ void resetBookVars();
 String getCurrentBook();
 int getLastPageNumber();
 void exitBook();
-void changePageDown();
-void changePageUp();
+void changePageDown(int charsPerPage = BOOK_CHARS_PER_PAGE, bool regularShow = true);
+void changePageUp(int charsPerPage = BOOK_CHARS_PER_PAGE, bool regularShow = true);
+String showPage(int page, bool actuallyShowIt = true, int charsPerPage = BOOK_CHARS_PER_PAGE);
+int getPageNumber();
+extern uint16_t startHeightBook;
+void calculateBookTextHeight();
 
 #endif

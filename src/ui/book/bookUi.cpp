@@ -96,7 +96,7 @@ int getLastPageNumber()
 }
 
 String test = "jqyQRTY";
-uint16_t startHeight;
+uint16_t startHeightBook = 0;
 int16_t staAx_X;
 int16_t staAx_Y;
 int16_t staAx_Z;
@@ -143,26 +143,31 @@ void resetStartAxc()
 
 bool openedBook = false;
 File bookFile;
-void showPage(int page)
+String showPage(int page, bool actuallyShowIt, int charsPerPage)
 {
     resetSleepDelayBook();
-    setFont(BOOK_FONT);
-    setTextSize(1);
+    if (actuallyShowIt == true)
+    {
+        setFont(BOOK_FONT);
+        setTextSize(1);
 
-    display.setCursor(1, startHeight);
-    display.fillScreen(GxEPD_WHITE);
+        display.setCursor(1, startHeightBook);
+        display.fillScreen(GxEPD_WHITE);
+    }
     if (openedBook == false)
     {
         bookFile = LittleFS.open("/book/" + getCurrentBook());
         if (bookFile.isDirectory() == true)
         {
-            debugLog("This file is a dir: " + String("/book/") + getCurrentBook());
-            return;
+            String theLog = "This file is a dir: " + String("/book/") + getCurrentBook();
+            debugLog(theLog);
+            return theLog;
         }
         if (bookFile == false)
         {
-            debugLog("File is not available:" + String("/book/") + getCurrentBook());
-            return;
+            String theLog = "File is not available:" + String("/book/") + getCurrentBook();
+            debugLog(theLog);
+            return theLog;
         }
         debugLog("book size: " + String(bookFile.size()));
         openedBook = true;
@@ -176,9 +181,23 @@ void showPage(int page)
     str = str.substring(0, BOOK_CHARS_PER_PAGE);
     free(buf);
     debugLog("book str is now: " + str);
-    display.print(str);
+    if (actuallyShowIt == true)
+    {
+        display.print(str);
+    }
     // display.print(fsGetString(String(getPageNumber()), "Failed to open page: " + String(getPageNumber()) + " book isin't probably in filesystem?", "/book/"));
     dUChange = true;
+    return str;
+}
+
+void calculateBookTextHeight()
+{
+    setFont(BOOK_FONT);
+    setTextSize(1);
+    getTextBounds(test, NULL, NULL, NULL, &startHeightBook);
+    // startHeightBook = startHeightBook - 3;
+    startHeightBook = startHeightBook + 2;
+    display.setTextWrap(true);
 }
 
 void initBook()
@@ -194,14 +213,7 @@ void initBook()
     initAxc();
     SBMA.enableAccel();
     resetStartAxc();
-
-    setFont(BOOK_FONT);
-    setTextSize(1);
-    getTextBounds(test, NULL, NULL, NULL, &startHeight);
-    // startHeight = startHeight - 3;
-    startHeight = startHeight + 2;
-    display.setTextWrap(true);
-
+    calculateBookTextHeight();
     int currPage = getPageNumber();
     /*
     if (currPage > getLastPageNumber() && currPage >= 0)
@@ -453,30 +465,40 @@ String bookGetPages(int charsPerPage)
     return String(getPageNumber() / charsPerPage + 1) + "/" + String(getLastPageNumber() / charsPerPage + 1);
 }
 
-void changePageUp()
+void changePageUp(int charsPerPage, bool regularShow)
 {
-    resetSleepDelayBook();
+    if(regularShow == true) {
+        resetSleepDelayBook();
+    }
     int page = getPageNumber();
-    page = page + BOOK_CHARS_PER_PAGE;
+    page = page + charsPerPage;
     if (page > getLastPageNumber())
     {
         return void();
     }
     setPageNumber(page);
-    showPage(page);
+    if (regularShow == true)
+    {
+        showPage(page);
+    }
 }
 
-void changePageDown()
+void changePageDown(int charsPerPage, bool regularShow)
 {
-    resetSleepDelayBook();
+    if(regularShow == true) {
+        resetSleepDelayBook();
+    }
     int page = getPageNumber();
-    page = page - BOOK_CHARS_PER_PAGE;
+    page = page - charsPerPage;
     if (page <= -1)
     {
         return void();
     }
     setPageNumber(page);
-    showPage(page);
+    if (regularShow == true)
+    {
+        showPage(page);
+    }
 }
 
 void resetBookVars()

@@ -15,7 +15,7 @@ void syncNtp(bool doDriftThings)
     WiFiUDP ntpUDP;
     NTPClient timeClient(ntpUDP);
     timeClient.begin();
-    if (timeClient.update() == true)
+    if (timeClient.forceUpdate() == true)
     {
         timeClient.setTimeOffset(TIME_OFFSET_S);
         time_t epochTime = timeClient.getEpochTime();
@@ -34,6 +34,7 @@ void syncNtp(bool doDriftThings)
         }
         else
         {
+            // It runs it 2 times then compares the time
             int difference = abs(epochTime - currentTime);
             debugLog("difference: " + String(difference));
             if (difference > 5)

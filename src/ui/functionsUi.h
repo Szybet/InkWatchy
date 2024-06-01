@@ -27,6 +27,7 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef* image = &emptyIm
 void simpleCenterText(String text);
 void textPage(String title, String *strList, int listCount);
 void drawProgressBar(int x, int y, int width, int height, int progress);
+sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y);
 
 extern const GFXfont *font;
 extern uint16_t maxHeight;

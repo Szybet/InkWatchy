@@ -164,15 +164,16 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
   {
     display.setTextWrap(true);
     getTextBounds(str, &tx, &ty, &tw, &th);
-    //debugLog("tw: " + String(tw) + " th: " + String(th));
-    //debugLog("tx: " + String(tx) + " ty: " + String(ty));
+    // debugLog("tw: " + String(tw) + " th: " + String(th));
+    // debugLog("tx: " + String(tx) + " ty: " + String(ty));
     size.w += tw;
     size.w += 1;
-    if(size.w > display.width() - toleranceSize) {
-      //th = th * 2;
+    if (size.w > display.width() - toleranceSize)
+    {
+      // th = th * 2;
       doubleLine = true;
       size.h = size.h + toleranceSize;
-      //debugLog("Second line in print button...");
+      // debugLog("Second line in print button...");
     }
   }
 
@@ -219,21 +220,26 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
   if (str != "")
   {
     int yCursorTmp = 0;
-    if(doubleLine == false) {
-      //yCursorTmp = th;
+    if (doubleLine == false)
+    {
+      // yCursorTmp = th;
       yCursorTmp = size.h - ((size.h - th) / 2) - 1;
       if (containsBelowChar(str) == true)
       {
-        //debugLog("We are below char for string: " + str);
+        // debugLog("We are below char for string: " + str);
         yCursorTmp = yCursorTmp - 3;
-      } else {
-        //debugLog("Below char not applied for string: " + str);
       }
-    } else {
+      else
+      {
+        // debugLog("Below char not applied for string: " + str);
+      }
+    }
+    else
+    {
       yCursorTmp = th / 2;
     }
     canvasTmp.setCursor(canvasTmp.getCursorX(), yCursorTmp); // -1 for reasons? -3 for cutted j g etc.
-    //debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()) + "x" + String(canvasTmp.getCursorY()));
+    // debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()) + "x" + String(canvasTmp.getCursorY()));
     canvasTmp.print(str);
   }
 
@@ -330,4 +336,17 @@ void drawProgressBar(int x, int y, int width, int height, int progress)
       display.drawPixel(x + i + 1, y + j + 1, GxEPD_BLACK);
     }
   }
+}
+
+sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y)
+{
+  uint16_t h = 0;
+  uint16_t w = 0;
+  setFont(getFont(font));
+  setTextSize(1);
+  getTextBounds(text, NULL, NULL, &w, &h);
+  display.setCursor(x, y + h);
+  display.print(text);
+  dUChange = true;
+  return {w, h}; // hm?
 }
