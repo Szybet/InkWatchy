@@ -28,7 +28,7 @@ void initLogs()
 #if PUT_LOGS_TO_FS
 #define LF1 "/logs1.txt"
 #define LF2 "/logs2.txt"
-#define CONF_PREVIOUS_FILE "previousLogFile"
+#define CONF_PREVIOUS_FILE "previous_log"
 bool openLogFile()
 {
   // this will lock it if it will not succed

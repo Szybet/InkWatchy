@@ -63,7 +63,7 @@ partition_table.append("#Name,Type,SubType,Offset,Size,Flags\n")
 partition_table.append(f"app,app,factory,0x{app_partition_offset:x},{hex(app_partition_size_bytes)},\n")
 partition_table.append(f"coredump,data,coredump,,0x{coredump_partition_size_bytes:x},\n")
 partition_table.append(f"nvs,data,nvs,,0x{nvs_partition_size_bytes:x},\n")
-partition_table.append(f"spiffs,data,spiffs,,{hex(spiffs_partition_size_bytes)},\n")
+partition_table.append(f"littlefs,data,undefined,,{hex(spiffs_partition_size_bytes)},\n")
 
 # Write the partition table to a file
 partition_table_path = "in/partitions.csv"

@@ -7,7 +7,7 @@ bool fsSetup()
   if (fsInitDone == false)
   {
     debugLog("Trying to mount littleFS");
-    if (LittleFS.begin(false, "/littlefs", 60) == false)
+    if (LittleFS.begin(false, "/littlefs", 100, "littlefs") == false)
     {
       debugLog("Failed to mount littlefs");
       return false;
@@ -29,6 +29,8 @@ bool fsSetup()
 
       fsCreateDir("/conf");
       isDebug(fsListDir("/", 0));
+      debugLog("Little fs total bytes: " + String(LittleFS.totalBytes()));
+      debugLog("Little fs used bytes: " + String(LittleFS.usedBytes()));
     }
   }
   return true;
