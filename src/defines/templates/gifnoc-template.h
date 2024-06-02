@@ -29,33 +29,8 @@
 #define WIFI_MULTI_SYNC_TIME 8000          // Ms, time for waiting to connect to wifi
 #define WIFI_MULTI_ERROR_TIME 1000         // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
 
-// Conway
-#define CONWAY 1
-
-// Watchface modules
-#define MODULE_PERSISTENT 1         // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen
-#define UPDATE_MODULE_IF_CHARGING 0 // Update modules very fast if its charging, not only every minute
-#define WIFI_MODULE 1
-#define BITCOIN_MODULE 1   // Remember to define the api key for it in confidential.h
-#define SMALL_BTC_MODULE 1 // At default, show the small btc module mode, if 0 show the bigger one
-
-#define CONWAY_MODULE 1                  // Conway module. to make it enabled CONWAY itself needs to be enabled
-#define CONWAY_MODULE_GRID_PERCANTAGE 50 // Percentage of initial grid filling
-#if CONWAY && CONWAY_MODULE
-#define CONWAY_MODULE_ENABLED 1
-#endif
-
-// Priorities - max is 24
-#define MAIN_LOOP_PRIORITY 16
-#define WIFI_PRIORITY_REGULAR 12
-#define BUTTONS_PRIORITY 6
-#define WIFI_PRIORITY_PERSISTENT 5
-#define SCOM_PRIORITY 3
-#define MOTOR_PRIORITY 0
-#define WATCHDOG_PRIORITY 0
-
 // Book things
-#define BOOK 0
+#define BOOK 1
 #define BOOK_ADD_SLEEP_DELAY_MS 60000
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_UP 300
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_DOWN 250
@@ -68,6 +43,36 @@
 #define BOOK_AXC_DIFFERENCE_CHANGE 15
 #define BOOK_CHARS_PER_PAGE 200 // This is dependent on the font. It must be Mono
 #define BOOK_FONT getFont("UbuntuMono-Regular10")
+
+// Conway
+#define CONWAY 1
+
+// Watchface modules
+#define MODULE_PERSISTENT 1         // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen
+#define UPDATE_MODULE_IF_CHARGING 0 // Update modules very fast if its charging, not only every minute
+#define WIFI_MODULE 1
+#define BITCOIN_MODULE 1   // Remember to define the api key for it in confidential.h
+#define SMALL_BTC_MODULE 1 // At default, show the small btc module mode, if 0 show the bigger one
+#define BITCOIN_SYNC_TRIES 3
+#define CONWAY_MODULE 1                  // Conway module. to make it enabled CONWAY itself needs to be enabled
+#define CONWAY_MODULE_GRID_PERCANTAGE 50 // Percentage of initial grid filling
+#if CONWAY && CONWAY_MODULE
+#define CONWAY_MODULE_ENABLED 1
+#endif
+#define BOOK_MODULE 1
+#define BOOK_MODULE_CHARS_PER_PAGE 140
+#if BOOK && BOOK_MODULE
+#define BOOK_MODULE_ENABLED 1
+#endif
+
+// Priorities - max is 24
+#define MAIN_LOOP_PRIORITY 16
+#define WIFI_PRIORITY_REGULAR 12
+#define BUTTONS_PRIORITY 6
+#define WIFI_PRIORITY_PERSISTENT 5
+#define SCOM_PRIORITY 3
+#define MOTOR_PRIORITY 0
+#define WATCHDOG_PRIORITY 0
 
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
@@ -117,12 +122,13 @@
 #define VOLTAGE_PRINT_ON 0         // Prints voltage on the screen, really fast
 #define DISABLE_SLEEP 0 // Disable sleep, so it will never go to sleep. Good for SCOM_TASK
 #define PUT_LOGS_TO_SERIAL 1 // Puts logs to serial. Turn off if you want debug on the go
-#define PUT_LOGS_TO_FS 0 // Puts logs into littlefs
+#define PUT_LOGS_TO_FS 1 // Puts logs into littlefs
 #define WAIT_FOR_MONITOR 0 // If debug is enabled, waits for monitor in setup for 3000 ms
 // Ah... too much allocated memory... 10 hours of my life...
 #define LOG_SERIAL_BUFFER_SIZE 300
 #define LOG_FILE_BUFFER_SIZE 3000
 #define MAX_LOG_FILE_SIZE_BYTES 100000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs
+#define STOP_ON_RESET 1 // Stop the device until the reset is cleared, it doesn't do that if it's sure that it was a forced reset (esptool one)
 
 #define SCOM_TASK 0          // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
 #if SCOM_TASK == 1 && DEBUG == 1
