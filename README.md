@@ -22,18 +22,23 @@ It doesn't use the watchy sub-class but it uses the same libraries. With that in
 - Many debugging tools in config.h
 - Most UI is rendered only when needed / values it's showing changed. Good for battery life
 - <sub> Proper variable naming and camelCase everywhere</sub>
+- LittleFS is used instead of NVS. Which means better code, logs in file system. Awesome
 
 </details>
 
 ## User features
 Apart from code things, here are the key features for now:
+- Easy to install [demo](https://github.com/Szybet/InkWatchy/wiki/Trying-out-the-demo-firmware) (no compiling!)
 - Full weather info via open weather api in charts, 5 day forecast
-- A book reader, with pages changable by moving your hand
+- A book reader
+   - with pages changable by moving your hand
+   - Support for many books
 - Working, uncomplete watchface
    - Watchface modules (Apps which are shown on the watchface directly). COnfigured to be shown on the bottom of the watchface. They can be configured as "dissmissable" so
       - Bitcoin module, which shows some data, here is an example:
         
         ![image](https://github.com/Szybet/InkWatchy/assets/53944559/01a01c95-f797-44e5-aac1-7a8f9458c5a6)
+         - Now it also has a "Big" mode to be truly a "bitclock"
       - A simple net module which just shows wifi status and SSID. It's more of an example imlementation than a serious module (for now)
       - A conway game of life module - which updates every minute
 - Debug menus to check on things on the fly
@@ -43,71 +48,19 @@ Apart from code things, here are the key features for now:
       - Disable wake up - The watch will sleep until you press a button
       - Disable all vibrations (For button clicks) - Spikes caused by the motor are heavy for the battery
 - A "vault" which allows to save encrypted images to the watchy and view them if provided the correct PIN. All generated dynamically via a script. Uses AES128 cbc/ecb. Example use is a backup phone book
+- Reset cause shower. If your battery will be the cause of a reset, you will be informed about it on boot.
 - I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.
 - https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.
 
-<details> 
-<summary><h2>Compiling</h2></summary>
-   
-1. Read `platformio.ini` and choose your env. Don't use the default one for reasons. You propably want to select the `min` one. Remember to do that too if you use platformio on the terminal. Select the platformio env before running `generate.sh`. If you are not using vscode, you will need to set `PLATFORMIO_ENV_NAME` as I can't detect it without vscode. You will be prompted for that anyway
-2. You need to run the `generate.sh` in the `resources` folder. As mentioned before it will convert images and fonts on the fly to header files
-   - Run it from the same directory it is placed in via, for example `cd resources && ./generate.sh`
-   - Look at the output if you need to install any packages - for debian you will be asked a few times for sudo, it should work automatically. Feel free too contribute for other distros
-      - Don't assumie pio will download them. no.
-   - Version 6.9.11-60 of ImageMagick (`convert` command) doesn't work, gives black squares as a result. Version 7.1.1-27 works for me. On debian as mentioned the script will try to overwrite it using an appimage
-   - You need also `xxd`, newer is better
-   - For more dependiecies look at `resources/other/packages.sh`
-3. After running `generate.sh`, it will create your personal config files. After that you can adjust values in `config.h` and `confidential.h` (in `src/defines/` directory) to your needs. **DO NOT EDIT ANYTHING IN TEMPLATES DIRECTORY. IT WILL DO NOTHING :(** 
-   - DEBUG and various other debugging options are helpfull to debug things but eat battery. On the final compilation disable them
-   - To enable all bitcoin data, you need a coinlib api key. If you can't create an account there because of no verification email, just create an account directly with google. I have already emailed them about the issue. If no api key is supplied, It will only show the block clock.
-4. For further details and for usage instructions, go to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
-
-**Also latest stable commit: 01a3a0b68ac89ac11cbf13b9c2fe7c355e409229** Go back to it if you encounter problems. It's also possible this commit is the latest commit in this repo
-<!-- **Also latest stable commit: None** Go back to it if you encounter problems. It's also possible this commit is the latest commit in this repo -->
-
-<details> 
-<summary><h2>Updating the firmware to a newer commit</h2></summary>
-
-To update the firmware to a newer commit:
-- pull the repo obviously
-- Update your `config.h` and `confidential.h`:
-   - Use a diff tool and update the files with the new values
-   - Or if you don't care about your changes or didn't changed anything, just delete the files. The next step will regenerate them. Deleting one of them will update both of them. Update the scripts if you don't want this to work like that
-- Run Generate resources once more, to generate new fonts & images
-- Compile. If there are any compile errors referencing and "undefined" value, contact me. I might have forgot to update the template file
-
-</details>
-
-<details> 
-<summary><h2>So you are a interested developer?</h2></summary>
-
-Some informations which you could find helpfull:
-- Feel free to ask questions
-- For writing your own watchface you could just modify watchFaceDraw.cpp file. If you write one, You can make it turn on off via config.h and merge it to the main repo :D
-- Submodules are written relatively to the main coordinate so you can eassly move them arround, but the original size must remain. Or you can not implement them at all too
-- I listed many things in `Code features` that make my code *good*. But as the project expanded and my brain failed from time to time because coding at 2 is actually a bad idea, there are some things that even I know about that are bad:
-   - Submodules should be pure OOP and not retarded OOP structures.
- 
-They need to be ramede, so before you touch it, repair them or I will do it
-
- Obiously feel free to complain and even help!
-
-</details>
-
-</details>
-
-
-<details> 
-<summary><h2>Troubleshooting</h2></summary>
-   
-### Your newly uploaded firmware looks like this?
-![image](https://github.com/Szybet/InkWatchy/assets/53944559/c2424301-219d-41b3-9bef-9d2cc47a2fd4)
-- Your image magick (`convert` command) is too old. Check the compilation section once again. If you want, contribute support for you distro / clear bugs to help me make this issue appear less
-
-</details>
+## Compiling, Some instructions, Further informations
+Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 
 ## Donations
-This was the first thing I have written and asked myself if I should release it for free. Well here we are - I also write other open source things - check my profile for more eink stuff. Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a option. 
+~~This was the first thing I have written and asked myself if I should release it for free. Well here we are ;)~~
+
+This is a passion project at this point. To help an open source developer - who is still a student and motivate him to create this software feel free to donate
+
+Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a option. 
 
 Oh and as it seems bitcoin is also preferred, just contact me and ask me for an address because creating a new address for every transaction is more secure, right?
 
