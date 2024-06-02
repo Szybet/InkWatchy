@@ -7,7 +7,7 @@ void wifiSyncModules()
 {
     syncWeather();
 #if BITCOIN_MODULE
-    bitcoinSync();
+    bitcoinSync(1);
 #endif
 }
 

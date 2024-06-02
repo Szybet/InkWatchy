@@ -60,7 +60,8 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         return;
     }
 #endif
-    if(button == Down) {
+    if (button == Down)
+    {
         smallBtcData = !smallBtcData;
         clearModuleArea();
     }
@@ -158,52 +159,62 @@ RTC_DATA_ATTR wfModule wfBit = {
     wfBitrequestShow,
 };
 
-void bitcoinSync()
+void bitcoinSync(uint8_t tries)
 {
     debugLog("Launching bitcoinSync");
+    if(tries > BITCOIN_SYNC_TRIES) {
+        debugLog("Too many tries, exiting");
+        return;
+    }
     BlockClockClient btcApi(COIN_LIB_API_KEY);
     String height = btcApi.getBlockHeight();
     debugLog("Got bitcoin height: " + height);
 
     btcData.height = height.toInt();
 
-    if (COIN_LIB_API_KEY != "")
+    if (height != 0)
     {
-        PriceData prices = btcApi.getBitcoinPrice();
-        if (prices.error == false)
+        btcData.lastSyncUnix = getUnixTime();
+        saveBitcoinData();
+        isBtcDataNew = true;
+        if (COIN_LIB_API_KEY != "")
         {
-            debugLog("price " + String(prices.price));
-            debugLog("change1h " + String(prices.change1h));
-            debugLog("change24h " + String(prices.change24h));
-            debugLog("change7d " + String(prices.change7d));
-            debugLog("change30d " + String(prices.change30d));
-            btcData.price = prices.price.toFloat();
-            btcData.change1h = prices.change1h;
-            btcData.change24 = prices.change24h;
-            btcData.change7d = prices.change7d;
-            btcData.change30d = prices.change30d;
+            PriceData prices = btcApi.getBitcoinPrice();
+            if (prices.error == false)
+            {
+                debugLog("price " + String(prices.price));
+                debugLog("change1h " + String(prices.change1h));
+                debugLog("change24h " + String(prices.change24h));
+                debugLog("change7d " + String(prices.change7d));
+                debugLog("change30d " + String(prices.change30d));
+                btcData.price = prices.price.toFloat();
+                btcData.change1h = prices.change1h;
+                btcData.change24 = prices.change24h;
+                btcData.change7d = prices.change7d;
+                btcData.change30d = prices.change30d;
+            }
+            else
+            {
+                debugLog("Failed to get prices of btc");
+                btcData.price = 0.0;
+                btcData.change1h = 0.0;
+                btcData.change24 = 0.0;
+                btcData.change7d = 0.0;
+                btcData.change30d = 0.0;
+            }
         }
         else
         {
-            debugLog("Failed to get prices of btc");
             btcData.price = 0.0;
             btcData.change1h = 0.0;
             btcData.change24 = 0.0;
             btcData.change7d = 0.0;
             btcData.change30d = 0.0;
         }
+    } else {
+        bitcoinSync(tries + 1);
+        return;
     }
-    else
-    {
-        btcData.price = 0.0;
-        btcData.change1h = 0.0;
-        btcData.change24 = 0.0;
-        btcData.change7d = 0.0;
-        btcData.change30d = 0.0;
-    }
-    btcData.lastSyncUnix = getUnixTime();
-    saveBitcoinData();
-    isBtcDataNew = true;
 }
 
 #endif

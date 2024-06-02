@@ -19,6 +19,7 @@ void wfBookrequestShow(buttonState button, bool *showBool)
         {
             disableSomeDrawing = true;
             calculateBookTextHeight();
+            startHeightBook = startHeightBook - 3;
             showPageChecker = true;
         }
         else
