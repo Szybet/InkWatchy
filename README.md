@@ -22,7 +22,7 @@ It doesn't use the watchy sub-class but it uses the same libraries. With that in
 - Many debugging tools in config.h
 - Most UI is rendered only when needed / values it's showing changed. Good for battery life
 - <sub> Proper variable naming and camelCase everywhere</sub>
-- LittleFS is used instead of NVS. Which means better code, logs in file system. Awesome
+- LittleFS is used instead of NVS. Which means better code, logs in file system. Resources not uploaded on every program change. Awesome
 
 </details>
 
