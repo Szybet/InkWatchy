@@ -31,6 +31,7 @@ bool fsSetup()
       isDebug(fsListDir("/", 0));
       debugLog("Little fs total bytes: " + String(LittleFS.totalBytes()));
       debugLog("Little fs used bytes: " + String(LittleFS.usedBytes()));
+      debugLog(String(NAME_MAX));
     }
   }
   return true;

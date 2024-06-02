@@ -20,7 +20,7 @@ extern RTC_DATA_ATTR bool isBtcDataNew;
 
 
 extern RTC_DATA_ATTR wfModule wfBit;
-void bitcoinSync();
+void bitcoinSync(uint8_t tries);
 
 #endif
 #endif

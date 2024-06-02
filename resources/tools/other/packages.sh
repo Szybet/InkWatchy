@@ -48,12 +48,15 @@ fi
 
 if [ ! -f "fs/in/mklittlefs" ]; then
     echo "Downloading mklittlefs"
-    wget -q -O mklittlefs.tar.gz https://github.com/earlephilhower/mklittlefs/releases/download/3.2.0/x86_64-linux-gnu-mklittlefs-975bd0f.tar.gz
-    tar -xf mklittlefs.tar.gz
-    chmod +x mklittlefs/mklittlefs
-    mv mklittlefs/mklittlefs fs/in/
-    rm -rf mklittlefs
-    rm -rf mklittlefs.tar.gz
+    #wget -q -O mklittlefs.tar.gz https://github.com/earlephilhower/mklittlefs/releases/download/3.2.0/x86_64-linux-gnu-mklittlefs-975bd0f.tar.gz
+    #tar -xf mklittlefs.tar.gz
+    #chmod +x mklittlefs/mklittlefs
+    #mv mklittlefs/mklittlefs fs/in/
+    #rm -rf mklittlefs
+    #rm -rf mklittlefs.tar.gz
+    wget -q -O mklittlefs https://github.com/Szybet/mklittlefs/releases/download/3.2.0/mklittlefs
+    chmod +x mklittlefs
+    mv mklittlefs fs/in/
 fi
 
 if [ ! -f "other/in/esptool" ]; then

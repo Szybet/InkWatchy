@@ -175,10 +175,10 @@ String showPage(int page, bool actuallyShowIt, int charsPerPage)
     }
     debugLog("Seeking the file to: " + String(page));
     bookFile.seek(page, SeekSet);
-    uint8_t *buf = (uint8_t *)malloc(BOOK_CHARS_PER_PAGE * sizeof(uint8_t));
-    bookFile.read(buf, BOOK_CHARS_PER_PAGE);
+    uint8_t *buf = (uint8_t *)malloc(charsPerPage * sizeof(uint8_t));
+    bookFile.read(buf, charsPerPage);
     String str = String((char *)buf);
-    str = str.substring(0, BOOK_CHARS_PER_PAGE);
+    str = str.substring(0, charsPerPage);
     free(buf);
     debugLog("book str is now: " + str);
     if (actuallyShowIt == true)
@@ -474,7 +474,7 @@ void changePageUp(int charsPerPage, bool regularShow)
     page = page + charsPerPage;
     if (page > getLastPageNumber())
     {
-        return void();
+        page = getLastPageNumber() - charsPerPage;
     }
     setPageNumber(page);
     if (regularShow == true)
@@ -492,7 +492,7 @@ void changePageDown(int charsPerPage, bool regularShow)
     page = page - charsPerPage;
     if (page <= -1)
     {
-        return void();
+        page = 0;
     }
     setPageNumber(page);
     if (regularShow == true)
