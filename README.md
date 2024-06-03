@@ -48,7 +48,7 @@ Apart from code things, here are the key features for now:
    - A menu to manually, or after certain battery percantage drop enable these features:
       - Disable wake up - The watch will sleep until you press a button
       - Disable all vibrations (For button clicks) - Spikes caused by the motor are heavy for the battery
-- A "vault" which allows to save encrypted images to the watchy and view them if provided the correct PIN. All generated dynamically via a script. Uses AES128 cbc/ecb. Example use is a backup phone book
+- A "vault" which allows to save encrypted images to the watchy and view them if provided the correct PIN. All generated dynamically via a script. Uses AES128 cbc/ecb. Example use is a backup phone book, bitcoin key backup in the form of a QR code
 - Reset cause shower. If your battery will be the cause of a reset, you will be informed about it on boot.
 - I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.
 - https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.
