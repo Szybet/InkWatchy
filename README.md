@@ -65,6 +65,8 @@ Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a
 
 Oh and as it seems bitcoin is also preferred, just contact me and ask me for an address because creating a new address for every transaction is more secure, right?
 
+For a small coffe donation I can manage your firmware and provide you personalised binaries, if you can't compile it yourself
+
 ## Sister projects
 - https://github.com/Szybet/E-Watch-FOSS
 - https://github.com/Szybet/watchy-scom
