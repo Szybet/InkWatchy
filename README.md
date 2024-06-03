@@ -80,7 +80,7 @@ Create a github issue or get in touch with me on Watchy or Quill OS discord serv
 
 or via matrix: @szybet:matrix.org
 
-### [Outdated demo of version 0.1](https://www.youtube.com/watch?v=gFOCqalJidQ)
+## [Outdated demo of version 0.1](https://www.youtube.com/watch?v=gFOCqalJidQ)
 
 ## Some credits
 - [GuruSR](https://github.com/GuruSR/Watchy_GSR) - I used some of his awesome libraries and looked at the code for how the watchy hardware should be handled. Also answered a few questions on discord. Thanks!
