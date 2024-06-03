@@ -1,29 +1,13 @@
 # InkWatchy
 A new innovative **firmware** written from the ground up for the [watchy](https://watchy.sqfmi.com/), by the second developer of [Quill OS](https://github.com/Quill-OS/quill) 
 
-### [Outdated demo](https://www.youtube.com/watch?v=gFOCqalJidQ)
+<p align="center">
+  <img src="https://github.com/Szybet/InkWatchy/assets/53944559/0c85d516-ff50-4440-9351-32780107e998" alt="02-demo-10mb""/>
+</p>
 
-<details> 
-<summary><h2>Code features</h2></summary>
-
-It doesn't use the watchy sub-class but it uses the same libraries. With that in mind, those are further diffrences from other firmwares:
-<sub>Every small text is a reason why I was mad enough to rewrite everything myself...</sub>
-- It's splitted into files and folders <sub>In my opinion a file that has 5k lines is heresy</sub>
-- It's function - not object based for the reason above and to make it easier for beginners to use
-- It uses free rtos tasks where needed
-- All resources like images, fonts, books are converted into variables dynamically via scripts. Editing images, changing font spacing is just one click. <sub>I can't believe I was the first to make this that way</sub>
-- The Ui is dynamically written. There are functions to do it eassly. Adding a new menu is just a few lines for example<sub>It's not just a collection of drawBitmap</sub>
-- It has a "manager" and design for various apps to run eassly
-- Has logs via serial. They can be disabled that they don't get compiled with changing one define - and the code doesn't look bad because it's a macro. Amazing <sub>Yea, this is a feature compared to other ones I have looked at</sub>
-- Uses libraries instead of pure calls to NTP or open weather
-- Many configurable values via defines in config.h
-- Many debugging tools in config.h
-- Most UI is rendered only when needed / values it's showing changed. Good for battery life
-- <sub> Proper variable naming and camelCase everywhere</sub>
-- LittleFS is used instead of NVS. Which means better code, logs in file system. Resources not uploaded on every program change. Awesome
-- Various tasks which speed up the debugging / development process (`resources/tools/other/tasks`)
-
-</details>
+<p align="center">
+<sub>This 3> minute demo was heavily compressed, so it looks like it looks. The speed is also messed up because of missing frames</sub>
+</p>
 
 ## User features
 Apart from code things, here are the key features for now:
@@ -51,6 +35,28 @@ Apart from code things, here are the key features for now:
 - I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.
 - https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.
 
+<details> 
+<summary><h2>Code features</h2></summary>
+
+It doesn't use the watchy sub-class but it uses the same libraries. With that in mind, those are further diffrences from other firmwares:
+<sub>Every small text is a reason why I was mad enough to rewrite everything myself...</sub>
+- It's splitted into files and folders <sub>In my opinion a file that has 5k lines is heresy</sub>
+- It's function - not object based for the reason above and to make it easier for beginners to use
+- It uses free rtos tasks where needed
+- All resources like images, fonts, books are converted into variables dynamically via scripts. Editing images, changing font spacing is just one click. <sub>I can't believe I was the first to make this that way</sub>
+- The Ui is dynamically written. There are functions to do it eassly. Adding a new menu is just a few lines for example<sub>It's not just a collection of drawBitmap</sub>
+- It has a "manager" and design for various apps to run eassly
+- Has logs via serial. They can be disabled that they don't get compiled with changing one define - and the code doesn't look bad because it's a macro. Amazing <sub>Yea, this is a feature compared to other ones I have looked at</sub>
+- Uses libraries instead of pure calls to NTP or open weather
+- Many configurable values via defines in config.h
+- Many debugging tools in config.h
+- Most UI is rendered only when needed / values it's showing changed. Good for battery life
+- <sub> Proper variable naming and camelCase everywhere</sub>
+- LittleFS is used instead of NVS. Which means better code, logs in file system. Resources not uploaded on every program change. Awesome
+- Various tasks which speed up the debugging / development process (`resources/tools/other/tasks`)
+
+</details>
+
 ## Compiling, Some instructions, Further informations
 Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 
@@ -69,11 +75,13 @@ For a small coffe donation I can manage your firmware and provide you personalis
 - https://github.com/Szybet/E-Watch-FOSS
 - https://github.com/Szybet/watchy-scom
 
-## Some credits
-- [GuruSR](https://github.com/GuruSR/Watchy_GSR) - I used some of his awesome libraries and looked at the code for how the watchy hardware should be handled. Also answered a few questions on discord. Thanks!
-- [Prokuon](https://github.com/Prokuon/watchy-starfield/) - I really liked the design of this watchface and almost coppied it. Thanks! - well the code is completly diffrent
-
 ## Questions / Contact
 Create a github issue or get in touch with me on Watchy or Quill OS discord server ( Or other discord communication channels )
 
 or via matrix: @szybet:matrix.org
+
+## [Outdated demo of version 0.1](https://www.youtube.com/watch?v=gFOCqalJidQ)
+
+## Some credits
+- [GuruSR](https://github.com/GuruSR/Watchy_GSR) - I used some of his awesome libraries and looked at the code for how the watchy hardware should be handled. Also answered a few questions on discord. Thanks!
+- [Prokuon](https://github.com/Prokuon/watchy-starfield/) - I really liked the design of this watchface and almost coppied it. Thanks! - well the code is completly diffrent
