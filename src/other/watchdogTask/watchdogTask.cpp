@@ -9,7 +9,7 @@ void loopWatchdogTask(void *parameter)
 {
     debugLog("Watchdog starting");
     while(true) {
-        delayTask(15000);
+        delayTask(30000);
         // debugLog("Watchdog cycle");
         if(digitalRead(BACK_PIN) == HIGH && digitalRead(MENU_PIN) == HIGH && digitalRead(UP_PIN) == HIGH && digitalRead(DOWN_PIN) == HIGH) {
             debugLog("Detected all buttons high, resetting...");
@@ -22,7 +22,7 @@ void loopWatchdogTask(void *parameter)
         } else {
             everythingIsFine = false;
             watchdogFine.unlock();
-            delayTask(15000);
+            delayTask(30000);
         }
     }
 }
@@ -33,7 +33,7 @@ void initWatchdogTask()
     xTaskCreate(
         loopWatchdogTask,
         "watchdogTask",
-        3500,
+        TASK_STACK_WATCHDOG,
         NULL,
         WATCHDOG_PRIORITY,
         &watchdogTask);

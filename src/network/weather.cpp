@@ -9,6 +9,7 @@ void syncWeather()
 {
   if (OPEN_WEATHER_API_KEY != "" && WEATHER_LONGTIT != "" && WEATHER_LATIT != "")
   {
+    debugLog("Starting weather forecast");
     forecast = new OW_forecast;
     bool status = ow.getForecast(forecast, OPEN_WEATHER_API_KEY, WEATHER_LATIT, WEATHER_LONGTIT, WEATHER_UNIT, WEATHER_LANG, false);
     debugLog("Weather forecast finished: " + BOOL_STR(status));

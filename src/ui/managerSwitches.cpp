@@ -128,8 +128,8 @@ void showTemp()
 #if DEBUG
     for (int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++)
     {
-        debugLog(String(i) + " : " + String(tempMax[i]));
-        debugLog(String(i) + " : " + String(tempMin[i]));
+        //debugLog(String(i) + " : " + String(tempMax[i]));
+        //debugLog(String(i) + " : " + String(tempMin[i]));
     }
 #endif
 
@@ -168,7 +168,7 @@ void showPressure()
 #if DEBUG
     for (int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++)
     {
-        debugLog(String(i) + " : " + String(pressure[i]));
+        //debugLog(String(i) + " : " + String(pressure[i]));
     }
 #endif
 
@@ -207,7 +207,7 @@ void showHumidity()
 #if DEBUG
     for (int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++)
     {
-        debugLog(String(i) + " : " + String(humidity[i]));
+       //debugLog(String(i) + " : " + String(humidity[i]));
     }
 #endif
 
@@ -246,7 +246,7 @@ void showWeatherCond()
 #if DEBUG
     for (int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++)
     {
-        debugLog(String(i) + " : " + String(weatherCond[i]));
+        //debugLog(String(i) + " : " + String(weatherCond[i]));
     }
 #endif
 
@@ -285,7 +285,7 @@ void showClouds()
 #if DEBUG
     for (int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++)
     {
-        debugLog(String(i) + " : " + String(clouds[i]));
+        //debugLog(String(i) + " : " + String(clouds[i]));
     }
 #endif
 
@@ -324,7 +324,7 @@ void showWindSpeed()
 #if DEBUG
     for (int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++)
     {
-        debugLog(String(i) + " : " + String(windSpeed[i]));
+        //debugLog(String(i) + " : " + String(windSpeed[i]));
     }
 #endif
 
@@ -363,7 +363,7 @@ void showWindGuts()
 #if DEBUG
     for (int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++)
     {
-        debugLog(String(i) + " : " + String(windGusts[i]));
+        //debugLog(String(i) + " : " + String(windGusts[i]));
     }
 #endif
 
@@ -402,7 +402,7 @@ void showVisibility()
 #if DEBUG
     for (int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++)
     {
-        debugLog(String(i) + " : " + String(visibility[i]));
+        //debugLog(String(i) + " : " + String(visibility[i]));
     }
 #endif
 
@@ -441,7 +441,7 @@ void showPop()
 #if DEBUG
     for (int i = 0; i < MAX_DAYS * WEATHER_PER_DAY; i++)
     {
-        debugLog(String(i) + " : " + String(pop[i]));
+        //debugLog(String(i) + " : " + String(pop[i]));
     }
 #endif
 

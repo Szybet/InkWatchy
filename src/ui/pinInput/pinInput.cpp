@@ -17,7 +17,9 @@ void showPin()
     display.fillScreen(GxEPD_WHITE);
     setTextSize(1);
     uint16_t currentHeight = 30;
+    //debugLog("Current height before center text: " + String(currentHeight));
     centerText(newPin, &currentHeight);
+    //debugLog("Current heigh after center text: " + String(currentHeight));
     setTextSize(2);
 
     currentHeight = currentHeight + 5;
@@ -76,6 +78,7 @@ void initPinInput()
     newPin = "";
     currentPinButton = 5;
     setFont(getFont("JackInput17"));
+    maxHeight = 0;
     showPin();
 }
 

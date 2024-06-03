@@ -157,7 +157,7 @@ void initButtonTask()
     xTaskCreate(
         loopButtonsTask,
         "buttonTask",
-        5000, // Too much but handling fs logging takes a bit more
+        TASK_STACK_BUTTON, // Too much but handling fs logging takes a bit more
         NULL,
         BUTTONS_PRIORITY,
         &buttonTask);

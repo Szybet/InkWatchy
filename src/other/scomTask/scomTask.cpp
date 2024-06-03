@@ -160,7 +160,7 @@ void initScomTask()
     xTaskCreate(
         loopScomTask,
         "scomTask",
-        13000, // because of huge list we copy
+        TASK_STACK_SCOM, // because of huge list we copy
         NULL,
         SCOM_PRIORITY,
         &scomTask);
