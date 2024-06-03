@@ -31,6 +31,18 @@ filename="src/defines/config.h"
 
 sed -i "s/$old_string/$new_string/g" "$filename"
 
+old_string="#define WIFI_SSID1 \"\""
+new_string="#define WIFI_SSID1 \"hotspot\""
+filename="src/defines/confidential.h"
+
+sed -i "s/$old_string/$new_string/g" "$filename"
+
+old_string="#define WIFI_PASS1 \"\""
+new_string="#define WIFI_PASS1 \"12345678\""
+filename="src/defines/confidential.h"
+
+sed -i "s/$old_string/$new_string/g" "$filename"
+
 # To apply those things
 cd resources/tools/
 export PLATFORMIO_ENV_NAME="min"
