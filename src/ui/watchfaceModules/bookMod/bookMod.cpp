@@ -15,7 +15,7 @@ void wfBookrequestShow(buttonState button, bool *showBool)
     {
     case Menu:
     {
-        if (disableSomeDrawing == true)
+        if (watchfacePos == MODULE_ENG_POS && positionEngaged == true)
         {
             if (disableSomeDrawing == false)
             {
