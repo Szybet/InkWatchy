@@ -1,7 +1,5 @@
 # InkWatchy
-A new **firmware** written  from the ground up for the [watchy](https://watchy.sqfmi.com/), written by the second developer of [Quill OS](https://github.com/Quill-OS/quill) 
-
-<sub>Quill OS was named InkBox OS which explains the name of this project but it was rebranded and now I'm stuck with this name :D</sub>
+A new innovative **firmware** written from the ground up for the [watchy](https://watchy.sqfmi.com/), by the second developer of [Quill OS](https://github.com/Quill-OS/quill) 
 
 ### [Outdated demo](https://www.youtube.com/watch?v=gFOCqalJidQ)
 
