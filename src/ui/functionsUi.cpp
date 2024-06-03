@@ -24,6 +24,7 @@ void writeLine(String strToWrite, int cursorX, uint16_t *currentHeight)
   *currentHeight = *currentHeight + maxHeight;
 }
 
+// Remember to reset maxHeight if you don't use it
 void centerText(String str, uint16_t *currentHeight)
 {
   uint16_t w;

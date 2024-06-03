@@ -114,7 +114,7 @@ void vibrateMotor(int vTime, bool add)
         xTaskCreate(
             vibrateMotorTaskFun,
             "motorTask",
-            1500,
+            TASK_STACK_VIBRATION,
             NULL,
             MOTOR_PRIORITY,
             &motorTask);

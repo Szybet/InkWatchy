@@ -15,17 +15,20 @@ void wfBookrequestShow(buttonState button, bool *showBool)
     {
     case Menu:
     {
-        if (disableSomeDrawing == false)
+        if (disableSomeDrawing == true)
         {
-            disableSomeDrawing = true;
-            calculateBookTextHeight();
-            startHeightBook = startHeightBook - 3;
-            showPageChecker = true;
-        }
-        else
-        {
-            disableSomeDrawing = false;
-            showFullWatchface();
+            if (disableSomeDrawing == false)
+            {
+                disableSomeDrawing = true;
+                calculateBookTextHeight();
+                startHeightBook = startHeightBook - 3;
+                showPageChecker = true;
+            }
+            else
+            {
+                disableSomeDrawing = false;
+                showFullWatchface();
+            }
         }
         break;
     }

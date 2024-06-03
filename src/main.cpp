@@ -62,7 +62,7 @@ void setup()
   xTaskCreate(
       dumpBatteryScreen,
       "dumpBatteryTask",
-      2000,
+      TASK_STACK_DUMP_BATTERY,
       NULL,
       0,
       nullptr);
@@ -80,6 +80,7 @@ void setup()
   }
 
   initWatchdogTask();
+  watchdogPing();
 }
 
 void loop()

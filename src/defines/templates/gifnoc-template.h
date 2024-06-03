@@ -30,7 +30,7 @@
 #define WIFI_MULTI_ERROR_TIME 1000         // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
 
 // Book things
-#define BOOK 1
+#define BOOK 0
 #define BOOK_ADD_SLEEP_DELAY_MS 60000
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_UP 300
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_DOWN 250
@@ -184,6 +184,14 @@
 // Other other
 #define IMG_COUNT 30
 #define FONT_COUNT 30
+
+// Task memory size
+#define TASK_STACK_DUMP_BATTERY 2000
+#define TASK_STACK_BUTTON 4700
+#define TASK_STACK_VIBRATION 1500
+#define TASK_STACK_WIFI 37500
+#define TASK_STACK_SCOM 10000
+#define TASK_STACK_WATCHDOG 3500
 
 // Config
 #define CONF_BOOK_CURRENT_PAGE "current_page_"

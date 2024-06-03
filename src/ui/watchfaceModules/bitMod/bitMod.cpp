@@ -21,11 +21,17 @@ void loadBitcoinData()
 {
     size_t dataSize = sizeof(bitcoinData);
     bufSize serializedData = fsGetBlob(CONF_BITCOIN);
+    debugLog("bitcoin serializedData.size: " + String(serializedData.size));
 
     if (serializedData.size != dataSize)
     {
         debugLog("Bitcoin data size is wrong");
         isBtcDataAvail = false;
+        if (serializedData.buf != NULL && serializedData.size != 0)
+        {
+            debugLog("Freeing bitcoin?");
+            free(serializedData.buf);
+        }
         return;
     }
     memcpy(&btcData, serializedData.buf, dataSize);
@@ -101,7 +107,7 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         display.setCursor(MODULE_RECT_X + MODULE_W - w - SYNC_INFO_OFFSET, MODULE_RECT_Y + 7 + h + SYNC_INFO_OFFSET);
         display.print(lastSync);
 
-        if (btcData.change1h != 0.0 || btcData.change24 != 0.0 || btcData.change7d != 0.0 || btcData.change30d != 0.0 || btcData.price != 00)
+        if (btcData.change1h != 0.0 || btcData.change24 != 0.0 || btcData.change7d != 0.0 || btcData.change30d != 0.0 || btcData.price != 0.0)
         {
             display.setCursor(MODULE_RECT_X + getImgWidth("bitcoin"), MODULE_RECT_Y + getImgHeight("bitcoin") - 2);
             setFont(getFont("dogicapixel4"));
@@ -111,6 +117,10 @@ void wfBitrequestShow(buttonState button, bool *showBool)
             display.print("1h:" + String(btcData.change1h) + "% 24h:" + String(btcData.change24) + "%");
             display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + getImgHeight("bitcoin") * 3);
             display.print("7d:" + String(btcData.change7d) + "% 30d:" + String(btcData.change30d) + "%");
+        }
+        else
+        {
+            debugLog("Not printing btc data?");
         }
     }
     else
@@ -162,7 +172,8 @@ RTC_DATA_ATTR wfModule wfBit = {
 void bitcoinSync(uint8_t tries)
 {
     debugLog("Launching bitcoinSync");
-    if(tries > BITCOIN_SYNC_TRIES) {
+    if (tries > BITCOIN_SYNC_TRIES)
+    {
         debugLog("Too many tries, exiting");
         return;
     }
@@ -175,8 +186,6 @@ void bitcoinSync(uint8_t tries)
     if (height != 0)
     {
         btcData.lastSyncUnix = getUnixTime();
-        saveBitcoinData();
-        isBtcDataNew = true;
         if (COIN_LIB_API_KEY != "")
         {
             PriceData prices = btcApi.getBitcoinPrice();
@@ -211,7 +220,11 @@ void bitcoinSync(uint8_t tries)
             btcData.change7d = 0.0;
             btcData.change30d = 0.0;
         }
-    } else {
+        saveBitcoinData();
+        isBtcDataNew = true;
+    }
+    else
+    {
         bitcoinSync(tries + 1);
         return;
     }

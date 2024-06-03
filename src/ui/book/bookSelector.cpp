@@ -1,5 +1,7 @@
 #include "bookSelector.h"
 
+#if BOOK
+
 void initBookSelector()
 {
     debugLog("Current book: " + fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/conf/"));
@@ -54,3 +56,4 @@ void selectedBook()
     setButton(Back);
     resetBookVars();
 }
+#endif
