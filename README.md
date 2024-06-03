@@ -23,6 +23,7 @@ It doesn't use the watchy sub-class but it uses the same libraries. With that in
 - Most UI is rendered only when needed / values it's showing changed. Good for battery life
 - <sub> Proper variable naming and camelCase everywhere</sub>
 - LittleFS is used instead of NVS. Which means better code, logs in file system. Resources not uploaded on every program change. Awesome
+- Various tasks which speed up the debugging / development process (`resources/tools/other/tasks`)
 
 </details>
 
