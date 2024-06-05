@@ -16,6 +16,7 @@
 #include <LittleFS.h>
 #include <mutex>
 #include <esp_core_dump.h>
+#include "esp_wifi.h"
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false

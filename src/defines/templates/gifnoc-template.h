@@ -127,7 +127,7 @@
 // Ah... too much allocated memory... 10 hours of my life...
 #define LOG_SERIAL_BUFFER_SIZE 300
 #define LOG_FILE_BUFFER_SIZE 3000
-#define MAX_LOG_FILE_SIZE_BYTES 100000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs
+#define MAX_LOG_FILE_SIZE_BYTES 100000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs, 400000 is the max in my opinion
 #define STOP_ON_RESET 1 // Stop the device until the reset is cleared, it doesn't do that if it's sure that it was a forced reset (esptool one)
 
 #define SCOM_TASK 0          // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
