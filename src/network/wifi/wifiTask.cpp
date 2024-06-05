@@ -39,8 +39,8 @@ void turnOnWifiTask(void *parameter)
             debugLog("Setting sleep mode for wifi");
         }
         // We don't have NVS anymore
-        //esp_wifi_set_storage(WIFI_STORAGE_RAM);
-        //WiFi.persistent(false);
+        // esp_wifi_set_storage(WIFI_STORAGE_RAM);
+        // WiFi.persistent(false);
         // Won't work, fuck IDF for forcing that. We need a NVS partition
         // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/partition-tables.html
         // 0x3000 bytes we need
@@ -78,13 +78,20 @@ void turnOnWifiTask(void *parameter)
 
 void turnOffWifiMinimal()
 {
-    WiFi.disconnect(true);
-    WiFi.mode(WIFI_OFF);
+    if(WiFi.disconnect(true) == false) {
+        debugLog("Failed to disconnect from wifi? turning it off anyway");
+        if(WiFi.mode(WIFI_OFF) == false) {
+            debugLog("Failed to force set mode of wifi, doing manual esp idf way");
+            debugLog("esp_wifi_deinit: " + String(esp_err_to_name(esp_wifi_deinit())));
+            debugLog("esp_wifi_stop: " + String(esp_err_to_name(esp_wifi_stop())));
+        }
+    }
 }
 
 void turnOffWifi()
 {
     debugLog("Turning wifi off");
+    turnOffWifiMinimal();
     if (isWifiTaskCheck() == true)
     {
         vTaskDelete(wifiTask);
