@@ -127,8 +127,11 @@
 // Ah... too much allocated memory... 10 hours of my life...
 #define LOG_SERIAL_BUFFER_SIZE 300
 #define LOG_FILE_BUFFER_SIZE 3000
+// Max file size for littlefs: 2Gb
+// https://github.com/littlefs-project/littlefs/issues/738
 #define MAX_LOG_FILE_SIZE_BYTES 100000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs, 400000 is the max in my opinion
 #define STOP_ON_RESET 1 // Stop the device until the reset is cleared, it doesn't do that if it's sure that it was a forced reset (esptool one)
+#define SERIAL_LOG_DELAY_MS 15
 
 #define SCOM_TASK 0          // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
 #if SCOM_TASK == 1 && DEBUG == 1
@@ -188,7 +191,7 @@
 // Task memory size
 #define TASK_STACK_DUMP_BATTERY 2000
 #define TASK_STACK_BUTTON 4700
-#define TASK_STACK_VIBRATION 1500
+#define TASK_STACK_VIBRATION 3500
 #define TASK_STACK_WIFI 37500
 #define TASK_STACK_SCOM 10000
 #define TASK_STACK_WATCHDOG 3500
