@@ -98,6 +98,8 @@ void logCleanup(bool serial, bool fs)
       if (savedLogsFileIndex > 0)
       {
         logFile.print(savedLogsFile);
+        savedLogsFileIndex = 0;
+        memset(savedLogsFile, 0, LOG_FILE_BUFFER_SIZE);
       }
       logFile.close();
     }
@@ -126,9 +128,11 @@ void logFunction(String file, int line, String func, String message)
   if (serialWrite.try_lock())
   {
     Serial.flush(true);
+    delayTask(SERIAL_LOG_DELAY_MS);
     logCleanup(true, false);
     Serial.print(log);
     Serial.flush(true);
+    delayTask(SERIAL_LOG_DELAY_MS);
     serialWrite.unlock();
 #if SCOM_TASK_ENABLED
     printEndPacket = true;

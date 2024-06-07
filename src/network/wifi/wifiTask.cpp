@@ -11,10 +11,13 @@ void (*wifiFunction)() = NULL;
 
 void createWifiTask(uint8_t tries, void (*functionToRunAfterConnection)(), uint8_t wifiPriority)
 {
+    debugLog("Creating wifi task");
     wifiConnectionTries = tries;
     wifiFunction = functionToRunAfterConnection;
     if (isWifiTaskCheck() == false)
     {
+        debugLog("xTaskCreate wifi");
+        setBoolMutex(&wifiTaskMutex, &isWifiTaskRunning, true); // To make sure it's fast enough
         xTaskCreate(
             turnOnWifiTask,
             "wifiTask",
@@ -22,6 +25,8 @@ void createWifiTask(uint8_t tries, void (*functionToRunAfterConnection)(), uint8
             NULL,
             wifiPriority,
             &wifiTask);
+    } else {
+        debugLog("The task is already running? why?");
     }
 }
 
@@ -78,12 +83,17 @@ void turnOnWifiTask(void *parameter)
 
 void turnOffWifiMinimal()
 {
-    if(WiFi.disconnect(true) == false) {
-        debugLog("Failed to disconnect from wifi? turning it off anyway");
-        if(WiFi.mode(WIFI_OFF) == false) {
-            debugLog("Failed to force set mode of wifi, doing manual esp idf way");
-            debugLog("esp_wifi_deinit: " + String(esp_err_to_name(esp_wifi_deinit())));
-            debugLog("esp_wifi_stop: " + String(esp_err_to_name(esp_wifi_stop())));
+    if (WiFi.getMode() != WIFI_OFF)
+    {
+        if (WiFi.disconnect(true) == false)
+        {
+            debugLog("Failed to disconnect from wifi? turning it off anyway");
+            if (WiFi.mode(WIFI_OFF) == false)
+            {
+                debugLog("Failed to force set mode of wifi, doing manual esp idf way");
+                debugLog("esp_wifi_deinit: " + String(esp_err_to_name(esp_wifi_deinit())));
+                debugLog("esp_wifi_stop: " + String(esp_err_to_name(esp_wifi_stop())));
+            }
         }
     }
 }
@@ -91,9 +101,11 @@ void turnOffWifiMinimal()
 void turnOffWifi()
 {
     debugLog("Turning wifi off");
-    turnOffWifiMinimal();
     if (isWifiTaskCheck() == true)
     {
+        // This is because task `arduino_events` has a queue and communicated with wifi task. Idk about this fix
+        vTaskSuspend(wifiTask);
+        delayTask(500);
         vTaskDelete(wifiTask);
         setBoolMutex(&wifiTaskMutex, &isWifiTaskRunning, false);
     }

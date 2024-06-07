@@ -48,11 +48,12 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     esp_err_t status = esp_pm_configure(&pm_config);
     debugLog("Configuring pm status: " + String(esp_err_to_name(status)));
     */
-    initDisplay(isFromWakeUp);
-    resetSleepDelay();
 
     pinMode(VIB_MOTOR_PIN, OUTPUT);
     digitalWrite(VIB_MOTOR_PIN, false); // To reset the motor button if esp crashed when it was vibrating
+
+    initDisplay(isFromWakeUp);
+    resetSleepDelay();
 }
 
 void resetSleepDelay(int addMs)
@@ -88,6 +89,7 @@ void vibrateMotorTaskFun(void *parameter)
     motorTaskRunning = true;
     debugLog("Motor on");
     int vibrateTimeout = vibrateTime / VIBRATION_DIVINE;
+    debugLog("vibrateTime: " + String(vibrateTime) + " vibrateTimeout: " + String(vibrateTimeout) + " VIBRATION_DIVINE: " + String(VIBRATION_DIVINE));
     for (int i = 0; i < vibrateTime / VIBRATION_DIVINE; i++)
     {
         digitalWrite(VIB_MOTOR_PIN, true);
@@ -110,6 +112,7 @@ void vibrateMotor(int vTime, bool add)
 
     if (motorTaskRunning == false)
     {
+        debugLog("Creating motor task");
         vibrateTime = vTime;
         xTaskCreate(
             vibrateMotorTaskFun,
