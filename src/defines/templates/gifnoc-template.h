@@ -65,20 +65,11 @@
 #define BOOK_MODULE_ENABLED 1
 #endif
 
-// Priorities - max is 24
-#define MAIN_LOOP_PRIORITY 16
-#define WIFI_PRIORITY_REGULAR 12
-#define BUTTONS_PRIORITY 6
-#define WIFI_PRIORITY_PERSISTENT 5
-#define SCOM_PRIORITY 3
-#define MOTOR_PRIORITY 0
-#define WATCHDOG_PRIORITY 0
-
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
 #define NIGHT_SLEEP_AFTER_HOUR 23
 #define NIGHT_SLEEP_BEFORE_HOUR 5
-#define SLEEP_EVERY_MS 6000               // 180000 // Goes to sleep timer, is resetted by button presses and other things
+#define SLEEP_EVERY_MS 15000               // 180000 // Goes to sleep timer, is resetted by button presses and other things
 #define POWER_SAVING_AFTER 60             // Turn on power saving features after a certain battery percantage.
 #define POWER_SAVING_OFF_AFTER 20         // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
 #define LOOP_NO_SCREEN_WRITE_DELAY_MS 125 // Go to "sleep" for 200 ms if the device is woken up ( in a menu for example )
@@ -102,7 +93,7 @@
 
 // Advanced
 #define BUTTON_TASK_DELAY 60 // In ms, lower means faster button detection but more cpu usage
-#define TIME_FOR_WATCHFACE_TO_SHOW_MS 1500
+#define TIME_FOR_WATCHFACE_TO_SHOW_MS 2000
 #define ADD_BUTTON_DELAY 1.5
 #define SMALL_BUTTON_DELAY_MS 15
 #define BAT_MINIMAL_DIFFERENCE 0.02
@@ -131,7 +122,7 @@
 // https://github.com/littlefs-project/littlefs/issues/738
 #define MAX_LOG_FILE_SIZE_BYTES 100000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs, 400000 is the max in my opinion
 #define STOP_ON_RESET 1 // Stop the device until the reset is cleared, it doesn't do that if it's sure that it was a forced reset (esptool one)
-#define SERIAL_LOG_DELAY_MS 15
+#define SERIAL_LOG_DELAY_MS 35
 
 #define SCOM_TASK 0          // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
 #if SCOM_TASK == 1 && DEBUG == 1
@@ -195,6 +186,15 @@
 #define TASK_STACK_WIFI 37500
 #define TASK_STACK_SCOM 10000
 #define TASK_STACK_WATCHDOG 3500
+
+// Priorities - max is 24
+#define MAIN_LOOP_PRIORITY 20
+#define WIFI_PRIORITY_REGULAR 10
+#define BUTTONS_PRIORITY 12
+#define WIFI_PRIORITY_PERSISTENT 4
+#define SCOM_PRIORITY 3
+#define MOTOR_PRIORITY 1
+#define WATCHDOG_PRIORITY 1
 
 // Config
 #define CONF_BOOK_CURRENT_PAGE "current_page_"

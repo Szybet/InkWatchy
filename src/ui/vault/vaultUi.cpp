@@ -21,7 +21,7 @@ String keyToString()
 
 bool checkKey()
 {
-    //debugLog("Starting decrypting: " + String(millis()));
+    // debugLog("Starting decrypting: " + String(millis()));
 
     String encCheck = fsGetString("check_enc", "", "/vault/conf/");
     if (encCheck == "")
@@ -59,7 +59,7 @@ bool checkKey()
     int resultCrypt = mbedtls_aes_crypt_ecb(&aes, MBEDTLS_AES_DECRYPT, realImage, realImage);
     debugLog("resultCrypt: " + String(resultCrypt));
 
-    //debugLog("Finished decrypting: " + String(millis()));
+    // debugLog("Finished decrypting: " + String(millis()));
 
     mbedtls_aes_free(&aes);
 
@@ -117,7 +117,7 @@ String getSault()
     int resultCrypt = mbedtls_aes_crypt_ecb(&aes, MBEDTLS_AES_DECRYPT, realImage, realImage);
     debugLog("resultCrypt: " + String(resultCrypt));
 
-    //debugLog("Finished decrypting: " + String(millis()));
+    // debugLog("Finished decrypting: " + String(millis()));
 
     mbedtls_aes_free(&aes);
 
@@ -193,13 +193,13 @@ void initVault()
             file.close();
             root.close();
 
-            initMenu(buttons, itemsInDir, "Vault", 1);
-            generalSwitch(generalMenuPlace);
+            initMenu(buttons, itemsInDir, "Vault");
+            generalSwitch(vaultMenu);
         }
         else
         {
             showVaultImage(foundMenuItemName);
-            generalSwitch(imagePlace);
+            generalSwitch(vaultImage);
             lastMenuSelected = "";
         }
     }
@@ -207,16 +207,24 @@ void initVault()
 
 void loopVault()
 {
+    useButtonBlank();
 }
 
 void exitVault()
 {
     debugLog("Exiting vault");
-    if (currentPlace == FIRST_PLACE)
+    debugLog("currentPlace: " + String(currentPlace));
+    debugLog("placeTree[currentPlaceIndex]: " + String(placeTree[currentPlaceIndex]));
+    if (currentPlace == FIRST_PLACE || currentPlace == NoPlace || placeTree[currentPlaceIndex] == FIRST_PLACE || placeTree[currentPlaceIndex] == NoPlace)
     {
         debugLog("Cleaning key");
         key = -1;
         key = 0;
+    }
+    else
+    {
+        debugLog("Setting vault exit vault");
+        exitFuncGlob = exitVault;
     }
 }
 
@@ -225,7 +233,7 @@ void showVaultImage(String file)
     if (key != 0)
     {
         debugLog("Showing vault image");
-        //debugLog("Starting decrypting: " + String(millis()));
+        // debugLog("Starting decrypting: " + String(millis()));
 
         bufSize vaultItem = fsGetBlob(file, "/vault/");
         debugLog("VaultItem size: " + String(vaultItem.size));
@@ -258,7 +266,7 @@ void showVaultImage(String file)
         int resultCrypt = mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, written, iv, realImage, realImage);
         debugLog("resultCrypt: " + String(resultCrypt));
 
-        //debugLog("Finished decrypting: " + String(millis()));
+        // debugLog("Finished decrypting: " + String(millis()));
 
         mbedtls_aes_free(&aes);
 

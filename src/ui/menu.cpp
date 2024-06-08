@@ -52,7 +52,7 @@ void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSiz
 
   if (textSize == 1)
   {
-    data.itemsOnPage = 7;
+    data.itemsOnPage = 8;
   }
   else
   {
@@ -85,7 +85,7 @@ void showMenu()
   String pageString = String(currentPage + 1) + "/" + String(pageNumber);
   debugLog(pageString);
   getTextBounds(pageString, NULL, NULL, &pageStringWidth, NULL);
-  debugLog("Page string width: " + String(pageStringWidth));
+  //debugLog("Page string width: " + String(pageStringWidth));
   currentHeight = textHeight + 1; // +1 to offset between edge of screen and menu name
   display.setCursor(display.width() - pageStringWidth - 10, currentHeight);
 
@@ -121,8 +121,8 @@ void showMenu()
   {
     startingButton = startingButton + data.itemsOnPage;
   }
-  debugLog("current button: " + String(data.currentButton));
-  debugLog("starting button: " + String(startingButton));
+  //debugLog("current button: " + String(data.currentButton));
+  //debugLog("starting button: " + String(startingButton));
   setTextSize(data.textSize);
   for (int i = startingButton; i < startingButton + data.itemsOnPage && i < data.totalMenus; i++)
   {
@@ -144,7 +144,7 @@ void showMenu()
       //debugLog("Printing button: " + String(i % data.itemsOnPage));
     }
 
-    debugLog("Menu entry text is: " + data.entryList[i].text);
+    //debugLog("Menu entry text is: " + data.entryList[i].text);
     buttonSize = drawButton(1, currentHeight, data.entryList[i].text, data.entryList[i].image, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
     //debugLog("Button h in menu: " + String(buttonSize.h));
     if (draw == true)

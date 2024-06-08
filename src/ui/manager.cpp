@@ -12,6 +12,22 @@ void initManager()
     placeTree[0] = FIRST_PLACE;
 }
 
+// in managerLaunchFunc, sleep and in manager long back.
+void executeExitFunc()
+{
+    if (exitFuncGlob != nullptr)
+    {
+        debugLog("Executing exit func");
+        void (*exitFuncGlobTmp)() = exitFuncGlob;
+        exitFuncGlob = nullptr;
+        exitFuncGlobTmp();
+    }
+    else
+    {
+        debugLog("No exit function supplied");
+    }
+}
+
 void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), void (*exitFunc)() = nullptr)
 {
     if (currentPlace == place)
@@ -24,6 +40,8 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
     }
     else
     {
+        debugLog("currentPlace: " + String(currentPlace));
+        debugLog("place: " + String(place));
         currentPlace = place;
         if (wasBacked == false)
         {
@@ -42,12 +60,7 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
             wasBacked = false;
         }
 
-        if (exitFuncGlob != nullptr)
-        {
-            debugLog("Executing exit func");
-            exitFuncGlob();
-            exitFuncGlob = nullptr;
-        }
+        executeExitFunc();
         if (initFunc != nullptr)
         {
             debugLog("Executing init function");
@@ -94,6 +107,7 @@ void loopManager()
                     }
                     currentPlaceIndex = 0;
                 }
+                executeExitFunc();
             }
         }
     }
@@ -174,6 +188,20 @@ void loopManager()
     {
 #if VAULT
         managerLaunchFunc(vault, initVault, loopVault, exitVault);
+#endif
+        break;
+    }
+    case vaultImage:
+    {
+#if VAULT
+        managerLaunchFunc(imagePlace, NULL, useButtonBlank, exitVault);
+#endif
+        break;
+    }
+    case vaultMenu:
+    {
+#if VAULT
+        managerLaunchFunc(generalMenuPlace, NULL, loopMenu, exitVault);
 #endif
         break;
     }
