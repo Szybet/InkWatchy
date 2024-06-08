@@ -100,9 +100,9 @@ void manageSleep()
         if (currentPlace != FIRST_PLACE)
         {
             debugLog("SLEEP_EVERY_MS runned out, Showing watchface");
-
             currentPlace = NoPlace;
             currentPlaceIndex = 0;
+            executeExitFunc();
 
             sleepDelayMs = sleepDelayMs + TIME_FOR_WATCHFACE_TO_SHOW_MS;
         }

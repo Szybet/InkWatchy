@@ -121,52 +121,52 @@ void initWifi()
     }
     if (WIFI_SSID1 != "" && WIFI_PASS1 != "")
     {
-        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID1));
+        debugLog("Adding wifi " + String(WIFI_SSID1));
         wifiMulti.addAP(WIFI_SSID1, WIFI_PASS1);
     }
     if (WIFI_SSID2 != "" && WIFI_PASS2 != "")
     {
-        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID2));
+        debugLog("Adding wifi " + String(WIFI_SSID2));
         wifiMulti.addAP(WIFI_SSID2, WIFI_PASS2);
     }
     if (WIFI_SSID3 != "" && WIFI_PASS3 != "")
     {
-        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID3));
+        debugLog("Adding wifi " + String(WIFI_SSID3));
         wifiMulti.addAP(WIFI_SSID3, WIFI_PASS3);
     }
     if (WIFI_SSID4 != "" && WIFI_PASS4 != "")
     {
-        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID4));
+        debugLog("Adding wifi " + String(WIFI_SSID4));
         wifiMulti.addAP(WIFI_SSID4, WIFI_PASS4);
     }
     if (WIFI_SSID5 != "" && WIFI_PASS5 != "")
     {
-        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID5));
+        debugLog("Adding wifi " + String(WIFI_SSID5));
         wifiMulti.addAP(WIFI_SSID5, WIFI_PASS5);
     }
     if (WIFI_SSID6 != "" && WIFI_PASS6 != "")
     {
-        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID6));
+        debugLog("Adding wifi " + String(WIFI_SSID6));
         wifiMulti.addAP(WIFI_SSID7, WIFI_PASS7);
     }
     if (WIFI_SSID7 != "" && WIFI_PASS7 != "")
     {
-        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID7));
+        debugLog("Adding wifi " + String(WIFI_SSID7));
         wifiMulti.addAP(WIFI_SSID7, WIFI_PASS7);
     }
     if (WIFI_SSID8 != "" && WIFI_PASS8 != "")
     {
-        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID8));
+        debugLog("Adding wifi " + String(WIFI_SSID8));
         wifiMulti.addAP(WIFI_SSID8, WIFI_PASS8);
     }
     if (WIFI_SSID9 != "" && WIFI_PASS9 != "")
     {
-        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID9));
+        debugLog("Adding wifi " + String(WIFI_SSID9));
         wifiMulti.addAP(WIFI_SSID9, WIFI_PASS9);
     }
     if (WIFI_SSID10 != "" && WIFI_PASS10 != "")
     {
-        debugLog("Attempting to connect to WiFi " + String(WIFI_SSID10));
+        debugLog("Adding wifi " + String(WIFI_SSID10));
         wifiMulti.addAP(WIFI_SSID10, WIFI_PASS10);
     }
     initWifiMultiDone = true;
