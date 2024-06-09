@@ -4,7 +4,7 @@ bool firstNTPSync = true;
 time_t initialRTCTime = 0;
 int ntpTries = 0;
 
-void syncNtp()
+void syncNtp(bool doDriftThings)
 {
     debugLog("Running syncNtp");
     WiFiUDP ntpUDP;
@@ -54,6 +54,22 @@ void syncNtp()
 
         SRTC.doBreakTime(epochTime, *timeRTC);
         saveRTC();
+        #if TIME_DRIFT_CORRECTION
+        if(doDriftThings == true) {
+            if(SRTC.checkingDrift(false) == true) {
+                // Drift is going on
+                SRTC.endDrift(*timeRTC, false);
+                uint32_t driftValue = SRTC.getDrift(false);
+                bool driftIsFast = SRTC.isFastDrift(false);
+                debugLog("isFast: " + String(driftIsFast) + " drift value: " + String(driftValue));
+                fsSetString(CONF_DRIFT, String(driftValue));
+                fsSetString(CONF_DRIFT_FAST, String(driftIsFast));
+            } else {
+                // Drift is not going on
+                SRTC.beginDrift(*timeRTC, false);
+            }
+        }
+        #endif
 
         timeClient.end();
         wakeUpManageRTC(); // After syncing time, remake the alarm

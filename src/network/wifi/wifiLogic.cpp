@@ -24,7 +24,7 @@ void wifiPersistent()
     debugLog("Launching");
     while (WiFi.status() == WL_CONNECTED && bat.isCharging == true)
     {
-        syncNtp();
+        syncNtp(false);
         int counter = 0;
         while (counter < SYNC_NTP_ON_CHARGING_DELAY && WiFi.status() == WL_CONNECTED && bat.isCharging == true)
         {
@@ -35,14 +35,14 @@ void wifiPersistent()
     }
     if (WiFi.status() == WL_CONNECTED)
     {
-        syncNtp();
+        syncNtp(false);
         lastTryUnix = getUnixTime();
     }
 }
 
 void wifiKindOfPersistent() {
     debugLog("Launching");
-    syncNtp(); // Because we are connected to usb for some time now so the drift drifted too much in a bad way
+    syncNtp(false); // Because we are connected to usb for some time now so the drift drifted too much in a bad way
     wifiSyncModules();
     lastSyncUnix = getUnixTime();
 }

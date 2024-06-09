@@ -3,6 +3,6 @@
 
 #include "defines/defines.h"
 
-void syncNtp();
+void syncNtp(bool doDriftThings = true);
 
 #endif

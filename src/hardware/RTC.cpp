@@ -1,10 +1,11 @@
 #include "RTC.h"
 
-tmElements_t* timeRTC;
+tmElements_t *timeRTC;
 
 RTC_DATA_ATTR SmallRTC SRTC;
 
-void setupTimeStructure() {
+void setupTimeStructure()
+{
   debugLog("Created time memory");
   timeRTC = new tmElements_t;
 }
@@ -16,6 +17,23 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
   {
     SRTC.init();
     HWVer = SRTC.getWatchyHWVer();
+#if TIME_DRIFT_CORRECTION
+    if (SRTC.getDrift(false) == 0)
+    {
+      uint32_t driftValue = fsGetString(CONF_DRIFT, "0").toInt();
+      if (driftValue != 0)
+      {
+        debugLog("Setting initial drift value, as it's not set and the watchy is not from wakeup");
+        bool isFast = bool(fsGetString(CONF_DRIFT_FAST, "0").toInt());
+        debugLog("isFast: " + String(isFast) + " drift value: " + String(driftValue));
+        SRTC.setDrift(driftValue, isFast, false);
+      }
+      else
+      {
+        debugLog("Something is wrong with drift value, probably");
+      }
+    }
+#endif
   }
   if (wakeUpReason != RTC_WAKEUP_REASON)
   {
@@ -44,7 +62,7 @@ void saveRTC()
 
 void readRTC()
 {
-  //debugLog("Reading RTC");
+  // debugLog("Reading RTC");
   SRTC.read(*timeRTC);
 }
 
@@ -53,19 +71,19 @@ void wakeUpManageRTC()
   SRTC.clearAlarm();
   if (disableWakeUp == false)
   {
-    //isDebug(dumpRTCTime());
+    // isDebug(dumpRTCTime());
     int hour = timeRTC->Hour;
-    //debugLog("timeRTC->Hour: " + String(hour));
-    // Watchy 2.0 has problems here... Idk?
+    // debugLog("timeRTC->Hour: " + String(hour));
+    //  Watchy 2.0 has problems here... Idk?
     if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
-      //debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
-      //isDebug(dumpRTCTime());
+      // debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
+      // isDebug(dumpRTCTime());
       SRTC.atMinuteWake(timeRTC->Minute + NIGHT_SLEEP_FOR_M, true);
     }
     else
     {
-      //debugLog("Next minute wake up");
+      // debugLog("Next minute wake up");
       SRTC.nextMinuteWake(true);
     }
   }
@@ -87,7 +105,7 @@ void alarmManageRTC()
 
 String getHourMinute(tmElements_t *timeEl)
 {
-  //isDebug(dumpRTCTime(timeEl));
+  // isDebug(dumpRTCTime(timeEl));
   String h = String(timeEl->Hour);
   if (h.length() == 1)
   {
@@ -179,7 +197,8 @@ String getMonthName(int monthNumber)
   }
 }
 
-String getFormattedTime(time_t rawTime) {
+String getFormattedTime(time_t rawTime)
+{
   unsigned long hours = (rawTime % 86400L) / 3600;
   String hoursStr = hours < 10 ? "0" + String(hours) : String(hours);
 
@@ -192,18 +211,20 @@ String getFormattedTime(time_t rawTime) {
   return hoursStr + ":" + minuteStr + ":" + secondStr;
 }
 
-String unixToDate(unsigned long unixTime) {
+String unixToDate(unsigned long unixTime)
+{
   int gotDay = day(unixTime);
   int gotMonth = month(unixTime);
   int gotYear = year(unixTime);
 
   char dateString[11];
   sprintf(dateString, "%02d.%02d.%04d", gotDay, gotMonth, gotYear);
-  
+
   return String(dateString);
 }
 
-long getHourDifference(time_t currentTime, time_t targetTime) {
+long getHourDifference(time_t currentTime, time_t targetTime)
+{
   return abs((targetTime - currentTime) / 3600);
 }
 
