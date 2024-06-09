@@ -4,7 +4,7 @@ bool firstNTPSync = true;
 time_t initialRTCTime = 0;
 int ntpTries = 0;
 
-void syncNtp(bool doDriftThings)
+void syncNtp()
 {
     debugLog("Running syncNtp");
     WiFiUDP ntpUDP;
