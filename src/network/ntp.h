@@ -4,7 +4,5 @@
 #include "defines/defines.h"
 
 void syncNtp(bool doDriftThings = true);
-void checkDrift();
-void manageDriftTiming(float *timeDifference, int *drift);
 
 #endif

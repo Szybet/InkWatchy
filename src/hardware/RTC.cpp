@@ -45,11 +45,7 @@ void saveRTC()
 void readRTC()
 {
   //debugLog("Reading RTC");
-  uint8_t m = timeRTC->Minute;
   SRTC.read(*timeRTC);
-  if(m != timeRTC->Minute) {
-    checkDrift();
-  }
 }
 
 void wakeUpManageRTC()

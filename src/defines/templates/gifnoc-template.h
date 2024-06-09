@@ -17,7 +17,6 @@
 #define WATCHDOG_TASK 1              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
 
 // Drift & NTP & Syncing
-#define REPAIR_TIME_S 600                  // 10 minutes, makes the time drift repair the time every 10 minutes no matter the delay between syncs
 #define SYNC_ON_CHARGING 1                 // Keep wifi connected and sync NTP every few minutes because the RTC fucks up
 #define SYNC_WIFI 1                        // Sync wifi - only if it's being charger and after the delay below
 #define SYNC_WIFI_SINCE_SUCC 72000         // 20h
@@ -26,8 +25,8 @@
 #define VALID_PREVIOUS_SYNC_DELAY 300      // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
 #define WIFI_CONNECTION_TRIES 3            // Regular sync, number of tries
 #define WIFI_CONNECTION_TRIES_PERSISTENT 1 // Persistent sync (SYNC_ON_CHARGING), number of tries
-#define WIFI_MULTI_SYNC_TIME 8000          // Ms, time for waiting to connect to wifi
-#define WIFI_MULTI_ERROR_TIME 1000         // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
+#define WIFI_MULTI_SYNC_TIME 20000          // Ms, time for waiting to connect to wifi
+#define WIFI_MULTI_ERROR_TIME 10000         // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
 
 // Book things
 #define BOOK 0
