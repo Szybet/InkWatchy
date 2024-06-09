@@ -1,10 +1,5 @@
 #include "ntp.h"
 
-RTC_DATA_ATTR time_t previousNTPTimeFull = 0;      // Full latest NTP sync time
-RTC_DATA_ATTR float previousNTPTimeDifference = 0; // The delay between 2 previous NTP syncs, float because of division of bigger delays
-RTC_DATA_ATTR int ntpDriftCorrection = 0;          // The drift
-RTC_DATA_ATTR float previousNTPCorrection = 0;     // UNIX time of previous drift correction, float because of division of bigger delays
-
 bool firstNTPSync = true;
 time_t initialRTCTime = 0;
 int ntpTries = 0;
@@ -60,42 +55,6 @@ void syncNtp(bool doDriftThings)
         SRTC.doBreakTime(epochTime, *timeRTC);
         saveRTC();
 
-        if (doDriftThings == true)
-        {
-            if (previousNTPTimeFull == 0)
-            {
-                previousNTPTimeFull = epochTime;
-                debugLog("Setting initial ntp time for drift");
-            }
-            else
-            {
-                debugLog("Drift calc - NTP time: " + getFormattedTime(epochTime));
-                debugLog("Drift calc - RTC time: " + getFormattedTime(currentTime));
-
-                ntpDriftCorrection = currentTime - epochTime;
-                previousNTPTimeDifference = epochTime - previousNTPTimeFull;
-                if (previousNTPTimeDifference < VALID_PREVIOUS_SYNC_DELAY)
-                {
-                    debugLog("The delay is too small, rejecting...");
-                    ntpDriftCorrection = 0;
-                    previousNTPTimeDifference = 0;
-                }
-                else
-                {
-
-                    manageDriftTiming(&previousNTPTimeDifference, &ntpDriftCorrection);
-
-                    debugLog("Drift calc - ntpDriftCorrection:" + String(ntpDriftCorrection));
-
-                    previousNTPTimeFull = epochTime;
-                    previousNTPCorrection = epochTime;
-                }
-            }
-        }
-
-        if(doDriftThings == false) {
-            previousNTPCorrection = epochTime;
-        }
         timeClient.end();
         wakeUpManageRTC(); // After syncing time, remake the alarm
     }
@@ -109,83 +68,4 @@ void syncNtp(bool doDriftThings)
             syncNtp();
         }
     }
-}
-
-void checkDrift()
-{
-    time_t currentTime = SRTC.doMakeTime(*timeRTC);
-    if (currentTime < 0)
-    {
-        debugLog("SOMETHING IS WRONG :(");
-        readRTC();
-        currentTime = SRTC.doMakeTime(*timeRTC);
-    }
-    debugLog("currentTime: " + String(currentTime));
-    debugLog("previousNTPCorrection: " + String(previousNTPCorrection));
-    debugLog("previousNTPTimeDifference: " + String(previousNTPTimeDifference));
-    int count = 0;
-    // Checker
-    int checker = (float(currentTime) - previousNTPCorrection) / previousNTPTimeDifference;
-    debugLog("Checker is: " + String(checker));
-    if (int(previousNTPCorrection) != 0 && int(ntpDriftCorrection) != 0 && checker > 2000)
-    {
-        debugLog("Checker is too high, do nothing");
-        return;
-    }
-    bool changed = false;
-    while (previousNTPCorrection != 0 && ntpDriftCorrection != 0 && abs(float(currentTime) - previousNTPCorrection) >= previousNTPTimeDifference)
-    {
-        previousNTPCorrection = previousNTPCorrection + previousNTPTimeDifference;
-        previousNTPCorrection = precision(previousNTPCorrection, 3);
-        debugLog("Doing drift correction!");
-        debugLog("ntpDriftCorrection: " + String(ntpDriftCorrection));
-        debugLog("previousNTPCorrection: " + String(previousNTPCorrection));
-        debugLog("previousNTPTimeDifference: " + String(previousNTPTimeDifference));
-        currentTime = currentTime - ntpDriftCorrection; // Not sure
-        debugLog("currentTime: " + String(currentTime));
-        changed = true;
-    }
-    if (changed == true)
-    {
-        SRTC.doBreakTime(currentTime, *timeRTC);
-        saveRTC();
-        wakeUpManageRTC();
-    }
-}
-
-#define MAX_TRIES 200
-void manageDriftTiming(float *timeDifference, int *drift)
-{
-    float timeDifferenceVar = *timeDifference;
-    int driftVar = *drift;
-
-    bool done = false;
-    for (int d = 2; d < MAX_TRIES; d++)
-    {
-        time_t newDrift = driftVar / d;
-        float newTimeDifference = timeDifferenceVar / d;
-
-        if (newTimeDifference <= REPAIR_TIME_S && newDrift * d == driftVar)
-        {
-            debugLog("Stopped at divison: " + String(d));
-            debugLog("old drift: " + String(driftVar));
-            debugLog("newDrift: " + String(newDrift));
-            debugLog("old difference: " + String(timeDifferenceVar));
-            debugLog("newTimeDifference: " + String(newTimeDifference));
-            driftVar = newDrift;
-            newTimeDifference = precision(newTimeDifference, 3);
-            timeDifferenceVar = newTimeDifference;
-            done = true;
-            break;
-        }
-    }
-
-    if (done == false)
-    {
-        debugLog("FAILED to minimase drift :(");
-        return;
-    }
-
-    *timeDifference = timeDifferenceVar;
-    *drift = driftVar;
 }

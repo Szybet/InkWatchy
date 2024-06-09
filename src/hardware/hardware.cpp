@@ -2,6 +2,7 @@
 
 RTC_DATA_ATTR float HWVer;
 long sleepDelayMs;
+#define FIRST_BOOT_FILE "first_boot"
 
 // Also at boot, but on wake up too
 void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
@@ -11,10 +12,10 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     {
         debugLog("Watchy is starting!");
         // This is because we want it to be cleared on boot and on the second one (the first boot is the in demo boot)
-        int firstBoot = fsGetString("firstBoot", "0").toInt();
+        int firstBoot = fsGetString(FIRST_BOOT_FILE, "0").toInt();
         if (firstBoot <= 2)
         {
-            fsSetString("firstBoot", String(firstBoot + 1));
+            fsSetString(FIRST_BOOT_FILE, String(firstBoot + 1));
             debugLog("This is the first boot. Clearing core dump partition");
             String res = String(esp_err_to_name(esp_core_dump_image_erase()));
             debugLog("esp_core_dump_image_erase status: " + res);
