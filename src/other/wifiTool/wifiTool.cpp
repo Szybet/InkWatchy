@@ -24,7 +24,7 @@ void initWifiTool()
 {
     debugLog("Running initWifiTool");
     wifiToolRunning = true;
-    setCpuMhz(maxSpeed);
+    setCpuSpeed(maxSpeed);
     esp_log_level_set("*", ESP_LOG_VERBOSE);
     ESP_LOGD(TAG, "app_main started");
     ESP_ERROR_CHECK(esp_event_loop_create_default());
@@ -59,7 +59,7 @@ void stopWifiTool()
     wifictl_ap_stop();
 
     wifiToolRunning = false;
-    setCpuMhz(minimalSpeed);
+    setCpuSpeed(minimalSpeed);
     setButton(LongBack);
     sleepDelayMs = sleepDelayMs + SLEEP_EVERY_MS;
 }

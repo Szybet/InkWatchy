@@ -20,7 +20,10 @@ typedef enum
     maxSpeed,
 } cpuSpeed;
 
-void setCpuMhz(cpuSpeed speed);
+extern cpuSpeed savedCpuSpeed;
+void setCpuSpeed(cpuSpeed speed);
+cpuSpeed getCpuSpeed();
+void restoreCpuSpeed();
 String resetReasonToString(esp_reset_reason_t reason);
 
 #if DEBUG

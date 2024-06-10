@@ -60,7 +60,12 @@ void wfBookrequestShow(buttonState button, bool *showBool)
         {
             debugLog("Entered book selected");
             sizeInfo s = drawTextSimple("Selected book:", "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y);
-            sizeInfo ss = drawTextSimple(curBook, "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y + s.h + 2);
+            // Max 29
+            String curBookTmp = curBook;
+            if(curBookTmp.length() > 28) {
+                curBookTmp = curBookTmp.substring(0, 28);
+            }
+            sizeInfo ss = drawTextSimple(curBookTmp, "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y + s.h + 2);
             drawTextSimple(bookGetPages(BOOK_MODULE_CHARS_PER_PAGE), "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y + s.h + ss.h + 4);
         }
     }

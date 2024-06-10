@@ -1,6 +1,6 @@
 #include "littlefs.h"
 
-String loadedImgNames[IMG_COUNT];
+char loadedImgNames[IMG_COUNT][RESOURCES_NAME_LENGTH] = {0};
 ImageDef loadedImg[IMG_COUNT];
 
 ImageDef *getImg(String name)
@@ -13,15 +13,18 @@ ImageDef *getImg(String name)
     uint8_t emptyListIndex = 0;
     for (int i = 0; i < IMG_COUNT; i++)
     {
-        if (name == loadedImgNames[i])
+        String loadedImgString = String(loadedImgNames[i]);
+        //debugLog("char test: \"" + loadedImgString + "\"");
+        if (name == loadedImgString)
         {
             return &loadedImg[i];
         }
         else
         {
-            if (loadedImgNames[i] == "")
+            if (loadedImgString == "")
             {
                 emptyListIndex = i;
+                //debugLog("current img final index: " + String(i));
                 break;
             }
         }
@@ -73,7 +76,14 @@ ImageDef *getImg(String name)
         width,
         height,
     };
-    loadedImgNames[emptyListIndex] = name;
+    //loadedImgNames[emptyListIndex] = name;
+    int nameLength = name.length();
+#if DEBUG
+    if(nameLength > RESOURCES_NAME_LENGTH) {
+        debugLog("Resource name: " + name + " is too big because RESOURCES_NAME_LENGTH. Buffer overflow.");
+    }
+#endif
+    strncpy(loadedImgNames[emptyListIndex], name.c_str(), nameLength);
     loadedImg[emptyListIndex] = newImg;
     return &loadedImg[emptyListIndex];
 }
