@@ -30,7 +30,7 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
       }
       else
       {
-        debugLog("Something is wrong with drift value, probably");
+        debugLog("Something is wrong with drift value, probably. Or it's not set :)");
       }
     }
 #endif

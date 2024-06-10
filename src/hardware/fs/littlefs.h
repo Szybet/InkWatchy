@@ -11,14 +11,14 @@ size_t fsGetFileSize(String path);
 void fsRemoveFile(String path);
 bool fsFileExists(String path);
 
-extern String loadedImgNames[IMG_COUNT];
+extern char loadedImgNames[IMG_COUNT][RESOURCES_NAME_LENGTH];
 extern ImageDef loadedImg[IMG_COUNT];
 
 ImageDef* getImg(String name);
 int16_t getImgWidth(String name);
 int16_t getImgHeight(String name);
 
-extern String loadedFontNames[FONT_COUNT];
+extern char loadedFontNames[FONT_COUNT][RESOURCES_NAME_LENGTH];
 extern GFXfont loadedFont[FONT_COUNT];
 
 const GFXfont *getFont(String name);

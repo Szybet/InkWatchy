@@ -12,13 +12,18 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     {
         debugLog("Watchy is starting!");
         // This is because we want it to be cleared on boot and on the second one (the first boot is the in demo boot)
-        int firstBoot = fsGetString(FIRST_BOOT_FILE, "0").toInt();
-        if (firstBoot <= 2)
+        if (fsSetup() == true)
         {
-            fsSetString(FIRST_BOOT_FILE, String(firstBoot + 1));
-            debugLog("This is the first boot. Clearing core dump partition");
-            String res = String(esp_err_to_name(esp_core_dump_image_erase()));
-            debugLog("esp_core_dump_image_erase status: " + res);
+            int firstBoot = fsGetString(FIRST_BOOT_FILE, "0").toInt();
+            if (firstBoot <= 2)
+            {
+                fsSetString(FIRST_BOOT_FILE, String(firstBoot + 1));
+                debugLog("This is the first boot. Clearing core dump partition");
+                debugLog("esp_core_dump_image_erase status: " + String(esp_err_to_name(esp_core_dump_image_erase())));
+                // This may be needed to avoid weird watchdog resets?
+                delay(1500);
+                ESP.restart();
+            }
         }
     }
     else
@@ -27,10 +32,10 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     }
 #endif
 #if DEBUG == 1 && DEBUG_SLOWER == 0
-    setCpuMhz(maxSpeed);
+    setCpuSpeed(maxSpeed);
 #else
     // Not needed anymore, It's set in platformio.ini
-    // setCpuMhz(minimalSpeed);
+    // setCpuSpeed(minimalSpeed);
 #endif
     initRTC(isFromWakeUp, wakeUpReason);
     initButtons(isFromWakeUp);
@@ -162,7 +167,8 @@ String resetReasonToString(esp_reset_reason_t reason)
     }
 }
 
-void setCpuMhz(cpuSpeed speed)
+cpuSpeed savedCpuSpeed = minimalSpeed;
+void setCpuSpeed(cpuSpeed speed)
 {
     // Only these values are available
     switch (speed)
@@ -183,4 +189,36 @@ void setCpuMhz(cpuSpeed speed)
         break;
     }
     }
+}
+
+cpuSpeed getCpuSpeed()
+{
+    uint32_t cpuMhz = getCpuFrequencyMhz();
+    debugLog("cpu Mhz bare: " + String(cpuMhz));
+    switch (cpuMhz)
+    {
+    case 80:
+    {
+        savedCpuSpeed = minimalSpeed;
+        return minimalSpeed;
+    }
+    case 160:
+    {
+        savedCpuSpeed = normalSpeed;
+        return normalSpeed;
+    }
+    case 240:
+    {
+        savedCpuSpeed = maxSpeed;
+        return maxSpeed;
+    }
+    }
+    debugLog("Something went wrong with cpu speed");
+    savedCpuSpeed = minimalSpeed;
+    return minimalSpeed;
+}
+
+void restoreCpuSpeed()
+{
+    setCpuSpeed(savedCpuSpeed);
 }

@@ -25,8 +25,9 @@
 #define VALID_PREVIOUS_SYNC_DELAY 300      // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
 #define WIFI_CONNECTION_TRIES 3            // Regular sync, number of tries
 #define WIFI_CONNECTION_TRIES_PERSISTENT 1 // Persistent sync (SYNC_ON_CHARGING), number of tries
-#define WIFI_MULTI_SYNC_TIME 20000          // Ms, time for waiting to connect to wifi
-#define WIFI_MULTI_ERROR_TIME 10000         // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
+#define WIFI_MULTI_SYNC_TIME 20000         // Ms, time for waiting to connect to wifi
+#define WIFI_MULTI_ERROR_TIME 10000        // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
+#define TIME_DRIFT_CORRECTION 1            // The RTC may drift, this should repair it
 
 // Book things
 #define BOOK 0
@@ -45,6 +46,8 @@
 
 // Conway
 #define CONWAY 1
+#define CONWAY_CPU_SPEED 1    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
+#define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
 
 // Watchface modules
 #define MODULE_PERSISTENT 1         // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen
@@ -68,7 +71,7 @@
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
 #define NIGHT_SLEEP_AFTER_HOUR 23
 #define NIGHT_SLEEP_BEFORE_HOUR 5
-#define SLEEP_EVERY_MS 15000               // 180000 // Goes to sleep timer, is resetted by button presses and other things
+#define SLEEP_EVERY_MS 15000              // 180000 // Goes to sleep timer, is resetted by button presses and other things
 #define POWER_SAVING_AFTER 60             // Turn on power saving features after a certain battery percantage.
 #define POWER_SAVING_OFF_AFTER 20         // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
 #define LOOP_NO_SCREEN_WRITE_DELAY_MS 125 // Go to "sleep" for 200 ms if the device is woken up ( in a menu for example )
@@ -110,20 +113,20 @@
 #define SPEED_THROUGH_TIME 0       // Speeds up time for watchface programming
 #define NO_SYNC 0                  // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0         // Prints voltage on the screen, really fast
-#define DISABLE_SLEEP 0 // Disable sleep, so it will never go to sleep. Good for SCOM_TASK
-#define PUT_LOGS_TO_SERIAL 1 // Puts logs to serial. Turn off if you want debug on the go
-#define PUT_LOGS_TO_FS 1 // Puts logs into littlefs
-#define WAIT_FOR_MONITOR 0 // If debug is enabled, waits for monitor in setup for 3000 ms
+#define DISABLE_SLEEP 0            // Disable sleep, so it will never go to sleep. Good for SCOM_TASK
+#define PUT_LOGS_TO_SERIAL 1       // Puts logs to serial. Turn off if you want debug on the go
+#define PUT_LOGS_TO_FS 1           // Puts logs into littlefs
+#define WAIT_FOR_MONITOR 0         // If debug is enabled, waits for monitor in setup for 3000 ms
 // Ah... too much allocated memory... 10 hours of my life...
 #define LOG_SERIAL_BUFFER_SIZE 300
 #define LOG_FILE_BUFFER_SIZE 3000
 // Max file size for littlefs: 2Gb
 // https://github.com/littlefs-project/littlefs/issues/738
 #define MAX_LOG_FILE_SIZE_BYTES 100000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs, 400000 is the max in my opinion
-#define STOP_ON_RESET 1 // Stop the device until the reset is cleared, it doesn't do that if it's sure that it was a forced reset (esptool one)
+#define STOP_ON_RESET 1                // Stop the device until the reset is cleared, it doesn't do that if it's sure that it was a forced reset (esptool one)
 #define SERIAL_LOG_DELAY_MS 35
 
-#define SCOM_TASK 0          // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
+#define SCOM_TASK 0 // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
 #if SCOM_TASK == 1 && DEBUG == 1
 #define SCOM_TASK_ENABLED 1
 #endif
@@ -174,9 +177,11 @@
 #define MAX_MENU_ITEMS 20
 #define RTC_INT_PIN 27
 
-// Other other
+// Other other, resources thing
+#define RESOURCES_NAME_LENGTH 50
 #define IMG_COUNT 30
 #define FONT_COUNT 30
+// So it's 50*30 bytes
 
 // Task memory size
 #define TASK_STACK_DUMP_BATTERY 2000

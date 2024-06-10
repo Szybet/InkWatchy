@@ -4,7 +4,7 @@
 
 #define INIT_CONWAY_MOD_VAL 200
 
-RTC_DATA_ATTR uint8_t timeChangeCheck = INIT_CONWAY_MOD_VAL; // if 0, init the grid
+RTC_DATA_ATTR uint8_t timeChangeCheck = INIT_CONWAY_MOD_VAL; // if INIT_CONWAY_MOD_VAL, init the grid
 
 // Because of rules in conway.cpp
 #define CONWAY_MODULE_WIDTH 176
@@ -12,8 +12,6 @@ RTC_DATA_ATTR uint8_t timeChangeCheck = INIT_CONWAY_MOD_VAL; // if 0, init the g
 
 #define CONWAY_MODULE_OFFSET_X 1
 #define CONWAY_MODULE_OFFSET_Y 4
-
-#define CONWAY_MODULE_DEBUG 1 // speed up the module
 
 RTC_DATA_ATTR uint8_t conwayModuleGrid[CONWAY_MODULE_WIDTH / 8 * CONWAY_MODULE_HEIGHT];
 uint8_t conwayModuleNewGrid[CONWAY_MODULE_WIDTH / 8 * CONWAY_MODULE_HEIGHT]; // new grid doesn't need RTC_DATA_ATTR
@@ -34,12 +32,26 @@ void wfConwaycheckShow(bool *showBool, bool *redrawBool)
     *showBool = true;
     if (timeChangeCheck == INIT_CONWAY_MOD_VAL)
     {
+#if CONWAY_CPU_SPEED
+        getCpuSpeed();
+        setCpuSpeed(maxSpeed);
+#endif
         initModuleConway();
+#if CONWAY_CPU_SPEED
+        restoreCpuSpeed();
+#endif
     }
     if (timeChangeCheck != timeRTC->Minute)
     {
         timeChangeCheck = timeRTC->Minute;
+#if CONWAY_CPU_SPEED
+        getCpuSpeed();
+        setCpuSpeed(maxSpeed);
+#endif
         moduleConwayGeneration();
+#if CONWAY_CPU_SPEED
+        restoreCpuSpeed();
+#endif
         *redrawBool = true;
     }
 #if CONWAY_MODULE_DEBUG
@@ -49,6 +61,11 @@ void wfConwaycheckShow(bool *showBool, bool *redrawBool)
 
 void wfConwayrequestShow(buttonState button, bool *showBool)
 {
+    debugLog("Drawing conway module");
+#if CONWAY_CPU_SPEED
+    getCpuSpeed();
+    setCpuSpeed(maxSpeed);
+#endif
     if (button != None)
     {
         clearModuleArea();
@@ -61,6 +78,9 @@ void wfConwayrequestShow(buttonState button, bool *showBool)
 
     drawGrid(conwayModuleGrid, CONWAY_MODULE_HEIGHT, CONWAY_MODULE_WIDTH, MODULE_RECT_X + CONWAY_MODULE_OFFSET_X, MODULE_RECT_Y + CONWAY_MODULE_OFFSET_Y);
     disUp(true);
+#if CONWAY_CPU_SPEED
+    restoreCpuSpeed();
+#endif
 }
 
 RTC_DATA_ATTR wfModule wfConway = {

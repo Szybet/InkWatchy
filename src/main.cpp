@@ -24,8 +24,10 @@ void setup()
 #if WAIT_FOR_MONITOR
   delay(3000);
 #endif
-  initLogs();
+  initLogs(); // This has #if in it, so it can run always
+#if PUT_LOGS_TO_SERIAL
   Serial.begin(115200);
+#endif
 #endif
   wakeUpReason = esp_sleep_get_wakeup_cause();
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm

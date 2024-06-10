@@ -39,7 +39,7 @@ void initDisplay(bool isFromWakeUp)
         centerText(resetReasonToString(resetReason), &h);
         display.display(FULL_UPDATE);
 #if STOP_ON_RESET
-        if (resetReason != ESP_RST_POWERON)
+        if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW) // ESP_RST_SW only for ESP.reset() in coredump cleaning
         {
             for (int i = 0; i < 10; i++)
             {

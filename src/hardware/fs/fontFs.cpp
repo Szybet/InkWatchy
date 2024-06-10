@@ -1,6 +1,6 @@
 #include "littlefs.h"
 
-String loadedFontNames[FONT_COUNT];
+char loadedFontNames[FONT_COUNT][RESOURCES_NAME_LENGTH] = {0};
 GFXfont loadedFont[FONT_COUNT];
 
 const GFXfont *getFont(String name)
@@ -11,15 +11,17 @@ const GFXfont *getFont(String name)
         return &FreeSansBold9pt7b;
     }
     uint8_t emptyListIndex = 0;
-    for (int i = 0; i < IMG_COUNT; i++)
+    for (int i = 0; i < FONT_COUNT; i++)
     {
-        if (name == loadedFontNames[i])
+        String loadedFontString = String(loadedFontNames[i]);
+        //debugLog("char test: \"" + loadedFontString + "\"");
+        if (name == loadedFontString)
         {
             return &loadedFont[i];
         }
         else
         {
-            if (loadedFontNames[i] == "")
+            if (loadedFontString == "")
             {
                 emptyListIndex = i;
                 break;
@@ -34,7 +36,7 @@ const GFXfont *getFont(String name)
         return &FreeSansBold9pt7b;
     }
     int fileBitmapSize = fileBitmap.size();
-    //debugLog("file size: " + String(fileBitmapSize));
+    // debugLog("file size: " + String(fileBitmapSize));
     if (fileBitmapSize <= 0)
     {
         debugLog("This file has size 0: " + name + "Bitmap");
@@ -54,7 +56,8 @@ const GFXfont *getFont(String name)
         return &FreeSansBold9pt7b;
     }
     int fileGlyphSize = fileGlyph.size();
-    if(fileGlyphSize != 95 * sizeof(GFXglyph)) {
+    if (fileGlyphSize != 95 * sizeof(GFXglyph))
+    {
         debugLog("Glyphs are fucked up :(");
     }
     uint8_t *glyphBuf = (uint8_t *)malloc(95 * sizeof(GFXglyph));
@@ -63,7 +66,7 @@ const GFXfont *getFont(String name)
         debugLog("Failed to read the file: " + name + "Glyphs");
         return &FreeSansBold9pt7b;
     }
-    GFXglyph* glyphs = reinterpret_cast<GFXglyph*>(glyphBuf);
+    GFXglyph *glyphs = reinterpret_cast<GFXglyph *>(glyphBuf);
     fileGlyph.close();
     // Struct
     File fileStruct = LittleFS.open("/font/" + name + "Struct");
@@ -73,7 +76,7 @@ const GFXfont *getFont(String name)
         return &FreeSansBold9pt7b;
     }
     int fileStructSize = fileStruct.size();
-    //debugLog("fileStructSize: " + String(fileStructSize));
+    // debugLog("fileStructSize: " + String(fileStructSize));
     uint8_t *structBuf = (uint8_t *)malloc(fileStructSize * sizeof(uint8_t));
     if (fileStruct.read(structBuf, fileStructSize) < 0)
     {
@@ -84,14 +87,21 @@ const GFXfont *getFont(String name)
     uint16_t first = ((uint16_t)structBuf[1] << 8) | structBuf[0];
     uint16_t last = ((uint16_t)structBuf[3] << 8) | structBuf[2];
     uint8_t yAdvance = structBuf[4];
-    GFXfont newFont = GFXfont {
+    GFXfont newFont = GFXfont{
         bitmapBuf,
         glyphs,
         first,
         last,
         yAdvance,
     };
+    int nameLength = name.length();
+#if DEBUG
+    if (nameLength > RESOURCES_NAME_LENGTH)
+    {
+        debugLog("Resource name: " + name + " is too big because RESOURCES_NAME_LENGTH. Buffer overflow.");
+    }
+#endif
+    strncpy(loadedFontNames[emptyListIndex], name.c_str(), nameLength);
     loadedFont[emptyListIndex] = newFont;
-    loadedFontNames[emptyListIndex] = name;
     return &loadedFont[emptyListIndex];
 }

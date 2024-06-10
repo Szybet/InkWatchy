@@ -25,7 +25,9 @@ void createWifiTask(uint8_t tries, void (*functionToRunAfterConnection)(), uint8
             NULL,
             wifiPriority,
             &wifiTask);
-    } else {
+    }
+    else
+    {
         debugLog("The task is already running? why?");
     }
 }
@@ -103,11 +105,26 @@ void turnOffWifi()
     debugLog("Turning wifi off");
     if (isWifiTaskCheck() == true)
     {
-        // This is because task `arduino_events` has a queue and communicated with wifi task. Idk about this fix
-        vTaskSuspend(wifiTask);
-        delayTask(500);
+#if DEBUG
+        uint8_t debugCounter = 0;
+#endif
+        while (WiFi.scanComplete() == WIFI_SCAN_RUNNING)
+        {
+            delayTask(30);
+#if DEBUG
+            if (debugCounter > 15)
+            {
+                debugLog("Wifi scan going, waiting...");
+                debugCounter = 0;
+            }
+            debugCounter = debugCounter + 1;
+#endif
+        }
         vTaskDelete(wifiTask);
+        // This is because task `arduino_events` has a queue and communicated with wifi task. Idk about this fix
         setBoolMutex(&wifiTaskMutex, &isWifiTaskRunning, false);
+        // vTaskSuspend(wifiTask);
+        // delayTask(1500);
     }
     turnOffWifiMinimal();
 }
