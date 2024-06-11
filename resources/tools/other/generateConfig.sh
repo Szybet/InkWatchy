@@ -14,6 +14,7 @@ cd resources/tools/
 mkdir -p fs/in/
 mkdir -p fs/out/
 mkdir -p fs/littlefs
+mkdir -p fs/littlefs/conf/
 mkdir -p other/out/
 mkdir -p other/in/
 
