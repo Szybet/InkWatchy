@@ -74,6 +74,7 @@ void turnOnWifiTask(void *parameter)
     }
     if (WiFi.status() == WL_CONNECTED)
     {
+        debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));
         delayTask(300);
         wifiFunction();
     }

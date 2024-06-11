@@ -46,7 +46,7 @@
 
 // Conway
 #define CONWAY 1
-#define CONWAY_CPU_SPEED 1    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
+#define CONWAY_CPU_SPEED 0    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
 #define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
 
 // Watchface modules
@@ -76,6 +76,7 @@
 #define POWER_SAVING_OFF_AFTER 20         // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
 #define LOOP_NO_SCREEN_WRITE_DELAY_MS 125 // Go to "sleep" for 200 ms if the device is woken up ( in a menu for example )
 #define HARDWARE_POWER_SAVINGS 1          // Like wifi modem in power saving mode
+#define CPU_SPEED minimalSpeed            // Possible values: minimalSpeed, normalSpeed, maxSpeed. Obviously higher speeds decrease battery life - but it's only when you interact with the watch. This is mostly for the people who "ugh this watch is slow!". Well first, it's a watch, it should show time, any other features are battery wasters in some way and secondly you should first remove some features you don't use, most noticibly unused watchface moduls. In debug mode, this feature is overritten by DEBUG_SLOWER and DEBUG
 
 // For now those features are:
 // DISABLE_BUTTON_VIBRATION
@@ -207,5 +208,7 @@
 #define CONF_DISABLE_WAKE_UP "disable_wake_up"
 #define CONF_WEATHER "weather"
 #define CONF_BITCOIN "bitcoin"
+#define CONF_DRIFT "drift"
+#define CONF_DRIFT_FAST "drift_fast"
 
 #endif
