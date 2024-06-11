@@ -31,12 +31,13 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
         debugLog("Watchy is waking up!");
     }
 #endif
+
 #if DEBUG == 1 && DEBUG_SLOWER == 0
     setCpuSpeed(maxSpeed);
 #else
-    // Not needed anymore, It's set in platformio.ini
-    // setCpuSpeed(minimalSpeed);
+    setCpuSpeed(CPU_SPEED);
 #endif
+
     initRTC(isFromWakeUp, wakeUpReason);
     initButtons(isFromWakeUp);
     if (isFromWakeUp == false)
