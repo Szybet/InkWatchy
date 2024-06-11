@@ -5,10 +5,15 @@ void initMainMenu()
     int count = -1;
     entryMenu buttons[9];
 #if BOOK
+    debugLog("Getting book here");
     String book = getCurrentBook();
-    if(book != ""){
+    debugLog("Book got: " + book);
+    String bookPages = bookGetPages();
+    debugLog("Book pages: " + bookPages);
+    if (book != "")
+    {
         count = count + 1;
-        buttons[count] = {book + " " + bookGetPages(), getImg("book"), switchBook};
+        buttons[count] = {book + " " + bookPages, getImg("book"), switchBook};
     }
     {
         count = count + 1;
@@ -91,7 +96,7 @@ void initDebugMenu()
         buttons[count] = {"Font preview", &emptyImgPack, switchFontsPreviewMenu};
     }
 #endif
-    
+
     count = count + 1;
     initMenu(buttons, count, "Debug menu", 1);
 }

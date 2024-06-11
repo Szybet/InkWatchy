@@ -33,15 +33,21 @@ void resetSleepDelayBook()
     debugLog("millis is:" + String(millis()));
 }
 
-String currentBook = "none";
+#define BOOK_NAME_SIZE 100
+bool wasCurrentBook = false;
+char currentBook[BOOK_NAME_SIZE] = {0};
 String getCurrentBook()
-{
-    if (currentBook == "none")
+{   
+    if (wasCurrentBook == false)
     {
-        currentBook = fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/conf/");
+        String bookNameTmp = fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/conf/");
+        memset(currentBook, 0, BOOK_NAME_SIZE);
+        strncpy(currentBook, bookNameTmp.c_str(), bookNameTmp.length());
+        wasCurrentBook = true;
     }
-    debugLog("The current book is: \"" + currentBook + "\"");
-    return currentBook;
+    //String currentBook = fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/conf/");
+    debugLog("The current book is: \"" + String(currentBook) + "\"");
+    return String(currentBook);
 }
 
 void setPageNumber(int page)
@@ -86,7 +92,7 @@ int getLastPageNumber()
             return 0;
         }
         int fileSize = file.size();
-        debugLog("file size of this book: " + fileSize);
+        debugLog("file size of this book: " + String(fileSize));
         // bookPages = int(ceil(float(fileSize) / float(BOOK_CHARS_PER_PAGE)));
         bookPages = fileSize;
         file.close();
@@ -467,7 +473,8 @@ String bookGetPages(int charsPerPage)
 
 void changePageUp(int charsPerPage, bool regularShow)
 {
-    if(regularShow == true) {
+    if (regularShow == true)
+    {
         resetSleepDelayBook();
     }
     int page = getPageNumber();
@@ -485,7 +492,8 @@ void changePageUp(int charsPerPage, bool regularShow)
 
 void changePageDown(int charsPerPage, bool regularShow)
 {
-    if(regularShow == true) {
+    if (regularShow == true)
+    {
         resetSleepDelayBook();
     }
     int page = getPageNumber();
@@ -504,7 +512,7 @@ void changePageDown(int charsPerPage, bool regularShow)
 void resetBookVars()
 {
     bookPages = -1;
-    currentBook = "none";
+    wasCurrentBook = false;
     if (openedBook == true)
     {
         openedBook = false;
