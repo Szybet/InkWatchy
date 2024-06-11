@@ -49,14 +49,14 @@ do
     w=$(identify -ping -format '%h' $f_path)
     if [ "$w" -ne 200 ] || [ "$h" -ne 200 ]; then
         echo "Image dimensions are not 200x200. Resizing."
-        ../other/in/convert $f_path -resize 200x200! $f_path
+        ../other/in/magick $f_path -resize 200x200! $f_path
         h=200
         w=200
     fi
 
     fc=$(echo -n ${file_name%.*})
 
-    ../other/in/convert $f_path -dither FloydSteinberg -define dither:diffusion-amount=90% -remap ../images/img/eink-2color.png -depth 1 gray:- | openssl enc -aes-128-cbc -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$random_salt" -base64 > out/$fc
+    ../other/in/magick $f_path -dither FloydSteinberg -define dither:diffusion-amount=90% -remap ../images/img/eink-2color.png -depth 1 gray:- | openssl enc -aes-128-cbc -K "$(echo -n "$vault_password" | xxd -p -c 16)" -iv "$random_salt" -base64 > out/$fc
 
     rm $f_path
 
