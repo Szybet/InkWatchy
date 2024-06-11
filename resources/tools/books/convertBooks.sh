@@ -9,6 +9,8 @@ for file in ../../personal/books/*; do
         file_name="${file##*/}"
         echo "Processing file: $file_name"
         file_no_ext="${file_name%.*}"
+        file_no_ext=$(echo -n $file_no_ext | python3 -c "import sys; from unidecode import unidecode; print(unidecode(sys.stdin.read().strip()))")
+        file_no_ext="${file_no_ext// /_}" # Remove spaces to be sure
         mutool convert -F text -o "out/$file_no_ext" "$file"
         sed -i ':a;N;$!ba;s/\n/ /g;s/ \+/ /g' "out/$file_no_ext"
         cat "out/$file_no_ext" | python3 -c "import sys; from unidecode import unidecode; print(unidecode(sys.stdin.read().strip()))" > "out/tmp"
