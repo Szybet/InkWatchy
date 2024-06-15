@@ -1,11 +1,11 @@
 #!/bin/bash
 
 function imagemagick_from_source() {
-    if [ ! -f "other/in/convert" ]; then
+    if [ ! -f "other/in/magick" ]; then
         echo "Downloading image magick"
         wget https://imagemagick.org/archive/binaries/magick
         chmod +x magick
-        mv magick other/in/convert
+        mv magick other/in/magick
         rm magick* 1>/dev/null 2>/dev/null # Not sure
     fi
 

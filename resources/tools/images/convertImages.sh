@@ -23,7 +23,7 @@ do
 
     identify -ping -format '%w\n%h' $f > ${img_info}
 
-    ../other/in/convert $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap img/eink-2color.png -depth 1 gray:- > ${img_path}
+    ../other/in/magick $f -dither FloydSteinberg -define dither:diffusion-amount=90% -remap img/eink-2color.png -depth 1 gray:- > ${img_path}
 done
 
 rm -rf ../fs/littlefs/img/ 1>/dev/null 2>/dev/null

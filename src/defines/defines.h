@@ -1,9 +1,6 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
-#undef CONFIG_ESP_INT_WDT_TIMEOUT_MS
-#define CONFIG_ESP_INT_WDT_TIMEOUT_MS 2000
-
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
 #include <GxEPD2_BW.h>
