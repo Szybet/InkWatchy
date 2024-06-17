@@ -1,6 +1,7 @@
 #include "bookMod.h"
 
 #if BOOK_MODULE_ENABLED
+#define BOOK_NAME_MODULE_NAME_MAX 25
 
 void wfBookcheckShow(bool *showBool, bool *redrawBool)
 {
@@ -60,10 +61,10 @@ void wfBookrequestShow(buttonState button, bool *showBool)
         {
             debugLog("Entered book selected");
             sizeInfo s = drawTextSimple("Selected book:", "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y);
-            // Max 29
+            // Max BOOK_NAME_MODULE_NAME_MAX
             String curBookTmp = curBook;
-            if(curBookTmp.length() > 28) {
-                curBookTmp = curBookTmp.substring(0, 28);
+            if(curBookTmp.length() > BOOK_NAME_MODULE_NAME_MAX) {
+                curBookTmp = curBookTmp.substring(0, BOOK_NAME_MODULE_NAME_MAX);
             }
             sizeInfo ss = drawTextSimple(curBookTmp, "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y + s.h + 2);
             drawTextSimple(bookGetPages(BOOK_MODULE_CHARS_PER_PAGE), "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y + s.h + ss.h + 4);

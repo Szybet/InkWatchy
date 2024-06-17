@@ -126,7 +126,7 @@ void drawModuleCount(bool force)
 
 void wfModuleSwitch(direction where)
 {
-#if DEBUG && true == true
+#if DEBUG && true == false
     for (int i = 0; i < MODULE_COUNT; i++)
     {
         debugLog("Dump show values: " + String(i) + " " + BOOL_STR(wfModulesList[i]->show));

@@ -27,10 +27,9 @@ bool fsSetup()
       {
         loadedFontNames[i] = "";
       }
-      */
 
-      fsCreateDir("/conf");
-      isDebug(fsListDir("/", 0));
+      */
+      //isDebug(fsListDir("/", 0));
       debugLog("Little fs total bytes: " + String(LittleFS.totalBytes()));
       debugLog("Little fs used bytes: " + String(LittleFS.usedBytes()));
     }
