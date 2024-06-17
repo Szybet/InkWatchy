@@ -32,8 +32,8 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     }
 #endif
 
-#if DEBUG == 1 && DEBUG_SLOWER == 0
-    setCpuSpeed(maxSpeed);
+#if DEBUG == 1
+    setCpuSpeed(DEBUG_CPU_SPEED);
 #else
     setCpuSpeed(CPU_SPEED);
 #endif

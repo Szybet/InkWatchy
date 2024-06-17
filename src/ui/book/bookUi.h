@@ -14,7 +14,7 @@ void changePageDown(int charsPerPage = BOOK_CHARS_PER_PAGE, bool regularShow = t
 void changePageUp(int charsPerPage = BOOK_CHARS_PER_PAGE, bool regularShow = true);
 String showPage(int page, bool actuallyShowIt = true, int charsPerPage = BOOK_CHARS_PER_PAGE);
 int getPageNumber();
-extern uint16_t startHeightBook;
+extern RTC_DATA_ATTR uint16_t startHeightBook;
 void calculateBookTextHeight();
 
 #endif

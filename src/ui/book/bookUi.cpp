@@ -102,7 +102,7 @@ int getLastPageNumber()
 }
 
 String test = "jqyQRTY";
-uint16_t startHeightBook = 0;
+RTC_DATA_ATTR uint16_t startHeightBook = 0;
 int16_t staAx_X;
 int16_t staAx_Y;
 int16_t staAx_Z;
