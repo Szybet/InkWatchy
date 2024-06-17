@@ -51,24 +51,25 @@ String fsGetString(String conf, String defaultValue, String dir)
     return str;
 }
 
-void fsSetString(String conf, String value, String dir)
+bool fsSetString(String conf, String value, String dir)
 {
     if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
-        return;
+        return false;
     }
     File file = LittleFS.open(dir + conf, FILE_WRITE);
     if (file == false)
     {
         debugLog("Failed to set conf: " + conf);
-        return;
+        return false;
     }
     if(file.print(value) == false) {
         debugLog("Failed to print to file " + conf + " value: " + value);
-        return;
+        return false;
     }
     file.close();
+    return true;
 }
 
 bufSize fsGetBlob(String conf, String dir)

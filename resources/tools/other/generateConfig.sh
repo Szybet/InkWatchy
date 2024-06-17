@@ -15,6 +15,7 @@ mkdir -p fs/in/
 mkdir -p fs/out/
 mkdir -p fs/littlefs
 mkdir -p fs/littlefs/conf/
+touch fs/littlefs/conf/.keep
 mkdir -p other/out/
 mkdir -p other/in/
 
