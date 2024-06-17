@@ -7,7 +7,6 @@ long sleepDelayMs;
 // Also at boot, but on wake up too
 void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
-#if DEBUG
     if (isFromWakeUp == false)
     {
         debugLog("Watchy is starting!");
@@ -17,12 +16,25 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
             int firstBoot = fsGetString(FIRST_BOOT_FILE, "0").toInt();
             if (firstBoot <= 2)
             {
-                fsSetString(FIRST_BOOT_FILE, String(firstBoot + 1));
-                debugLog("This is the first boot. Clearing core dump partition");
-                debugLog("esp_core_dump_image_erase status: " + String(esp_err_to_name(esp_core_dump_image_erase())));
-                // This may be needed to avoid weird watchdog resets?
-                delay(1500);
-                ESP.restart();
+                if (fsSetString(FIRST_BOOT_FILE, String(firstBoot + 1)) == true)
+                {
+                    if (fsGetString(FIRST_BOOT_FILE, "0").toInt() == firstBoot + 1)
+                    {
+                        debugLog("This is the first boot. Clearing core dump partition");
+                        debugLog("esp_core_dump_image_erase status: " + String(esp_err_to_name(esp_core_dump_image_erase())));
+                        // This may be needed to avoid weird watchdog resets?
+                        delay(1500);
+                        ESP.restart();
+                    }
+                    else
+                    {
+                        debugLog("Failed to write a file to littlefs but no errors reported? fuck...");
+                    }
+                }
+                else
+                {
+                    debugLog("Failed to set first boot file string, little fs is borked?");
+                }
             }
         }
     }
@@ -30,7 +42,6 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     {
         debugLog("Watchy is waking up!");
     }
-#endif
 
 #if DEBUG == 1
     setCpuSpeed(DEBUG_CPU_SPEED);
