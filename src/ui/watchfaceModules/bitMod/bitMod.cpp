@@ -186,7 +186,7 @@ void bitcoinSync(uint8_t tries)
     if (height != 0)
     {
         btcData.lastSyncUnix = getUnixTime();
-        if (COIN_LIB_API_KEY != "")
+        if (strlen(COIN_LIB_API_KEY) != 0)
         {
             PriceData prices = btcApi.getBitcoinPrice();
             if (prices.error == false)

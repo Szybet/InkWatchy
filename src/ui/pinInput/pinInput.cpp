@@ -116,5 +116,9 @@ void loopPinInput()
         showPin();
         break;
     }
+    default:
+    {
+        break;
+    }
     }
 }

@@ -248,5 +248,10 @@ void loopManager()
         managerLaunchFunc(generalMenuPlace, NULL, loopMenu);
         break;
     }
+    case NoPlace:
+    {
+        debugLog("This shouldn't happen?");
+        break;
+    }
     }
 }
