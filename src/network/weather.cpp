@@ -7,7 +7,7 @@ savedWeatherData weatherDataDays[MAX_DAYS][WEATHER_PER_DAY]; // Days / Data for 
 
 void syncWeather()
 {
-  if (OPEN_WEATHER_API_KEY != "" && WEATHER_LONGTIT != "" && WEATHER_LATIT != "")
+  if (strlen(OPEN_WEATHER_API_KEY) != 0 && strlen(WEATHER_LONGTIT) != 0 && strlen(WEATHER_LATIT) != 0)
   {
     debugLog("Starting weather forecast");
     forecast = new OW_forecast;

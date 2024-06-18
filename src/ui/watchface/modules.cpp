@@ -92,5 +92,9 @@ void modulesButtons(buttonState bt)
         drawPosMarker();
         break;
     }
+    default:
+    {
+        break;
+    }
     }
 }

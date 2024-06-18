@@ -223,6 +223,10 @@ void loopMenu()
     showMenu();
     break;
   }
+  default:
+  {
+    break;
+  }
   }
 }
 

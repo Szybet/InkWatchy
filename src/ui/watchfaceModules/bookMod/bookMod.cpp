@@ -47,6 +47,10 @@ void wfBookrequestShow(buttonState button, bool *showBool)
         showPageChecker = true;
         break;
     }
+    default:
+    {
+        break;
+    }
     }
 
     String curBook = getCurrentBook();

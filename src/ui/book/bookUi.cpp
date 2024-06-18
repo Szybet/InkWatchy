@@ -295,6 +295,10 @@ void loopBook()
     {
         break;
     }
+    default:
+    {
+        break;
+    }
     }
 
     bma4_accel accel;
