@@ -1,0 +1,6 @@
+dependencies:
+  # Required IDF version
+  idf: ">=4.4"
+
+  esp_littlefs:
+    git: https://github.com/Szybet/esp_littlefs.git
