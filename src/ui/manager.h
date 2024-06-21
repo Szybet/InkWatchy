@@ -36,10 +36,10 @@ typedef enum
 } UiPlace;
 
 extern int currentPlaceIndex;
-extern RTC_DATA_ATTR UiPlace placeTree[PLACE_TREE_MAX_DEPTH];
-extern RTC_DATA_ATTR UiPlace currentPlace;
-extern RTC_DATA_ATTR void (*exitFunc)();
-extern RTC_DATA_ATTR void (*exitFuncGlob)(); // Executed when a place is exiting and it was requested
+extern UiPlace placeTree[PLACE_TREE_MAX_DEPTH];
+extern UiPlace currentPlace;
+extern void (*exitFunc)();
+extern void (*exitFuncGlob)(); // Executed when a place is exiting and it was requested
 
 void executeExitFunc();
 

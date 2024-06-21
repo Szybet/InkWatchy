@@ -8,8 +8,8 @@
 #define MODULE_POS 1
 #define MODULE_ENG_POS 2
 
-extern RTC_DATA_ATTR int watchfacePos;
-extern RTC_DATA_ATTR bool positionEngaged;
+extern int watchfacePos;
+extern bool positionEngaged;
 
 void drawPosMarker();
 void movePos(int add);

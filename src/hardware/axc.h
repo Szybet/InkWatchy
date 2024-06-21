@@ -3,7 +3,7 @@
 
 #include "defines/defines.h"
 
-extern RTC_DATA_ATTR StableBMA SBMA;
+extern StableBMA SBMA;
 
 void initAxc();
 void deInitAxc();

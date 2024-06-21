@@ -4,7 +4,7 @@
 
 extern tmElements_t* timeRTC;
 
-extern RTC_DATA_ATTR SmallRTC SRTC;
+extern SmallRTC SRTC;
 
 void setupTimeStructure();
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);

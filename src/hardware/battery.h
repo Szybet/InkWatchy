@@ -19,8 +19,8 @@ struct batteryInfo {
     bool oneCheck; // Force check once even if no voltage changed
 };
 
-extern RTC_DATA_ATTR batteryInfo bat;
-extern RTC_DATA_ATTR bool isBatterySaving;
+extern batteryInfo bat;
+extern bool isBatterySaving;
 
 double getBatteryVoltage();
 
