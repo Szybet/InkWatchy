@@ -3,8 +3,8 @@
 
 #include "../../defines/defines.h"
 
-extern RTC_DATA_ATTR bool disableAllVibration;
-extern RTC_DATA_ATTR bool disableWakeUp;
+extern bool disableAllVibration;
+extern bool disableWakeUp;
 
 void loadAllStorage();
 void saveAllStorage();

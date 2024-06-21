@@ -5,8 +5,8 @@
 
 #if WIFI_MODULE
 
-extern RTC_DATA_ATTR wifiStatusSimple previousWifiState;
-extern RTC_DATA_ATTR wfModule wfNet;
+extern wifiStatusSimple previousWifiState;
+extern wfModule wfNet;
 
 #endif
 #endif

@@ -4,8 +4,7 @@
 #include "defines/defines.h"
 
 extern buttonState buttonPressed;
-extern int RTC_DATA_ATTR UP_PIN;
-extern uint64_t RTC_DATA_ATTR UP_MASK;
+extern int UP_PIN;
 extern TaskHandle_t buttonTask;
 
 buttonState useButtonBack();

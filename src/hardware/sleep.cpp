@@ -79,7 +79,7 @@ void goSleep()
     ForceInputs();
     LittleFS.end();
     esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
-    esp_sleep_enable_ext1_wakeup(UP_MASK | DOWN_MASK | MENU_MASK | BACK_MASK, ESP_EXT1_WAKEUP_ANY_HIGH); // Enable deep sleep wake on button press
+    esp_sleep_enable_ext1_wakeup(BIT(UP_PIN) | BIT(DOWN_PIN) | BIT(MENU_PIN) | BIT(BACK_PIN), ESP_EXT1_WAKEUP_ANY_HIGH); // Enable deep sleep wake on button press
     esp_deep_sleep_start();
 }
 

@@ -1,6 +1,4 @@
 dependencies:
-  # Required IDF version
-  idf: ">=4.4"
-
+  espressif/arduino-esp32: "^3.0.1"
   esp_littlefs:
     git: https://github.com/Szybet/esp_littlefs.git

@@ -55,7 +55,6 @@ void turnOnWifiTask(void *parameter)
 
         debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));
 
-        WiFi.setAutoConnect(true);
         WiFi.setAutoReconnect(true);
         initWifi();
         wifiMulti.run(WIFI_MULTI_SYNC_TIME);

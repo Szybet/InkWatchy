@@ -15,11 +15,11 @@ struct bitcoinData {
     long lastSyncUnix;
 };
 extern bitcoinData btcData;
-extern bool RTC_DATA_ATTR isBtcDataAvail;
-extern RTC_DATA_ATTR bool isBtcDataNew;
+extern bool isBtcDataAvail;
+extern bool isBtcDataNew;
 
 
-extern RTC_DATA_ATTR wfModule wfBit;
+extern wfModule wfBit;
 void bitcoinSync(uint8_t tries);
 
 #endif

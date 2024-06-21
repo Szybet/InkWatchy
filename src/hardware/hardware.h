@@ -3,7 +3,7 @@
 
 #include "defines/defines.h"
 
-extern RTC_DATA_ATTR float HWVer;
+extern float HWVer;
 extern long sleepDelayMs;
 
 void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);

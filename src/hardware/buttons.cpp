@@ -1,7 +1,6 @@
 #include "buttons.h"
 
 int RTC_DATA_ATTR UP_PIN = 32;
-uint64_t RTC_DATA_ATTR UP_MASK = GPIO_SEL_32;
 buttonState buttonPressed = None;
 TaskHandle_t buttonTask = NULL;
 std::mutex buttMut;
@@ -60,12 +59,10 @@ void initButtons(bool isFromWakeUp)
             if (HWVer == 1.5)
             {
                 UP_PIN = 32;
-                UP_MASK = GPIO_SEL_32;
             }
             else
             {
                 UP_PIN = 35;
-                UP_MASK = GPIO_SEL_35;
             }
         }
     }
@@ -200,22 +197,22 @@ void manageButtonWakeUp()
     initButtons(true);
     uint64_t wakeupBit;
     wakeupBit = esp_sleep_get_ext1_wakeup_status();
-    if (wakeupBit & BACK_MASK)
+    if (wakeupBit & BIT(BACK_PIN))
     {
         wakeUpLong(BACK_PIN, Back, LongBack);
         return;
     }
-    if (wakeupBit & MENU_MASK)
+    if (wakeupBit & BIT(MENU_PIN))
     {
         wakeUpLong(MENU_PIN, Menu, LongMenu);
         return;
     }
-    if (wakeupBit & DOWN_MASK)
+    if (wakeupBit & BIT(DOWN_PIN))
     {
         wakeUpLong(DOWN_PIN, Down, LongDown);
         return;
     }
-    if (wakeupBit & UP_MASK)
+    if (wakeupBit & BIT(UP_PIN))
     {
         wakeUpLong(UP_PIN, Up, LongUp);
         return;

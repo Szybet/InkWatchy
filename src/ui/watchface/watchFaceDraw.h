@@ -17,8 +17,8 @@
 #define TO_DAY_BAR_SIZE 54, 6
 #define BATT_BAR_CORD 135, 83
 
-extern RTC_DATA_ATTR int percentOfDay;
-extern RTC_DATA_ATTR int batteryPercantageWF;
+extern int percentOfDay;
+extern int batteryPercantageWF;
 
 void drawTimeBeforeApply();
 void drawTimeAfterApply();
