@@ -1,4 +1,5 @@
 dependencies:
-  espressif/arduino-esp32: "^3.0.1"
+  espressif/arduino-esp32: 
+    git: https://github.com/Szybet/arduino-esp32.git
   esp_littlefs:
     git: https://github.com/Szybet/esp_littlefs.git
