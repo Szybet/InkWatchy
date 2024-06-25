@@ -97,6 +97,7 @@ void logCleanup(bool serial, bool fs)
     {
       if (savedLogsFileIndex > 0)
       {
+        // This function here can output old logs, mostly from FsSetup
         logFile.print(savedLogsFile);
         savedLogsFileIndex = 0;
         memset(savedLogsFile, 0, LOG_FILE_BUFFER_SIZE);

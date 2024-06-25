@@ -197,22 +197,22 @@ void manageButtonWakeUp()
     initButtons(true);
     uint64_t wakeupBit;
     wakeupBit = esp_sleep_get_ext1_wakeup_status();
-    if (wakeupBit & BIT(BACK_PIN))
+    if (wakeupBit & pinToMask(BACK_PIN))
     {
         wakeUpLong(BACK_PIN, Back, LongBack);
         return;
     }
-    if (wakeupBit & BIT(MENU_PIN))
+    if (wakeupBit & pinToMask(MENU_PIN))
     {
         wakeUpLong(MENU_PIN, Menu, LongMenu);
         return;
     }
-    if (wakeupBit & BIT(DOWN_PIN))
+    if (wakeupBit & pinToMask(DOWN_PIN))
     {
         wakeUpLong(DOWN_PIN, Down, LongDown);
         return;
     }
-    if (wakeupBit & BIT(UP_PIN))
+    if (wakeupBit & pinToMask(UP_PIN))
     {
         wakeUpLong(UP_PIN, Up, LongUp);
         return;

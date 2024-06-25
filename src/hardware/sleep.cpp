@@ -70,16 +70,25 @@ void goSleep()
     display.hibernate();
     turnOffWifi();    // To be sure only
     alarmManageRTC(); // To be sure too...
+    deInitWatchdogTask();
     debugLog("Sleeping!");
 #if DEBUG
     logCleanup();
     Serial.flush();
 #endif
-    deInitWatchdogTask();
     ForceInputs();
     LittleFS.end();
-    esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
-    esp_sleep_enable_ext1_wakeup(BIT(UP_PIN) | BIT(DOWN_PIN) | BIT(MENU_PIN) | BIT(BACK_PIN), ESP_EXT1_WAKEUP_ANY_HIGH); // Enable deep sleep wake on button press
+    esp_err_t ext0Err = esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
+    esp_err_t ext1Err = esp_sleep_enable_ext1_wakeup(pinToMask(UP_PIN) | pinToMask(DOWN_PIN) | pinToMask(MENU_PIN) | pinToMask(BACK_PIN), ESP_EXT1_WAKEUP_ANY_HIGH);
+    if (ext0Err != ESP_OK || ext1Err != ESP_OK)
+    {
+        Serial.begin(SERIAL_BAUDRATE);
+        debugLog("UP_PIN: " + String(UP_PIN));
+        debugLog("ext0 error: " + String(esp_err_to_name(ext0Err)));
+        debugLog("ext1 error: " + String(esp_err_to_name(ext1Err)));
+        delayTask(3000);
+        assert("Failed to make gpio interrupts");
+    }
     esp_deep_sleep_start();
 }
 
@@ -138,5 +147,19 @@ void manageSleep()
             resetSleepDelay();
             goSleep();
         }
+    }
+}
+
+// https://github.com/espressif/esp-idf/blob/625bd5eb1806809ff3cc010ee20d1f750aa778a1/components/soc/include/hal/gpio_types.h#L59
+// #define BIT(nr) (1UL << (nr))
+uint64_t pinToMask(uint8_t pin)
+{
+    if (pin < 32)
+    {
+        return BIT(pin);
+    }
+    else
+    {
+        return ((uint64_t)(((uint64_t)1) << pin));
     }
 }
