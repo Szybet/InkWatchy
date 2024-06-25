@@ -19,6 +19,9 @@ touch fs/littlefs/conf/.keep
 mkdir -p other/out/
 mkdir -p other/in/
 
+echo "2019328" > fs/in/offset.txt
+echo "2097152" > fs/in/size.txt
+
 if [ ! -f "fs/in/fsConfig.ini" ] || [ ! -f "fs/in/partitions.csv" ]; then
     echo -e ''
     echo "Creating fs config"

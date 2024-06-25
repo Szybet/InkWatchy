@@ -10,17 +10,17 @@ offset=$(<in/offset.txt tr -d '\n')
 
 #./in/mklittlefs -d 5 --all-files -c littlefs -s $size out/fs.bin
 
-rm -rf out/fs.bin
-dd if=/dev/zero of=out/fs.bin bs=$size count=1
-sudo losetup /dev/loop84 out/fs.bin
-sudo lfs --block_size=4096 --format /dev/loop84
-rm -rf in/fsMount
-mkdir in/fsMount
-sudo lfs --block_size=4096 /dev/loop84 in/fsMount
-sudo cp -r littlefs/* in/fsMount/
-sync
-sudo umount in/fsMount/
-sync
-sudo losetup -d /dev/loop84
+# rm -rf out/fs.bin
+# dd if=/dev/zero of=out/fs.bin bs=$size count=1
+# sudo losetup /dev/loop84 out/fs.bin
+# sudo lfs --block_size=4096 --format /dev/loop84
+# rm -rf in/fsMount
+# mkdir in/fsMount
+# sudo lfs --block_size=4096 /dev/loop84 in/fsMount
+# sudo cp -r littlefs/* in/fsMount/
+# sync
+# sudo umount in/fsMount/
+# sync
+# sudo losetup -d /dev/loop84
 
 ../other/in/esptool write_flash $offset out/fs.bin
