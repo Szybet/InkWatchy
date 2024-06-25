@@ -1,7 +1,7 @@
 #!/bin/bash
 
 OPTIONS=("1" "Generate resources"
-         "2" "Generate partition table"
+         #"2" "Generate partition table"
          "3" "Flash filesystem"
          "4" "Get filesystem from ESP"
          "5" "Flash personal filesystem")
