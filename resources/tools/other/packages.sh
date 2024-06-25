@@ -54,9 +54,10 @@ if [ ! -f "fs/in/mklittlefs" ]; then
     mv mklittlefs/mklittlefs fs/in/
     rm -rf mklittlefs
     rm -rf mklittlefs.tar.gz
+    
     #wget -q -O mklittlefs https://github.com/Szybet/mklittlefs/releases/download/3.2.0/mklittlefs
-    chmod +x mklittlefs
-    mv mklittlefs fs/in/
+    #chmod +x mklittlefs
+    #mv mklittlefs fs/in/
 fi
 
 if [ ! -f "other/in/esptool" ]; then

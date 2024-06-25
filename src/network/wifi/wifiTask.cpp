@@ -210,10 +210,13 @@ bool isWifiTaskCheck()
 #if DEBUG == 1 || DEBUG_MENUS == 1
 String wifiStatus()
 {
-    switch (WiFi.status())
+    wl_status_t wifiStatus = WiFi.status();
+    switch (wifiStatus)
     {
     case WL_NO_SHIELD:
         return "NO SHIELD";
+    case WL_STOPPED:
+        return "WL_STOPPED";
     case WL_IDLE_STATUS:
         return "IDLE STATUS";
     case WL_NO_SSID_AVAIL:
@@ -229,7 +232,7 @@ String wifiStatus()
     case WL_DISCONNECTED:
         return "DISCONNECTED";
     default:
-        return "UNKNOWN STATUS";
+        return "UNKNOWN: " + String(wifiStatus);
     }
 }
 #endif

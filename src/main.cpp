@@ -26,7 +26,7 @@ void setup()
 #endif
   initLogs(); // This has #if in it, so it can run always
 #if PUT_LOGS_TO_SERIAL
-  Serial.begin(115200);
+  Serial.begin(SERIAL_BAUDRATE);
 #endif
 #endif
   wakeUpReason = esp_sleep_get_wakeup_cause();
