@@ -66,6 +66,8 @@
 #if BOOK && BOOK_MODULE
 #define BOOK_MODULE_ENABLED 1
 #endif
+#define MODULES_OPERATING_FAST 1 // Great name for a feature... Well basically when you operate modules it won't wait for more operations, it goes to sleep. This makes it wait the value below:
+#define MODULES_WAITING_DIVISION 13 // Divise SLEEP_EVERY_MS through that value
 
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
@@ -76,7 +78,7 @@
 #define POWER_SAVING_OFF_AFTER 20         // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
 #define LOOP_NO_SCREEN_WRITE_DELAY_MS 125 // Go to "sleep" for 200 ms if the device is woken up ( in a menu for example )
 #define HARDWARE_POWER_SAVINGS 1          // Like wifi modem in power saving mode
-#define CPU_SPEED minimalSpeed            // Possible values: minimalSpeed, normalSpeed, maxSpeed. Obviously higher speeds decrease battery life - but it's only when you interact with the watch. This is mostly for the people who "ugh this watch is slow!". Well first, it's a watch, it should show time, any other features are battery wasters in some way and secondly you should first remove some features you don't use, most noticibly unused watchface moduls. In debug mode, this feature is overritten by DEBUG_SLOWER and DEBUG
+#define CPU_SPEED minimalSpeed            // Possible values: minimalSpeed, normalSpeed, maxSpeed. Obviously higher speeds decrease battery life - but it's only when you interact with the watch. This is mostly for the people who "ugh this watch is slow!". Well first, it's a watch, it should show time, any other features are battery wasters in some way and secondly you should first remove some features you don't use, most noticibly unused watchface moduls. In debug mode, this feature is overritten by DEBUG_CPU_SPEED when DEBUG
 
 // For now those features are:
 // DISABLE_BUTTON_VIBRATION
@@ -103,29 +105,30 @@
 
 // Debugging help
 #define DEBUG 0
-#define DEBUG_SLOWER 0             // Makes debug as slow as the regular build
-#define EINK_COUNTER 0             // Shows a counter somewhere on screen
-#define DUMP_INIT_DEBUG 0          // If debug, shows at init init information
-#define DUMP_LOOP_DEBUG 0          // If debug, at every loop iteration dump hardware values that can change
-#define DUMP_LOOP_SOFTWARE_DEBUG 0 // If debug, at every loop iteration dump software values that can change - no sense in using it with DUMP_LOOP_DEBUG
-#define SCREEN_SLEEP_INFO 0        // Shows information on screen when the device goes to screen
-#define DRAW_DEBUG_RECT 0          // Shows rectangles where custom functions write bitmaps
-#define DUMP_LOOP_DELAY 5000       // delay in ms of dumping loop data
-#define SPEED_THROUGH_TIME 0       // Speeds up time for watchface programming
-#define NO_SYNC 0                  // If debug and this is both true, it will not try to sync up automatically
-#define VOLTAGE_PRINT_ON 0         // Prints voltage on the screen, really fast
-#define DISABLE_SLEEP 0            // Disable sleep, so it will never go to sleep. Good for SCOM_TASK
-#define PUT_LOGS_TO_SERIAL 1       // Puts logs to serial. Turn off if you want debug on the go
-#define PUT_LOGS_TO_FS 1           // Puts logs into littlefs
-#define WAIT_FOR_MONITOR 0         // If debug is enabled, waits for monitor in setup for 3000 ms
+#define DEBUG_CPU_SPEED normalSpeed // Possible values: minimalSpeed, normalSpeed, maxSpeed
+#define EINK_COUNTER 0              // Shows a counter somewhere on screen
+#define DUMP_INIT_DEBUG 0           // If debug, shows at init init information
+#define DUMP_LOOP_DEBUG 0           // If debug, at every loop iteration dump hardware values that can change
+#define DUMP_LOOP_SOFTWARE_DEBUG 0  // If debug, at every loop iteration dump software values that can change - no sense in using it with DUMP_LOOP_DEBUG
+#define SCREEN_SLEEP_INFO 0         // Shows information on screen when the device goes to screen
+#define DRAW_DEBUG_RECT 0           // Shows rectangles where custom functions write bitmaps
+#define DUMP_LOOP_DELAY 5000        // delay in ms of dumping loop data
+#define SPEED_THROUGH_TIME 0        // Speeds up time for watchface programming
+#define NO_SYNC 0                   // If debug and this is both true, it will not try to sync up automatically
+#define VOLTAGE_PRINT_ON 0          // Prints voltage on the screen, really fast
+#define DISABLE_SLEEP 0             // Disable sleep, so it will never go to sleep. Good for SCOM_TASK
+#define PUT_LOGS_TO_SERIAL 1        // Puts logs to serial. Turn off if you want debug on the go
+#define PUT_LOGS_TO_FS 1            // Puts logs into littlefs
+#define WAIT_FOR_MONITOR 0          // If debug is enabled, waits for monitor in setup for 3000 ms
 // Ah... too much allocated memory... 10 hours of my life...
-#define LOG_SERIAL_BUFFER_SIZE 300
-#define LOG_FILE_BUFFER_SIZE 3000
+#define LOG_SERIAL_BUFFER_SIZE 1000
+#define LOG_FILE_BUFFER_SIZE 8000
 // Max file size for littlefs: 2Gb
 // https://github.com/littlefs-project/littlefs/issues/738
-#define MAX_LOG_FILE_SIZE_BYTES 100000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs, 400000 is the max in my opinion
+#define MAX_LOG_FILE_SIZE_BYTES 300000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs, 400000 is the max in my opinion
 #define STOP_ON_RESET 1                // Stop the device until the reset is cleared, it doesn't do that if it's sure that it was a forced reset (esptool one)
-#define SERIAL_LOG_DELAY_MS 35
+#define SERIAL_LOG_DELAY_MS 23
+#define SERIAL_BAUDRATE 115200
 
 #define SCOM_TASK 0 // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
 #if SCOM_TASK == 1 && DEBUG == 1
@@ -188,7 +191,7 @@
 #define TASK_STACK_DUMP_BATTERY 2000
 #define TASK_STACK_BUTTON 4700
 #define TASK_STACK_VIBRATION 3500
-#define TASK_STACK_WIFI 37500
+#define TASK_STACK_WIFI 33500
 #define TASK_STACK_SCOM 10000
 #define TASK_STACK_WATCHDOG 3500
 
