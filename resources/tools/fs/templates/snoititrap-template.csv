@@ -1,2 +1,2 @@
 # Name,   Type, SubType, Offset,  Size,    Flags
-app,     app,  factory,   0x13000, 3M,
+app,     app,  factory,   0x20000, 3M,
