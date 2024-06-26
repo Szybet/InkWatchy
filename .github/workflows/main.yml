@@ -34,7 +34,7 @@ jobs:
             echo "Not cleaning platformio packages"
           fi
 
-          ./resources/tools/other/setup/demoMaker.sh
+          ./resources/tools/other/compile/demoMaker.sh
           cd ..
       - name: Upload demo program
         uses: actions/upload-artifact@v4
