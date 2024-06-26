@@ -30,7 +30,7 @@ case $CHOICE in
         cd resources/tools/other/wifiTool/ && ./patch.sh
         ;;
     2)
-        resources/tools/other/demoMaker.sh
+        resources/tools/other/compile/demoMaker.sh
         ;;
     3)
         baudrate=$(extract_monitor_speed platformio.ini)
