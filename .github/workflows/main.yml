@@ -19,17 +19,12 @@ jobs:
           cd InkWatchy-demo
 
           COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-          if [[ $COMMIT_MESSAGE == *":clean-pio" ]]; then
-            echo "Cleaning platformio directory, as requested"
-            rm -rf ~/.platformio/
-          else
-            echo "Not cleaning platformio directory"
-          fi
 
-          if [[ $COMMIT_MESSAGE == *":clean-pack" ]]; then
+          if [[ $COMMIT_MESSAGE == *":clean-pio" ]]; then
             echo "Cleaning pio packages, as requested"
             rm -rf ~/.platformio/packages/framework-arduinoespressif32/
             rm -rf ~/.platformio/packages/framework-espidf/
+            rm -rf ~/.platformio/platforms/*
           else
             echo "Not cleaning platformio packages"
           fi
