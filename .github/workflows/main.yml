@@ -11,6 +11,7 @@ jobs:
       - name: demo build
         run: |
           rm -rf InkWatchy-demo 1>/dev/null 2>/dev/null
+          git config --global http.version HTTP/1.1
           git clone https://github.com/Szybet/InkWatchy.git InkWatchy-demo
 
           COMMIT_MESSAGE=$(git log -1 --pretty=%B)
