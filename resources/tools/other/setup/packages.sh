@@ -23,7 +23,7 @@ imagemagick_from_source
 
 if command -v dpkg &> /dev/null; then
     echo "Detected a debian based system"
-    debian_packages=("mupdf-tools" "xxd" "jq" "python3-unidecode" "libfreetype-dev" "libfreetype6" "libfreetype6-dev" "python3-venv" "imagemagick" "libltdl-dev" "make" "build-essential" "automake")
+    debian_packages=("mupdf-tools" "xxd" "jq" "python3-unidecode" "libfreetype-dev" "libfreetype6" "libfreetype6-dev" "python3-venv" "imagemagick" "libltdl-dev" "make" "build-essential" "automake" "ninja-build")
     missing_packages=()
 
     for pkg in "${debian_packages[@]}"; do
