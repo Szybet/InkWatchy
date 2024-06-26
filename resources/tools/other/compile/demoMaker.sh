@@ -69,7 +69,7 @@ sleep 10
 
 cd resources/tools/other/
 in/esptool -p $serial_port read_flash 0x00000 0x400000 out/demo-program.bin
-python ../fs/cleanPartition.py ../fs/in/partitions.csv out/demo-program.bin nvs
+#python ../fs/cleanPartition.py ../fs/in/partitions.csv out/demo-program.bin nvs
 #python ../fs/cleanPartition.py ../fs/in/partitions.csv out/demo-program.bin coredump
 sleep 5
 in/esptool -p $serial_port erase_flash

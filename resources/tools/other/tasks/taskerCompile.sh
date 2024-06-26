@@ -1,7 +1,7 @@
 #!/bin/bash
 
-OPTIONS=("1" "Clean everything"
-         "2" "Setup build")
+OPTIONS=("1" "Clean"
+         "2" "First build")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 

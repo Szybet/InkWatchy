@@ -20,8 +20,9 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
                 {
                     if (fsGetString(FIRST_BOOT_FILE, "0").toInt() == firstBoot + 1)
                     {
-                        debugLog("This is the first boot. Clearing core dump partition");
+                        debugLog("This is the first boot. Clearing core dump and nvs partition");
                         debugLog("esp_core_dump_image_erase status: " + String(esp_err_to_name(esp_core_dump_image_erase())));
+                        debugLog("nvs_flash_erase status: " + String(esp_err_to_name(nvs_flash_erase())));
                         // This may be needed to avoid weird watchdog resets?
                         delay(1500);
                         ESP.restart();

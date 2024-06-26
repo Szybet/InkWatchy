@@ -5,6 +5,9 @@ on:
     branches: [ master ]
 
 jobs:
+  clean:
+    runs-on: self-hosted
+      - name: clean platformio check
   demo:
     runs-on: self-hosted
     steps:
@@ -12,8 +15,25 @@ jobs:
         run: |
           rm -rf InkWatchy-demo 1>/dev/null 2>/dev/null
           git clone https://github.com/Szybet/InkWatchy.git InkWatchy-demo
+
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          if [[ $COMMIT_MESSAGE == *":clean-platformio" ]]; then
+            echo "Cleaning platformio directory, as requested"
+            rm -rf ~/.platformio/
+          else
+            echo "Not cleaning platformio directory"
+          fi
+
+          if [[ $COMMIT_MESSAGE == *":clean-packages" ]]; then
+            echo "Cleaning pio packages, as requested"
+            rm -rf ~/.platformio/packages/framework-arduinoespressif32/
+            rm -rf ~/.platformio/packages/framework-espidf/
+          else
+            echo "Not cleaning platformio packages"
+          fi
+
           cd InkWatchy-demo
-          ./resources/tools/other/demoMaker.sh
+          ./resources/tools/other/setup/demoMaker.sh
           cd ..
       - name: Upload demo program
         uses: actions/upload-artifact@v4
