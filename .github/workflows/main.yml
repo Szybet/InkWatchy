@@ -5,9 +5,6 @@ on:
     branches: [ master ]
 
 jobs:
-  clean:
-    runs-on: self-hosted
-      - name: clean platformio check
   demo:
     runs-on: self-hosted
     steps:
@@ -17,14 +14,14 @@ jobs:
           git clone https://github.com/Szybet/InkWatchy.git InkWatchy-demo
 
           COMMIT_MESSAGE=$(git log -1 --pretty=%B)
-          if [[ $COMMIT_MESSAGE == *":clean-platformio" ]]; then
+          if [[ $COMMIT_MESSAGE == *":clean-pio" ]]; then
             echo "Cleaning platformio directory, as requested"
             rm -rf ~/.platformio/
           else
             echo "Not cleaning platformio directory"
           fi
 
-          if [[ $COMMIT_MESSAGE == *":clean-packages" ]]; then
+          if [[ $COMMIT_MESSAGE == *":clean-pack" ]]; then
             echo "Cleaning pio packages, as requested"
             rm -rf ~/.platformio/packages/framework-arduinoespressif32/
             rm -rf ~/.platformio/packages/framework-espidf/
