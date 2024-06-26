@@ -2,13 +2,13 @@
 
 git submodule update --init --recursive
 
-./other/generateConfig.sh
+./other/setup/generateConfig.sh
 
 echo -e ''
-./other/packages.sh
+./other/setup/packages.sh
 
 echo "Patching some libraries so you won't see warnings :D"
-./other/patchLibs.sh
+./other/setup/patchLibs.sh
 
 echo -e ''
 echo "Processing images"

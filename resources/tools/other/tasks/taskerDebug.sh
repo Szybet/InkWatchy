@@ -12,7 +12,7 @@ HEIGHT=$((NUM_OPTIONS + 7))
 WIDTH=40
 CHOICE_HEIGHT=$((NUM_OPTIONS + 1))
 
-TITLE="ESP options"
+TITLE="Debug options"
 MENU="Choose:"
 
 CHOICE=$(dialog --clear \
@@ -29,16 +29,16 @@ case $CHOICE in
         resources/tools/other/in/esptool --before default_reset chip_id
         ;;
     2)
-        cd resources/tools/other/
+        cd resources/tools/other/debug/
         ./resetAndMonitor.sh
         ;;
     3)  
         args=$(dialog --inputbox "Enter the backtrace" 8 150 3>&1 1>&2 2>&3)
         clear
-        ./resources/tools/other/backtraceResolver.sh $args
+        ./resources/tools/other/debug/backtraceResolver.sh $args
         ;;
     4)
-        cd resources/tools/other
+        cd resources/tools/other/debug/
         ./getCoreDump.sh
         ;;
     5)
