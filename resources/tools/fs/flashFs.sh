@@ -8,7 +8,7 @@ offset=$(<in/offset.txt tr -d '\n')
 # https://electronics.stackexchange.com/questions/588293/esp32-littlefs-change-block-size
 # Fuck
 
-#./in/mklittlefs -d 5 --all-files -c littlefs -s $size out/fs.bin
+./in/mklittlefs --all-files -c littlefs -s $size out/fs.bin
 
 # rm -rf out/fs.bin
 # dd if=/dev/zero of=out/fs.bin bs=$size count=1
