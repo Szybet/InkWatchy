@@ -51,10 +51,12 @@ cd ../../
 
 pio run -e min
 
-cd resources/tools/fs/
-PLATFORMIO_ENV_NAME="min" python3 generatePartTable.py
-cd ../../../
+#pio run -e min
+#cd resources/tools/fs/
+#PLATFORMIO_ENV_NAME="min" python3 generatePartTable.py
+#cd ../../../
 
+# This will succeed
 pio run -e min
 resources/tools/other/in/esptool -p $serial_port erase_flash
 pio run -e min -t upload --upload-port $serial_port
