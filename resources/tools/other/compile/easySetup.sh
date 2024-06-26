@@ -10,9 +10,4 @@ export PLATFORMIO_ENV_NAME="min"
 cd ../../
 
 pio run -e min
-
-cd resources/tools/fs/
-PLATFORMIO_ENV_NAME="min" python3 generatePartTable.py
-cd ../../../
-
 pio run -e min
