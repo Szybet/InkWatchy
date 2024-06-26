@@ -14,8 +14,9 @@ jobs:
 
           git config --global http.version HTTP/1.1
           git config --global core.compression 0
-          
+
           git clone https://github.com/Szybet/InkWatchy.git InkWatchy-demo
+          cd InkWatchy-demo
 
           COMMIT_MESSAGE=$(git log -1 --pretty=%B)
           if [[ $COMMIT_MESSAGE == *":clean-pio" ]]; then
@@ -33,7 +34,6 @@ jobs:
             echo "Not cleaning platformio packages"
           fi
 
-          cd InkWatchy-demo
           ./resources/tools/other/setup/demoMaker.sh
           cd ..
       - name: Upload demo program
