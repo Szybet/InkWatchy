@@ -22,3 +22,6 @@ resources/tools/fs/in
 dependencies.lock
 managed_components
 components/
+
+.platformio/*
+!.platformio/.gitkeep
