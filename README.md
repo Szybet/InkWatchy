@@ -76,7 +76,7 @@ For a small coffe donation I can manage your firmware and provide you personalis
 - https://github.com/Szybet/watchy-scom
 
 ## Questions / Contact
-Create a github issue or get in touch with me on Watchy or Quill OS discord server ( Or other discord communication channels )
+Create a github issue or get in touch with me on Quill OS or <a href="https://discord.gg/6PUmRXZRGD">*atchy community</a> discord servers
 
 or via matrix: @szybet:matrix.org
 
