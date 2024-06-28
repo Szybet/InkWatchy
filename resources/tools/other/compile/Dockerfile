@@ -19,7 +19,11 @@ RUN apt-get install -y \
     automake \
     ninja-build \
     pip \
-    dialog
+    dialog \
+    fuse \
+    libfuse2 \
+    unzip \
+    sudo
 
 # Esp idf
 RUN apt-get install -y \
