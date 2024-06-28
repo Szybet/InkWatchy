@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 OPTIONS=("1" "Generate resources"
          #"2" "Generate partition table"
