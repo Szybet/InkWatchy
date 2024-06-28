@@ -3,7 +3,7 @@
 function imagemagick_from_source() {
     if [ ! -f "other/in/magick" ]; then
         echo "Downloading image magick"
-        wget https://imagemagick.org/archive/binaries/magick
+        wget -q -O magick https://github.com/ImageMagick/ImageMagick/releases/download/7.1.1-34/ImageMagick-b0b7b17-gcc-x86_64.AppImage
         chmod +x magick
         mv magick other/in/magick
         rm magick* 1>/dev/null 2>/dev/null # Not sure
@@ -23,7 +23,7 @@ imagemagick_from_source
 
 if command -v dpkg &> /dev/null; then
     echo "Detected a debian based system"
-    debian_packages=("mupdf-tools" "xxd" "jq" "python3-unidecode" "libfreetype-dev" "libfreetype6" "libfreetype6-dev" "python3-venv" "imagemagick" "libltdl-dev" "make" "build-essential" "automake" "ninja-build")
+    debian_packages=("mupdf-tools" "xxd" "jq" "python3-unidecode" "libfreetype-dev" "libfreetype6" "python3-venv" "imagemagick" "libltdl-dev" "make" "build-essential" "automake" "ninja-build")
     missing_packages=()
 
     for pkg in "${debian_packages[@]}"; do
@@ -62,6 +62,7 @@ fi
 
 if [ ! -f "other/in/esptool" ]; then
     echo "Downloading esptool"
+    rm -rf esptool-download
     mkdir esptool-download
     cd esptool-download
     wget -q -O esptool.zip https://github.com/espressif/esptool/releases/download/v4.7.0/esptool-v4.7.0-linux-amd64.zip
