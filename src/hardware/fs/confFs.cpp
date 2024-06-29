@@ -38,7 +38,7 @@ String fsGetString(String conf, String defaultValue, String dir)
     }
     int fileSize = file.size();
     uint8_t *buf = (uint8_t *)malloc(fileSize * sizeof(uint8_t));
-    if (file.read(buf, fileSize) < 0)
+    if (file.read(buf, fileSize) == 0)
     {
         debugLog("Failed to read the file: " + conf);
         fsSetString(conf, defaultValue, dir);
@@ -87,7 +87,7 @@ bufSize fsGetBlob(String conf, String dir)
     }
     int fileSize = file.size();
     uint8_t *buf = (uint8_t *)malloc(fileSize * sizeof(uint8_t));
-    if (file.read(buf, fileSize) < 0)
+    if (file.read(buf, fileSize) == 0)
     {
         debugLog("Failed to read the file: " + conf);
         return emptyBuff;

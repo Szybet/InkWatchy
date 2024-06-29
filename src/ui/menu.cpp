@@ -1,6 +1,6 @@
 #include "menu.h"
 
-menuData data = {0};
+menuData data = {};
 #define buttonsOffset 2;
 int currentMenuItem = 0;
 

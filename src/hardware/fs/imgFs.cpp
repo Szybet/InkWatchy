@@ -42,7 +42,7 @@ ImageDef *getImg(String name)
         debugLog("This file has size 0: " + name);
     }
     uint8_t *imgBuf = (uint8_t *)malloc(fileSize * sizeof(uint8_t));
-    if (file.read(imgBuf, fileSize) < 0)
+    if (file.read(imgBuf, fileSize) == 0)
     {
         debugLog("Failed to read the file: " + name);
         return &emptyImgPack;
@@ -58,7 +58,7 @@ ImageDef *getImg(String name)
     int fileInfSize = fileInf.size();
     //debugLog("File inf size: " + String(fileInfSize));
     uint8_t *InfBuf = (uint8_t *)malloc(fileInfSize * sizeof(uint8_t));
-    if (fileInf.read(InfBuf, fileInfSize) < 0)
+    if (fileInf.read(InfBuf, fileInfSize) == 0)
     {
         debugLog("Failed to read the file: " + name + "Inf");
         return &emptyImgPack;

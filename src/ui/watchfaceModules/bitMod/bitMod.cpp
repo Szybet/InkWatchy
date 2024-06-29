@@ -4,7 +4,7 @@
 
 #include <blockClockClient.h>
 
-bitcoinData btcData = {0};
+bitcoinData btcData = {};
 RTC_DATA_ATTR bool isBtcDataAvail = false;
 RTC_DATA_ATTR bool isBtcDataNew = false;
 RTC_DATA_ATTR bool smallBtcData = SMALL_BTC_MODULE;

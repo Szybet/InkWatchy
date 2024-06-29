@@ -151,7 +151,7 @@ void writeImageN(int16_t x, int16_t y, ImageDef *image, uint16_t frColor, uint16
 
 sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor, bool draw)
 {
-  sizeInfo size = {0};
+  sizeInfo size = {};
   int toleranceSize = tolerance * 2 + borderWidth * 2;
   size.w = toleranceSize;
   size.h = toleranceSize;

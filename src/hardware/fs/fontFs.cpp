@@ -42,7 +42,7 @@ const GFXfont *getFont(String name)
         debugLog("This file has size 0: " + name + "Bitmap");
     }
     uint8_t *bitmapBuf = (uint8_t *)malloc(fileBitmapSize * sizeof(uint8_t));
-    if (fileBitmap.read(bitmapBuf, fileBitmapSize) < 0)
+    if (fileBitmap.read(bitmapBuf, fileBitmapSize) == 0)
     {
         debugLog("Failed to read the file: " + name + "Bitmap");
         return &FreeSansBold9pt7b;
@@ -61,7 +61,7 @@ const GFXfont *getFont(String name)
         debugLog("Glyphs are fucked up :(");
     }
     uint8_t *glyphBuf = (uint8_t *)malloc(95 * sizeof(GFXglyph));
-    if (fileGlyph.read(glyphBuf, fileGlyphSize) < 0)
+    if (fileGlyph.read(glyphBuf, fileGlyphSize) == 0)
     {
         debugLog("Failed to read the file: " + name + "Glyphs");
         return &FreeSansBold9pt7b;
@@ -78,7 +78,7 @@ const GFXfont *getFont(String name)
     int fileStructSize = fileStruct.size();
     // debugLog("fileStructSize: " + String(fileStructSize));
     uint8_t *structBuf = (uint8_t *)malloc(fileStructSize * sizeof(uint8_t));
-    if (fileStruct.read(structBuf, fileStructSize) < 0)
+    if (fileStruct.read(structBuf, fileStructSize) == 0)
     {
         debugLog("Failed to read the file: " + name + "Struct");
         return &FreeSansBold9pt7b;
