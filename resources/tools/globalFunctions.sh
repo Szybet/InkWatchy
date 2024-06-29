@@ -42,23 +42,36 @@ get_pio_env() {
         env_name=${env_name//\"/}
         
         if [ -n "$env_name" ]; then
-            echo "$env_name"
+            if [ "$env_name" != "null" ]; then
+                echo "$env_name"
+                return
+            else 
+                echo "The json answer is a null" >&2
+            fi
         else
             echo "projectEnvName not found in any configuration in $json_file" >&2
-            exit
-        fi
-    else
-        echo "File $json_file not found. You are not using vscode. Trying to use env variable" >&2
-        if [ -n "$PLATFORMIO_ENV_NAME" ]; then
-            echo "PLATFORMIO_ENV_NAME is set with value: $PLATFORMIO_ENV_NAME" >&2
-            echo $PLATFORMIO_ENV_NAME
-        else
-            pio_path="${json_file%%.vscode/*}.pio/"
-            first_folder=$(ls ${pio_path}libdeps/ | head -n 1)
-            echo "PLATFORMIO_ENV_NAME is not set. Using \"$first_folder\" env" >&2
-            echo $first_folder
         fi
     fi
+    echo "File $json_file not found or not valid. Trying to use env variable" >&2
+    if [ -n "$PLATFORMIO_ENV_NAME" ]; then
+        echo "PLATFORMIO_ENV_NAME is set with value: $PLATFORMIO_ENV_NAME" >&2
+        echo $PLATFORMIO_ENV_NAME
+        return
+    fi
+    echo "PLATFORMIO_ENV_NAME not set, trying to read platformio.ini" >&2
+    ini_path="${json_file%%.vscode/*}platformio.ini"
+    if [ -f $ini_path ]; then
+        default_env=$(grep 'default_envs' "$ini_path" | awk '{print $3}')
+        echo "default env found: $default_env" >&2
+        echo $default_env
+        return
+    fi
+    echo "Failed to read platformio.ini at $ini_path, trying to get the directory?"
+    pio_path="${json_file%%.vscode/*}.pio/"
+    first_folder=$(ls ${pio_path}libdeps/ | head -n 1)
+    echo "first_folder found: $first_folder" >&2
+    echo $first_folder
+    return
 }
 
 extract_serial_port() {

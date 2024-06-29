@@ -1,12 +1,11 @@
 #!/bin/bash
 source resources/tools/globalFunctions.sh
 
-pio pkg install -e min
+pio pkg install
 rm -rf resources/personal/books/* resources/personal/vault/*
 cp -r resources/demo/* resources/personal/
 
 cd resources/tools/
-export PLATFORMIO_ENV_NAME="min"
 ./generate.sh
 cd ../../
 
@@ -45,21 +44,20 @@ sed -i "s/$old_string/$new_string/g" "$filename"
 
 # To apply those things
 cd resources/tools/
-export PLATFORMIO_ENV_NAME="min"
 ./generate.sh
 cd ../../
 
-pio run -e min
+pio run
 
-#pio run -e min
+#pio run
 #cd resources/tools/fs/
-#PLATFORMIO_ENV_NAME="min" python3 generatePartTable.py
+#python3 generatePartTable.py
 #cd ../../../
 
 # This will succeed
-pio run -e min
+pio run
 resources/tools/other/in/esptool -p $serial_port erase_flash
-pio run -e min -t upload --upload-port $serial_port
+pio run -t upload --upload-port $serial_port
 
 sleep 10
 
