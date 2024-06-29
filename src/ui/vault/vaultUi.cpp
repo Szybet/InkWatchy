@@ -270,7 +270,7 @@ void showVaultImage(String file)
 
         mbedtls_aes_free(&aes);
 
-        ImageDef newImage = {realImage, 200, 200};
+        ImageDef newImage = {200, 200, realImage};
         writeImageN(0, 0, &newImage);
         disUp(true);
 
@@ -407,7 +407,7 @@ if (key != 0)
     debugLog("End of decrypting: " + String(millis()));
     debugLog("Result is: " + String(result)); // 0 means good
 
-    ImageDef newImage = {realImage, 200, 200};
+    ImageDef newImage = {200, 200, realImage};
     writeImageN(0, 0, newImage);
     disUp(true);
 }

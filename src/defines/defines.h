@@ -27,9 +27,9 @@
 #define BUTTON_WAKEUP_REASON ESP_SLEEP_WAKEUP_EXT1
 
 struct ImageDef {
-    uint8_t *bitmap;
     int16_t bw;
     int16_t bh;
+    uint8_t *bitmap;
 };
 
 extern ImageDef emptyImgPack;

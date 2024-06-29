@@ -1,5 +1,5 @@
 #include "defines.h"
 
-ImageDef emptyImgPack = {NULL, 0, 0};
+ImageDef emptyImgPack = {0, 0, NULL};
 
 bufSize emptyBuff = {NULL, 0};
