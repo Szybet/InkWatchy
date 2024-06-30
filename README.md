@@ -57,6 +57,11 @@ It doesn't use the watchy sub-class but it uses the same libraries. With that in
 
 </details>
 
+## Devices supported
+Watchy 1.0, 2.0 are supported
+
+for the 3.0 version contact me if you want to help me support it ;)
+
 ## Compiling, Some instructions, Further informations
 Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 
