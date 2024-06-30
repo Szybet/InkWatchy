@@ -127,9 +127,10 @@
 // https://github.com/littlefs-project/littlefs/issues/738
 #define MAX_LOG_FILE_SIZE_BYTES 300000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs, 400000 is the max in my opinion
 #define STOP_ON_RESET 1                // Stop the device until the reset is cleared, it doesn't do that if it's sure that it was a forced reset (esptool one)
+#define SERIAL_LOG_DELAY 0 // If 1, use the delay below to ensure good looking logs
 #define SERIAL_LOG_DELAY_MS 23
 #define SERIAL_BAUDRATE 115200
-
+#define MINIMAL_LOGS 1 // Don't put full file paths in logs
 #define SCOM_TASK 0 // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
 #if SCOM_TASK == 1 && DEBUG == 1
 #define SCOM_TASK_ENABLED 1
@@ -156,11 +157,6 @@
 #define MENU_PIN 26
 #define BACK_PIN 25
 #define DOWN_PIN 4
-
-// Button masks (for wake up)
-#define MENU_MASK GPIO_SEL_26
-#define BACK_MASK GPIO_SEL_25
-#define DOWN_MASK GPIO_SEL_4
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
