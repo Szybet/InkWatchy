@@ -4,16 +4,21 @@
 int loopDumpDelayMs = 0;
 #endif
 
-bool loopTaskApplied = false;
-// The loop task runs in a task, which we want to change a few things
-void loopTaskSettings()
+// https://github.com/espressif/arduino-esp32/blob/337058ac94e7e3df11d273a93e88d1ea605e6f5f/cores/esp32/main.cpp#L105
+// Why is that? well anyway this task set's it and exits
+TaskHandle_t priorityLoopHandle;
+void priorityLoopSet(void *parameter)
 {
-  if (loopTaskApplied == false)
+  while (true)
   {
-    loopTaskApplied = true;
-    // UBaseType_t prio = uxTaskPriorityGet(NULL);
-    // debugLog("Main task priority: " + String(prio));
-    vTaskPrioritySet(NULL, MAIN_LOOP_PRIORITY);
+    TaskHandle_t loopTaskHandle = xTaskGetHandle("loopTask");
+    if (loopTaskHandle != NULL)
+    {
+      vTaskPrioritySet(loopTaskHandle, MAIN_LOOP_PRIORITY);
+      debugLog("Set loop task priority, exiting...");
+      vTaskDelete(NULL);
+    }
+    delayTask(100);
   }
 }
 
@@ -79,16 +84,26 @@ void setup()
   if (wakeUpReason != RTC_WAKEUP_REASON)
   {
     initButtonTask();
+    turnOnInterrupts();
   }
 
   initWatchdogTask();
-  watchdogPing();
+
+  // Not sure
+  //if (wakeUpReason != RTC_WAKEUP_REASON)
+  //{
+    xTaskCreate(
+        priorityLoopSet,
+        "priorityLoop",
+        1000,
+        NULL,
+        20,
+        &priorityLoopHandle);
+  //}
 }
 
 void loop()
 {
-  loopTaskSettings();
-
   watchdogPing();
   alarmManageRTC();
   loopBattery();

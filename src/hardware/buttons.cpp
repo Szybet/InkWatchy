@@ -8,6 +8,7 @@ std::mutex buttMut;
 buttonState useButtonBack()
 {
     buttMut.lock();
+    // debugLog("useButtonBack state: " + getButtonString(buttonPressed));
     if (buttonPressed == Back || buttonPressed == LongBack)
     {
         buttonState buttonPressedTmp = buttonPressed;
@@ -77,9 +78,9 @@ void setButton(buttonState button)
 {
     buttMut.lock();
     debugLog("setButton called: " + getButtonString(button));
-    vibrateMotor();
     buttonPressed = button;
     buttMut.unlock();
+    vibrateMotor();
     resetSleepDelay();
     debugLog("setButton done");
 }
@@ -117,35 +118,51 @@ void loopButtonsTask(void *parameter)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
     }
+    interruptedButton = None;
     while (true)
     {
-        delayTask(BUTTON_TASK_DELAY);
+        // debugLog("Button task looping...");
+        buttonState interruptedButtonCopy = interruptedButton;
+        // debugLog("interruptedButtonCopy: " + getButtonString(interruptedButtonCopy));
+        // debugLog("buttonPressed: " + getButtonString(buttonPressed));
         buttMut.lock();
-        if (digitalRead(BACK_PIN) == HIGH && buttonPressed != LongBack)
+        if (interruptedButtonCopy == Back && buttonPressed != LongBack)
         {
             buttMut.unlock();
             longButtonCheck(BACK_PIN, Back, LongBack);
             buttMut.lock();
         }
-        else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu)
+        else if (interruptedButtonCopy == Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu)
         {
             buttMut.unlock();
             longButtonCheck(MENU_PIN, Menu, LongMenu);
             buttMut.lock();
         }
-        else if (digitalRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu && buttonPressed != LongUp)
+        else if (interruptedButtonCopy == Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu && buttonPressed != LongUp)
         {
             buttMut.unlock();
             longButtonCheck(UP_PIN, Up, LongUp);
             buttMut.lock();
         }
-        else if (digitalRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongUp && buttonPressed != LongBack && buttonPressed != LongDown && buttonPressed != LongMenu)
+        else if (interruptedButtonCopy == Down && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongUp && buttonPressed != LongBack && buttonPressed != LongDown && buttonPressed != LongMenu)
         {
             buttMut.unlock();
             longButtonCheck(DOWN_PIN, Down, LongDown);
             buttMut.lock();
         }
         buttMut.unlock();
+        if (interruptedButtonCopy == interruptedButton)
+        {
+            interruptedButton = None;
+            debugLog("Button task going to sleep!");
+            vTaskSuspend(NULL);
+        }
+#if DEBUG
+        else
+        {
+            debugLog("Another button clicked...");
+        }
+#endif
     }
 }
 
@@ -162,11 +179,13 @@ void initButtonTask()
 
 void deInitButtonTask()
 {
-    if (buttonTask != NULL)
+    eTaskState taskState = eTaskGetState(buttonTask);
+    if (taskState == eRunning || taskState == eSuspended)
     {
         debugLog("Shutting down button task");
         vTaskDelete(buttonTask);
-        buttonTask = NULL;
+    } else {
+        debugLog("Not shutting down button task, it's state is: " + String(taskState));
     }
 }
 

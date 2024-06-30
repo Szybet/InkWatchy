@@ -1,0 +1,53 @@
+#include "buttons.h"
+
+buttonState interruptedButton = None;
+
+// No logs here because interrupts don't like them
+void resumeButtonTask()
+{
+    //debugLog("Resuming button task");
+    eTaskState taskState = eTaskGetState(buttonTask);
+    if(taskState == eSuspended) {
+        vTaskResume(buttonTask);
+    } 
+#if DEBUG
+    else {
+        if(taskState != eRunning) {
+            //debugLog("Something is wrong with button task: " + String(taskState));
+        }
+    }
+#endif
+}
+
+void backIntBut()
+{
+    interruptedButton = Back;
+    resumeButtonTask();
+}
+
+void menuIntBut()
+{
+    interruptedButton = Menu;
+    resumeButtonTask();
+}
+
+void upIntBut()
+{
+    interruptedButton = Up;
+    resumeButtonTask();
+}
+
+void downIntBut()
+{
+    interruptedButton = Down;
+    resumeButtonTask();
+}
+
+void turnOnInterrupts()
+{
+    attachInterrupt(digitalPinToInterrupt(BACK_PIN), backIntBut, RISING);
+    attachInterrupt(digitalPinToInterrupt(MENU_PIN), menuIntBut, RISING);
+    attachInterrupt(digitalPinToInterrupt(UP_PIN), upIntBut, RISING);
+    attachInterrupt(digitalPinToInterrupt(DOWN_PIN), downIntBut, RISING);
+    debugLog("Attached interrupts!");
+}

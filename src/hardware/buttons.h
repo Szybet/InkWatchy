@@ -3,6 +3,7 @@
 
 #include "defines/defines.h"
 
+extern std::mutex buttMut;
 extern buttonState buttonPressed;
 extern int UP_PIN;
 extern TaskHandle_t buttonTask;
@@ -17,6 +18,9 @@ void initButtons(bool isFromWakeUp);
 void initButtonTask();
 void deInitButtonTask();
 void setButton(buttonState button);
+void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton);
+void turnOnInterrupts();
+extern buttonState interruptedButton;
 
 #if DEBUG
 void dumpButtons();
