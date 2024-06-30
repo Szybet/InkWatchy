@@ -36,7 +36,7 @@ const GFXfont *getFont(String name)
         return &FreeSansBold9pt7b;
     }
     int fileFontSize = fileFont.size();
-    debugLog("file size: " + String(fileFontSize));
+    //debugLog("file size: " + String(fileFontSize));
     if (fileFontSize <= 0)
     {
         debugLog("This file has size 0: " + name);
@@ -50,7 +50,7 @@ const GFXfont *getFont(String name)
     fileFont.close();
 
     uint16_t fontBitmapSize = fileBuf[0] | (fileBuf[1] << 8);
-    debugLog("Bitmap size: " + String(fontBitmapSize) + " for font: " + name);
+    //debugLog("Bitmap size: " + String(fontBitmapSize) + " for font: " + name);
     //GFXfont *newFont = (GFXfont *)malloc(sizeof(GFXfont));
     GFXfont *newFont = new GFXfont();
 

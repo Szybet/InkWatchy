@@ -18,10 +18,10 @@
 
 # this is only supported on arch linux esp-idf aur package
 
-source ../globalFunctions.sh
-source /opt/esp-idf/export.sh
+source ../../globalFunctions.sh
+source ~/.platformio/packages/framework-espidf/export.sh
 
-pio_env=$(get_pio_env ../../../.vscode/launch.json)
+pio_env=$(get_pio_env ../../../../.vscode/launch.json)
 
-espcoredump.py info_corefile ../../../.pio/build/$pio_env/firmware.elf
+espcoredump.py info_corefile ../../../../.pio/build/$pio_env/firmware.elf
 

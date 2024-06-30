@@ -123,17 +123,26 @@ void logCleanup(bool serial, bool fs)
 
 void logFunction(String file, int line, String func, String message)
 {
+#if MINIMAL_LOGS
+  String log = String(line) + ": " + message + "\n";
+#else
   String log = file + ":" + String(line) + " " + func + ": " + message + "\n";
+#endif
+
   int logLength = log.length();
 #if PUT_LOGS_TO_SERIAL
   if (serialWrite.try_lock())
   {
     Serial.flush(true);
+#if SERIAL_LOG_DELAY
     delayTask(SERIAL_LOG_DELAY_MS);
+#endif
     logCleanup(true, false);
     Serial.print(log);
     Serial.flush(true);
+#if SERIAL_LOG_DELAY
     delayTask(SERIAL_LOG_DELAY_MS);
+#endif
     serialWrite.unlock();
 #if SCOM_TASK_ENABLED
     printEndPacket = true;
