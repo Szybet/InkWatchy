@@ -79,21 +79,18 @@ do
 
         echo "#define BYTE_COUNT $count" >> out/fonts.h
         # stat -c "%s" out/fontStruct.bin
-        rm out/fontBitmaps.bin 1>/dev/null 2>/dev/null
-        rm out/fontGlyphs.bin 1>/dev/null 2>/dev/null
-        rm out/fontStruct.bin 1>/dev/null 2>/dev/null
+        rm out/font.bin 1>/dev/null 2>/dev/null
         rm out/fontDumper 1>/dev/null 2>/dev/null
         g++ -I out/ fontDumper.cpp -o out/fontDumper
         out/fontDumper
 
-        pure_name="${f_name/font_size\/}"
-        pure_name="${pure_name/".ttf"}"
-        mv out/fontBitmaps.bin out/${pure_name}${font_size}Bitmap
-        mv out/fontGlyphs.bin out/${pure_name}${font_size}Glyphs
-        mv out/fontStruct.bin out/${pure_name}${font_size}Struct
+        pure_name="${f_name%.ttf}${font_size}"
+
+        mv out/font.bin out/$pure_name
+        rm out/fontDumper 1>/dev/null 2>/dev/null
     done
 done
 
-rm -f out/font.ttf out/fonts.h
+rm -f out/font.ttf out/fonts.h out/fontDumper
 rm -rf ../fs/littlefs/font/ 1>/dev/null 2>/dev/null
 mv out ../fs/littlefs/font/
