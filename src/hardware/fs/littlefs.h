@@ -19,9 +19,9 @@ int16_t getImgWidth(String name);
 int16_t getImgHeight(String name);
 
 extern char loadedFontNames[FONT_COUNT][RESOURCES_NAME_LENGTH];
-extern GFXfont loadedFont[FONT_COUNT];
+extern GFXfont* loadedFont[FONT_COUNT];
 
-const GFXfont *getFont(String name);
+const GFXfont* getFont(String name);
 
 // bool fsIsConfig(String conf, String dir = "/conf/");
 String fsGetString(String conf, String defaultValue, String dir = "/conf/");

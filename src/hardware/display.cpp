@@ -36,6 +36,7 @@ void initDisplay(bool isFromWakeUp)
         h = h + 11;
         setFont(getFont("dogicapixel4"));
         esp_reset_reason_t resetReason = esp_reset_reason();
+        debugLog("Reset for reason: " + resetReasonToString(resetReason));
         centerText(resetReasonToString(resetReason), &h);
         display.display(FULL_UPDATE);
 #if STOP_ON_RESET

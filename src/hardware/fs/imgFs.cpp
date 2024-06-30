@@ -51,9 +51,9 @@ ImageDef *getImg(String name)
 
     ImageDef newImg = *(ImageDef*)imgBuf;
     newImg.bitmap = imgBuf + sizeof(newImg.bh) + sizeof(newImg.bw);
-    debugLog("newImg name: " + name);
-    debugLog("newImg bw: " + String(newImg.bw));
-    debugLog("newImg bh: " + String(newImg.bh));
+    //debugLog("newImg name: " + name);
+    //debugLog("newImg bw: " + String(newImg.bw));
+    //debugLog("newImg bh: " + String(newImg.bh));
 
     int nameLength = name.length();
 #if DEBUG

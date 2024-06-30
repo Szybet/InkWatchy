@@ -1,7 +1,7 @@
 #include "littlefs.h"
 
 char loadedFontNames[FONT_COUNT][RESOURCES_NAME_LENGTH] = {0};
-GFXfont loadedFont[FONT_COUNT];
+GFXfont *loadedFont[FONT_COUNT];
 
 const GFXfont *getFont(String name)
 {
@@ -14,10 +14,10 @@ const GFXfont *getFont(String name)
     for (int i = 0; i < FONT_COUNT; i++)
     {
         String loadedFontString = String(loadedFontNames[i]);
-        //debugLog("char test: \"" + loadedFontString + "\"");
+        // debugLog("char test: \"" + loadedFontString + "\"");
         if (name == loadedFontString)
         {
-            return &loadedFont[i];
+            return loadedFont[i];
         }
         else
         {
@@ -29,71 +29,66 @@ const GFXfont *getFont(String name)
         }
     }
     // Bitmap
-    File fileBitmap = LittleFS.open("/font/" + name + "Bitmap");
-    if (fileBitmap == false)
+    File fileFont = LittleFS.open("/font/" + name);
+    if (fileFont == false)
     {
-        debugLog("File is not available: " + name + "Bitmap");
+        debugLog("File is not available: " + name);
         return &FreeSansBold9pt7b;
     }
-    int fileBitmapSize = fileBitmap.size();
-    // debugLog("file size: " + String(fileBitmapSize));
-    if (fileBitmapSize <= 0)
+    int fileFontSize = fileFont.size();
+    debugLog("file size: " + String(fileFontSize));
+    if (fileFontSize <= 0)
     {
-        debugLog("This file has size 0: " + name + "Bitmap");
+        debugLog("This file has size 0: " + name);
     }
-    uint8_t *bitmapBuf = (uint8_t *)malloc(fileBitmapSize * sizeof(uint8_t));
-    if (fileBitmap.read(bitmapBuf, fileBitmapSize) == 0)
+    uint8_t *fileBuf = (uint8_t *)malloc(fileFontSize * sizeof(uint8_t));
+    if (fileFont.read(fileBuf, fileFontSize) == 0)
     {
-        debugLog("Failed to read the file: " + name + "Bitmap");
+        debugLog("Failed to read the file: " + name);
         return &FreeSansBold9pt7b;
     }
-    fileBitmap.close();
-    // Glyph
-    File fileGlyph = LittleFS.open("/font/" + name + "Glyphs");
-    if (fileGlyph == false)
+    fileFont.close();
+
+    uint16_t fontBitmapSize = fileBuf[0] | (fileBuf[1] << 8);
+    debugLog("Bitmap size: " + String(fontBitmapSize) + " for font: " + name);
+    //GFXfont *newFont = (GFXfont *)malloc(sizeof(GFXfont));
+    GFXfont *newFont = new GFXfont();
+
+    newFont->bitmap = fileBuf + 2; // To skip the uint16_t
+    /*
     {
-        debugLog("File is not available: " + name + "Glyphs");
-        return &FreeSansBold9pt7b;
+        debugLog("Dumping bitmap");
+        const uint8_t *data = (const uint8_t *)newFont->bitmap;
+        for (size_t i = 0; i < 12; ++i)
+        {
+            printf("0x%02x ", data[i]);
+        }
+        printf("\n");
     }
-    int fileGlyphSize = fileGlyph.size();
-    if (fileGlyphSize != 95 * sizeof(GFXglyph))
+    */
+    newFont->glyph = (GFXglyph *)(fileBuf + 2 + fontBitmapSize);
+    /*
     {
-        debugLog("Glyphs are fucked up :(");
+        debugLog("Dumping glyph");
+        debugLog("glyph bitmapOffset: " + String(newFont->glyph[0].bitmapOffset));
+        debugLog("glyph width: " + String(newFont->glyph[0].width));
+        debugLog("glyph height: " + String(newFont->glyph[0].height));
+        debugLog("glyph xAdvance: " + String(newFont->glyph[0].xAdvance));
+        debugLog("glyph xOffset: " + String(newFont->glyph[0].xOffset));
+        debugLog("glyph yOffset: " + String(newFont->glyph[0].yOffset));
+        printf("\n");
     }
-    uint8_t *glyphBuf = (uint8_t *)malloc(95 * sizeof(GFXglyph));
-    if (fileGlyph.read(glyphBuf, fileGlyphSize) == 0)
-    {
-        debugLog("Failed to read the file: " + name + "Glyphs");
-        return &FreeSansBold9pt7b;
-    }
-    GFXglyph *glyphs = reinterpret_cast<GFXglyph *>(glyphBuf);
-    fileGlyph.close();
-    // Struct
-    File fileStruct = LittleFS.open("/font/" + name + "Struct");
-    if (fileStruct == false)
-    {
-        debugLog("File is not available: " + name + "Struct");
-        return &FreeSansBold9pt7b;
-    }
-    int fileStructSize = fileStruct.size();
-    // debugLog("fileStructSize: " + String(fileStructSize));
-    uint8_t *structBuf = (uint8_t *)malloc(fileStructSize * sizeof(uint8_t));
-    if (fileStruct.read(structBuf, fileStructSize) == 0)
-    {
-        debugLog("Failed to read the file: " + name + "Struct");
-        return &FreeSansBold9pt7b;
-    }
-    fileStruct.close();
-    uint16_t first = ((uint16_t)structBuf[1] << 8) | structBuf[0];
-    uint16_t last = ((uint16_t)structBuf[3] << 8) | structBuf[2];
-    uint8_t yAdvance = structBuf[4];
-    GFXfont newFont = GFXfont{
-        bitmapBuf,
-        glyphs,
-        first,
-        last,
-        yAdvance,
-    };
+    */
+
+    size_t metaDataOffset = 2 + fontBitmapSize + 95 * sizeof(GFXglyph); // There are exactly 95 glyphs, always
+    newFont->first = *reinterpret_cast<uint16_t *>(fileBuf + metaDataOffset);
+    newFont->last = *reinterpret_cast<uint16_t *>(fileBuf + metaDataOffset + sizeof(uint16_t));
+    newFont->yAdvance = *(fileBuf + metaDataOffset + 2 * sizeof(uint16_t));
+
+    //debugLog("Value first: " + String(newFont->first) + " for font: " + name);
+    //debugLog("Value last: " + String(newFont->last) + " for font: " + name);
+    //debugLog("Value yAdvance: " + String(newFont->yAdvance) + " for font: " + name);
+
     int nameLength = name.length();
 #if DEBUG
     if (nameLength > RESOURCES_NAME_LENGTH)
@@ -103,5 +98,5 @@ const GFXfont *getFont(String name)
 #endif
     strncpy(loadedFontNames[emptyListIndex], name.c_str(), nameLength);
     loadedFont[emptyListIndex] = newFont;
-    return &loadedFont[emptyListIndex];
+    return loadedFont[emptyListIndex];
 }
