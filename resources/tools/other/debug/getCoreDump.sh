@@ -23,5 +23,10 @@ source ~/.platformio/packages/framework-espidf/export.sh
 
 pio_env=$(get_pio_env ../../../../.vscode/launch.json)
 
-espcoredump.py info_corefile ../../../../.pio/build/$pio_env/firmware.elf
+#/root/.platformio/penv/bin/python -m pip install --break-system-packages setuptools
 
+. /workspaces/InkWatchy/.esp-idf/esp-idf/export.sh 
+
+#esp-coredump info_corefile ../../../../.pio/build/$pio_env/firmware.elf
+#./esp-coredump info_corefile /workspaces/InkWatchy/.pio/build/Watchy_2/firmware.elf
+espcoredump.py --chip esp32 info_corefile /workspaces/InkWatchy/.pio/build/Watchy_2/firmware.elf

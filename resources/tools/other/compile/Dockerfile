@@ -57,5 +57,8 @@ RUN echo 'export PATH="$PATH:$HOME/.platformio/penv/bin"' | tee -a /root/.bashrc
 RUN echo 'export PYTHONPATH="$PYTHONPATH:/root/.platformio/packages/tool-esptoolpy"' | tee -a /root/.bashrc /root/.zshrc
 RUN git config --global --add safe.directory '*'
 
+RUN mkdir -p /root/esp-idf/
+RUN mkdir -p /root/.espressif/
+
 #RUN curl -fsSL -o /tmp/get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py
 #RUN python3 /tmp/get-platformio.py
