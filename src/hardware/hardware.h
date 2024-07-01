@@ -26,6 +26,8 @@ cpuSpeed getCpuSpeed();
 void restoreCpuSpeed();
 String resetReasonToString(esp_reset_reason_t reason);
 
+void softStartDelay();
+
 #if DEBUG
 void initHardwareDebug();
 void loopHardwareDebug();

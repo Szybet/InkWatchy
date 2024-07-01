@@ -5,8 +5,10 @@ RTC_DATA_ATTR long lastTryUnix = 0;
 
 void wifiSyncModules()
 {
+    softStartDelay();
     syncWeather();
 #if BITCOIN_MODULE
+    softStartDelay();
     bitcoinSync(1);
 #endif
 }
@@ -40,7 +42,8 @@ void wifiPersistent()
     }
 }
 
-void wifiKindOfPersistent() {
+void wifiKindOfPersistent()
+{
     debugLog("Launching");
     syncNtp(false); // Because we are connected to usb for some time now so the drift drifted too much in a bad way
     wifiSyncModules();
