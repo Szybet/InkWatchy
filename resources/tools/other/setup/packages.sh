@@ -76,3 +76,15 @@ fi
 if ! command -v pio &> /dev/null; then
     echo "install platformio (pio command). The rest will fail."
 fi
+
+if [ ! -d "/root/esp-idf/docs" ]; then
+    echo "Cloning esp idf"
+    cd /root/
+    rm -rf esp-idf-git/
+    git clone https://github.com/espressif/esp-idf.git esp-idf-git
+    mv esp-idf-git/{*,.[!.]*,..?*} esp-idf/
+    rm -rf esp-idf-git
+    cd esp-idf/
+    git checkout tags/v5.1.2
+    ./install.sh
+fi
