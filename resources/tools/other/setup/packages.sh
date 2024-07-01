@@ -1,50 +1,21 @@
 #!/bin/bash
 
-function imagemagick_from_source() {
-    if [ ! -f "other/in/magick" ]; then
-        echo "Downloading image magick"
-        wget -q -O magick https://github.com/ImageMagick/ImageMagick/releases/download/7.1.1-34/ImageMagick-b0b7b17-gcc-x86_64.AppImage
-        chmod +x magick
-        mv magick other/in/magick
-        rm magick* 1>/dev/null 2>/dev/null # Not sure
-    fi
-
-    # That's for libraries, fuck
-    #git clone https://github.com/ImageMagick/ImageMagick.git ImageMagick
-    #cd ImageMagick
-    #./configure --with-modules
-    #make -j$(nproc)
-    #sudo make install
-    #sudo ldconfig /usr/local/lib
-    #cd ..
-}
-
-imagemagick_from_source
-
-if command -v dpkg &> /dev/null; then
-    echo "Detected a debian based system"
-    debian_packages=("mupdf-tools" "xxd" "jq" "python3-unidecode" "libfreetype-dev" "libfreetype6" "python3-venv" "imagemagick" "libltdl-dev" "make" "build-essential" "automake" "ninja-build")
-    missing_packages=()
-
-    for pkg in "${debian_packages[@]}"; do
-        if ! dpkg -s "$pkg" &> /dev/null; then
-            missing_packages+=("$pkg")
-        fi
-    done
-
-    if [ ${#missing_packages[@]} -gt 0 ]; then
-        echo "Installing missing packages: ${missing_packages[*]}"
-        timeout 1m sudo apt-get install -y "${missing_packages[@]}"
-        if [ $? -ne 0 ]; then
-            echo "Failed to install some packages. It will fail."
-        fi
-    else
-        echo "All required packages are already installed."
-    fi
-else
-    echo "I only managed to support debian based system, feel free to add other distros :)"
-    echo "Oh yea good luck :D"
+if [ ! -f "other/in/magick" ]; then
+    echo "Downloading image magick"
+    wget -q -O magick https://github.com/ImageMagick/ImageMagick/releases/download/7.1.1-34/ImageMagick-b0b7b17-gcc-x86_64.AppImage
+    chmod +x magick
+    mv magick other/in/magick
+    rm magick* 1>/dev/null 2>/dev/null # Not sure
 fi
+
+# That's for libraries, fuck
+#git clone https://github.com/ImageMagick/ImageMagick.git ImageMagick
+#cd ImageMagick
+#./configure --with-modules
+#make -j$(nproc)
+#sudo make install
+#sudo ldconfig /usr/local/lib
+#cd ..
 
 if [ ! -f "fs/in/mklittlefs" ]; then
     echo "Downloading mklittlefs"
