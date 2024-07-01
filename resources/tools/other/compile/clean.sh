@@ -1,6 +1,7 @@
 #!/bin/bash
 
-rm -rf .pio/ dependencies.lock sdkconfig.* managed_components
+# I don't clean .pio/libdeps here
+rm -rf .pio/build/ dependencies.lock sdkconfig.* managed_components
 rm -rf resources/tools/other/in/*
 rm -rf resources/tools/other/out/*
 rm -rf resources/tools/fs/in/*
