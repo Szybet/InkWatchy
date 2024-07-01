@@ -59,8 +59,9 @@ void goSleep()
     disUp(true);
 #endif
 
-    deInitButtonTask();
-
+    //deInitButtonTask();
+    noInterrupts();
+    
     while (motorTaskRunning == true)
     {
         debugLog("Waiting for motor task");
