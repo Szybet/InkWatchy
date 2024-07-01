@@ -176,7 +176,24 @@ void initButtonTask()
         BUTTONS_PRIORITY,
         &buttonTask);
 }
+/*
+Idk why this fuction doesn't work
+==================== CURRENT THREAD STACK =====================
+#0  0x400838dd in panic_abort (details=0x3ffb4090 "assert failed: eTaskGetState tasks.c:1696 (pxTCB)") at /root/.platformio/packages/framework-espidf/components/esp_system/panic.c:452
+#1  0x4008bd88 in esp_system_abort (details=0x3ffb4090 "assert failed: eTaskGetState tasks.c:1696 (pxTCB)") at /root/.platformio/packages/framework-espidf/components/esp_system/port/esp_system_chip.c:84
+#2  0x40092ff4 in __assert_func (file=<optimized out>, line=<optimized out>, func=<optimized out>, expr=<optimized out>) at /root/.platformio/packages/framework-espidf/components/newlib/assert.c:81
+#3  0x4008d0fc in eTaskGetState (xTask=0x0) at /root/.platformio/packages/framework-espidf/components/freertos/FreeRTOS-Kernel/tasks.c:1696
+#4  0x400d40b4 in deInitButtonTask () at src/hardware/buttons.cpp:182
+#5  0x400d5426 in goSleep () at src/hardware/sleep.cpp:62
+#6  0x400d551a in manageSleep () at src/hardware/sleep.cpp:148
+#7  0x400d55bd in loop () at src/main.cpp:164
+#8  0x400fa684 in loopTask (pvParameters=<optimized out>) at /root/.platformio/packages/framework-arduinoespressif32/cores/esp32/main.cpp:74
+#9  0x4008ed1d in vPortTaskWrapper (pxCode=0x400fa650 <loopTask(void*)>, pvParameters=0x0) at /root/.platformio/packages/framework-espidf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:162
 
+For now i will not care
+
+MAYBE it's because this task is never initialized when doing a RTC wakeup...
+*/
 void deInitButtonTask()
 {
     eTaskState taskState = eTaskGetState(buttonTask);
