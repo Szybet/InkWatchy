@@ -51,13 +51,17 @@ void turnOnWifiTask(void *parameter)
         // Won't work, fuck IDF for forcing that. We need a NVS partition
         // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/partition-tables.html
         // 0x3000 bytes we need
+        softStartDelay();
         WiFi.mode(WIFI_STA);
+        softStartDelay();
 
         debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));
 
         WiFi.setAutoReconnect(true);
         initWifi();
+        softStartDelay();
         wifiMulti.run(WIFI_MULTI_SYNC_TIME);
+        softStartDelay();
 
         if (WiFi.status() == WL_CONNECTED)
         {
@@ -71,6 +75,7 @@ void turnOnWifiTask(void *parameter)
             delayTask(WIFI_MULTI_ERROR_TIME);
         }
     }
+    softStartDelay();
     if (WiFi.status() == WL_CONNECTED)
     {
         debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));
@@ -134,7 +139,7 @@ void initWifi()
 {
     if (initWifiMultiDone == true)
     {
-        return void();
+        return;
     }
     if (strlen(WIFI_SSID1) != 0 && strlen(WIFI_PASS1) != 0)
     {

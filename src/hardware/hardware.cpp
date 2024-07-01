@@ -235,3 +235,9 @@ void restoreCpuSpeed()
 {
     setCpuSpeed(savedCpuSpeed);
 }
+
+void softStartDelay() {
+    #if SOFT_START_THINGS
+        delayTask(SOFT_START_DELAY_MS);
+    #endif
+}
