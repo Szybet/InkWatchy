@@ -5,7 +5,6 @@
 
 extern std::mutex buttMut;
 extern buttonState buttonPressed;
-extern int UP_PIN;
 extern TaskHandle_t buttonTask;
 
 buttonState useButtonBack();

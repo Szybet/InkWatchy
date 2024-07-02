@@ -26,6 +26,9 @@
 #define RTC_WAKEUP_REASON ESP_SLEEP_WAKEUP_EXT0
 #define BUTTON_WAKEUP_REASON ESP_SLEEP_WAKEUP_EXT1
 
+#define WATCHY_2 2
+#define WATCHY_3 3
+
 struct ImageDef {
     int16_t bw;
     int16_t bh;
@@ -67,6 +70,7 @@ struct bufSize {
 extern bufSize emptyBuff;
 
 #include "config.h" // Needs to be first!
+#include "condition.h"
 #include "confidential.h"
 #include "macros.h"
 
