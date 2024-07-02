@@ -79,13 +79,14 @@ void goSleep()
 #endif
     ForceInputs();
     LittleFS.end();
-    esp_err_t ext0Err = esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
-    esp_err_t ext1Err = esp_sleep_enable_ext1_wakeup(pinToMask(UP_PIN) | pinToMask(DOWN_PIN) | pinToMask(MENU_PIN) | pinToMask(BACK_PIN), ESP_EXT1_WAKEUP_ANY_HIGH);
-    if (ext0Err != ESP_OK || ext1Err != ESP_OK)
+    // Not needed since small rtc 2.3.7
+    //esp_err_t ext0Err = esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
+    esp_err_t ext1Err = esp_sleep_enable_ext1_wakeup(pinToMask(UP_PIN) | pinToMask(DOWN_PIN) | pinToMask(MENU_PIN) | pinToMask(BACK_PIN), EXT1_WAKEUP_STATE);
+    if (ext1Err != ESP_OK)
     {
         Serial.begin(SERIAL_BAUDRATE);
         debugLog("UP_PIN: " + String(UP_PIN));
-        debugLog("ext0 error: " + String(esp_err_to_name(ext0Err)));
+        //debugLog("ext0 error: " + String(esp_err_to_name(ext0Err)));
         debugLog("ext1 error: " + String(esp_err_to_name(ext1Err)));
         delayTask(3000);
         assert("Failed to make gpio interrupts");

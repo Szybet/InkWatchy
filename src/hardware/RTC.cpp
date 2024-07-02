@@ -12,13 +12,18 @@ void setupTimeStructure()
 
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
+#if RTC_INT_PIN != -1
   pinMode(RTC_INT_PIN, INPUT);
+#endif
   if (isFromWakeUp == false)
   {
     SRTC.init();
+#if RTC_INT_PIN == -1
+    SRTC.use32K(true);
+#endif
     HWVer = SRTC.getWatchyHWVer();
 #if TIME_DRIFT_CORRECTION
-    if (SRTC.getDrift(false) == 0)
+    if (SRTC.getDrift() == 0)
     {
       uint32_t driftValue = fsGetString(CONF_DRIFT, "0").toInt();
       if (driftValue != 0)
@@ -95,7 +100,11 @@ void wakeUpManageRTC()
 
 void alarmManageRTC()
 {
+#if ATCHY_VER == WATCHY_2
   if (digitalRead(RTC_INT_PIN) == LOW)
+#elif ATCHY_VER == WATCHY_3
+  if (SRTC.isNewMinute() == true)
+#endif
   {
     debugLog("RTC PIN IS HIGH");
     readRTC();

@@ -1,6 +1,5 @@
 #include "buttons.h"
 
-int RTC_DATA_ATTR UP_PIN = 32;
 buttonState buttonPressed = None;
 TaskHandle_t buttonTask = NULL;
 std::mutex buttMut;
@@ -53,21 +52,6 @@ void useButtonBlank()
 
 void initButtons(bool isFromWakeUp)
 {
-    if (isFromWakeUp == false)
-    {
-        if (SRTC.getType() == RTC_PCF8563)
-        {
-            if (HWVer == 1.5)
-            {
-                UP_PIN = 32;
-            }
-            else
-            {
-                UP_PIN = 35;
-            }
-        }
-    }
-
     pinMode(MENU_PIN, INPUT);
     pinMode(BACK_PIN, INPUT);
     pinMode(UP_PIN, INPUT);
@@ -114,7 +98,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
 void loopButtonsTask(void *parameter)
 {
     // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
-    while (digitalRead(BACK_PIN) == HIGH || digitalRead(MENU_PIN) == HIGH || digitalRead(UP_PIN) == HIGH || digitalRead(DOWN_PIN) == HIGH)
+    while (digitalRead(BACK_PIN) == BUT_CLICK_STATE || digitalRead(MENU_PIN) == BUT_CLICK_STATE || digitalRead(UP_PIN) == BUT_CLICK_STATE || digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
     }
@@ -210,7 +194,7 @@ void wakeUpLong(int pin, buttonState normal, buttonState hold)
 {
     long timeTime = millis();
 
-    while (digitalRead(pin) == HIGH && timeTime + BUTTON_LONG_PRESS_MS > millis())
+    while (digitalRead(pin) == BUT_CLICK_STATE && timeTime + BUTTON_LONG_PRESS_MS > millis())
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
     }
@@ -219,7 +203,7 @@ void wakeUpLong(int pin, buttonState normal, buttonState hold)
     {
         buttonPressed = hold;
     }
-    else if (digitalRead(pin) == LOW)
+    else if (digitalRead(pin) == BUT_STATE)
     {
         buttonPressed = normal;
     }
@@ -258,19 +242,19 @@ void manageButtonWakeUp()
 #if DEBUG
 void dumpButtons()
 {
-    if (digitalRead(MENU_PIN) == 1)
+    if (digitalRead(MENU_PIN) == BUT_CLICK_STATE)
     {
         debugLog("Menu button pressed");
     }
-    else if (digitalRead(BACK_PIN) == 1)
+    else if (digitalRead(BACK_PIN) == BUT_CLICK_STATE)
     {
         debugLog("Back button pressed");
     }
-    else if (digitalRead(UP_PIN) == 1)
+    else if (digitalRead(UP_PIN) == BUT_CLICK_STATE)
     {
         debugLog("Up button pressed");
     }
-    else if (digitalRead(DOWN_PIN) == 1)
+    else if (digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
     {
         debugLog("Down button pressed");
     }
