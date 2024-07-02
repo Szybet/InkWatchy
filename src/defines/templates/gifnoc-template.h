@@ -58,16 +58,11 @@
 #define BITCOIN_SYNC_TRIES 3
 #define CONWAY_MODULE 1                  // Conway module. to make it enabled CONWAY itself needs to be enabled
 #define CONWAY_MODULE_GRID_PERCANTAGE 50 // Percentage of initial grid filling
-#if CONWAY && CONWAY_MODULE
-#define CONWAY_MODULE_ENABLED 1
-#endif
+
 #define BOOK_MODULE 1
 #define BOOK_MODULE_CHARS_PER_PAGE 140
-#if BOOK && BOOK_MODULE
-#define BOOK_MODULE_ENABLED 1
-#endif
-#define MODULES_OPERATING_FAST 1 // Great name for a feature... Well basically when you operate modules it won't wait for more operations, it goes to sleep. This makes it wait the value below:
-#define MODULES_WAITING_DIVISION 13 // Divise SLEEP_EVERY_MS through that value
+#define MODULES_OPERATING_FAST 1       // Great name for a feature... Well basically when you operate modules it won't wait for more operations, it goes to sleep. This makes it wait the value below:
+#define MODULES_WAITING_DIVISION 0.825 // Divise SLEEP_EVERY_MS through that value
 
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
@@ -79,6 +74,8 @@
 #define LOOP_NO_SCREEN_WRITE_DELAY_MS 125 // Go to "sleep" for 200 ms if the device is woken up ( in a menu for example )
 #define HARDWARE_POWER_SAVINGS 1          // Like wifi modem in power saving mode
 #define CPU_SPEED minimalSpeed            // Possible values: minimalSpeed, normalSpeed, maxSpeed. Obviously higher speeds decrease battery life - but it's only when you interact with the watch. This is mostly for the people who "ugh this watch is slow!". Well first, it's a watch, it should show time, any other features are battery wasters in some way and secondly you should first remove some features you don't use, most noticibly unused watchface moduls. In debug mode, this feature is overritten by DEBUG_CPU_SPEED when DEBUG
+#define SOFT_START_THINGS 1               // Slowly starts things, like wifi to prevent brownout reset.
+#define SOFT_START_DELAY_MS 2500
 
 // For now those features are:
 // DISABLE_BUTTON_VIBRATION
@@ -127,36 +124,13 @@
 // https://github.com/littlefs-project/littlefs/issues/738
 #define MAX_LOG_FILE_SIZE_BYTES 300000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs, 400000 is the max in my opinion
 #define STOP_ON_RESET 1                // Stop the device until the reset is cleared, it doesn't do that if it's sure that it was a forced reset (esptool one)
-#define SERIAL_LOG_DELAY 0 // If 1, use the delay below to ensure good looking logs
+#define SERIAL_LOG_DELAY 0             // If 1, use the delay below to ensure good looking logs
 #define SERIAL_LOG_DELAY_MS 23
 #define SERIAL_BAUDRATE 115200
-#define MINIMAL_LOGS 1 // Don't put full file paths in logs
-#define SCOM_TASK 0 // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
-#if SCOM_TASK == 1 && DEBUG == 1
-#define SCOM_TASK_ENABLED 1
-#endif
-#if SCOM_TASK_ENABLED
-#undef VIBRATION_BUTTON_TIME
-#undef VIBRATION_ACTION_TIME
-#define VIBRATION_BUTTON_TIME 800 // Time in ms to the motor to vibrate after clicking a button. 0 means none
-#define VIBRATION_ACTION_TIME 800 // Time in ms to the motor to vibrate when the UI receives an action
-#endif
-
+#define MINIMAL_LOGS 1      // Don't put full file paths in logs
+#define SCOM_TASK 0         // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
 #define FONT_PREVIEW_MENU 1 // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
-#if FONT_PREVIEW_MENU == 1 && DEBUG == 1 && DEBUG_MENUS == 1
-#define FONT_MENU_ENABLED 1
-#endif
-
-// Display init magic ;)
-#define EPD_CS 5
-#define EPD_DC 10
-#define EPD_RESET 9
-#define EPD_BUSY 19
-
-// Button pins
-#define MENU_PIN 26
-#define BACK_PIN 25
-#define DOWN_PIN 4
+#define NO_CHARGING 1       // Disable detection of charging, only in debug
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
@@ -173,9 +147,7 @@
 #define BATTERY_CHARGE_DETECTION_DIFFERENCE 0.10 // The minimum difference to detect that the battery is charging
 
 // Other
-#define VIB_MOTOR_PIN 13 // Vibration motor
 #define MAX_MENU_ITEMS 20
-#define RTC_INT_PIN 27
 
 // Other other, resources thing
 #define RESOURCES_NAME_LENGTH 50

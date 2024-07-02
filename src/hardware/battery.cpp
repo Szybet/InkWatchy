@@ -57,6 +57,10 @@ RTC_DATA_ATTR bool previousCharging = true;
 #endif
 void isChargingCheck()
 {
+    #if NO_CHARGING == 1 && DEBUG == 1
+        bat.isCharging = false;
+        return;
+    #endif
     if (bat.curV >= bat.charV)
     {
         // debugLog("It's charging because of above voltage");
