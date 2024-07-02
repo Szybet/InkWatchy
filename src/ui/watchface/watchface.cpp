@@ -87,18 +87,21 @@ void loopWatchfaceLoop()
   buttonState bt = useButton();
   modulesButtons(bt);
 
-  // if(dUChange == false) {
-  // debugLog("No change in watchface, skipping timer");
-  // Always go to sleep in watchface after loop
-  // Well not if it's charging
-  #if MODULES_OPERATING_FAST
-      if(bt != None) {
-        debugLog("Watchface modules fast operating done");
-        wentToSleep = true;
-        sleepDelayMs = SLEEP_EVERY_MS / MODULES_WAITING_DIVISION;
-      }
-  #endif
-  if (bt == None && wentToSleep == false && (bat.isCharging == false || SYNC_WIFI == 0))
+// if(dUChange == false) {
+// debugLog("No change in watchface, skipping timer");
+// Always go to sleep in watchface after loop
+// Well not if it's charging
+#if MODULES_OPERATING_FAST
+  if (bt != None && currentPlaceIndex == 0)
+  {
+    debugLog("Watchface modules fast operating done");
+    wentToSleep = true;
+    int makeMinus = -1 * (SLEEP_EVERY_MS * MODULES_WAITING_DIVISION);
+    debugLog("makeMinus: " + String(makeMinus));
+    resetSleepDelay(makeMinus);
+  }
+#endif
+  if (bt == None && wentToSleep == false && (bat.isCharging == false)) // || SYNC_WIFI == 0
   {
     // We dont want resetDelay because if something wants to sleep, we dont want to be the reason for forcing it
     debugLog("Watchface requesting sleep");
