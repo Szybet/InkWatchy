@@ -53,7 +53,7 @@ if [ ! -d "/root/esp-idf/docs" ]; then
     cd /root/
     rm -rf esp-idf-git/
     git clone https://github.com/espressif/esp-idf.git esp-idf-git
-    # rm -rf esp-idf-git/.git # not sure about this one
+    # rm -rf esp-idf-git/.git # not sure about this one, if it will make problems for gitignore and vscode git support or smth
     mv esp-idf-git/{*,.[!.]*,..?*} esp-idf/
     rm -rf esp-idf-git
     cd esp-idf/
