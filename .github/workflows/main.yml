@@ -1,8 +1,11 @@
 name: Build demo
 
+#on:
+#  push:
+#    branches: [ master ]
+
 on:
-  push:
-    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   demo:

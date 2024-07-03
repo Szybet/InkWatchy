@@ -8,18 +8,23 @@ TaskHandle_t watchdogTask = NULL;
 void loopWatchdogTask(void *parameter)
 {
     debugLog("Watchdog starting");
-    while(true) {
+    while (true)
+    {
         delayTask(30000);
         // debugLog("Watchdog cycle");
-        if(digitalRead(BACK_PIN) == HIGH && digitalRead(MENU_PIN) == HIGH && digitalRead(UP_PIN) == HIGH && digitalRead(DOWN_PIN) == HIGH) {
+        if (digitalRead(BACK_PIN) == BUT_CLICK_STATE && digitalRead(MENU_PIN) == BUT_CLICK_STATE && digitalRead(UP_PIN) == BUT_CLICK_STATE && digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
+        {
             debugLog("Detected all buttons high, resetting...");
             assert(true == false);
         }
         watchdogFine.lock();
-        if(everythingIsFine == false) {
+        if (everythingIsFine == false)
+        {
             debugLog("everythingIsFine is false, resetting...");
             assert(true == false);
-        } else {
+        }
+        else
+        {
             everythingIsFine = false;
             watchdogFine.unlock();
             delayTask(30000);
@@ -51,7 +56,7 @@ void deInitWatchdogTask()
 
 void watchdogPing()
 {
-    //debugLog("watchdogPing called");
+    // debugLog("watchdogPing called");
     watchdogFine.lock();
     everythingIsFine = true;
     watchdogFine.unlock();
