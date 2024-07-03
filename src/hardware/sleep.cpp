@@ -2,8 +2,8 @@
 
 void ForceInputs()
 {
-    isDebug(Serial.end());
 #if ATCHY_VER == WATCHY_2
+    isDebug(Serial.end());
     uint8_t P = SRTC.getADCPin();
     /* Unused GPIO PINS */
     pinMode(0, INPUT);  /*  ??      */
@@ -47,7 +47,7 @@ void ForceInputs()
     pinMode(12, INPUT); /* INT2     */
     pinMode(14, INPUT); /* INT1     */
 #elif ATCHY_VER == WATCHY_3    
-    debugLog("Not implemented for the watchy3!");
+    // Not implemented for the watchy3!
 #endif
 }
 
