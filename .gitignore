@@ -26,8 +26,9 @@ components/
 .platformio/*
 !.platformio/.gitkeep
 
-!.esp-idf/.gitkeep
 .esp-idf/esp-idf/*
-!.esp-idf/esp-idf/.gitkeep
 .esp-idf/espressif/*
+
+!.esp-idf/.gitkeep
+!.esp-idf/esp-idf/.gitkeep
 !.esp-idf/espressif/.gitkeep
