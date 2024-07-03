@@ -58,7 +58,7 @@ It doesn't use the watchy sub-class but it uses the same libraries. With that in
 </details>
 
 ## Devices supported
-Watchy 1.0, 2.0 are supported
+Watchy 2.0 is supported, 1.0 or 1.5 should work but not fully
 
 The 3.0 is supported but not tested, contact me if you want to test it :D
 
