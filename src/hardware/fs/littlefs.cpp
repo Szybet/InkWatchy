@@ -7,7 +7,7 @@ bool fsSetup()
   if (fsInitDone == false)
   {
     debugLog("Trying to mount littleFS");
-    if (LittleFS.begin(false, "/littlefs", 100, "littlefs") == false)
+    if (LittleFS.begin(false, "/littlefs", 30, "littlefs") == false)
     {
       debugLog("Failed to mount littlefs");
       return false;
