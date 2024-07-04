@@ -113,7 +113,7 @@ void logCleanup(bool serial, bool fs)
     {
       // debugLog("Printing out saved logs");
       Serial.print(savedLogs);
-      Serial.flush(true);
+      flushLogs();
       savedLogsIndex = 0;
       memset(savedLogs, 0, LOG_SERIAL_BUFFER_SIZE);
     }
@@ -133,13 +133,13 @@ void logFunction(String file, int line, String func, String message)
 #if PUT_LOGS_TO_SERIAL
   if (serialWrite.try_lock())
   {
-    Serial.flush(true);
+    flushLogs();
 #if SERIAL_LOG_DELAY
     delayTask(SERIAL_LOG_DELAY_MS);
 #endif
     logCleanup(true, false);
     Serial.print(log);
-    Serial.flush(true);
+    flushLogs();
 #if SERIAL_LOG_DELAY
     delayTask(SERIAL_LOG_DELAY_MS);
 #endif
@@ -187,7 +187,19 @@ void logFunction(String file, int line, String func, String message)
   }
 #endif
 }
+
 #endif
+
+void flushLogs()
+{
+#if DEBUG
+#if ATCHY_VER == WATCHY_2
+  Serial.flush(true);
+#elif ATCHY_VER == WATCHY_3
+  Serial.flush();
+#endif
+#endif
+}
 
 // Check if a function contains a character that has a line below like... g p q j
 bool containsBelowChar(String str)

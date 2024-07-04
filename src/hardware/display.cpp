@@ -47,7 +47,7 @@ void initDisplay(bool isFromWakeUp)
                 Serial.println("Waiting for button input after reset...");
                 delay(100);
             }
-            Serial.flush();
+            flushLogs();
             while (digitalRead(BACK_PIN) != HIGH && digitalRead(MENU_PIN) != HIGH && digitalRead(UP_PIN) != HIGH && digitalRead(DOWN_PIN) != HIGH)
             {
                 delay(1000);
