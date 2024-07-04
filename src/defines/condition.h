@@ -43,6 +43,20 @@ Template for versioning
 #define EPD_BUSY 36
 #endif
 
+// More display magic but SPI
+#if ATCHY_VER == WATCHY_2
+#define EPD_SPI_SCK 18
+#define EPD_SPI_MISO 19
+#define EPD_SPI_MOSI 23
+#define EPD_SPI_SS 5
+#elif ATCHY_VER == WATCHY_3
+#define EPD_SPI_SCK 47
+#define EPD_SPI_MISO 46
+#define EPD_SPI_MOSI 48
+#define EPD_SPI_SS 33
+#endif
+
+
 // Button pins
 #if ATCHY_VER == WATCHY_2
 // Maybe I could od a !not but whatever
