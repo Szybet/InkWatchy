@@ -3,7 +3,12 @@
 RTC_DATA_ATTR GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display(GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY));
 
 bool resetReasonHold(esp_reset_reason_t resetReason) {
-    
+    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW) {
+        return true;
+    } else {
+        return false;
+    }
+    return true;
 }
 
 void initDisplay(bool isFromWakeUp)
@@ -49,7 +54,7 @@ void initDisplay(bool isFromWakeUp)
         debugLog("Reset for reason: " + resetReasonToString(resetReason));
         centerText(resetReasonToString(resetReason), &h);
 #if STOP_ON_RESET
-        if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW) // ESP_RST_SW only for ESP.reset() in coredump cleaning
+        if (resetReasonHold(resetReason) == true) // ESP_RST_SW only for ESP.reset() in coredump cleaning
         {
             h = h + 30;
             centerText("Hold any right button", &h);
@@ -59,7 +64,7 @@ void initDisplay(bool isFromWakeUp)
 #endif
         display.display(FULL_UPDATE);
 #if STOP_ON_RESET
-        if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW) // ESP_RST_SW only for ESP.reset() in coredump cleaning
+        if (resetReasonHold(resetReason) == true) // ESP_RST_SW only for ESP.reset() in coredump cleaning
         {
             for (int i = 0; i < 10; i++)
             {
