@@ -132,6 +132,7 @@ size_t fsGetFileSize(String path)
   if (file.isDirectory() == true)
   {
     debugLog("Is a dir: " + path);
+    file.close();
     return 0;
   }
   size_t size = file.size();

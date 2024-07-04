@@ -15,7 +15,7 @@ void priorityLoopSet(void *parameter)
     if (loopTaskHandle != NULL)
     {
       vTaskPrioritySet(loopTaskHandle, MAIN_LOOP_PRIORITY);
-      debugLog("Set loop task priority, exiting...");
+      //debugLog("Set loop task priority, exiting...");
       vTaskDelete(NULL);
     }
     delayTask(100);
