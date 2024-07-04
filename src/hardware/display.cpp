@@ -2,6 +2,10 @@
 
 RTC_DATA_ATTR GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display(GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY));
 
+bool resetReasonHold(esp_reset_reason_t resetReason) {
+    
+}
+
 void initDisplay(bool isFromWakeUp)
 {
     debugLog("initDisplay called: " + BOOL_STR(isFromWakeUp));
@@ -48,7 +52,7 @@ void initDisplay(bool isFromWakeUp)
         if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW) // ESP_RST_SW only for ESP.reset() in coredump cleaning
         {
             h = h + 30;
-            centerText("Click any button", &h);
+            centerText("Hold any right button", &h);
             h = h + 10;
             centerText("To continue", &h);
         }
