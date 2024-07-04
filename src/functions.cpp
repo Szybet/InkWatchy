@@ -93,17 +93,21 @@ void logCleanup(bool serial, bool fs)
 #if PUT_LOGS_TO_FS
   if (fs == true)
   {
-    if (disableFsLogging == false && openLogFile() == true)
+    if (disableFsLogging == false)
     {
-      if (savedLogsFileIndex > 0)
+      if (openLogFile() == true)
       {
-        // This function here can output old logs, mostly from FsSetup
-        logFile.print(savedLogsFile);
-        savedLogsFileIndex = 0;
-        memset(savedLogsFile, 0, LOG_FILE_BUFFER_SIZE);
+        if (savedLogsFileIndex > 0)
+        {
+          // This function here can output old logs, mostly from FsSetup
+          logFile.print(savedLogsFile);
+          savedLogsFileIndex = 0;
+          memset(savedLogsFile, 0, LOG_FILE_BUFFER_SIZE);
+        }
+        logFile.close();
       }
-      logFile.close();
     }
+    disableFsLogging = true;
   }
 #endif
 #if PUT_LOGS_TO_SERIAL
