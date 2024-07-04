@@ -25,4 +25,4 @@ pio_env=$(get_pio_env ../../../../.vscode/launch.json)
 
 . /workspaces/InkWatchy/.esp-idf/esp-idf/export.sh 
 
-espcoredump.py --chip esp32 info_corefile /workspaces/InkWatchy/.pio/build/Watchy_2/firmware.elf
+espcoredump.py --chip esp32 info_corefile /workspaces/InkWatchy/.pio/build/$pio_env/firmware.elf
