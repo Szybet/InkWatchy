@@ -46,7 +46,7 @@ void ForceInputs()
                         /* BMA 423 */
     pinMode(12, INPUT); /* INT2     */
     pinMode(14, INPUT); /* INT1     */
-#elif ATCHY_VER == WATCHY_3    
+#elif ATCHY_VER == WATCHY_3
     // Not implemented for the watchy3!
 #endif
 }
@@ -63,8 +63,12 @@ void goSleep()
     disUp(true);
 #endif
 
-    //deInitButtonTask();
-    noInterrupts();
+    // deInitButtonTask();
+    // noInterrupts(); // Holy shit not this shit
+    detachInterrupt(UP_PIN);
+    detachInterrupt(DOWN_PIN);
+    detachInterrupt(BACK_PIN);
+    detachInterrupt(MENU_PIN);
     
     while (motorTaskRunning == true)
     {
@@ -73,7 +77,8 @@ void goSleep()
     }
 
     display.hibernate();
-    turnOffWifi();    // To be sure only
+
+    turnOffWifi(); // To be sure only
     alarmManageRTC(); // To be sure too...
     deInitWatchdogTask();
     debugLog("Going sleep...");
@@ -81,17 +86,17 @@ void goSleep()
     logCleanup();
     Serial.print("Sleeping now!");
     flushLogs();
+    delayTask(50);
 #endif
     ForceInputs();
     LittleFS.end();
     // Not needed since small rtc 2.3.7
-    //esp_err_t ext0Err = esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
+    // esp_err_t ext0Err = esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
     esp_err_t ext1Err = esp_sleep_enable_ext1_wakeup(pinToMask(UP_PIN) | pinToMask(DOWN_PIN) | pinToMask(MENU_PIN) | pinToMask(BACK_PIN), EXT1_WAKEUP_STATE);
     if (ext1Err != ESP_OK)
     {
         Serial.begin(SERIAL_BAUDRATE);
-        debugLog("UP_PIN: " + String(UP_PIN));
-        //debugLog("ext0 error: " + String(esp_err_to_name(ext0Err)));
+        // debugLog("ext0 error: " + String(esp_err_to_name(ext0Err)));
         debugLog("ext1 error: " + String(esp_err_to_name(ext1Err)));
         delayTask(3000);
         assert("Failed to make gpio interrupts");
