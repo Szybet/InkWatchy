@@ -28,6 +28,8 @@ void setup()
 #if DEBUG
 #if PUT_LOGS_TO_SERIAL // This is here first because of watchy 3
   Serial.begin(SERIAL_BAUDRATE);
+#if ATCHY_VER == WATCHY_3
+  Serial.setDebugOutput(true);
 #endif
 #if WAIT_FOR_MONITOR
   delay(5000);
