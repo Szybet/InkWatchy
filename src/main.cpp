@@ -26,13 +26,13 @@ esp_sleep_wakeup_cause_t wakeUpReason;
 void setup()
 {
 #if DEBUG
-#if WAIT_FOR_MONITOR
-  delay(3000);
-#endif
-  initLogs(); // This has #if in it, so it can run always
-#if PUT_LOGS_TO_SERIAL
+#if PUT_LOGS_TO_SERIAL // This is here first because of watchy 3
   Serial.begin(SERIAL_BAUDRATE);
 #endif
+#if WAIT_FOR_MONITOR
+  delay(5000);
+#endif
+  initLogs(); // This has #if in it, so it can run always
 #endif
   wakeUpReason = esp_sleep_get_wakeup_cause();
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
