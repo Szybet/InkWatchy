@@ -6,7 +6,11 @@ void initDisplay(bool isFromWakeUp)
 {
     debugLog("initDisplay called: " + BOOL_STR(isFromWakeUp));
     display.init(0, !isFromWakeUp, 10, true);
+    #if ATCHY_VER == WATCHY_3
+    SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
+    #elif ATCHY_VER == WATCHY_2
     display.epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
+    #endif
     /*
     Here, to remove border you need to go to GxEPD2_154_D67::_InitDisplay()
     .pio/libdeps/watchy/GxEPD2/src/epd/GxEPD2_154_D67.cpp
