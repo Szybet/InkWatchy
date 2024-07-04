@@ -4,7 +4,18 @@ source resources/tools/globalFunctions.sh
 
 pio_env=$(get_pio_env .vscode/launch.json)
 
-XTENSA_ADDR2LINE="$HOME/.platformio/packages/toolchain-xtensa-esp32/bin/xtensa-esp32-elf-addr2line"
+toolchain_dir=""
+addr_file=""
+
+if [[ "$pio_env" =~ 3 ]]; then
+    toolchain_dir="toolchain-xtensa-esp32s3"
+    addr_file="xtensa-esp32s3-elf-addr2line"
+elif [[ "$pio_env" =~ 2 ]]; then
+    toolchain_dir="toolchain-xtensa-esp32"
+    addr_file="xtensa-esp32-elf-addr2line"
+fi
+
+XTENSA_ADDR2LINE="$HOME/.platformio/packages/$toolchain_dir/bin/$addr_file"
 ELF_FILE=".pio/build/$pio_env/firmware.elf"
 
 IFS=' ' read -r -a BACKTRACES <<< "$@" # <<< "$1" 
