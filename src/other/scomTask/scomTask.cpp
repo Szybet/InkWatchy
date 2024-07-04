@@ -139,7 +139,7 @@ void loopScomTask(void *parameter)
             printEndPacket = false;
             printPacket(endPacket);
             Serial.write('\n');
-            Serial.flush(true);
+            flushLogs();
         }
 
         serialWrite.unlock();

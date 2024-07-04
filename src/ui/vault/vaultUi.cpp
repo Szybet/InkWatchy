@@ -36,7 +36,7 @@ bool checkKey()
     size_t written = 0;
 
     debugLog("Before base64 encoding");
-    Serial.flush();
+    flushLogs();
 
     int baseResult = mbedtls_base64_decode(realImage, encCheckLen, &written, (const unsigned char *)encCheck.c_str(), encCheckLen);
 
@@ -96,7 +96,7 @@ String getSault()
     size_t written = 0;
 
     debugLog("Before base64 encoding");
-    Serial.flush();
+    flushLogs();
 
     int baseResult = mbedtls_base64_decode(realImage, saultLen, &written, (const unsigned char *)saultEnc.c_str(), saultLen);
 
@@ -243,7 +243,7 @@ void showVaultImage(String file)
         size_t written = 0;
 
         debugLog("Before base64 encoding");
-        Serial.flush();
+        flushLogs();
 
         int baseResult = mbedtls_base64_decode(realImage, vaultItem.size, &written, vaultItem.buf, vaultItem.size);
 
@@ -285,7 +285,7 @@ void showVaultImage(String file)
             Serial.print(" ");
         }
         Serial.println("");
-        Serial.flush();
+        flushLogs();
 
         debugLog("Original base64 image:");
         for (size_t i = 0; i < testImgVaultImg_len; i++)
@@ -294,7 +294,7 @@ void showVaultImage(String file)
             Serial.print(" ");
         }
         Serial.println("");
-        Serial.flush();
+        flushLogs();
         */
     }
     else

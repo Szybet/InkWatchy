@@ -10,6 +10,7 @@ void logFunction(String file, int line, String func, String message);
 void logCleanup(bool serial = true, bool fs = true);
 extern bool disableFsLogging;
 #endif
+void flushLogs(); // This should be moved inside of DEBUG but the code is messed up in other places, for now leave it
 bool containsBelowChar(String str);
 void delayTask(int timeMs);
 void checkMaxMin(int *value, int max, int min = 0, bool wrapback = true);

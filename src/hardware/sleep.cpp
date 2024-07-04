@@ -79,7 +79,7 @@ void goSleep()
     debugLog("Sleeping!");
 #if DEBUG
     logCleanup();
-    Serial.flush();
+    flushLogs();
 #endif
     ForceInputs();
     LittleFS.end();
