@@ -45,11 +45,13 @@ Template for versioning
 
 // More display magic but SPI
 #if ATCHY_VER == WATCHY_2
+// Unused really as defaults are good
 #define EPD_SPI_SCK 18
 #define EPD_SPI_MISO 19
 #define EPD_SPI_MOSI 23
 #define EPD_SPI_SS 5
 #elif ATCHY_VER == WATCHY_3
+// But those are used
 #define EPD_SPI_SCK 47
 #define EPD_SPI_MISO 46
 #define EPD_SPI_MOSI 48
