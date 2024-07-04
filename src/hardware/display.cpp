@@ -44,6 +44,15 @@ void initDisplay(bool isFromWakeUp)
         esp_reset_reason_t resetReason = esp_reset_reason();
         debugLog("Reset for reason: " + resetReasonToString(resetReason));
         centerText(resetReasonToString(resetReason), &h);
+#if STOP_ON_RESET
+        if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW) // ESP_RST_SW only for ESP.reset() in coredump cleaning
+        {
+            h = h + 30;
+            centerText("Click any button", &h);
+            h = h + 10;
+            centerText("To continue", &h);
+        }
+#endif
         display.display(FULL_UPDATE);
 #if STOP_ON_RESET
         if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW) // ESP_RST_SW only for ESP.reset() in coredump cleaning
@@ -54,7 +63,7 @@ void initDisplay(bool isFromWakeUp)
                 delay(100);
             }
             flushLogs();
-            while (digitalRead(BACK_PIN) != HIGH && digitalRead(MENU_PIN) != HIGH && digitalRead(UP_PIN) != HIGH && digitalRead(DOWN_PIN) != HIGH)
+            while (digitalRead(BACK_PIN) != BUT_CLICK_STATE && digitalRead(MENU_PIN) != BUT_CLICK_STATE && digitalRead(UP_PIN) != BUT_CLICK_STATE && digitalRead(DOWN_PIN) != BUT_CLICK_STATE)
             {
                 delay(1000);
             }
