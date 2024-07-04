@@ -76,9 +76,10 @@ void goSleep()
     turnOffWifi();    // To be sure only
     alarmManageRTC(); // To be sure too...
     deInitWatchdogTask();
-    debugLog("Sleeping!");
+    debugLog("Going sleep...");
 #if DEBUG
     logCleanup();
+    Serial.print("Sleeping now!");
     flushLogs();
 #endif
     ForceInputs();
