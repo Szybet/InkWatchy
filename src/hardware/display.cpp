@@ -2,12 +2,28 @@
 
 RTC_DATA_ATTR GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display(GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY));
 
-bool resetReasonHold(esp_reset_reason_t resetReason) {
-    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW) {
+bool resetReasonHold(esp_reset_reason_t resetReason)
+{
+#if ATCHY_VER == WATCHY_2
+    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW)
+    {
         return true;
-    } else {
+    }
+    else
+    {
         return false;
     }
+#elif ATCHY_VER == WATCHY_3
+    // Because we are on a outdated version of esp idf ESP_RST_UNKNOWN is causes by jtag for example
+    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW && resetReason != ESP_RST_UNKNOWN)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+#endif
     return true;
 }
 
@@ -17,8 +33,7 @@ void initDisplay(bool isFromWakeUp)
 #if ATCHY_VER == WATCHY_3
     SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
     display.init(0, !isFromWakeUp, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
-#endif
-#if ATCHY_VER == WATCHY_2
+#elif ATCHY_VER == WATCHY_2
     display.init(0, !isFromWakeUp, 10, true);
     display.epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
 #endif
