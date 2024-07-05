@@ -109,20 +109,20 @@
 #define DUMP_LOOP_SOFTWARE_DEBUG 0  // If debug, at every loop iteration dump software values that can change - no sense in using it with DUMP_LOOP_DEBUG
 #define SCREEN_SLEEP_INFO 0         // Shows information on screen when the device goes to screen
 #define DRAW_DEBUG_RECT 0           // Shows rectangles where custom functions write bitmaps
-#define DUMP_LOOP_DELAY 5000        // delay in ms of dumping loop data
+#define DUMP_LOOP_DELAY 1000        // delay in ms of dumping loop data
 #define SPEED_THROUGH_TIME 0        // Speeds up time for watchface programming
 #define NO_SYNC 0                   // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0          // Prints voltage on the screen, really fast
 #define DISABLE_SLEEP 0             // Disable sleep, so it will never go to sleep. Good for SCOM_TASK
 #define PUT_LOGS_TO_SERIAL 1        // Puts logs to serial. Turn off if you want debug on the go
 #define PUT_LOGS_TO_FS 1            // Puts logs into littlefs
-#define WAIT_FOR_MONITOR 0          // If debug is enabled, waits for monitor in setup for 3000 ms
+#define WAIT_FOR_MONITOR 0          // If debug is enabled, waits for monitor in setup for x ms
 // Ah... too much allocated memory... 10 hours of my life...
 #define LOG_SERIAL_BUFFER_SIZE 1000
-#define LOG_FILE_BUFFER_SIZE 8000
+#define LOG_FILE_BUFFER_SIZE 3000
 // Max file size for littlefs: 2Gb
 // https://github.com/littlefs-project/littlefs/issues/738
-#define MAX_LOG_FILE_SIZE_BYTES 300000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs, 400000 is the max in my opinion
+#define MAX_LOG_FILE_SIZE_BYTES 100000 // 100 Kb - this means logs will maximally be stored x2 by that, because 2 files switching by each other to preserve 100 Kb of last logs, 400000 is the max in my opinion
 #define STOP_ON_RESET 1                // Stop the device until the reset is cleared, it doesn't do that if it's sure that it was a forced reset (esptool one)
 #define SERIAL_LOG_DELAY 0             // If 1, use the delay below to ensure good looking logs
 #define SERIAL_LOG_DELAY_MS 23
