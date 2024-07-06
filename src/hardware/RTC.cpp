@@ -12,7 +12,7 @@ void setupTimeStructure()
 
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
-#if RTC_INT_PIN != -1
+#if ATCHY_VER == WATCHY_2
   pinMode(RTC_INT_PIN, INPUT);
 #endif
   if (isFromWakeUp == false)
@@ -47,6 +47,13 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     readRTC();
     wakeUpManageRTC();
   }
+  #if ATCHY_VER == WATCHY_3
+  else
+  {
+    readRTC(); // To update millis(); always
+  }
+  setupMillisComparators();
+  #endif
 }
 
 void saveRTC()
@@ -70,6 +77,40 @@ void readRTC()
 {
   // debugLog("Reading RTC");
   SRTC.read(*timeRTC);
+#if ATCHY_VER == WATCHY_3
+  bool rtcGarbage = false;
+  if (timeRTC->Year < 1970 || timeRTC->Year > 3000)
+  {
+    timeRTC->Year = 1970;
+    rtcGarbage = true;
+  }
+  if (timeRTC->Month < 0 || timeRTC->Month > 11)
+  {
+    timeRTC->Month = 0;
+    rtcGarbage = true;
+  }
+  if (timeRTC->Day < 0 || timeRTC->Day > 31)
+  {
+    timeRTC->Day = 0;
+    rtcGarbage = true;
+  }
+  if (timeRTC->Hour < 0 || timeRTC->Year > 24)
+  {
+    timeRTC->Hour = 0;
+    rtcGarbage = true;
+  }
+  if (timeRTC->Minute < 0 || timeRTC->Minute > 60)
+  {
+    timeRTC->Minute = 0;
+    rtcGarbage = true;
+  }
+#if DEBUG
+  if (rtcGarbage == true)
+  {
+    debugLog("RTC data is utterly garbage");
+  }
+#endif
+#endif
 }
 
 void wakeUpManageRTC()
@@ -269,3 +310,12 @@ void dumpRTCTimeSmall(tmElements_t *timeEl)
   debugLog("Time: " + String(timeEl->Minute) + ":" + String(timeEl->Second));
 }
 #endif
+
+void setupMillisComparators() {
+  // Every value that compares to millis needs to be set here, or if it's used only locally, like it's initialized every time then we don't need it
+  uint64_t theMillis = millis();
+  #if DEBUG
+  loopDumpDelayMs = theMillis;
+  #endif
+  sleepDelayMs = theMillis;
+}

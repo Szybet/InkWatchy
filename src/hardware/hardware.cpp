@@ -1,8 +1,12 @@
 #include "hardware.h"
 
 RTC_DATA_ATTR float HWVer;
-long sleepDelayMs;
+uint64_t sleepDelayMs;
 #define FIRST_BOOT_FILE "first_boot"
+
+#if DEBUG
+uint64_t loopDumpDelayMs;
+#endif
 
 // Also at boot, but on wake up too
 void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)

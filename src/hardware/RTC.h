@@ -13,6 +13,8 @@ void readRTC();
 void wakeUpManageRTC();
 void alarmManageRTC();
 
+void setupMillisComparators();
+
 // Not using reference made it... really broken
 String getHourMinute(tmElements_t* timeEl = timeRTC);
 String getDayName(int offset = 0);
