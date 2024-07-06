@@ -129,7 +129,7 @@
 #define SERIAL_BAUDRATE 115200
 #define MINIMAL_LOGS 1      // Don't put full file paths in logs
 #define SCOM_TASK 0         // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
-#define FONT_PREVIEW_MENU 1 // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
+#define FONT_PREVIEW_MENU 0 // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
 #define NO_CHARGING 1       // Disable detection of charging, only in debug
 
 // Voltage reading average
