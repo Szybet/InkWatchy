@@ -47,7 +47,11 @@ void ForceInputs()
     pinMode(12, INPUT); /* INT2     */
     pinMode(14, INPUT); /* INT1     */
 #elif ATCHY_VER == WATCHY_3
-    // Not implemented for the watchy3!
+    // Not implemented for the watchy3! (kind of)
+
+    // Stolen from the default firmware :)
+    rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
+    rtc_gpio_pullup_en((gpio_num_t)UP_PIN);
 #endif
 }
 

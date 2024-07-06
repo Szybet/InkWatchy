@@ -110,6 +110,9 @@ void loopManager()
                 executeExitFunc();
             }
         }
+    } else {
+        // Clear the back button even in watchface...
+        useButtonBack();
     }
 
     // Don't forget break...

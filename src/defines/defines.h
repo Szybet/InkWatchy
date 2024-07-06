@@ -19,6 +19,7 @@
 #include "esp_wifi.h"
 #include "hal/gpio_types.h"
 #include <nvs_flash.h> 
+#include "driver/rtc_io.h"
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
