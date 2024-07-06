@@ -94,7 +94,7 @@ void readRTC()
     timeRTC->Day = 0;
     rtcGarbage = true;
   }
-  if (timeRTC->Hour < 0 || timeRTC->Year > 24)
+  if (timeRTC->Hour < 0 || timeRTC->Hour > 24)
   {
     timeRTC->Hour = 0;
     rtcGarbage = true;
@@ -107,7 +107,7 @@ void readRTC()
 #if DEBUG
   if (rtcGarbage == true)
   {
-    debugLog("RTC data is utterly garbage");
+    debugLog("RTC garbage");
   }
 #endif
 #endif
