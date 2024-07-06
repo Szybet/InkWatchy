@@ -4,7 +4,7 @@
 #include "defines/defines.h"
 
 extern float HWVer;
-extern long sleepDelayMs;
+extern uint64_t sleepDelayMs;
 
 void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
 void resetSleepDelay(int addMs = 0);
@@ -29,6 +29,7 @@ String resetReasonToString(esp_reset_reason_t reason);
 void softStartDelay();
 
 #if DEBUG
+extern uint64_t loopDumpDelayMs;
 void initHardwareDebug();
 void loopHardwareDebug();
 #endif

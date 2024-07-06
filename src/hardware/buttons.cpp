@@ -73,8 +73,8 @@ void setButton(buttonState button)
 void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton)
 {
     int startime = millis();
-    int elapsedtime = 0;
-    while (digitalRead(buttonPin) == HIGH && elapsedtime < BUTTON_LONG_PRESS_MS)
+    int elapsedtime = millis();
+    while (digitalRead(buttonPin) == BUT_CLICK_STATE && elapsedtime < BUTTON_LONG_PRESS_MS)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
         elapsedtime = millis() - startime;
@@ -84,7 +84,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
     {
         setButton(longButton);
         vibrateMotor(VIBRATION_BUTTON_TIME * 1.7, true);
-        while (digitalRead(buttonPin) == HIGH)
+        while (digitalRead(buttonPin) == BUT_CLICK_STATE)
         {
             delayTask(SMALL_BUTTON_DELAY_MS);
         }

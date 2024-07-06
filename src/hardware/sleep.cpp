@@ -123,8 +123,8 @@ void checkIfButtonIsRunning()
 void manageSleep()
 {
     // debugLog("sleepDelayMs is:" + String(sleepDelayMs));
-    // debugLog("millis is:" + String(long(millis())));
-    if (long(millis()) - sleepDelayMs >= SLEEP_EVERY_MS)
+    // debugLog("millis is:" + String(millis()));
+    if (millis() - sleepDelayMs >= SLEEP_EVERY_MS)
     {
         if (currentPlace != FIRST_PLACE)
         {

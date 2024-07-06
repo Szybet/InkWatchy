@@ -1,9 +1,5 @@
 #include "defines/defines.h"
 
-#if DEBUG
-int loopDumpDelayMs = 0;
-#endif
-
 // https://github.com/espressif/arduino-esp32/blob/337058ac94e7e3df11d273a93e88d1ea605e6f5f/cores/esp32/main.cpp#L105
 // Why is that? well anyway this task set's it and exits
 TaskHandle_t priorityLoopHandle;
@@ -33,9 +29,9 @@ void setup()
 #endif
 #endif
 #if WAIT_FOR_MONITOR
-  delay(5000);
+  delay(7500);
 #endif
-  initLogs(); // This has #if in it, so it can run always
+  initLogs();
 #endif
 
   wakeUpReason = esp_sleep_get_wakeup_cause();
