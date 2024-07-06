@@ -127,6 +127,7 @@ String getHourMinute(tmElements_t *timeEl)
     m = "0" + m;
   }
 
+  debugLog("The bare hour: " + String(timeEl->Hour) + " and the bare minute: " + String(timeEl->Minute));
   String answer = h + ":" + m;
   debugLog("Answer: " + answer);
   return answer;

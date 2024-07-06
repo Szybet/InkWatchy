@@ -3,6 +3,7 @@
 
 #include "defines/defines.h"
 
+extern bool buttonsActivated;
 extern std::mutex buttMut;
 extern buttonState buttonPressed;
 extern TaskHandle_t buttonTask;

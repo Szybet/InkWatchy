@@ -1,5 +1,6 @@
 #include "buttons.h"
 
+bool buttonsActivated = false;
 buttonState buttonPressed = None;
 TaskHandle_t buttonTask = NULL;
 std::mutex buttMut;
@@ -97,6 +98,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
 
 void loopButtonsTask(void *parameter)
 {
+    buttonsActivated = true;
     // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
     while (digitalRead(BACK_PIN) == BUT_CLICK_STATE || digitalRead(MENU_PIN) == BUT_CLICK_STATE || digitalRead(UP_PIN) == BUT_CLICK_STATE || digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
     {

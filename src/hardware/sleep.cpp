@@ -67,13 +67,16 @@ void goSleep()
     disUp(true);
 #endif
 
-    // deInitButtonTask();
-    // noInterrupts(); // Holy shit not this shit
-    detachInterrupt(UP_PIN);
-    detachInterrupt(DOWN_PIN);
-    detachInterrupt(BACK_PIN);
-    detachInterrupt(MENU_PIN);
-    
+    if (buttonsActivated == true)
+    {
+        // deInitButtonTask(); // Should work now, reanable it later TODO
+        // noInterrupts(); // Holy shit not this shit
+        detachInterrupt(UP_PIN);
+        detachInterrupt(DOWN_PIN);
+        detachInterrupt(BACK_PIN);
+        detachInterrupt(MENU_PIN);
+    }
+
     while (motorTaskRunning == true)
     {
         debugLog("Waiting for motor task");
@@ -82,7 +85,7 @@ void goSleep()
 
     display.hibernate();
 
-    turnOffWifi(); // To be sure only
+    turnOffWifi();    // To be sure only
     alarmManageRTC(); // To be sure too...
     deInitWatchdogTask();
     debugLog("Going sleep...");
