@@ -73,7 +73,7 @@ void setButton(buttonState button)
 void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton)
 {
     int startime = millis();
-    int elapsedtime = millis();
+    int elapsedtime = 0;
     while (digitalRead(buttonPin) == BUT_CLICK_STATE && elapsedtime < BUTTON_LONG_PRESS_MS)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
