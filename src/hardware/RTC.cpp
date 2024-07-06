@@ -18,9 +18,10 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
   if (isFromWakeUp == false)
   {
     SRTC.init();
-#if RTC_INT_PIN == -1
-    SRTC.use32K(true);
-#endif
+    // Done inside smallrtc
+    // #if RTC_INT_PIN == -1
+    // SRTC.use32K(true);
+    // #endif
     HWVer = SRTC.getWatchyHWVer();
 #if TIME_DRIFT_CORRECTION
     if (SRTC.getDrift() == 0)

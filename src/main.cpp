@@ -37,6 +37,7 @@ void setup()
 #endif
   initLogs(); // This has #if in it, so it can run always
 #endif
+
   wakeUpReason = esp_sleep_get_wakeup_cause();
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
   // ESP_SLEEP_WAKEUP_EXT1 Button press
@@ -59,6 +60,10 @@ void setup()
   }
 
   initHardware(wakedUpFromSleep, wakeUpReason);
+
+#if WATCHY_3
+  debugLog("Starting millis: " + String(millis()));
+#endif
 
 #if DEBUG
 #if DUMP_INIT_DEBUG
