@@ -58,7 +58,6 @@ Template for versioning
 #define EPD_SPI_SS 33
 #endif
 
-
 // Button pins
 #if ATCHY_VER == WATCHY_2
 // Maybe I could od a !not but whatever
@@ -85,9 +84,12 @@ Template for versioning
 #define RTC_INT_PIN 27
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_HIGH
 #define RTC_WAKEUP_REASON ESP_SLEEP_WAKEUP_EXT0
+#define BATT_ADC_PIN 34
 #elif ATCHY_VER == WATCHY_3
 #define VIB_MOTOR_PIN 17
 #define RTC_INT_PIN -1
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_LOW
 #define RTC_WAKEUP_REASON ESP_SLEEP_WAKEUP_TIMER
+#define BATT_ADC_PIN 9
+#define ADC_VOLTAGE_DIVIDER ((360.0f + 100.0f) / 360.0f) // Voltage divider at battery ADC
 #endif
