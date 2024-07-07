@@ -35,7 +35,15 @@ xxd_wrapper(){
 
 get_pio_env() {
     local json_file=$1
+    local inkwatchy_env_file="/tmp/inkwatchy_env"
 
+    if [ -f "$inkwatchy_env_file" ]; then
+        env_name=$(tr -d '\n\r ' < "$inkwatchy_env_file")
+        echo "Env name found in inkwatchy env file in /tmp/: $env_name" >&2
+        echo "$env_name"
+        return 
+    fi
+    echo "File $inkwatchy_env_file not found. Trying to use the json file" >&2
     if [ -f "$json_file" ]; then
         # Use jq to extract the projectEnvName from launch.json
         local env_name=$(grep -v '^ *//' "$json_file" | jq '.configurations[0].projectEnvName')
@@ -43,6 +51,7 @@ get_pio_env() {
         
         if [ -n "$env_name" ]; then
             if [ "$env_name" != "null" ]; then
+                echo "Env name found in $json_file json file: $env_name" >&2
                 echo "$env_name"
                 return
             else 
