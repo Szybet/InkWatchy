@@ -94,7 +94,7 @@ void wfBookrequestShow(buttonState button, bool *showBool)
         }
     }
 
-    disUp();
+    dUChange = true;
 }
 
 RTC_DATA_ATTR wfModule wfBook = {

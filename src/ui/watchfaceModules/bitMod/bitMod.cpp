@@ -156,7 +156,7 @@ void wfBitrequestShow(buttonState button, bool *showBool)
     }
 
     isBtcDataNew = false;
-    disUp(true);
+    dUChange = true;
 }
 
 RTC_DATA_ATTR wfModule wfBit = {

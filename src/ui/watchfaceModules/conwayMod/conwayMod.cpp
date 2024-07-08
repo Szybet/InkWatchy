@@ -77,7 +77,7 @@ void wfConwayrequestShow(buttonState button, bool *showBool)
     }
 
     drawGrid(conwayModuleGrid, CONWAY_MODULE_HEIGHT, CONWAY_MODULE_WIDTH, MODULE_RECT_X + CONWAY_MODULE_OFFSET_X, MODULE_RECT_Y + CONWAY_MODULE_OFFSET_Y);
-    disUp(true);
+    dUChange = true;
 #if CONWAY_CPU_SPEED
     restoreCpuSpeed();
 #endif

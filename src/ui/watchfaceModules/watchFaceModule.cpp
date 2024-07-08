@@ -120,7 +120,7 @@ void drawModuleCount(bool force)
         display.setCursor(MODULE_COUNT_POS_X, MODULE_COUNT_POS_Y);
         display.print(String(counter));
 
-        disUp(true);
+        dUChange = true;
     }
 }
 
