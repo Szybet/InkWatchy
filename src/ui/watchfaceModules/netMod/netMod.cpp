@@ -42,7 +42,7 @@ void wfNetrequestShow(buttonState button, bool *showBool)
         setTextSize(1);
         display.print(WiFi.SSID());
     }
-    disUp(true);
+    dUChange = true;
 }
 
 // Lambda doesn't work here

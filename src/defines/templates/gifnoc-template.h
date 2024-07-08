@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 // Basics
-#define GSR_MINIMUM_BATTERY_VOLTAGE 0 // GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you have problems at lower battery levels
+#define GSR_MINIMUM_BATTERY_VOLTAGE 0 // Watchy_GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you want some more restrictive battery measurments
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
 #define VIBRATION_BUTTON_TIME 35 // Time in ms to the motor to vibrate after clicking a button. 0 means none
@@ -12,7 +12,7 @@
 #define TIME_OFFSET_S 7200           // Time offset in seconds, use this as timezones
 #define MENU_LINES false             // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500     // Duration until long press registers in miliseconds
-#define FULL_DISPLAY_UPDATE_QUEUE 30 // Make a full display update after x of partial ones
+#define FULL_DISPLAY_UPDATE_QUEUE 60 // Make a full display update after x of partial ones
 #define LONG_BACK_FULL_REFRESH 1     // Make a full refresh at long back button clicked
 #define WATCHDOG_TASK 1              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
 
@@ -61,8 +61,8 @@
 
 #define BOOK_MODULE 1
 #define BOOK_MODULE_CHARS_PER_PAGE 140
-#define MODULES_OPERATING_FAST 1       // Great name for a feature... Well basically when you operate modules it won't wait for more operations, it goes to sleep. This makes it wait the value below:
-#define MODULES_WAITING_DIVISION 0.825 // Divise SLEEP_EVERY_MS through that value
+#define MODULES_OPERATING_FAST 1      // Great name for a feature... Well basically when you operate modules it won't wait for more operations, it goes to sleep. This makes it wait the value below:
+#define MODULES_WAITING_DIVISION 0.75 // Divise SLEEP_EVERY_MS through that value
 
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
