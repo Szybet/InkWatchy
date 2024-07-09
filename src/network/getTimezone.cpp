@@ -2,8 +2,9 @@
 
 // This should be executed after NTP sync
 void syncTimezone()
-{
-    if (strlen(posixTimeZone) == 0 && strlen(TIMEZONE_OLSON) == 0 && strlen(TIMEZONE_POSIX) == 0)
+{   
+    // We could here also strlen(posixTimeZone) == 0 but what if we move?
+    if (strlen(TIMEZONE_OLSON) == 0 && strlen(TIMEZONE_POSIX) == 0)
     {
         Olson2POSIX timezoneMagic;
 
