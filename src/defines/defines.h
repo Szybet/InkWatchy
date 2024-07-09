@@ -20,6 +20,7 @@
 #include "hal/gpio_types.h"
 #include <nvs_flash.h> 
 #include "driver/rtc_io.h"
+#include <Olson2POSIX.h>
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
@@ -86,6 +87,7 @@ extern bufSize emptyBuff;
 #include "../network/wifi/wifiLogic.h"
 #include "../network/wifi/wifiTask.h"
 #include "../network/ntp.h"
+#include "../network/getTimezone.h"
 #include "../network/weather.h"
 #include "../ui/functionsUi.h"
 #include "../ui/debug.h"

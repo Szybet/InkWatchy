@@ -9,7 +9,21 @@
 #define VIBRATION_ACTION_TIME 60 // Time in ms to the motor to vibrate when the UI receives an action
 // maybe a TLDR: if you don't feel any vibrations, turn the diviner smaller and in reverse. It kind of controls the power of the vibrations while the TIME variables the time its vibrating
 #define VIBRATION_DIVINE 7           // Divider for the time above for it to not vibrate and not just run. Imits PWM... hard to explain, just look at vibrateMotorTaskFun in hardware.cpp
-#define TIME_OFFSET_S 7200           // Time offset in seconds, use this as timezones
+
+// Timezone!
+// Set this as a string of olson timezone time
+// List here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+// The "TZ" identifier in the table
+#define TIMEZONE_OLSON ""//"Europe/Warsaw"
+// If you live on the space station or for whatever reason the olson format doesn't work for you, consider using the posix format
+// It overwrites
+// Here is an example table:
+// https://support.cyberdata.net/portal/en/kb/articles/010d63c0cfce3676151e1f2d5442e311
+// From the Posix timezone string table column
+// This function overwrites the TIMEZONE_OLSON variable if it's set
+#define TIMEZONE_POSIX ""
+// If you don't set anything, It will try to ques your time zone when syncing wifi
+
 #define MENU_LINES false             // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500     // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 60 // Make a full display update after x of partial ones
