@@ -17,6 +17,7 @@ void wifiRegular()
 {
     debugLog("Launching");
     syncNtp();
+    syncTimezone();
     wifiSyncModules();
     lastSyncUnix = getUnixTime();
 }

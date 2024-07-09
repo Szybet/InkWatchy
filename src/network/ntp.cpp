@@ -12,7 +12,7 @@ void syncNtp(bool doDriftThings)
     timeClient.begin();
     if (timeClient.forceUpdate() == true)
     {
-        timeClient.setTimeOffset(TIME_OFFSET_S);
+        //timeClient.setTimeOffset(TIME_OFFSET_S);
         time_t epochTime = timeClient.getEpochTime();
         SRTC.read(*timeRTC);
         time_t currentTime = SRTC.doMakeTime(*timeRTC); // Save the time to a var and update it afterwards for better accuracy

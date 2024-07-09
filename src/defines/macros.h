@@ -15,4 +15,7 @@
 
 #define BOOL_STR(b) ((b) ? String("True") : String("False"))
 
+// https://stackoverflow.com/questions/2335888/how-to-compare-strings-in-c-conditional-preprocessor-directives
+#define MYSTRING_LEN(s) strlen(s)
+
 #endif

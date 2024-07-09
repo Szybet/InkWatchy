@@ -4,6 +4,8 @@ tmElements_t *timeRTC;
 
 RTC_DATA_ATTR SmallRTC SRTC;
 
+RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
+
 void setupTimeStructure()
 {
   debugLog("Created time memory");
@@ -47,13 +49,13 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     readRTC();
     wakeUpManageRTC();
   }
-  #if ATCHY_VER == WATCHY_3
+#if ATCHY_VER == WATCHY_3
   else
   {
     readRTC(); // To update millis(); always
   }
   setupMillisComparators();
-  #endif
+#endif
 }
 
 void saveRTC()
@@ -73,10 +75,88 @@ void saveRTC()
   */
 }
 
+#define TIME_ZONE_DUMP 1
+void timeZoneApply()
+{
+  // https://github.com/Michal-Szczepaniak/TinyWatchy/commit/cb9082fe0f8df6ac4dc3ff682a7ddc80ef07d78f
+  if (strlen(posixTimeZone) > 0)
+  {
+
+#if TIME_ZONE_DUMP == 1
+    debugLog("Before timezone:");
+    debugLog("seconds: " + String(timeRTC->Second));
+    debugLog("minutes: " + String(timeRTC->Minute));
+    debugLog("hours: " + String(timeRTC->Hour));
+    debugLog("day: " + String(timeRTC->Day));
+    debugLog("month: " + String(timeRTC->Month));
+    debugLog("day of the week: " + String(timeRTC->Wday));
+    debugLog("year: " + String(timeRTC->Year));
+#endif
+
+    // https://man7.org/linux/man-pages/man3/setenv.3.html
+    if (setenv("TZ", posixTimeZone, 1) == 0)
+    {
+      tzset();
+      time_t tempTime = makeTime(*timeRTC);
+      struct tm *tempTM = localtime(&tempTime);
+      // Madness
+      timeRTC->Second = tempTM->tm_sec;
+      timeRTC->Minute = tempTM->tm_min;
+      timeRTC->Hour = tempTM->tm_hour; 
+      timeRTC->Day = tempTM->tm_mday - 1; // AAAAAA
+      timeRTC->Month = tempTM->tm_mon + 1;
+      timeRTC->Year = tempTM->tm_year - 70; // Really? m y g o d
+      timeRTC->Wday = tempTM->tm_wday + 1;
+
+#if TIME_ZONE_DUMP == 1
+      debugLog("After timezone:");
+      debugLog("seconds: " + String(timeRTC->Second));
+      debugLog("minutes: " + String(timeRTC->Minute));
+      debugLog("hours: " + String(timeRTC->Hour));
+      debugLog("day: " + String(timeRTC->Day));
+      debugLog("month: " + String(timeRTC->Month));
+      debugLog("day of the week: " + String(timeRTC->Wday));
+      debugLog("year: " + String(timeRTC->Year));
+#endif
+    }
+    else
+    {
+      debugLog("Failed to set posix timezone");
+    }
+  }
+  else
+  {
+    if (strlen(TIMEZONE_OLSON) > 0)
+    {
+      Olson2POSIX timezoneMagic;
+      timezoneMagic.setOlsonTimeZone(String(TIMEZONE_OLSON));
+      String posix = timezoneMagic.getCurrentPOSIX();
+      debugLog("Got posix from olson: " + posix);
+      uint8_t posixLength = posix.length();
+      if (posixLength < POSIX_TIMEZONE_MAX_LENGTH)
+      {
+        strncpy(posixTimeZone, posix.c_str(), posix.length());
+        posixTimeZone[posix.length() - 1] = '\0';
+        timeZoneApply();
+      }
+      else
+      {
+        debugLog("How is your posix timezone so long? BUG BUG contact me");
+      }
+    }
+    else
+    {
+      debugLog("No timezone set, anywhere yet (ntp should fix this log)");
+    }
+  }
+}
+
 void readRTC()
 {
   // debugLog("Reading RTC");
   SRTC.read(*timeRTC);
+  timeZoneApply();
+
 #if ATCHY_VER == WATCHY_3
   bool rtcGarbage = false;
   if (timeRTC->Year < 1970 || timeRTC->Year > 3000)
@@ -311,11 +391,12 @@ void dumpRTCTimeSmall(tmElements_t *timeEl)
 }
 #endif
 
-void setupMillisComparators() {
+void setupMillisComparators()
+{
   // Every value that compares to millis needs to be set here, or if it's used only locally, like it's initialized every time then we don't need it
   uint64_t theMillis = millis();
-  #if DEBUG
+#if DEBUG
   loopDumpDelayMs = theMillis;
-  #endif
+#endif
   sleepDelayMs = theMillis;
 }

@@ -5,6 +5,10 @@
 extern tmElements_t* timeRTC;
 
 extern SmallRTC SRTC;
+// Chatgpt said 38 is max, I trust him :)
+#define POSIX_TIMEZONE_MAX_LENGTH 50
+extern char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH];
+void timeZoneApply();
 
 void setupTimeStructure();
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
