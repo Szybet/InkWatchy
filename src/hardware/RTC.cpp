@@ -79,6 +79,7 @@ void saveRTC()
 void timeZoneApply()
 {
   // https://github.com/Michal-Szczepaniak/TinyWatchy/commit/cb9082fe0f8df6ac4dc3ff682a7ddc80ef07d78f
+  // https://docs.espressif.com/projects/esp-idf/en/v5.1.4/esp32/api-reference/system/system_time.html
   if (strlen(posixTimeZone) > 0)
   {
 
@@ -391,6 +392,8 @@ void dumpRTCTimeSmall(tmElements_t *timeEl)
 }
 #endif
 
+// It is in fact needed
+// https://github.com/espressif/esp-idf/blob/5ca9f2a49aaabbfaf726da1cc3597c0edb3c4d37/components/newlib/port/esp_time_impl.c#L138
 void setupMillisComparators()
 {
   // Every value that compares to millis needs to be set here, or if it's used only locally, like it's initialized every time then we don't need it
