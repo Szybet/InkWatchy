@@ -59,6 +59,12 @@ void goSleep()
 {
     debugLog("goSleep activated");
 
+    // This is because We need to set it at one point, but the external one will just ring from before
+    // I hope I'm right and this should not be for the external one
+    #if RTC_TYPE == INTERNAL_RTC
+        wakeUpManageRTC();
+    #endif
+
 #if DEBUG && SCREEN_SLEEP_INFO
     display.setCursor(50, 190);
     display.setFont();

@@ -5,7 +5,7 @@ RTC_DATA_ATTR GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display(GxEPD2_1
 bool resetReasonHold(esp_reset_reason_t resetReason)
 {
 #if ATCHY_VER == WATCHY_2
-    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW)
+    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW && resetReason != ESP_RST_DEEPSLEEP)
     {
         return true;
     }
@@ -15,7 +15,7 @@ bool resetReasonHold(esp_reset_reason_t resetReason)
     }
 #elif ATCHY_VER == WATCHY_3
     // Because we are on a outdated version of esp idf ESP_RST_UNKNOWN is causes by jtag for example
-    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW && resetReason != ESP_RST_UNKNOWN)
+    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW && resetReason != ESP_RST_DEEPSLEEP && resetReason != ESP_RST_UNKNOWN)
     {
         return true;
     }

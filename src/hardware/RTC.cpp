@@ -23,6 +23,12 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
 #endif
     SRTC.init();
+    // I don't trust it
+#if RTC_TYPE == INTERNAL_RTC
+    SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
+#endif
+
+    debugLog("Using internal RTC clock: " + BOOL_STR(SRTC.onESP32()));
 
     HWVer = SRTC.getWatchyHWVer();
 #if TIME_DRIFT_CORRECTION
@@ -223,6 +229,7 @@ void wakeUpManageRTC()
 
 void alarmManageRTC()
 {
+  debugLog("Executed alarmManageRTC");
 #if RTC_TYPE == EXTERNAL_RTC
   if (digitalRead(RTC_INT_PIN) == LOW)
 #elif RTC_TYPE == INTERNAL_RTC
