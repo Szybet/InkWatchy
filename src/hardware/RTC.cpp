@@ -75,7 +75,7 @@ void saveRTC()
   */
 }
 
-#define TIME_ZONE_DUMP 1
+#define TIME_ZONE_DUMP 0
 void timeZoneApply()
 {
   // https://github.com/Michal-Szczepaniak/TinyWatchy/commit/cb9082fe0f8df6ac4dc3ff682a7ddc80ef07d78f
