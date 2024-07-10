@@ -159,27 +159,27 @@ void readRTC()
 
 #if ATCHY_VER == WATCHY_3
   bool rtcGarbage = false;
-  if (timeRTC->Year < 1970 || timeRTC->Year > 3000)
+  if (timeRTC->Year < 50 || timeRTC->Year > 100)
   {
-    timeRTC->Year = 1970;
+    timeRTC->Year = 54;
     rtcGarbage = true;
   }
-  if (timeRTC->Month < 0 || timeRTC->Month > 11)
+  if (timeRTC->Month > 11)
   {
     timeRTC->Month = 0;
     rtcGarbage = true;
   }
-  if (timeRTC->Day < 0 || timeRTC->Day > 31)
+  if (timeRTC->Day > 31)
   {
     timeRTC->Day = 0;
     rtcGarbage = true;
   }
-  if (timeRTC->Hour < 0 || timeRTC->Hour > 24)
+  if (timeRTC->Hour > 24)
   {
     timeRTC->Hour = 0;
     rtcGarbage = true;
   }
-  if (timeRTC->Minute < 0 || timeRTC->Minute > 60)
+  if (timeRTC->Minute > 60)
   {
     timeRTC->Minute = 0;
     rtcGarbage = true;
