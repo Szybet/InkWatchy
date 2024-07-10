@@ -14,16 +14,16 @@ void setupTimeStructure()
 
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
-#if ATCHY_VER == WATCHY_2
+#if RTC_TYPE == EXTERNAL_RTC
   pinMode(RTC_INT_PIN, INPUT);
 #endif
   if (isFromWakeUp == false)
   {
+#if RTC_TYPE == INTERNAL_RTC
+    SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
+#endif
     SRTC.init();
-    // Done inside smallrtc
-    // #if RTC_INT_PIN == -1
-    // SRTC.use32K(true);
-    // #endif
+
     HWVer = SRTC.getWatchyHWVer();
 #if TIME_DRIFT_CORRECTION
     if (SRTC.getDrift() == 0)
@@ -49,7 +49,7 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     readRTC();
     wakeUpManageRTC();
   }
-#if ATCHY_VER == WATCHY_3
+#if RTC_TYPE == INTERNAL_RTC
   else
   {
     readRTC(); // To update millis(); always
@@ -103,7 +103,7 @@ void timeZoneApply()
       // Madness
       timeRTC->Second = tempTM->tm_sec;
       timeRTC->Minute = tempTM->tm_min;
-      timeRTC->Hour = tempTM->tm_hour; 
+      timeRTC->Hour = tempTM->tm_hour;
       timeRTC->Day = tempTM->tm_mday - 1; // AAAAAA
       timeRTC->Month = tempTM->tm_mon + 1;
       timeRTC->Year = tempTM->tm_year - 70; // Really? m y g o d
@@ -158,7 +158,7 @@ void readRTC()
   SRTC.read(*timeRTC);
   timeZoneApply();
 
-#if ATCHY_VER == WATCHY_3
+#if RTC_TYPE == INTERNAL_RTC
   bool rtcGarbage = false;
   if (timeRTC->Year < 50 || timeRTC->Year > 100)
   {
@@ -223,9 +223,9 @@ void wakeUpManageRTC()
 
 void alarmManageRTC()
 {
-#if ATCHY_VER == WATCHY_2
+#if RTC_TYPE == EXTERNAL_RTC
   if (digitalRead(RTC_INT_PIN) == LOW)
-#elif ATCHY_VER == WATCHY_3
+#elif RTC_TYPE == INTERNAL_RTC
   if (SRTC.isNewMinute() == true)
 #endif
   {

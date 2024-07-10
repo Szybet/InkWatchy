@@ -93,3 +93,21 @@ Template for versioning
 #define BATT_ADC_PIN 9
 #define ADC_VOLTAGE_DIVIDER ((360.0f + 100.0f) / 360.0f) // Voltage divider at battery ADC
 #endif
+
+// RTC type
+#if FORCE_INTERNAL_RTC
+#define RTC_TYPE INTERNAL_RTC
+#if FORCED_INTERNAL_RTC_QUARTZ
+#define RTC_32KHZ_CRYSTAL 1
+#endif
+#else
+#if ATCHY_VER == WATCHY_2
+#define RTC_TYPE EXTERNAL_RTC
+#elif ATCHY_VER == WATCHY_3
+#define RTC_TYPE INTERNAL_RTC
+#define RTC_32KHZ_CRYSTAL 1
+#endif
+#endif
+#if RTC_32KHZ_CRYSTAL != 1
+#define RTC_32KHZ_CRYSTAL 0
+#endif
