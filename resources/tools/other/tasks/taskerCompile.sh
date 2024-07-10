@@ -32,6 +32,6 @@ case $CHOICE in
         ;;
     3)
         resources/tools/other/compile/updateClean.sh
-        resources/tools/other/compile/easySetup.sh
+        resources/tools/other/compile/updateEasySetup.sh
         ;;
 esac
