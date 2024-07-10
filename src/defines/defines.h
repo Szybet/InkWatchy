@@ -30,6 +30,9 @@
 #define WATCHY_2 2
 #define WATCHY_3 3
 
+#define EXTERNAL_RTC 1
+#define INTERNAL_RTC 2
+
 struct ImageDef {
     int16_t bw;
     int16_t bh;

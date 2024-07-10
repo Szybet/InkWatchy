@@ -1,7 +1,8 @@
 #!/bin/bash
 
 OPTIONS=("1" "Clean"
-         "2" "First build")
+         "2" "First build"
+         "3" "Update build")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -27,6 +28,10 @@ case $CHOICE in
         ;;
     2)
         resources/tools/other/compile/clean.sh
+        resources/tools/other/compile/easySetup.sh
+        ;;
+    3)
+        resources/tools/other/compile/updateClean.sh
         resources/tools/other/compile/easySetup.sh
         ;;
 esac
