@@ -110,7 +110,7 @@ void timeZoneApply()
       timeRTC->Second = tempTM->tm_sec;
       timeRTC->Minute = tempTM->tm_min;
       timeRTC->Hour = tempTM->tm_hour;
-      timeRTC->Day = tempTM->tm_mday - 1; // AAAAAA
+      timeRTC->Day = tempTM->tm_mday; // - 1; // AAAAAA no?
       timeRTC->Month = tempTM->tm_mon + 1;
       timeRTC->Year = tempTM->tm_year - 70; // Really? m y g o d
       timeRTC->Wday = tempTM->tm_wday + 1;

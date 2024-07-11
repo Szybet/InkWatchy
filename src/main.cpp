@@ -38,6 +38,7 @@ void setup()
   // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
   // ESP_SLEEP_WAKEUP_EXT1 Button press
 
+  debugLog("Sleep wakeup reason: " + wakeupSourceToString(wakeUpReason));
   bool wakedUpFromSleep = false;
   if (wakeUpReason == RTC_WAKEUP_REASON || wakeUpReason == BUTTON_WAKEUP_REASON)
   {

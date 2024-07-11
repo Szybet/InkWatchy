@@ -245,3 +245,38 @@ void softStartDelay() {
         delayTask(SOFT_START_DELAY_MS);
     #endif
 }
+
+#if DEBUG
+String wakeupSourceToString(esp_sleep_source_t source) {
+    switch (source) {
+        case ESP_SLEEP_WAKEUP_UNDEFINED:
+            return "ESP_SLEEP_WAKEUP_UNDEFINED";
+        case ESP_SLEEP_WAKEUP_ALL:
+            return "ESP_SLEEP_WAKEUP_ALL";
+        case ESP_SLEEP_WAKEUP_EXT0:
+            return "ESP_SLEEP_WAKEUP_EXT0";
+        case ESP_SLEEP_WAKEUP_EXT1:
+            return "ESP_SLEEP_WAKEUP_EXT1";
+        case ESP_SLEEP_WAKEUP_TIMER:
+            return "ESP_SLEEP_WAKEUP_TIMER";
+        case ESP_SLEEP_WAKEUP_TOUCHPAD:
+            return "ESP_SLEEP_WAKEUP_TOUCHPAD";
+        case ESP_SLEEP_WAKEUP_ULP:
+            return "ESP_SLEEP_WAKEUP_ULP";
+        case ESP_SLEEP_WAKEUP_GPIO:
+            return "ESP_SLEEP_WAKEUP_GPIO";
+        case ESP_SLEEP_WAKEUP_UART:
+            return "ESP_SLEEP_WAKEUP_UART";
+        case ESP_SLEEP_WAKEUP_WIFI:
+            return "ESP_SLEEP_WAKEUP_WIFI";
+        case ESP_SLEEP_WAKEUP_COCPU:
+            return "ESP_SLEEP_WAKEUP_COCPU";
+        case ESP_SLEEP_WAKEUP_COCPU_TRAP_TRIG:
+            return "ESP_SLEEP_WAKEUP_COCPU_TRAP_TRIG";
+        case ESP_SLEEP_WAKEUP_BT:
+            return "ESP_SLEEP_WAKEUP_BT";
+        default:
+            return "UNKNOWN";
+    }
+}
+#endif
