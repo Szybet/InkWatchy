@@ -53,10 +53,18 @@ void useButtonBlank()
 
 void initButtons(bool isFromWakeUp)
 {
+#if ATCHY_VER == WATCHY_3
+    rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
+    rtc_gpio_pullup_en((gpio_num_t)UP_PIN);
+#endif
     pinMode(MENU_PIN, INPUT);
     pinMode(BACK_PIN, INPUT);
     pinMode(UP_PIN, INPUT);
     pinMode(DOWN_PIN, INPUT);
+#if ATCHY_VER == WATCHY_3
+    rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
+    rtc_gpio_pullup_en((gpio_num_t)UP_PIN);
+#endif
 }
 
 void setButton(buttonState button)
@@ -187,7 +195,9 @@ void deInitButtonTask()
     {
         debugLog("Shutting down button task");
         vTaskDelete(buttonTask);
-    } else {
+    }
+    else
+    {
         debugLog("Not shutting down button task, it's state is: " + String(taskState));
     }
 }
