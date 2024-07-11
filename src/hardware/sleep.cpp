@@ -62,7 +62,6 @@ void goSleep()
     // This is because We need to set it at one point, but the external one will just ring from before
     // I hope I'm right and this should not be for the external one
 #if RTC_TYPE == INTERNAL_RTC
-    esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_TIMER);
     wakeUpManageRTC();
 #endif
 
