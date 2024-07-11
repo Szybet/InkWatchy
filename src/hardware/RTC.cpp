@@ -210,13 +210,13 @@ void wakeUpManageRTC()
     //  Watchy 2.0 has problems here... Idk?
     if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
-      // debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
+      debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
       // isDebug(dumpRTCTime());
       SRTC.atMinuteWake(timeRTC->Minute + NIGHT_SLEEP_FOR_M, true);
     }
     else
     {
-      // debugLog("Next minute wake up");
+      debugLog("Next minute wake up");
       SRTC.nextMinuteWake(true);
     }
   }
