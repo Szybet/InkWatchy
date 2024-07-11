@@ -28,8 +28,6 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
 #endif
 
-    debugLog("Using internal RTC clock: " + BOOL_STR(SRTC.onESP32()));
-
     HWVer = SRTC.getWatchyHWVer();
 #if TIME_DRIFT_CORRECTION
     if (SRTC.getDrift() == 0)
@@ -49,6 +47,9 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     }
 #endif
   }
+
+  debugLog("Using internal RTC clock: " + BOOL_STR(SRTC.onESP32()));
+
   if (wakeUpReason != RTC_WAKEUP_REASON)
   {
     setupTimeStructure();
