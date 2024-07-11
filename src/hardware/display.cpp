@@ -57,7 +57,8 @@ void initDisplay(bool isFromWakeUp)
     }
     display.setTextColor(GxEPD_BLACK);
 
-    if (isFromWakeUp == false)
+    esp_reset_reason_t resetReason = esp_reset_reason();
+    if (isFromWakeUp == false && resetReason != ESP_RST_DEEPSLEEP)
     {
         setFont(&FreeSansBold9pt7b);
         setTextSize(1);
@@ -65,7 +66,6 @@ void initDisplay(bool isFromWakeUp)
         centerText("Reset", &h);
         h = h + 11;
         setFont(getFont("dogicapixel4"));
-        esp_reset_reason_t resetReason = esp_reset_reason();
         debugLog("Reset for reason: " + resetReasonToString(resetReason));
         centerText(resetReasonToString(resetReason), &h);
 #if STOP_ON_RESET
