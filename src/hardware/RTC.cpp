@@ -193,7 +193,7 @@ void readRTC()
   }
   if (rtcGarbage == true)
   {
-    debugLog("RTC garbage");
+    debugLog("RTC garbage, repaired");
     saveRTC();
   }
 #endif
