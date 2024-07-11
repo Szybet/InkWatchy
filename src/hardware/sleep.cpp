@@ -179,12 +179,5 @@ void manageSleep()
 // #define BIT(nr) (1UL << (nr))
 uint64_t pinToMask(uint8_t pin)
 {
-    if (pin < 32)
-    {
-        return BIT(pin);
-    }
-    else
-    {
-        return ((uint64_t)(((uint64_t)1) << pin));
-    }
+    return ((uint64_t)(((uint64_t)1) << pin));
 }
