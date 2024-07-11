@@ -17,12 +17,12 @@
 // Set this as a string of olson timezone time
 // List here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 // The "TZ" identifier in the table
-#define TIMEZONE_OLSON "" //"Europe/Warsaw"
+#define TIMEZONE_OLSON "" // Example value: "Europe/Warsaw"
 // Here is an example table:
 // https://support.cyberdata.net/portal/en/kb/articles/010d63c0cfce3676151e1f2d5442e311
 // From the Posix timezone string table column
 // This function overwrites the TIMEZONE_OLSON variable if it's set
-#define TIMEZONE_POSIX ""
+#define TIMEZONE_POSIX "" // Example value: "CEST-1CET,M3.2.0/2:00:00,M11.1.0/2:00:00"
 
 #define MENU_LINES false             // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500     // Duration until long press registers in miliseconds

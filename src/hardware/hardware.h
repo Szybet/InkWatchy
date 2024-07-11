@@ -32,6 +32,7 @@ void softStartDelay();
 extern uint64_t loopDumpDelayMs;
 void initHardwareDebug();
 void loopHardwareDebug();
+String wakeupSourceToString(esp_sleep_source_t source);
 #endif
 
 #endif

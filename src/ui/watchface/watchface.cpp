@@ -44,7 +44,7 @@ void loopWatchfaceLoop()
   }
 
   // debugLog("Executing loop watch face");
-  if (wFTime.Minute != timeRTC->Minute)
+  if (wFTime.Minute != timeRTC->Minute || wFTime.Hour != timeRTC->Hour) // Hour too because of timezone
   {
     dUChange = true;
 
