@@ -191,12 +191,11 @@ void readRTC()
     timeRTC->Minute = 0;
     rtcGarbage = true;
   }
-#if DEBUG
   if (rtcGarbage == true)
   {
     debugLog("RTC garbage");
+    saveRTC();
   }
-#endif
 #endif
 }
 
