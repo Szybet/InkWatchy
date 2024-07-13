@@ -14,14 +14,14 @@ void syncNtp(bool doDriftThings)
     {
         //timeClient.setTimeOffset(TIME_OFFSET_S);
         time_t epochTime = timeClient.getEpochTime();
-        SRTC.read(*timeRTC);
-        time_t currentTime = SRTC.doMakeTime(*timeRTC); // Save the time to a var and update it afterwards for better accuracy
+        SRTC.read(timeRTC);
+        time_t currentTime = SRTC.doMakeTime(timeRTC); // Save the time to a var and update it afterwards for better accuracy
         if (firstNTPSync == true)
         {
             debugLog("firstNTPSync is true, running again");
             firstNTPSync = false;
             initialRTCTime = currentTime;
-            SRTC.doBreakTime(epochTime, *timeRTC);
+            SRTC.doBreakTime(epochTime, timeRTC);
             saveRTC();
             timeClient.end();
             syncNtp();
@@ -35,7 +35,7 @@ void syncNtp(bool doDriftThings)
             if (difference > 5)
             {
                 debugLog("Difference too high, running ntp once more");
-                SRTC.doBreakTime(epochTime, *timeRTC);
+                SRTC.doBreakTime(epochTime, timeRTC);
                 saveRTC();
                 timeClient.end();
                 syncNtp();
@@ -52,13 +52,13 @@ void syncNtp(bool doDriftThings)
         I haven't looked at your code, but the make and break Time functions outside of SmallRTC don't follow time.h for values, so the day and month will increase.
         */
 
-        SRTC.doBreakTime(epochTime, *timeRTC);
+        SRTC.doBreakTime(epochTime, timeRTC);
         saveRTC();
         #if TIME_DRIFT_CORRECTION
         if(doDriftThings == true) {
             if(SRTC.checkingDrift() == true) {
                 // Drift is going on
-                SRTC.endDrift(*timeRTC);
+                SRTC.endDrift(timeRTC);
                 uint32_t driftValue = SRTC.getDrift();
                 bool driftIsFast = SRTC.isFastDrift();
                 debugLog("isFast: " + String(driftIsFast) + " drift value: " + String(driftValue));
@@ -66,7 +66,7 @@ void syncNtp(bool doDriftThings)
                 fsSetString(CONF_DRIFT_FAST, String(driftIsFast));
             } else {
                 // Drift is not going on
-                SRTC.beginDrift(*timeRTC);
+                SRTC.beginDrift(timeRTC);
             }
         }
         #endif

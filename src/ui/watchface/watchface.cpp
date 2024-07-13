@@ -9,12 +9,12 @@ void initWatchfaceDisplay()
   readRTC(); // For returning from book, for example
   // Idk?
   // wFTime = timeRTC;
-  wFTime.Second = timeRTC->Second;
-  wFTime.Minute = timeRTC->Minute;
-  wFTime.Hour = timeRTC->Hour;
-  wFTime.Day = timeRTC->Day;
-  wFTime.Month = timeRTC->Month;
-  wFTime.Year = timeRTC->Year;
+  wFTime.Second = timeRTC.Second;
+  wFTime.Minute = timeRTC.Minute;
+  wFTime.Hour = timeRTC.Hour;
+  wFTime.Day = timeRTC.Day;
+  wFTime.Month = timeRTC.Month;
+  wFTime.Year = timeRTC.Year;
   // dumpRTCTime(wFTime);
   // dumpRTCTime(timeRTC);
 
@@ -44,28 +44,28 @@ void loopWatchfaceLoop()
   }
 
   // debugLog("Executing loop watch face");
-  if (wFTime.Minute != timeRTC->Minute || wFTime.Hour != timeRTC->Hour) // Hour too because of timezone
+  if (wFTime.Minute != timeRTC.Minute || wFTime.Hour != timeRTC.Hour) // Hour too because of timezone
   {
     dUChange = true;
 
     drawTimeBeforeApply();
 
-    wFTime.Minute = timeRTC->Minute;
-    wFTime.Hour = timeRTC->Hour;
+    wFTime.Minute = timeRTC.Minute;
+    wFTime.Hour = timeRTC.Hour;
 
     if (disableSomeDrawing == false)
     {
       drawTimeAfterApply();
 
-      if (wFTime.Day != timeRTC->Day)
+      if (wFTime.Day != timeRTC.Day)
       {
-        wFTime.Day = timeRTC->Day;
+        wFTime.Day = timeRTC.Day;
         drawDay();
       }
 
-      if (wFTime.Month != timeRTC->Month)
+      if (wFTime.Month != timeRTC.Month)
       {
-        wFTime.Month = timeRTC->Month;
+        wFTime.Month = timeRTC.Month;
         drawMonth();
       }
     }

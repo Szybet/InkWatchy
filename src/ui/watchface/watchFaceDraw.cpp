@@ -39,7 +39,7 @@ void drawTimeBeforeApply()
     debugLog("Called");
     setTextSize(1);
     setFont(TIME_FONT);
-    String oldTime = getHourMinute(&wFTime);
+    String oldTime = getHourMinute(wFTime);
     String newTime = getHourMinute();
 
     for (int i = 0; i < 5; i++)
