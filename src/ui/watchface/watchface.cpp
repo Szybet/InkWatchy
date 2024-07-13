@@ -94,6 +94,7 @@ void loopWatchfaceLoop()
 #if MODULES_OPERATING_FAST
   if (bt != None && currentPlaceIndex == 0)
   {
+    // Should be simplfied to setSleepDelay
     debugLog("Watchface modules fast operating done");
     wentToSleep = true;
     int makeMinus = -1 * (SLEEP_EVERY_MS * MODULES_WAITING_DIVISION);
@@ -111,5 +112,5 @@ void loopWatchfaceLoop()
   }
 
   // We ignore sleep because probably we will want to go to sleep fast
-  disUp(dUChange, true, true);
+  disUp(dUChange, false, true);
 }

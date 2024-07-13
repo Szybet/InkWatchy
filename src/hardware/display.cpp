@@ -49,17 +49,12 @@ void initDisplay(bool isFromWakeUp)
     // display.epd2._writeCommand(0x3C);
     // display.epd2._writeCommand(0x00);
 
-    if (isFromWakeUp == false)
-    {
-        debugLog("Clearing screen");
-        display.fillScreen(GxEPD_WHITE);
-        display.clearScreen();
-    }
     display.setTextColor(GxEPD_BLACK);
 
     esp_reset_reason_t resetReason = esp_reset_reason();
     if (isFromWakeUp == false && resetReason != ESP_RST_DEEPSLEEP)
     {
+        display.fillScreen(GxEPD_WHITE);
         setFont(&FreeSansBold9pt7b);
         setTextSize(1);
         uint16_t h = 100;
@@ -131,10 +126,8 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
     }
     if (ignoreSleep == false && updatedScreen == false)
     {
-        // debugLog("Sleeping task because display had no update");
-#if DEBUG == false
+        debugLog("Sleeping task because display had no update");
         delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
-#endif
     }
 }
 

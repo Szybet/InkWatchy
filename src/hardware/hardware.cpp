@@ -86,7 +86,7 @@ void resetSleepDelay(int addMs)
 
 void setSleepDelay(int addMs) {
     sleepDelayMs = millisBetter() - (SLEEP_EVERY_MS - addMs);
-    debugLog("setSleepDelay sleepDelayMs: " + String(sleepDelayMs));
+    // debugLog("setSleepDelay sleepDelayMs: " + String(sleepDelayMs));
 }
 
 #if DEBUG

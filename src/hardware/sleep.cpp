@@ -86,7 +86,7 @@ void goSleep()
     while (motorTaskRunning == true)
     {
         debugLog("Waiting for motor task");
-        delayTask(1); // not sure
+        delayTask(50); // not sure
     }
 
     display.hibernate();
@@ -99,7 +99,6 @@ void goSleep()
     logCleanup();
     Serial.print("Sleeping now!");
     flushLogs();
-    delayTask(50);
 #endif
     ForceInputs();
 
