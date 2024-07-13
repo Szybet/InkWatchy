@@ -92,6 +92,7 @@ void setup()
   }
 
   initWatchdogTask();
+  watchdogPing();
 
   // Not sure
   // if (wakeUpReason != RTC_WAKEUP_REASON)
