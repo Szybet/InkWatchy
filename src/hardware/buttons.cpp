@@ -80,12 +80,12 @@ void setButton(buttonState button)
 
 void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton)
 {
-    int startime = millis();
+    int startime = millisBetter();
     int elapsedtime = 0;
     while (digitalRead(buttonPin) == BUT_CLICK_STATE && elapsedtime < BUTTON_LONG_PRESS_MS)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
-        elapsedtime = millis() - startime;
+        elapsedtime = millisBetter() - startime;
     }
     debugLog("elapsed time: " + String(elapsedtime) + " BUTTON_LONG_PRESS_MS:" + String(BUTTON_LONG_PRESS_MS));
     if (elapsedtime > BUTTON_LONG_PRESS_MS)
@@ -204,14 +204,14 @@ void deInitButtonTask()
 
 void wakeUpLong(int pin, buttonState normal, buttonState hold)
 {
-    long timeTime = millis();
+    long timeTime = millisBetter();
 
-    while (digitalRead(pin) == BUT_CLICK_STATE && timeTime + BUTTON_LONG_PRESS_MS > millis())
+    while (digitalRead(pin) == BUT_CLICK_STATE && timeTime + BUTTON_LONG_PRESS_MS > millisBetter())
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
     }
     buttMut.lock();
-    if (timeTime + BUTTON_LONG_PRESS_MS < millis())
+    if (timeTime + BUTTON_LONG_PRESS_MS < millisBetter())
     {
         buttonPressed = hold;
     }

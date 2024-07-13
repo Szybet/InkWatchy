@@ -11,7 +11,7 @@ void priorityLoopSet(void *parameter)
     if (loopTaskHandle != NULL)
     {
       vTaskPrioritySet(loopTaskHandle, MAIN_LOOP_PRIORITY);
-      //debugLog("Set loop task priority, exiting...");
+      // debugLog("Set loop task priority, exiting...");
       vTaskDelete(NULL);
     }
     delayTask(100);
@@ -59,10 +59,9 @@ void setup()
 
   initHardware(wakedUpFromSleep, wakeUpReason);
 
-#if WATCHY_3
-  debugLog("Starting millis: " + String(millis()));
+#if RTC_TYPE == INTERNAL_RTC
+  debugLog("Starting millis: " + String(millisBetter()));
 #endif
-
 #if DEBUG
 #if DUMP_INIT_DEBUG
   initHardwareDebug();
@@ -96,15 +95,15 @@ void setup()
   initWatchdogTask();
 
   // Not sure
-  //if (wakeUpReason != RTC_WAKEUP_REASON)
+  // if (wakeUpReason != RTC_WAKEUP_REASON)
   //{
-    xTaskCreate(
-        priorityLoopSet,
-        "priorityLoop",
-        1000,
-        NULL,
-        20,
-        &priorityLoopHandle);
+  xTaskCreate(
+      priorityLoopSet,
+      "priorityLoop",
+      1000,
+      NULL,
+      20,
+      &priorityLoopHandle);
   //}
 }
 
@@ -154,9 +153,9 @@ void loop()
 #endif
 
 #if DEBUG && (DUMP_LOOP_DEBUG || DUMP_LOOP_SOFTWARE_DEBUG)
-  if (millis() - loopDumpDelayMs > DUMP_LOOP_DELAY)
+  if (millisBetter() - loopDumpDelayMs > DUMP_LOOP_DELAY)
   {
-    loopDumpDelayMs = millis();
+    loopDumpDelayMs = millisBetter();
 #if DUMP_LOOP_DEBUG
     loopHardwareDebug();
 #endif

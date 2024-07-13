@@ -6,6 +6,8 @@ RTC_DATA_ATTR SmallRTC SRTC;
 
 RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
 
+uint64_t lastTimeRead = 0; // Millis of latest reading of the RTC
+
 void setupTimeStructure()
 {
   debugLog("Created time memory");
@@ -53,14 +55,10 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
   if (wakeUpReason != RTC_WAKEUP_REASON)
   {
     setupTimeStructure();
-    readRTC();
     wakeUpManageRTC();
   }
+  readRTC();
 #if RTC_TYPE == INTERNAL_RTC
-  else
-  {
-    readRTC(); // To update millis(); always
-  }
   setupMillisComparators();
 #endif
 }
@@ -198,6 +196,8 @@ void readRTC()
     saveRTC();
   }
 #endif
+
+  lastTimeRead = millisBetter();
 }
 
 void wakeUpManageRTC()
@@ -205,6 +205,7 @@ void wakeUpManageRTC()
   SRTC.clearAlarm();
   if (disableWakeUp == false)
   {
+    readRTC();
     // isDebug(dumpRTCTime());
     int hour = timeRTC->Hour;
     // debugLog("timeRTC->Hour: " + String(hour));
@@ -237,7 +238,6 @@ void alarmManageRTC()
 #endif
   {
     debugLog("RTC PIN IS HIGH");
-    readRTC();
     wakeUpManageRTC();
   }
 }
@@ -404,7 +404,7 @@ void dumpRTCTimeSmall(tmElements_t *timeEl)
 void setupMillisComparators()
 {
   // Every value that compares to millis needs to be set here, or if it's used only locally, like it's initialized every time then we don't need it
-  uint64_t theMillis = millis();
+  uint64_t theMillis = millisBetter();
 #if DEBUG
   loopDumpDelayMs = theMillis;
 #endif
