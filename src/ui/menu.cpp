@@ -164,7 +164,7 @@ void showMenu()
     }
     currentHeight = currentHeight + buttonSize.h + buttonsOffset;
   }
-  disUp(true);
+  dUChange = true;
 }
 
 String lastMenuSelected;
@@ -228,6 +228,7 @@ void loopMenu()
     break;
   }
   }
+  disUp();
 }
 
 /*

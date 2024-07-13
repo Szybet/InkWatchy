@@ -138,15 +138,9 @@ void logFunction(String file, int line, String func, String message)
   if (serialWrite.try_lock())
   {
     flushLogs();
-#if SERIAL_LOG_DELAY
-    delayTask(SERIAL_LOG_DELAY_MS);
-#endif
     logCleanup(true, false);
     Serial.print(log);
     flushLogs();
-#if SERIAL_LOG_DELAY
-    delayTask(SERIAL_LOG_DELAY_MS);
-#endif
     serialWrite.unlock();
 #if SCOM_TASK_ENABLED
     printEndPacket = true;
@@ -202,6 +196,7 @@ void flushLogs()
 #elif ATCHY_VER == WATCHY_3
   Serial.flush();
 #endif
+  delayTask(SERIAL_LOG_DELAY_MS);
 #endif
 }
 

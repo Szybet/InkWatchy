@@ -34,7 +34,7 @@
 #define SYNC_ON_CHARGING 1                 // Keep wifi connected and sync NTP every few minutes because the RTC fucks up
 #define SYNC_WIFI 1                        // Sync wifi - only if it's being charger and after the delay below
 #define SYNC_WIFI_SINCE_SUCC 72000         // 20h
-#define SYNC_WIFI_SINCE_FAIL 60            // 30 s
+#define SYNC_WIFI_SINCE_FAIL 600           // 10m
 #define SYNC_NTP_ON_CHARGING_DELAY 90000   // Sync NTP when charging every, in Ms. Default 1.5 minute
 #define VALID_PREVIOUS_SYNC_DELAY 300      // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
 #define WIFI_CONNECTION_TRIES 3            // Regular sync, number of tries
@@ -85,10 +85,10 @@
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
 #define NIGHT_SLEEP_AFTER_HOUR 23
 #define NIGHT_SLEEP_BEFORE_HOUR 5
-#define SLEEP_EVERY_MS 15000              // 180000 // Goes to sleep timer, is resetted by button presses and other things
+#define SLEEP_EVERY_MS 10000              // Goes to sleep timer, is resetted by button presses and other things
 #define POWER_SAVING_AFTER 60             // Turn on power saving features after a certain battery percantage.
 #define POWER_SAVING_OFF_AFTER 20         // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
-#define LOOP_NO_SCREEN_WRITE_DELAY_MS 125 // Go to "sleep" for 200 ms if the device is woken up ( in a menu for example )
+#define LOOP_NO_SCREEN_WRITE_DELAY_MS 225 // Go to "sleep" for x ms if the device is woken up (in a menu for example) and the screen didn't update. This value is fine tuned, but if you want a faster menu, feel free to make it smaller
 #define HARDWARE_POWER_SAVINGS 1          // Like wifi modem in power saving mode
 #define CPU_SPEED minimalSpeed            // Possible values: minimalSpeed, normalSpeed, maxSpeed. Obviously higher speeds decrease battery life - but it's only when you interact with the watch. This is mostly for the people who "ugh this watch is slow!". Well first, it's a watch, it should show time, any other features are battery wasters in some way and secondly you should first remove some features you don't use, most noticibly unused watchface moduls. In debug mode, this feature is overritten by DEBUG_CPU_SPEED when DEBUG
 #define SOFT_START_THINGS 1               // Slowly starts things, like wifi to prevent brownout reset.
