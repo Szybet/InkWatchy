@@ -318,7 +318,7 @@ void loopBook()
             {
                 // Imit a long back button press
                 setButton(LongBack);
-                return void();
+                return;
             }
         }
 

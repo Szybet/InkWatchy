@@ -5,6 +5,7 @@
 
 extern TaskHandle_t watchdogTask;
 
+bool allButtonCheck();
 void loopWatchdogTask(void *parameter);
 void initWatchdogTask();
 void deInitWatchdogTask();

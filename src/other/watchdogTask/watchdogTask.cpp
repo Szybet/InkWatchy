@@ -4,15 +4,23 @@ RTC_DATA_ATTR bool everythingIsFine = false;
 std::mutex watchdogFine;
 TaskHandle_t watchdogTask = NULL;
 
+bool allButtonCheck()
+{
+    if (digitalRead(BACK_PIN) == BUT_CLICK_STATE && digitalRead(MENU_PIN) == BUT_CLICK_STATE && digitalRead(UP_PIN) == BUT_CLICK_STATE && digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
+    {
+        return true;
+    }
+    return false;
+}
+
 #if WATCHDOG_TASK
 void loopWatchdogTask(void *parameter)
 {
     debugLog("Watchdog starting");
     while (true)
     {
-        delayTask(30000);
         // debugLog("Watchdog cycle");
-        if (digitalRead(BACK_PIN) == BUT_CLICK_STATE && digitalRead(MENU_PIN) == BUT_CLICK_STATE && digitalRead(UP_PIN) == BUT_CLICK_STATE && digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
+        if (allButtonCheck() == true)
         {
             debugLog("Detected all buttons high, resetting...");
             assert(true == false);
@@ -29,6 +37,8 @@ void loopWatchdogTask(void *parameter)
             watchdogFine.unlock();
             delayTask(30000);
         }
+        // It's at the end to run the button check at the start (of the watch)
+        delayTask(30000);
     }
 }
 
@@ -65,21 +75,21 @@ void watchdogPing()
 #else
 void loopWatchdogTask(void *parameter)
 {
-    return void();
+    return;
 }
 
 void initWatchdogTask()
 {
-    return void();
+    return;
 }
 
 void deInitWatchdogTask()
 {
-    return void();
+    return;
 }
 
 void watchdogPing()
 {
-    return void();
+    return;
 }
 #endif

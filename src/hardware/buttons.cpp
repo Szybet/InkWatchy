@@ -148,7 +148,7 @@ void loopButtonsTask(void *parameter)
         if (interruptedButtonCopy == interruptedButton)
         {
             interruptedButton = None;
-            debugLog("Button task going to sleep!");
+            debugLog("Button task going to sleep!"); // That's normal and very efficient
             vTaskSuspend(NULL);
         }
 #if DEBUG

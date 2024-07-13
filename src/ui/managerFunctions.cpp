@@ -108,7 +108,7 @@ void initWeatherMenu()
     {
         overwriteSwitch(textDialog);
         showTextDialog("Weather not available");
-        return void();
+        return;
     }
 
     int day = 0;

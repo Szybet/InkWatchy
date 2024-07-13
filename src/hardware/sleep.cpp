@@ -149,14 +149,14 @@ void manageSleep()
                 resetSleepDelay();
                 checkIfButtonIsRunning();
                 // debugLog("sleepDelayMs is after change:" + String(sleepDelayMs));
-                return void();
+                return;
             }
 #if WIFI_TOOL
             if (wifiToolRunning == true)
             {
                 debugLog("Wifi tool is running, waiting...");
                 resetSleepDelay();
-                return void();
+                return;
             }
 #endif
 #if APPLE_JOKE
@@ -164,9 +164,23 @@ void manageSleep()
             {
                 debugLog("Apple joke is running, waiting...");
                 resetSleepDelay();
-                return void();
+                return;
             }
 #endif
+
+            if (digitalRead(BACK_PIN) == BUT_CLICK_STATE || digitalRead(MENU_PIN) == BUT_CLICK_STATE || digitalRead(UP_PIN) == BUT_CLICK_STATE || digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
+            {
+                // Basically one more watchdog test
+#if WATCHDOG_TASK
+                if (allButtonCheck() == true)
+                {
+                    debugLog("Detected all buttons high, resetting...");
+                    assert(true == false);
+                }
+#endif
+                resetSleepDelay();
+                return;
+            }
             uint64_t lastTimeReadSec = ((millisBetter() - lastTimeRead) + 999) / 1000; // To make it the upper without calling cell() here
             int currentSeconds = (lastTimeReadSec + timeRTC.Second) % 60;
             if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE))
