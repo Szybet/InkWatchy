@@ -9,6 +9,7 @@ extern SmallRTC SRTC;
 #define POSIX_TIMEZONE_MAX_LENGTH 50
 extern char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH];
 void timeZoneApply();
+extern uint64_t lastTimeRead;
 
 void setupTimeStructure();
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);

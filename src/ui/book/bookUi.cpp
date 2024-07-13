@@ -30,7 +30,7 @@ void resetSleepDelayBook()
 {
     resetSleepDelay(BOOK_ADD_SLEEP_DELAY_MS);
     debugLog("sleepDelayMs is:" + String(sleepDelayMs));
-    debugLog("millis is:" + String(millis()));
+    debugLog("millis is:" + String(millisBetter()));
 }
 
 #define BOOK_NAME_SIZE 100

@@ -4,10 +4,11 @@
 #include "defines/defines.h"
 
 extern float HWVer;
-extern uint64_t sleepDelayMs;
+extern int64_t sleepDelayMs;
 
 void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
 void resetSleepDelay(int addMs = 0);
+void setSleepDelay(int addMs);
 
 extern TaskHandle_t motorTask;
 extern bool motorTaskRunning;
@@ -34,5 +35,7 @@ void initHardwareDebug();
 void loopHardwareDebug();
 String wakeupSourceToString(esp_sleep_source_t source);
 #endif
+
+int64_t millisBetter();
 
 #endif

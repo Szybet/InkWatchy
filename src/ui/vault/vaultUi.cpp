@@ -21,7 +21,7 @@ String keyToString()
 
 bool checkKey()
 {
-    // debugLog("Starting decrypting: " + String(millis()));
+    // debugLog("Starting decrypting: " + String(millisBetter()));
 
     String encCheck = fsGetString("check_enc", "", "/vault/conf/");
     if (encCheck == "")
@@ -59,7 +59,7 @@ bool checkKey()
     int resultCrypt = mbedtls_aes_crypt_ecb(&aes, MBEDTLS_AES_DECRYPT, realImage, realImage);
     debugLog("resultCrypt: " + String(resultCrypt));
 
-    // debugLog("Finished decrypting: " + String(millis()));
+    // debugLog("Finished decrypting: " + String(millisBetter()));
 
     mbedtls_aes_free(&aes);
 
@@ -117,7 +117,7 @@ String getSault()
     int resultCrypt = mbedtls_aes_crypt_ecb(&aes, MBEDTLS_AES_DECRYPT, realImage, realImage);
     debugLog("resultCrypt: " + String(resultCrypt));
 
-    // debugLog("Finished decrypting: " + String(millis()));
+    // debugLog("Finished decrypting: " + String(millisBetter()));
 
     mbedtls_aes_free(&aes);
 
@@ -233,7 +233,7 @@ void showVaultImage(String file)
     if (key != 0)
     {
         debugLog("Showing vault image");
-        // debugLog("Starting decrypting: " + String(millis()));
+        // debugLog("Starting decrypting: " + String(millisBetter()));
 
         bufSize vaultItem = fsGetBlob(file, "/vault/");
         debugLog("VaultItem size: " + String(vaultItem.size));
@@ -266,7 +266,7 @@ void showVaultImage(String file)
         int resultCrypt = mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, written, iv, realImage, realImage);
         debugLog("resultCrypt: " + String(resultCrypt));
 
-        // debugLog("Finished decrypting: " + String(millis()));
+        // debugLog("Finished decrypting: " + String(millisBetter()));
 
         mbedtls_aes_free(&aes);
 
@@ -382,7 +382,7 @@ void printHex(const unsigned char *data, size_t len)
 
 if (key != 0)
 {
-    debugLog("Starting decrypting: " + String(millis()));
+    debugLog("Starting decrypting: " + String(millisBetter()));
     String keyStr = String(key);
     uint8_t keyBytes[KEY_LENGTH] = {0};
     keyStr.getBytes(keyBytes, KEY_LENGTH);
@@ -404,7 +404,7 @@ if (key != 0)
 
     //debugLog("Size of bitmap: " + String(sizeof(vaultList[index].bitmap)));
     int result = mbedtls_aes_crypt_cbc(&aes, MBEDTLS_AES_DECRYPT, 5008, IvBytes, vaultList[index].bitmap, realImage);
-    debugLog("End of decrypting: " + String(millis()));
+    debugLog("End of decrypting: " + String(millisBetter()));
     debugLog("Result is: " + String(result)); // 0 means good
 
     ImageDef newImage = {200, 200, realImage};

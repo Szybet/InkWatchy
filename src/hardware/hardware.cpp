@@ -1,7 +1,7 @@
 #include "hardware.h"
 
 RTC_DATA_ATTR float HWVer;
-uint64_t sleepDelayMs;
+int64_t sleepDelayMs;
 #define FIRST_BOOT_FILE "first_boot"
 
 #if DEBUG
@@ -81,7 +81,12 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 
 void resetSleepDelay(int addMs)
 {
-    sleepDelayMs = millis() + addMs;
+    sleepDelayMs = millisBetter() + addMs;
+}
+
+void setSleepDelay(int addMs) {
+    sleepDelayMs = millisBetter() - (SLEEP_EVERY_MS - addMs);
+    debugLog("setSleepDelay sleepDelayMs: " + String(sleepDelayMs));
 }
 
 #if DEBUG
@@ -280,3 +285,9 @@ String wakeupSourceToString(esp_sleep_source_t source) {
     }
 }
 #endif
+
+// int because we want, when - it to not overlap
+// And I don't trust arduino functions
+int64_t millisBetter() {
+    return esp_timer_get_time() / 1000ULL;
+}

@@ -129,9 +129,9 @@ void checkIfButtonIsRunning()
 
 void manageSleep()
 {
-    // debugLog("sleepDelayMs is:" + String(sleepDelayMs));
-    // debugLog("millis is:" + String(millis()));
-    if (millis() - sleepDelayMs >= SLEEP_EVERY_MS)
+    //debugLog("millis is:" + String(millisBetter()));
+    //debugLog("sleepDelayMs is:" + String(sleepDelayMs));
+    if (millisBetter() - sleepDelayMs >= SLEEP_EVERY_MS)
     {
         if (currentPlace != FIRST_PLACE)
         {
@@ -139,8 +139,7 @@ void manageSleep()
             currentPlace = NoPlace;
             currentPlaceIndex = 0;
             executeExitFunc();
-
-            sleepDelayMs = sleepDelayMs + TIME_FOR_WATCHFACE_TO_SHOW_MS;
+            setSleepDelay(TIME_FOR_WATCHFACE_TO_SHOW_MS);
         }
         else
         {
@@ -169,6 +168,19 @@ void manageSleep()
                 return void();
             }
 #endif
+            uint64_t lastTimeReadSec = ((millisBetter() - lastTimeRead) + 999) / 1000; // To make it the upper without calling cell() here
+            //debugLog("lastTimeReadSec: " + String(lastTimeReadSec));
+            int currentSeconds = (lastTimeReadSec + timeRTC->Second) % 60;
+            //debugLog("timeRTC->Second: " + String(timeRTC->Second));
+            //debugLog("currentSeconds: " + String(currentSeconds));
+            // -2 to avoid triggering this again
+            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE))
+            {
+                int toSleepSec = (((AVOID_SLEEPING_ON_FULL_MINUTE / 2) - currentSeconds + 60) % 60);
+                debugLog("Too near a full second! delaying it a bit. This message should be rare. This device will wait before going to sleep in seconds: " + String(toSleepSec));
+                setSleepDelay(toSleepSec * 1000);
+                return;
+            }
             debugLog("SLEEP_EVERY_MS runned out, going to sleep");
             resetSleepDelay();
             goSleep();

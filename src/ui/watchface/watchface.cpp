@@ -106,7 +106,7 @@ void loopWatchfaceLoop()
     // We dont want resetDelay because if something wants to sleep, we dont want to be the reason for forcing it
     debugLog("Watchface requesting sleep");
     sleepDelayMs = sleepDelayMs - SLEEP_EVERY_MS;
-    // sleepDelayMs = millis() - SLEEP_EVERY_MS;
+    // sleepDelayMs = millisBetter() - SLEEP_EVERY_MS;
     wentToSleep = true;
   }
 
