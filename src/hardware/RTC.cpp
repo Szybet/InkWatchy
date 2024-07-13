@@ -1,18 +1,12 @@
 #include "RTC.h"
 
-tmElements_t *timeRTC;
+tmElements_t timeRTC;
 
 RTC_DATA_ATTR SmallRTC SRTC;
 
 RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
 
 uint64_t lastTimeRead = 0; // Millis of latest reading of the RTC
-
-void setupTimeStructure()
-{
-  debugLog("Created time memory");
-  timeRTC = new tmElements_t;
-}
 
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
@@ -54,7 +48,6 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 
   if (wakeUpReason != RTC_WAKEUP_REASON)
   {
-    setupTimeStructure();
     wakeUpManageRTC();
   }
   readRTC();
@@ -65,7 +58,7 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 
 void saveRTC()
 {
-  SRTC.set(*timeRTC);
+  SRTC.set(timeRTC);
 
   // Test
   /*
@@ -90,39 +83,39 @@ void timeZoneApply()
 
 #if TIME_ZONE_DUMP == 1
     debugLog("Before timezone:");
-    debugLog("seconds: " + String(timeRTC->Second));
-    debugLog("minutes: " + String(timeRTC->Minute));
-    debugLog("hours: " + String(timeRTC->Hour));
-    debugLog("day: " + String(timeRTC->Day));
-    debugLog("month: " + String(timeRTC->Month));
-    debugLog("day of the week: " + String(timeRTC->Wday));
-    debugLog("year: " + String(timeRTC->Year));
+    debugLog("seconds: " + String(timeRTC.Second));
+    debugLog("minutes: " + String(timeRTC.Minute));
+    debugLog("hours: " + String(timeRTC.Hour));
+    debugLog("day: " + String(timeRTC.Day));
+    debugLog("month: " + String(timeRTC.Month));
+    debugLog("day of the week: " + String(timeRTC.Wday));
+    debugLog("year: " + String(timeRTC.Year));
 #endif
 
     // https://man7.org/linux/man-pages/man3/setenv.3.html
     if (setenv("TZ", posixTimeZone, 1) == 0)
     {
       tzset();
-      time_t tempTime = makeTime(*timeRTC);
+      time_t tempTime = makeTime(timeRTC);
       struct tm *tempTM = localtime(&tempTime);
       // Madness
-      timeRTC->Second = tempTM->tm_sec;
-      timeRTC->Minute = tempTM->tm_min;
-      timeRTC->Hour = tempTM->tm_hour;
-      timeRTC->Day = tempTM->tm_mday; // - 1; // AAAAAA no?
-      timeRTC->Month = tempTM->tm_mon + 1;
-      timeRTC->Year = tempTM->tm_year - 70; // Really? m y g o d
-      timeRTC->Wday = tempTM->tm_wday + 1;
+      timeRTC.Second = tempTM->tm_sec;
+      timeRTC.Minute = tempTM->tm_min;
+      timeRTC.Hour = tempTM->tm_hour;
+      timeRTC.Day = tempTM->tm_mday; // - 1; // AAAAAA no?
+      timeRTC.Month = tempTM->tm_mon + 1;
+      timeRTC.Year = tempTM->tm_year - 70; // Really? m y g o d
+      timeRTC.Wday = tempTM->tm_wday + 1;
 
 #if TIME_ZONE_DUMP == 1
       debugLog("After timezone:");
-      debugLog("seconds: " + String(timeRTC->Second));
-      debugLog("minutes: " + String(timeRTC->Minute));
-      debugLog("hours: " + String(timeRTC->Hour));
-      debugLog("day: " + String(timeRTC->Day));
-      debugLog("month: " + String(timeRTC->Month));
-      debugLog("day of the week: " + String(timeRTC->Wday));
-      debugLog("year: " + String(timeRTC->Year));
+      debugLog("seconds: " + String(timeRTC.Second));
+      debugLog("minutes: " + String(timeRTC.Minute));
+      debugLog("hours: " + String(timeRTC.Hour));
+      debugLog("day: " + String(timeRTC.Day));
+      debugLog("month: " + String(timeRTC.Month));
+      debugLog("day of the week: " + String(timeRTC.Wday));
+      debugLog("year: " + String(timeRTC.Year));
 #endif
     }
     else
@@ -160,34 +153,34 @@ void timeZoneApply()
 void readRTC()
 {
   // debugLog("Reading RTC");
-  SRTC.read(*timeRTC);
+  SRTC.read(timeRTC);
   timeZoneApply();
 
 #if RTC_TYPE == INTERNAL_RTC
   bool rtcGarbage = false;
-  if (timeRTC->Year < 50 || timeRTC->Year > 100)
+  if (timeRTC.Year < 50 || timeRTC.Year > 100)
   {
-    timeRTC->Year = 54;
+    timeRTC.Year = 54;
     rtcGarbage = true;
   }
-  if (timeRTC->Month > 11)
+  if (timeRTC.Month > 11)
   {
-    timeRTC->Month = 0;
+    timeRTC.Month = 0;
     rtcGarbage = true;
   }
-  if (timeRTC->Day > 31)
+  if (timeRTC.Day > 31)
   {
-    timeRTC->Day = 0;
+    timeRTC.Day = 0;
     rtcGarbage = true;
   }
-  if (timeRTC->Hour > 24)
+  if (timeRTC.Hour > 24)
   {
-    timeRTC->Hour = 0;
+    timeRTC.Hour = 0;
     rtcGarbage = true;
   }
-  if (timeRTC->Minute > 60)
+  if (timeRTC.Minute > 60)
   {
-    timeRTC->Minute = 0;
+    timeRTC.Minute = 0;
     rtcGarbage = true;
   }
   if (rtcGarbage == true)
@@ -207,14 +200,14 @@ void wakeUpManageRTC()
   {
     readRTC();
     // isDebug(dumpRTCTime());
-    int hour = timeRTC->Hour;
-    // debugLog("timeRTC->Hour: " + String(hour));
+    int hour = timeRTC.Hour;
+    // debugLog("timeRTC.Hour: " + String(hour));
     //  Watchy 2.0 has problems here... Idk?
     if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
       debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
       // isDebug(dumpRTCTime());
-      SRTC.atMinuteWake(timeRTC->Minute + NIGHT_SLEEP_FOR_M, true);
+      SRTC.atMinuteWake(timeRTC.Minute + NIGHT_SLEEP_FOR_M, true);
     }
     else
     {
@@ -242,22 +235,22 @@ void alarmManageRTC()
   }
 }
 
-String getHourMinute(tmElements_t *timeEl)
+String getHourMinute(tmElements_t timeEl)
 {
   // isDebug(dumpRTCTime(timeEl));
-  String h = String(timeEl->Hour);
+  String h = String(timeEl.Hour);
   if (h.length() == 1)
   {
     h = "0" + h;
   }
 
-  String m = String(timeEl->Minute);
+  String m = String(timeEl.Minute);
   if (m.length() == 1)
   {
     m = "0" + m;
   }
 
-  debugLog("The bare hour: " + String(timeEl->Hour) + " and the bare minute: " + String(timeEl->Minute));
+  debugLog("The bare hour: " + String(timeEl.Hour) + " and the bare minute: " + String(timeEl.Minute));
   String answer = h + ":" + m;
   debugLog("Answer: " + answer);
   return answer;
@@ -265,7 +258,7 @@ String getHourMinute(tmElements_t *timeEl)
 
 String getDayName(int offset)
 {
-  long unixTime = SRTC.doMakeTime(*timeRTC);
+  long unixTime = SRTC.doMakeTime(timeRTC);
   int weekDay = weekday(unixTime);
   debugLog("unixTime: " + String(unixTime));
   debugLog("weekDay reported: " + String(weekDay));
@@ -294,7 +287,7 @@ String getDayName(int offset)
 
 long getUnixTime()
 {
-  return SRTC.doMakeTime(*timeRTC);
+  return SRTC.doMakeTime(timeRTC);
 }
 
 String getMonthName(int monthNumber)
@@ -329,7 +322,7 @@ String getMonthName(int monthNumber)
   case 255:
   {
     // How?
-    timeRTC->Month = 0;
+    timeRTC.Month = 0;
     return "Jan";
   }
   default:
@@ -383,19 +376,19 @@ void loopRTCDebug()
   debugLog("SRTC.temperature(): " + String(SRTC.temperature()));
 }
 
-void dumpRTCTime(tmElements_t *timeEl)
+void dumpRTCTime(tmElements_t timeEl)
 {
-  debugLog("Second: " + String(timeEl->Second));
-  debugLog("Minute: " + String(timeEl->Minute));
-  debugLog("Hour: " + String(timeEl->Hour));
-  debugLog("Day: " + String(timeEl->Day));
-  debugLog("Month: " + String(timeEl->Month));
-  debugLog("Year: " + String(timeEl->Year));
+  debugLog("Second: " + String(timeEl.Second));
+  debugLog("Minute: " + String(timeEl.Minute));
+  debugLog("Hour: " + String(timeEl.Hour));
+  debugLog("Day: " + String(timeEl.Day));
+  debugLog("Month: " + String(timeEl.Month));
+  debugLog("Year: " + String(timeEl.Year));
 }
 
-void dumpRTCTimeSmall(tmElements_t *timeEl)
+void dumpRTCTimeSmall(tmElements_t timeEl)
 {
-  debugLog("Time: " + String(timeEl->Minute) + ":" + String(timeEl->Second));
+  debugLog("Time: " + String(timeEl.Minute) + ":" + String(timeEl.Second));
 }
 #endif
 

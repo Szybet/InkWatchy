@@ -168,12 +168,12 @@ void manageSleep()
             }
 #endif
             uint64_t lastTimeReadSec = ((millisBetter() - lastTimeRead) + 999) / 1000; // To make it the upper without calling cell() here
-            int currentSeconds = (lastTimeReadSec + timeRTC->Second) % 60;
+            int currentSeconds = (lastTimeReadSec + timeRTC.Second) % 60;
             if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE))
             {
                 int toSleepSec = ((AVOID_SLEEPING_ON_FULL_MINUTE - currentSeconds + 60) % 60) + 2; // + 2 to avoid triggering it again
                 debugLog("lastTimeReadSec: " + String(lastTimeReadSec));
-                debugLog("timeRTC->Second: " + String(timeRTC->Second));
+                debugLog("timeRTC.Second: " + String(timeRTC.Second));
                 debugLog("currentSeconds: " + String(currentSeconds));
                 debugLog("Too near a full second! delaying it a bit. This message should be rare. This device will wait before going to sleep in seconds: " + String(toSleepSec));
                 setSleepDelay(toSleepSec * 1000);
