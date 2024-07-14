@@ -1,8 +1,8 @@
 #!/bin/bash
 source resources/tools/globalFunctions.sh
 
-#envList=("Watchy_2" "Watchy_3")
-envList=("Watchy_2")
+envList=("Watchy_2" "Watchy_3")
+#envList=("Watchy_2")
 
 for env in "${envList[@]}"; do
     pio run --target clean -e $env
@@ -97,7 +97,7 @@ function assembleBinary {
     bootloaderAddress=$(hexToDec $3)
     partitionTableAddress=$(hexToDec 0x19000)
     firmwareAddress=$(hexToDec 0x20000)
-    resourceAddress=$(<resources/tools/fs/in/size.txt tr -d '\n')
+    resourceAddress=$(<resources/tools/fs/in/offset.txt tr -d '\n')
 
     writeAtOffset demo.bin $bootloaderPath $bootloaderAddress
     writeAtOffset demo.bin $partitionTablePath $partitionTableAddress
@@ -111,5 +111,6 @@ rm -rf resources/tools/other/out/demo/
 mkdir -p resources/tools/other/out/demo/
 
 assembleBinary 4 Watchy_2 0x1000
+assembleBinary 8 Watchy_3 0x0
 
 sync
