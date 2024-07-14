@@ -1,6 +1,6 @@
 #include "watchdogTask.h"
 
-RTC_DATA_ATTR bool everythingIsFine = false;
+RTC_DATA_ATTR bool everythingIsFine = true;
 std::mutex watchdogFine;
 TaskHandle_t watchdogTask = NULL;
 
@@ -16,7 +16,9 @@ bool allButtonCheck()
 #if WATCHDOG_TASK
 void loopWatchdogTask(void *parameter)
 {
-    debugLog("Watchdog starting");
+    debugLog("Watchdog starting, slowly");
+    delayTask(30000);
+    debugLog("Watchdog finally started!");
     while (true)
     {
         // debugLog("Watchdog cycle");
