@@ -1,142 +1,31 @@
 #include "weather.h"
 
-OW_Weather ow;
+#if WEATHER_INFO
 bool isWeatherAvailable = false;
-OW_forecast *forecast = NULL;
-savedWeatherData weatherDataDays[MAX_DAYS][WEATHER_PER_DAY]; // Days / Data for these days
 
+// http://api.open-meteo.com/v1/forecast?latitude=53.543082&longitude=9.994695&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto
 void syncWeather()
 {
-  if (strlen(OPEN_WEATHER_API_KEY) != 0 && strlen(WEATHER_LONGTIT) != 0 && strlen(WEATHER_LATIT) != 0)
+  if (strlen(WEATHER_LONGTIT) == 0 || strlen(WEATHER_LATIT) == 0)
   {
-    debugLog("Starting weather forecast");
-    forecast = new OW_forecast;
-    bool status = ow.getForecast(forecast, OPEN_WEATHER_API_KEY, WEATHER_LATIT, WEATHER_LONGTIT, WEATHER_UNIT, WEATHER_LANG, false);
-    debugLog("Weather forecast finished: " + BOOL_STR(status));
-    if (status == true && forecast)
-    {
-      uint8_t c = 0;
-      for (int i = 0; i < MAX_DAYS; i++)
-      {
-        for (int j = 0; j < WEATHER_PER_DAY; j++)
-        {
-          weatherDataDays[i][j].dt = forecast->dt[c];
-          weatherDataDays[i][j].temp = forecast->feels_like[c];
-          weatherDataDays[i][j].minTemp = forecast->temp_min[c];
-          weatherDataDays[i][j].pressure = forecast->pressure[c];
-          weatherDataDays[i][j].humidity = forecast->humidity[c];
-          weatherDataDays[i][j].weatherConditionId = forecast->id[c];
-          weatherDataDays[i][j].cloudsPerc = forecast->clouds_all[c];
-          weatherDataDays[i][j].windSpeed = forecast->wind_speed[c];
-          weatherDataDays[i][j].windGusts = forecast->wind_gust[c];
-          weatherDataDays[i][j].visibility = forecast->visibility[c];
-          weatherDataDays[i][j].pop = forecast->pop[c] * 100;
-          weatherDataDays[i][j].sunrise = forecast->sunrise;
-          weatherDataDays[i][j].sunset = forecast->sunset;
-          c = c + 1;
-        }
-      }
-      saveWeatherData();
-      // isDebug(dumpWeather());
-      delete forecast;
-    }
-    else
-    {
-      isWeatherAvailable = false;
-    }
+    return;
   }
-  else
-  {
-    isWeatherAvailable = false;
-  }
-}
+  
+  OM_HourlyForecast *forecast = new OM_HourlyForecast;
+  getHourlyForecast(forecast, String(WEATHER_LATIT).toFloat(), String(WEATHER_LONGTIT).toFloat());
 
-void saveWeatherData()
-{
-  size_t dataSize = sizeof(savedWeatherData) * MAX_DAYS * WEATHER_PER_DAY;
-  fsSetBlob(CONF_WEATHER, (uint8_t *)weatherDataDays, dataSize);
-  isWeatherAvailable = true;
+  // Save every hour seperately, via unix time
 }
 
 void loadWeatherData()
 {
-  size_t dataSize = sizeof(savedWeatherData) * MAX_DAYS * WEATHER_PER_DAY;
-  bufSize serializedData = fsGetBlob(CONF_WEATHER);
 
-  if (serializedData.size != dataSize)
-  {
-    debugLog("Weather data size is wrong");
-    return;
-  }
-  memcpy(weatherDataDays, serializedData.buf, serializedData.size);
-  
   isWeatherAvailable = true;
 }
 
 #if DEBUG
 void dumpWeather()
 {
-  debugLog("City name: " + forecast->city_name);
-  debugLog("Latitude: " + String(ow.lat));
-  debugLog("Longitude: " + String(ow.lon));
-  debugLog("Timezone: " + String(forecast->timezone));
-  for (int i = 0; i < MAX_DAYS; i++)
-  {
-    debugLog("Day number: " + String(i + 1) + " weather info:");
-    for (int j = 0; j < WEATHER_PER_DAY; j++)
-    {
-      debugLog("Information for day " + String(i) + " number " + String(j));
-      String time = strTime(weatherDataDays[i][j].dt);
-      time.remove(time.length() - 1);
-      debugLog("Information for time: " + time);
-      debugLog("Temperature: " + String(weatherDataDays[i][j].temp) + "C");
-      debugLog("Minimal temperature: " + String(weatherDataDays[i][j].minTemp));
-      debugLog("Pressure: " + String(weatherDataDays[i][j].pressure) + "hPa");
-      debugLog("Humidity: " + String(weatherDataDays[i][j].humidity) + "%");
-      debugLog("Weather condition: " + weatherConditionIdToStr(weatherDataDays[i][j].weatherConditionId));
-      debugLog("Cloudiness: " + String(weatherDataDays[i][j].cloudsPerc) + "%");
-      debugLog("WindSpeed: " + String(weatherDataDays[i][j].windSpeed) + "m/s");
-      debugLog("Wind guts: " + String(weatherDataDays[i][j].windGusts) + "m/s");
-      debugLog("Visibility: " + String(weatherDataDays[i][j].visibility) + "km");
-      debugLog("Probability of precipitation: " + String(weatherDataDays[i][j].pop) + "%");
-      String sunrise = strTime(weatherDataDays[i][j].sunrise);
-      sunrise.remove(sunrise.length() - 1);
-      debugLog("Sunrise: " + sunrise);
-      String sunset = strTime(weatherDataDays[i][j].sunset);
-      sunset.remove(sunset.length() - 1);
-      debugLog("Sunset: " + sunset);
-    }
-  }
-  /*
-  if (forecast)
-  {
-    for (int i = 0; i < (MAX_DAYS * 8); i++)
-    {
-      debugLog("dt_txt: " + forecast->dt_txt[i]);
-      debugLog("temp: " + String(forecast->temp[i]));
-      debugLog("temp.min: " + String(forecast->temp_min[i]));
-      debugLog("temp.max: " + String(forecast->temp_max[i]));
-
-      debugLog("pressure: " + String(forecast->pressure[i]));
-      debugLog("sea_level: " + String(forecast->sea_level[i]));
-      debugLog("grnd_level: " + String(forecast->grnd_level[i]));
-      debugLog("humidity: " + String(forecast->humidity[i]));
-
-      debugLog("clouds: " + String(forecast->clouds_all[i]));
-      debugLog("wind_speed: " + String(forecast->wind_speed[i]));
-      debugLog("wind_deg: " + String(forecast->wind_deg[i]));
-      debugLog("wind_gust: " + String(forecast->wind_gust[i]));
-
-      debugLog("visibility: " + String(forecast->visibility[i]));
-      debugLog("pop: " + String(forecast->pop[i]));
-
-      debugLog("id: " + String(forecast->id[i]));
-      debugLog("main: " + forecast->main[i]);
-      debugLog("description: " + forecast->description[i]);
-      debugLog("icon: " + forecast->icon[i]);
-    }
-  }
-  */
 }
 #endif
 
@@ -274,3 +163,4 @@ String weatherConditionIdToStr(int weatherCode)
     return "Unknown weather code";
   }
 }
+#endif
