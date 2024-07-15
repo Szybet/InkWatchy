@@ -200,14 +200,25 @@ void wakeUpManageRTC()
   {
     readRTC();
     // isDebug(dumpRTCTime());
-    int hour = timeRTC.Hour;
+    uint8_t hour = timeRTC.Hour;
     // debugLog("timeRTC.Hour: " + String(hour));
-    //  Watchy 2.0 has problems here... Idk?
-    if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
+    if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour <= NIGHT_SLEEP_BEFORE_HOUR))
     {
       debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
       // isDebug(dumpRTCTime());
-      SRTC.atMinuteWake(timeRTC.Minute + NIGHT_SLEEP_FOR_M, true);
+      // SRTC.atMinuteWake(timeRTC.Minute + NIGHT_SLEEP_FOR_M, true); // Old, not working
+      int addHours = uint8_t(floor(float(NIGHT_SLEEP_FOR_M) / 60.0));
+      int addMinutes = NIGHT_SLEEP_FOR_M - (addHours * 60);
+      // GuruSR said that
+      if (addHours > 23 || addMinutes >= 120)
+      {
+        debugLog("Your NIGHT_SLEEP_FOR_M is too high!");
+        SRTC.nextMinuteWake(true);
+      }
+      else
+      {
+        SRTC.atTimeWake(hour + addHours, timeRTC.Minute + addMinutes, true);
+      }
     }
     else
     {
@@ -223,7 +234,7 @@ void wakeUpManageRTC()
 
 void alarmManageRTC()
 {
-  //debugLog("Executed alarmManageRTC");
+  // debugLog("Executed alarmManageRTC");
 #if RTC_TYPE == EXTERNAL_RTC
   if (digitalRead(RTC_INT_PIN) == LOW)
 #elif RTC_TYPE == INTERNAL_RTC
