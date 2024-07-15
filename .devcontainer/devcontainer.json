@@ -15,7 +15,5 @@
         "source=${localWorkspaceFolder}/.esp-idf/esp-idf/,target=/root/esp-idf/,type=bind,consistency=consistent",
         "source=${localWorkspaceFolder}/.esp-idf/espressif/,target=/root/.espressif/,type=bind,consistency=consistent"
 	],
-	"runArgs": [
-		"--privileged"
-	]
+	"privileged": true
 }
