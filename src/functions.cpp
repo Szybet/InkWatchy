@@ -196,7 +196,9 @@ void flushLogs()
 #elif ATCHY_VER == WATCHY_3
   Serial.flush();
 #endif
+#if SERIAL_LOG_DELAY
   delayTask(SERIAL_LOG_DELAY_MS);
+#endif
 #endif
 }
 
