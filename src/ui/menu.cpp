@@ -147,7 +147,7 @@ void showMenu()
 
     // debugLog("Menu entry text is: " + data.entryList[i].text);
     String textToShow = data.entryList[i].text;
-    // To show the cut off text fully when it's selected :D
+    // To show the cut off text fully when it's selected :D the value of 18 should be calculated somehow
     if (textToShow.length() > 18 && data.currentButton != i)
     {
       textToShow = textToShow.substring(0, 18);
