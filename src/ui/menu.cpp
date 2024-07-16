@@ -15,7 +15,8 @@ struct buttonCheck
 buttonCheck previousButtons[MAX_BUTTONS];
 sizeInfo buttonSize;
 
-void resetPreviousItems() {
+void resetPreviousItems()
+{
   // Clear variables
   showedMenuName = false;
   previousPageNumber = "";
@@ -85,17 +86,17 @@ void showMenu()
   String pageString = String(currentPage + 1) + "/" + String(pageNumber);
   debugLog(pageString);
   getTextBounds(pageString, NULL, NULL, &pageStringWidth, NULL);
-  //debugLog("Page string width: " + String(pageStringWidth));
+  // debugLog("Page string width: " + String(pageStringWidth));
   currentHeight = textHeight + 1; // +1 to offset between edge of screen and menu name
   display.setCursor(display.width() - pageStringWidth - 10, currentHeight);
 
   if (previousPageNumber != pageString)
   {
-    //uint16_t hTmp;
-    //uint16_t wTmp;
-    //getTextBounds(previousPageNumber, NULL, NULL, &wTmp, &hTmp);
-    //display.fillRect(display.width() - pageStringWidth - 10, currentHeight - hTmp, wTmp, hTmp, GxEPD_WHITE);
-    
+    // uint16_t hTmp;
+    // uint16_t wTmp;
+    // getTextBounds(previousPageNumber, NULL, NULL, &wTmp, &hTmp);
+    // display.fillRect(display.width() - pageStringWidth - 10, currentHeight - hTmp, wTmp, hTmp, GxEPD_WHITE);
+
     display.fillScreen(GxEPD_WHITE);
     resetPreviousItems();
 
@@ -121,8 +122,8 @@ void showMenu()
   {
     startingButton = startingButton + data.itemsOnPage;
   }
-  //debugLog("current button: " + String(data.currentButton));
-  //debugLog("starting button: " + String(startingButton));
+  // debugLog("current button: " + String(data.currentButton));
+  // debugLog("starting button: " + String(startingButton));
   setTextSize(data.textSize);
   for (int i = startingButton; i < startingButton + data.itemsOnPage && i < data.totalMenus; i++)
   {
@@ -141,12 +142,20 @@ void showMenu()
       draw = true;
       previousButtons[i % data.itemsOnPage].text = data.entryList[i].text;
       previousButtons[i % data.itemsOnPage].inverted = invert;
-      //debugLog("Printing button: " + String(i % data.itemsOnPage));
+      // debugLog("Printing button: " + String(i % data.itemsOnPage));
     }
 
-    //debugLog("Menu entry text is: " + data.entryList[i].text);
-    buttonSize = drawButton(1, currentHeight, data.entryList[i].text, data.entryList[i].image, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
-    //debugLog("Button h in menu: " + String(buttonSize.h));
+    // debugLog("Menu entry text is: " + data.entryList[i].text);
+    String textToShow = data.entryList[i].text;
+    // To show the cut off text fully when it's selected :D
+    if (textToShow.length() > 18 && data.currentButton != i)
+    {
+      textToShow = textToShow.substring(0, 18);
+    } else if(textToShow.length() > 18 && data.currentButton == i) {
+      previousPageNumber = ""; // To reset the next iteration
+    }
+    buttonSize = drawButton(1, currentHeight, textToShow, data.entryList[i].image, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
+    // debugLog("Button h in menu: " + String(buttonSize.h));
     if (draw == true)
     {
       if (invert == true)
