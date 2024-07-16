@@ -32,3 +32,5 @@ components/
 !.esp-idf/.gitkeep
 !.esp-idf/esp-idf/.gitkeep
 !.esp-idf/espressif/.gitkeep
+
+trash/

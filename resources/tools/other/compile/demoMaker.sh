@@ -11,6 +11,8 @@ for env in "${envList[@]}"; do
 done
 
 function generalThings {
+    mkdir trash/
+    mv resources/personal/* trash/
     cp -r resources/demo/* resources/personal/
 
     rm -rf src/defines/confidential.h
