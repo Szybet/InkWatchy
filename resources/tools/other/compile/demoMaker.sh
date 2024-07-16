@@ -115,4 +115,7 @@ mkdir -p resources/tools/other/out/demo/
 assembleBinary 4 Watchy_2 0x1000
 assembleBinary 8 Watchy_3 0x0
 
+touch resources/personal/books/.gitkeep
+touch resources/personal/vault/.gitkeep
+
 sync
