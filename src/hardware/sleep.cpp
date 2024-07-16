@@ -189,7 +189,8 @@ void manageSleep()
                 debugLog("lastTimeReadSec: " + String(lastTimeReadSec));
                 debugLog("timeRTC.Second: " + String(timeRTC.Second));
                 debugLog("currentSeconds: " + String(currentSeconds));
-                debugLog("Too near a full second! delaying it a bit. This message should be rare. This device will wait before going to sleep in seconds: " + String(toSleepSec));
+                // This message can appear a few times because watchface will attempt to force to go to sleep
+                debugLog("Too near a full second! delaying it a bit. This device will wait before going to sleep in seconds: " + String(toSleepSec));
                 setSleepDelay(toSleepSec * 1000);
                 return;
             }

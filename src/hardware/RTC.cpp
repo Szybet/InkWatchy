@@ -117,6 +117,7 @@ void timeZoneApply()
       debugLog("day of the week: " + String(timeRTC.Wday));
       debugLog("year: " + String(timeRTC.Year));
 #endif
+      debugLog("Timezone set succes, current timezone: " + String(posixTimeZone));
     }
     else
     {
@@ -135,7 +136,7 @@ void timeZoneApply()
       if (posixLength < POSIX_TIMEZONE_MAX_LENGTH)
       {
         strncpy(posixTimeZone, posix.c_str(), posix.length());
-        posixTimeZone[posix.length() - 1] = '\0';
+        posixTimeZone[posix.length()] = '\0';
         timeZoneApply();
       }
       else
