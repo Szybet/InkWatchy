@@ -201,25 +201,23 @@ void wakeUpManageRTC()
   {
     readRTC();
     // isDebug(dumpRTCTime());
-    uint8_t hour = timeRTC.Hour;
+    uint hour = timeRTC.Hour;
     // debugLog("timeRTC.Hour: " + String(hour));
-    if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour <= NIGHT_SLEEP_BEFORE_HOUR))
+    if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
       debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
       // isDebug(dumpRTCTime());
-      // SRTC.atMinuteWake(timeRTC.Minute + NIGHT_SLEEP_FOR_M, true); // Old, not working
-      int addHours = uint8_t(floor(float(NIGHT_SLEEP_FOR_M) / 60.0));
-      int addMinutes = NIGHT_SLEEP_FOR_M - (addHours * 60);
-      // GuruSR said that
-      if (addHours > 23 || addMinutes >= 120)
+      uint fullMinutes = (hour * 60) + timeRTC.Minute + NIGHT_SLEEP_FOR_M;
+      // 60 * 24 = 1440 so a full day in minutes
+      if (fullMinutes >= (1440))
       {
-        debugLog("Your NIGHT_SLEEP_FOR_M is too high!");
-        SRTC.nextMinuteWake(true);
+        fullMinutes = fullMinutes - 1440;
       }
-      else
-      {
-        SRTC.atTimeWake(hour + addHours, timeRTC.Minute + addMinutes, true);
-      }
+      uint finalHour = fullMinutes / 60; // Will always round up to the floor
+      uint finalMinute = fullMinutes - (finalHour * 60);
+      debugLog("The watch will wake up at exactly hour: " + String(finalHour) + " and minute: " + String(finalMinute));
+
+      SRTC.atTimeWake(finalHour, finalMinute, true);
     }
     else
     {
