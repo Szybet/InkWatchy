@@ -183,7 +183,7 @@ void manageSleep()
             }
             uint64_t lastTimeReadSec = ((millisBetter() - lastTimeRead) + 999) / 1000; // To make it the upper without calling cell() here
             int currentSeconds = (lastTimeReadSec + timeRTC.Second) % 60;
-            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE))
+            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || currentSeconds < AVOID_SLEEPING_ON_FULL_MINUTE)
             {
                 int toSleepSec = ((AVOID_SLEEPING_ON_FULL_MINUTE - currentSeconds + 60) % 60) + 2; // + 2 to avoid triggering it again
                 debugLog("lastTimeReadSec: " + String(lastTimeReadSec));
@@ -192,6 +192,10 @@ void manageSleep()
                 // This message can appear a few times because watchface will attempt to force to go to sleep
                 debugLog("Too near a full second! delaying it a bit. This device will wait before going to sleep in seconds: " + String(toSleepSec));
                 setSleepDelay(toSleepSec * 1000);
+                // To make sure the time updates
+                if(currentSeconds < AVOID_SLEEPING_ON_FULL_MINUTE) {
+                    readRTC();
+                }
                 return;
             }
             debugLog("SLEEP_EVERY_MS runned out, going to sleep");
