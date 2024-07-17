@@ -25,7 +25,7 @@ String getDayName(int offset = 0);
 String getMonthName(int monthNumber);
 long getUnixTime();
 String getFormattedTime(time_t rawTime);
-String unixToDate(unsigned long unixTime);
+String unixToDate(uint64_t unixTime);
 long getHourDifference(time_t currentTime, time_t targetTime);
 
 #if DEBUG
