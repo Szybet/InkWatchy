@@ -44,7 +44,7 @@
 #define TIME_DRIFT_CORRECTION 1            // The RTC may drift, this should repair it
 #define FORCE_INTERNAL_RTC 0               // If your device has an external RTC but it sucks, set this to 1
 #define FORCED_INTERNAL_RTC_QUARTZ 0       // If you forced the internal RTC and if you have an external quartz crystal, set this to 1
-#define AVOID_SLEEPING_ON_FULL_MINUTE 4    // This value shouldn't be really touched, it checks if in x seconds a full minute passess, if yes, it waits to x / 2 seconds
+#define AVOID_SLEEPING_ON_FULL_MINUTE 3    // This value shouldn't be really touched, it checks if in x seconds a full minute passess, if yes, it waits to x / 2 seconds
 
 // Book things
 #define BOOK 0
