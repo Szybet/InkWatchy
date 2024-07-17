@@ -20,6 +20,8 @@ String getRtcType()
         return "DS3231";
     case 2:
         return "PCF8563";
+    case 3:
+        return "INTERNAL";
     default:
         return "Invalid Type";
     }
