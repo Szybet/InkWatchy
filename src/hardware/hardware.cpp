@@ -14,11 +14,11 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     if (isFromWakeUp == false)
     {
         debugLog("Watchy is starting!");
-        // This is because we want it to be cleared on boot and on the second one (the first boot is the in demo boot)
+
         if (fsSetup() == true)
         {
             int firstBoot = fsGetString(FIRST_BOOT_FILE, "0").toInt();
-            if (firstBoot <= 2)
+            if (firstBoot < 1)
             {
                 if (fsSetString(FIRST_BOOT_FILE, String(firstBoot + 1)) == true)
                 {
