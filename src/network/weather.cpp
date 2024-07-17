@@ -3,18 +3,63 @@
 #if WEATHER_INFO
 bool isWeatherAvailable = false;
 
-// http://api.open-meteo.com/v1/forecast?latitude=53.543082&longitude=9.994695&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto
+// http://api.open-meteo.com/v1/forecast?latitude=53.543082&longitude=9.994695&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto&forecast_days=16
 void syncWeather()
 {
   if (strlen(WEATHER_LONGTIT) == 0 || strlen(WEATHER_LATIT) == 0)
   {
     return;
   }
-  
-  OM_HourlyForecast *forecast = new OM_HourlyForecast;
-  getHourlyForecast(forecast, String(WEATHER_LATIT).toFloat(), String(WEATHER_LONGTIT).toFloat());
 
+  OM_HourlyForecast *forecast = new OM_HourlyForecast;
+  bool status = false;
+  for (u8_t i = 0; i < WEATHER_TRIES; i++)
+  {
+    status = getHourlyForecast(forecast, String(WEATHER_LATIT).toFloat(), String(WEATHER_LONGTIT).toFloat());
+    if (status == true)
+    {
+      break;
+    }
+    else
+    {
+      debugLog("Failed to get weather, retrying...");
+      delayTask(1500);
+    }
+  }
+
+  if (status == false)
+  {
+    debugLog("Failed to get weather... bye");
+    delete forecast;
+    return;
+  }
+
+  // Remove the weather directory here
+  // WEATHER_HOURLY_DIR
+  // Create CONF_WEATHER_HOURLY_DIR
+
+  removeDir(WEATHER_DIR);
+  fsCreateDir(WEATHER_DIR);
+  fsCreateDir(WEATHER_HOURLY_DIR);
+
+  String currentDay = unixToDate(forecast->hourly_time[0]);
+  OM_HourlyForecastMinimal miniForecast = {};
+  u8_t miniIndex = 0;
   // Save every hour seperately, via unix time
+  for (u8_t i = 1; i < OM_WEATHER_MAX_HOURS; i++)
+  {
+    String currentDayTMp = unixToDate(forecast->hourly_time[i]);
+    if (currentDay != currentDayTMp)
+    {
+      fsSetBlob(currentDay, (uint8_t *)&miniForecast, sizeof(OM_HourlyForecastMinimal), WEATHER_HOURLY_DIR);
+      miniIndex = 0;
+      currentDay = currentDayTMp;
+    }
+    miniForecast.hourly_time[miniIndex] = forecast->hourly_time[i];
+    miniIndex = miniIndex + 1;
+  }
+
+  delete forecast;
 }
 
 void loadWeatherData()

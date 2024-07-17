@@ -2,6 +2,7 @@
 #define LITTLEFS_H
 
 #include "defines/defines.h"
+// https://github.com/espressif/arduino-esp32/blob/master/libraries/LittleFS/examples/LITTLEFS_test/LITTLEFS_test.ino
 
 bool fsSetup();
 void fsCreateDir(String path);
@@ -10,6 +11,7 @@ void fsAppendToFile(String path, String str);
 size_t fsGetFileSize(String path);
 void fsRemoveFile(String path);
 bool fsFileExists(String path);
+bool removeDir(String path);
 
 extern char loadedImgNames[IMG_COUNT][RESOURCES_NAME_LENGTH];
 extern ImageDef loadedImg[IMG_COUNT];

@@ -344,7 +344,7 @@ String getFormattedTime(time_t rawTime)
   return hoursStr + ":" + minuteStr + ":" + secondStr;
 }
 
-String unixToDate(unsigned long unixTime)
+String unixToDate(uint64_t unixTime)
 {
   int gotDay = day(unixTime);
   int gotMonth = month(unixTime);

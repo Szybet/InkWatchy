@@ -103,52 +103,52 @@ void initDebugMenu()
 
 void initWeatherMenu()
 {
-    loadWeatherData();
-    if (isWeatherAvailable == false)
-    {
-        overwriteSwitch(textDialog);
-        showTextDialog("Weather not available");
-        return;
-    }
+    // loadWeatherData();
+    // if (isWeatherAvailable == false)
+    // {
+    //     overwriteSwitch(textDialog);
+    //     showTextDialog("Weather not available");
+    //     return;
+    // }
 
-    int day = 0;
-    int c = 0;
-    entryMenu buttons[MAX_DAYS] = {};
-    for (int i = 0; i < MAX_DAYS; i++)
-    {
-        for (int j = 0; j < WEATHER_PER_DAY; j++)
-        {
-            tmElements_t times;
-            time_t dtTime = weatherDataDays[i][j].dt;
-            SRTC.doBreakTime(dtTime, times);
-            if (day != times.Day)
-            {
-                day = times.Day;
-                String dayStr = String(times.Day);
-                String monthStr = String(times.Month + 1);
-                if (dayStr.length() == 1)
-                {
-                    dayStr = "0" + dayStr;
-                }
-                if (monthStr.length() == 1)
-                {
-                    monthStr = "0" + monthStr;
-                }
-                buttons[c].text = dayStr + "." + monthStr + "." + String(tmYearToCalendar(times.Year));
-                buttons[c].image = &emptyImgPack;
-                // Lambda doesn't work :( global values then... weatherDayChoosed
-                /*
-                auto lambdaFunction = [day]()
-                {
-                    switchWeatherSelectorMenu(day);
-                };
-                */
-                buttons[c].function = switchWeatherSelectorMenu;
-                c = c + 1;
-            }
-        }
-    }
-    initMenu(buttons, MAX_DAYS, "Weather info", 1);
+    // int day = 0;
+    // int c = 0;
+    // entryMenu buttons[MAX_DAYS] = {};
+    // for (int i = 0; i < MAX_DAYS; i++)
+    // {
+    //     for (int j = 0; j < WEATHER_PER_DAY; j++)
+    //     {
+    //         tmElements_t times;
+    //         time_t dtTime = weatherDataDays[i][j].dt;
+    //         SRTC.doBreakTime(dtTime, times);
+    //         if (day != times.Day)
+    //         {
+    //             day = times.Day;
+    //             String dayStr = String(times.Day);
+    //             String monthStr = String(times.Month + 1);
+    //             if (dayStr.length() == 1)
+    //             {
+    //                 dayStr = "0" + dayStr;
+    //             }
+    //             if (monthStr.length() == 1)
+    //             {
+    //                 monthStr = "0" + monthStr;
+    //             }
+    //             buttons[c].text = dayStr + "." + monthStr + "." + String(tmYearToCalendar(times.Year));
+    //             buttons[c].image = &emptyImgPack;
+    //             // Lambda doesn't work :( global values then... weatherDayChoosed
+    //             /*
+    //             auto lambdaFunction = [day]()
+    //             {
+    //                 switchWeatherSelectorMenu(day);
+    //             };
+    //             */
+    //             buttons[c].function = switchWeatherSelectorMenu;
+    //             c = c + 1;
+    //         }
+    //     }
+    // }
+    // initMenu(buttons, MAX_DAYS, "Weather info", 1);
 }
 
 int weatherDayChoosed;

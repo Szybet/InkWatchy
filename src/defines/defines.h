@@ -1,6 +1,8 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#define ARDUINOJSON_ENABLE_PROGMEM 0
+
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
 #include <GxEPD2_BW.h>
