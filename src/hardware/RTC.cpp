@@ -46,14 +46,8 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 
   debugLog("Using internal RTC clock: " + BOOL_STR(SRTC.onESP32()));
 
-  if (wakeUpReason != RTC_WAKEUP_REASON)
-  {
-    wakeUpManageRTC();
-  }
   readRTC();
-#if RTC_TYPE == INTERNAL_RTC
   setupMillisComparators();
-#endif
 }
 
 void saveRTC()
@@ -117,7 +111,8 @@ void timeZoneApply()
       debugLog("day of the week: " + String(timeRTC.Wday));
       debugLog("year: " + String(timeRTC.Year));
 #endif
-      debugLog("Timezone set succes, current timezone: " + String(posixTimeZone));
+      //debugLog("Timezone set succes, current timezone: " + String(posixTimeZone));
+      debugLog("Timezone working");
     }
     else
     {
@@ -234,14 +229,15 @@ void wakeUpManageRTC()
 void alarmManageRTC()
 {
   // debugLog("Executed alarmManageRTC");
-#if RTC_TYPE == EXTERNAL_RTC
-  if (digitalRead(RTC_INT_PIN) == LOW)
-#elif RTC_TYPE == INTERNAL_RTC
+  // #if RTC_TYPE == EXTERNAL_RTC
+  //   if (digitalRead(RTC_INT_PIN) == LOW)
+  // #elif RTC_TYPE == INTERNAL_RTC
+
+  // #endif
   if (SRTC.isNewMinute() == true)
-#endif
   {
-    debugLog("RTC PIN IS HIGH");
-    wakeUpManageRTC();
+    debugLog("RTC new minute");
+    readRTC();
   }
 }
 

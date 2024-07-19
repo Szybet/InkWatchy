@@ -180,6 +180,7 @@ void toggleDisableVibrationsEntry()
 void toggleWakeUpEntry()
 {
     toggleWakeUp();
+    /*
     if (disableWakeUp == false)
     {
         wakeUpManageRTC();
@@ -188,6 +189,7 @@ void toggleWakeUpEntry()
     {
         SRTC.clearAlarm();
     }
+    */
     initpowerMenu();
 }
 

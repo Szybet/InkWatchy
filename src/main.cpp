@@ -47,7 +47,6 @@ void setup()
     if (wakeUpReason == RTC_WAKEUP_REASON)
     {
       debugLog("Waked up because of RTC");
-      alarmManageRTC();
     }
     else if (wakeUpReason == BUTTON_WAKEUP_REASON)
     {
@@ -58,9 +57,8 @@ void setup()
 
   initHardware(wakedUpFromSleep, wakeUpReason);
 
-#if RTC_TYPE == INTERNAL_RTC
   debugLog("Starting millis: " + String(millisBetter()));
-#endif
+
 #if DEBUG
 #if DUMP_INIT_DEBUG
   initHardwareDebug();
