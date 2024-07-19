@@ -59,12 +59,6 @@ void goSleep()
 {
     debugLog("goSleep activated");
 
-    // This is because We need to set it at one point, but the external one will just ring from before
-    // I hope I'm right and this should not be for the external one
-#if RTC_TYPE == INTERNAL_RTC
-    wakeUpManageRTC();
-#endif
-
 #if DEBUG && SCREEN_SLEEP_INFO
     display.setCursor(50, 190);
     display.setFont();
@@ -91,9 +85,9 @@ void goSleep()
 
     display.hibernate();
 
-    turnOffWifi();    // To be sure only
-    alarmManageRTC(); // To be sure too...
+    turnOffWifi(); // To be sure only
     deInitWatchdogTask();
+    wakeUpManageRTC();
     debugLog("Going sleep...");
 #if DEBUG
     logCleanup();
@@ -193,13 +187,14 @@ void manageSleep()
                 debugLog("Too near a full second! delaying it a bit. This device will wait before going to sleep in seconds: " + String(toSleepSec));
                 setSleepDelay(toSleepSec * 1000);
                 // To make sure the time updates
-                if(currentSeconds < AVOID_SLEEPING_ON_FULL_MINUTE) {
+                if (currentSeconds < AVOID_SLEEPING_ON_FULL_MINUTE)
+                {
                     readRTC();
                 }
                 return;
             }
             debugLog("SLEEP_EVERY_MS runned out, going to sleep");
-            resetSleepDelay();
+            // resetSleepDelay(); // Not needed as we are from the loop task
             goSleep();
         }
     }

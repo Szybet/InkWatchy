@@ -72,7 +72,7 @@ void syncNtp(bool doDriftThings)
         #endif
 
         timeClient.end();
-        wakeUpManageRTC(); // After syncing time, remake the alarm
+        readRTC(); // After syncing time, remake the alarm
     }
     else
     {

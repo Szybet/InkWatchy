@@ -6,9 +6,7 @@ RTC_DATA_ATTR bool disableSomeDrawing = false;
 void initWatchfaceDisplay()
 {
   debugLog("Executing init watch face");
-  readRTC(); // For returning from book, for example
-  // Idk?
-  // wFTime = timeRTC;
+
   wFTime.Second = timeRTC.Second;
   wFTime.Minute = timeRTC.Minute;
   wFTime.Hour = timeRTC.Hour;
@@ -26,23 +24,9 @@ void initWatchfaceDisplay()
   disUp(true, false, true);
 }
 
-// Basically reasons for it to be not in normal mode (sleeping)
-bool isMoreActive()
-{
-  return bat.isCharging || isWifiTaskCheck();
-}
-
 bool wentToSleep = false; // Don't go to sleep after one try of noClickedButton - maybe a sync is going on?
 void loopWatchfaceLoop()
 {
-  if (isMoreActive() == true)
-  {            // Here should be a checker if its in these hours when wakeups are disabled, otherwise in main wakeup manage will read it, but this is fine too
-    readRTC(); // It's really only needed when wifi is on and its charging
-#if UPDATE_MODULE_IF_CHARGING
-    wfModulesManage(None);
-#endif
-  }
-
   // debugLog("Executing loop watch face");
   if (wFTime.Minute != timeRTC.Minute || wFTime.Hour != timeRTC.Hour) // Hour too because of timezone
   {
