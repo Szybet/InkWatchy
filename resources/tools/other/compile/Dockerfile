@@ -66,3 +66,6 @@ RUN mkdir -p /root/.espressif/
 
 #RUN curl -fsSL -o /tmp/get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py
 #RUN python3 /tmp/get-platformio.py
+
+# Platformio folder prerequisite for compliling Watchy firmware via Terminal/Docker
+ENV PATH=$PATH:/root/.platformio/penv/bin
