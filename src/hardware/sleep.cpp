@@ -175,12 +175,11 @@ void manageSleep()
                 resetSleepDelay();
                 return;
             }
-            uint64_t lastTimeReadSec = ((millisBetter() - lastTimeRead) + 999) / 1000; // To make it the upper without calling cell() here
-            int currentSeconds = (lastTimeReadSec + timeRTC.Second) % 60;
-            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || currentSeconds < AVOID_SLEEPING_ON_FULL_MINUTE)
+
+            uint currentSeconds = getCurrentSeconds();
+            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || currentSeconds < AVOID_SLEEPING_ON_FULL_MINUTE / 2)
             {
                 int toSleepSec = ((AVOID_SLEEPING_ON_FULL_MINUTE - currentSeconds + 60) % 60) + 2; // + 2 to avoid triggering it again
-                debugLog("lastTimeReadSec: " + String(lastTimeReadSec));
                 debugLog("timeRTC.Second: " + String(timeRTC.Second));
                 debugLog("currentSeconds: " + String(currentSeconds));
                 // This message can appear a few times because watchface will attempt to force to go to sleep

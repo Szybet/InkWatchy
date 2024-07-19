@@ -26,8 +26,8 @@ void setCpuSpeed(cpuSpeed speed);
 cpuSpeed getCpuSpeed();
 void restoreCpuSpeed();
 String resetReasonToString(esp_reset_reason_t reason);
-
 void softStartDelay();
+bool isRtcWakeUpReason(esp_sleep_source_t reason);
 
 #if DEBUG
 extern uint64_t loopDumpDelayMs;

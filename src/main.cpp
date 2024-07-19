@@ -41,10 +41,11 @@ void setup()
   debugLog("Sleep wakeup reason: " + wakeupSourceToString(wakeUpReason));
   debugLog("esp_sleep_get_ext1_wakeup_status: " + String(esp_sleep_get_ext1_wakeup_status()));
   bool wakedUpFromSleep = false;
-  if (wakeUpReason == RTC_WAKEUP_REASON || wakeUpReason == BUTTON_WAKEUP_REASON)
+  
+  if (isRtcWakeUpReason(wakeUpReason) == true || wakeUpReason == BUTTON_WAKEUP_REASON)
   {
     wakedUpFromSleep = true;
-    if (wakeUpReason == RTC_WAKEUP_REASON)
+    if (isRtcWakeUpReason(wakeUpReason) == true)
     {
       debugLog("Waked up because of RTC");
     }
@@ -83,7 +84,7 @@ void setup()
 #endif
 
   initManager();
-  if (wakeUpReason != RTC_WAKEUP_REASON)
+  if (isRtcWakeUpReason(wakeUpReason) == false)
   {
     initButtonTask();
     turnOnInterrupts();
