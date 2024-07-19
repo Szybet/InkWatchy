@@ -6,7 +6,8 @@ RTC_DATA_ATTR SmallRTC SRTC;
 
 RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
 
-uint64_t lastTimeRead = 0; // Millis of latest reading of the RTC
+// Millis of latest reading of the RTC
+uint64_t lastTimeRead = 999999; // it's that much to trigger the alarm wakeup if something fails, llabs is there for this reason
 
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
@@ -111,7 +112,7 @@ void timeZoneApply()
       debugLog("day of the week: " + String(timeRTC.Wday));
       debugLog("year: " + String(timeRTC.Year));
 #endif
-      //debugLog("Timezone set succes, current timezone: " + String(posixTimeZone));
+      // debugLog("Timezone set succes, current timezone: " + String(posixTimeZone));
       debugLog("Timezone working");
     }
     else
@@ -234,7 +235,8 @@ void alarmManageRTC()
   // #elif RTC_TYPE == INTERNAL_RTC
 
   // #endif
-  if (SRTC.isNewMinute() == true)
+
+  if (getLastTimeReadSec() >= 60)
   {
     debugLog("RTC new minute");
     readRTC();
@@ -408,4 +410,18 @@ void setupMillisComparators()
   loopDumpDelayMs = theMillis;
 #endif
   sleepDelayMs = theMillis;
+}
+
+uint64_t getLastTimeReadSec()
+{
+  // To make it the upper without calling cell() here
+  uint64_t lastTimeReadSec = (llabs(millisBetter() - lastTimeRead) + 999) / 1000;
+  return lastTimeReadSec;
+}
+
+uint getCurrentSeconds()
+{
+  // debugLog("lastTimeReadSec: " + String(lastTimeReadSec));
+  uint currentSeconds = (getLastTimeReadSec() + timeRTC.Second) % 60;
+  return currentSeconds;
 }
