@@ -285,7 +285,7 @@ String getDayName(int offset)
   }
 }
 
-long getUnixTime()
+uint64_t getUnixTime()
 {
   return SRTC.doMakeTime(timeRTC);
 }

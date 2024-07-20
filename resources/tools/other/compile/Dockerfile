@@ -51,6 +51,20 @@ RUN apt-get install -y \
     udev \
     locales
 
+# Watchy scom & xorg
+# To check if x11 works, and to make it work run "xhost local:root" on the host then check if it works by running xclock in the container
+# Also select the non xorg linux dev container
+# https://stackoverflow.com/questions/60733288/devcontainer-how-to-make-x-display-work-mount-graphics-inside-docker-in-visual
+# https://github.com/thewtex/docker-opengl/blob/master/Dockerfile
+RUN apt-get install -y \
+    x11-apps \
+    libudev-dev \
+    pkg-config \
+    libgl1-mesa-dri \
+    libxkbcommon-dev
+
+
+
 #RUN apt-get clean
 #RUN rm -rf /var/lib/apt/lists/*
 
@@ -66,3 +80,6 @@ RUN mkdir -p /root/.espressif/
 
 #RUN curl -fsSL -o /tmp/get-platformio.py https://raw.githubusercontent.com/platformio/platformio-core-installer/master/get-platformio.py
 #RUN python3 /tmp/get-platformio.py
+
+# Install rust for watchy-scom
+RUN curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
