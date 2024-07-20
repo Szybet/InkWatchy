@@ -106,7 +106,7 @@ void fsSetBlob(String conf, uint8_t* value, int size, String dir)
         debugLog("Failed to setup fs");
         return;
     }
-    File file = LittleFS.open(dir + conf, FILE_WRITE);
+    File file = LittleFS.open(dir + conf, FILE_WRITE, true);
     if (file == false)
     {
         debugLog("Failed to set conf: " + conf);

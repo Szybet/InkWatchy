@@ -105,6 +105,10 @@ void setup()
       20,
       &priorityLoopHandle);
   //}
+
+  //turnOnWifiRegular();
+  removeDir("/weather/");
+  fsListDir("/", 0);
 }
 
 void loop()

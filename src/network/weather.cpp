@@ -46,7 +46,7 @@ void syncWeather()
       return;
     }
 
-    fsSetBlob(currentDayDate, (uint8_t *)&forecast, sizeof(OM_HourlyForecast), WEATHER_HOURLY_DIR);
+    fsSetBlob(currentDayDate, (uint8_t *)&forecast, sizeof(OM_HourlyForecast), String(WEATHER_HOURLY_DIR) + "/");
   }
 
   debugLog("Finished syncing weather");
