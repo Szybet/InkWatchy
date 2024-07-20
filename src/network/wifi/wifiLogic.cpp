@@ -15,7 +15,7 @@ void wifiSyncModules()
 
 void wifiRegular()
 {
-    debugLog("Launching");
+    debugLog("Launching wifi regular");
     syncNtp();
     syncTimezone();
     wifiSyncModules();

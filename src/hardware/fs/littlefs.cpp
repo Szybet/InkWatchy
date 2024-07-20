@@ -46,7 +46,9 @@ void fsCreateDir(String path)
   if (LittleFS.mkdir(path))
   {
     debugLog("Created dir: " + path);
-  } else {
+  }
+  else
+  {
     debugLog("Failed to create dir: " + path);
   }
 }
@@ -57,10 +59,40 @@ bool removeDir(String path)
   {
     return false;
   }
+
+  File root = LittleFS.open(path);
+  if (!root)
+  {
+    debugLog("Failed to open directory");
+    return false;
+  }
+  if (root.isDirectory() == false)
+  {
+    debugLog("Not a directory");
+    return false;
+  }
+
+  File file = root.openNextFile();
+  while (file)
+  {
+    String filePath = String(file.path());
+    if (file.isDirectory())
+    {
+      removeDir(filePath);
+      file.close();
+      LittleFS.rmdir(filePath);
+    } else {
+      file.close();
+      LittleFS.remove(filePath);
+    }
+    file = root.openNextFile();
+  }
+
   bool status = LittleFS.rmdir(path);
-  debugLog("Removing of dir status: " + BOOL_STR(status));
-  return status;
+  debugLog("Removing final dir: " + BOOL_STR(status));
+  return true;
 }
+
 
 /*
 File *fsOpenFile(String path)
