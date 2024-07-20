@@ -6,6 +6,8 @@ RTC_DATA_ATTR SmallRTC SRTC;
 
 RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
 
+int64_t timeZoneOffset = 0;
+
 // Millis of latest reading of the RTC
 uint64_t lastTimeRead = 999999; // it's that much to trigger the alarm wakeup if something fails, llabs is there for this reason
 
@@ -51,6 +53,7 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
   setupMillisComparators();
 }
 
+// Make sure you save bare UTC0 time here, no timezone
 void saveRTC()
 {
   SRTC.set(timeRTC);
@@ -91,6 +94,8 @@ void timeZoneApply()
     if (setenv("TZ", posixTimeZone, 1) == 0)
     {
       tzset();
+      int64_t initialUnixTime = getUnixTime();
+      
       time_t tempTime = makeTime(timeRTC);
       struct tm *tempTM = localtime(&tempTime);
       // Madness
@@ -102,6 +107,10 @@ void timeZoneApply()
       timeRTC.Year = tempTM->tm_year - 70; // Really? m y g o d
       timeRTC.Wday = tempTM->tm_wday + 1;
 
+      int64_t secondUnixTime = getUnixTime();
+      timeZoneOffset = initialUnixTime - secondUnixTime;
+      debugLog("Unix times: " + String(initialUnixTime) + " " + String(secondUnixTime) + " " + String(initialUnixTime - secondUnixTime));
+      
 #if TIME_ZONE_DUMP == 1
       debugLog("After timezone:");
       debugLog("seconds: " + String(timeRTC.Second));
@@ -151,7 +160,6 @@ void readRTC()
 {
   // debugLog("Reading RTC");
   SRTC.read(timeRTC);
-  timeZoneApply();
 
 #if RTC_TYPE == INTERNAL_RTC
   bool rtcGarbage = false;
@@ -187,6 +195,7 @@ void readRTC()
   }
 #endif
 
+  timeZoneApply(); // Here because of garbage cleaning
   lastTimeRead = millisBetter();
 }
 
@@ -203,7 +212,12 @@ void wakeUpManageRTC()
     {
       debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
       // isDebug(dumpRTCTime());
-      uint fullMinutes = (hour * 60) + timeRTC.Minute + NIGHT_SLEEP_FOR_M;
+      int fullMinutes = int((hour * 60) + timeRTC.Minute + NIGHT_SLEEP_FOR_M) + (timeZoneOffset / 60);
+      debugLog("fullMinutes: " + String(fullMinutes));
+      // Timezone triggered backwards, it's on minutes, add secconds
+      if(fullMinutes < 0) {
+        fullMinutes = 1440 + fullMinutes;
+      }
       // 60 * 24 = 1440 so a full day in minutes
       if (fullMinutes >= (1440))
       {
@@ -211,7 +225,7 @@ void wakeUpManageRTC()
       }
       uint finalHour = fullMinutes / 60; // Will always round up to the floor
       uint finalMinute = fullMinutes - (finalHour * 60);
-      debugLog("The watch will wake up at exactly hour: " + String(finalHour) + " and minute: " + String(finalMinute));
+      debugLog("The watch will wake up at exactly (in UTC0, taking in account your timezone) hour: " + String(finalHour) + " and minute: " + String(finalMinute));
 
       SRTC.atTimeWake(finalHour, finalMinute, true);
     }
