@@ -24,6 +24,8 @@ Template for versioning
 #undef VIBRATION_ACTION_TIME
 #define VIBRATION_BUTTON_TIME 800 // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_ACTION_TIME 800 // Time in ms to the motor to vibrate when the UI receives an action
+#undef DEBUG_CPU_SPEED
+#define DEBUG_CPU_SPEED maxSpeed
 #endif
 
 #if FONT_PREVIEW_MENU == 1 && DEBUG == 1 && DEBUG_MENUS == 1

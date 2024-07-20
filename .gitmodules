@@ -1,0 +1,3 @@
+[submodule "src/other/scomTask/watchy-scom"]
+	path = src/other/scomTask/watchy-scom
+	url = https://github.com/Szybet/watchy-scom.git
