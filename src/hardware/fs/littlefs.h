@@ -29,7 +29,7 @@ const GFXfont* getFont(String name);
 String fsGetString(String conf, String defaultValue, String dir = "/conf/");
 bool fsSetString(String conf, String value, String dir = "/conf/");
 bufSize fsGetBlob(String conf, String dir = "/conf/");
-void fsSetBlob(String conf, uint8_t* value, int size, String dir = "/conf/");
+bool fsSetBlob(String conf, uint8_t* value, int size, String dir = "/conf/");
 
 #if DEBUG
 void fsListDir(String dirname, uint8_t levels);
