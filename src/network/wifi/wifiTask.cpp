@@ -40,11 +40,10 @@ void turnOnWifiTask(void *parameter)
     {
         debugLog("Running wifi loop: " + String(i));
         // debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
-        if (HARDWARE_POWER_SAVINGS == 1)
-        {
+        #if HARDWARE_POWER_SAVINGS
             WiFi.setSleep(WIFI_PS_MAX_MODEM);
             debugLog("Setting sleep mode for wifi");
-        }
+        #endif
         // We don't have NVS anymore
         // esp_wifi_set_storage(WIFI_STORAGE_RAM);
         // WiFi.persistent(false);

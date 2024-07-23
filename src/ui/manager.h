@@ -50,7 +50,6 @@ void loopManager();
 void initMainMenu();
 void initDebugMenu();
 void initWeatherMenu();
-extern int weatherDayChoosed;
 void initWeatherConditionMenu();
 void initpowerMenu();
 #if FONT_MENU_ENABLED
