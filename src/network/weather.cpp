@@ -21,7 +21,7 @@ void syncWeather()
   for (u8_t iw = 0; iw < MAX_WEATHER_DAYS; iw++)
   {
     bool status = false;
-    uint64_t unixTimeWeat = getUnixTime() + (ADD_DAY_UNIX * iw);
+    uint64_t unixTimeWeat = simplifyUnix(getUnixTime() + (ADD_DAY_UNIX * iw));
     String currentDayDate = unixToDate(unixTimeWeat);
     for (u8_t i = 0; i < WEATHER_TRIES; i++)
     {
@@ -67,7 +67,7 @@ void syncWeather()
     }
 #endif
 
-    if (fsSetBlob(currentDayDate, (uint8_t *)forecast, sizeof(OM_HourlyForecast), String(WEATHER_HOURLY_DIR) + "/") == false)
+    if (fsSetBlob(String(unixTimeWeat), (uint8_t *)forecast, sizeof(OM_HourlyForecast), String(WEATHER_HOURLY_DIR) + "/") == false)
     {
       debugLog("Failed to set weather: currentDayDate");
     }
