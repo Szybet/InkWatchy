@@ -105,9 +105,12 @@ void isChargingCheck()
     }
 #elif ATCHY_VER == WATCHY_3
     // Looks like bad code? go to definition of the pin
-    if(analogRead(CHRG_STATUS_PIN) > 4000) {
+    if (analogRead(CHRG_STATUS_PIN) > 4000)
+    {
         bat.isCharging = true;
-    } else {
+    }
+    else
+    {
         bat.isCharging = false;
     }
 #endif
@@ -155,6 +158,9 @@ void loopBattery()
 
         loopPowerSavings();
     }
+#if ATCHY_VER == WATCHY_3
+    isChargingCheck();
+#endif
 }
 
 void loopPowerSavings()
