@@ -90,6 +90,7 @@ Template for versioning
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_LOW
 #define BATT_ADC_PIN 9
 #define ADC_VOLTAGE_DIVIDER ((360.0f + 100.0f) / 360.0f) // Voltage divider at battery ADC
+#define USB_DET_PIN 21 // If HIGH, usb is connected. Someone with a v3 is free to use interrupts for that and enable wakeups for this pin too
 #endif
 
 // RTC type

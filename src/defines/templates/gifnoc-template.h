@@ -86,7 +86,7 @@
 #define NIGHT_SLEEP_AFTER_HOUR 23
 #define NIGHT_SLEEP_BEFORE_HOUR 5
 #define SLEEP_EVERY_MS 10000              // Goes to sleep timer, is resetted by button presses and other things
-#define POWER_SAVING_AFTER 60             // Turn on power saving features after a certain battery percantage.
+#define POWER_SAVING_AFTER 40             // Turn on power saving features after a certain battery percantage.
 #define POWER_SAVING_OFF_AFTER 20         // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
 #define LOOP_NO_SCREEN_WRITE_DELAY_MS 225 // Go to "sleep" for x ms if the device is woken up (in a menu for example) and the screen didn't update. This value is fine tuned, but if you want a faster menu, feel free to make it smaller
 #define HARDWARE_POWER_SAVINGS 1          // Like wifi modem in power saving mode

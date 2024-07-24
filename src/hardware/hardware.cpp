@@ -56,6 +56,12 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 
     initRTC(isFromWakeUp, wakeUpReason);
     initButtons(isFromWakeUp);
+
+    // Before initBattery, but executed always
+#if ATCHY_VER == WATCHY_3
+    pinMode(USB_DET_PIN, INPUT);
+#endif
+
     if (isFromWakeUp == false)
     {
         loadAllStorage();
