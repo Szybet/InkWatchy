@@ -105,7 +105,11 @@ void isChargingCheck()
     }
 #elif ATCHY_VER == WATCHY_3
     // Looks like bad code? go to definition of the pin
-    bat.isCharging = digitalRead(USB_DET_PIN);
+    if(analogRead(CHRG_STATUS_PIN) > 4000) {
+        bat.isCharging = true;
+    } else {
+        bat.isCharging = false;
+    }
 #endif
 #if DEBUG
     if (bat.isCharging != previousCharging)
