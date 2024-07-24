@@ -24,6 +24,8 @@ String getHourMinute(tmElements_t timeEl = timeRTC);
 String getDayName(int offset = 0);
 String getMonthName(int monthNumber);
 uint64_t getUnixTime();
+uint64_t simplifyUnix(uint64_t unixTime);
+uint64_t dateToUnix(String date);
 String getFormattedTime(time_t rawTime);
 String unixToDate(uint64_t unixTime);
 long getHourDifference(time_t currentTime, time_t targetTime);

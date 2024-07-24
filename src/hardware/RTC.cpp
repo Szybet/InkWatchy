@@ -223,7 +223,7 @@ void wakeUpManageRTC()
 
 void alarmManageRTC()
 {
-  //debugLog("Executed alarmManageRTC");
+  // debugLog("Executed alarmManageRTC");
 #if RTC_TYPE == EXTERNAL_RTC
   if (digitalRead(RTC_INT_PIN) == LOW)
 #elif RTC_TYPE == INTERNAL_RTC
@@ -354,6 +354,40 @@ String unixToDate(uint64_t unixTime)
   sprintf(dateString, "%02d.%02d.%04d", gotDay, gotMonth, gotYear);
 
   return String(dateString);
+}
+
+uint64_t simplifyUnix(uint64_t unixTime)
+{
+  return unixTime - (unixTime % 86400);
+  /*
+  std::time_t time = static_cast<std::time_t>(unixTime);
+
+  std::tm *date = std::localtime(&time);
+
+  date->tm_hour = 0;
+  date->tm_min = 0;
+  date->tm_sec = 0;
+
+  std::time_t simplified_time = std::mktime(date);
+
+  return static_cast<uint64_t>(simplified_time);
+  */
+}
+
+// Accepts format "%02d.%02d.%04d"
+uint64_t dateToUnix(String date)
+{
+  int day, month, year;
+  sscanf(date.c_str(), "%02d.%02d.%04d", &day, &month, &year);
+
+  tmElements_t tm = {};
+  tm.Year = year - 1970;
+  tm.Month = month;
+  tm.Day = day;
+
+  uint64_t t = static_cast<uint64_t>(makeTime(tm));
+  debugLog("For date: " + date + " returning unix time: " + String(t));
+  return t;
 }
 
 long getHourDifference(time_t currentTime, time_t targetTime)

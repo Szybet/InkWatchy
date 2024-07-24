@@ -61,7 +61,7 @@ void initWeatherMenu()
         root.close();
         break;
     }
-    debugLog("There are so many books: " + String(days));
+    debugLog("There are so many days: " + String(days));
 
     if (days == 0)
     {
@@ -70,36 +70,90 @@ void initWeatherMenu()
         return;
     }
 
-    entryMenu buttons[days];
+    long daysUnixList[days] = {0};
     File root = LittleFS.open(WEATHER_HOURLY_DIR);
     File file = root.openNextFile();
-    uint8_t counter = 0;
+    u8_t c = 0;
     while (file)
     {
         if (file.isDirectory() == false)
         {
-            buttons[counter] = {String(file.name()), &emptyImgPack, switchWeatherSelectorMenu};
-            counter = counter + 1;
+            String unixTmp = String(file.name());
+            debugLog("Got unix file name: " + unixTmp);
+            daysUnixList[c] = unixTmp.toInt();
+            c = c + 1;
         }
         file = root.openNextFile();
     }
     root.close();
-    initMenu(buttons, counter, "Select date", 1);
+    file.close();
+
+    // Sort daysListPure
+    // for (u8_t i = 0; i < days; i++)
+    // {
+    //     debugLog("i: " + String(daysUnixList[i]));
+    // }
+    // debugLog("Sorting!");
+    std::sort(daysUnixList, daysUnixList + days);
+    // for (u8_t i = 0; i < days; i++)
+    // {
+    //     debugLog("i: " + String(daysUnixList[i]));
+    // }
+
+    // First, get the current day from that list
+    uint theUnixFromListIndex = 9999;
+    long currentUnix = getUnixTime();
+    uint smallestDifference = -1;
+    for (u8_t i = 0; i < days; i++)
+    {
+        if (llabs(currentUnix - daysUnixList[i]) < smallestDifference && day(currentUnix) == day(daysUnixList[i]))
+        {
+            theUnixFromListIndex = i;
+            smallestDifference = llabs(currentUnix - daysUnixList[i]);
+        }
+    }
+
+    debugLog("Got current unix from list: " + String(theUnixFromListIndex));
+
+    if (theUnixFromListIndex == 9999)
+    {
+        debugLog("Failed to find unix with the same date, skipping further sorting");
+        std::reverse(daysUnixList, daysUnixList + days);
+    }
+    else
+    {
+        // Move arround the list
+        long daysUnixListTmp[days];
+        // Copy everything before theUnixFromListIndex to daysUnixListTmp
+        std::copy(daysUnixList, daysUnixList + theUnixFromListIndex, daysUnixListTmp);
+        // Copy everything after theUnixFromListIndex to the beginning of daysUnixList
+        std::copy(daysUnixList + theUnixFromListIndex, daysUnixList + days, daysUnixList);
+        // Copy elements from daysUnixListTmp to the remaining space of daysUnixList
+        std::copy(daysUnixListTmp, daysUnixListTmp + theUnixFromListIndex, daysUnixList + days - theUnixFromListIndex);
+    }
+
+    entryMenu buttons[days];
+    for (u8_t i = 0; i < days; i++)
+    {
+        buttons[i] = {unixToDate(daysUnixList[i]), &emptyImgPack, switchWeatherSelectorMenu};
+    }
+
+    initMenu(buttons, days, "Select date", 1);
 }
 
 char weatherDayChoosed[12];
 void initWeatherConditionMenu()
 {
-    debugLog("initWeatherConditionMenu called")
-        // Check if the last menu item name is a date
-        int dayIndex = lastMenuSelected.indexOf(".");
+    debugLog("initWeatherConditionMenu called");
+    // Check if the last menu item name is a date
+    int dayIndex = lastMenuSelected.indexOf(".");
     // if (lastMenuSelected.length() >= 5 && lastMenuSelected[2] == '.' && lastMenuSelected[5] == '.')
     if (dayIndex != -1)
     {
         lastMenuSelected.toCharArray(weatherDayChoosed, 12);
         weatherDayChoosed[11] = '\0';
     }
-    else
+    else if(String(weatherDayChoosed).indexOf(".") == -1)
     {
         debugLog("Error finding date for weather condition");
         overwriteSwitch(textDialog);
@@ -121,78 +175,102 @@ void initWeatherConditionMenu()
     initMenu(buttons, 9, "Weather stat", 1);
 }
 
-OM_HourlyForecast generalWeatherGetData()
+struct OM_HourlyForecastReturn
+{
+    bool fine;
+    OM_HourlyForecast data;
+};
+
+OM_HourlyForecastReturn generalWeatherGetData()
 {
     String weatherDay = String(weatherDayChoosed);
     debugLog("Showing temperature for day: " + weatherDay);
 
-    bufSize weatherData = fsGetBlob(weatherDay, String(WEATHER_HOURLY_DIR) + "/");
+    bufSize weatherData = fsGetBlob(String(dateToUnix(weatherDay)), String(WEATHER_HOURLY_DIR) + "/");
     debugLog("Weather size is: " + String(weatherData.size) + " While is should be: " + String(sizeof(OM_HourlyForecast)));
-    OM_HourlyForecast forecast = {};
+    OM_HourlyForecastReturn forecast = {};
     if (weatherData.size != sizeof(OM_HourlyForecast))
     {
         debugLog("Weather data is bad.");
         free(weatherData.buf);
         overwriteSwitch(textDialog);
         showTextDialog("Weather corrupted");
+        forecast.fine = false;
         return forecast;
     }
-    memcpy(&forecast, weatherData.buf, weatherData.size);
+    memcpy(&forecast.data, weatherData.buf, weatherData.size);
     free(weatherData.buf);
 
+    forecast.fine = true;
     return forecast;
 }
 
 void showTemp()
 {
-    OM_HourlyForecast forecast = generalWeatherGetData();
+    OM_HourlyForecastReturn forecast = generalWeatherGetData();
+    if(forecast.fine == false) {
+        return;
+    }
 #if DEBUG
     debugLog("Dumping temp");
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        debugLog(String(i) + ": " + String(forecast.temp[i]));
+        debugLog(String(i) + ": " + String(forecast.data.temp[i]));
     }
 #endif
-    showChart(forecast.temp, OM_WEATHER_MAX_HOURS, "Temp / C");
+    showChart(forecast.data.temp, OM_WEATHER_MAX_HOURS, "Temp / C");
+    generalSwitch(ChartPlace);
 }
 
 void showPressure()
 {
-    OM_HourlyForecast forecast = generalWeatherGetData();
+    OM_HourlyForecastReturn forecast = generalWeatherGetData();
+    if(forecast.fine == false) {
+        return;
+    }
 #if DEBUG
     debugLog("Dumping pressure");
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        debugLog(String(i) + ": " + String(forecast.temp[i]));
+        debugLog(String(i) + ": " + String(forecast.data.pressure[i]));
     }
 #endif
-    showChart(forecast.pressure, OM_WEATHER_MAX_HOURS, "Pressure / hPa");
+    showChart(forecast.data.pressure, OM_WEATHER_MAX_HOURS, "Pressure / hPa");
+    generalSwitch(ChartPlace);
 }
 
 void showHumidity()
 {
-    OM_HourlyForecast forecast = generalWeatherGetData();
+    OM_HourlyForecastReturn forecast = generalWeatherGetData();
+    if(forecast.fine == false) {
+        return;
+    }
 #if DEBUG
     debugLog("Dumping humidity");
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        debugLog(String(i) + ": " + String(forecast.temp[i]));
+        debugLog(String(i) + ": " + String(forecast.data.humidity[i]));
     }
 #endif
     float humidity[OM_WEATHER_MAX_HOURS] = {0};
     for (u8_t i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        humidity[i] = u8_t(forecast.humidity[i]);
+        humidity[i] = u8_t(forecast.data.humidity[i]);
     }
     showChart(humidity, OM_WEATHER_MAX_HOURS, "Humidity / %");
+    generalSwitch(ChartPlace);
 }
 
 void showWeatherCond()
 {
-    OM_HourlyForecast forecast = generalWeatherGetData();
+    OM_HourlyForecastReturn forecast = generalWeatherGetData();
+    if(forecast.fine == false) {
+        return;
+    }
     String weatherCond[OM_WEATHER_MAX_HOURS];
-    for(u8_t i = 0; i < OM_WEATHER_MAX_HOURS; i++) {
-        weatherCond[i] = weatherConditionIdToStr(forecast.weather_code[i]);
+    for (u8_t i = 0; i < OM_WEATHER_MAX_HOURS; i++)
+    {
+        weatherCond[i] = weatherConditionIdToStr(forecast.data.weather_code[i]);
     }
     textPage("Weather conditions", weatherCond, OM_WEATHER_MAX_HOURS);
     generalSwitch(ChartPlace);
@@ -200,80 +278,100 @@ void showWeatherCond()
 
 void showClouds()
 {
-    OM_HourlyForecast forecast = generalWeatherGetData();
+    OM_HourlyForecastReturn forecast = generalWeatherGetData();
+    if(forecast.fine == false) {
+        return;
+    }
 #if DEBUG
     debugLog("Dumping clouds");
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        debugLog(String(i) + ": " + String(forecast.cloud_cover[i]));
+        debugLog(String(i) + ": " + String(forecast.data.cloud_cover[i]));
     }
 #endif
     float clouds[OM_WEATHER_MAX_HOURS] = {0};
     for (u8_t i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        clouds[i] = float(forecast.cloud_cover[i]);
+        clouds[i] = float(forecast.data.cloud_cover[i]);
     }
     showChart(clouds, OM_WEATHER_MAX_HOURS, "Clouds / %");
+    generalSwitch(ChartPlace);
 }
 
 void showWindSpeed()
 {
-    OM_HourlyForecast forecast = generalWeatherGetData();
+    OM_HourlyForecastReturn forecast = generalWeatherGetData();
+    if(forecast.fine == false) {
+        return;
+    }
 #if DEBUG
     debugLog("Dumping wind speed");
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        debugLog(String(i) + ": " + String(forecast.wind_speed[i]));
+        debugLog(String(i) + ": " + String(forecast.data.wind_speed[i]));
     }
 #endif
-    showChart(forecast.wind_speed, OM_WEATHER_MAX_HOURS, "Wind speed / km/h");
+    showChart(forecast.data.wind_speed, OM_WEATHER_MAX_HOURS, "Wind speed / km/h");
+    generalSwitch(ChartPlace);
 }
 
 void showWindGuts()
 {
-    OM_HourlyForecast forecast = generalWeatherGetData();
+    OM_HourlyForecastReturn forecast = generalWeatherGetData();
+    if(forecast.fine == false) {
+        return;
+    }
 #if DEBUG
     debugLog("Dumping wind guts");
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        debugLog(String(i) + ": " + String(forecast.wind_gust[i]));
+        debugLog(String(i) + ": " + String(forecast.data.wind_gust[i]));
     }
 #endif
-    showChart(forecast.wind_gust, OM_WEATHER_MAX_HOURS, "Wind guts / km/h");
+    showChart(forecast.data.wind_gust, OM_WEATHER_MAX_HOURS, "Wind guts / km/h");
+    generalSwitch(ChartPlace);
 }
 
 void showVisibility()
 {
-    OM_HourlyForecast forecast = generalWeatherGetData();
+    OM_HourlyForecastReturn forecast = generalWeatherGetData();
+    if(forecast.fine == false) {
+        return;
+    }
 #if DEBUG
     debugLog("Dumping visibility");
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        debugLog(String(i) + ": " + String(forecast.visibility[i]));
+        debugLog(String(i) + ": " + String(forecast.data.visibility[i]));
     }
 #endif
     float vis[OM_WEATHER_MAX_HOURS] = {0};
     for (u8_t i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        vis[i] = float(forecast.visibility[i]);
+        vis[i] = float(forecast.data.visibility[i]);
     }
     showChart(vis, OM_WEATHER_MAX_HOURS, "Visib. / m");
+    generalSwitch(ChartPlace);
 }
 
 void showPop()
 {
-    OM_HourlyForecast forecast = generalWeatherGetData();
+    OM_HourlyForecastReturn forecast = generalWeatherGetData();
+    if(forecast.fine == false) {
+        return;
+    }
 #if DEBUG
     debugLog("Dumping pop");
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        debugLog(String(i) + ": " + String(forecast.precipitation[i]));
+        debugLog(String(i) + ": " + String(forecast.data.precipitation[i]));
     }
 #endif
     float pop[OM_WEATHER_MAX_HOURS] = {0};
     for (u8_t i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        pop[i] = float(forecast.precipitation[i]);
+        pop[i] = float(forecast.data.precipitation[i]);
     }
     showChart(pop, OM_WEATHER_MAX_HOURS, "Preper. / %");
+    generalSwitch(ChartPlace);
 }
