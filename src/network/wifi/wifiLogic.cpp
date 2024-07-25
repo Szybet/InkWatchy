@@ -6,7 +6,9 @@ RTC_DATA_ATTR long lastTryUnix = 0;
 void wifiSyncModules()
 {
     softStartDelay();
+#if WEATHER_INFO
     syncWeather();
+#endif
 #if BITCOIN_MODULE
     softStartDelay();
     bitcoinSync(1);
@@ -15,7 +17,7 @@ void wifiSyncModules()
 
 void wifiRegular()
 {
-    debugLog("Launching");
+    debugLog("Launching wifi regular");
     syncNtp();
     syncTimezone();
     wifiSyncModules();

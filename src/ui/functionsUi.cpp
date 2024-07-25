@@ -297,7 +297,7 @@ void textPage(String title, String *strList, int listCount)
     h = h - 3;
   }
   writeTextCenterReplaceBack(title, h);
-  h = h + 3;
+  h = h + 1;
   display.fillRect(0, h, display.width(), 1, GxEPD_BLACK);
   h = h + 3;
 
@@ -306,14 +306,33 @@ void textPage(String title, String *strList, int listCount)
   uint16_t textHeight;
   getTextBounds(strList[0], NULL, NULL, NULL, &textHeight);
   h = h + textHeight;
+  uint16_t firstHeight = h;
 
-  for (int i = 1; i < listCount; i++)
+  for (int i = 0; i < listCount; i++)
   {
     display.setCursor(0, h);
     display.print(strList[i]);
     h = h + textHeight;
     h = h + 3;
   }
+
+  // hacky work arround, I'm not sure how to handle this properly
+  /*
+  if (h > 200 && listCount > 1)
+  {
+    display.fillRect(0, firstHeight, 200, 200, GxEPD_WHITE);
+    display.setTextWrap(true);
+    display.setCursor(0, firstHeight);
+    for (int i = 0; i < listCount; i++)
+    {
+      display.print(strList[i]);
+      if (i != listCount - 1)
+      {
+        display.print(", ");
+      }
+    }
+  }
+  */
 
   disUp(true);
   setFont(font);

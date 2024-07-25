@@ -99,22 +99,23 @@ bufSize fsGetBlob(String conf, String dir)
     return retBuf;
 }
 
-void fsSetBlob(String conf, uint8_t* value, int size, String dir)
+bool fsSetBlob(String conf, uint8_t* value, int size, String dir)
 {
     if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
-        return;
+        return false;
     }
-    File file = LittleFS.open(dir + conf, FILE_WRITE);
+    File file = LittleFS.open(dir + conf, FILE_WRITE, true);
     if (file == false)
     {
         debugLog("Failed to set conf: " + conf);
-        return;
+        return false;
     }
     if(file.write(value, size) == false) {
         debugLog("Failed to write blob to file " + conf);
-        return;
+        return false;
     }
     file.close();
+    return true;
 }

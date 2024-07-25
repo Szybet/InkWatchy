@@ -43,11 +43,56 @@ void fsCreateDir(String path)
   {
     return;
   }
-  if (LittleFS.mkdir(path) <= 0)
+  if (LittleFS.mkdir(path))
+  {
+    debugLog("Created dir: " + path);
+  }
+  else
   {
     debugLog("Failed to create dir: " + path);
   }
 }
+
+bool removeDir(String path)
+{
+  if (fsSetup() == false)
+  {
+    return false;
+  }
+
+  File root = LittleFS.open(path);
+  if (!root)
+  {
+    debugLog("Failed to open directory");
+    return false;
+  }
+  if (root.isDirectory() == false)
+  {
+    debugLog("Not a directory");
+    return false;
+  }
+
+  File file = root.openNextFile();
+  while (file)
+  {
+    String filePath = String(file.path());
+    if (file.isDirectory())
+    {
+      removeDir(filePath);
+      file.close();
+      LittleFS.rmdir(filePath);
+    } else {
+      file.close();
+      LittleFS.remove(filePath);
+    }
+    file = root.openNextFile();
+  }
+
+  bool status = LittleFS.rmdir(path);
+  debugLog("Removing final dir: " + BOOL_STR(status));
+  return true;
+}
+
 
 /*
 File *fsOpenFile(String path)
@@ -158,18 +203,20 @@ bool fsFileExists(String path)
   {
     return false;
   }
-  //bool ret = LittleFS.exists(path);
+  // bool ret = LittleFS.exists(path);
   File f = LittleFS.open(path);
   bool ret = false;
   // Madness, idk
   if (!f)
   {
     ret = false;
-  } else {
+  }
+  else
+  {
     ret = true;
     f.close();
   }
-  
+
   debugLog("File: " + path + " exists: " + BOOL_STR(ret));
   return ret;
 }

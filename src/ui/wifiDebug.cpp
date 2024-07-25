@@ -245,5 +245,10 @@ void loopWifiDebugDisplay()
     }
     }
     disUp();
+    // Never exit this wifi is on or connected
+    if (wifiStatusWrap() != WifiOff)
+    {
+        resetSleepDelay();
+    }
 }
 #endif
