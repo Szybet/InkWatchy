@@ -49,9 +49,10 @@ void loopManager();
 // Manager functions
 void initMainMenu();
 void initDebugMenu();
+#if WEATHER_INFO
 void initWeatherMenu();
-extern int weatherDayChoosed;
 void initWeatherConditionMenu();
+#endif
 void initpowerMenu();
 #if FONT_MENU_ENABLED
 void initFontMenu();
@@ -82,6 +83,7 @@ void switchFontsPreview();
 void showTextDialog(String str);
 
 // Switches for weather
+#if WEATHER_INFO
 void showTemp();
 void showPressure();
 void showHumidity();
@@ -91,5 +93,6 @@ void showWindSpeed();
 void showWindGuts();
 void showVisibility();
 void showPop();
+#endif
 
 #endif

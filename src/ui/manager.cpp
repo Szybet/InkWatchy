@@ -110,7 +110,9 @@ void loopManager()
                 executeExitFunc();
             }
         }
-    } else {
+    }
+    else
+    {
         // Clear the back button even in watchface...
         useButtonBack();
     }
@@ -155,12 +157,16 @@ void loopManager()
     }
     case weatherMenu:
     {
+#if WEATHER_INFO
         managerLaunchFunc(weatherMenu, initWeatherMenu, loopMenu);
+#endif
         break;
     }
     case weatherConditionMenu:
     {
+#if WEATHER_INFO
         managerLaunchFunc(weatherConditionMenu, initWeatherConditionMenu, loopMenu);
+#endif
         break;
     }
     case powerMenu:

@@ -44,17 +44,17 @@ function generalThings {
 
     sed -i "s/$old_string/$new_string/g" "$filename"
 
-    old_string="#define WIFI_SSID1 \"\""
-    new_string="#define WIFI_SSID1 \"hotspot\""
-    filename="src/defines/confidential.h"
+    # old_string="#define WIFI_SSID1 \"\""
+    # new_string="#define WIFI_SSID1 \"hotspot\""
+    # filename="src/defines/confidential.h"
 
-    sed -i "s/$old_string/$new_string/g" "$filename"
+    # sed -i "s/$old_string/$new_string/g" "$filename"
 
-    old_string="#define WIFI_PASS1 \"\""
-    new_string="#define WIFI_PASS1 \"12345678\""
-    filename="src/defines/confidential.h"
+    # old_string="#define WIFI_PASS1 \"\""
+    # new_string="#define WIFI_PASS1 \"12345678\""
+    # filename="src/defines/confidential.h"
 
-    sed -i "s/$old_string/$new_string/g" "$filename"
+    # sed -i "s/$old_string/$new_string/g" "$filename"
 }
 
 generalThings

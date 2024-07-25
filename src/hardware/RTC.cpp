@@ -307,7 +307,7 @@ String getDayName(int offset)
   }
 }
 
-long getUnixTime()
+uint64_t getUnixTime()
 {
   return SRTC.doMakeTime(timeRTC);
 }
@@ -366,7 +366,7 @@ String getFormattedTime(time_t rawTime)
   return hoursStr + ":" + minuteStr + ":" + secondStr;
 }
 
-String unixToDate(unsigned long unixTime)
+String unixToDate(uint64_t unixTime)
 {
   int gotDay = day(unixTime);
   int gotMonth = month(unixTime);
@@ -376,6 +376,40 @@ String unixToDate(unsigned long unixTime)
   sprintf(dateString, "%02d.%02d.%04d", gotDay, gotMonth, gotYear);
 
   return String(dateString);
+}
+
+uint64_t simplifyUnix(uint64_t unixTime)
+{
+  return unixTime - (unixTime % 86400);
+  /*
+  std::time_t time = static_cast<std::time_t>(unixTime);
+
+  std::tm *date = std::localtime(&time);
+
+  date->tm_hour = 0;
+  date->tm_min = 0;
+  date->tm_sec = 0;
+
+  std::time_t simplified_time = std::mktime(date);
+
+  return static_cast<uint64_t>(simplified_time);
+  */
+}
+
+// Accepts format "%02d.%02d.%04d"
+uint64_t dateToUnix(String date)
+{
+  int day, month, year;
+  sscanf(date.c_str(), "%02d.%02d.%04d", &day, &month, &year);
+
+  tmElements_t tm = {};
+  tm.Year = year - 1970;
+  tm.Month = month;
+  tm.Day = day;
+
+  uint64_t t = static_cast<uint64_t>(makeTime(tm));
+  debugLog("For date: " + date + " returning unix time: " + String(t));
+  return t;
 }
 
 long getHourDifference(time_t currentTime, time_t targetTime)

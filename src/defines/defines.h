@@ -1,6 +1,8 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#define ARDUINOJSON_ENABLE_PROGMEM 0
+
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
 #include <GxEPD2_BW.h>
@@ -9,8 +11,6 @@
 #include <WiFi.h>
 #include <WiFiMulti.h>
 #include <NTPClient.h>
-#include <JSON_Decoder.h>
-#include <OpenWeather.h>
 #include <StableBMA.h>
 #include "FS.h"
 #include <LittleFS.h>
@@ -21,6 +21,15 @@
 #include <nvs_flash.h> 
 #include "driver/rtc_io.h"
 #include <Olson2POSIX.h>
+
+#include "config.h" // Needs to be first!
+#include "condition.h"
+#include "confidential.h"
+#include "macros.h"
+
+#if WEATHER_INFO
+#include <OpenMeteo.h>
+#endif
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
@@ -73,11 +82,6 @@ struct bufSize {
 
 extern bufSize emptyBuff;
 
-#include "config.h" // Needs to be first!
-#include "condition.h"
-#include "confidential.h"
-#include "macros.h"
-
 #include "../hardware/hardware.h"
 #include "../hardware/battery.h"
 #include "../hardware/RTC.h"
@@ -91,7 +95,9 @@ extern bufSize emptyBuff;
 #include "../network/wifi/wifiTask.h"
 #include "../network/ntp.h"
 #include "../network/getTimezone.h"
+#if WEATHER_INFO
 #include "../network/weather.h"
+#endif
 #include "../ui/functionsUi.h"
 #include "../ui/debug.h"
 #include "../ui/batteryDebug.h"

@@ -22,8 +22,16 @@ Template for versioning
 #if SCOM_TASK_ENABLED
 #undef VIBRATION_BUTTON_TIME
 #undef VIBRATION_ACTION_TIME
-#define VIBRATION_BUTTON_TIME 800 // Time in ms to the motor to vibrate after clicking a button. 0 means none
-#define VIBRATION_ACTION_TIME 800 // Time in ms to the motor to vibrate when the UI receives an action
+#define VIBRATION_BUTTON_TIME 150 // Time in ms to the motor to vibrate after clicking a button. 0 means none
+#define VIBRATION_ACTION_TIME 150 // Time in ms to the motor to vibrate when the UI receives an action
+#undef DEBUG_CPU_SPEED
+#define DEBUG_CPU_SPEED maxSpeed
+#undef SERIAL_LOG_DELAY_MS
+#define SERIAL_LOG_DELAY_MS 0
+#undef DISABLE_SLEEP
+#define DISABLE_SLEEP 1
+#undef MINIMAL_LOGS
+#define MINIMAL_LOGS 0
 #endif
 
 #if FONT_PREVIEW_MENU == 1 && DEBUG == 1 && DEBUG_MENUS == 1

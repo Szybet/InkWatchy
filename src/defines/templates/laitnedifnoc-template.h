@@ -31,11 +31,10 @@
 #define WIFI_SSID10 ""
 #define WIFI_PASS10 ""
 
-#define OPEN_WEATHER_API_KEY ""
-#define WEATHER_LATIT ""
-#define WEATHER_LONGTIT ""
-#define WEATHER_UNIT "metric"
-#define WEATHER_LANG "en"
+// Get those values here: https://open-meteo.com/en/docs/geocoding-api
+// For hamburg, germany example values:
+#define WEATHER_LATIT "" // 53.55073
+#define WEATHER_LONGTIT "" // 9.99302
 
 #define COIN_LIB_API_KEY "" // It will work without it, just with less informations
 
