@@ -45,6 +45,8 @@
 #define FORCE_INTERNAL_RTC 0               // If your device has an external RTC but it sucks, set this to 1
 #define FORCED_INTERNAL_RTC_QUARTZ 0       // If you forced the internal RTC and if you have an external quartz crystal, set this to 1
 #define AVOID_SLEEPING_ON_FULL_MINUTE 4    // This value shouldn't be really touched, it checks if in x seconds a full minute passess, if yes, it waits to x / 2 seconds
+#define WEATHER_INFO 1                     // Enable weather
+#define WEATHER_TRIES 3                    // Ammount of times to try to sync weather
 
 // Book things
 #define BOOK 0
@@ -92,7 +94,7 @@
 #define HARDWARE_POWER_SAVINGS 1          // Like wifi modem in power saving mode
 #define CPU_SPEED minimalSpeed            // Possible values: minimalSpeed, normalSpeed, maxSpeed. Obviously higher speeds decrease battery life - but it's only when you interact with the watch. This is mostly for the people who "ugh this watch is slow!". Well first, it's a watch, it should show time, any other features are battery wasters in some way and secondly you should first remove some features you don't use, most noticibly unused watchface moduls. In debug mode, this feature is overritten by DEBUG_CPU_SPEED when DEBUG
 #define SOFT_START_THINGS 1               // Slowly starts things, like wifi to prevent brownout reset.
-#define SOFT_START_DELAY_MS 2500
+#define SOFT_START_DELAY_MS 4500
 
 // For now those features are:
 // DISABLE_BUTTON_VIBRATION
@@ -145,7 +147,7 @@
 #define SERIAL_LOG_DELAY_MS 23
 #define SERIAL_BAUDRATE 115200
 #define MINIMAL_LOGS 1      // Don't put full file paths in logs
-#define SCOM_TASK 0         // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied
+#define SCOM_TASK 0         // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
 #define FONT_PREVIEW_MENU 0 // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
 #define NO_CHARGING 1       // Disable detection of charging, only in debug
 
@@ -176,7 +178,7 @@
 #define TASK_STACK_DUMP_BATTERY 2000
 #define TASK_STACK_BUTTON 4700
 #define TASK_STACK_VIBRATION 3500
-#define TASK_STACK_WIFI 33500
+#define TASK_STACK_WIFI 60000
 #define TASK_STACK_SCOM 10000
 #define TASK_STACK_WATCHDOG 3500
 
@@ -194,9 +196,11 @@
 #define CONF_BOOK_CURRENT_BOOK "current_book"
 #define CONF_DISABLE_ALL_VIBRATION "disable_all_vibrations"
 #define CONF_DISABLE_WAKE_UP "disable_wake_up"
-#define CONF_WEATHER "weather"
 #define CONF_BITCOIN "bitcoin"
 #define CONF_DRIFT "drift"
 #define CONF_DRIFT_FAST "drift_fast"
+
+#define WEATHER_HOURLY_DIR "/weather/hourly"
+#define WEATHER_DIR "/weather"
 
 #endif
