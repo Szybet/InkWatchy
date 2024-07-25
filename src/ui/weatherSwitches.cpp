@@ -142,7 +142,7 @@ void initWeatherConditionMenu()
     // visibility
     // precipitation
 
-    entryMenu buttons[9] = {{"Temperature", &emptyImgPack, showTemp}, {"Pressure", &emptyImgPack, showPressure}, {"Humidity", &emptyImgPack, showHumidity}, {"Weather conditions", &emptyImgPack, showWeatherCond}, {"Cloudiness", &emptyImgPack, showClouds}, {"Wind speed", &emptyImgPack, showWindSpeed}, {"Wind guts", &emptyImgPack, showWindGuts}, {"Visibility", &emptyImgPack, showVisibility}, {"% of precipitation", &emptyImgPack, showPop}};
+    entryMenu buttons[9] = {{"Temperature", &emptyImgPack, showTemp}, {"Pressure", &emptyImgPack, showPressure}, {"Humidity", &emptyImgPack, showHumidity}, {"Weather conditions", &emptyImgPack, showWeatherCond}, {"Cloudiness", &emptyImgPack, showClouds}, {"Wind speed", &emptyImgPack, showWindSpeed}, {"Wind gusts", &emptyImgPack, showWindGuts}, {"Visibility", &emptyImgPack, showVisibility}, {"% of precipitation", &emptyImgPack, showPop}};
     initMenu(buttons, 9, "Weather stat", 1);
 }
 
@@ -299,7 +299,7 @@ void showWindGuts()
         debugLog(String(i) + ": " + String(forecast.data.wind_gust[i]));
     }
 #endif
-    showChart(forecast.data.wind_gust, OM_WEATHER_MAX_HOURS, "Wind guts / km/h");
+    showChart(forecast.data.wind_gust, OM_WEATHER_MAX_HOURS, "Wind gusts / km/h");
     generalSwitch(ChartPlace);
 }
 
