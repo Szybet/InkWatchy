@@ -22,15 +22,6 @@
 #include "driver/rtc_io.h"
 #include <Olson2POSIX.h>
 
-#include "config.h" // Needs to be first!
-#include "condition.h"
-#include "confidential.h"
-#include "macros.h"
-
-#if WEATHER_INFO
-#include <OpenMeteo.h>
-#endif
-
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
 
@@ -41,6 +32,15 @@
 
 #define EXTERNAL_RTC 1
 #define INTERNAL_RTC 2
+
+#include "config.h" // Needs to be first!
+#include "condition.h"
+#include "confidential.h"
+#include "macros.h"
+
+#if WEATHER_INFO
+#include <OpenMeteo.h>
+#endif
 
 struct ImageDef {
     int16_t bw;
