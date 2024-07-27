@@ -62,8 +62,8 @@ Watchy 2.0 is supported, 1.0 or 1.5 should work but not fully
 
 Watchy 3.0 is now also fully supported, thanks to the community :)
 
-## Compiling, Some instructions, Further informations
-Don't try anything by yourself, you will fail.
+## Easy to install demo, Compiling, Some instructions, Further informations
+Don't try anything by yourself without the wiki, you will probably fail.
 
 Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 
