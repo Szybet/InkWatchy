@@ -60,7 +60,7 @@ It doesn't use the watchy sub-class but it uses the same libraries. With that in
 ## Devices supported
 Watchy 2.0 is supported, 1.0 or 1.5 should work but not fully
 
-The 3.0 is supported but not tested, contact me if you want to test it :D
+Watchy 3.0 is now also fully supported, thanks to the community :)
 
 ## Compiling, Some instructions, Further informations
 Don't try anything by yourself, you will fail.
