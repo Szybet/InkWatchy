@@ -55,6 +55,18 @@ function generalThings {
     # filename="src/defines/confidential.h"
 
     # sed -i "s/$old_string/$new_string/g" "$filename"
+
+    old_string="#define WEATHER_LATIT \"\""
+    new_string="#define WEATHER_LATIT \"53.55073\""
+    filename="src/defines/confidential.h"
+
+    sed -i "s/$old_string/$new_string/g" "$filename"
+
+    old_string="#define WEATHER_LONGTIT \"\""
+    new_string="#define WEATHER_LONGTIT \"9.99302\""
+    filename="src/defines/confidential.h"
+
+    sed -i "s/$old_string/$new_string/g" "$filename"
 }
 
 generalThings
