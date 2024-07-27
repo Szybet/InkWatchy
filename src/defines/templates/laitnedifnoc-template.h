@@ -28,8 +28,8 @@
 #define WIFI_SSID9 ""
 #define WIFI_PASS9 ""
 
-#define WIFI_SSID10 ""
-#define WIFI_PASS10 ""
+#define WIFI_SSID10 "hotspot"
+#define WIFI_PASS10 "12345678"
 
 // Get those values here: https://open-meteo.com/en/docs/geocoding-api
 // For hamburg, germany example values:
