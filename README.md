@@ -26,7 +26,7 @@ Apart from code things, here are the key features for now:
       - A conway game of life module - which updates every minute
 - Debug menus to check on things on the fly
 - Battery life features:
-   - Configurable wake up every x minutes at night
+   - Configurable wake up every x minutes at night. This is configurable via recompiling, at default it's between 23-06 every 45 minutes
    - A menu to manually, or after certain battery percantage drop enable these features:
       - Disable wake up - The watch will sleep until you press a button
       - Disable all vibrations (For button clicks) - Spikes caused by the motor are heavy for the battery
