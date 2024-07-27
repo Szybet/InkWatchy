@@ -79,7 +79,7 @@ Oh and as it seems bitcoin is also preferred, just contact me and ask me for an 
 For a small coffe donation I can manage your firmware and provide you personalised binaries, if you can't compile it yourself, even add some features for you
 
 ## Sister projects
-- https://github.com/Szybet/E-Watch-FOSS
+- https://github.com/Szybet/WatchySourcingHub
 - https://github.com/Szybet/watchy-scom
 
 ## Questions / Contact
