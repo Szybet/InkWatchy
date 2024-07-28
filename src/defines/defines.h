@@ -134,7 +134,6 @@ extern bufSize emptyBuff;
 #include "../ui/pinInput/pinInput.h"
 #include "../ui/settings/nvsSettings.h"
 #include "../ui/watchfaceModules/netMod/netMod.h"
-#include "../ui/watchfaceModules/emptyMod/emptyMod.h"
 #include "../ui/watchfaceModules/watchFaceModule.h"
 #if BITCOIN_MODULE
 #include "../ui/watchfaceModules/bitMod/bitMod.h"
@@ -144,6 +143,9 @@ extern bufSize emptyBuff;
 #endif
 #if BOOK_MODULE_ENABLED
 #include "../ui/watchfaceModules/bookMod/bookMod.h"
+#endif
+#if IMAGE_MODULE
+#include "../ui/watchfaceModules/imgMod/imgMod.h"
 #endif
 
 #endif
