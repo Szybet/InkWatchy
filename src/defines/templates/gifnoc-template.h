@@ -69,7 +69,7 @@
 #define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
 
 // Watchface modules
-#define MODULE_PERSISTENT 1         // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen
+#define MODULE_PERSISTENT 1         // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space
 #define UPDATE_MODULE_IF_CHARGING 0 // Update modules very fast if its charging, not only every minute
 #define WIFI_MODULE 1
 #define BITCOIN_MODULE 1   // Remember to define the api key for it in confidential.h
@@ -82,6 +82,9 @@
 #define BOOK_MODULE_CHARS_PER_PAGE 140
 #define MODULES_OPERATING_FAST 1      // Great name for a feature... Well basically when you operate modules it won't wait for more operations, it goes to sleep. This makes it wait the value below:
 #define MODULES_WAITING_DIVISION 0.75 // Divise SLEEP_EVERY_MS through that value
+
+#define IMAGE_MODULE 1
+#define IMG_MODULE_CHANGE_EVERY_HOUR 1 // Change the image every hour
 
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
@@ -149,7 +152,7 @@
 #define MINIMAL_LOGS 1      // Don't put full file paths in logs
 #define SCOM_TASK 0         // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
 #define FONT_PREVIEW_MENU 0 // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
-#define NO_CHARGING 1       // Disable detection of charging, only in debug
+#define NO_CHARGING 0       // Disable detection of charging, only in debug
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
@@ -202,5 +205,7 @@
 
 #define WEATHER_HOURLY_DIR "/weather/hourly"
 #define WEATHER_DIR "/weather"
+
+#define IMAGE_MODULE_PATH "watchfaceImages/"
 
 #endif

@@ -34,20 +34,24 @@ RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
     &wfEmpty,
     &wfEmpty,
     &wfEmpty,
+#if IMAGE_MODULE
+    &wfImage,
+#else
     &wfEmpty,
+#endif
 };
 
 void clearModuleArea()
 {
     debugLog("clearModuleArea: extecuted...");
     display.fillRect(MODULE_RECT_X, MODULE_RECT_Y, MODULE_W, MODULE_H, GxEPD_WHITE);
+    dUChange = true;
 }
 
 void nothingModule()
 {
     debugLog("Nothing module executed");
     clearModuleArea();
-    wfPlace.requestShow(None, &wfPlace.show);
 }
 
 void moveModule(direction where)
@@ -121,6 +125,11 @@ void drawModuleCount(bool force)
         display.print(String(counter));
 
         dUChange = true;
+
+        if(counter == 0 && currentModuleTranslated == 0) {
+            debugLog("There are actually no modules, clearing the area.");
+            clearModuleArea();
+        }
     }
 }
 
