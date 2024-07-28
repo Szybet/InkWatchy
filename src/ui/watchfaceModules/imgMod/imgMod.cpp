@@ -88,8 +88,8 @@ void wfImagerequestShow(buttonState button, bool *showBool)
 }
 
 // Lambda doesn't work here
-wfModule wfImage = {
-    false,
+RTC_DATA_ATTR wfModule wfImage = {
+    true,
     wfImagecheckShow,
     wfImagerequestShow,
 };
