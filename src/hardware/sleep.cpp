@@ -114,9 +114,9 @@ void goSleep()
 // Should be executed in every sleep cancelation which can happen without user interaction (no buttons clicked and the watchy is woken up by RTC, then the button task is not turned on because why would it)
 void checkIfButtonIsRunning()
 {
-    if (buttonTask == NULL)
+    if (buttonsActivated == false)
     {
-        initButtonTask();
+        turnOnButtons();
     }
 }
 

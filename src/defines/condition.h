@@ -118,3 +118,10 @@ Template for versioning
 #if RTC_32KHZ_CRYSTAL != 1
 #define RTC_32KHZ_CRYSTAL 0
 #endif
+
+// Temps
+#if TEMP_CHECKS != 0 || TEMP_HIGHER_LIMIT_RELATIVE != 0 || TEMP_LOWER_LIMIT_RELATIVE != 0 || TEMP_REBOOT_LIMIT_RELATIVE != 0
+#define TEMP_CHECKS_ENABLED 1
+#else
+#define TEMP_CHECKS_ENABLED 0
+#endif
