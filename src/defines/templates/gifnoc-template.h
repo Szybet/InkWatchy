@@ -122,6 +122,21 @@
 #define SMALL_BUTTON_DELAY_MS 15
 #define BAT_MINIMAL_DIFFERENCE 0.02
 
+// Temperature readings
+// This is highly experimental, dont enable this if you dont have a reason for it, possible reasons (but you still should read the code to understand if it will help you)
+// - screen goes bad on bad temperatures
+// - you live in a volcano and need to turn the esp32 off if its above a certain temperature, or below
+// - you stream youtube and the cpu gets too hot
+#define TEMP_CHECKS 0
+// Those variables won't work for you, you need to edit them yourself after you see the temperature logs
+// Also everything in Celsius, americans need to metric (Or add support for burgers per inch for inkwatchy)
+// just joking
+#define TEMP_REAL_OFFSET 0 // On first boot a temperature will be taken, this will be added to it and that's the main temperature
+#define TEMP_HIGHER_LIMIT_RELATIVE 0 //
+#define TEMP_LOWER_LIMIT_RELATIVE 0
+#define TEMP_REBOOT_LIMIT_RELATIVE 0
+#define TEMP_MAX_SCREEN_FIXES 5
+
 // Debugging help
 #define DEBUG 0
 #define DEBUG_CPU_SPEED normalSpeed // Possible values: minimalSpeed, normalSpeed, maxSpeed

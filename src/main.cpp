@@ -41,7 +41,7 @@ void setup()
   debugLog("Sleep wakeup reason: " + wakeupSourceToString(wakeUpReason));
   debugLog("esp_sleep_get_ext1_wakeup_status: " + String(esp_sleep_get_ext1_wakeup_status()));
   bool wakedUpFromSleep = false;
-  
+
   if (isRtcWakeUpReason(wakeUpReason) == true || wakeUpReason == BUTTON_WAKEUP_REASON)
   {
     wakedUpFromSleep = true;
@@ -86,8 +86,7 @@ void setup()
   initManager();
   if (isRtcWakeUpReason(wakeUpReason) == false)
   {
-    initButtonTask();
-    turnOnInterrupts();
+    turnOnButtons();
   }
 
   initWatchdogTask();
@@ -108,6 +107,9 @@ void setup()
 
 void loop()
 {
+#if TEMP_CHECKS_ENABLED
+  tempChecker();
+#endif
   watchdogPing();
   alarmManageRTC();
   loopBattery();

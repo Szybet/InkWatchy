@@ -299,3 +299,9 @@ String getButtonString(buttonState state)
     }
 }
 #endif
+
+void turnOnButtons()
+{
+    initButtonTask();
+    turnOnInterrupts();
+}

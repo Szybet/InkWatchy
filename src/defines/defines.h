@@ -90,6 +90,9 @@ extern bufSize emptyBuff;
 #include "../hardware/display.h"
 #include "../hardware/axc.h"
 #include "../hardware/fs/littlefs.h"
+#if TEMP_CHECKS_ENABLED
+#include "../hardware/temp/temp.h"
+#endif
 #include "../functions.h"
 #include "../network/wifi/wifiLogic.h"
 #include "../network/wifi/wifiTask.h"
