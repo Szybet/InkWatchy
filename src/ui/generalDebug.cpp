@@ -11,7 +11,7 @@ uint16_t usedHeapLenght;
 
 #if TEMP_CHECKS_ENABLED
 int tempHeight;
-int previousTempUi;
+float previousTempUi;
 #endif
 
 String getRtcType()
@@ -104,6 +104,7 @@ void loopGeneralDebugDisplay()
         if(currentTemp != previousTempUi) {
             previousTempUi = currentTemp;
             writeTextReplaceBack("CPU temp: " + String(currentTemp), cursorX, tempHeight);
+            dUChange = true;
         }
     #endif
     useButtonBlank();
