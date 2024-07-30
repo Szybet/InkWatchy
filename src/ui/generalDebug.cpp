@@ -9,6 +9,11 @@ SmallRTC rtc;
 uint16_t usedHeapWidth;
 uint16_t usedHeapLenght;
 
+#if TEMP_CHECKS_ENABLED
+int tempHeight;
+int previousTempUi;
+#endif
+
 String getRtcType()
 {
     int rtcType = rtc.getType();
@@ -36,6 +41,9 @@ void initGeneralDebugDisplay()
     display.setCursor(cursorX, 1);
     String menuName = "Debug Menu: General";
     getTextBounds(menuName, NULL, NULL, NULL, &h);
+    if(containsBelowChar(menuName) == true) {
+        h = h + 2;
+    }
     maxHeight = h;
     uint16_t currentHeight = maxHeight;
     display.setCursor(cursorX, currentHeight - 3);
@@ -55,6 +63,16 @@ void initGeneralDebugDisplay()
 
     writeLine("Used Heap KB: " + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024), cursorX, &currentHeight);
     memoryHeight = currentHeight - maxHeight;
+
+#if TEMP_CHECKS_ENABLED
+    writeLine("CPU temp: " + String(getTemp()), cursorX, &currentHeight);
+    tempHeight = currentHeight - maxHeight;
+
+    writeLine("Init temp: " + String(initialTemp), cursorX, &currentHeight);
+#endif
+
+    // Double the time before sleeping
+    resetSleepDelay(SLEEP_EVERY_MS);
     disUp(true);
 }
 
@@ -81,6 +99,13 @@ void loopGeneralDebugDisplay()
         writeTextReplaceBack(usedHeapStr, cursorX, memoryHeight);
         dUChange = true;
     }
+    #if TEMP_CHECKS_ENABLED
+        float currentTemp = getTemp();
+        if(currentTemp != previousTempUi) {
+            previousTempUi = currentTemp;
+            writeTextReplaceBack("CPU temp: " + String(currentTemp), cursorX, tempHeight);
+        }
+    #endif
     useButtonBlank();
     disUp();
 }

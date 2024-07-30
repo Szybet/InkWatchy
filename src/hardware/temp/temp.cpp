@@ -62,8 +62,7 @@ void tempChecker()
         {
             debugLog("Temperature too high, exiting");
             assert(true == false);
-        }
-        if (newTemp > initialTemp + float(TEMP_HIGHER_LIMIT_RELATIVE))
+        } else if (newTemp > initialTemp + float(TEMP_HIGHER_LIMIT_RELATIVE))
         {
             screenTempFix();
         }
