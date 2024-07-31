@@ -39,8 +39,10 @@ void drawTimeBeforeApply()
     debugLog("Called");
     setTextSize(1);
     setFont(TIME_FONT);
+    debugLog("Getting hour minute for wFTime");
     String oldTime = getHourMinute(wFTime);
-    String newTime = getHourMinute();
+    debugLog("Getting hour minute for timeRTC");
+    String newTime = getHourMinute(timeRTC);
 
     for (int i = 0; i < 5; i++)
     {
@@ -94,7 +96,7 @@ void showFullWatchface()
 
     setTextSize(1);
     setFont(TIME_FONT);
-    writeTextReplaceBack(getHourMinute(), TIME_CORD);
+    writeTextReplaceBack(getHourMinute(timeRTC), TIME_CORD);
 
     setTextSize(1);
     setFont(DATE_FONT);

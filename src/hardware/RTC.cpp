@@ -13,6 +13,7 @@ uint64_t lastTimeRead = 999999; // it's that much to trigger the alarm wakeup if
 
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
+  timeRTC = {};
 #if RTC_TYPE == EXTERNAL_RTC
   pinMode(RTC_INT_PIN, INPUT);
 #endif
@@ -54,9 +55,9 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 }
 
 // Make sure you save bare UTC0 time here, no timezone
-void saveRTC()
+void saveRTC(tmElements_t timeToSave)
 {
-  SRTC.set(timeRTC);
+  SRTC.set(timeToSave);
 
   // Test
   /*
@@ -71,6 +72,21 @@ void saveRTC()
   */
 }
 
+tmElements_t convertToTmElements(const struct tm &tmStruct)
+{
+  tmElements_t elements;
+  // because mktime sucks UTC and timegm doesn't exist
+  elements.Second = static_cast<uint8_t>(tmStruct.tm_sec);
+  elements.Minute = static_cast<uint8_t>(tmStruct.tm_min);
+  elements.Hour = static_cast<uint8_t>(tmStruct.tm_hour);
+  elements.Wday = static_cast<uint8_t>(tmStruct.tm_wday + 1); // Adjust to start from Sunday = 1
+  elements.Day = static_cast<uint8_t>(tmStruct.tm_mday);
+  elements.Month = static_cast<uint8_t>(tmStruct.tm_mon);
+  elements.Year = static_cast<uint8_t>(tmStruct.tm_year - 70); // Offset from 1970
+
+  return elements;
+}
+
 #define TIME_ZONE_DUMP 0
 void timeZoneApply()
 {
@@ -79,7 +95,7 @@ void timeZoneApply()
   if (strlen(posixTimeZone) > 0)
   {
 
-#if TIME_ZONE_DUMP == 1
+#if TIME_ZONE_DUMP
     debugLog("Before timezone:");
     debugLog("seconds: " + String(timeRTC.Second));
     debugLog("minutes: " + String(timeRTC.Minute));
@@ -95,23 +111,28 @@ void timeZoneApply()
     {
       tzset();
       int64_t initialUnixTime = getUnixTime();
-      
-      time_t tempTime = makeTime(timeRTC);
-      struct tm *tempTM = localtime(&tempTime);
-      // Madness
-      timeRTC.Second = tempTM->tm_sec;
-      timeRTC.Minute = tempTM->tm_min;
-      timeRTC.Hour = tempTM->tm_hour;
-      timeRTC.Day = tempTM->tm_mday; // - 1; // AAAAAA no?
-      timeRTC.Month = tempTM->tm_mon + 1;
-      timeRTC.Year = tempTM->tm_year - 70; // Really? m y g o d
-      timeRTC.Wday = tempTM->tm_wday + 1;
+      time_t tempTime = initialUnixTime;
+      struct tm tempTM = {};
+      localtime_r(&tempTime, &tempTM);
+#if TIME_ZONE_DUMP
+      debugLog("tempTM->tm_sec: " + String(tempTM.tm_sec));
+      debugLog("tempTM->tm_min: " + String(tempTM.tm_min));
+      debugLog("tempTM->tm_hour: " + String(tempTM.tm_hour));
+      debugLog("tempTM->tm_mday: " + String(tempTM.tm_mday));
+      debugLog("tempTM->tm_mon: " + String(tempTM.tm_mon));
+      debugLog("tempTM->tm_year: " + String(tempTM.tm_year));
+      debugLog("tempTM->tm_wday: " + String(tempTM.tm_wday));
+      debugLog("tempTM->tm_yday: " + String(tempTM.tm_yday));
+      debugLog("tempTM->tm_isdst: " + String(tempTM.tm_isdst));
+#endif
 
-      int64_t secondUnixTime = getUnixTime();
-      timeZoneOffset = initialUnixTime - secondUnixTime;
-      debugLog("Unix times: " + String(initialUnixTime) + " " + String(secondUnixTime) + " " + String(initialUnixTime - secondUnixTime));
-      
-#if TIME_ZONE_DUMP == 1
+      timeRTC = convertToTmElements(tempTM);
+      time_t timeZoneUnix = getUnixTime();
+
+      timeZoneOffset = initialUnixTime - timeZoneUnix;
+      debugLog("Unix times: " + String(initialUnixTime) + " " + String(timeZoneUnix) + " " + String(initialUnixTime - timeZoneUnix));
+
+#if TIME_ZONE_DUMP
       debugLog("After timezone:");
       debugLog("seconds: " + String(timeRTC.Second));
       debugLog("minutes: " + String(timeRTC.Minute));
@@ -191,7 +212,7 @@ void readRTC()
   if (rtcGarbage == true)
   {
     debugLog("RTC garbage, repaired");
-    saveRTC();
+    saveRTC(timeRTC);
   }
 #endif
 
@@ -215,7 +236,8 @@ void wakeUpManageRTC()
       int fullMinutes = int((hour * 60) + timeRTC.Minute + NIGHT_SLEEP_FOR_M) + (timeZoneOffset / 60);
       debugLog("fullMinutes: " + String(fullMinutes));
       // Timezone triggered backwards, it's on minutes, add secconds
-      if(fullMinutes < 0) {
+      if (fullMinutes < 0)
+      {
         fullMinutes = 1440 + fullMinutes;
       }
       // 60 * 24 = 1440 so a full day in minutes
@@ -259,7 +281,7 @@ void alarmManageRTC()
 
 String getHourMinute(tmElements_t timeEl)
 {
-  // isDebug(dumpRTCTime(timeEl));
+  isDebug(dumpRTCTime(timeEl));
   String h = String(timeEl.Hour);
   if (h.length() == 1)
   {
