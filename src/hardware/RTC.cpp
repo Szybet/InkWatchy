@@ -57,6 +57,8 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 // Make sure you save bare UTC0 time here, no timezone
 void saveRTC(tmElements_t timeToSave)
 {
+  debugLog("Saving time to rtc:");
+  isDebug(dumpRTCTimeSmall(timeToSave));
   SRTC.set(timeToSave);
 
   // Test
@@ -88,8 +90,13 @@ tmElements_t convertToTmElements(const struct tm &tmStruct)
 }
 
 #define TIME_ZONE_DUMP 0
+// If you are setting time, turn this to true, then back to false
+bool dontTouchTimeZone = false;
 void timeZoneApply()
 {
+  if(dontTouchTimeZone == true) {
+    return;
+  }
   // https://github.com/Michal-Szczepaniak/TinyWatchy/commit/cb9082fe0f8df6ac4dc3ff682a7ddc80ef07d78f
   // https://docs.espressif.com/projects/esp-idf/en/v5.1.4/esp32/api-reference/system/system_time.html
   if (strlen(posixTimeZone) > 0)
@@ -149,6 +156,9 @@ void timeZoneApply()
     {
       debugLog("Failed to set posix timezone");
     }
+
+    unsetenv("TZ");
+    tzset();
   }
   else
   {
@@ -466,7 +476,7 @@ void dumpRTCTime(tmElements_t timeEl)
 
 void dumpRTCTimeSmall(tmElements_t timeEl)
 {
-  debugLog("Time: " + String(timeEl.Minute) + ":" + String(timeEl.Second));
+  debugLog("Time: " + String(timeEl.Hour) + ":" + String(timeEl.Minute) + ":" + String(timeEl.Second));
 }
 #endif
 

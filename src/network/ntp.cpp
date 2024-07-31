@@ -1,15 +1,14 @@
 #include "ntp.h"
 
+// TODO: reset those variables
 bool firstNTPSync = true;
 time_t initialRTCTime = 0;
 int ntpTries = 0;
 
 void syncNtp(bool doDriftThings)
 {
-    unsetenv("TZ");
-    setenv("TZ", "", 1);
-    tzset();
     debugLog("Running syncNtp");
+    dontTouchTimeZone = true;
     WiFiUDP ntpUDP;
     NTPClient timeClient(ntpUDP);
     timeClient.begin();
@@ -52,6 +51,9 @@ void syncNtp(bool doDriftThings)
         tmElements_t timeTmp;
         SRTC.doBreakTime(epochTime, timeTmp);
         saveRTC(timeTmp);
+        debugLog("Reading rtc from ntp");
+        dontTouchTimeZone = false;
+        readRTC(); // After syncing time, remake the timezone
 #if TIME_DRIFT_CORRECTION
         if (doDriftThings == true)
         {
@@ -74,8 +76,6 @@ void syncNtp(bool doDriftThings)
 #endif
 
         timeClient.end();
-        debugLog("Reading rtc from ntp");
-        readRTC(); // After syncing time, remake the timezone
     }
     else
     {
@@ -87,4 +87,5 @@ void syncNtp(bool doDriftThings)
             syncNtp();
         }
     }
+    dontTouchTimeZone = false;
 }
