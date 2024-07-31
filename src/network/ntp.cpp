@@ -22,7 +22,7 @@ void syncNtp(bool doDriftThings)
             firstNTPSync = false;
             initialRTCTime = currentTime;
             SRTC.doBreakTime(epochTime, timeRTC);
-            saveRTC();
+            saveRTC(timeRTC);
             timeClient.end();
             syncNtp();
             return;
@@ -36,7 +36,7 @@ void syncNtp(bool doDriftThings)
             {
                 debugLog("Difference too high, running ntp once more");
                 SRTC.doBreakTime(epochTime, timeRTC);
-                saveRTC();
+                saveRTC(timeRTC);
                 timeClient.end();
                 syncNtp();
                 return;
@@ -53,7 +53,7 @@ void syncNtp(bool doDriftThings)
         */
 
         SRTC.doBreakTime(epochTime, timeRTC);
-        saveRTC();
+        saveRTC(timeRTC);
         #if TIME_DRIFT_CORRECTION
         if(doDriftThings == true) {
             if(SRTC.checkingDrift() == true) {

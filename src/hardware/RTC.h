@@ -12,7 +12,7 @@ void timeZoneApply();
 extern uint64_t lastTimeRead;
 
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
-void saveRTC();
+void saveRTC(tmElements_t timeToSave);
 void readRTC();
 void wakeUpManageRTC();
 void alarmManageRTC();
@@ -20,7 +20,7 @@ void alarmManageRTC();
 void setupMillisComparators();
 
 // Not using reference made it... really broken
-String getHourMinute(tmElements_t timeEl = timeRTC);
+String getHourMinute(tmElements_t timeEl);
 String getDayName(int offset = 0);
 String getMonthName(int monthNumber);
 uint64_t getUnixTime();
@@ -35,7 +35,7 @@ uint getCurrentSeconds();
 #if DEBUG
 void initRTCDebug();
 void loopRTCDebug();
-void dumpRTCTime(tmElements_t timeEl = timeRTC);
+void dumpRTCTime(tmElements_t timeEl);
 void dumpRTCTimeSmall(tmElements_t timeEl);
 #endif
 
