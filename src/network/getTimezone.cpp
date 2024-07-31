@@ -51,5 +51,5 @@ void syncTimezone()
     {
         debugLog("Skipping timezone request, it's already set, somewhere");
     }
-    timeZoneApply();
+    readRTC();
 }

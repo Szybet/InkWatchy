@@ -92,6 +92,7 @@ tmElements_t convertToTmElements(const struct tm &tmStruct)
 #define TIME_ZONE_DUMP 0
 // If you are setting time, turn this to true, then back to false
 bool dontTouchTimeZone = false;
+// Don't call this function when timeRTC is not UTC0 from a bare read
 void timeZoneApply()
 {
   if(dontTouchTimeZone == true) {
