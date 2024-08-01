@@ -1,6 +1,5 @@
 #include "ntp.h"
 
-// TODO: reset those variables
 bool firstNTPSync = true;
 time_t initialRTCTime = 0;
 int ntpTries = 0;
@@ -9,6 +8,8 @@ void syncNtp(bool doDriftThings)
 {
     debugLog("Running syncNtp");
     dontTouchTimeZone = true;
+    unsetenv("TZ");
+    tzset();
     WiFiUDP ntpUDP;
     NTPClient timeClient(ntpUDP);
     timeClient.begin();
@@ -41,6 +42,8 @@ void syncNtp(bool doDriftThings)
         }
         debugLog("NTP success");
         debugLog("NTP time: " + timeClient.getFormattedTime());
+        debugLog("NTP unix time: " + String(epochTime));
+        debugLog("millis are: " + String(millisBetter()));
 
         /* GuruSR:
         SmallRTC doesn't cause time to drift.  The drift values are all reset on init, they never change anything when like that.  Are you using the SRTC's make and break time functions, if not, that is what is happening, the standard makeTime and breakTime are not compliant to time.h, they add month and day onto the values.  With the correct TimeZone (TZ) used, using localTime against the RTC having UTC values, you'll get accurate DST calculations.
@@ -48,12 +51,15 @@ void syncNtp(bool doDriftThings)
         I haven't looked at your code, but the make and break Time functions outside of SmallRTC don't follow time.h for values, so the day and month will increase.
         */
 
-        tmElements_t timeTmp;
+        tmElements_t timeTmp = {};
         SRTC.doBreakTime(epochTime, timeTmp);
         saveRTC(timeTmp);
         debugLog("Reading rtc from ntp");
         dontTouchTimeZone = false;
         readRTC(); // After syncing time, remake the timezone
+        // Reset
+        firstNTPSync = true;
+        ntpTries = 0;
 #if TIME_DRIFT_CORRECTION
         if (doDriftThings == true)
         {

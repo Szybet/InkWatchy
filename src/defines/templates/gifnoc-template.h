@@ -41,7 +41,7 @@
 #define WIFI_CONNECTION_TRIES_PERSISTENT 1 // Persistent sync (SYNC_ON_CHARGING), number of tries
 #define WIFI_MULTI_SYNC_TIME 20000         // Ms, time for waiting to connect to wifi
 #define WIFI_MULTI_ERROR_TIME 10000        // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
-#define TIME_DRIFT_CORRECTION 1            // The RTC may drift, this should repair it
+#define TIME_DRIFT_CORRECTION 0            // The RTC may drift, this should repair it
 #define FORCE_INTERNAL_RTC 0               // If your device has an external RTC but it sucks, set this to 1
 #define FORCED_INTERNAL_RTC_QUARTZ 0       // If you forced the internal RTC and if you have an external quartz crystal, set this to 1
 #define AVOID_SLEEPING_ON_FULL_MINUTE 4    // This value shouldn't be really touched, it checks if in x seconds a full minute passess, if yes, it waits to x / 2 seconds
@@ -168,6 +168,7 @@
 #define SCOM_TASK 0         // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
 #define FONT_PREVIEW_MENU 0 // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
 #define NO_CHARGING 0       // Disable detection of charging, only in debug
+#define RESET_RTC_ON_BOOT 0 // Experimental.
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
