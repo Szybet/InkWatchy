@@ -28,6 +28,13 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
 #endif
 
+#if RESET_RTC_ON_BOOT && DEBUG
+    if (isFromWakeUp == false)
+    {
+      SRTC.rtc_pcf.initClock();
+    }
+#endif
+
     HWVer = SRTC.getWatchyHWVer();
 #if TIME_DRIFT_CORRECTION
     if (SRTC.getDrift() == 0)
@@ -57,9 +64,14 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 // Make sure you save bare UTC0 time here, no timezone
 void saveRTC(tmElements_t timeToSave)
 {
-  debugLog("Saving time to rtc:");
-  isDebug(dumpRTCTimeSmall(timeToSave));
+  debugLog("Saving time to RTC: " + String(getUnixTime(timeToSave)));
   SRTC.set(timeToSave);
+
+#if DEBUG
+  tmElements_t test;
+  SRTC.read(test);
+  debugLog("Readed time back: " + String(getUnixTime(test)));
+#endif
 
   // Test
   /*
@@ -95,7 +107,8 @@ bool dontTouchTimeZone = false;
 // Don't call this function when timeRTC is not UTC0 from a bare read
 void timeZoneApply()
 {
-  if(dontTouchTimeZone == true) {
+  if (dontTouchTimeZone == true)
+  {
     return;
   }
   // https://github.com/Michal-Szczepaniak/TinyWatchy/commit/cb9082fe0f8df6ac4dc3ff682a7ddc80ef07d78f
@@ -113,12 +126,11 @@ void timeZoneApply()
     debugLog("day of the week: " + String(timeRTC.Wday));
     debugLog("year: " + String(timeRTC.Year));
 #endif
-
+    int64_t initialUnixTime = getUnixTime(timeRTC);
     // https://man7.org/linux/man-pages/man3/setenv.3.html
     if (setenv("TZ", posixTimeZone, 1) == 0)
     {
       tzset();
-      int64_t initialUnixTime = getUnixTime();
       time_t tempTime = initialUnixTime;
       struct tm tempTM = {};
       localtime_r(&tempTime, &tempTM);
@@ -135,7 +147,7 @@ void timeZoneApply()
 #endif
 
       timeRTC = convertToTmElements(tempTM);
-      time_t timeZoneUnix = getUnixTime();
+      time_t timeZoneUnix = getUnixTime(timeRTC);
 
       timeZoneOffset = initialUnixTime - timeZoneUnix;
       debugLog("Unix times: " + String(initialUnixTime) + " " + String(timeZoneUnix) + " " + String(initialUnixTime - timeZoneUnix));
@@ -192,6 +204,7 @@ void readRTC()
 {
   // debugLog("Reading RTC");
   SRTC.read(timeRTC);
+  debugLog("Time saved in RTC: " + String(getUnixTime(timeRTC)));
 
 #if RTC_TYPE == INTERNAL_RTC
   bool rtcGarbage = false;
@@ -227,7 +240,7 @@ void readRTC()
   }
 #endif
 
-  timeZoneApply(); // Here because of garbage cleaning
+  timeZoneApply();
   lastTimeRead = millisBetter();
 }
 
@@ -340,9 +353,9 @@ String getDayName(int offset)
   }
 }
 
-uint64_t getUnixTime()
+uint64_t getUnixTime(tmElements_t tme)
 {
-  return SRTC.doMakeTime(timeRTC);
+  return SRTC.doMakeTime(tme);
 }
 
 String getMonthName(int monthNumber)

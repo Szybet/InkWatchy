@@ -21,7 +21,7 @@ void syncWeather()
   for (u8_t iw = 0; iw < MAX_WEATHER_DAYS; iw++)
   {
     bool status = false;
-    uint64_t unixTimeWeat = simplifyUnix(getUnixTime() + (ADD_DAY_UNIX * iw));
+    uint64_t unixTimeWeat = simplifyUnix(getUnixTime(timeRTC) + (ADD_DAY_UNIX * iw));
     String currentDayDate = unixToDate(unixTimeWeat);
     for (u8_t i = 0; i < WEATHER_TRIES; i++)
     {

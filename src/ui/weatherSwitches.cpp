@@ -73,7 +73,7 @@ void initWeatherMenu()
 
     // First, get the current day from that list
     uint theUnixFromListIndex = 9999;
-    long currentUnix = getUnixTime();
+    long currentUnix = getUnixTime(timeRTC);
     uint smallestDifference = -1;
     for (u8_t i = 0; i < days; i++)
     {
