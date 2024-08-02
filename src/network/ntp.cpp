@@ -91,6 +91,7 @@ void syncNtp(bool doDriftThings)
         {
             ntpTries = ntpTries + 1;
             syncNtp();
+            return;
         }
     }
     dontTouchTimeZone = false;
