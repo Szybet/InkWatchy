@@ -3,13 +3,13 @@
 OPTIONS=("1" "Generate resources"
          #"2" "Generate partition table"
          "3" "Flash filesystem"
-         "4" "Get filesystem from ESP"
-         "5" "Flash personal filesystem")
+         "4" "Get filesystem from device"
+         "5" "Flash filesystem you got from the device")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
 HEIGHT=$((NUM_OPTIONS + 7))
-WIDTH=40
+WIDTH=60
 CHOICE_HEIGHT=$((NUM_OPTIONS + 1))
 
 TITLE="Resources options"
