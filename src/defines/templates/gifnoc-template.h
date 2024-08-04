@@ -31,17 +31,17 @@
 #define WATCHDOG_TASK 1              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
 
 // Drift & NTP & Syncing
-#define SYNC_ON_CHARGING 1                 // Keep wifi connected and sync NTP every few minutes because the RTC fucks up
-#define SYNC_WIFI 1                        // Sync wifi - only if it's being charger and after the delay below
+#define SYNC_WIFI 1                        // Autimatically sync wifi - only if it's being charger and after the delay below
 #define SYNC_WIFI_SINCE_SUCC 72000         // 20h
 #define SYNC_WIFI_SINCE_FAIL 600           // 10m
 #define SYNC_NTP_ON_CHARGING_DELAY 90000   // Sync NTP when charging every, in Ms. Default 1.5 minute
 #define VALID_PREVIOUS_SYNC_DELAY 300      // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
 #define WIFI_CONNECTION_TRIES 3            // Regular sync, number of tries
-#define WIFI_CONNECTION_TRIES_PERSISTENT 1 // Persistent sync (SYNC_ON_CHARGING), number of tries
+#define WIFI_CONNECTION_TRIES_PERSISTENT 1 // Persistent sync (SYNC_WIFI), number of tries
 #define WIFI_MULTI_SYNC_TIME 20000         // Ms, time for waiting to connect to wifi
 #define WIFI_MULTI_ERROR_TIME 10000        // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
-#define TIME_DRIFT_CORRECTION 0            // The RTC may drift, this should repair it
+#define TIME_DRIFT_CORRECTION 0            // The RTC may drift, this should repair it. It basically on first ntp sync starts the measurment and on the second it ends it. I suggest disabling SYNC_WIFI because if it's triggered, it will cancel the drift calculation because its a persistent sync, it happens every few minutes. If you have a watchy V2, you should first try FORCE_INTERNAL_RTC instead of this option.
+#define TIME_DRIFT_MINIMUM_TIME 24         // Minimum amount of hours a drift calculation can go on, because measuring drift between 5 minutes will help you experience the back to the future movie. It's suggested to be minimum 24 hours.
 #define FORCE_INTERNAL_RTC 0               // If your device has an external RTC but it sucks, set this to 1
 #define FORCED_INTERNAL_RTC_QUARTZ 0       // If you forced the internal RTC and if you have an external quartz crystal, set this to 1
 #define AVOID_SLEEPING_ON_FULL_MINUTE 4    // This value shouldn't be really touched, it checks if in x seconds a full minute passess, if yes, it waits to x / 2 seconds

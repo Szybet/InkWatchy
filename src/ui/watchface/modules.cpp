@@ -92,6 +92,14 @@ void modulesButtons(buttonState bt)
         drawPosMarker();
         break;
     }
+#if LONG_BACK_FULL_REFRESH
+    case LongBack:
+    {
+        debugLog("Because of LONG_BACK_FULL_REFRESH in watchface, I shall now refresh the screen fully");
+        display.display(FULL_UPDATE);
+        break;
+    }
+#endif
     default:
     {
         break;

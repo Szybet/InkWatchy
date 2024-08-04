@@ -99,22 +99,16 @@ void loopManager()
                     {
                         placeTree[i] = NoPlace;
                     }
-                    if (LONG_BACK_FULL_REFRESH == true)
-                    {
-                        debugLog("Forcing full update because of long back button");
-                        dUChange = true;
-                        updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
-                    }
+#if LONG_BACK_FULL_REFRESH
+                    debugLog("Forcing full update because of long back button");
+                    dUChange = true;
+                    updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
+#endif
                     currentPlaceIndex = 0;
                 }
                 executeExitFunc();
             }
         }
-    }
-    else
-    {
-        // Clear the back button even in watchface...
-        useButtonBack();
     }
 
     // Don't forget break...
