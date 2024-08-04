@@ -47,6 +47,7 @@
 #define AVOID_SLEEPING_ON_FULL_MINUTE 4    // This value shouldn't be really touched, it checks if in x seconds a full minute passess, if yes, it waits to x / 2 seconds
 #define WEATHER_INFO 1                     // Enable weather
 #define WEATHER_TRIES 3                    // Ammount of times to try to sync weather
+#define CONNECT_TO_HIDDEN_NETWORKS 0       // This makes the wifi manager connect to hidden networks too. For some reason it takes more time and power to do so, that's why it's not on default, otherwise it should work
 
 // Book things
 #define BOOK 0
