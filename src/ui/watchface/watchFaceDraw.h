@@ -15,7 +15,7 @@
 #define MONTH_NUMBER_2_CORD 89, 102
 #define TO_DAY_BAR_CORD 136, 68
 #define TO_DAY_BAR_SIZE 54, 6
-#define BATT_BAR_CORD 135, 83
+#define BATT_BAR_CORD 136, 83
 
 extern int percentOfDay;
 extern int batteryPercantageWF;
