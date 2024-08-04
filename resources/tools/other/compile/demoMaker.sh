@@ -12,22 +12,20 @@ done
 
 function generalThings {
     mkdir trash/
-    mv resources/personal/* trash/
+    mv resources/personal/books trash/
+    mv resources/personal/moduleImages trash/
     cp -r resources/demo/* resources/personal/
 
     rm -rf src/defines/confidential.h
     rm -rf src/defines/config.h
 
+    # To generate config files
     cd resources/tools/
     ./generate.sh
     cd ../../
 
-    cd resources/tools/fs
-    ./createFs.sh
-    cd ../../../
-
     old_string="#define VAULT_PASSWORD \"\""
-    new_string="#define VAULT_PASSWORD \"1\""
+    new_string="#define VAULT_PASSWORD \"5\""
     filename="src/defines/confidential.h"
 
     sed -i "s/$old_string/$new_string/g" "$filename"
@@ -67,6 +65,15 @@ function generalThings {
     filename="src/defines/confidential.h"
 
     sed -i "s/$old_string/$new_string/g" "$filename"
+
+    # To regenerate vault
+    cd resources/tools/
+    ./generate.sh
+    cd ../../
+
+    cd resources/tools/fs
+    ./createFs.sh
+    cd ../../../
 }
 
 generalThings
