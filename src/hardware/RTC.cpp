@@ -1,19 +1,18 @@
 #include "RTC.h"
 
-tmElements_t timeRTC;
+tmElements_t timeRTCLocal;  // Local time
+tmElements_t timeRTCUTC0;   // UTC0 time
+int64_t timeZoneOffset = 0; // The offset the timezone did, can be minus
+// Millis of latest reading of the RTC
+uint64_t lastTimeRead = 999999; // it's that much to trigger the alarm wakeup if something fails, llabs is there for this reason
+RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
 
 RTC_DATA_ATTR SmallRTC SRTC;
 
-RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
-
-int64_t timeZoneOffset = 0;
-
-// Millis of latest reading of the RTC
-uint64_t lastTimeRead = 999999; // it's that much to trigger the alarm wakeup if something fails, llabs is there for this reason
-
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
-  timeRTC = {};
+  timeRTCLocal = {};
+  timeRTCUTC0 = {};
 #if RTC_TYPE == EXTERNAL_RTC
   pinMode(RTC_INT_PIN, INPUT);
 #endif
@@ -72,18 +71,6 @@ void saveRTC(tmElements_t timeToSave)
   SRTC.read(test);
   debugLog("Readed time back: " + String(getUnixTime(test)));
 #endif
-
-  // Test
-  /*
-  debugLog("Time test:");
-  SRTC.read(*timeRTC);
-  dumpRTCTimeSmall(timeRTC);
-  delay(1000);
-  SRTC.read(*timeRTC);
-  dumpRTCTimeSmall(timeRTC);
-  SRTC.read(*timeRTC);
-  dumpRTCTimeSmall(timeRTC);
-  */
 }
 
 tmElements_t convertToTmElements(const struct tm &tmStruct)
@@ -104,7 +91,6 @@ tmElements_t convertToTmElements(const struct tm &tmStruct)
 #define TIME_ZONE_DUMP 0
 // If you are setting time, turn this to true, then back to false
 bool dontTouchTimeZone = false;
-// Don't call this function when timeRTC is not UTC0 from a bare read
 void timeZoneApply()
 {
   if (dontTouchTimeZone == true)
@@ -118,15 +104,15 @@ void timeZoneApply()
 
 #if TIME_ZONE_DUMP
     debugLog("Before timezone:");
-    debugLog("seconds: " + String(timeRTC.Second));
-    debugLog("minutes: " + String(timeRTC.Minute));
-    debugLog("hours: " + String(timeRTC.Hour));
-    debugLog("day: " + String(timeRTC.Day));
-    debugLog("month: " + String(timeRTC.Month));
-    debugLog("day of the week: " + String(timeRTC.Wday));
-    debugLog("year: " + String(timeRTC.Year));
+    debugLog("seconds: " + String(timeRTCLocal.Second));
+    debugLog("minutes: " + String(timeRTCLocal.Minute));
+    debugLog("hours: " + String(timeRTCLocal.Hour));
+    debugLog("day: " + String(timeRTCLocal.Day));
+    debugLog("month: " + String(timeRTCLocal.Month));
+    debugLog("day of the week: " + String(timeRTCLocal.Wday));
+    debugLog("year: " + String(timeRTCLocal.Year));
 #endif
-    int64_t initialUnixTime = getUnixTime(timeRTC);
+    int64_t initialUnixTime = getUnixTime(timeRTCUTC0);
     // https://man7.org/linux/man-pages/man3/setenv.3.html
     if (setenv("TZ", posixTimeZone, 1) == 0)
     {
@@ -146,21 +132,21 @@ void timeZoneApply()
       debugLog("tempTM->tm_isdst: " + String(tempTM.tm_isdst));
 #endif
 
-      timeRTC = convertToTmElements(tempTM);
-      time_t timeZoneUnix = getUnixTime(timeRTC);
+      timeRTCLocal = convertToTmElements(tempTM);
+      time_t timeZoneUnix = getUnixTime(timeRTCLocal);
 
       timeZoneOffset = initialUnixTime - timeZoneUnix;
       debugLog("Unix times: " + String(initialUnixTime) + " " + String(timeZoneUnix) + " " + String(initialUnixTime - timeZoneUnix));
 
 #if TIME_ZONE_DUMP
       debugLog("After timezone:");
-      debugLog("seconds: " + String(timeRTC.Second));
-      debugLog("minutes: " + String(timeRTC.Minute));
-      debugLog("hours: " + String(timeRTC.Hour));
-      debugLog("day: " + String(timeRTC.Day));
-      debugLog("month: " + String(timeRTC.Month));
-      debugLog("day of the week: " + String(timeRTC.Wday));
-      debugLog("year: " + String(timeRTC.Year));
+      debugLog("seconds: " + String(timeRTCLocal.Second));
+      debugLog("minutes: " + String(timeRTCLocal.Minute));
+      debugLog("hours: " + String(timeRTCLocal.Hour));
+      debugLog("day: " + String(timeRTCLocal.Day));
+      debugLog("month: " + String(timeRTCLocal.Month));
+      debugLog("day of the week: " + String(timeRTCLocal.Wday));
+      debugLog("year: " + String(timeRTCLocal.Year));
 #endif
       // debugLog("Timezone set succes, current timezone: " + String(posixTimeZone));
       debugLog("Timezone working");
@@ -169,9 +155,7 @@ void timeZoneApply()
     {
       debugLog("Failed to set posix timezone");
     }
-
-    unsetenv("TZ");
-    tzset();
+    removeTimeZoneVars();
   }
   else
   {
@@ -200,43 +184,50 @@ void timeZoneApply()
   }
 }
 
+void removeTimeZoneVars()
+{
+  debugLog("Removing timezone variables");
+  unsetenv("TZ");
+  tzset();
+}
+
 void readRTC()
 {
   // debugLog("Reading RTC");
-  SRTC.read(timeRTC);
-  debugLog("Time saved in RTC: " + String(getUnixTime(timeRTC)));
+  SRTC.read(timeRTCUTC0);
+  debugLog("Time saved in RTC: " + String(getUnixTime(timeRTCUTC0)));
 
 #if RTC_TYPE == INTERNAL_RTC
   bool rtcGarbage = false;
-  if (timeRTC.Year < 50 || timeRTC.Year > 100)
+  if (timeRTCUTC0.Year < 50 || timeRTCUTC0.Year > 100)
   {
-    timeRTC.Year = 54;
+    timeRTCUTC0.Year = 54;
     rtcGarbage = true;
   }
-  if (timeRTC.Month > 11)
+  if (timeRTCUTC0.Month > 11)
   {
-    timeRTC.Month = 0;
+    timeRTCUTC0.Month = 0;
     rtcGarbage = true;
   }
-  if (timeRTC.Day > 31)
+  if (timeRTCUTC0.Day > 31)
   {
-    timeRTC.Day = 0;
+    timeRTCUTC0.Day = 0;
     rtcGarbage = true;
   }
-  if (timeRTC.Hour > 24)
+  if (timeRTCUTC0.Hour > 24)
   {
-    timeRTC.Hour = 0;
+    timeRTCUTC0.Hour = 0;
     rtcGarbage = true;
   }
-  if (timeRTC.Minute > 60)
+  if (timeRTCUTC0.Minute > 60)
   {
-    timeRTC.Minute = 0;
+    timeRTCUTC0.Minute = 0;
     rtcGarbage = true;
   }
   if (rtcGarbage == true)
   {
     debugLog("RTC garbage, repaired");
-    saveRTC(timeRTC);
+    saveRTC(timeRTCUTC0);
   }
 #endif
 
@@ -244,6 +235,7 @@ void readRTC()
   lastTimeRead = millisBetter();
 }
 
+// TODO: switch to timeRTCUTC0 here
 void wakeUpManageRTC()
 {
   SRTC.clearAlarm();
@@ -251,13 +243,13 @@ void wakeUpManageRTC()
   {
     readRTC();
     // isDebug(dumpRTCTime());
-    uint hour = timeRTC.Hour;
-    // debugLog("timeRTC.Hour: " + String(hour));
+    uint hour = timeRTCLocal.Hour;
+    // debugLog("timeRTCLocal.Hour: " + String(hour));
     if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
       debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
       // isDebug(dumpRTCTime());
-      int fullMinutes = int((hour * 60) + timeRTC.Minute + NIGHT_SLEEP_FOR_M) + (timeZoneOffset / 60);
+      int fullMinutes = int((hour * 60) + timeRTCLocal.Minute + NIGHT_SLEEP_FOR_M) + (timeZoneOffset / 60);
       debugLog("fullMinutes: " + String(fullMinutes));
       // Timezone triggered backwards, it's on minutes, add secconds
       if (fullMinutes < 0)
@@ -326,7 +318,7 @@ String getHourMinute(tmElements_t timeEl)
 
 String getDayName(int offset)
 {
-  long unixTime = SRTC.doMakeTime(timeRTC);
+  long unixTime = SRTC.doMakeTime(timeRTCLocal);
   int weekDay = weekday(unixTime);
   debugLog("unixTime: " + String(unixTime));
   debugLog("weekDay reported: " + String(weekDay));
@@ -390,7 +382,7 @@ String getMonthName(int monthNumber)
   case 255:
   {
     // How?
-    timeRTC.Month = 0;
+    debugLog("We have a problem month 255");
     return "Jan";
   }
   default:
@@ -516,6 +508,6 @@ uint64_t getLastTimeReadSec()
 uint getCurrentSeconds()
 {
   // debugLog("lastTimeReadSec: " + String(lastTimeReadSec));
-  uint currentSeconds = (getLastTimeReadSec() + timeRTC.Second) % 60;
+  uint currentSeconds = (getLastTimeReadSec() + timeRTCLocal.Second) % 60;
   return currentSeconds;
 }

@@ -41,9 +41,9 @@ void wfConwaycheckShow(bool *showBool, bool *redrawBool)
         restoreCpuSpeed();
 #endif
     }
-    if (timeChangeCheck != timeRTC.Minute)
+    if (timeChangeCheck != timeRTCLocal.Minute)
     {
-        timeChangeCheck = timeRTC.Minute;
+        timeChangeCheck = timeRTCLocal.Minute;
 #if CONWAY_CPU_SPEED
         getCpuSpeed();
         setCpuSpeed(maxSpeed);

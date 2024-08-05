@@ -109,7 +109,7 @@ void initHardwareDebug()
 void loopHardwareDebug()
 {
     loopRTCDebug();
-    dumpRTCTime(timeRTC);
+    dumpRTCTime(timeRTCLocal);
     dumpButtons();
     dumpBattery();
     loopGeneralDebug();

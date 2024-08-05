@@ -7,14 +7,14 @@ void initWatchfaceDisplay()
 {
   debugLog("Executing init watch face");
 
-  wFTime.Second = timeRTC.Second;
-  wFTime.Minute = timeRTC.Minute;
-  wFTime.Hour = timeRTC.Hour;
-  wFTime.Day = timeRTC.Day;
-  wFTime.Month = timeRTC.Month;
-  wFTime.Year = timeRTC.Year;
+  wFTime.Second = timeRTCLocal.Second;
+  wFTime.Minute = timeRTCLocal.Minute;
+  wFTime.Hour = timeRTCLocal.Hour;
+  wFTime.Day = timeRTCLocal.Day;
+  wFTime.Month = timeRTCLocal.Month;
+  wFTime.Year = timeRTCLocal.Year;
   // dumpRTCTime(wFTime);
-  // dumpRTCTime(timeRTC);
+  // dumpRTCTime(timeRTCLocal);
 
   showFullWatchface();
 
@@ -28,28 +28,28 @@ bool wentToSleep = false; // Don't go to sleep after one try of noClickedButton 
 void loopWatchfaceLoop()
 {
   // debugLog("Executing loop watch face");
-  if (wFTime.Minute != timeRTC.Minute || wFTime.Hour != timeRTC.Hour) // Hour too because of timezone
+  if (wFTime.Minute != timeRTCLocal.Minute || wFTime.Hour != timeRTCLocal.Hour) // Hour too because of timezone
   {
     dUChange = true;
 
     drawTimeBeforeApply();
 
-    wFTime.Minute = timeRTC.Minute;
-    wFTime.Hour = timeRTC.Hour;
+    wFTime.Minute = timeRTCLocal.Minute;
+    wFTime.Hour = timeRTCLocal.Hour;
 
     if (disableSomeDrawing == false)
     {
       drawTimeAfterApply();
 
-      if (wFTime.Day != timeRTC.Day)
+      if (wFTime.Day != timeRTCLocal.Day)
       {
-        wFTime.Day = timeRTC.Day;
+        wFTime.Day = timeRTCLocal.Day;
         drawDay();
       }
 
-      if (wFTime.Month != timeRTC.Month)
+      if (wFTime.Month != timeRTCLocal.Month)
       {
-        wFTime.Month = timeRTC.Month;
+        wFTime.Month = timeRTCLocal.Month;
         drawMonth();
       }
     }

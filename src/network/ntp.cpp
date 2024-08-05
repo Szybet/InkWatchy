@@ -8,8 +8,7 @@ void syncNtp(bool doDriftThings)
 {
     debugLog("Running syncNtp");
     dontTouchTimeZone = true;
-    unsetenv("TZ");
-    tzset();
+    removeTimeZoneVars();
     WiFiUDP ntpUDP;
     NTPClient timeClient(ntpUDP);
     timeClient.begin();
@@ -51,9 +50,8 @@ void syncNtp(bool doDriftThings)
         I haven't looked at your code, but the make and break Time functions outside of SmallRTC don't follow time.h for values, so the day and month will increase.
         */
 
-        tmElements_t timeTmp = {};
-        SRTC.doBreakTime(epochTime, timeTmp);
-        saveRTC(timeTmp);
+        SRTC.doBreakTime(epochTime, timeRTCUTC0);
+        saveRTC(timeRTCUTC0);
         debugLog("Reading rtc from ntp");
         dontTouchTimeZone = false;
         readRTC(); // After syncing time, remake the timezone
@@ -66,7 +64,7 @@ void syncNtp(bool doDriftThings)
             if (SRTC.checkingDrift() == true)
             {
                 // Drift is going on
-                SRTC.endDrift(timeRTC);
+                SRTC.endDrift(timeRTCLocal);
                 uint32_t driftValue = SRTC.getDrift();
                 bool driftIsFast = SRTC.isFastDrift();
                 debugLog("isFast: " + String(driftIsFast) + " drift value: " + String(driftValue));
@@ -76,7 +74,7 @@ void syncNtp(bool doDriftThings)
             else
             {
                 // Drift is not going on
-                SRTC.beginDrift(timeRTC);
+                SRTC.beginDrift(timeRTCLocal);
             }
         }
 #endif
