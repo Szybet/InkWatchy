@@ -125,31 +125,31 @@ void loop()
 
 #if DEBUG && SPEED_THROUGH_TIME
   debugLog("Speeding time");
-  timeRTC.Minute = timeRTC.Minute + 1;
-  if (String(timeRTC.Minute).indexOf("5") != -1)
+  timeRTCUTC0.Minute = timeRTCUTC0.Minute + 1;
+  if (String(timeRTCUTC0.Minute).indexOf("5") != -1)
   {
-    timeRTC.Hour = timeRTC.Hour + 1;
-    timeRTC.Day = timeRTC.Day + 1;
-    // timeRTC.Month = timeRTC.Month + 1; // We rely on previous day to clean up so this makes things break
+    timeRTCUTC0.Hour = timeRTCUTC0.Hour + 1;
+    timeRTCUTC0.Day = timeRTCUTC0.Day + 1;
+    // timeRTCUTC0.Month = timeRTCUTC0.Month + 1; // We rely on previous day to clean up so this makes things break
   }
-  if (timeRTC.Minute == 60)
+  if (timeRTCUTC0.Minute == 60)
   {
-    timeRTC.Minute = 0;
-    timeRTC.Hour = timeRTC.Hour + 1;
+    timeRTCUTC0.Minute = 0;
+    timeRTCUTC0.Hour = timeRTCUTC0.Hour + 1;
   }
-  if (timeRTC.Hour == 24)
+  if (timeRTCUTC0.Hour == 24)
   {
-    timeRTC.Hour = 0;
+    timeRTCUTC0.Hour = 0;
   }
-  if (timeRTC.Day == 32)
+  if (timeRTCUTC0.Day == 32)
   {
-    timeRTC.Day = 1;
+    timeRTCUTC0.Day = 1;
   }
-  if (timeRTC.Month == 12)
+  if (timeRTCUTC0.Month == 12)
   {
-    timeRTC.Month = 0;
+    timeRTCUTC0.Month = 0;
   }
-  saveRTC(timeRTC);
+  saveRTC(timeRTCUTC0);
   return;
 #endif
 

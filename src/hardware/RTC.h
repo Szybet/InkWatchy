@@ -2,7 +2,8 @@
 #define RTC_H
 #include "defines/defines.h"
 
-extern tmElements_t timeRTC;
+extern tmElements_t timeRTCLocal;
+extern tmElements_t timeRTCUTC0;
 
 extern SmallRTC SRTC;
 // Chatgpt said 38 is max, I trust him :)
@@ -10,6 +11,7 @@ extern SmallRTC SRTC;
 extern char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH];
 extern bool dontTouchTimeZone;
 void timeZoneApply();
+void removeTimeZoneVars();
 extern uint64_t lastTimeRead;
 
 void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
