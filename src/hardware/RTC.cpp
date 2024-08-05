@@ -93,6 +93,7 @@ tmElements_t convertToTmElements(const struct tm &tmStruct)
 bool dontTouchTimeZone = false;
 void timeZoneApply()
 {
+  timeRTCLocal = timeRTCUTC0; // To have at least UTC0 there
   if (dontTouchTimeZone == true)
   {
     return;
