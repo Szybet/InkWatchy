@@ -69,7 +69,6 @@ void turnOnWifiTask(void *parameter)
         else
         {
             debugLog("Wifi failed to connect, retrying...");
-            // turnOffWifi();
             turnOffWifiMinimal();
             delayTask(WIFI_MULTI_ERROR_TIME);
         }
@@ -80,6 +79,8 @@ void turnOnWifiTask(void *parameter)
         debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));
         delayTask(300);
         wifiFunction();
+    } else {
+        debugLog("Failed to connect to wifi properly");
     }
     turnOffWifiMinimal();
     debugLog("Setting isWifiTaskRunning to false NOW");

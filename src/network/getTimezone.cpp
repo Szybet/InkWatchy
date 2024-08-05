@@ -9,10 +9,6 @@ void syncTimezone()
         Olson2POSIX timezoneMagic;
 
         debugLog("Starting getting timezone");
-        while(WiFi.status() != WL_CONNECTED) {
-            delayTask(700);
-            debugLog("Waiting for wifi to get connected status, current status: " + wifiStatus());
-        }
         debugLog("So, wifi current status: " + wifiStatus());
 
         // This is a start of a 20K task, very large - could be smaller
