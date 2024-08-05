@@ -2,9 +2,8 @@
 
 tmElements_t timeRTCLocal;  // Local time
 tmElements_t timeRTCUTC0;   // UTC0 time
-int64_t timeZoneOffset = 0; // The offset the timezone did, can be minus
-// Millis of latest reading of the RTC
-uint64_t lastTimeRead = 999999; // it's that much to trigger the alarm wakeup if something fails, llabs is there for this reason
+int64_t timeZoneOffset = 0; // The offset the timezone did, can be in minus
+uint64_t lastTimeRead = 999999; // Millis of latest reading of the RTC, it's used to get accurate seconds, it's that much to trigger the alarm wakeup if something fails, llabs is there for this reason
 RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
 
 RTC_DATA_ATTR SmallRTC SRTC;
