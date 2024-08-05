@@ -40,6 +40,27 @@ buttonState useButton()
     return buttonPressedTmp;
 }
 
+// Should be used only in watchface
+buttonState useAllButtons()
+{
+    buttMut.lock();
+    // if (buttonPressed == Back || buttonPressed == LongBack)
+    // {
+    //     buttMut.unlock();
+    //     return None;
+    // }
+    buttonState buttonPressedTmp = buttonPressed;
+    buttonPressed = None;
+
+    // debugLog("Used button by UI: " + getButtonString(buttonPressedTmp));
+    if (buttonPressedTmp != None)
+    {
+        debugLog("Used button by UI: " + getButtonString(buttonPressedTmp));
+    }
+    buttMut.unlock();
+    return buttonPressedTmp;
+}
+
 // To unlock the button
 void useButtonBlank()
 {

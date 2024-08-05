@@ -9,7 +9,7 @@ OPTIONS=("1" "Run Command 1"
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
 HEIGHT=$((NUM_OPTIONS + 7))
-WIDTH=40
+WIDTH=60
 CHOICE_HEIGHT=$((NUM_OPTIONS + 1))
 
 TITLE="Options"
