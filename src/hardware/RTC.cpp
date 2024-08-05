@@ -44,7 +44,7 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
         debugLog("Setting initial drift value, as it's not set and the watchy is not from wakeup");
         bool isFast = bool(fsGetString(CONF_DRIFT_FAST, "0").toInt());
         debugLog("isFast: " + String(isFast) + " drift value: " + String(driftValue));
-        SRTC.setDrift(driftValue, isFast, false);
+        SRTC.setDrift(driftValue, isFast); // not sure about internal here
       }
       else
       {

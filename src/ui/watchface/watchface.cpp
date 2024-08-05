@@ -68,7 +68,7 @@ void loopWatchfaceLoop()
     }
   }
 
-  buttonState bt = useButton();
+  buttonState bt = useAllButtons();
   modulesButtons(bt);
 
 // if(dUChange == false) {
