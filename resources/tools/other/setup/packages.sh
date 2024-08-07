@@ -48,9 +48,9 @@ if ! command -v pio &> /dev/null; then
     echo "install platformio (pio command). The rest will fail."
 fi
 
-if [ ! -d "/root/esp-idf/package.json" ]; then
+current_path=$(pwd)
+if [ ! -f "/root/esp-idf/package.json" ]; then
     echo "Getting esp idf"
-    current_path=$(pwd)
     cd /root/
     rm -rf esp-idf-git/
     mkdir esp-idf-git
@@ -62,22 +62,26 @@ if [ ! -d "/root/esp-idf/package.json" ]; then
     cd ..
 
     # rm -rf esp-idf-git/.git # not sure about this one, if it will make problems for gitignore and vscode git support or smth
-    mv esp-idf-git/{.*,*} esp-idf/
+    # mv esp-idf-git/{.*,*} esp-idf/
+    mv esp-idf-git/* esp-idf/
     rm -rf esp-idf-git
     cd esp-idf/
     chmod +x install.sh
     ./install.sh
-    cd $current_path
+    rm -rf .git
 fi
+cd $current_path
 
-if [ ! -d "components/arduino" ]; then
+if [ ! -d "../../components/arduino" ]; then
     echo "Getting arduino core"
-    cd components/
+    cd ../../components/
     rm -rf arduino
     mkdir arduino
     cd arduino
     wget -q -O arduino.zip https://github.com/Szybet/arduino-esp32/archive/refs/heads/master.zip
     unzip arduino.zip
+    mv arduino-esp32-master/* .
     rm -rf arduino.zip
     cd ../../
 fi
+cd $current_path
