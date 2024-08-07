@@ -20,17 +20,12 @@ check_and_run() {
 }
 
 check_and_run "https_server.crt.S" "https_server.crt.S"
-
 check_and_run "rmaker_mqtt_server.crt.S" "rmaker_mqtt_server.crt.S"
-
 check_and_run "rmaker_claim_service_server.crt.S" "rmaker_claim_service_server.crt.S"
-
 check_and_run "rmaker_ota_server.crt.S" "rmaker_ota_server.crt.S"
 
-#FILE="~/.platformio/penv/.espidf-5.1.2/lib/python3.12/site-packages/pyserial-3.5.dist-info"
-
-#if [ ! -e "$FILE" ]; then
-#    echo "Pyserial doesn't exist, trying to install it..."
-#    /root/.platformio/penv/.espidf-5.1.2/bin/python -m pip install pyserial
-#fi
+#cp managed_components/espressif__esp_insights/server_certs/https_server.crt .pio/build/$pio_env/https_server.crt
+#cp managed_components/espressif__esp_rainmaker/server_certs/rmaker_mqtt_server.crt .pio/build/$pio_env/
+#cp managed_components/espressif__esp_rainmaker/server_certs/rmaker_claim_service_server.crt .pio/build/$pio_env/
+#cp managed_components/espressif__esp_rainmaker/server_certs/rmaker_ota_server.crt .pio/build/$pio_env/
 
