@@ -236,5 +236,5 @@ void wfModulesManage(buttonState button, bool forceRender)
         nothingModule();
     }
     drawModuleCount();
-    debugLog("Exiting wfModulesManage")
+    debugLog("Exiting wfModulesManage");
 }
