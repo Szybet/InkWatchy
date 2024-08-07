@@ -34,8 +34,8 @@ void initDisplay(bool isFromWakeUp)
     SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
     display.init(0, !isFromWakeUp, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
 #elif ATCHY_VER == WATCHY_2
-    display.init(0, !isFromWakeUp, 10, true);
     display.epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
+    display.init(0, !isFromWakeUp, 10, true);
 #endif
     /*
     Here, to remove border you need to go to GxEPD2_154_D67::_InitDisplay()

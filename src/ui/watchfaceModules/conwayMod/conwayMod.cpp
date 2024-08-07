@@ -81,6 +81,7 @@ void wfConwayrequestShow(buttonState button, bool *showBool)
 #if CONWAY_CPU_SPEED
     restoreCpuSpeed();
 #endif
+    debugLog("Finished drawing conway module");
 }
 
 RTC_DATA_ATTR wfModule wfConway = {
