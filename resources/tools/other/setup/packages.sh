@@ -48,15 +48,36 @@ if ! command -v pio &> /dev/null; then
     echo "install platformio (pio command). The rest will fail."
 fi
 
-if [ ! -d "/root/esp-idf/docs" ]; then
-    echo "Cloning esp idf"
+if [ ! -d "/root/esp-idf/package.json" ]; then
+    echo "Getting esp idf"
+    current_path=$(pwd)
     cd /root/
     rm -rf esp-idf-git/
-    git clone https://github.com/espressif/esp-idf.git esp-idf-git
+    mkdir esp-idf-git
+    cd esp-idf-git/
+    wget -q -O esp-idf.zip https://github.com/Szybet/esp-idf-platformio/archive/refs/heads/main.zip
+    unzip esp-idf.zip
+    mv esp-idf-platformio-main/* .
+    rm -rf esp-idf.zip
+    cd ..
+
     # rm -rf esp-idf-git/.git # not sure about this one, if it will make problems for gitignore and vscode git support or smth
     mv esp-idf-git/{.*,*} esp-idf/
     rm -rf esp-idf-git
     cd esp-idf/
-    git checkout tags/v5.1.2
+    chmod +x install.sh
     ./install.sh
+    cd $current_path
+fi
+
+if [ ! -d "components/arduino" ]; then
+    echo "Getting arduino core"
+    cd components/
+    rm -rf arduino
+    mkdir arduino
+    cd arduino
+    wget -q -O arduino.zip https://github.com/Szybet/arduino-esp32/archive/refs/heads/master.zip
+    unzip arduino.zip
+    rm -rf arduino.zip
+    cd ../../
 fi
