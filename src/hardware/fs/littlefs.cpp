@@ -4,6 +4,7 @@ bool fsInitDone = false;
 
 bool fsSetup()
 {
+  return false;
   if (fsInitDone == false)
   {
     debugLog("Trying to mount littleFS");
