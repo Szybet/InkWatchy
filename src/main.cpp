@@ -86,7 +86,7 @@ void setup()
   initManager();
   if (isRtcWakeUpReason(wakeUpReason) == false)
   {
-    turnOnButtons();
+    //turnOnButtons();
   }
 
   initWatchdogTask();
@@ -112,7 +112,7 @@ void loop()
 #endif
   watchdogPing();
   alarmManageRTC();
-  loopBattery();
+  //loopBattery();
   loopManager();
 
 #if !DEBUG || !NO_SYNC

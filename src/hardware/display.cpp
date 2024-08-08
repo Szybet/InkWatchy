@@ -30,6 +30,10 @@ bool resetReasonHold(esp_reset_reason_t resetReason)
 void initDisplay(bool isFromWakeUp)
 {
     debugLog("initDisplay called: " + BOOL_STR(isFromWakeUp));
+    pinMode(EPD_CS, OUTPUT);
+    pinMode(EPD_RESET, OUTPUT);
+    pinMode(EPD_DC, OUTPUT);
+    pinMode(EPD_BUSY, INPUT);
 #if ATCHY_VER == WATCHY_3
     SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
     display.init(0, !isFromWakeUp, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));

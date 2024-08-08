@@ -58,8 +58,10 @@ if [ ! -f "/root/esp-idf/package.json" ]; then
     wget -q -O esp-idf.zip https://github.com/Szybet/esp-idf-platformio/archive/refs/heads/main.zip
     unzip esp-idf.zip
     mv esp-idf-platformio-main/* .
+    rm -rf esp-idf-platformio-main  
     rm -rf esp-idf.zip
     cd ..
+    sync
 
     # rm -rf esp-idf-git/.git # not sure about this one, if it will make problems for gitignore and vscode git support or smth
     # mv esp-idf-git/{.*,*} esp-idf/
