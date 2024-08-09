@@ -4,7 +4,7 @@ source resources/tools/globalFunctions.sh
 
 pio_env=$(get_pio_env .vscode/launch.json)
 
-cd .pio/build/$pio_env
+#cd .pio/build/$pio_env
 
 #ninja -k 0 || true
 #exit 0
@@ -29,4 +29,14 @@ cd .pio/build/$pio_env
 #cp managed_components/espressif__esp_rainmaker/server_certs/rmaker_claim_service_server.crt .pio/build/$pio_env/
 #cp managed_components/espressif__esp_rainmaker/server_certs/rmaker_ota_server.crt .pio/build/$pio_env/
 
+if [ ! -f "sdkconfig.defaults" ]; then
+    rm -f "sdkconfig.${pio_env}"
+fi
+
 cp resources/tools/buildTime/sdkconfig_${pio_env}.defaults sdkconfig.defaults
+
+for dir in managed_components/*; do
+    if [ -d "$dir" ] && [ -f "$dir/.component_hash" ]; then
+        rm -f "$dir/.component_hash"
+    fi
+done

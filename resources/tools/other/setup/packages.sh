@@ -73,8 +73,11 @@ current_path=$(pwd)
 #     rm -rf .git
 # fi
 # cd $current_path
+
+cd ../../
 rm -rf .esp-idf/esp-idf
 ln -s $PWD/.platformio/packages/framework-espidf $PWD/.esp-idf/esp-idf
+cd $current_path
 
 if [ ! -d "../../components/arduino" ]; then
     echo "Getting arduino core"
