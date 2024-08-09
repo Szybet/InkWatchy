@@ -55,10 +55,10 @@ if [ ! -f "/root/esp-idf/package.json" ]; then
     rm -rf esp-idf-git/
     mkdir esp-idf-git
     cd esp-idf-git/
-    wget -q -O esp-idf.zip https://github.com/Szybet/esp-idf-platformio/archive/refs/heads/main.zip
+    wget -q -O esp-idf.zip https://github.com/pioarduino/esp-idf/releases/download/v5.1.4.240805/esp-idf-v5.1.4.zip
     unzip esp-idf.zip
-    mv esp-idf-platformio-main/* .
-    rm -rf esp-idf-platformio-main  
+    mv esp-idf-v5.1.4.240805/* .
+    rm -rf esp-idf-v5.1.4.240805
     rm -rf esp-idf.zip
     cd ..
     sync
@@ -76,7 +76,9 @@ cd $current_path
 
 if [ ! -d "../../components/arduino" ]; then
     echo "Getting arduino core"
-    cd ../../components/
+    cd ../../
+    mkdir -p components/arduino
+    cd components
     rm -rf arduino
     mkdir arduino
     cd arduino
