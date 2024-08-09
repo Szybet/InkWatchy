@@ -11,4 +11,3 @@ cd resources/tools/
 cd ../../
 
 pio run -e $pio_env
-pio run -e $pio_env

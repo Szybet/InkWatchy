@@ -11,5 +11,5 @@ rm -rf resources/tools/other/out/*
 rm -rf resources/tools/fs/in/*
 rm -rf resources/tools/fs/out/*
 rm -rf resources/tools/fs/littlefs/*
-echo "Waiting for 20 seconds for platformio to shut up"
-sleep 20
+echo "Waiting for 60 seconds for platformio to shut up"
+sleep 60
