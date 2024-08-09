@@ -65,7 +65,7 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     if (isFromWakeUp == false)
     {
         loadAllStorage();
-        //initBattery();
+        initBattery();
     }
     /*
     // Not available :(
