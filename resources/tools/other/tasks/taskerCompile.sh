@@ -1,6 +1,6 @@
 #!/bin/bash
 
-OPTIONS=("1" "Clean"
+OPTIONS=("1" "Full clean"
          "2" "First build"
          "3" "Update build (after updating the code from github)")
 
@@ -24,10 +24,10 @@ CHOICE=$(dialog --clear \
 clear
 case $CHOICE in
     1)
-        resources/tools/other/compile/clean.sh
+        resources/tools/other/compile/fullClean.sh
         ;;
     2)
-        resources/tools/other/compile/clean.sh
+        resources/tools/other/compile/fullClean.sh
         resources/tools/other/compile/easySetup.sh
         ;;
     3)
