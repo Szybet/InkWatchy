@@ -49,30 +49,32 @@ if ! command -v pio &> /dev/null; then
 fi
 
 current_path=$(pwd)
-if [ ! -f "/root/esp-idf/package.json" ]; then
-    echo "Getting esp idf"
-    cd /root/
-    rm -rf esp-idf-git/
-    mkdir esp-idf-git
-    cd esp-idf-git/
-    wget -q -O esp-idf.zip https://github.com/pioarduino/esp-idf/releases/download/v5.1.4.240805/esp-idf-v5.1.4.zip
-    unzip esp-idf.zip
-    mv esp-idf-v5.1.4.240805/* .
-    rm -rf esp-idf-v5.1.4.240805
-    rm -rf esp-idf.zip
-    cd ..
-    sync
+# if [ ! -f "/root/esp-idf/package.json" ]; then
+#     echo "Getting esp idf"
+#     cd /root/
+#     rm -rf esp-idf-git/
+#     mkdir esp-idf-git
+#     cd esp-idf-git/
+#     wget -q -O esp-idf.zip https://github.com/pioarduino/esp-idf/releases/download/v5.1.4.240805/esp-idf-v5.1.4.zip
+#     unzip esp-idf.zip
+#     mv esp-idf-v5.1.4.240805/* .
+#     rm -rf esp-idf-v5.1.4.240805
+#     rm -rf esp-idf.zip
+#     cd ..
+#     sync
 
-    # rm -rf esp-idf-git/.git # not sure about this one, if it will make problems for gitignore and vscode git support or smth
-    # mv esp-idf-git/{.*,*} esp-idf/
-    mv esp-idf-git/* esp-idf/
-    rm -rf esp-idf-git
-    cd esp-idf/
-    chmod +x install.sh
-    ./install.sh
-    rm -rf .git
-fi
-cd $current_path
+#     # rm -rf esp-idf-git/.git # not sure about this one, if it will make problems for gitignore and vscode git support or smth
+#     # mv esp-idf-git/{.*,*} esp-idf/
+#     mv esp-idf-git/* esp-idf/
+#     rm -rf esp-idf-git
+#     cd esp-idf/
+#     chmod +x install.sh
+#     ./install.sh
+#     rm -rf .git
+# fi
+# cd $current_path
+rm -rf .esp-idf/esp-idf
+ln -s $PWD/.platformio/packages/framework-espidf $PWD/.esp-idf/esp-idf
 
 if [ ! -d "../../components/arduino" ]; then
     echo "Getting arduino core"
@@ -85,6 +87,7 @@ if [ ! -d "../../components/arduino" ]; then
     wget -q -O arduino.zip https://github.com/Szybet/arduino-esp32/archive/refs/heads/master.zip
     unzip arduino.zip
     mv arduino-esp32-master/* .
+    rm -rf arduino-esp32-master
     rm -rf arduino.zip
     cd ../../
 fi

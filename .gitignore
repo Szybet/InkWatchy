@@ -26,11 +26,10 @@ components/arduino
 .platformio/*
 !.platformio/.gitkeep
 
-.esp-idf/esp-idf/*
+.esp-idf/esp-idf
 .esp-idf/espressif/*
 
 !.esp-idf/.gitkeep
-!.esp-idf/esp-idf/.gitkeep
 !.esp-idf/espressif/.gitkeep
 
 trash/
