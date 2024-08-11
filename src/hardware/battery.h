@@ -2,7 +2,6 @@
 #define BATTERY_H
 
 #include "defines/defines.h"
-#include <SmallRTC.h>
 
 #define PREV_VOLTAGE_SIZE 3
 struct batteryInfo {

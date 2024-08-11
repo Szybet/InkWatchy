@@ -138,9 +138,16 @@ Template for versioning
 #elif ATCHY_VER == WATCHY_3
 #define RTC_TYPE INTERNAL_RTC
 #define RTC_32KHZ_CRYSTAL 1
+// This won't work, needs to be in platformio.ini too
+#define SMALL_RTC_NO_DS3232 1
+#define SMALL_RTC_NO_PCF8563 1
 #elif ATCHY_VER == YATCHY
 #define RTC_TYPE INTERNAL_RTC
-#define RTC_32KHZ_CRYSTAL 1
+#define RTC_32KHZ_CRYSTAL 0 // TODO: not yet!
+// This won't work, needs to be in platformio.ini too
+#define SMALL_RTC_NO_DS3232 1
+#define SMALL_RTC_NO_PCF8563 1
+#define SMALL_RTC_NO_EXT0 1 // esp32c6 simply doesn't have it, as a defined function
 #endif
 #endif
 #if RTC_32KHZ_CRYSTAL != 1
