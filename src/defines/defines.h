@@ -1,6 +1,22 @@
 #ifndef DEFINES_H
 #define DEFINES_H
 
+#define PARTIAL_UPDATE true
+#define FULL_UPDATE false
+
+#define BUTTON_WAKEUP_REASON ESP_SLEEP_WAKEUP_EXT1
+
+#define WATCHY_2 2
+#define WATCHY_3 3
+#define YATCHY 4
+
+#define EXTERNAL_RTC 1
+#define INTERNAL_RTC 2
+
+// It's before the libraries to be able to affect them (until it doesn't work)
+#include "config.h" // Needs to be first!
+#include "condition.h"
+
 #define ARDUINOJSON_ENABLE_PROGMEM 0
 
 #include <Arduino.h>
@@ -22,20 +38,6 @@
 #include "driver/rtc_io.h"
 #include <Olson2POSIX.h>
 
-#define PARTIAL_UPDATE true
-#define FULL_UPDATE false
-
-#define BUTTON_WAKEUP_REASON ESP_SLEEP_WAKEUP_EXT1
-
-#define WATCHY_2 2
-#define WATCHY_3 3
-#define YATCHY 4
-
-#define EXTERNAL_RTC 1
-#define INTERNAL_RTC 2
-
-#include "config.h" // Needs to be first!
-#include "condition.h"
 #include "confidential.h"
 #include "macros.h"
 
