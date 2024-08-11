@@ -33,7 +33,8 @@ if [ ! -f "sdkconfig.defaults" ]; then
     rm -f "sdkconfig.${pio_env}"
 fi
 
-cp resources/tools/buildTime/sdkconfig_${pio_env}.defaults sdkconfig.defaults
+cp resources/tools/buildTime/sdkconfigs/sdkconfig_general.defaults sdkconfig.defaults
+cat resources/tools/buildTime/sdkconfigs/sdkconfig_${pio_env}.defaults >> sdkconfig.defaults
 
 for dir in managed_components/*; do
     if [ -d "$dir" ] && [ -f "$dir/.component_hash" ]; then

@@ -2,7 +2,8 @@
 
 OPTIONS=("1" "Full clean"
          "2" "First build"
-         "3" "Update build (after updating the code from github)")
+         "3" "Update build (after updating the code from github)"
+         "4" "Regular clean")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -33,5 +34,8 @@ case $CHOICE in
     3)
         resources/tools/other/compile/updateClean.sh
         resources/tools/other/compile/updateEasySetup.sh
+        ;;
+    4)
+        resources/tools/other/compile/regularClean.sh
         ;;
 esac

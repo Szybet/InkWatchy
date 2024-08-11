@@ -1,0 +1,8 @@
+# Watchy 3.0 changes
+CONFIG_ESPTOOLPY_FLASHSIZE_8MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="8MB"
+CONFIG_ARDUINO_VARIANT="esp32s3"
+# Enable external crystal properly
+CONFIG_RTC_CLK_SRC_EXT_CRYS=y
+CONFIG_ESP_SYSTEM_RTC_EXT_XTAL=y
+CONFIG_ESP_SYSTEM_RTC_EXT_XTAL_BOOTSTRAP_CYCLES=256 # This value is for faulty RTC clocks, if your external quartz doesn't work, adjust this value
