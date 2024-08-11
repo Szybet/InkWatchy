@@ -92,3 +92,4 @@ or via matrix: @szybet:matrix.org
 ## Some credits
 - [GuruSR](https://github.com/GuruSR/Watchy_GSR) - I used some of his awesome libraries and looked at the code for how the watchy hardware should be handled. Also answered a few questions on discord. Thanks!
 - [Prokuon](https://github.com/Prokuon/watchy-starfield/) - I really liked the design of this watchface and almost coppied it. Thanks! - well the code is completly diffrent
+- (Jason2866)https://github.com/Jason2866] - Help with solving platformio hackery
