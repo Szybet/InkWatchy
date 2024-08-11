@@ -34,6 +34,7 @@
 #define SYNC_WIFI 1                        // Autimatically sync wifi - only if it's being charger and after the delay below
 #define SYNC_WIFI_SINCE_SUCC 72000         // 20h
 #define SYNC_WIFI_SINCE_FAIL 600           // 10m
+#define MANUAL_NTP_OFFSET 0                // In seconds, When your ntp server is wrong
 #define SYNC_NTP_ON_CHARGING_DELAY 90000   // Sync NTP when charging every, in Ms. Default 1.5 minute
 #define VALID_PREVIOUS_SYNC_DELAY 300      // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
 #define WIFI_CONNECTION_TRIES 3            // Regular sync, number of tries

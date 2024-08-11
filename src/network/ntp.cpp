@@ -15,6 +15,9 @@ void syncNtp(bool doDriftThings)
     removeTimeZoneVars();
     WiFiUDP ntpUDP;
     NTPClient timeClient(ntpUDP);
+#if MANUAL_NTP_OFFSET != 0
+    timeClient.setTimeOffset(MANUAL_NTP_OFFSET);
+#endif
     timeClient.begin();
     if (timeClient.forceUpdate() == true)
     {
