@@ -74,7 +74,7 @@ void initDisplay(bool isFromWakeUp)
         if (resetReasonHold(resetReason) == true) // ESP_RST_SW only for ESP.reset() in coredump cleaning
         {
             h = h + 30;
-            centerText("Hold any right button", &h);
+            centerText("Hold any button", &h);
             h = h + 10;
             centerText("To continue", &h);
         }
