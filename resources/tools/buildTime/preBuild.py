@@ -1,11 +1,16 @@
 import subprocess
 import os
+import sys
 Import("env")
 
 #print(env.Dump())
 
 pio_env = env.get('PIOENV', '')
 print("Current pio env: " + str(pio_env))
+
+if str(pio_env) == "Unknown":
+     print("Select the proper PlatformIO environment; it is currently unknown!", file=sys.stderr)
+     sys.exit(1)
 
 file_path = '/tmp/inkwatchy_env'
 if os.path.exists(file_path):

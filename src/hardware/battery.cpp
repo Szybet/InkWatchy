@@ -5,7 +5,7 @@
 RTC_DATA_ATTR batteryInfo bat;
 RTC_DATA_ATTR bool isBatterySaving = false;
 
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / 500.0f; } // Battery voltage goes through a 1/2 divider.
 #elif ATCHY_VER == WATCHY_3
 // 100.0f is the "correct" value, but the tolerance of the resistor and accuracy ESP's ADC may result in variation to the voltage reading. The voltage divider is 100K over 360K
@@ -68,7 +68,7 @@ void isChargingCheck()
     bat.isCharging = false;
     return;
 #endif
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
     if (bat.curV >= bat.charV)
     {
         // debugLog("It's charging because of above voltage");

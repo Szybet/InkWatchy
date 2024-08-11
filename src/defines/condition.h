@@ -39,7 +39,7 @@ Template for versioning
 #endif
 
 // Display init magic ;)
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #define EPD_CS 5
 #define EPD_DC 10
 #define EPD_RESET 9
@@ -57,7 +57,7 @@ Template for versioning
 #endif
 
 // More display magic but SPI
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 // Unused really as defaults are good
 #define EPD_SPI_SCK 18
 #define EPD_SPI_MISO 19
@@ -77,7 +77,7 @@ Template for versioning
 #endif
 
 // Button pins
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 // Maybe I could od a !not but whatever
 #define BUT_STATE LOW
 #define BUT_CLICK_STATE HIGH
@@ -85,7 +85,11 @@ Template for versioning
 #define MENU_PIN 26
 #define BACK_PIN 25
 #define DOWN_PIN 4
-#define UP_PIN 35 // Watchy 1.5 Has the pin 32 here
+#if ATCHY_VER == WATCHY_2
+#define UP_PIN 35
+#elif ATCHY_VER == WATCHY_1_5 || ATCHY_VER == WATCHY_1
+#define UP_PIN 32
+#endif
 #elif ATCHY_VER == WATCHY_3
 #define BUT_STATE HIGH
 #define BUT_CLICK_STATE LOW
@@ -105,11 +109,17 @@ Template for versioning
 #endif
 
 // Other
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #define VIB_MOTOR_PIN 13
 #define RTC_INT_PIN 27
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_HIGH
+#if ATCHY_VER == WATCHY_2
 #define BATT_ADC_PIN 34
+#elif ATCHY_VER == WATCHY_1_5
+#define BATT_ADC_PIN 35
+#elif ATCHY_VER == WATCHY_1
+#define BATT_ADC_PIN 33
+#endif
 #elif ATCHY_VER == WATCHY_3
 #define VIB_MOTOR_PIN 17
 #define RTC_INT_PIN -1
@@ -133,7 +143,7 @@ Template for versioning
 #define RTC_32KHZ_CRYSTAL 1
 #endif
 #else
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #define RTC_TYPE EXTERNAL_RTC
 #elif ATCHY_VER == WATCHY_3
 #define RTC_TYPE INTERNAL_RTC

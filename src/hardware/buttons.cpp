@@ -125,6 +125,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
     delayTask(BUTTON_TASK_DELAY / ADD_BUTTON_DELAY);
 }
 
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_3 || ATCHY_VER == YATCHY
 void loopButtonsTask(void *parameter)
 {
     buttonsActivated = true;
@@ -180,6 +181,47 @@ void loopButtonsTask(void *parameter)
 #endif
     }
 }
+// For some reason on those interrupt doesn't work
+#elif ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
+void loopButtonsTask(void *parameter)
+{
+    // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
+    while (digitalRead(BACK_PIN) == HIGH || digitalRead(MENU_PIN) == HIGH || digitalRead(UP_PIN) == HIGH || digitalRead(DOWN_PIN) == HIGH)
+    {
+        delayTask(SMALL_BUTTON_DELAY_MS);
+    }
+    while (true)
+    {
+        delayTask(BUTTON_TASK_DELAY);
+        buttMut.lock();
+        if (digitalRead(BACK_PIN) == HIGH && buttonPressed != LongBack)
+        {
+            buttMut.unlock();
+            longButtonCheck(BACK_PIN, Back, LongBack);
+            buttMut.lock();
+        }
+        else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu)
+        {
+            buttMut.unlock();
+            longButtonCheck(MENU_PIN, Menu, LongMenu);
+            buttMut.lock();
+        }
+        else if (digitalRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu && buttonPressed != LongUp)
+        {
+            buttMut.unlock();
+            longButtonCheck(UP_PIN, Up, LongUp);
+            buttMut.lock();
+        }
+        else if (digitalRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongUp && buttonPressed != LongBack && buttonPressed != LongDown && buttonPressed != LongMenu)
+        {
+            buttMut.unlock();
+            longButtonCheck(DOWN_PIN, Down, LongDown);
+            buttMut.lock();
+        }
+        buttMut.unlock();
+    }
+}
+#endif
 
 void initButtonTask()
 {
@@ -324,5 +366,7 @@ String getButtonString(buttonState state)
 void turnOnButtons()
 {
     initButtonTask();
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_3 || ATCHY_VER == YATCHY
     turnOnInterrupts();
+#endif
 }
