@@ -49,6 +49,11 @@ Template for versioning
 #define EPD_DC 34
 #define EPD_RESET 35
 #define EPD_BUSY 36
+#elif ATCHY_VER == YATCHY
+#define EPD_CS -1 // Chip select
+#define EPD_DC 3
+#define EPD_RESET 2
+#define EPD_BUSY 4
 #endif
 
 // More display magic but SPI
@@ -64,6 +69,11 @@ Template for versioning
 #define EPD_SPI_MISO 46
 #define EPD_SPI_MOSI 48
 #define EPD_SPI_SS 33
+#elif ATCHY_VER == YATCHY
+#define EPD_SPI_SCK 7
+#define EPD_SPI_MISO -1
+#define EPD_SPI_MOSI 5
+#define EPD_SPI_SS -1 // Chip select!
 #endif
 
 // Button pins
@@ -84,6 +94,14 @@ Template for versioning
 #define BACK_PIN 6
 #define DOWN_PIN 8
 #define UP_PIN 0
+#elif ATCHY_VER == YATCHY
+#define BUT_STATE LOW
+#define BUT_CLICK_STATE HIGH
+#define BUTTON_INTER_COND RISING
+#define MENU_PIN -1
+#define BACK_PIN -1
+#define DOWN_PIN -1
+#define UP_PIN -1
 #endif
 
 // Other
@@ -99,6 +117,13 @@ Template for versioning
 #define BATT_ADC_PIN 9
 #define ADC_VOLTAGE_DIVIDER ((360.0f + 100.0f) / 360.0f) // Voltage divider at battery ADC
 #define CHRG_STATUS_PIN 10 // If HIGH, usb is connected. Someone with a v3 is free to use interrupts for that and enable wakeups for this pin too
+#elif ATCHY_VER == YATCHY
+#define VIB_MOTOR_PIN -1
+#define RTC_INT_PIN -1
+#define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_LOW
+#define BATT_ADC_PIN -1
+#define ADC_VOLTAGE_DIVIDER -1
+#define CHRG_STATUS_PIN -1
 #endif
 
 // RTC type
@@ -111,6 +136,9 @@ Template for versioning
 #if ATCHY_VER == WATCHY_2
 #define RTC_TYPE EXTERNAL_RTC
 #elif ATCHY_VER == WATCHY_3
+#define RTC_TYPE INTERNAL_RTC
+#define RTC_32KHZ_CRYSTAL 1
+#elif ATCHY_VER == YATCHY
 #define RTC_TYPE INTERNAL_RTC
 #define RTC_32KHZ_CRYSTAL 1
 #endif

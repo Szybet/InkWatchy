@@ -10,6 +10,8 @@ float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / 500.0f; } // B
 #elif ATCHY_VER == WATCHY_3
 // 100.0f is the "correct" value, but the tolerance of the resistor and accuracy ESP's ADC may result in variation to the voltage reading. The voltage divider is 100K over 360K
 float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / 1000.0f * ADC_VOLTAGE_DIVIDER; }
+#elif ATCHY_VER == YATCHY
+float BatteryRead() { return 0.0; }
 #endif
 
 double getBatteryVoltage()
