@@ -6,6 +6,8 @@
 
 #define BUTTON_WAKEUP_REASON ESP_SLEEP_WAKEUP_EXT1
 
+#define WATCHY_1 1
+#define WATCHY_1_5 15
 #define WATCHY_2 2
 #define WATCHY_3 3
 #define YATCHY 4
