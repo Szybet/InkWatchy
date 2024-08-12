@@ -68,7 +68,7 @@ void syncNtp(bool doDriftThings)
 #if TIME_DRIFT_CORRECTION
         if (doDriftThings == true)
         {
-            if (SRTC.checkingDrift() == true && (getUnixTime(timeRTC) - driftStartUnix > TIME_DRIFT_MINIMUM_TIME * 3600 || driftStartUnix == 0))
+            if (SRTC.checkingDrift() == true && (getUnixTime(timeRTCLocal) - driftStartUnix > TIME_DRIFT_MINIMUM_TIME * 3600 || driftStartUnix == 0))
             {
                 debugLog("Ending drift");
                 SRTC.endDrift(timeRTCLocal);
