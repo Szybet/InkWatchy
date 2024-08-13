@@ -11,6 +11,9 @@ uint64_t loopDumpDelayMs;
 // Also at boot, but on wake up too
 void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 {
+    pinMode(VIB_MOTOR_PIN, OUTPUT);
+    digitalWrite(VIB_MOTOR_PIN, false); // To reset the motor button if esp crashed when it was vibrating
+
     if (isFromWakeUp == false)
     {
         debugLog("Watchy is starting!");
@@ -78,8 +81,9 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     debugLog("Configuring pm status: " + String(esp_err_to_name(status)));
     */
 
-    pinMode(VIB_MOTOR_PIN, OUTPUT);
-    digitalWrite(VIB_MOTOR_PIN, false); // To reset the motor button if esp crashed when it was vibrating
+#if ATCHY_VER == YATCHY
+    mcp23018 gpio_expander(false);
+#endif
 
     initDisplay(isFromWakeUp);
     resetSleepDelay();

@@ -1,0 +1,23 @@
+#include "i2c.h"
+
+#if ATCHY_VER == YATCHY
+#if ATCHY_VER == YATCHY
+#define I2C_SDA_PIN 22
+#define I2C_SCL_PIN 23
+#define I2C_FREQ 100 // In Khz
+#endif
+
+bool initedI2C = false;
+
+bool initI2C() {
+    if(initedI2C == false) {
+        debugLog("Starting to init I2C line");
+        if(Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN, I2C_FREQ * 1000) == false) {
+            debugLog("Failed to begin I2C");
+            return false;
+        }
+        initedI2C = true;
+    }
+    return true;
+}
+#endif

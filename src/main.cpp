@@ -24,7 +24,7 @@ void setup()
 #if DEBUG
 #if PUT_LOGS_TO_SERIAL // This is here first because of watchy 3
   Serial.begin(SERIAL_BAUDRATE);
-#if ATCHY_VER == WATCHY_3
+#if ATCHY_VER == WATCHY_3 || ATCHY_VER == YATCHY
   Serial.setDebugOutput(true);
 #endif
 #endif
