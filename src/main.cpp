@@ -84,25 +84,23 @@ void setup()
 #endif
 
   initManager();
+
   if (isRtcWakeUpReason(wakeUpReason) == false)
   {
+    // I trust myself enough now to not need watchdog task running all the time
+    initWatchdogTask();
+    watchdogPing();
+
     turnOnButtons();
+
+    xTaskCreate(
+        priorityLoopSet,
+        "priorityLoop",
+        1000,
+        NULL,
+        20,
+        &priorityLoopHandle);
   }
-
-  initWatchdogTask();
-  watchdogPing();
-
-  // Not sure
-  // if (wakeUpReason != RTC_WAKEUP_REASON)
-  //{
-  xTaskCreate(
-      priorityLoopSet,
-      "priorityLoop",
-      1000,
-      NULL,
-      20,
-      &priorityLoopHandle);
-  //}
 }
 
 void loop()
@@ -110,8 +108,11 @@ void loop()
 #if TEMP_CHECKS_ENABLED
   tempChecker();
 #endif
-  watchdogPing();
-  alarmManageRTC();
+  if (isRtcWakeUpReason(wakeUpReason) == false)
+  {
+    watchdogPing();
+    alarmManageRTC();
+  }
   loopBattery();
   loopManager();
 

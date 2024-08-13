@@ -241,7 +241,8 @@ void wakeUpManageRTC()
   SRTC.clearAlarm();
   if (disableWakeUp == false)
   {
-    readRTC();
+    // Not needed as we check if we go before next minute to sleep
+    // readRTC();
     // isDebug(dumpRTCTime());
     uint hour = timeRTCLocal.Hour;
     // debugLog("timeRTCLocal.Hour: " + String(hour));
