@@ -95,6 +95,9 @@ extern bufSize emptyBuff;
 #include "../hardware/display.h"
 #include "../hardware/axc.h"
 #include "../hardware/fs/littlefs.h"
+#if ATCHY_VER == YATCHY
+#include "../hardware/i2c.h"
+#endif
 #if TEMP_CHECKS_ENABLED
 #include "../hardware/temp/temp.h"
 #endif
@@ -138,6 +141,9 @@ extern bufSize emptyBuff;
 #endif
 #if CONWAY
 #include "../other/conway/conway.h"
+#endif
+#if ATCHY_VER == YATCHY
+#include "../other/mcp23018/mcp23018.h"
 #endif
 #include "../ui/pinInput/pinInput.h"
 #include "../ui/settings/nvsSettings.h"
