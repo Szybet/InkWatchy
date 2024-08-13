@@ -86,7 +86,7 @@ void loopWatchfaceLoop()
     resetSleepDelay(makeMinus);
   }
 #endif
-  if (bt == None && wentToSleep == false && (bat.isCharging == false)) // || SYNC_WIFI == 0
+  if (bt == None && wentToSleep == false)
   {
     // We dont want resetDelay because if something wants to sleep, we dont want to be the reason for forcing it
     debugLog("Watchface requesting sleep");
