@@ -128,6 +128,13 @@ void loopBattery()
     if (abs(bat.prevVOne - bat.curV) > BAT_MINIMAL_DIFFERENCE || bat.oneCheck == true)
     {
         debugLog("Voltage changed changed, doing things...");
+#if BATTERY_TIME_DROP
+    if(bat.curV < BATTERY_TIME_DROP_VOLTAGE) {
+        if(fsFileExists("/batDump.txt") == false) {
+            fsSetString("batDump.txt", String(getUnixTime(timeRTCUTC0)) + " at voltage " + String(bat.curV), "/");
+        }
+    }
+#endif
         debugLog("prevOne: " + String(bat.prevVOne) + " curV: " + String(bat.curV));
         bat.prevVOne = bat.curV;
         bat.prevV[bat.prevVPos] = bat.curV;

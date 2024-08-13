@@ -166,11 +166,13 @@
 #define SERIAL_LOG_DELAY 0             // If 1, use the delay below to ensure good looking logs
 #define SERIAL_LOG_DELAY_MS 23
 #define SERIAL_BAUDRATE 115200
-#define MINIMAL_LOGS 1      // Don't put full file paths in logs
-#define SCOM_TASK 0         // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
-#define FONT_PREVIEW_MENU 0 // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
-#define NO_CHARGING 0       // Disable detection of charging, only in debug
-#define RESET_RTC_ON_BOOT 0 // Experimental.
+#define MINIMAL_LOGS 1                // Don't put full file paths in logs
+#define SCOM_TASK 0                   // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
+#define FONT_PREVIEW_MENU 0           // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
+#define NO_CHARGING 0                 // Disable detection of charging, only in debug
+#define RESET_RTC_ON_BOOT 0           // Experimental.
+#define BATTERY_TIME_DROP 0           // If enabled, if battery drops below BATTERY_TIME_DROP_VOLTAGE. Doesn't need DEBUG
+#define BATTERY_TIME_DROP_VOLTAGE 3.5 // Needs to be float
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
