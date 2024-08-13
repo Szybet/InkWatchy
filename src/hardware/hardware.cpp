@@ -202,7 +202,10 @@ String resetReasonToString(esp_reset_reason_t reason)
 
 cpuSpeed savedCpuSpeed = minimalSpeed;
 void setCpuSpeed(cpuSpeed speed)
-{
+{ 
+    if(getCpuSpeed() == speed) {
+        return;
+    }
     // Only these values are available
     switch (speed)
     {
