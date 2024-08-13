@@ -77,16 +77,19 @@ void goSleep()
         detachInterrupt(MENU_PIN);
     }
 
-    while (motorTaskRunning == true)
-    {
-        debugLog("Waiting for motor task");
-        delayTask(50); // not sure
-    }
+    // Shouldn't ever happen, as no interactions are going on
+    // while (motorTaskRunning == true)
+    // {
+    //     debugLog("Waiting for motor task");
+    //     delayTask(25);
+    // }
 
     display.hibernate();
 
-    turnOffWifi(); // To be sure only
-    deInitWatchdogTask();
+    // https://esp32.com/viewtopic.php?t=34166
+    // turnOffWifi();
+
+    // deInitWatchdogTask();
     wakeUpManageRTC();
     debugLog("Going sleep...");
 #if DEBUG
@@ -96,6 +99,7 @@ void goSleep()
 #endif
     ForceInputs();
 
+    // It will always be on, how couldn't it be not
     LittleFS.end();
     // Not needed since small rtc 2.3.7
     // esp_err_t ext0Err = esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
