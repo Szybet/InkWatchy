@@ -113,6 +113,7 @@ Template for versioning
 #define VIB_MOTOR_PIN 13
 #define RTC_INT_PIN 27
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_HIGH
+#define ADC_VOLTAGE_DIVIDER 500.0f // Shortened version, by GuruSR
 #if ATCHY_VER == WATCHY_2
 #define BATT_ADC_PIN 34
 #elif ATCHY_VER == WATCHY_1_5
@@ -125,7 +126,7 @@ Template for versioning
 #define RTC_INT_PIN -1
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_LOW
 #define BATT_ADC_PIN 9
-#define ADC_VOLTAGE_DIVIDER ((7.39759f + 739.750f) / 7.39759f) // Voltage divider at battery ADC, original values were ((360.0f + 100.0f) / 360.0f)
+#define ADC_VOLTAGE_DIVIDER 739.750f // Voltage divider at battery ADC, original values were ((360.0f + 100.0f) / 360.0f), this math is done by GuruSR
 #define CHRG_STATUS_PIN 10 // If HIGH, usb is connected. Someone with a v3 is free to use interrupts for that and enable wakeups for this pin too
 #elif ATCHY_VER == YATCHY
 #define VIB_MOTOR_PIN -1
