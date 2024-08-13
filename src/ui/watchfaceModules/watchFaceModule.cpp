@@ -34,11 +34,6 @@ RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
 #else
     &wfEmpty,
 #endif
-    &wfEmpty,
-    &wfEmpty,
-    &wfEmpty,
-    &wfEmpty,
-    &wfEmpty,
 };
 
 void clearModuleArea()
