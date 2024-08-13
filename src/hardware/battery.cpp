@@ -130,8 +130,8 @@ void loopBattery()
         debugLog("Voltage changed changed, doing things...");
 #if BATTERY_TIME_DROP
     if(bat.curV < BATTERY_TIME_DROP_VOLTAGE) {
-        if(fsFileExists("/batDump.txt") == false) {
-            fsSetString("batDump.txt", String(getUnixTime(timeRTCUTC0)) + " at voltage " + String(bat.curV), "/");
+        if(fsFileExists("/bat_dump.txt") == false) {
+            fsSetString("bat_dump.txt", String(getUnixTime(timeRTCUTC0)) + " at voltage " + String(bat.curV), "/");
         }
     }
 #endif
