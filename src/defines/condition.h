@@ -171,3 +171,24 @@ Template for versioning
 #else
 #define TEMP_CHECKS_ENABLED 0
 #endif
+
+// Yatchy specific things
+#if ATCHY_VER == YATCHY
+#define YATCHY_MENU_BTN 0 // A0
+#define YATCHY_DOWN_BTN 1 // A1
+#define YATCHY_UP_BTN 2 // A2
+
+#define YATCHY_DISPLAY_CS 8 // B0
+
+// Module definitions
+#define YATCHY_NO_MODULE 0
+#define YATCHY_DEFAULT_MODULE 1
+
+// Select the module
+#define YATCHY_MODULE YATCHY_DEFAULT_MODULE
+
+#if YATCHY_MODULE == YATCHY_DEFAULT_MODULE
+// Everything here is optional
+#define YATCHY_BACK_BTN 3 // A3
+#endif
+#endif
