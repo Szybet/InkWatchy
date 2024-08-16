@@ -81,6 +81,9 @@ void initDisplay(bool isFromWakeUp)
 #endif
         display.display(FULL_UPDATE);
 #if STOP_ON_RESET
+        while(true) {
+            delayTask(1000);
+        }
         if (resetReasonHold(resetReason) == true) // ESP_RST_SW only for ESP.reset() in coredump cleaning
         {
             for (int i = 0; i < 10; i++)

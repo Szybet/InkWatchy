@@ -57,6 +57,7 @@ extern ImageDef emptyImgPack;
 
 typedef enum 
 {
+    Unknown, // For the task to look for answers, used on the yatchy
     None,
     Back,
     Menu,

@@ -33,3 +33,4 @@ components/arduino
 !.esp-idf/espressif/.gitkeep
 
 trash/
+build/

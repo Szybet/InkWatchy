@@ -82,7 +82,7 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     */
 
 #if ATCHY_VER == YATCHY
-    mcp23018 gpio_expander(false);
+    gpioExpander.init(isFromWakeUp, wakeUpReason);
 #endif
 
     initDisplay(isFromWakeUp);

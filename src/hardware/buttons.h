@@ -22,6 +22,7 @@ void deInitButtonTask();
 void setButton(buttonState button);
 void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton);
 void turnOnInterrupts();
+void resumeButtonTask();
 extern buttonState interruptedButton;
 
 #if DEBUG

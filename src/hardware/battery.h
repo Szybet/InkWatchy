@@ -21,6 +21,7 @@ struct batteryInfo {
 extern batteryInfo bat;
 extern bool isBatterySaving;
 
+float BatteryRead();
 double getBatteryVoltage();
 
 void loopBattery();

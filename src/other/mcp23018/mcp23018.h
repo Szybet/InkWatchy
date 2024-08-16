@@ -6,11 +6,16 @@
 #if ATCHY_VER == YATCHY
 
 #define MCP23018_ADDRESS 0x27 // https://www.chiark.greenend.org.uk/~peterb/electronics/mcp23018/addr
+// 20 on prototype PCB but gpio6 as ADC pin fix
+#define MCP_INTERRUPT_PIN 20 // Pin on esp for the interrupt
 /*
 #define MCP23018_SDA_PIN 22
 #define MCP23018_SCL_PIN 23
 #define MCP23018_I2C_FREQ 10 // In Khz
 */
+
+#define MCP_OUTPUT 1
+#define MCP_INPUT 0
 
 /*
 For interrupts, read the datasheet one more time
@@ -21,7 +26,7 @@ For interrupts, read the datasheet one more time
 #define IODIR 0x00
 /* Controls the polarity inversion of the input pins
 1 = GPIO register bit will reflect the opposite logic state of the input pin.
-0 = GPIO register bit will reflect the same logic state of the input pin 
+0 = GPIO register bit will reflect the same logic state of the input pin
 Why does this exist */
 #define IPOL 0x02
 /* General purpose I/O interrupt-on-change pins
@@ -62,17 +67,43 @@ Not really useful, this register shows which value we want and GPIO register whi
 0 = Logic-low. */
 #define OLAT 0x14
 
-class mcp23018 {
-  public:
-    mcp23018(bool fromWakeUp);
+class mcp23018
+{
+public:
+  mcp23018();
+  void init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
+  void manageInterrupts();
+  void setDefaultInterrupts();
+  void setInterrupt(uint8_t pin, bool interrupt);
+  void setPinMode(uint8_t pin, bool mode); // false input, true output
+  void setPinState(uint8_t pin, bool state);
+  void setPinPullUp(uint8_t pin, bool pull);
 
+private:
+  uint16_t iodirReg;
+  uint16_t gpintenReg;
+  uint16_t gppuReg;
+  uint16_t olatReg;
 
-  private:
-    bool resetVerify();
-    void writeRegister(uint8_t reg, uint16_t val);
-    uint16_t readRegister(uint8_t reg);
+  void resetVerify();
+  uint8_t expectInterruptState;
+
+  void setBit(uint16_t &val, uint8_t bit, bool state);
+  void writeRegister(uint8_t reg, uint16_t val);
+  void writeSingleRegister(uint8_t reg, uint8_t val);
+  uint16_t readRegister(uint8_t reg);
+  uint8_t readSingleRegister(uint8_t reg);
+#if DEBUG
+  void dumpAllRegisters();
+#endif
 };
 
+extern mcp23018 gpioExpander;
+
+#if DEBUG
+String uint16ToBinaryString(uint16_t value);
+String uint8ToBinaryString(uint8_t value);
+#endif
 
 #endif
 #endif
