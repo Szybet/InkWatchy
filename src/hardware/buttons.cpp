@@ -141,6 +141,15 @@ void loopButtonsTask(void *parameter)
         buttonState interruptedButtonCopy = interruptedButton;
         // debugLog("interruptedButtonCopy: " + getButtonString(interruptedButtonCopy));
         // debugLog("buttonPressed: " + getButtonString(buttonPressed));
+
+        #if ATCHY_VER == YATCHY
+            if(interruptedButtonCopy == Unknown) {
+                #if ATCHY_VER == YATCHY
+                    interruptedButtonCopy = gpioExpander.manageInterrupts();
+                #endif
+            }
+        #endif
+
         buttMut.lock();
         if (interruptedButtonCopy == Back && buttonPressed != LongBack)
         {
