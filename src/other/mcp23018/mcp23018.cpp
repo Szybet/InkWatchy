@@ -129,6 +129,7 @@ void mcp23018::resetVerify()
 bool mcp23018::digitalRead(uint8_t pin) {
   initI2C();
   // Manage YATCHY_BACK_BTN not existing here
+  // Also consider using interrupts
   return checkBit(readRegister(GPIO), pin);
 }
 
