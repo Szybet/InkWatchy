@@ -78,10 +78,12 @@ void initButtons(bool isFromWakeUp)
     rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
     rtc_gpio_pullup_en((gpio_num_t)UP_PIN);
 #endif
+#if ATCHY_VER != YATCHY
     pinMode(MENU_PIN, INPUT);
     pinMode(BACK_PIN, INPUT);
     pinMode(UP_PIN, INPUT);
     pinMode(DOWN_PIN, INPUT);
+#endif
 #if ATCHY_VER == WATCHY_3
     rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
     rtc_gpio_pullup_en((gpio_num_t)UP_PIN);
@@ -103,7 +105,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
 {
     int startime = millisBetter();
     int elapsedtime = 0;
-    while (digitalRead(buttonPin) == BUT_CLICK_STATE && elapsedtime < BUTTON_LONG_PRESS_MS)
+    while (buttonRead(buttonPin) == BUT_CLICK_STATE && elapsedtime < BUTTON_LONG_PRESS_MS)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
         elapsedtime = millisBetter() - startime;
@@ -113,7 +115,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
     {
         setButton(longButton);
         vibrateMotor(VIBRATION_BUTTON_TIME * 1.7, true);
-        while (digitalRead(buttonPin) == BUT_CLICK_STATE)
+        while (buttonRead(buttonPin) == BUT_CLICK_STATE)
         {
             delayTask(SMALL_BUTTON_DELAY_MS);
         }
@@ -130,7 +132,7 @@ void loopButtonsTask(void *parameter)
 {
     buttonsActivated = true;
     // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
-    while (digitalRead(BACK_PIN) == BUT_CLICK_STATE || digitalRead(MENU_PIN) == BUT_CLICK_STATE || digitalRead(UP_PIN) == BUT_CLICK_STATE || digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
+    while (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
     }
@@ -142,13 +144,15 @@ void loopButtonsTask(void *parameter)
         // debugLog("interruptedButtonCopy: " + getButtonString(interruptedButtonCopy));
         // debugLog("buttonPressed: " + getButtonString(buttonPressed));
 
-        #if ATCHY_VER == YATCHY
-            if(interruptedButtonCopy == Unknown) {
-                #if ATCHY_VER == YATCHY
-                    interruptedButtonCopy = gpioExpander.manageInterrupts();
-                #endif
-            }
-        #endif
+#if ATCHY_VER == YATCHY
+        if (interruptedButtonCopy == Unknown)
+        {
+#if ATCHY_VER == YATCHY
+            interruptedButtonCopy = gpioExpander.manageInterrupts();
+            debugLog("Received button from gpio expander: " + getButtonString(buttonPressed));
+#endif
+        }
+#endif
 
         buttMut.lock();
         if (interruptedButtonCopy == Back && buttonPressed != LongBack)
@@ -195,7 +199,7 @@ void loopButtonsTask(void *parameter)
 void loopButtonsTask(void *parameter)
 {
     // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
-    while (digitalRead(BACK_PIN) == HIGH || digitalRead(MENU_PIN) == HIGH || digitalRead(UP_PIN) == HIGH || digitalRead(DOWN_PIN) == HIGH)
+    while (buttonRead(BACK_PIN) == HIGH || buttonRead(MENU_PIN) == HIGH || buttonRead(UP_PIN) == HIGH || buttonRead(DOWN_PIN) == HIGH)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
     }
@@ -203,25 +207,25 @@ void loopButtonsTask(void *parameter)
     {
         delayTask(BUTTON_TASK_DELAY);
         buttMut.lock();
-        if (digitalRead(BACK_PIN) == HIGH && buttonPressed != LongBack)
+        if (buttonRead(BACK_PIN) == HIGH && buttonPressed != LongBack)
         {
             buttMut.unlock();
             longButtonCheck(BACK_PIN, Back, LongBack);
             buttMut.lock();
         }
-        else if (digitalRead(MENU_PIN) == HIGH && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu)
+        else if (buttonRead(MENU_PIN) == HIGH && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu)
         {
             buttMut.unlock();
             longButtonCheck(MENU_PIN, Menu, LongMenu);
             buttMut.lock();
         }
-        else if (digitalRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu && buttonPressed != LongUp)
+        else if (buttonRead(UP_PIN) == HIGH && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongBack && buttonPressed != LongMenu && buttonPressed != LongUp)
         {
             buttMut.unlock();
             longButtonCheck(UP_PIN, Up, LongUp);
             buttMut.lock();
         }
-        else if (digitalRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongUp && buttonPressed != LongBack && buttonPressed != LongDown && buttonPressed != LongMenu)
+        else if (buttonRead(DOWN_PIN) == HIGH && buttonPressed != Up && buttonPressed != Menu && buttonPressed != Back && buttonPressed != LongUp && buttonPressed != LongBack && buttonPressed != LongDown && buttonPressed != LongMenu)
         {
             buttMut.unlock();
             longButtonCheck(DOWN_PIN, Down, LongDown);
@@ -278,7 +282,7 @@ void wakeUpLong(int pin, buttonState normal, buttonState hold)
 {
     long timeTime = millisBetter();
 
-    while (digitalRead(pin) == BUT_CLICK_STATE && timeTime + BUTTON_LONG_PRESS_MS > millisBetter())
+    while (buttonRead(pin) == BUT_CLICK_STATE && timeTime + BUTTON_LONG_PRESS_MS > millisBetter())
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
     }
@@ -287,7 +291,7 @@ void wakeUpLong(int pin, buttonState normal, buttonState hold)
     {
         buttonPressed = hold;
     }
-    else if (digitalRead(pin) == BUT_STATE)
+    else if (buttonRead(pin) == BUT_STATE)
     {
         buttonPressed = normal;
     }
@@ -298,6 +302,7 @@ void manageButtonWakeUp()
 {
     pinMode(VIB_MOTOR_PIN, OUTPUT);
     vibrateMotor();
+#if ATCHY_VER != YATCHY
     initButtons(true);
     uint64_t wakeupBit;
     wakeupBit = esp_sleep_get_ext1_wakeup_status();
@@ -321,24 +326,45 @@ void manageButtonWakeUp()
         wakeUpLong(UP_PIN, Up, LongUp);
         return;
     }
+#else
+    buttonState btn = gpioExpander.manageInterrupts();
+#ifdef YATCHY_BACK_BTN
+    if(btn == Back) {
+        wakeUpLong(BACK_PIN, Back, LongBack);
+        return;
+    }
+#endif
+    if(btn == Menu) {
+        wakeUpLong(MENU_PIN, Menu, LongMenu);
+        return;
+    }
+    if(btn == Down) {
+        wakeUpLong(DOWN_PIN, Down, LongDown);
+        return;
+    }
+    if(btn == Up) {
+        wakeUpLong(UP_PIN, Up, LongUp);
+        return;
+    }
+#endif
 }
 
 #if DEBUG
 void dumpButtons()
 {
-    if (digitalRead(MENU_PIN) == BUT_CLICK_STATE)
+    if (buttonRead(MENU_PIN) == BUT_CLICK_STATE)
     {
         debugLog("Menu button pressed");
     }
-    else if (digitalRead(BACK_PIN) == BUT_CLICK_STATE)
+    else if (buttonRead(BACK_PIN) == BUT_CLICK_STATE)
     {
         debugLog("Back button pressed");
     }
-    else if (digitalRead(UP_PIN) == BUT_CLICK_STATE)
+    else if (buttonRead(UP_PIN) == BUT_CLICK_STATE)
     {
         debugLog("Up button pressed");
     }
-    else if (digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
+    else if (buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
     {
         debugLog("Down button pressed");
     }
@@ -348,6 +374,8 @@ String getButtonString(buttonState state)
 {
     switch (state)
     {
+    case Unknown:
+        return "Unknown";
     case None:
         return "None";
     case Back:
@@ -367,7 +395,7 @@ String getButtonString(buttonState state)
     case LongDown:
         return "LongDown";
     default:
-        return "None";
+        return "Error";
     }
 }
 #endif
@@ -377,5 +405,12 @@ void turnOnButtons()
     initButtonTask();
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_3 || ATCHY_VER == YATCHY
     turnOnInterrupts();
+#endif
+}
+bool buttonRead(uint8_t pin) {
+#if ATCHY_VER != YATCHY
+    return digitalRead(pin);
+#else
+    return gpioExpander.digitalRead(pin);
 #endif
 }

@@ -71,10 +71,14 @@ void goSleep()
     {
         // deInitButtonTask(); // Should work now, reanable it later TODO
         // noInterrupts(); // Holy shit not this shit
+#if ATCHY_VER != YATCHY
         detachInterrupt(UP_PIN);
         detachInterrupt(DOWN_PIN);
         detachInterrupt(BACK_PIN);
         detachInterrupt(MENU_PIN);
+#else
+        detachInterrupt(MCP_INTERRUPT_PIN);
+#endif
     }
 
     // Shouldn't ever happen, as no interactions are going on
@@ -103,7 +107,11 @@ void goSleep()
     LittleFS.end();
     // Not needed since small rtc 2.3.7
     // esp_err_t ext0Err = esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
+#if ATCHY_VER != YATCHY
     esp_err_t ext1Err = esp_sleep_enable_ext1_wakeup(pinToMask(UP_PIN) | pinToMask(DOWN_PIN) | pinToMask(MENU_PIN) | pinToMask(BACK_PIN), EXT1_WAKEUP_STATE);
+#else
+    esp_err_t ext1Err = esp_sleep_enable_ext1_wakeup(pinToMask(MCP_INTERRUPT_PIN), EXT1_WAKEUP_STATE);
+#endif
     if (ext1Err != ESP_OK)
     {
         Serial.begin(SERIAL_BAUDRATE);
@@ -166,7 +174,7 @@ void manageSleep()
             }
 #endif
 
-            if (digitalRead(BACK_PIN) == BUT_CLICK_STATE || digitalRead(MENU_PIN) == BUT_CLICK_STATE || digitalRead(UP_PIN) == BUT_CLICK_STATE || digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
+            if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
             {
                 // Basically one more watchdog test
 #if WATCHDOG_TASK

@@ -89,7 +89,7 @@ void initDisplay(bool isFromWakeUp)
                 delay(100);
             }
             flushLogs();
-            while (digitalRead(BACK_PIN) != BUT_CLICK_STATE && digitalRead(MENU_PIN) != BUT_CLICK_STATE && digitalRead(UP_PIN) != BUT_CLICK_STATE && digitalRead(DOWN_PIN) != BUT_CLICK_STATE)
+            while (buttonRead(BACK_PIN) != BUT_CLICK_STATE && buttonRead(MENU_PIN) != BUT_CLICK_STATE && buttonRead(UP_PIN) != BUT_CLICK_STATE && buttonRead(DOWN_PIN) != BUT_CLICK_STATE)
             {
                 delay(1000);
             }

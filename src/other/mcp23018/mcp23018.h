@@ -74,10 +74,12 @@ public:
   void init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
   buttonState manageInterrupts();
   void setDefaultInterrupts();
+  void setDefaultInterruptsEsp();
   void setInterrupt(uint8_t pin, bool interrupt);
   void setPinMode(uint8_t pin, bool mode); // false input, true output
   void setPinState(uint8_t pin, bool state);
   void setPinPullUp(uint8_t pin, bool pull);
+  bool digitalRead(uint8_t pin);
 
 private:
   uint16_t iodirReg;

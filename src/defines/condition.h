@@ -99,13 +99,9 @@ Template for versioning
 #define DOWN_PIN 8
 #define UP_PIN 0
 #elif ATCHY_VER == YATCHY
+// Don't define it, to show errors
 #define BUT_STATE LOW
 #define BUT_CLICK_STATE HIGH
-#define BUTTON_INTER_COND RISING
-#define MENU_PIN -1
-#define BACK_PIN -1
-#define DOWN_PIN -1
-#define UP_PIN -1
 #endif
 
 // Other
@@ -174,9 +170,9 @@ Template for versioning
 
 // Yatchy specific things
 #if ATCHY_VER == YATCHY
-#define YATCHY_MENU_BTN 0 // A0
-#define YATCHY_DOWN_BTN 1 // A1
-#define YATCHY_UP_BTN 2 // A2
+#define MENU_PIN 0 // A0
+#define DOWN_PIN 1 // A1
+#define UP_PIN 2 // A2
 
 #define YATCHY_DISPLAY_CS 8 // B0
 
@@ -186,9 +182,11 @@ Template for versioning
 
 // Select the module
 #define YATCHY_MODULE YATCHY_DEFAULT_MODULE
+// Always define YATCHY_BACK_BTN, maybe just as 255 otherwise compiler errors, done because it simplified code
 
 #if YATCHY_MODULE == YATCHY_DEFAULT_MODULE
 // Everything here is optional
-#define YATCHY_BACK_BTN 3 // A3
+#define BACK_PIN 3 // A3
+#define YATCHY_BACK_BTN
 #endif
 #endif

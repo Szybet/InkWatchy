@@ -24,6 +24,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
 void turnOnInterrupts();
 void resumeButtonTask();
 extern buttonState interruptedButton;
+bool buttonRead(uint8_t pin); // Wrapper for digitalRead for buttons
 
 #if DEBUG
 void dumpButtons();
