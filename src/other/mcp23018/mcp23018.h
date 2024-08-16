@@ -72,7 +72,7 @@ class mcp23018
 public:
   mcp23018();
   void init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
-  void manageInterrupts();
+  buttonState manageInterrupts();
   void setDefaultInterrupts();
   void setInterrupt(uint8_t pin, bool interrupt);
   void setPinMode(uint8_t pin, bool mode); // false input, true output
@@ -89,6 +89,7 @@ private:
   uint8_t expectInterruptState;
 
   void setBit(uint16_t &val, uint8_t bit, bool state);
+  bool checkBit(uint16_t val, uint8_t bit);
   void writeRegister(uint8_t reg, uint16_t val);
   void writeSingleRegister(uint8_t reg, uint8_t val);
   uint16_t readRegister(uint8_t reg);

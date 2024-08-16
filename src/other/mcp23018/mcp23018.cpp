@@ -31,6 +31,28 @@ void mcp23018::init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
   }
 }
 
+buttonState mcp23018::manageInterrupts()
+{
+  debugLog("Launched manageInterrupts");
+  uint16_t interrupts = readRegister(INTCAP);
+
+  if(checkBit(interrupts, YATCHY_BACK_BTN) == true) {
+    return Back;
+  }
+
+  if(checkBit(interrupts, YATCHY_MENU_BTN) == true) {
+    return Menu;
+  }
+
+  if(checkBit(interrupts, YATCHY_DOWN_BTN) == true) {
+    return Down;
+  }
+
+  if(checkBit(interrupts, YATCHY_UP_BTN) == true) {
+    return Up;
+  }
+}
+
 void mcp23018::resetVerify()
 {
   // Init to default value
@@ -151,6 +173,11 @@ void mcp23018::setBit(uint16_t &val, uint8_t bit, bool state)
   {
     val &= ~(1 << bit);
   }
+}
+
+bool mcp23018::checkBit(uint16_t val, uint8_t bit)
+{
+  return (val & (1 << bit)) != 0;
 }
 
 void mcp23018::writeSingleRegister(uint8_t reg, uint8_t val)
