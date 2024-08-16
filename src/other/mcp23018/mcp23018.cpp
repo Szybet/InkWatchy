@@ -20,41 +20,44 @@ void mcp23018::init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
   debugLog("Begin mcp23018 init");
   if (fromWakeUp == false)
   {
-    initI2C(); // When this fails, we are lost
     resetVerify();
   }
+}
 
-  // Set esp things
-  if (isRtcWakeUpReason(wakeUpReason) == false)
-  {
-    attachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN), manageGpioExpanderInt, expectInterruptState);
-  }
+void mcp23018::setDefaultInterruptsEsp() {
+  attachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN), manageGpioExpanderInt, expectInterruptState);
 }
 
 buttonState mcp23018::manageInterrupts()
 {
+  initI2C();
   debugLog("Launched manageInterrupts");
   uint16_t interrupts = readRegister(INTCAP);
 
-  if(checkBit(interrupts, YATCHY_BACK_BTN) == true) {
+#ifdef YATCHY_BACK_BTN
+  if(checkBit(interrupts, BACK_PIN) == true) {
     return Back;
   }
+#endif
 
-  if(checkBit(interrupts, YATCHY_MENU_BTN) == true) {
+  if(checkBit(interrupts, MENU_PIN) == true) {
     return Menu;
   }
 
-  if(checkBit(interrupts, YATCHY_DOWN_BTN) == true) {
+  if(checkBit(interrupts, DOWN_PIN) == true) {
     return Down;
   }
 
-  if(checkBit(interrupts, YATCHY_UP_BTN) == true) {
+  if(checkBit(interrupts, UP_PIN) == true) {
     return Up;
   }
+
+  return None;
 }
 
 void mcp23018::resetVerify()
 {
+      initI2C(); // When this fails, we are lost
   // Init to default value
   writeRegister(0, FULL_REG);
   for (byte i = 2; i < 22; i = i + 2)
@@ -123,14 +126,20 @@ void mcp23018::resetVerify()
   isDebug(dumpAllRegisters());
 }
 
+bool mcp23018::digitalRead(uint8_t pin) {
+  initI2C();
+  // Manage YATCHY_BACK_BTN not existing here
+  return checkBit(readRegister(GPIO), pin);
+}
+
 void mcp23018::setDefaultInterrupts()
 {
-  setInterrupt(YATCHY_MENU_BTN, true);
-  setInterrupt(YATCHY_DOWN_BTN, true);
-  setInterrupt(YATCHY_UP_BTN, true);
 #ifdef YATCHY_BACK_BTN
-  setInterrupt(YATCHY_BACK_BTN, true);
+  setInterrupt(BACK_PIN, true);
 #endif
+  setInterrupt(MENU_PIN, true);
+  setInterrupt(DOWN_PIN, true);
+  setInterrupt(UP_PIN, true);
 }
 
 void mcp23018::setInterrupt(uint8_t pin, bool interrupt)

@@ -105,7 +105,6 @@ void initHardwareDebug()
 {
     initRTCDebug();
     debugLog("Hardware version: " + String(HWVer));
-    debugLog("Up button pin number: " + String(UP_PIN));
     initDisplayDebug();
     initGeneralDebug();
 }
