@@ -8,7 +8,12 @@ RTC_DATA_ATTR bool isBatterySaving = false;
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5 || ATCHY_VER == WATCHY_3
 float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / ADC_VOLTAGE_DIVIDER; }
 #elif ATCHY_VER == YATCHY
-float BatteryRead() { return 0.0; }
+float BatteryRead() { 
+    // TODO: manage interrupts here
+    uint32_t volts = analogReadMilliVolts(BATT_ADC_PIN) / ADC_VOLTAGE_DIVIDER;
+    debugLog("volts: " + String(volts));
+    return volts;
+}
 #endif
 
 double getBatteryVoltage()

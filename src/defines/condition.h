@@ -128,8 +128,8 @@ Template for versioning
 #define VIB_MOTOR_PIN -1
 #define RTC_INT_PIN -1
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_LOW
-#define BATT_ADC_PIN -1
-#define ADC_VOLTAGE_DIVIDER -1
+#define BATT_ADC_PIN 6
+#define ADC_VOLTAGE_DIVIDER 710.094f // 300K and 806K
 #define CHRG_STATUS_PIN -1
 #endif
 

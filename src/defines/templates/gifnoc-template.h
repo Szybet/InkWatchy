@@ -172,7 +172,7 @@
 #define NO_CHARGING 0                 // Disable detection of charging, only in debug
 #define RESET_RTC_ON_BOOT 0           // Experimental.
 #define BATTERY_TIME_DROP 0           // If enabled, if battery drops below BATTERY_TIME_DROP_VOLTAGE. Doesn't need DEBUG
-#define BATTERY_TIME_DROP_VOLTAGE 3.5 // Needs to be float
+#define BATTERY_TIME_DROP_VOLTAGE 3.50 // Needs to be float
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
