@@ -5,28 +5,21 @@
 RTC_DATA_ATTR batteryInfo bat;
 RTC_DATA_ATTR bool isBatterySaving = false;
 
-#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5 || ATCHY_VER == WATCHY_3
 float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / ADC_VOLTAGE_DIVIDER; }
-#elif ATCHY_VER == YATCHY
-float BatteryRead() { 
-    // TODO: manage interrupts here
-    uint32_t volts = analogReadMilliVolts(BATT_ADC_PIN) / ADC_VOLTAGE_DIVIDER;
-    debugLog("volts: " + String(volts));
-    return volts;
-}
-#endif
 
-double getBatteryVoltage()
+float getBatteryVoltage()
 {
-    double sum = 0;
+    float sum = 0;
 
     for (int i = 0; i < VOLTAGE_AVG_COUNT; i++)
     {
-        sum += BatteryRead() - 0.0125;
+        sum += BatteryRead();// - 0.0125;
         delay(VOLTAGE_AVG_DELAY);
     }
 
-    return sum / VOLTAGE_AVG_COUNT;
+    float batVoltFinish = sum / VOLTAGE_AVG_COUNT;
+    debugLog("So battery voltage: " + String(batVoltFinish));
+    return batVoltFinish;
 }
 
 void initBattery()

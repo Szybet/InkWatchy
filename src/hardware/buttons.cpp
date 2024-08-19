@@ -329,20 +329,24 @@ void manageButtonWakeUp()
 #else
     buttonState btn = gpioExpander.manageInterrupts();
 #ifdef YATCHY_BACK_BTN
-    if(btn == Back) {
+    if (btn == Back)
+    {
         wakeUpLong(BACK_PIN, Back, LongBack);
         return;
     }
 #endif
-    if(btn == Menu) {
+    if (btn == Menu)
+    {
         wakeUpLong(MENU_PIN, Menu, LongMenu);
         return;
     }
-    if(btn == Down) {
+    if (btn == Down)
+    {
         wakeUpLong(DOWN_PIN, Down, LongDown);
         return;
     }
-    if(btn == Up) {
+    if (btn == Up)
+    {
         wakeUpLong(UP_PIN, Up, LongUp);
         return;
     }
@@ -402,12 +406,17 @@ String getButtonString(buttonState state)
 
 void turnOnButtons()
 {
-    initButtonTask();
+    if (buttonsActivated == false)
+    {
+        initButtonTask();
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_3 || ATCHY_VER == YATCHY
-    turnOnInterrupts();
+        turnOnInterrupts();
 #endif
+    }
 }
-bool buttonRead(uint8_t pin) {
+
+bool buttonRead(uint8_t pin)
+{
 #if ATCHY_VER != YATCHY
     return digitalRead(pin);
 #else

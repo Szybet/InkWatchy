@@ -24,7 +24,9 @@ void mcp23018::init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
   }
 }
 
-void mcp23018::setDefaultInterruptsEsp() {
+void mcp23018::setDefaultInterruptsEsp()
+{
+  //pinMode(MCP_INTERRUPT_PIN, INPUT); // maybe no
   attachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN), manageGpioExpanderInt, expectInterruptState);
 }
 
@@ -33,31 +35,43 @@ buttonState mcp23018::manageInterrupts()
   initI2C();
   debugLog("Launched manageInterrupts");
   uint16_t interrupts = readRegister(INTCAP);
-
+  debugLog("Interrupt bits: " + uint16ToBinaryString(interrupts));
+  dumpAllRegisters();
+  // What is going on here
+  
 #ifdef YATCHY_BACK_BTN
-  if(checkBit(interrupts, BACK_PIN) == true) {
+  if (checkBit(interrupts, BACK_PIN) == true)
+  {
+    debugLog("Gpio expander back");
     return Back;
   }
 #endif
 
-  if(checkBit(interrupts, MENU_PIN) == true) {
+  if (checkBit(interrupts, MENU_PIN) == true)
+  {
+    debugLog("Gpio expander menu");
     return Menu;
   }
 
-  if(checkBit(interrupts, DOWN_PIN) == true) {
+  if (checkBit(interrupts, DOWN_PIN) == true)
+  {
+    debugLog("Gpio expander down pin");
     return Down;
   }
 
-  if(checkBit(interrupts, UP_PIN) == true) {
+  if (checkBit(interrupts, UP_PIN) == true)
+  {
+    debugLog("Gpio expander up pin");
     return Up;
   }
 
+  debugLog("No interrupt? returning none");
   return None;
 }
 
 void mcp23018::resetVerify()
 {
-      initI2C(); // When this fails, we are lost
+  initI2C(); // When this fails, we are lost
   // Init to default value
   writeRegister(0, FULL_REG);
   for (byte i = 2; i < 22; i = i + 2)
@@ -93,6 +107,7 @@ void mcp23018::resetVerify()
   // odr to 1 if battery voltage is above 3.0V
   // intpol to 1 if battery voltage is below 3.0V
   // intcc to 1
+  /*
   uint8_t bitToHigh = 0;
   if (BatteryRead() > 3.0)
   {
@@ -104,6 +119,15 @@ void mcp23018::resetVerify()
     bitToHigh = 1;
     expectInterruptState = RISING;
   }
+  */
+  uint8_t bitToHigh = 0;
+  bitToHigh = 2;
+  expectInterruptState = FALLING; // FALLING
+  if (BatteryRead() < 3.0)
+  {
+    debugLog("Interrupt is already low?");
+  }
+
   uint8_t iocon = 0b01000001 | (1 << bitToHigh);
   debugLog("Final iocon is: " + uint8ToBinaryString(iocon));
 
@@ -126,7 +150,8 @@ void mcp23018::resetVerify()
   isDebug(dumpAllRegisters());
 }
 
-bool mcp23018::digitalRead(uint8_t pin) {
+bool mcp23018::digitalRead(uint8_t pin)
+{
   initI2C();
   // Manage YATCHY_BACK_BTN not existing here
   // Also consider using interrupts
