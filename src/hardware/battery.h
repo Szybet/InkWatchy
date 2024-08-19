@@ -22,7 +22,7 @@ extern batteryInfo bat;
 extern bool isBatterySaving;
 
 float BatteryRead();
-double getBatteryVoltage();
+float getBatteryVoltage();
 
 void loopBattery();
 void initBattery();

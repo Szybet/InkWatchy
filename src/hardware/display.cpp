@@ -89,9 +89,12 @@ void initDisplay(bool isFromWakeUp)
                 delay(100);
             }
             flushLogs();
-            while (buttonRead(BACK_PIN) != BUT_CLICK_STATE && buttonRead(MENU_PIN) != BUT_CLICK_STATE && buttonRead(UP_PIN) != BUT_CLICK_STATE && buttonRead(DOWN_PIN) != BUT_CLICK_STATE)
+            turnOnButtons();
+
+            while (useAllButtons() == None)
             {
-                delay(1000);
+                loopBattery();
+                delayTask(1000);
             }
             Serial.println("Exiting the stopper...");
         }

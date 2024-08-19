@@ -6,8 +6,8 @@
 #if ATCHY_VER == YATCHY
 
 #define MCP23018_ADDRESS 0x27 // https://www.chiark.greenend.org.uk/~peterb/electronics/mcp23018/addr
-// 20 on prototype PCB but gpio6 as ADC pin fix
-#define MCP_INTERRUPT_PIN 20 // Pin on esp for the interrupt
+// gpio20 on prototype PCB but gpio6 as ADC pin fix
+#define MCP_INTERRUPT_PIN 6 // Pin on esp for the interrupt
 /*
 #define MCP23018_SDA_PIN 22
 #define MCP23018_SCL_PIN 23
@@ -88,7 +88,7 @@ private:
   uint16_t olatReg;
 
   void resetVerify();
-  uint8_t expectInterruptState;
+  int expectInterruptState;
 
   void setBit(uint16_t &val, uint8_t bit, bool state);
   bool checkBit(uint16_t val, uint8_t bit);
