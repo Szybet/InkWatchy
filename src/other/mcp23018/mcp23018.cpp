@@ -7,10 +7,15 @@ RTC_DATA_ATTR mcp23018 gpioExpander;
 #define EMPTY_REG 0
 #define FULL_REG 0xFFFF
 
+bool ignoreInterrupt = false;
 void manageGpioExpanderInt()
 {
-  interruptedButton = Unknown;
-  resumeButtonTask();
+  if (ignoreInterrupt == false)
+  {
+    ignoreInterrupt = true;
+    interruptedButton = Unknown;
+    resumeButtonTask();
+  }
 }
 
 mcp23018::mcp23018() {}
@@ -26,7 +31,7 @@ void mcp23018::init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 
 void mcp23018::setDefaultInterruptsEsp()
 {
-  //pinMode(MCP_INTERRUPT_PIN, INPUT); // maybe no
+  // pinMode(MCP_INTERRUPT_PIN, INPUT); // maybe no
   attachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN), manageGpioExpanderInt, expectInterruptState);
 }
 
@@ -34,39 +39,63 @@ buttonState mcp23018::manageInterrupts()
 {
   initI2C();
   debugLog("Launched manageInterrupts");
+  debugLog("BatteryRead1: " + String(BatteryRead()));
+  // Then we read the interrupts
   uint16_t interrupts = readRegister(INTCAP);
+  // We disable all interrupts, we don't want new ones now
+  writeRegister(GPINTEN, EMPTY_REG);
   debugLog("Interrupt bits: " + uint16ToBinaryString(interrupts));
   dumpAllRegisters();
   // What is going on here
-  
-#ifdef YATCHY_BACK_BTN
-  if (checkBit(interrupts, BACK_PIN) == true)
+
+  debugLog("BatteryRead2: " + String(BatteryRead()));
+  buttonState selectedbtn = None;
+  // I want a break call here
+  while (true)
   {
-    debugLog("Gpio expander back");
-    return Back;
-  }
+#ifdef YATCHY_BACK_BTN
+    if (checkBit(interrupts, BACK_PIN) == true)
+    {
+      debugLog("Gpio expander back");
+      selectedbtn = Back;
+      break;
+    }
 #endif
 
-  if (checkBit(interrupts, MENU_PIN) == true)
-  {
-    debugLog("Gpio expander menu");
-    return Menu;
+    if (checkBit(interrupts, MENU_PIN) == true)
+    {
+      debugLog("Gpio expander menu");
+      selectedbtn = Menu;
+      break;
+    }
+
+    if (checkBit(interrupts, DOWN_PIN) == true)
+    {
+      debugLog("Gpio expander down pin");
+      selectedbtn = Down;
+      break;
+    }
+
+    if (checkBit(interrupts, UP_PIN) == true)
+    {
+      debugLog("Gpio expander up pin");
+      selectedbtn = Up;
+      break;
+    }
+    break;
   }
 
-  if (checkBit(interrupts, DOWN_PIN) == true)
-  {
-    debugLog("Gpio expander down pin");
-    return Down;
-  }
+  ignoreInterrupt = false;
+  return selectedbtn;
+}
 
-  if (checkBit(interrupts, UP_PIN) == true)
-  {
-    debugLog("Gpio expander up pin");
-    return Up;
-  }
-
-  debugLog("No interrupt? returning none");
-  return None;
+void mcp23018::manageInterruptsExit()
+{
+  // Restore interrupts
+  debugLog("BatteryRead1: " + String(BatteryRead()));
+  debugLog("Restoring interrupts");
+  writeRegister(GPINTEN, gpintenReg);
+  debugLog("BatteryRead1: " + String(BatteryRead()));
 }
 
 void mcp23018::resetVerify()

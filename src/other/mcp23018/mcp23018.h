@@ -73,6 +73,7 @@ public:
   mcp23018();
   void init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
   buttonState manageInterrupts();
+  void manageInterruptsExit();
   void setDefaultInterrupts();
   void setDefaultInterruptsEsp();
   void setInterrupt(uint8_t pin, bool interrupt);
@@ -80,6 +81,9 @@ public:
   void setPinState(uint8_t pin, bool state);
   void setPinPullUp(uint8_t pin, bool pull);
   bool digitalRead(uint8_t pin);
+#if DEBUG
+  void dumpAllRegisters();
+#endif
 
 private:
   uint16_t iodirReg;
@@ -96,9 +100,6 @@ private:
   void writeSingleRegister(uint8_t reg, uint8_t val);
   uint16_t readRegister(uint8_t reg);
   uint8_t readSingleRegister(uint8_t reg);
-#if DEBUG
-  void dumpAllRegisters();
-#endif
 };
 
 extern mcp23018 gpioExpander;
