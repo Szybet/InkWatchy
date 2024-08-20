@@ -149,6 +149,7 @@ void loopButtonsTask(void *parameter)
         {
 #if ATCHY_VER == YATCHY
             interruptedButtonCopy = gpioExpander.manageInterrupts();
+            interruptedButton = interruptedButtonCopy; // to make sure it can "rest" at the end
             debugLog("Received button from gpio expander: " + getButtonString(buttonPressed));
 #endif
         }
@@ -183,6 +184,9 @@ void loopButtonsTask(void *parameter)
         if (interruptedButtonCopy == interruptedButton)
         {
             interruptedButton = None;
+            #if ATCHY_VER == YATCHY
+            gpioExpander.manageInterruptsExit();
+            #endif
             debugLog("Button task going to sleep!"); // That's normal and very efficient
             vTaskSuspend(NULL);
         }
