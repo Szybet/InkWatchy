@@ -125,7 +125,7 @@ Template for versioning
 #define ADC_VOLTAGE_DIVIDER 739.750f // Voltage divider at battery ADC, original values were ((360.0f + 100.0f) / 360.0f), this math is done by GuruSR
 #define CHRG_STATUS_PIN 10 // If HIGH, usb is connected. Someone with a v3 is free to use interrupts for that and enable wakeups for this pin too
 #elif ATCHY_VER == YATCHY
-#define VIB_MOTOR_PIN -1
+#define VIB_MOTOR_PIN 14
 #define RTC_INT_PIN -1
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_LOW
 #define BATT_ADC_PIN 6

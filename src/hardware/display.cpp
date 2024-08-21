@@ -93,10 +93,6 @@ void initDisplay(bool isFromWakeUp)
 
             while (useAllButtons() == None)
             {
-#if ATCHY_VER == YATCHY
-                loopBattery();
-                gpioExpander.dumpAllRegisters();
-#endif
                 delayTask(1000);
             }
             Serial.println("Exiting the stopper...");
