@@ -73,7 +73,7 @@ public:
   mcp23018();
   void init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
   buttonState manageInterrupts();
-  void manageInterruptsExit();
+  bool manageInterruptsExit();
   void setDefaultInterrupts();
   void setDefaultInterruptsEsp();
   void setInterrupt(uint8_t pin, bool interrupt);

@@ -12,6 +12,9 @@ void manageGpioExpanderInt()
 {
   if (ignoreInterrupt == false)
   {
+#if DEBUG
+    Serial.println("ABC123"); // Potential crash
+#endif
     ignoreInterrupt = true;
     interruptedButton = Unknown;
     resumeButtonTask();
@@ -41,12 +44,12 @@ buttonState mcp23018::manageInterrupts()
   debugLog("Launched manageInterrupts");
   debugLog("BatteryRead1: " + String(BatteryRead()));
   // Then we read the interrupts
-  uint16_t interrupts = readRegister(INTCAP);
+  uint16_t gpio_ints = readRegister(INTCAP);
   // We disable all interrupts, we don't want new ones now
-  writeRegister(GPINTEN, EMPTY_REG);
-  debugLog("Interrupt bits: " + uint16ToBinaryString(interrupts));
-  dumpAllRegisters();
-  // What is going on here
+  // writeRegister(GPINTEN, EMPTY_REG); // or not OR NOT we can't in fact do that
+  debugLog("Interrupt bits: " + uint16ToBinaryString(gpio_ints));
+  // dumpAllRegisters();
+  //  What is going on here
 
   debugLog("BatteryRead2: " + String(BatteryRead()));
   buttonState selectedbtn = None;
@@ -54,7 +57,7 @@ buttonState mcp23018::manageInterrupts()
   while (true)
   {
 #ifdef YATCHY_BACK_BTN
-    if (checkBit(interrupts, BACK_PIN) == true)
+    if (checkBit(gpio_ints, BACK_PIN) == true)
     {
       debugLog("Gpio expander back");
       selectedbtn = Back;
@@ -62,21 +65,21 @@ buttonState mcp23018::manageInterrupts()
     }
 #endif
 
-    if (checkBit(interrupts, MENU_PIN) == true)
+    if (checkBit(gpio_ints, MENU_PIN) == true)
     {
       debugLog("Gpio expander menu");
       selectedbtn = Menu;
       break;
     }
 
-    if (checkBit(interrupts, DOWN_PIN) == true)
+    if (checkBit(gpio_ints, DOWN_PIN) == true)
     {
       debugLog("Gpio expander down pin");
       selectedbtn = Down;
       break;
     }
 
-    if (checkBit(interrupts, UP_PIN) == true)
+    if (checkBit(gpio_ints, UP_PIN) == true)
     {
       debugLog("Gpio expander up pin");
       selectedbtn = Up;
@@ -85,17 +88,32 @@ buttonState mcp23018::manageInterrupts()
     break;
   }
 
-  ignoreInterrupt = false;
   return selectedbtn;
 }
 
-void mcp23018::manageInterruptsExit()
+bool mcp23018::manageInterruptsExit()
 {
-  // Restore interrupts
-  debugLog("BatteryRead1: " + String(BatteryRead()));
   debugLog("Restoring interrupts");
-  writeRegister(GPINTEN, gpintenReg);
-  debugLog("BatteryRead1: " + String(BatteryRead()));
+  if (BatteryRead() < 3.0)
+  {
+    debugLog("Voltage below 3.0, running interrupt again: " + String(BatteryRead()));
+    ignoreInterrupt = false;
+    manageGpioExpanderInt();
+    return false;
+  }
+  debugLog("Exiting the interrupt thing");
+  ignoreInterrupt = false;
+  return true;
+  // Restore interrupts
+  // debugLog("BatteryRead1: " + String(BatteryRead()));
+  // debugLog("BTN:" + String(buttonRead(0)));
+  // debugLog("BTN:" + String(buttonRead(1)));
+  // debugLog("BTN:" + String(buttonRead(2)));
+  // debugLog("BTN:" + String(buttonRead(3)));
+  // gpioExpander.dumpAllRegisters();
+  // writeRegister(GPINTEN, gpintenReg);
+  // gpioExpander.dumpAllRegisters();
+  // debugLog("BatteryRead1: " + String(BatteryRead()));
 }
 
 void mcp23018::resetVerify()
@@ -133,8 +151,7 @@ void mcp23018::resetVerify()
   isDebug(dumpAllRegisters());
   // IOCON register
   // mirror 1
-  // odr to 1 if battery voltage is above 3.0V
-  // intpol to 1 if battery voltage is below 3.0V
+  // intpol to 1 if battery voltage is below 3.0V - Not really anymore, usb charger fault
   // intcc to 1
   /*
   uint8_t bitToHigh = 0;
