@@ -427,6 +427,7 @@ bool buttonRead(uint8_t pin)
 #if ATCHY_VER != YATCHY
     return digitalRead(pin);
 #else
-    return gpioExpander.digitalRead(pin);
+    // NOT here
+    return !gpioExpander.digitalRead(pin);
 #endif
 }

@@ -90,7 +90,7 @@ void initDisplay(bool isFromWakeUp)
             }
             flushLogs();
             turnOnButtons();
-
+            gpioExpander.dumpAllRegisters();
             while (useAllButtons() == None)
             {
                 delayTask(1000);
