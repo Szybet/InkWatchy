@@ -1,5 +1,5 @@
 # InkWatchy
-A new innovative **firmware** written from the ground up for the [watchy](https://watchy.sqfmi.com/), by the second developer of [Quill OS](https://github.com/Quill-OS/quill) 
+A new innovative **firmware** written from the ground up for the [watchy](https://watchy.sqfmi.com/)
 
 <p align="center">
   <img src="https://github.com/Szybet/InkWatchy/assets/53944559/0c85d516-ff50-4440-9351-32780107e998" alt="02-demo-10mb""/>
