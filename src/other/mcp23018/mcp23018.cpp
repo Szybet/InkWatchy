@@ -57,7 +57,7 @@ buttonState mcp23018::manageInterrupts()
   while (true)
   {
 #ifdef YATCHY_BACK_BTN
-    if (checkBit(gpio_ints, BACK_PIN) == true)
+    if (checkBit(gpio_ints, BACK_PIN) == false)
     {
       debugLog("Gpio expander back");
       selectedbtn = Back;
@@ -65,21 +65,21 @@ buttonState mcp23018::manageInterrupts()
     }
 #endif
 
-    if (checkBit(gpio_ints, MENU_PIN) == true)
+    if (checkBit(gpio_ints, MENU_PIN) == false)
     {
       debugLog("Gpio expander menu");
       selectedbtn = Menu;
       break;
     }
 
-    if (checkBit(gpio_ints, DOWN_PIN) == true)
+    if (checkBit(gpio_ints, DOWN_PIN) == false)
     {
       debugLog("Gpio expander down pin");
       selectedbtn = Down;
       break;
     }
 
-    if (checkBit(gpio_ints, UP_PIN) == true)
+    if (checkBit(gpio_ints, UP_PIN) == false)
     {
       debugLog("Gpio expander up pin");
       selectedbtn = Up;
@@ -96,24 +96,21 @@ bool mcp23018::manageInterruptsExit()
   debugLog("Restoring interrupts");
   if (BatteryRead() < 3.0)
   {
-    debugLog("Voltage below 3.0, running interrupt again: " + String(BatteryRead()));
-    ignoreInterrupt = false;
-    manageGpioExpanderInt();
-    return false;
+    debugLog("Voltage below 3.0, Clearing interrupt: " + String(BatteryRead()));
+    // We need to read the register one more time because it clears only when the interrupt condition clears eg the button is not clicked
+    readRegister(INTCAP);
+    delayTask(10); // Give it time to restore the voltage
+    if (BatteryRead() < 3.0)
+    {
+      debugLog("Voltage still low after reading register, running again...");
+      ignoreInterrupt = false;
+      manageGpioExpanderInt();
+      return false;
+    }
   }
   debugLog("Exiting the interrupt thing");
   ignoreInterrupt = false;
   return true;
-  // Restore interrupts
-  // debugLog("BatteryRead1: " + String(BatteryRead()));
-  // debugLog("BTN:" + String(buttonRead(0)));
-  // debugLog("BTN:" + String(buttonRead(1)));
-  // debugLog("BTN:" + String(buttonRead(2)));
-  // debugLog("BTN:" + String(buttonRead(3)));
-  // gpioExpander.dumpAllRegisters();
-  // writeRegister(GPINTEN, gpintenReg);
-  // gpioExpander.dumpAllRegisters();
-  // debugLog("BatteryRead1: " + String(BatteryRead()));
 }
 
 void mcp23018::resetVerify()
@@ -211,16 +208,20 @@ void mcp23018::setDefaultInterrupts()
 {
 #ifdef YATCHY_BACK_BTN
   setInterrupt(BACK_PIN, true);
-  setInterruptCause(BACK_PIN, true, true);
+  setInterruptCause(BACK_PIN, true, false);
+  setPinPullUp(BACK_PIN, true);
 #endif
   setInterrupt(MENU_PIN, true);
-  setInterruptCause(MENU_PIN, true, true);
+  setInterruptCause(MENU_PIN, true, false);
+  setPinPullUp(MENU_PIN, true);
 
   setInterrupt(DOWN_PIN, true);
-  setInterruptCause(DOWN_PIN, true, true);
+  setInterruptCause(DOWN_PIN, true, false);
+  setPinPullUp(DOWN_PIN, true);
 
   setInterrupt(UP_PIN, true);
-  setInterruptCause(UP_PIN, true, true);
+  setInterruptCause(UP_PIN, true, false);
+  setPinPullUp(UP_PIN, true);
 }
 
 void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
