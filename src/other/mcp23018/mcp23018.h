@@ -77,6 +77,7 @@ public:
   void setDefaultInterrupts();
   void setDefaultInterruptsEsp();
   void setInterrupt(uint8_t pin, bool interrupt);
+  void setInterruptCause(uint8_t pin, bool enableCause, bool causeState);
   void setPinMode(uint8_t pin, bool mode); // false input, true output
   void setPinState(uint8_t pin, bool state);
   void setPinPullUp(uint8_t pin, bool pull);
@@ -90,6 +91,9 @@ private:
   uint16_t gpintenReg;
   uint16_t gppuReg;
   uint16_t olatReg;
+
+  uint16_t intconReg;
+  uint16_t defvalReg;
 
   void resetVerify();
   int expectInterruptState;

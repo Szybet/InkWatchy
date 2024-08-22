@@ -185,6 +185,9 @@ void mcp23018::resetVerify()
   gppuReg = EMPTY_REG;
   olatReg = EMPTY_REG;
 
+  intconReg = EMPTY_REG;
+  defvalReg = EMPTY_REG;
+
   // isDebug(dumpAllRegisters());
 
   // Set screen cs to low
@@ -208,10 +211,16 @@ void mcp23018::setDefaultInterrupts()
 {
 #ifdef YATCHY_BACK_BTN
   setInterrupt(BACK_PIN, true);
+  setInterruptCause(BACK_PIN, true, true);
 #endif
   setInterrupt(MENU_PIN, true);
+  setInterruptCause(MENU_PIN, true, true);
+
   setInterrupt(DOWN_PIN, true);
+  setInterruptCause(DOWN_PIN, true, true);
+
   setInterrupt(UP_PIN, true);
+  setInterruptCause(UP_PIN, true, true);
 }
 
 void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
@@ -219,6 +228,17 @@ void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
   setBit(gpintenReg, pin, interrupt);
   // debugLog("gpintenReg: " + uint16ToBinaryString(gpintenReg));
   writeRegister(GPINTEN, gpintenReg);
+}
+
+void mcp23018::setInterruptCause(uint8_t pin, bool enableCause, bool causeState)
+{
+  // enableCause writes the bit to INTCON
+  // causeState writes the bit to DEFVAL, but it's a NOT statement because if we want the cause to be true, we need to write the opposite which is false
+  setBit(intconReg, pin, enableCause);
+  setBit(defvalReg, pin, !causeState);
+  
+  writeRegister(INTCON, intconReg);
+  writeRegister(DEFVAL, defvalReg);
 }
 
 // Use MCP_OUTPUT and MCP_INPUT here
