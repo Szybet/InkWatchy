@@ -1,8 +1,8 @@
 #include "RTC.h"
 
-tmElements_t timeRTCLocal;  // Local time
-tmElements_t timeRTCUTC0;   // UTC0 time
-int64_t timeZoneOffset = 0; // The offset the timezone did, can be in minus
+tmElements_t timeRTCLocal;         // Local time
+tmElements_t timeRTCUTC0;          // UTC0 time
+int64_t timeZoneOffset = 0;        // The offset the timezone did, can be in minus
 uint64_t lastTimeRead = 999999999; // Millis of latest reading of the RTC, it's used to get accurate seconds, it's that much to trigger the alarm wakeup if something fails, llabs is there for this reason
 RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
 
@@ -57,6 +57,11 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 
   readRTC();
   setupMillisComparators();
+
+#if DEBUG && RTC_TYPE == INTERNAL_RTC
+  // Should be 1 for external RTC quartz, if it's 0 then it's using the internal RTC which is not accurate
+  debugLog("Internal RTC source clock: " + String(rtc_clk_slow_src_get()));
+#endif
 }
 
 // Make sure you save bare UTC0 time here, no timezone
@@ -489,6 +494,7 @@ void dumpRTCTimeSmall(tmElements_t timeEl)
 
 // It is in fact needed
 // https://github.com/espressif/esp-idf/blob/5ca9f2a49aaabbfaf726da1cc3597c0edb3c4d37/components/newlib/port/esp_time_impl.c#L138
+// Ok maybe not, I'm really confused at this point
 void setupMillisComparators()
 {
   // Every value that compares to millis needs to be set here, or if it's used only locally, like it's initialized every time then we don't need it

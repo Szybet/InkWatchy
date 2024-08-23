@@ -6,4 +6,5 @@ CONFIG_ARDUINO_VARIANT="esp32s3"
 # Enable external crystal properly
 CONFIG_RTC_CLK_SRC_EXT_CRYS=y
 CONFIG_ESP_SYSTEM_RTC_EXT_XTAL=y
+# Uncomfirmed if used on esp32s3, someone with a v3 watchy could dive into the code
 CONFIG_ESP_SYSTEM_RTC_EXT_XTAL_BOOTSTRAP_CYCLES=256 # This value is for faulty RTC clocks, if your external quartz doesn't work, adjust this value
