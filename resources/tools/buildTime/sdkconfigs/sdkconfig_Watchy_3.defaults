@@ -8,3 +8,5 @@ CONFIG_RTC_CLK_SRC_EXT_CRYS=y
 CONFIG_ESP_SYSTEM_RTC_EXT_XTAL=y
 # Uncomfirmed if used on esp32s3, someone with a v3 watchy could dive into the code
 CONFIG_ESP_SYSTEM_RTC_EXT_XTAL_BOOTSTRAP_CYCLES=256 # This value is for faulty RTC clocks, if your external quartz doesn't work, adjust this value
+# https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/kconfig.html#config-rtc-clk-cal-cycles
+CONFIG_RTC_CLK_CAL_CYCLES=3000

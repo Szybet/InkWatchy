@@ -60,6 +60,7 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 
 #if DEBUG && RTC_TYPE == INTERNAL_RTC
   // Should be 1 for external RTC quartz, if it's 0 then it's using the internal RTC which is not accurate
+  // It's set here: https://github.com/espressif/esp-idf/blob/dbce23f8a449eb436b0b574726fe6ce9a6df67cc/components/esp_system/port/soc/esp32c6/clk.c#L179
   debugLog("Internal RTC source clock: " + String(rtc_clk_slow_src_get()));
 #endif
 }
