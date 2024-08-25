@@ -114,7 +114,8 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
     if (elapsedtime > BUTTON_LONG_PRESS_MS)
     {
         setButton(longButton);
-        vibrateMotor(VIBRATION_BUTTON_TIME * 1.7, true);
+        debugLog("Vibrating long button now");
+        vibrateMotor(VIBRATION_BUTTON_LONG_TIME);
         while (buttonRead(buttonPin) == BUT_CLICK_STATE)
         {
             delayTask(SMALL_BUTTON_DELAY_MS);

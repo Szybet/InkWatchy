@@ -102,6 +102,7 @@ extern bufSize emptyBuff;
 #if TEMP_CHECKS_ENABLED
 #include "../hardware/temp/temp.h"
 #endif
+#include "../hardware/motor/motor.h"
 #include "../functions.h"
 #include "../network/wifi/wifiLogic.h"
 #include "../network/wifi/wifiTask.h"

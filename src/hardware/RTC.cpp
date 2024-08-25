@@ -298,6 +298,7 @@ void alarmManageRTC()
   if (getLastTimeReadSec() >= 60)
   {
     debugLog("RTC new minute");
+    loopBattery();
     readRTC();
   }
 }

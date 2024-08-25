@@ -119,55 +119,6 @@ void loopHardwareDebug()
 }
 #endif
 
-TaskHandle_t motorTask = NULL;
-bool motorTaskRunning = false;
-int vibrateTime;
-void vibrateMotorTaskFun(void *parameter)
-{
-    motorTaskRunning = true;
-    debugLog("Motor on");
-    int vibrateTimeout = vibrateTime / VIBRATION_DIVINE;
-    debugLog("vibrateTime: " + String(vibrateTime) + " vibrateTimeout: " + String(vibrateTimeout) + " VIBRATION_DIVINE: " + String(VIBRATION_DIVINE));
-    for (int i = 0; i < vibrateTime / VIBRATION_DIVINE; i++)
-    {
-        digitalWrite(VIB_MOTOR_PIN, true);
-        delayTask(vibrateTimeout);
-        digitalWrite(VIB_MOTOR_PIN, false);
-        delayTask(vibrateTimeout);
-    }
-    debugLog("Motor off");
-    motorTaskRunning = false;
-    vTaskDelete(NULL);
-}
-
-void vibrateMotor(int vTime, bool add)
-{
-    if (disableAllVibration == true)
-    {
-        debugLog("Vibrations are disabled");
-        return;
-    }
-
-    if (motorTaskRunning == false)
-    {
-        debugLog("Creating motor task");
-        vibrateTime = vTime;
-        xTaskCreate(
-            vibrateMotorTaskFun,
-            "motorTask",
-            TASK_STACK_VIBRATION,
-            NULL,
-            MOTOR_PRIORITY,
-            &motorTask);
-    }
-    if (add == true && motorTaskRunning == true)
-    {
-        debugLog("Adding time to motor");
-        vibrateTime = vibrateTime + vTime;
-    }
-    debugLog("Mottor task done");
-}
-
 String resetReasonToString(esp_reset_reason_t reason)
 {
     switch (reason)
