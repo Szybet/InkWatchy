@@ -30,7 +30,9 @@ bool resetReasonHold(esp_reset_reason_t resetReason)
 void initDisplay(bool isFromWakeUp)
 {
     debugLog("initDisplay called: " + BOOL_STR(isFromWakeUp));
+#if EPD_CS != -1
     pinMode(EPD_CS, OUTPUT);
+#endif
     pinMode(EPD_RESET, OUTPUT);
     pinMode(EPD_DC, OUTPUT);
     pinMode(EPD_BUSY, INPUT);

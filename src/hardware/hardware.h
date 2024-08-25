@@ -10,10 +10,6 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
 void resetSleepDelay(int addMs = 0);
 void setSleepDelay(int addMs);
 
-extern TaskHandle_t motorTask;
-extern bool motorTaskRunning;
-void vibrateMotor(int vTime = VIBRATION_BUTTON_TIME, bool add = true);
-
 typedef enum
 {
     minimalSpeed,

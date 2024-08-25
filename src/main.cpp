@@ -113,7 +113,6 @@ void loop()
     watchdogPing();
     alarmManageRTC();
   }
-  loopBattery();
   loopManager();
 
 #if !DEBUG || !NO_SYNC

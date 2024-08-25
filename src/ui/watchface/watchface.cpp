@@ -28,6 +28,7 @@ bool wentToSleep = false; // Don't go to sleep after one try of noClickedButton 
 void loopWatchfaceLoop()
 {
   debugLog("Executing loop watch face");
+  bool timeHappened = true;
   if (wFTime.Minute != timeRTCLocal.Minute || wFTime.Hour != timeRTCLocal.Hour) // Hour too because of timezone
   {
     dUChange = true;
@@ -55,6 +56,10 @@ void loopWatchfaceLoop()
     }
 
     wfModulesManage(None);
+  }
+  else
+  {
+    timeHappened = false;
   }
 
   // Hmm this could be in the minute checker
@@ -97,4 +102,9 @@ void loopWatchfaceLoop()
 
   // We ignore sleep because probably we will want to go to sleep fast
   disUp(dUChange, false, true);
+  
+  if (timeHappened == false && bt == None && wentToSleep == true)
+  {
+    delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
+  }
 }

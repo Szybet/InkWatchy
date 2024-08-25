@@ -13,7 +13,7 @@ void manageGpioExpanderInt()
   if (ignoreInterrupt == false)
   {
 #if DEBUG
-    Serial.println("ABC123"); // Potential crash
+    //Serial.println("ABC123"); // Potential crash
 #endif
     ignoreInterrupt = true;
     interruptedButton = Unknown;

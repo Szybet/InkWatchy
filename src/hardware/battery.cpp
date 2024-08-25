@@ -7,17 +7,43 @@ RTC_DATA_ATTR bool isBatterySaving = false;
 
 float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / ADC_VOLTAGE_DIVIDER; }
 
+#if ATCHY_VER == YATCHY
+#define FALLBACK_BATTERY_VOLTAGE 4.12345
+float previousGoodRead = FALLBACK_BATTERY_VOLTAGE;
+#endif
 float getBatteryVoltage()
 {
-    float sum = 0;
-
+    uint8_t readedTimes = 0;
+#if ATCHY_VER != YATCHY
+    float sum = 0.0;
     for (int i = 0; i < VOLTAGE_AVG_COUNT; i++)
     {
-        sum += BatteryRead();// - 0.0125;
+        sum += BatteryRead();
+        readedTimes = readedTimes + 1;
         delay(VOLTAGE_AVG_DELAY);
     }
+#else
+    float sum = 0.0;
+    float previousRead = 0.0;
+    for (int i = 0; i < VOLTAGE_AVG_COUNT; i++)
+    {   float readed = BatteryRead();
+        if((previousRead != 0.0 && abs(previousRead - readed) > 0.6) || readed == 0.0) {
+            if(previousRead > 3.3) {
+                break;
+            } else {
+                if(previousGoodRead == FALLBACK_BATTERY_VOLTAGE) {
+                    debugLog("Returning fallback battery voltage");
+                }
+                return previousGoodRead;
+            }
+        }
+        sum += readed;
+        readedTimes = readedTimes + 1;
+        delayTask(VOLTAGE_AVG_DELAY);
+    }
 
-    float batVoltFinish = sum / VOLTAGE_AVG_COUNT;
+#endif
+    float batVoltFinish = sum / readedTimes;
     debugLog("So battery voltage: " + String(batVoltFinish));
     return batVoltFinish;
 }
