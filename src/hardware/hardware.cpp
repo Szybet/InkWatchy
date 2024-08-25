@@ -69,6 +69,10 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     {
         loadAllStorage();
         initBattery();
+    } else {
+        // This is for RTC wakeup
+        // We could put loop battery inside init battery and pass a bool, but for now this
+        loopBattery();
     }
     /*
     // Not available :(
