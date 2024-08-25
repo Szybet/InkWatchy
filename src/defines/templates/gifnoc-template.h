@@ -5,10 +5,10 @@
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // Watchy_GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you want some more restrictive battery measurments
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
-#define VIBRATION_BUTTON_TIME 35 // Time in ms to the motor to vibrate after clicking a button. 0 means none
-#define VIBRATION_ACTION_TIME 60 // Time in ms to the motor to vibrate when the UI receives an action
-// maybe a TLDR: if you don't feel any vibrations, turn the diviner smaller and in reverse. It kind of controls the power of the vibrations while the TIME variables the time its vibrating
-#define VIBRATION_DIVINE 7 // Divider for the time above for it to not vibrate and not just run. Imits PWM... hard to explain, just look at vibrateMotorTaskFun in hardware.cpp
+#define VIBRATION_BUTTON_TIME 90 // Time in ms to the motor to vibrate after clicking a button. 0 means none
+#define VIBRATION_BUTTON_LONG_TIME 60 // This is just an addition to VIBRATION_BUTTON_TIME
+#define VIBRATION_ACTION_TIME 200 // Time in ms to the motor to vibrate when the UI receives an action
+#define VIBRATION_POWER 170 // From 1 to 255, PWM duty cycle. Too low and it can not even vibrate a little
 
 // Timezone! So:
 // - You don't set anything, it will try to ques based on IP, it can fail sometimes
@@ -176,7 +176,7 @@
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
-#define VOLTAGE_AVG_DELAY 5
+#define VOLTAGE_AVG_DELAY 1
 
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3
@@ -211,7 +211,7 @@
 #define BUTTONS_PRIORITY 12
 #define WIFI_PRIORITY_PERSISTENT 4
 #define SCOM_PRIORITY 3
-#define MOTOR_PRIORITY 1
+#define MOTOR_PRIORITY 15
 #define WATCHDOG_PRIORITY 1
 
 // Config
