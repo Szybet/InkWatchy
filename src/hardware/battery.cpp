@@ -69,11 +69,7 @@ void initBattery()
         bat.charV = BAD_BATTERY_CHARGE_VOLTAGE;
     }
 #endif
-    bat.prevVPos = 0;
-    for (int i = 0; i < PREV_VOLTAGE_SIZE; i++)
-    {
-        bat.prevV[i] = 0.0;
-    }
+    bat.prevVOne = 0.0;
 
     bat.oneCheck = true;
     loopBattery();
@@ -95,6 +91,8 @@ void isChargingCheck()
         // debugLog("It's charging because of above voltage");
         bat.isCharging = true;
     }
+    // This did not worked well, sadly
+    /*
     else
     {
         float average = 0;
@@ -126,6 +124,7 @@ void isChargingCheck()
             bat.isCharging = false;
         }
     }
+    */
 #elif ATCHY_VER == WATCHY_3
     // Looks like bad code? go to definition of the pin
     if (analogRead(CHRG_STATUS_PIN) > 4000)
@@ -161,15 +160,20 @@ void loopBattery()
 #endif
         debugLog("prevOne: " + String(bat.prevVOne) + " curV: " + String(bat.curV));
         bat.prevVOne = bat.curV;
-        bat.prevV[bat.prevVPos] = bat.curV;
         // debugLog("bat.curV: " + String(bat.curV));
         // debugLog("bat.charV: " + String(bat.charV));
-        bat.percentage = ((bat.curV - bat.minV) / (bat.maxV - bat.minV)) * 100.0;
-        if (bat.percentage > 100)
+        int batPercTemp = ((bat.curV - bat.minV) / (bat.maxV - bat.minV)) * 100.0;
+        debugLog("Calculated battery percentage, raw: " + String(batPercTemp));
+        if (batPercTemp > 100)
         {
-            // Charging
-            bat.percentage = 100;
+            // Charging for sure
+            batPercTemp = 100;
         }
+        if(batPercTemp < 0) {
+            batPercTemp = 0;
+        }
+        bat.percentage = batPercTemp;
+        debugLog("Current voltage percentage: " + String(bat.percentage));
 
 #if DEBUG && true == 0
         debugLog("Dumping previous voltages:");
@@ -180,12 +184,6 @@ void loopBattery()
 #endif
 
         isChargingCheck();
-        bat.prevVPos = bat.prevVPos + 1;
-        if (bat.prevVPos >= PREV_VOLTAGE_SIZE)
-        {
-            bat.prevVPos = 0;
-        }
-
         loopPowerSavings();
     }
 #if ATCHY_VER == WATCHY_3

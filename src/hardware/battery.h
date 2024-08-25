@@ -10,8 +10,6 @@ struct batteryInfo {
     float critV;
     float maxV;
     float charV;
-    float prevV[PREV_VOLTAGE_SIZE];
-    uint8_t prevVPos;
     bool isCharging;
     uint8_t percentage;
     float prevVOne;
