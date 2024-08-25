@@ -189,14 +189,19 @@ void manageSleep()
             }
 
             uint currentSeconds = getCurrentSeconds();
-            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || currentSeconds < AVOID_SLEEPING_ON_FULL_MINUTE / 2)
+            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || wFTime.Minute != timeRTCLocal.Minute)
             {
                 int toSleepSec = ((AVOID_SLEEPING_ON_FULL_MINUTE - currentSeconds + 60) % 60) + 2; // + 2 to avoid triggering it again
                 debugLog("timeRTCLocal.Second: " + String(timeRTCLocal.Second));
                 debugLog("currentSeconds: " + String(currentSeconds));
                 // This message can appear a few times because watchface will attempt to force to go to sleep
-                debugLog("Too near a full second! delaying it a bit. This device will wait before going to sleep in seconds: " + String(toSleepSec));
-                setSleepDelay(toSleepSec * 1000);
+                if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE))
+                {
+                    debugLog("Too near a full second! delaying it a bit. This device will wait before going to sleep in seconds: " + String(toSleepSec));
+                    setSleepDelay(toSleepSec * 1000);
+                } else {
+                    debugLog("Minute not updated, delaying for one additional loop");
+                }
                 // To make sure the time updates
                 if (currentSeconds < AVOID_SLEEPING_ON_FULL_MINUTE)
                 {
