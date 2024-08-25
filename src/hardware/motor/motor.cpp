@@ -29,8 +29,7 @@ void vibrateMotor(int vTime)
     if (disableAllVibration == true)
     {
         debugLog("Vibrations are disabled");
-        eTaskState taskState = eTaskGetState(motorTask);
-        if (taskState == eSuspended)
+        if (motorTaskRunning == true)
         {
             debugLog("Deleting motor task");
             motorTaskRunning = false;
