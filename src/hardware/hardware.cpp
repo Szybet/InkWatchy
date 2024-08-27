@@ -1,6 +1,5 @@
 #include "hardware.h"
 
-RTC_DATA_ATTR float HWVer;
 int64_t sleepDelayMs;
 #define FIRST_BOOT_FILE "first_boot"
 
@@ -8,47 +7,38 @@ int64_t sleepDelayMs;
 uint64_t loopDumpDelayMs;
 #endif
 
-// Also at boot, but on wake up too
-void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
-{
-    pinMode(VIB_MOTOR_PIN, OUTPUT);
-    digitalWrite(VIB_MOTOR_PIN, false); // To reset the motor button if esp crashed when it was vibrating
+wakeUpInfo bootStatus = {};
 
-    if (isFromWakeUp == false)
+// Also at boot, but on wake up too
+void initHardware()
+{
+
+    bootStatus.bareEspCause = esp_sleep_get_wakeup_cause();
+    bootStatus.resetReason = esp_reset_reason();
+    if (bootStatus.bareEspCause == ESP_SLEEP_WAKEUP_EXT0 || bootStatus.bareEspCause == ESP_SLEEP_WAKEUP_TIMER)
+    {
+        debugLog("Waked up because of RTC");
+        bootStatus.fromWakeup = true;
+        bootStatus.reason = rtc;
+    }
+    else if (bootStatus.bareEspCause == ESP_SLEEP_WAKEUP_EXT1)
+    {
+        debugLog("Waked up because of buttons");
+        debugLog("esp_sleep_get_ext1_wakeup_status: " + String(esp_sleep_get_ext1_wakeup_status()));
+        bootStatus.fromWakeup = true;
+        bootStatus.reason = button;
+        manageButtonWakeUp();
+    }
+
+    if (bootStatus.fromWakeup == false)
     {
         debugLog("Watchy is starting!");
-
-        if (fsSetup() == true)
-        {
-            int firstBoot = fsGetString(FIRST_BOOT_FILE, "0").toInt();
-            if (firstBoot < 1)
-            {
-                if (fsSetString(FIRST_BOOT_FILE, String(firstBoot + 1)) == true)
-                {
-                    if (fsGetString(FIRST_BOOT_FILE, "0").toInt() == firstBoot + 1)
-                    {
-                        debugLog("This is the first boot. Clearing core dump and nvs partition");
-                        debugLog("esp_core_dump_image_erase status: " + String(esp_err_to_name(esp_core_dump_image_erase())));
-                        debugLog("nvs_flash_erase status: " + String(esp_err_to_name(nvs_flash_erase())));
-                        // This may be needed to avoid weird watchdog resets?
-                        delay(1500);
-                        ESP.restart();
-                    }
-                    else
-                    {
-                        debugLog("Failed to write a file to littlefs but no errors reported? fuck...");
-                    }
-                }
-                else
-                {
-                    debugLog("Failed to set first boot file string, little fs is borked?");
-                }
-            }
-        }
+        firstWakeUpManage();
     }
     else
     {
         debugLog("Watchy is waking up!");
+        debugLog("Sleep wakeup reason: " + wakeupSourceToString(bootStatus.bareEspCause));
     }
 
 #if DEBUG == 1
@@ -57,25 +47,28 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     setCpuSpeed(CPU_SPEED);
 #endif
 
-    initRTC(isFromWakeUp, wakeUpReason);
-    initButtons(isFromWakeUp);
+    initRTC();
+    initButtons();
 
     // Before initBattery, but executed always
 #if ATCHY_VER == WATCHY_3
     pinMode(CHRG_STATUS_PIN, INPUT);
 #endif
 
-    if (isFromWakeUp == false)
+    if (bootStatus.fromWakeup == false)
     {
         loadAllStorage();
         initBattery();
-    } else {
+    }
+    else
+    {
         // This is for RTC wakeup
         // We could put loop battery inside init battery and pass a bool, but for now this
         loopBattery();
     }
+
     /*
-    // Not available :(
+    // Implement in the future?
     esp_pm_config_esp32_t pm_config = {
         .max_freq_mhz = 240,        // Set the maximum CPU frequency to 80 MHz
         .min_freq_mhz = 240,        // Set the minimum CPU frequency to 40 MHz
@@ -85,11 +78,7 @@ void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
     debugLog("Configuring pm status: " + String(esp_err_to_name(status)));
     */
 
-#if ATCHY_VER == YATCHY
-    gpioExpander.init(isFromWakeUp, wakeUpReason);
-#endif
-
-    initDisplay(isFromWakeUp);
+    initDisplay();
     resetSleepDelay();
 }
 
@@ -108,7 +97,6 @@ void setSleepDelay(int addMs)
 void initHardwareDebug()
 {
     initRTCDebug();
-    debugLog("Hardware version: " + String(HWVer));
     initDisplayDebug();
     initGeneralDebug();
 }
@@ -156,8 +144,9 @@ String resetReasonToString(esp_reset_reason_t reason)
 
 cpuSpeed savedCpuSpeed = minimalSpeed;
 void setCpuSpeed(cpuSpeed speed)
-{ 
-    if(getCpuSpeed() == speed) {
+{
+    if (getCpuSpeed() == speed)
+    {
         return;
     }
     // Only these values are available
@@ -264,11 +253,33 @@ int64_t millisBetter()
     return esp_timer_get_time() / 1000ULL;
 }
 
-bool isRtcWakeUpReason(esp_sleep_source_t reason)
+void firstWakeUpManage()
 {
-    if (reason == ESP_SLEEP_WAKEUP_EXT0 || reason == ESP_SLEEP_WAKEUP_TIMER)
+    if (fsSetup() == true)
     {
-        return true;
+        int firstBoot = fsGetString(FIRST_BOOT_FILE, "0").toInt();
+        if (firstBoot < 1)
+        {
+            if (fsSetString(FIRST_BOOT_FILE, String(firstBoot + 1)) == true)
+            {
+                if (fsGetString(FIRST_BOOT_FILE, "0").toInt() == firstBoot + 1)
+                {
+                    debugLog("This is the first boot. Clearing core dump and nvs partition");
+                    debugLog("esp_core_dump_image_erase status: " + String(esp_err_to_name(esp_core_dump_image_erase())));
+                    debugLog("nvs_flash_erase status: " + String(esp_err_to_name(nvs_flash_erase())));
+                    // This may be needed to avoid weird watchdog resets?
+                    delay(1500);
+                    ESP.restart();
+                }
+                else
+                {
+                    debugLog("Failed to write a file to littlefs but no errors reported? fuck...");
+                }
+            }
+            else
+            {
+                debugLog("Failed to set first boot file string, little fs is borked?");
+            }
+        }
     }
-    return false;
 }

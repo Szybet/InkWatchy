@@ -8,14 +8,14 @@ RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
 
 RTC_DATA_ATTR SmallRTC SRTC;
 
-void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
+void initRTC()
 {
   timeRTCLocal = {};
   timeRTCUTC0 = {};
 #if RTC_TYPE == EXTERNAL_RTC
   pinMode(RTC_INT_PIN, INPUT);
 #endif
-  if (isFromWakeUp == false)
+  if (bootStatus.fromWakeup == false)
   {
 #if RTC_TYPE == INTERNAL_RTC
     SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
@@ -27,13 +27,12 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 #endif
 
 #if RESET_RTC_ON_BOOT && DEBUG
-    if (isFromWakeUp == false)
+    if (bootStatus.fromWakeup == false)
     {
       SRTC.rtc_pcf.initClock();
     }
 #endif
 
-    HWVer = SRTC.getWatchyHWVer();
 #if TIME_DRIFT_CORRECTION
     if (SRTC.getDrift() == 0)
     {

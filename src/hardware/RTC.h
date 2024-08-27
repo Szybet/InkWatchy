@@ -14,7 +14,7 @@ void timeZoneApply();
 void removeTimeZoneVars();
 extern uint64_t lastTimeRead;
 
-void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
+void initRTC();
 void saveRTC(tmElements_t timeToSave);
 void readRTC();
 void wakeUpManageRTC();

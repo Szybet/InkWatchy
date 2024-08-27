@@ -72,7 +72,7 @@ void useButtonBlank()
     buttMut.unlock();
 }
 
-void initButtons(bool isFromWakeUp)
+void initButtons()
 {
 #if ATCHY_VER == WATCHY_3
     rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
@@ -308,10 +308,10 @@ void wakeUpLong(int pin, buttonState normal, buttonState hold)
 
 void manageButtonWakeUp()
 {
-    pinMode(VIB_MOTOR_PIN, OUTPUT);
+    initMotor();
     vibrateMotor();
 #if ATCHY_VER != YATCHY
-    initButtons(true);
+    initButtons();
     uint64_t wakeupBit;
     wakeupBit = esp_sleep_get_ext1_wakeup_status();
     if (wakeupBit & pinToMask(BACK_PIN))
