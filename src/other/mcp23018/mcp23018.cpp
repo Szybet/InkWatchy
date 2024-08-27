@@ -32,15 +32,36 @@ void mcp23018::init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
   }
 }
 
+bool mcp23018::simplerInit() {
+  if(inited == false) {
+    if(initCount > 5) {
+      return false;
+    }
+    if(resetVerify() == false) {
+      debugLog("Failed to reset-verify the expander");
+      initCount = initCount + 1;
+      delayTask(10);
+      return simplerInit();
+    }
+  }
+  return true;
+}
+
 void mcp23018::setDefaultInterruptsEsp()
 {
+  // This is not needed here?
+  if(simplerInit() == false) {
+    return;
+  }
   // pinMode(MCP_INTERRUPT_PIN, INPUT); // maybe no
   attachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN), manageGpioExpanderInt, expectInterruptState);
 }
 
 buttonState mcp23018::manageInterrupts()
 {
-  initI2C();
+  if(simplerInit() == false) {
+    return Unknown;
+  }
   debugLog("Launched manageInterrupts");
   debugLog("BatteryRead1: " + String(BatteryRead()));
   // Then we read the interrupts
@@ -93,6 +114,9 @@ buttonState mcp23018::manageInterrupts()
 
 bool mcp23018::manageInterruptsExit()
 {
+  if(simplerInit() == false) {
+    return true; // True here because of infinite loop
+  }
   debugLog("Restoring interrupts");
   if (BatteryRead() < 3.0)
   {
@@ -113,9 +137,13 @@ bool mcp23018::manageInterruptsExit()
   return true;
 }
 
-void mcp23018::resetVerify()
+bool mcp23018::resetVerify()
 {
-  initI2C(); // When this fails, we are lost
+  // When this fails, we are lost
+  if(initI2C() == false) {
+    return false;
+  }
+
   // Init to default value
   writeRegister(0, FULL_REG);
   for (byte i = 2; i < 22; i = i + 2)
@@ -125,7 +153,6 @@ void mcp23018::resetVerify()
   // isDebug(dumpAllRegisters());
 
   // Verify
-#if DEBUG
   bool somethingWrong = false;
   if (readRegister(0) != FULL_REG)
   {
@@ -143,8 +170,9 @@ void mcp23018::resetVerify()
   if (somethingWrong == true)
   {
     debugLog("Something is really wrong with the expander!");
+    return false;
   }
-#endif
+
   isDebug(dumpAllRegisters());
   // IOCON register
   // mirror 1
@@ -194,11 +222,15 @@ void mcp23018::resetVerify()
 
   setDefaultInterrupts();
   isDebug(dumpAllRegisters());
+
+  return true;
 }
 
 bool mcp23018::digitalRead(uint8_t pin)
 {
-  initI2C();
+  if(simplerInit() == false) {
+    return false;
+  }
   // Manage YATCHY_BACK_BTN not existing here
   // Also consider using interrupts
   return checkBit(readRegister(GPIO), pin);
@@ -226,6 +258,9 @@ void mcp23018::setDefaultInterrupts()
 
 void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
 {
+  if(simplerInit() == false) {
+    return;
+  }
   setBit(gpintenReg, pin, interrupt);
   // debugLog("gpintenReg: " + uint16ToBinaryString(gpintenReg));
   writeRegister(GPINTEN, gpintenReg);
@@ -233,6 +268,9 @@ void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
 
 void mcp23018::setInterruptCause(uint8_t pin, bool enableCause, bool causeState)
 {
+  if(simplerInit() == false) {
+    return;
+  }
   // enableCause writes the bit to INTCON
   // causeState writes the bit to DEFVAL, but it's a NOT statement because if we want the cause to be true, we need to write the opposite which is false
   setBit(intconReg, pin, enableCause);
@@ -245,6 +283,9 @@ void mcp23018::setInterruptCause(uint8_t pin, bool enableCause, bool causeState)
 // Use MCP_OUTPUT and MCP_INPUT here
 void mcp23018::setPinMode(uint8_t pin, bool mode)
 {
+  if(simplerInit() == false) {
+    return;
+  }
   // NOT is here
   setBit(iodirReg, pin, !mode);
   // debugLog("iodirReg: " + uint16ToBinaryString(iodirReg));
@@ -253,6 +294,9 @@ void mcp23018::setPinMode(uint8_t pin, bool mode)
 
 void mcp23018::setPinState(uint8_t pin, bool state)
 {
+  if(simplerInit() == false) {
+    return;
+  }
   setBit(olatReg, pin, state);
   // debugLog("olatReg: " + uint16ToBinaryString(olatReg));
   writeRegister(OLAT, olatReg);
@@ -260,6 +304,9 @@ void mcp23018::setPinState(uint8_t pin, bool state)
 
 void mcp23018::setPinPullUp(uint8_t pin, bool pull)
 {
+  if(simplerInit() == false) {
+    return;
+  }
   setBit(gppuReg, pin, pull);
   // debugLog("gppuReg: " + uint16ToBinaryString(gppuReg));
   writeRegister(GPPU, gppuReg);

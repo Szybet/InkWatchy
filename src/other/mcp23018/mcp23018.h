@@ -95,8 +95,12 @@ private:
   uint16_t intconReg;
   uint16_t defvalReg;
 
-  void resetVerify();
+  bool resetVerify();
   int expectInterruptState;
+
+  bool simplerInit();
+  bool inited = false;
+  uint8_t initCount = 0;
 
   void setBit(uint16_t &val, uint8_t bit, bool state);
   bool checkBit(uint16_t val, uint8_t bit);

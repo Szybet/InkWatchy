@@ -10,5 +10,5 @@ CONFIG_ESP_SYSTEM_RTC_EXT_XTAL=y
 CONFIG_ESP_SYSTEM_RTC_EXT_XTAL_BOOTSTRAP_CYCLES=256
 # https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/kconfig.html#config-rtc-clk-cal-cycles
 CONFIG_RTC_CLK_CAL_CYCLES=3000
-# A very interesting option but it may decrease battery life? to be tested.
+# It doesn't exist on the esp32c6 :/
 # CONFIG_ESP_XT_WDT=y
