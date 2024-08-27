@@ -18,7 +18,6 @@ void priorityLoopSet(void *parameter)
   }
 }
 
-esp_sleep_wakeup_cause_t wakeUpReason;
 void setup()
 {
 #if DEBUG
@@ -34,31 +33,8 @@ void setup()
   initLogs();
 #endif
 
-  wakeUpReason = esp_sleep_get_wakeup_cause();
-  // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
-  // ESP_SLEEP_WAKEUP_EXT1 Button press
-
-  debugLog("Sleep wakeup reason: " + wakeupSourceToString(wakeUpReason));
-  debugLog("esp_sleep_get_ext1_wakeup_status: " + String(esp_sleep_get_ext1_wakeup_status()));
-  bool wakedUpFromSleep = false;
-
-  if (isRtcWakeUpReason(wakeUpReason) == true || wakeUpReason == BUTTON_WAKEUP_REASON)
-  {
-    wakedUpFromSleep = true;
-    if (isRtcWakeUpReason(wakeUpReason) == true)
-    {
-      debugLog("Waked up because of RTC");
-    }
-    else if (wakeUpReason == BUTTON_WAKEUP_REASON)
-    {
-      debugLog("Waked up because of buttons");
-      manageButtonWakeUp();
-    }
-  }
-
-  initHardware(wakedUpFromSleep, wakeUpReason);
-
-  debugLog("Starting millis: " + String(millisBetter()));
+  initHardware();
+  // debugLog("Starting millis: " + String(millisBetter()));
 
 #if DEBUG
 #if DUMP_INIT_DEBUG
@@ -85,7 +61,7 @@ void setup()
 
   initManager();
 
-  if (isRtcWakeUpReason(wakeUpReason) == false)
+  if (bootStatus.reason != rtc)
   {
     // I trust myself enough now to not need watchdog task running all the time
     initWatchdogTask();
@@ -108,7 +84,7 @@ void loop()
 #if TEMP_CHECKS_ENABLED
   tempChecker();
 #endif
-  if (isRtcWakeUpReason(wakeUpReason) == false)
+  if (bootStatus.reason != rtc)
   {
     watchdogPing();
     alarmManageRTC();

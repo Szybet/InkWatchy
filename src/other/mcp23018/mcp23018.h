@@ -71,7 +71,6 @@ class mcp23018
 {
 public:
   mcp23018();
-  void init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
   buttonState manageInterrupts();
   bool manageInterruptsExit();
   void setDefaultInterrupts();

@@ -16,7 +16,7 @@ void loopButtonsTask(void *parameter);
 void manageButtonWakeUp();
 
 void turnOnButtons();
-void initButtons(bool isFromWakeUp);
+void initButtons();
 void initButtonTask();
 void deInitButtonTask();
 void setButton(buttonState button);

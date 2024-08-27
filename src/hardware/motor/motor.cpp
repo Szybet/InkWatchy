@@ -4,6 +4,14 @@ TaskHandle_t motorTask = NULL;
 std::mutex motorMutex;
 bool motorTaskRunning = false;
 int vibrateTime;
+
+void initMotor() {
+    if(bootStatus.reason != rtc) {
+        pinMode(VIB_MOTOR_PIN, OUTPUT);
+        digitalWrite(VIB_MOTOR_PIN, false); // To reset the motor button if esp crashed when it was vibrating
+    }
+}
+
 void vibrateMotorTaskFun(void *parameter)
 {
     while (true)

@@ -23,15 +23,6 @@ void manageGpioExpanderInt()
 
 mcp23018::mcp23018() {}
 
-void mcp23018::init(bool fromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
-{
-  debugLog("Begin mcp23018 init");
-  if (fromWakeUp == false)
-  {
-    resetVerify();
-  }
-}
-
 bool mcp23018::simplerInit() {
   if(inited == false) {
     if(initCount > 5) {
