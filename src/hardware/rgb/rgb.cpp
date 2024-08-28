@@ -4,6 +4,10 @@ void setRgb(IWColors color)
 {
 #if RGB_DIODE
 #if ATCHY_VER == YATCHY
+    if (gpioExpander.simplerInit() == false)
+    {
+        return;
+    }
     switch (color)
     {
     case IwNone:

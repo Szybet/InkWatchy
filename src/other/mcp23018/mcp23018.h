@@ -71,6 +71,7 @@ class mcp23018
 {
 public:
   mcp23018();
+  bool simplerInit();
   buttonState manageInterrupts();
   bool manageInterruptsExit();
   void setDefaultInterrupts();
@@ -95,9 +96,7 @@ private:
   uint16_t defvalReg;
 
   bool resetVerify();
-  int expectInterruptState;
 
-  bool simplerInit();
   bool inited = false;
   bool initOngoing = false; // Makes all functions ignore the init. Required for resetVerify function
   uint8_t initCount = 0;
@@ -115,6 +114,7 @@ extern mcp23018 gpioExpander;
 #if DEBUG
 String uint16ToBinaryString(uint16_t value);
 String uint8ToBinaryString(uint8_t value);
+String decimalToHexString(int decimal);
 #endif
 
 #endif

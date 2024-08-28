@@ -8,6 +8,12 @@ void initDisplay()
 #if EPD_CS != -1
     pinMode(EPD_CS, OUTPUT);
 #endif
+#if YATCHY
+    // Set screen cs to low
+    gpioExpander.setPinMode(YATCHY_DISPLAY_CS, MCP_OUTPUT);
+    // setPinPullUp(YATCHY_DISPLAY_CS, false); // Not needed, it's false at default
+    gpioExpander.setPinState(YATCHY_DISPLAY_CS, LOW);
+#endif
     pinMode(EPD_RESET, OUTPUT);
     pinMode(EPD_DC, OUTPUT);
     pinMode(EPD_BUSY, INPUT);
@@ -145,6 +151,8 @@ void resetHoldManage()
             turnOnButtons();
             while (useAllButtons() == None)
             {
+                // gpioExpander.dumpAllRegisters();
+                debugLog("Battery voltage: " + String(BatteryRead()));
                 delayTask(1000);
             }
             Serial.println("Exiting the stopper...");
