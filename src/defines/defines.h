@@ -101,6 +101,7 @@ extern bufSize emptyBuff;
 #include "../hardware/temp/temp.h"
 #endif
 #include "../hardware/motor/motor.h"
+#include "../hardware/rgb/rgb.h"
 #include "../functions.h"
 #include "../network/wifi/wifiLogic.h"
 #include "../network/wifi/wifiTask.h"

@@ -188,5 +188,9 @@ Template for versioning
 // Everything here is optional
 #define BACK_PIN 3 // A3
 #define YATCHY_BACK_BTN
+#define RGB_DIODE 1
+#define RGB_DIODE_RED_PIN 12
+#define RGB_DIODE_GREEN_PIN 11
+#define RGB_DIODE_BLUE_PIN 10
 #endif
 #endif
