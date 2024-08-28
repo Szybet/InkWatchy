@@ -61,6 +61,44 @@ void initRTC()
   // Should be 1 for external RTC quartz, if it's 0 then it's using the internal RTC which is not accurate
   // It's set here: https://github.com/espressif/esp-idf/blob/dbce23f8a449eb436b0b574726fe6ce9a6df67cc/components/esp_system/port/soc/esp32c6/clk.c#L179
   debugLog("Internal RTC source clock: " + String(rtc_clk_slow_src_get()));
+
+  // Some further testing:
+  // Go to /root/.platformio/packages/framework-espidf/components/esp_system/port/soc/esp32c6/clk.c and at line arround 195
+  // ESP_EARLY_LOGD(TAG, "RTC_SLOW_CLK calibration value: %" PRIu32, cal_val);
+  // Change ESP_EARLY_LOGD to ESP_EARLY_LOGE for the value to appear
+  // If you can't catch this log, edit the line ESP_EARLY_LOGD(TAG, "waiting for 32k oscillator to start up"); to
+  /*
+  for(int i = 0; i < 300; i++) {
+    ESP_EARLY_LOGE(TAG, "waiting for 32k oscillator to start up");
+  }
+  */
+  // The value should be arround, 16000000 because, explanation:
+  // This function, select_rtc_slow_clk and the while loop compares how many cycles pass for the 32Khz quartz in x ammount of time (cpu cycles) and compares it to the 160Khz internal clock, which it assumes is accurate to a degree.
+  // So for example:
+  // 16000593 is fine
+  // 15999959 for a 20 ppm clock is good
+
+  // Some more logs I gathered:
+  /*
+  D (1705) clk: waiting for 32k oscillator to start up
+  D (1710) clk: clk 32 enable
+  D (1713) clk: calibrate slow clk
+  W (1716) rtc_time: clk_ll_32k_calibration_set_target
+  W (1720) rtc_time: expected_freq: 32768
+  W (1724) rtc_time: us_time_estimate: 91552
+  W (1819) rtc_time: return cal_val: 3662245
+  W (1820) rtc_time: xtal_cycles: 1082652004
+  W (1820) clk: rtc_slow_clk_src: 1
+  W (1821) rtc_time: clk_ll_32k_calibration_set_target
+  W (1823) rtc_time: expected_freq: 32768
+  W (1827) rtc_time: us_time_estimate: 91552
+  W (1922) rtc_time: return cal_val: 3662245
+  W (1923) rtc_time: xtal_cycles: 1082652004
+  W (1923) clk: cal_val in todo: 16000593
+  D (1924) clk: RTC_SLOW_CLK calibration value: 16000593
+  */
+  // Links:
+  // https://github.com/espressif/esp-idf/issues/11755
 #endif
 }
 
