@@ -78,10 +78,6 @@ void initHardware()
     debugLog("Configuring pm status: " + String(esp_err_to_name(status)));
     */
 
-    setRgb(IwGreen);
-    setRgb(IwRed);
-    setRgb(IwBlue);
-
     initDisplay();
     resetSleepDelay();
 }
