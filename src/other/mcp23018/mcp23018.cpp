@@ -10,10 +10,13 @@ RTC_DATA_ATTR mcp23018 gpioExpander;
 bool ignoreInterrupt = false;
 void manageGpioExpanderInt()
 {
+#if DEBUG
+  // Serial.println("mcpI"); // Potential crash
+#endif
   if (ignoreInterrupt == false)
   {
 #if DEBUG
-    // Serial.println("ABC123"); // Potential crash
+    Serial.println("mcpD"); // Potential crash
 #endif
     ignoreInterrupt = true;
     interruptedButton = Unknown;
@@ -49,12 +52,13 @@ bool mcp23018::simplerInit()
 void mcp23018::setDefaultInterruptsEsp()
 {
   // This is not needed here?
-  if (simplerInit() == false)
-  {
-    return;
-  }
+  // if (simplerInit() == false)
+  //{
+  // return;
+  //}
   // pinMode(MCP_INTERRUPT_PIN, INPUT); // maybe no
-  attachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN), manageGpioExpanderInt, expectInterruptState);
+  debugLog("Attaching gpio expander interrupt pin");
+  attachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN), manageGpioExpanderInt, FALLING);
 }
 
 buttonState mcp23018::manageInterrupts()
@@ -158,6 +162,10 @@ bool mcp23018::resetVerify()
   }
   // isDebug(dumpAllRegisters());
 
+  // Clear it again, to be sure...
+  delayTask(10);
+  readRegister(INTCAP);
+
   // Verify
   bool somethingWrong = false;
   if (readRegister(0) != FULL_REG)
@@ -167,7 +175,8 @@ bool mcp23018::resetVerify()
   }
   for (uint8_t i = 2; i < 22; i = i + 2)
   {
-    if (i == 16 || i == 18)
+    // 16 is weird, it persist but the voltage is what really indicates an interrupt
+    if (i == 18 || i == 16)
     {
       continue;
     }
@@ -177,13 +186,18 @@ bool mcp23018::resetVerify()
       somethingWrong = true;
     }
   }
+  if (BatteryRead() < 3.0)
+  {
+    debugLog("Battery is low, so interrupt too?");
+    somethingWrong = true;
+  }
   if (somethingWrong == true)
   {
     debugLog("Something is really wrong with the expander!");
+    isDebug(dumpAllRegisters());
     return false;
   }
 
-  isDebug(dumpAllRegisters());
   // IOCON register
   // mirror 1
   // intpol to 1 if battery voltage is below 3.0V - Not really anymore, usb charger fault
@@ -203,7 +217,6 @@ bool mcp23018::resetVerify()
   */
   uint8_t bitToHigh = 0;
   bitToHigh = 2;
-  expectInterruptState = FALLING; // FALLING
   if (BatteryRead() < 3.0)
   {
     debugLog("Interrupt is already low?");
@@ -225,17 +238,12 @@ bool mcp23018::resetVerify()
 
   // isDebug(dumpAllRegisters());
 
-  // Set screen cs to low
-  setPinMode(YATCHY_DISPLAY_CS, MCP_OUTPUT);
-  // setPinPullUp(YATCHY_DISPLAY_CS, false); // Not needed, it's false at default
-  setPinState(YATCHY_DISPLAY_CS, LOW);
-
-  #if RGB_DIODE
+#if RGB_DIODE
   setRgb(IwNone);
   setPinMode(RGB_DIODE_RED_PIN, MCP_OUTPUT);
   setPinMode(RGB_DIODE_GREEN_PIN, MCP_OUTPUT);
   setPinMode(RGB_DIODE_BLUE_PIN, MCP_OUTPUT);
-  #endif
+#endif
 
   setDefaultInterrupts();
   isDebug(dumpAllRegisters());
@@ -257,21 +265,21 @@ bool mcp23018::digitalRead(uint8_t pin)
 void mcp23018::setDefaultInterrupts()
 {
 #ifdef YATCHY_BACK_BTN
-  setInterrupt(BACK_PIN, true);
   setInterruptCause(BACK_PIN, true, false);
   setPinPullUp(BACK_PIN, true);
+  setInterrupt(BACK_PIN, true);
 #endif
-  setInterrupt(MENU_PIN, true);
   setInterruptCause(MENU_PIN, true, false);
   setPinPullUp(MENU_PIN, true);
+  setInterrupt(MENU_PIN, true);
 
-  setInterrupt(DOWN_PIN, true);
   setInterruptCause(DOWN_PIN, true, false);
   setPinPullUp(DOWN_PIN, true);
+  setInterrupt(DOWN_PIN, true);
 
-  setInterrupt(UP_PIN, true);
   setInterruptCause(UP_PIN, true, false);
   setPinPullUp(UP_PIN, true);
+  setInterrupt(UP_PIN, true);
 }
 
 void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
@@ -423,12 +431,12 @@ void mcp23018::dumpAllRegisters()
 #if true == true
   for (byte i = 0; i < 22; i = i + 2)
   {
-    debugLog("Register: " + String(i) + " is: " + uint16ToBinaryString(readRegister(i)));
+    debugLog("Register: " + decimalToHexString(i) + " is: " + uint16ToBinaryString(readRegister(i)));
   }
 #else
   for (byte i = 0; i < 22; i++)
   {
-    debugLog("Register: " + String(i) + " is: " + uint8ToBinaryString(readSingleRegister(i)));
+    debugLog("Register: " + decimalToHexString(i) + " is: " + uint8ToBinaryString(readSingleRegister(i)));
   }
 #endif
 }
@@ -451,6 +459,18 @@ String uint8ToBinaryString(uint8_t value)
     binaryString += (value & (1 << i)) ? '1' : '0';
   }
   return binaryString;
+}
+
+String decimalToHexString(int decimal)
+{
+  char hexString[10];
+  sprintf(hexString, "%X", decimal);
+  String str = String(hexString);
+  if (str.length() < 2)
+  {
+    str = "0" + str;
+  }
+  return "0x" + str;
 }
 
 #endif
