@@ -99,6 +99,7 @@ private:
 
   bool simplerInit();
   bool inited = false;
+  bool initOngoing = false; // Makes all functions ignore the init. Required for resetVerify function
   uint8_t initCount = 0;
 
   void setBit(uint16_t &val, uint8_t bit, bool state);

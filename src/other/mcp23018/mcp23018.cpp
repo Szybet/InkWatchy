@@ -13,7 +13,7 @@ void manageGpioExpanderInt()
   if (ignoreInterrupt == false)
   {
 #if DEBUG
-    //Serial.println("ABC123"); // Potential crash
+    // Serial.println("ABC123"); // Potential crash
 #endif
     ignoreInterrupt = true;
     interruptedButton = Unknown;
@@ -23,17 +23,25 @@ void manageGpioExpanderInt()
 
 mcp23018::mcp23018() {}
 
-bool mcp23018::simplerInit() {
-  if(inited == false) {
-    if(initCount > 5) {
+bool mcp23018::simplerInit()
+{
+  if (inited == false && initOngoing == false)
+  {
+    if (initCount > 5)
+    {
       return false;
     }
-    if(resetVerify() == false) {
+    initOngoing = true;
+    if (resetVerify() == false)
+    {
+      initOngoing = false;
       debugLog("Failed to reset-verify the expander");
       initCount = initCount + 1;
       delayTask(10);
       return simplerInit();
     }
+    initOngoing = false;
+    inited = true;
   }
   return true;
 }
@@ -41,7 +49,8 @@ bool mcp23018::simplerInit() {
 void mcp23018::setDefaultInterruptsEsp()
 {
   // This is not needed here?
-  if(simplerInit() == false) {
+  if (simplerInit() == false)
+  {
     return;
   }
   // pinMode(MCP_INTERRUPT_PIN, INPUT); // maybe no
@@ -50,7 +59,8 @@ void mcp23018::setDefaultInterruptsEsp()
 
 buttonState mcp23018::manageInterrupts()
 {
-  if(simplerInit() == false) {
+  if (simplerInit() == false)
+  {
     return Unknown;
   }
   debugLog("Launched manageInterrupts");
@@ -105,7 +115,8 @@ buttonState mcp23018::manageInterrupts()
 
 bool mcp23018::manageInterruptsExit()
 {
-  if(simplerInit() == false) {
+  if (simplerInit() == false)
+  {
     return true; // True here because of infinite loop
   }
   debugLog("Restoring interrupts");
@@ -131,9 +142,13 @@ bool mcp23018::manageInterruptsExit()
 bool mcp23018::resetVerify()
 {
   // When this fails, we are lost
-  if(initI2C() == false) {
+  if (initI2C() == false)
+  {
     return false;
   }
+
+  // To clear if it exists...
+  readRegister(INTCAP);
 
   // Init to default value
   writeRegister(0, FULL_REG);
@@ -152,6 +167,10 @@ bool mcp23018::resetVerify()
   }
   for (uint8_t i = 2; i < 22; i = i + 2)
   {
+    if (i == 16 || i == 18)
+    {
+      continue;
+    }
     if (readRegister(i) != EMPTY_REG)
     {
       debugLog("Register " + String(i) + " is wrong");
@@ -211,6 +230,13 @@ bool mcp23018::resetVerify()
   // setPinPullUp(YATCHY_DISPLAY_CS, false); // Not needed, it's false at default
   setPinState(YATCHY_DISPLAY_CS, LOW);
 
+  #if RGB_DIODE
+  setRgb(IwNone);
+  setPinMode(RGB_DIODE_RED_PIN, MCP_OUTPUT);
+  setPinMode(RGB_DIODE_GREEN_PIN, MCP_OUTPUT);
+  setPinMode(RGB_DIODE_BLUE_PIN, MCP_OUTPUT);
+  #endif
+
   setDefaultInterrupts();
   isDebug(dumpAllRegisters());
 
@@ -219,7 +245,8 @@ bool mcp23018::resetVerify()
 
 bool mcp23018::digitalRead(uint8_t pin)
 {
-  if(simplerInit() == false) {
+  if (simplerInit() == false)
+  {
     return false;
   }
   // Manage YATCHY_BACK_BTN not existing here
@@ -249,7 +276,8 @@ void mcp23018::setDefaultInterrupts()
 
 void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
 {
-  if(simplerInit() == false) {
+  if (simplerInit() == false)
+  {
     return;
   }
   setBit(gpintenReg, pin, interrupt);
@@ -259,14 +287,15 @@ void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
 
 void mcp23018::setInterruptCause(uint8_t pin, bool enableCause, bool causeState)
 {
-  if(simplerInit() == false) {
+  if (simplerInit() == false)
+  {
     return;
   }
   // enableCause writes the bit to INTCON
   // causeState writes the bit to DEFVAL, but it's a NOT statement because if we want the cause to be true, we need to write the opposite which is false
   setBit(intconReg, pin, enableCause);
   setBit(defvalReg, pin, !causeState);
-  
+
   writeRegister(INTCON, intconReg);
   writeRegister(DEFVAL, defvalReg);
 }
@@ -274,7 +303,8 @@ void mcp23018::setInterruptCause(uint8_t pin, bool enableCause, bool causeState)
 // Use MCP_OUTPUT and MCP_INPUT here
 void mcp23018::setPinMode(uint8_t pin, bool mode)
 {
-  if(simplerInit() == false) {
+  if (simplerInit() == false)
+  {
     return;
   }
   // NOT is here
@@ -285,7 +315,8 @@ void mcp23018::setPinMode(uint8_t pin, bool mode)
 
 void mcp23018::setPinState(uint8_t pin, bool state)
 {
-  if(simplerInit() == false) {
+  if (simplerInit() == false)
+  {
     return;
   }
   setBit(olatReg, pin, state);
@@ -295,7 +326,8 @@ void mcp23018::setPinState(uint8_t pin, bool state)
 
 void mcp23018::setPinPullUp(uint8_t pin, bool pull)
 {
-  if(simplerInit() == false) {
+  if (simplerInit() == false)
+  {
     return;
   }
   setBit(gppuReg, pin, pull);
