@@ -1,12 +1,16 @@
 #include "rgb.h"
 
-void setRgb(IWColors color)
+void setRgb(IWColors color, bool clearPrevious)
 {
 #if RGB_DIODE
 #if ATCHY_VER == YATCHY
     if (gpioExpander.simplerInit() == false)
     {
         return;
+    }
+    if (clearPrevious == true && color != IwNone)
+    {
+        setRgb(IwNone, false);
     }
     switch (color)
     {
@@ -30,6 +34,31 @@ void setRgb(IWColors color)
     case IwBlue:
     {
         gpioExpander.setPinState(RGB_DIODE_BLUE_PIN, false);
+        return;
+    }
+    case IwYellow:
+    {
+        setRgb(IwRed, true);
+        setRgb(IwGreen, false);
+        return;
+    }
+    case IwPink:
+    {
+        setRgb(IwRed, true);
+        setRgb(IwBlue, false);
+        return;
+    }
+    case IwCyan:
+    {
+        setRgb(IwGreen, true);
+        setRgb(IwBlue, false);
+        return;
+    }
+    case IwWhite:
+    {
+        setRgb(IwGreen, true);
+        setRgb(IwBlue, false);
+        setRgb(IwGreen, false);
         return;
     }
     }

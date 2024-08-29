@@ -152,7 +152,7 @@ void resetHoldManage()
             while (useAllButtons() == None)
             {
                 // gpioExpander.dumpAllRegisters();
-                debugLog("Battery voltage: " + String(BatteryRead()));
+                // debugLog("Battery voltage: " + String(BatteryRead()));
                 delayTask(1000);
             }
             Serial.println("Exiting the stopper...");
