@@ -8,7 +8,7 @@ void initDisplay()
 #if EPD_CS != -1
     pinMode(EPD_CS, OUTPUT);
 #endif
-#if YATCHY
+#if ATCHY_VER == YATCHY
     // Set screen cs to low
     gpioExpander.setPinMode(YATCHY_DISPLAY_CS, MCP_OUTPUT);
     // setPinPullUp(YATCHY_DISPLAY_CS, false); // Not needed, it's false at default

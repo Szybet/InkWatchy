@@ -1,7 +1,9 @@
 #!/bin/bash
 source resources/tools/globalFunctions.sh
 
-envList=("Watchy_2" "Watchy_3")
+envList=("Watchy_1" "Watchy_1_5" "Watchy_2" "Watchy_3" "Yatchy")
+
+# Also don't forget removing generating the binary when removing things from this list
 #envList=("Watchy_2")
 
 for env in "${envList[@]}"; do
@@ -13,7 +15,7 @@ done
 function generalThings {
     mkdir trash/
     mv resources/personal/books trash/
-    mv resources/personal/moduleImages trash/
+    cp resources/personal/moduleImages trash/
     cp -r resources/demo/* resources/personal/
 
     rm -rf src/defines/confidential.h
@@ -80,7 +82,6 @@ generalThings
 
 function compileEnv {
     pio run -e $1
-    pio run -e $1
 }
 
 for env in "${envList[@]}"; do
@@ -131,8 +132,11 @@ function assembleBinary {
 rm -rf resources/tools/other/out/demo/
 mkdir -p resources/tools/other/out/demo/
 
+assembleBinary 4 Watchy_1 0x1000
+assembleBinary 4 Watchy_1_5 0x1000
 assembleBinary 4 Watchy_2 0x1000
 assembleBinary 8 Watchy_3 0x0
+assembleBinary 4 Yatchy 0x0
 
 touch resources/personal/books/.gitkeep
 touch resources/personal/vault/.gitkeep
