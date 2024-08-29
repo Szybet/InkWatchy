@@ -170,6 +170,13 @@ Template for versioning
 #define AXC_ENABLED 0 // Eh
 #endif
 
+// USB JTAG
+#if ATCHY_VER == YATCHY
+#define USB_JTAG 1
+#else
+#define USB_JTAG 0 // I don't have this device
+#endif
+
 // Temps
 #if TEMP_CHECKS != 0 && TEMP_HIGHER_LIMIT_RELATIVE != 0 && TEMP_LOWER_LIMIT_RELATIVE != 0 && TEMP_REBOOT_LIMIT_RELATIVE != 0
 #define TEMP_CHECKS_ENABLED 1
