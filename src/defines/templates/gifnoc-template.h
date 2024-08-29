@@ -154,7 +154,7 @@
 #define NO_SYNC 0                   // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0          // Prints voltage on the screen, really fast
 #define DISABLE_SLEEP 0             // Disable sleep, so it will never go to sleep. Good for SCOM_TASK. It disables the sleep logic fully
-#define DISABLE_SLEEP_PARTIAL 1     // Disable sleep, but remain the logic of it so it will return to the watchface for example
+#define DISABLE_SLEEP_PARTIAL 0     // Disable sleep, but remain the logic of it so it will return to the watchface for example
 #define PUT_LOGS_TO_SERIAL 1        // Puts logs to serial. Turn off if you want debug on the go
 #define PUT_LOGS_TO_FS 0            // Puts logs into littlefs
 #define WAIT_FOR_MONITOR 0          // If debug is enabled, waits for monitor in setup for x ms
