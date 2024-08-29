@@ -173,6 +173,14 @@ void manageSleep()
                 return;
             }
 #endif
+#if USB_JTAG && AVOID_SLEEP_USB_JTAG
+            if (usb_serial_jtag_is_connected() == true)
+            {
+                debugLog("Usb jtag is connected, not going to sleep...");
+                resetSleepDelay();
+                return;
+            }
+#endif
 
             if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
             {
@@ -199,7 +207,9 @@ void manageSleep()
                 {
                     debugLog("Too near a full second! delaying it a bit. This device will wait before going to sleep in seconds: " + String(toSleepSec));
                     setSleepDelay(toSleepSec * 1000);
-                } else {
+                }
+                else
+                {
                     debugLog("Minute not updated, delaying for one additional loop");
                 }
                 // To make sure the time updates
@@ -209,9 +219,16 @@ void manageSleep()
                 }
                 return;
             }
+
+#if !DEBUG && !DISABLE_SLEEP_PARTIAL
             debugLog("SLEEP_EVERY_MS runned out, going to sleep");
             // resetSleepDelay(); // Not needed as we are from the loop task
             goSleep();
+#else
+            debugLog("DISABLE_SLEEP_PARTIAL enabled, avoiding sleep");
+            resetSleepDelay();
+            return;
+#endif
         }
     }
 }

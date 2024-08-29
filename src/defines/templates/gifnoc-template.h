@@ -5,10 +5,10 @@
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // Watchy_GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you want some more restrictive battery measurments
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
-#define VIBRATION_BUTTON_TIME 90 // Time in ms to the motor to vibrate after clicking a button. 0 means none
+#define VIBRATION_BUTTON_TIME 90      // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_BUTTON_LONG_TIME 60 // This is just an addition to VIBRATION_BUTTON_TIME
-#define VIBRATION_ACTION_TIME 200 // Time in ms to the motor to vibrate when the UI receives an action
-#define VIBRATION_POWER 170 // From 1 to 255, PWM duty cycle. Too low and it can not even vibrate a little
+#define VIBRATION_ACTION_TIME 200     // Time in ms to the motor to vibrate when the UI receives an action
+#define VIBRATION_POWER 170           // From 1 to 255, PWM duty cycle. Too low and it can not even vibrate a little
 
 // Timezone! So:
 // - You don't set anything, it will try to ques based on IP, it can fail sometimes
@@ -28,7 +28,7 @@
 #define BUTTON_LONG_PRESS_MS 500     // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 60 // Make a full display update after x of partial ones
 #define LONG_BACK_FULL_REFRESH 1     // Make a full refresh at long back button clicked
-#define WATCHDOG_TASK 1              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
+#define WATCHDOG_TASK 0              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
 
 // Drift & NTP & Syncing
 #define SYNC_WIFI 0                        // Autimatically sync wifi - only if it's being charger and after the delay below
@@ -123,6 +123,7 @@
 #define ADD_BUTTON_DELAY 1.5
 #define SMALL_BUTTON_DELAY_MS 15
 #define BAT_MINIMAL_DIFFERENCE 0.02
+#define AVOID_SLEEP_USB_JTAG 1 // If your device has USB JTAG (Yatchy, I don't have a Watchy v3 to test) it will avoid going to sleep if it detects it is being used. Useful when you want to reprogram the watch but it goes to sleep
 
 // Temperature readings
 // This is highly experimental, dont enable this if you dont have a reason for it, possible reasons (but you still should read the code to understand if it will help you)
@@ -152,10 +153,12 @@
 #define SPEED_THROUGH_TIME 0        // Speeds up time for watchface programming
 #define NO_SYNC 0                   // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0          // Prints voltage on the screen, really fast
-#define DISABLE_SLEEP 0             // Disable sleep, so it will never go to sleep. Good for SCOM_TASK
+#define DISABLE_SLEEP 0             // Disable sleep, so it will never go to sleep. Good for SCOM_TASK. It disables the sleep logic fully
+#define DISABLE_SLEEP_PARTIAL 1     // Disable sleep, but remain the logic of it so it will return to the watchface for example
 #define PUT_LOGS_TO_SERIAL 1        // Puts logs to serial. Turn off if you want debug on the go
-#define PUT_LOGS_TO_FS 1            // Puts logs into littlefs
+#define PUT_LOGS_TO_FS 0            // Puts logs into littlefs
 #define WAIT_FOR_MONITOR 0          // If debug is enabled, waits for monitor in setup for x ms
+#define WAIT_FOR_INPUT 0            // If debug is enabled, waits for monitor until you click a button while serial monitor is opened
 // Ah... too much allocated memory... 10 hours of my life...
 #define LOG_SERIAL_BUFFER_SIZE 1000
 #define LOG_FILE_BUFFER_SIZE 3000
@@ -166,12 +169,12 @@
 #define SERIAL_LOG_DELAY 0             // If 1, use the delay below to ensure good looking logs
 #define SERIAL_LOG_DELAY_MS 23
 #define SERIAL_BAUDRATE 115200
-#define MINIMAL_LOGS 1                // Don't put full file paths in logs
-#define SCOM_TASK 0                   // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
-#define FONT_PREVIEW_MENU 0           // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
-#define NO_CHARGING 0                 // Disable detection of charging, only in debug
-#define RESET_RTC_ON_BOOT 0           // Experimental.
-#define BATTERY_TIME_DROP 0           // If enabled, if battery drops below BATTERY_TIME_DROP_VOLTAGE. Doesn't need DEBUG
+#define MINIMAL_LOGS 1                 // Don't put full file paths in logs
+#define SCOM_TASK 0                    // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
+#define FONT_PREVIEW_MENU 0            // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
+#define NO_CHARGING 0                  // Disable detection of charging, only in debug
+#define RESET_RTC_ON_BOOT 0            // Experimental.
+#define BATTERY_TIME_DROP 0            // If enabled, if battery drops below BATTERY_TIME_DROP_VOLTAGE. Doesn't need DEBUG
 #define BATTERY_TIME_DROP_VOLTAGE 3.50 // Needs to be float
 
 // Voltage reading average
