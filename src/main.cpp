@@ -30,6 +30,23 @@ void setup()
 #if WAIT_FOR_MONITOR
   delay(7500);
 #endif
+#if WAIT_FOR_INPUT
+  int theDelay = 500;
+  while(true) {
+    delayTask(theDelay / 1.5);
+    if (Serial.available() > 0) {
+      Serial.println("Received input! launching in 3..");
+      delayTask(theDelay);
+      Serial.println("2...");
+      delayTask(theDelay);
+      Serial.println("1...");
+      delayTask(theDelay);
+      Serial.println("Go!");
+      break;
+    }
+    Serial.println("Waiting for input...");
+  }
+#endif
   initLogs();
 #endif
 

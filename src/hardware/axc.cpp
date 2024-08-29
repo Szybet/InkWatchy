@@ -1,5 +1,6 @@
 #include "axc.h"
 
+#if AXC_ENABLED
 RTC_DATA_ATTR StableBMA SBMA;
 
 uint16_t readRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
@@ -57,3 +58,4 @@ void deInitAxc()
         debugLog("Ignoring SBMA shutdown");
     }
 }
+#endif

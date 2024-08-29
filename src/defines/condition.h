@@ -161,6 +161,15 @@ Template for versioning
 #define RTC_32KHZ_CRYSTAL 0
 #endif
 
+// AXC
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
+#define AXC_ENABLED 1
+#elif ATCHY_VER == WATCHY_3
+#define AXC_ENABLED 0 // I don't have this device
+#elif ATCHY_VER == YATCHY
+#define AXC_ENABLED 0 // Eh
+#endif
+
 // Temps
 #if TEMP_CHECKS != 0 && TEMP_HIGHER_LIMIT_RELATIVE != 0 && TEMP_LOWER_LIMIT_RELATIVE != 0 && TEMP_REBOOT_LIMIT_RELATIVE != 0
 #define TEMP_CHECKS_ENABLED 1

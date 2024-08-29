@@ -37,7 +37,7 @@ void resetSleepDelayBook()
 bool wasCurrentBook = false;
 char currentBook[BOOK_NAME_SIZE] = {0};
 String getCurrentBook()
-{   
+{
     if (wasCurrentBook == false)
     {
         String bookNameTmp = fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/conf/");
@@ -45,7 +45,7 @@ String getCurrentBook()
         strncpy(currentBook, bookNameTmp.c_str(), bookNameTmp.length());
         wasCurrentBook = true;
     }
-    //String currentBook = fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/conf/");
+    // String currentBook = fsGetString(CONF_BOOK_CURRENT_BOOK, "", "/book/conf/");
     debugLog("The current book is: \"" + String(currentBook) + "\"");
     return String(currentBook);
 }
@@ -108,6 +108,7 @@ int16_t staAx_Y;
 int16_t staAx_Z;
 bool waitForReturn = false;
 
+#if AXC_ENABLED
 #define MIDDLE_MULTI 0.075
 int axis_XTop;
 int axis_XBott;
@@ -146,6 +147,7 @@ void resetStartAxc()
     axis_ZTop = maxAxcelLimit(staAx_Z, BOOK_AX_Z_BACK_VALUE);
     axis_ZBott = minAxcelLimit(staAx_Z, BOOK_AX_Z_BACK_VALUE);
 }
+#endif
 
 bool openedBook = false;
 File bookFile;
@@ -216,9 +218,11 @@ void initBook()
         return;
     }
     resetSleepDelayBook();
+#if AXC_ENABLED
     initAxc();
     SBMA.enableAccel();
     resetStartAxc();
+#endif
     calculateBookTextHeight();
     int currPage = getPageNumber();
     /*
@@ -241,7 +245,9 @@ void exitBook()
         changePageDown();
     }
     resetBookVars();
+#if AXC_ENABLED
     deInitAxc();
+#endif
 }
 
 int filledAxcLine = 0;
@@ -260,7 +266,9 @@ void loopBook()
     {
     case Up:
     {
+#if AXC_ENABLED
         resetStartAxc();
+#endif
         changePageUp();
         waitForReturn = false;
         changedPageAxis = 0;
@@ -269,7 +277,9 @@ void loopBook()
     }
     case Down:
     {
+#if AXC_ENABLED
         resetStartAxc();
+#endif
         changePageDown();
         waitForReturn = false;
         changedPageAxis = 0;
@@ -301,6 +311,7 @@ void loopBook()
     }
     }
 
+#if AXC_ENABLED
     bma4_accel accel;
     if (excOn == true && SBMA.getAccel(accel))
     {
@@ -467,6 +478,7 @@ void loopBook()
             debugLog("Failed to get accel");
         }
     }
+#endif
     disUp();
 }
 

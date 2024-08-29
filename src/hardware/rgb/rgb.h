@@ -9,8 +9,12 @@ typedef enum
     IwRed,
     IwGreen,
     IwBlue,
+    IwYellow,
+    IwPink,
+    IwCyan,
+    IwWhite,
 } IWColors; // IW as inkwatchy
 
-void setRgb(IWColors color);
+void setRgb(IWColors color, bool clearPrevious = true);
 
 #endif
