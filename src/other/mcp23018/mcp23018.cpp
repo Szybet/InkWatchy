@@ -16,7 +16,7 @@ void manageGpioExpanderInt()
   if (ignoreInterrupt == false)
   {
 #if DEBUG
-    Serial.println("mcpD"); // Potential crash
+    // Serial.println("mcpD"); // Potential crash
 #endif
     ignoreInterrupt = true;
     interruptedButton = Unknown;
