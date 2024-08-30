@@ -87,10 +87,11 @@ if [ ! -d "../../components/arduino" ]; then
     rm -rf arduino
     mkdir arduino
     cd arduino
-    wget -q -O arduino.zip https://github.com/Szybet/arduino-esp32/archive/refs/heads/idf-release/v5.3.zip
+    #wget -q -O arduino.zip https://github.com/Szybet/arduino-esp32/archive/refs/heads/idf-release/v5.3.zip
+    wget -q -O arduino.zip https://github.com/espressif/arduino-esp32/archive/refs/tags/3.1.0-RC1.zip
     unzip arduino.zip
-    mv arduino-esp32-idf-release-v5.3/* .
-    rm -rf arduino-esp32-idf-release-v5.3
+    mv arduino-esp32-*/* .
+    rm -rf arduino-esp32-*
     rm -rf arduino.zip
     cd ../../
 fi
