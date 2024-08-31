@@ -13,6 +13,13 @@
 #define EXTERNAL_RTC 1
 #define INTERNAL_RTC 2
 
+typedef struct {
+    const char* ssid;
+    const char* password;
+} WiFiCred;
+
+#define STATIC_WIFI_CRED static const WiFiCred
+
 // It's before the libraries to be able to affect them (until it doesn't work)
 #include "config.h" // Needs to be first!
 #include "condition.h"
@@ -39,6 +46,21 @@
 #include <Olson2POSIX.h>
 
 #include "confidential.h"
+
+static const WiFiCred* wifiCredStatic[] = {
+    &wifi_credential1,
+    &wifi_credential2,
+    &wifi_credential3,
+    &wifi_credential4,
+    &wifi_credential5,
+    &wifi_credential6,
+    &wifi_credential7,
+    &wifi_credential8,
+    &wifi_credential9,
+    &wifi_credential10
+};
+#define SIZE_WIFI_CRED_STAT sizeof(wifiCredStatic) / sizeof(wifiCredStatic[0])
+
 #include "macros.h"
 
 #if WEATHER_INFO

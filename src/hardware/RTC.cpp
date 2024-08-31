@@ -77,6 +77,7 @@ void initRTC()
   // So for example:
   // 16000593 is fine
   // 15999959 for a 20 ppm clock is good
+  // 15997884 for watchy v3 lol
 
   // Some more logs I gathered:
   /*

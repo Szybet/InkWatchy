@@ -3,7 +3,6 @@
 std::mutex wifiTaskMutex;
 bool isWifiTaskRunning;
 
-WiFiMulti wifiMulti;
 TaskHandle_t wifiTask;
 
 uint8_t wifiConnectionTries = 0;
@@ -32,6 +31,44 @@ void createWifiTask(uint8_t tries, void (*functionToRunAfterConnection)(), uint8
     }
 }
 
+void tryToConnectWifi()
+{
+    debugLog("sizeof(wifiCredStatic): " + String(SIZE_WIFI_CRED_STAT));
+    for (int i = 0; i < SIZE_WIFI_CRED_STAT; i++)
+    {
+        debugLog("Trying to connect to wifi number: " + String(i) + " so: " + String(wifiCredStatic[i]->ssid) + " " + String(wifiCredStatic[i]->password));
+        softStartDelay();
+        if (wifiCredStatic[i] == NULL || wifiCredStatic[i]->ssid == NULL || wifiCredStatic[i]->password == NULL)
+        {
+            continue;
+        }
+        else if (strlen(wifiCredStatic[i]->ssid) == 0 || strlen(wifiCredStatic[i]->password) < 8)
+        {
+            continue;
+        }
+        WiFi.begin(wifiCredStatic[i]->ssid, wifiCredStatic[i]->password);
+
+        for (int i = 0; i < WIFI_SYNC_TIME / 1000; i++)
+        {
+            delayTask(1000);
+            if (WiFi.status() == WL_CONNECTED)
+            {
+                return;
+            }
+#if DEBUG
+            else
+            {
+                debugLog("Failed to connect to wifi...");
+            }
+#endif
+        }
+        if (WiFi.status() == WL_CONNECTED)
+        {
+            return;
+        }
+    }
+}
+
 void turnOnWifiTask(void *parameter)
 {
     debugLog("Turning wifi on");
@@ -39,11 +76,11 @@ void turnOnWifiTask(void *parameter)
     for (int i = 0; i < wifiConnectionTries; i++)
     {
         debugLog("Running wifi loop: " + String(i));
-        // debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
-        #if HARDWARE_POWER_SAVINGS
-            WiFi.setSleep(WIFI_PS_MAX_MODEM);
-            debugLog("Setting sleep mode for wifi");
-        #endif
+// debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
+#if HARDWARE_POWER_SAVINGS
+        WiFi.setSleep(WIFI_PS_MAX_MODEM);
+        debugLog("Setting sleep mode for wifi");
+#endif
         // We don't have NVS anymore
         // esp_wifi_set_storage(WIFI_STORAGE_RAM);
         // WiFi.persistent(false);
@@ -57,20 +94,19 @@ void turnOnWifiTask(void *parameter)
         debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));
 
         WiFi.setAutoReconnect(true);
-        initWifi();
-        softStartDelay();
-        wifiMulti.run(WIFI_MULTI_SYNC_TIME, CONNECT_TO_HIDDEN_NETWORKS);
-        softStartDelay();
+
+        tryToConnectWifi();
 
         if (WiFi.status() == WL_CONNECTED)
         {
+            debugLog("Finally connected: " + WiFi.localIP().toString());
             break;
         }
         else
         {
             debugLog("Wifi failed to connect, retrying...");
             turnOffWifiMinimal();
-            delayTask(WIFI_MULTI_ERROR_TIME);
+            delayTask(WIFI_ERROR_TIME);
         }
     }
     softStartDelay();
@@ -79,7 +115,9 @@ void turnOnWifiTask(void *parameter)
         debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));
         delayTask(300);
         wifiFunction();
-    } else {
+    }
+    else
+    {
         debugLog("Failed to connect to wifi properly");
     }
     turnOffWifiMinimal();
@@ -132,76 +170,6 @@ void turnOffWifi()
         // delayTask(1500);
     }
     turnOffWifiMinimal();
-}
-
-bool initWifiMultiDone = false;
-void initWifi()
-{
-    if (initWifiMultiDone == true)
-    {
-        return;
-    }
-    if (strlen(WIFI_SSID1) != 0 && strlen(WIFI_PASS1) != 0)
-    {
-        debugLog("Adding wifi " + String(WIFI_SSID1));
-        wifiMulti.addAP(WIFI_SSID1, WIFI_PASS1);
-    }
-
-    if (strlen(WIFI_SSID2) != 0 && strlen(WIFI_PASS2) != 0)
-    {
-        debugLog("Adding wifi " + String(WIFI_SSID2));
-        wifiMulti.addAP(WIFI_SSID2, WIFI_PASS2);
-    }
-
-    if (strlen(WIFI_SSID3) != 0 && strlen(WIFI_PASS3) != 0)
-    {
-        debugLog("Adding wifi " + String(WIFI_SSID3));
-        wifiMulti.addAP(WIFI_SSID3, WIFI_PASS3);
-    }
-
-    if (strlen(WIFI_SSID4) != 0 && strlen(WIFI_PASS4) != 0)
-    {
-        debugLog("Adding wifi " + String(WIFI_SSID4));
-        wifiMulti.addAP(WIFI_SSID4, WIFI_PASS4);
-    }
-
-    if (strlen(WIFI_SSID5) != 0 && strlen(WIFI_PASS5) != 0)
-    {
-        debugLog("Adding wifi " + String(WIFI_SSID5));
-        wifiMulti.addAP(WIFI_SSID5, WIFI_PASS5);
-    }
-
-    if (strlen(WIFI_SSID6) != 0 && strlen(WIFI_PASS6) != 0)
-    {
-        debugLog("Adding wifi " + String(WIFI_SSID6));
-        wifiMulti.addAP(WIFI_SSID6, WIFI_PASS6);
-    }
-
-    if (strlen(WIFI_SSID7) != 0 && strlen(WIFI_PASS7) != 0)
-    {
-        debugLog("Adding wifi " + String(WIFI_SSID7));
-        wifiMulti.addAP(WIFI_SSID7, WIFI_PASS7);
-    }
-
-    if (strlen(WIFI_SSID8) != 0 && strlen(WIFI_PASS8) != 0)
-    {
-        debugLog("Adding wifi " + String(WIFI_SSID8));
-        wifiMulti.addAP(WIFI_SSID8, WIFI_PASS8);
-    }
-
-    if (strlen(WIFI_SSID9) != 0 && strlen(WIFI_PASS9) != 0)
-    {
-        debugLog("Adding wifi " + String(WIFI_SSID9));
-        wifiMulti.addAP(WIFI_SSID9, WIFI_PASS9);
-    }
-
-    if (strlen(WIFI_SSID10) != 0 && strlen(WIFI_PASS10) != 0)
-    {
-        debugLog("Adding wifi " + String(WIFI_SSID10));
-        wifiMulti.addAP(WIFI_SSID10, WIFI_PASS10);
-    }
-
-    initWifiMultiDone = true;
 }
 
 bool isWifiTaskCheck()

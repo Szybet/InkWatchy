@@ -10,7 +10,6 @@ void createWifiTask(uint8_t tries, void (*functionToRunAfterConnection)(), uint8
 void turnOnWifiTask(void *parameter);
 void turnOffWifiMinimal();
 void turnOffWifi();
-void initWifi();
 
 bool isWifiTaskCheck();
 #if DEBUG || DEBUG_MENUS == 1
