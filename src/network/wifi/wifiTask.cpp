@@ -58,7 +58,7 @@ void turnOnWifiTask(void *parameter)
 
         WiFi.setAutoReconnect(true);
         initWifi();
-        softStartDelay();
+        
         wifiMulti.run(WIFI_MULTI_SYNC_TIME, CONNECT_TO_HIDDEN_NETWORKS);
         softStartDelay();
 
