@@ -1,35 +1,17 @@
 #ifndef CONFIDETNIAL_H
 #define CONFIDETNIAL_H
 
-#define WIFI_SSID1 ""
-#define WIFI_PASS1 ""
-
-#define WIFI_SSID2 ""
-#define WIFI_PASS2 ""
-
-#define WIFI_SSID3 ""
-#define WIFI_PASS3 ""
-
-#define WIFI_SSID4 ""
-#define WIFI_PASS4 ""
-
-#define WIFI_SSID5 ""
-#define WIFI_PASS5 ""
-
-#define WIFI_SSID6 ""
-#define WIFI_PASS6 ""
-
-#define WIFI_SSID7 ""
-#define WIFI_PASS7 ""
-
-#define WIFI_SSID8 ""
-#define WIFI_PASS8 ""
-
-#define WIFI_SSID9 ""
-#define WIFI_PASS9 ""
-
-#define WIFI_SSID10 "hotspot"
-#define WIFI_PASS10 "12345678"
+// The priority (order) here matters a bit
+STATIC_WIFI_CRED wifi_credential1 = {.ssid = "", .password = ""};
+STATIC_WIFI_CRED wifi_credential2 = {.ssid = "", .password = ""};
+STATIC_WIFI_CRED wifi_credential3 = {.ssid = "", .password = ""};
+STATIC_WIFI_CRED wifi_credential4 = {.ssid = "", .password = ""};
+STATIC_WIFI_CRED wifi_credential5 = {.ssid = "", .password = ""};
+STATIC_WIFI_CRED wifi_credential6 = {.ssid = "", .password = ""};
+STATIC_WIFI_CRED wifi_credential7 = {.ssid = "", .password = ""};
+STATIC_WIFI_CRED wifi_credential8 = {.ssid = "", .password = ""};
+STATIC_WIFI_CRED wifi_credential9 = {.ssid = "", .password = ""};
+STATIC_WIFI_CRED wifi_credential10 = {.ssid = "hotspot", .password = "12345678"};
 
 // Get those values here: https://open-meteo.com/en/docs/geocoding-api
 // For hamburg, germany example values:
