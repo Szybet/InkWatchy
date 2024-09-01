@@ -15,6 +15,6 @@ typedef enum
     IwWhite,
 } IWColors; // IW as inkwatchy
 
-void setRgb(IWColors color, bool clearPrevious = true);
+void setRgb(IWColors color, bool clearPrevious = true, uint timeMs = 0);
 
 #endif

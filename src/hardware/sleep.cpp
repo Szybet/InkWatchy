@@ -173,6 +173,16 @@ void manageSleep()
                 return;
             }
 #endif
+#if ATCHY_VER == YATCHY
+            // Yatchy should never go to sleep, because of RGB diode and the interrupt switching problem (from fully charged to discharging)
+            // Yes we test for both
+            if (bat.isCharging == true || bat.isFullyCharged == true) {
+                debugLog("Yatchy is charging, avoid sleep");
+                isChargingCheck();
+                resetSleepDelay();
+                return;
+            }
+#endif
 #if USB_JTAG && AVOID_SLEEP_USB_JTAG
             if (usb_serial_jtag_is_connected() == true)
             {
@@ -180,21 +190,25 @@ void manageSleep()
                 resetSleepDelay();
                 return;
             }
+            else
+            {
+                debugLog("USB jtag is not connected");
+            }
 #endif
 
-            if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
-            {
-                // Basically one more watchdog test
-#if WATCHDOG_TASK
-                if (allButtonCheck() == true)
+                if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
                 {
-                    debugLog("Detected all buttons high, resetting...");
-                    assert(true == false);
-                }
+                    // Basically one more watchdog test
+#if WATCHDOG_TASK
+                    if (allButtonCheck() == true)
+                    {
+                        debugLog("Detected all buttons high, resetting...");
+                        assert(true == false);
+                    }
 #endif
-                resetSleepDelay();
-                return;
-            }
+                    resetSleepDelay();
+                    return;
+                }
 
             uint currentSeconds = getCurrentSeconds();
             if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || wFTime.Minute != timeRTCLocal.Minute)

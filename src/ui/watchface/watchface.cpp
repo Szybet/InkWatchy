@@ -105,6 +105,7 @@ void loopWatchfaceLoop()
   
   if (timeHappened == false && bt == None && wentToSleep == true)
   {
+    debugLog("Nothing happened, delay...");
     delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
   }
 }

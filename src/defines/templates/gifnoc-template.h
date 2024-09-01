@@ -133,9 +133,9 @@
 #define TEMP_CHECKS 0
 // Those variables won't work for you, you need to edit them yourself after you see the temperature logs
 // Also everything in Celsius, americans need to metric (Or add support for burgers per inch for inkwatchy)
-// just joking
+// just joking :D
 #define TEMP_REAL_OFFSET 0 // On first boot a temperature will be taken, this will be added to it and that's the main temperature
-#define TEMP_HIGHER_LIMIT_RELATIVE 0 //
+#define TEMP_HIGHER_LIMIT_RELATIVE 0
 #define TEMP_LOWER_LIMIT_RELATIVE 0
 #define TEMP_REBOOT_LIMIT_RELATIVE 0
 #define TEMP_MAX_SCREEN_FIXES 5
@@ -207,6 +207,7 @@
 #define TASK_STACK_WIFI 60000
 #define TASK_STACK_SCOM 10000
 #define TASK_STACK_WATCHDOG 3500
+#define TASK_STACK_RGB 2000
 
 // Priorities - max is 24
 #define MAIN_LOOP_PRIORITY 20
@@ -216,6 +217,7 @@
 #define SCOM_PRIORITY 3
 #define MOTOR_PRIORITY 15
 #define WATCHDOG_PRIORITY 1
+#define RGB_PRIORITY 5
 
 // Config
 #define CONF_BOOK_CURRENT_PAGE "current_page_"
