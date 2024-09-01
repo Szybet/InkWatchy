@@ -220,14 +220,14 @@ void manageSleep()
                 return;
             }
 
-#if !DEBUG && !DISABLE_SLEEP_PARTIAL
-            debugLog("SLEEP_EVERY_MS runned out, going to sleep");
-            // resetSleepDelay(); // Not needed as we are from the loop task
-            goSleep();
-#else
+#if DEBUG && DISABLE_SLEEP_PARTIAL
             debugLog("DISABLE_SLEEP_PARTIAL enabled, avoiding sleep");
             resetSleepDelay();
             return;
+#else
+            debugLog("SLEEP_EVERY_MS runned out, going to sleep");
+            // resetSleepDelay(); // Not needed as we are from the loop task
+            goSleep();
 #endif
         }
     }
