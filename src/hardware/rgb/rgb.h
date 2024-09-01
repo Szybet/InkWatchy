@@ -3,6 +3,9 @@
 
 #include "defines/defines.h"
 
+extern bool rgbTaskRunning;
+extern std::mutex rgbTaskMutex;
+
 typedef enum
 {
     IwNone,

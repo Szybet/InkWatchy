@@ -176,7 +176,8 @@ void manageSleep()
 #if ATCHY_VER == YATCHY
             // Yatchy should never go to sleep, because of RGB diode and the interrupt switching problem (from fully charged to discharging)
             // Yes we test for both
-            if (bat.isCharging == true || bat.isFullyCharged == true) {
+            if (bat.isCharging == true || bat.isFullyCharged == true)
+            {
                 debugLog("Yatchy is charging, avoid sleep");
                 isChargingCheck();
                 resetSleepDelay();
@@ -196,19 +197,30 @@ void manageSleep()
             }
 #endif
 
-                if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
-                {
-                    // Basically one more watchdog test
-#if WATCHDOG_TASK
-                    if (allButtonCheck() == true)
-                    {
-                        debugLog("Detected all buttons high, resetting...");
-                        assert(true == false);
-                    }
+#if RGB_DIODE
+            rgbTaskMutex.lock();
+            if (rgbTaskRunning == true)
+            {
+                rgbTaskMutex.unlock();
+                setSleepDelay(1000);
+                return;
+            }
+            rgbTaskMutex.unlock();
 #endif
-                    resetSleepDelay();
-                    return;
+
+            if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
+            {
+                // Basically one more watchdog test
+#if WATCHDOG_TASK
+                if (allButtonCheck() == true)
+                {
+                    debugLog("Detected all buttons high, resetting...");
+                    assert(true == false);
                 }
+#endif
+                resetSleepDelay();
+                return;
+            }
 
             uint currentSeconds = getCurrentSeconds();
             if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || wFTime.Minute != timeRTCLocal.Minute)
