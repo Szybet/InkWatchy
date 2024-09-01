@@ -145,7 +145,7 @@ void resetHoldManage()
             for (int i = 0; i < 10; i++)
             {
                 Serial.println("Waiting for button input after reset...");
-                delay(100);
+                delay(10);
             }
             flushLogs();
             turnOnButtons();

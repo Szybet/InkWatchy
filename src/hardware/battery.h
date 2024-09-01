@@ -11,6 +11,7 @@ struct batteryInfo {
     float maxV;
     float charV;
     bool isCharging;
+    bool isFullyCharged; // Only on the Yatchy really, v3 people are free to implement it
     uint8_t percentage;
     float prevVOne;
     bool oneCheck; // Force check once even if no voltage changed
@@ -23,6 +24,7 @@ float BatteryRead();
 float getBatteryVoltage();
 
 void loopBattery();
+void isChargingCheck();
 void initBattery();
 void loopPowerSavings();
 bool reasonForVoltageSpikes();

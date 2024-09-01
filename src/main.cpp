@@ -98,6 +98,11 @@ void setup()
 
 void loop()
 {
+  #if ATCHY_VER == YATCHY
+    if(bat.isCharging == true || bat.isFullyCharged == true) {
+      isChargingCheck();
+    }
+  #endif
 #if TEMP_CHECKS_ENABLED
   tempChecker();
 #endif

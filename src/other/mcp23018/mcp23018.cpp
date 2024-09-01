@@ -69,11 +69,14 @@ buttonState mcp23018::manageInterrupts()
   }
   debugLog("Launched manageInterrupts");
   debugLog("BatteryRead1: " + String(BatteryRead()));
+  // First read the cause
+  uint16_t gpio_cause = readRegister(INTF);
   // Then we read the interrupts
   uint16_t gpio_ints = readRegister(INTCAP);
   // We disable all interrupts, we don't want new ones now
   // writeRegister(GPINTEN, EMPTY_REG); // or not OR NOT we can't in fact do that
   debugLog("Interrupt bits: " + uint16ToBinaryString(gpio_ints));
+  debugLog("Interrupt cause: " + uint16ToBinaryString(gpio_cause));
   // dumpAllRegisters();
   //  What is going on here
 
@@ -82,6 +85,13 @@ buttonState mcp23018::manageInterrupts()
   // I want a break call here
   while (true)
   {
+    if (checkBit(gpio_cause, MCP_STAT_IN) == true)
+    {
+      debugLog("Stat pin detected");
+      isChargingCheck();
+      loopBattery();
+    }
+
 #ifdef YATCHY_BACK_BTN
     if (checkBit(gpio_ints, BACK_PIN) == false)
     {
@@ -111,6 +121,7 @@ buttonState mcp23018::manageInterrupts()
       selectedbtn = Up;
       break;
     }
+
     break;
   }
 
@@ -239,11 +250,15 @@ bool mcp23018::resetVerify()
   // isDebug(dumpAllRegisters());
 
 #if RGB_DIODE
+  // This does the setPinState(RGB_DIODE_RED_PIN, true);
   setRgb(IwNone);
   setPinMode(RGB_DIODE_RED_PIN, MCP_OUTPUT);
   setPinMode(RGB_DIODE_GREEN_PIN, MCP_OUTPUT);
   setPinMode(RGB_DIODE_BLUE_PIN, MCP_OUTPUT);
 #endif
+
+  setPinState(MCP_STAT_OUT, true);
+  setPinMode(MCP_STAT_OUT, MCP_OUTPUT);
 
   setDefaultInterrupts();
   isDebug(dumpAllRegisters());
@@ -264,6 +279,7 @@ bool mcp23018::digitalRead(uint8_t pin)
 
 void mcp23018::setDefaultInterrupts()
 {
+  // Buttons
 #ifdef YATCHY_BACK_BTN
   setInterruptCause(BACK_PIN, true, false);
   setPinPullUp(BACK_PIN, true);
@@ -280,6 +296,9 @@ void mcp23018::setDefaultInterrupts()
   setInterruptCause(UP_PIN, true, false);
   setPinPullUp(UP_PIN, true);
   setInterrupt(UP_PIN, true);
+
+  // Battery charger
+  setInterrupt(MCP_STAT_IN, true);
 }
 
 void mcp23018::setInterrupt(uint8_t pin, bool interrupt)

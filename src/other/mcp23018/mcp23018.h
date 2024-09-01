@@ -8,10 +8,14 @@
 #define MCP23018_ADDRESS 0x27 // https://www.chiark.greenend.org.uk/~peterb/electronics/mcp23018/addr
 // gpio20 on prototype PCB but gpio6 as ADC pin fix
 #define MCP_INTERRUPT_PIN 6 // Pin on esp for the interrupt
+
+// Charger
+#define MCP_STAT_IN 6 // A6
+#define MCP_STAT_OUT 7 // A7
+
 /*
 #define MCP23018_SDA_PIN 22
 #define MCP23018_SCL_PIN 23
-#define MCP23018_I2C_FREQ 10 // In Khz
 */
 
 #define MCP_OUTPUT 1
@@ -85,6 +89,12 @@ public:
 #if DEBUG
   void dumpAllRegisters();
 #endif
+  void setBit(uint16_t &val, uint8_t bit, bool state);
+  bool checkBit(uint16_t val, uint8_t bit);
+  void writeRegister(uint8_t reg, uint16_t val);
+  void writeSingleRegister(uint8_t reg, uint8_t val);
+  uint16_t readRegister(uint8_t reg);
+  uint8_t readSingleRegister(uint8_t reg);
 
 private:
   uint16_t iodirReg;
@@ -100,13 +110,6 @@ private:
   bool inited = false;
   bool initOngoing = false; // Makes all functions ignore the init. Required for resetVerify function
   uint8_t initCount = 0;
-
-  void setBit(uint16_t &val, uint8_t bit, bool state);
-  bool checkBit(uint16_t val, uint8_t bit);
-  void writeRegister(uint8_t reg, uint16_t val);
-  void writeSingleRegister(uint8_t reg, uint8_t val);
-  uint16_t readRegister(uint8_t reg);
-  uint8_t readSingleRegister(uint8_t reg);
 };
 
 extern mcp23018 gpioExpander;

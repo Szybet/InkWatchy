@@ -208,5 +208,12 @@ Template for versioning
 #define RGB_DIODE_RED_PIN 12
 #define RGB_DIODE_GREEN_PIN 11
 #define RGB_DIODE_BLUE_PIN 10
+#define BATTERY_RGB_DIODE 1 // If to show battery charge / fully charge with rgb diode
+
+// For colors, look up to src/hardware/rgb/rgb.h
+#define BATTERY_CHARGING_COLOR IwYellow
+#define BATTERY_CHARGED_COLOR IwGreen
+#define BATTERY_DISCHARGING_COLOR IwRed // What color to show for a second if its starting to discharge
+
 #endif
 #endif
