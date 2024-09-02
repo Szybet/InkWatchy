@@ -12,7 +12,7 @@ A new innovative **firmware** written from the ground up for the [watchy](https:
 ## User features
 Apart from code things, here are the key features for now:
 - Easy to install [demo](https://github.com/Szybet/InkWatchy/wiki/Trying-out-the-demo-firmware) (no compiling!)
-- Full weather info via open weather api in charts, 5 day forecast
+- Full weather info via open meteo api in charts, 16 day forecast
 - A book reader
    - with pages changable by moving your hand
    - Support for many books
