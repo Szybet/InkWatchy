@@ -12,6 +12,8 @@ wakeUpInfo bootStatus = {};
 // Also at boot, but on wake up too
 void initHardware()
 {
+    // To turn it off if something bad happens
+    initMotor();
 
     bootStatus.bareEspCause = esp_sleep_get_wakeup_cause();
     bootStatus.resetReason = esp_reset_reason();
@@ -23,7 +25,7 @@ void initHardware()
     }
     else if (bootStatus.bareEspCause == ESP_SLEEP_WAKEUP_EXT1)
     {
-        debugLog("Waked up because of buttons");
+        debugLog("Waked up because of ext1");
         debugLog("esp_sleep_get_ext1_wakeup_status: " + String(esp_sleep_get_ext1_wakeup_status()));
         bootStatus.fromWakeup = true;
         bootStatus.reason = button;
@@ -137,8 +139,18 @@ String resetReasonToString(esp_reset_reason_t reason)
         return "ESP_RST_BROWNOUT"; // Brownout reset (software or hardware)
     case ESP_RST_SDIO:
         return "ESP_RST_SDIO"; // Reset over SDIO
+    case ESP_RST_USB:
+        return "ESP_RST_USB"; // Reset by USB peripheral
+    case ESP_RST_JTAG:
+        return "ESP_RST_JTAG"; // Reset by JTAG
+    case ESP_RST_EFUSE:
+        return "ESP_RST_EFUSE"; // Reset due to efuse error
+    case ESP_RST_PWR_GLITCH:
+        return "ESP_RST_PWR_GLITCH"; // Reset due to power glitch detected
+    case ESP_RST_CPU_LOCKUP:
+        return "ESP_RST_CPU_LOCKUP"; // Reset due to CPU lock up
     default:
-        return "UNKNOWN"; // Unknown reset reason
+        return "REALLY_UNKNOWN_:P"; // Unknown reset reason
     }
 }
 
@@ -154,17 +166,17 @@ void setCpuSpeed(cpuSpeed speed)
     {
     case minimalSpeed:
     {
-        setCpuFrequencyMhz(80);
+        setCpuFrequencyMhz(CPU_MINIMAL_SPEED);
         break;
     }
     case normalSpeed:
     {
-        setCpuFrequencyMhz(160);
+        setCpuFrequencyMhz(CPU_NORMAL_SPEED);
         break;
     }
     case maxSpeed:
     {
-        setCpuFrequencyMhz(240);
+        setCpuFrequencyMhz(CPU_FAST_SPEED);
         break;
     }
     }

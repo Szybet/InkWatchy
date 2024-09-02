@@ -160,6 +160,7 @@ void isChargingCheck()
     */
     // Maybe delays are not needed
     //debugLog("Executing isCharging");
+    TODO HERE: disable interrupt on this god forbidden pin when reading it...
     bool statInStateBefore = gpioExpander.digitalRead(MCP_STAT_IN);
     //delayTask(10);
     gpioExpander.setPinState(MCP_STAT_OUT, false);

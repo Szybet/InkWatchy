@@ -162,6 +162,11 @@ bool mcp23018::resetVerify()
     return false;
   }
 
+  if(bootStatus.fromWakeup == true) {
+    debugLog("mcp23018 from wakeup, everything should be fine");
+    return true;
+  }
+
   // To clear if it exists...
   readRegister(INTCAP);
 
