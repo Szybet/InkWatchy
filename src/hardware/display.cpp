@@ -104,7 +104,16 @@ bool resetReasonHold(esp_reset_reason_t resetReason)
     }
 #elif ATCHY_VER == WATCHY_3
     // Because we are on a outdated version of esp idf ESP_RST_UNKNOWN is causes by jtag for example
-    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW && resetReason != ESP_RST_DEEPSLEEP && resetReason != ESP_RST_UNKNOWN)
+    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW && resetReason != ESP_RST_DEEPSLEEP && resetReason != ESP_RST_UNKNOWN) // TODO people with v3 get rid off unknown here
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+#elif ATCHY_VER == YATCHY
+    if (resetReason != ESP_RST_POWERON && resetReason != ESP_RST_SW && resetReason != ESP_RST_DEEPSLEEP && resetReason != ESP_RST_USB)
     {
         return true;
     }
@@ -113,6 +122,7 @@ bool resetReasonHold(esp_reset_reason_t resetReason)
         return false;
     }
 #endif
+
     return true;
 }
 

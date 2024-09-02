@@ -246,6 +246,10 @@ void manageSleep()
                 return;
             }
 
+#if ATCHY_VER == YATCHY 
+    debugLog("Battery voltage before sleep: " + String(BatteryRead()));
+#endif
+
 #if DEBUG && DISABLE_SLEEP_PARTIAL
             debugLog("DISABLE_SLEEP_PARTIAL enabled, avoiding sleep");
             resetSleepDelay();

@@ -308,7 +308,6 @@ void wakeUpLong(int pin, buttonState normal, buttonState hold)
 
 void manageButtonWakeUp()
 {
-    initMotor();
     vibrateMotor();
 #if ATCHY_VER != YATCHY
     initButtons();

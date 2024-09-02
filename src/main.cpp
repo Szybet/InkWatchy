@@ -32,9 +32,15 @@ void setup()
 #endif
 #if WAIT_FOR_INPUT
   int theDelay = 500;
-  while(true) {
-    delayTask(theDelay / 1.5);
-    if (Serial.available() > 0) {
+#if WAIT_FOR_INPUT_MOTOR
+  pinMode(VIB_MOTOR_PIN, OUTPUT);
+#endif
+  Serial.flush();
+  while (true)
+  {
+    delayTask(theDelay / 2);
+    if (Serial.available() > 0 && Serial.readString().indexOf("123") >= 0)
+    {
       Serial.println("Received input! launching in 3..");
       delayTask(theDelay);
       Serial.println("2...");
@@ -44,8 +50,22 @@ void setup()
       Serial.println("Go!");
       break;
     }
+#if WAIT_FOR_INPUT_MOTOR
+    digitalWrite(VIB_MOTOR_PIN, 1);
+    delayTask(theDelay / 10);
+    digitalWrite(VIB_MOTOR_PIN, 0);
+#endif
+#if ATCHY_VER == YATCHY
+    // usb_serial_jtag_driver_uninstall doesn't help
+    // if it can't connect after deep sleep consider using a better usb connection
+    if (usb_serial_jtag_is_connected() == false)
+    {
+      delayTask(1000);
+    }
+#endif
     Serial.println("Waiting for input...");
   }
+  digitalWrite(VIB_MOTOR_PIN, 0);
 #endif
   initLogs();
 #endif
@@ -98,11 +118,12 @@ void setup()
 
 void loop()
 {
-  #if ATCHY_VER == YATCHY
-    if(bat.isCharging == true || bat.isFullyCharged == true) {
-      isChargingCheck();
-    }
-  #endif
+#if ATCHY_VER == YATCHY
+  if (bat.isCharging == true || bat.isFullyCharged == true)
+  {
+    isChargingCheck();
+  }
+#endif
 #if TEMP_CHECKS_ENABLED
   tempChecker();
 #endif
