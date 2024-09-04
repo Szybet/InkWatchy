@@ -160,12 +160,15 @@ void isChargingCheck()
     */
     // Maybe delays are not needed
     //debugLog("Executing isCharging");
-    TODO HERE: disable interrupt on this god forbidden pin when reading it...
+    
+    gpioExpander.setInterrupt(MCP_STAT_IN, false); // Turn off interrupt
     bool statInStateBefore = gpioExpander.digitalRead(MCP_STAT_IN);
-    //delayTask(10);
+    delayTask(10);
     gpioExpander.setPinState(MCP_STAT_OUT, false);
-    //delayTask(10);
+    delayTask(10);
     bool statInStateAfter = gpioExpander.digitalRead(MCP_STAT_IN);
+    delayTask(10);
+    gpioExpander.setPinState(MCP_STAT_OUT, true);
     //debugLog("statInStateBefore: " + String(statInStateBefore));
     //debugLog("statInStateAfter: " + String(statInStateAfter));
     if (previousStatInStateBefore != statInStateBefore || previousStatInStateAfter != statInStateAfter)
@@ -208,8 +211,9 @@ void isChargingCheck()
         previousStatInStateBefore = statInStateBefore;
         previousStatInStateAfter = statInStateAfter;
     }
-    gpioExpander.setPinState(MCP_STAT_OUT, true);
-    //delayTask(10);
+    //debugLog("Turning on interrupt back on");
+    delayTask(10);
+    gpioExpander.setInterrupt(MCP_STAT_IN, true); // Turn on interrupt
 #endif
 #if DEBUG && true == false
     if (bat.isCharging != previousCharging)

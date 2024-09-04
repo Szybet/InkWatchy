@@ -52,6 +52,8 @@ void ForceInputs()
     // Stolen from the default firmware :)
     rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
     rtc_gpio_pullup_en((gpio_num_t)UP_PIN);
+#elif ATCHY_VER == YATCHY
+    deInitI2C();
 #endif
 }
 
@@ -248,6 +250,7 @@ void manageSleep()
 
 #if ATCHY_VER == YATCHY 
     debugLog("Battery voltage before sleep: " + String(BatteryRead()));
+    debugLog("Gpio expander stat in pin state: " + BOOL_STR(gpioExpander.digitalRead(MCP_STAT_IN)));
 #endif
 
 #if DEBUG && DISABLE_SLEEP_PARTIAL

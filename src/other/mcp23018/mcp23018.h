@@ -12,6 +12,7 @@
 // Charger
 #define MCP_STAT_IN 6 // A6
 #define MCP_STAT_OUT 7 // A7
+#define MCP_5V 15 // B7
 
 /*
 #define MCP23018_SDA_PIN 22
@@ -76,6 +77,7 @@ class mcp23018
 public:
   mcp23018();
   bool simplerInit();
+  void deInit();
   buttonState manageInterrupts();
   bool manageInterruptsExit();
   void setDefaultInterrupts();

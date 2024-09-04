@@ -85,9 +85,9 @@ buttonState mcp23018::manageInterrupts()
   // I want a break call here
   while (true)
   {
-    if (checkBit(gpio_cause, MCP_STAT_IN) == true)
+    if (checkBit(gpio_cause, MCP_STAT_IN) == true || checkBit(gpio_cause, MCP_5V) == true)
     {
-      debugLog("Stat pin detected");
+      debugLog("Stat pin or 5V detected");
       isChargingCheck();
       loopBattery();
     }
@@ -162,8 +162,10 @@ bool mcp23018::resetVerify()
     return false;
   }
 
-  if(bootStatus.fromWakeup == true) {
-    debugLog("mcp23018 from wakeup, everything should be fine");
+  if (bootStatus.fromWakeup == true)
+  {
+    debugLog("mcp23018 from wakeup");
+    setDefaultInterrupts();
     return true;
   }
 
@@ -271,6 +273,16 @@ bool mcp23018::resetVerify()
   return true;
 }
 
+void mcp23018::deInit()
+{
+  if (initI2C() == false)
+  {
+    return;
+  }
+  setInterrupt(MCP_STAT_IN, false);
+  setInterrupt(MCP_5V, true);
+}
+
 bool mcp23018::digitalRead(uint8_t pin)
 {
   if (simplerInit() == false)
@@ -284,26 +296,31 @@ bool mcp23018::digitalRead(uint8_t pin)
 
 void mcp23018::setDefaultInterrupts()
 {
-  // Buttons
+  if (bootStatus.fromWakeup == false)
+  {
+    // Buttons
 #ifdef YATCHY_BACK_BTN
-  setInterruptCause(BACK_PIN, true, false);
-  setPinPullUp(BACK_PIN, true);
-  setInterrupt(BACK_PIN, true);
+    setInterruptCause(BACK_PIN, true, false);
+    setPinPullUp(BACK_PIN, true);
+    setInterrupt(BACK_PIN, true);
 #endif
-  setInterruptCause(MENU_PIN, true, false);
-  setPinPullUp(MENU_PIN, true);
-  setInterrupt(MENU_PIN, true);
+    setInterruptCause(MENU_PIN, true, false);
+    setPinPullUp(MENU_PIN, true);
+    setInterrupt(MENU_PIN, true);
 
-  setInterruptCause(DOWN_PIN, true, false);
-  setPinPullUp(DOWN_PIN, true);
-  setInterrupt(DOWN_PIN, true);
+    setInterruptCause(DOWN_PIN, true, false);
+    setPinPullUp(DOWN_PIN, true);
+    setInterrupt(DOWN_PIN, true);
 
-  setInterruptCause(UP_PIN, true, false);
-  setPinPullUp(UP_PIN, true);
-  setInterrupt(UP_PIN, true);
+    setInterruptCause(UP_PIN, true, false);
+    setPinPullUp(UP_PIN, true);
+    setInterrupt(UP_PIN, true);
+  }
 
-  // Battery charger
+  // Battery charger, always set it as it was disabled in sleep
   setInterrupt(MCP_STAT_IN, true);
+  // This was enabled in sleep, now we disable it
+  setInterrupt(MCP_5V, false);
 }
 
 void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
