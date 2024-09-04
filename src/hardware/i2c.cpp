@@ -30,4 +30,11 @@ bool initI2C()
     }
     return true;
 }
+
+void deInitI2C() {
+    initedI2C = false;
+    i2cInitCount = 10; // This turns it off forever in this sessions
+    bool wireEnd = Wire.end();
+    debugLog("Wire end status: " + BOOL_STR(wireEnd));
+}
 #endif
