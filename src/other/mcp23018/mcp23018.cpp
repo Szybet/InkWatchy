@@ -30,6 +30,12 @@ bool mcp23018::simplerInit()
 {
   if (inited == false && initOngoing == false)
   {
+    mcpMutex.lock();
+    if (inited == true)
+    {
+      mcpMutex.unlock();
+      return true;
+    }
     if (initCount > 5)
     {
       return false;
@@ -41,8 +47,10 @@ bool mcp23018::simplerInit()
       debugLog("Failed to reset-verify the expander");
       initCount = initCount + 1;
       delayTask(10);
+      mcpMutex.unlock();
       return simplerInit();
     }
+    mcpMutex.unlock();
     initOngoing = false;
     inited = true;
   }
