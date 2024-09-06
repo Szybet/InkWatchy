@@ -53,6 +53,7 @@ void ForceInputs()
     rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
     rtc_gpio_pullup_en((gpio_num_t)UP_PIN);
 #elif ATCHY_VER == YATCHY
+    gpioExpander.deInit();
     deInitI2C();
 #endif
 }
@@ -182,7 +183,7 @@ void manageSleep()
             {
                 debugLog("Yatchy is charging, avoid sleep");
                 isChargingCheck();
-                resetSleepDelay();
+                setSleepDelay(1000);
                 return;
             }
 #endif
