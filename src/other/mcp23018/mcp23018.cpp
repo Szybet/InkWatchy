@@ -288,7 +288,7 @@ void mcp23018::deInit()
     return;
   }
   setInterrupt(MCP_STAT_IN, false);
-  dumpAllRegisters();
+  //dumpAllRegisters();
 }
 
 bool mcp23018::digitalRead(uint8_t pin)
