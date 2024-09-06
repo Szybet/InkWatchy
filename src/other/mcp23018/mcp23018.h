@@ -112,6 +112,7 @@ private:
   bool inited = false;
   bool initOngoing = false; // Makes all functions ignore the init. Required for resetVerify function
   uint8_t initCount = 0;
+  std::mutex mcpMutex; // it can be called from another task, mostly the button task? Just to be sure
 };
 
 extern mcp23018 gpioExpander;
