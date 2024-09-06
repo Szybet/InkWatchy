@@ -89,6 +89,7 @@ RTC_DATA_ATTR bool previousCharging = true;
 #if ATCHY_VER == YATCHY
 RTC_DATA_ATTR bool previousStatInStateBefore = false;
 RTC_DATA_ATTR bool previousStatInStateAfter = true; // There is no such configuration, so it will always trigger at least once
+RTC_DATA_ATTR bool previousFiveVolt = false;        // false because it will be true after flashing
 #endif
 void isChargingCheck()
 {
@@ -147,71 +148,91 @@ void isChargingCheck()
         bat.isCharging = false;
     }
 #elif ATCHY_VER == YATCHY
-    // In main.cpp for testing:
-    // loopBattery();
-    // isChargingCheck();
-    // debugLog("Yatchy gpio: " + uint16ToBinaryString(gpioExpander.readRegister(GPIO)));
-    // delayTask(2000);
-    // return;
     /*
+    In main.cpp for testing:
+    loopBattery();
+    isChargingCheck();
+    debugLog("Yatchy gpio: " + uint16ToBinaryString(gpioExpander.readRegister(GPIO)));
+    delayTask(2000);
+    return;
+    Sadly not anymore, outdated:
     Charging: Before is 0 and after is 0 (so is_falling on this pin for interrupt so we can detect charging)
     Discharging: Before is 1 and after is 0
     Fully charged: Before is 1 and after is 1
+
+    Basically now we can't detect if its between Hi-Z and L
     */
-    // Maybe delays are not needed
-    //debugLog("Executing isCharging");
-    
     gpioExpander.setInterrupt(MCP_STAT_IN, false); // Turn off interrupt
-    bool statInStateBefore = gpioExpander.digitalRead(MCP_STAT_IN);
-    delayTask(10);
+    bool fiveVolt = gpioExpander.digitalRead(MCP_5V);
     gpioExpander.setPinState(MCP_STAT_OUT, false);
-    delayTask(10);
-    bool statInStateAfter = gpioExpander.digitalRead(MCP_STAT_IN);
-    delayTask(10);
+    delayTask(5);
+    bool statInStateBefore = gpioExpander.digitalRead(MCP_STAT_IN);
     gpioExpander.setPinState(MCP_STAT_OUT, true);
-    //debugLog("statInStateBefore: " + String(statInStateBefore));
-    //debugLog("statInStateAfter: " + String(statInStateAfter));
-    if (previousStatInStateBefore != statInStateBefore || previousStatInStateAfter != statInStateAfter)
+    delayTask(5);
+    bool statInStateAfter = gpioExpander.digitalRead(MCP_STAT_IN);
+#if DEBUG && true == false
+    debugLog("Executed isCharging");
+    debugLog("fiveVolt: " + String(fiveVolt));
+    debugLog("statInStateBefore: " + String(statInStateBefore));
+    debugLog("statInStateAfter: " + String(statInStateAfter));
+#endif
+    if (previousStatInStateBefore != statInStateBefore || previousStatInStateAfter != statInStateAfter || previousFiveVolt != fiveVolt)
     {
         debugLog("Charging state changed for gpio expander");
-        if (statInStateBefore == 0 && statInStateAfter == 0)
+        bool isFine = true;
+        // Only charging
+        if (statInStateBefore == 0 && statInStateAfter == 0 && fiveVolt == true)
         {
             bat.isCharging = true;
             bat.isFullyCharged = false;
-        }
-        else if (statInStateBefore == 1 && statInStateAfter == 1)
+        } // Fully charged
+        else if (statInStateBefore == 1 && statInStateAfter == 1 && fiveVolt == true)
         {
             bat.isCharging = false;
             bat.isFullyCharged = true;
-        }
-        else if (statInStateBefore == 1 && statInStateAfter == 0)
+        } // Not charging
+        else if (statInStateBefore == 0 && statInStateAfter == 0 && fiveVolt == false)
         {
             bat.isCharging = false;
             bat.isFullyCharged = false;
         }
+        else
+        {
+            debugLog("SOMETHING IS WRONG WITH CHARGING");
+            isFine = false;
+        }
+        if (isFine == true)
+        {
 #if DEBUG && true == true
-        debugLog("bat.isCharging: " + BOOL_STR(bat.isCharging));
-        debugLog("bat.isFullyCharged: " + BOOL_STR(bat.isCharging));
+            debugLog("bat.isCharging: " + BOOL_STR(bat.isCharging));
+            debugLog("bat.isFullyCharged: " + BOOL_STR(bat.isCharging));
 #endif
 #if BATTERY_RGB_DIODE
-        if (bat.isFullyCharged == true)
-        {
-            setRgb(BATTERY_CHARGED_COLOR);
-        }
-        else if (bat.isCharging == true)
-        {
-            setRgb(BATTERY_CHARGING_COLOR);
+            if (bat.isFullyCharged == true)
+            {
+                setRgb(BATTERY_CHARGED_COLOR);
+            }
+            else if (bat.isCharging == true)
+            {
+                setRgb(BATTERY_CHARGING_COLOR);
+            }
+            else
+            {
+                setRgb(BATTERY_DISCHARGING_COLOR, true, 1000);
+            }
+#endif
         }
         else
         {
-            // Maybe a task here, TODO
-            setRgb(BATTERY_DISCHARGING_COLOR, true, 1000);
-        }
+#if BATTERY_RGB_DIODE
+            setRgb(IwNone);
 #endif
+        }
+        previousFiveVolt = fiveVolt;
         previousStatInStateBefore = statInStateBefore;
         previousStatInStateAfter = statInStateAfter;
     }
-    //debugLog("Turning on interrupt back on");
+    // debugLog("Turning on interrupt back on");
     delayTask(10);
     gpioExpander.setInterrupt(MCP_STAT_IN, true); // Turn on interrupt
 #endif

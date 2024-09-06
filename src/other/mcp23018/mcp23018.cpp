@@ -280,7 +280,7 @@ void mcp23018::deInit()
     return;
   }
   setInterrupt(MCP_STAT_IN, false);
-  setInterrupt(MCP_5V, true);
+  dumpAllRegisters();
 }
 
 bool mcp23018::digitalRead(uint8_t pin)
@@ -315,12 +315,12 @@ void mcp23018::setDefaultInterrupts()
     setInterruptCause(UP_PIN, true, false);
     setPinPullUp(UP_PIN, true);
     setInterrupt(UP_PIN, true);
+
+    setInterrupt(MCP_5V, true);
   }
 
-  // Battery charger, always set it as it was disabled in sleep
+  // This was disabled in sleep, now we disable it
   setInterrupt(MCP_STAT_IN, true);
-  // This was enabled in sleep, now we disable it
-  setInterrupt(MCP_5V, false);
 }
 
 void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
@@ -470,6 +470,10 @@ uint8_t mcp23018::readSingleRegister(uint8_t reg)
 void mcp23018::dumpAllRegisters()
 {
 #if true == true
+  if (simplerInit() == false)
+  {
+    return;
+  }
   for (byte i = 0; i < 22; i = i + 2)
   {
     debugLog("Register: " + decimalToHexString(i) + " is: " + uint16ToBinaryString(readRegister(i)));

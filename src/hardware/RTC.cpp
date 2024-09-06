@@ -63,7 +63,7 @@ void initRTC()
   debugLog("Internal RTC source clock: " + String(rtc_clk_slow_src_get()));
 
   // Some further testing:
-  // Go to /root/.platformio/packages/framework-espidf/components/esp_system/port/soc/esp32c6/clk.c and at line arround 195
+  // Go to (Adjust path for soc) /root/.platformio/packages/framework-espidf/components/esp_system/port/soc/esp32c6/clk.c and at line arround 195
   // ESP_EARLY_LOGD(TAG, "RTC_SLOW_CLK calibration value: %" PRIu32, cal_val);
   // Change ESP_EARLY_LOGD to ESP_EARLY_LOGE for the value to appear
   // If you can't catch this log, edit the line ESP_EARLY_LOGD(TAG, "waiting for 32k oscillator to start up"); to
