@@ -4,6 +4,8 @@ if [ ! -f "other/in/magick" ]; then
     echo "Downloading image magick"
     wget -q -O magick https://github.com/ImageMagick/ImageMagick/releases/download/7.1.1-34/ImageMagick-b0b7b17-gcc-x86_64.AppImage
     chmod +x magick
+    # - If your resource generation doesn't work, you get errors about magick "file not found" go to `resources/tools/other/in` and execute `dd if=/dev/zero bs=1 count=3 seek=8 conv=notrunc of=magick`. Appimages are stupid.
+    dd if=/dev/zero bs=1 count=3 seek=8 conv=notrunc of=magick
     mv magick other/in/magick
     rm magick* 1>/dev/null 2>/dev/null # Not sure
 fi
