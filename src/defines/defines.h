@@ -124,6 +124,11 @@ extern bufSize emptyBuff;
 #endif
 #include "../hardware/motor/motor.h"
 #include "../hardware/rgb/rgb.h"
+#if LP_CORE
+#include "esp_sleep.h"
+#include "ulp_lp_core.h"
+#include "../hardware/lpCore/lpCore.h"
+#endif
 #include "../functions.h"
 #include "../network/wifi/wifiLogic.h"
 #include "../network/wifi/wifiTask.h"
