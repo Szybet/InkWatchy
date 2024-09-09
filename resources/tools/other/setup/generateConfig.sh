@@ -16,6 +16,10 @@ mkdir -p fs/out/
 mkdir -p fs/littlefs
 mkdir -p fs/littlefs/conf/
 touch fs/littlefs/conf/.keep
+# TODO: Only on Yatchy selector or something
+mkdir -p fs/littlefs/other/
+touch fs/littlefs/other/.keep
+
 mkdir -p other/out/
 mkdir -p other/in/
 
