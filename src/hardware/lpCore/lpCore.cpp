@@ -2,14 +2,6 @@
 
 #if LP_CORE
 
-/*
-https://github.com/esp-rs/esp-hal/blob/main/esp-lp-hal/src/lib.rs
-https://github.com/espressif/esp-idf/blob/master/examples/system/ulp/lp_core/build_system/main/lp_core_build_system_example_main.c
-https://github.com/espressif/esp-idf/tree/master/examples/system/ulp/lp_core
-https://github.com/espressif/esp-idf/blob/59e18382702b6986be3d3f55e9ac7763c1397cf7/components/ulp/lp_core/lp_core.c#L141
-https://github.com/espressif/esp-idf/blob/master/examples/system/ulp/lp_core/gpio/main/lp_core_gpio_example_main.c
-*/
-
 bool loadLpCore() {
     // Load it from littlefs first
     bufSize bin = fsGetBlob("yatchy-lp-program.bin", "/other/");
