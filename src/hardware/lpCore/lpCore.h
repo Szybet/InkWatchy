@@ -6,6 +6,11 @@
 #if LP_CORE
 
 bool loadLpCore();
+bool runLpCore();
 
+#if DEBUG
+void monitorLpCore();
+
+#endif
 #endif
 #endif

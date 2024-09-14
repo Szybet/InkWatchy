@@ -228,7 +228,7 @@ void manageSleep()
             uint currentSeconds = getCurrentSeconds();
             if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || wFTime.Minute != timeRTCLocal.Minute)
             {
-                int toSleepSec = ((AVOID_SLEEPING_ON_FULL_MINUTE - currentSeconds + 60) % 60) + 2; // + 2 to avoid triggering it again
+                int toSleepSec = (((AVOID_SLEEPING_ON_FULL_MINUTE / 2) - currentSeconds + 60) % 60);
                 debugLog("timeRTCLocal.Second: " + String(timeRTCLocal.Second));
                 debugLog("currentSeconds: " + String(currentSeconds));
                 // This message can appear a few times because watchface will attempt to force to go to sleep

@@ -65,7 +65,9 @@ void setup()
 #endif
     Serial.println("Waiting for input...");
   }
+#if WAIT_FOR_INPUT_MOTOR
   digitalWrite(VIB_MOTOR_PIN, 0);
+#endif
 #endif
   initLogs();
 #endif

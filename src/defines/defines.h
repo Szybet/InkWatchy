@@ -127,6 +127,8 @@ extern bufSize emptyBuff;
 #if LP_CORE
 #include "esp_sleep.h"
 #include "ulp_lp_core.h"
+#include <ulp_lp_core_memory_shared.h>
+
 #include "../hardware/lpCore/lpCore.h"
 #endif
 #include "../functions.h"
