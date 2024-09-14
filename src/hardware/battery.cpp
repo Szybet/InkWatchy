@@ -333,7 +333,6 @@ void dumpBatteryScreen(void *parameter)
         display.fillRect(80, 80, 40, 40, GxEPD_WHITE);
         display.setCursor(85, 100);
         display.print(String(getBatteryVoltage()));
-        display.display(true);
         resetSleepDelay();
     }
 }

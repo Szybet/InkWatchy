@@ -145,7 +145,6 @@ void writeImageN(int16_t x, int16_t y, ImageDef *image, uint16_t frColor, uint16
   int16_t cy = display.getCursorY();
   display.setCursor(0, 0);
   display.drawBitmap(x, y, image->bitmap, image->bw, image->bh, frColor, bgColor);
-  display.refresh(PARTIAL_UPDATE);
   display.setCursor(cx, cy);
 }
 
