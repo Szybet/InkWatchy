@@ -41,6 +41,15 @@ void initDisplay()
 
     display.setTextColor(GxEPD_BLACK);
 
+    // Only on first boot, only to be extra sure
+#if SCREEN_PARTIAL_GREY_WORKAROUND
+    if(bootStatus.fromWakeup == false) {
+        display.setPartialWindow(0, 0, 200, 200);
+        display.clearScreen();
+        display.fillScreen(GxEPD_WHITE);
+        display.display(FULL_UPDATE);
+    }
+#endif
     resetHoldManage();
 
     // Default values
