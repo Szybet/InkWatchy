@@ -10,6 +10,7 @@ bool runLpCore();
 
 #if DEBUG
 void monitorLpCore();
+const char *getLpLog(uint8_t id);
 
 #endif
 #endif

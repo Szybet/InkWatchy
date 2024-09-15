@@ -70,7 +70,15 @@ void setup()
 #endif
 #endif
   initLogs();
+
+#if LP_CORE_TEST_RUN
+  loadLpCore();
+  runLpCore();
+  monitorLpCore();
 #endif
+#endif
+
+
 
   initHardware();
   // debugLog("Starting millis: " + String(millisBetter()));
