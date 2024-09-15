@@ -94,3 +94,4 @@ or via matrix: @szybet:matrix.org
 - [Prokuon](https://github.com/Prokuon/watchy-starfield/) - I really liked the design of this watchface and almost coppied it. Thanks! - well the code is completly diffrent
 - [Jason2866](https://github.com/Jason2866) - Help with solving platformio hackery
 - C4nn0n from discord - Testing a lot for the watchy v3 and beyond
+- [invpt](https://github.com/invpt) (slabeb on discord) - Huge thanks for pointing out the direction for a potential fix for screen ghosting, I easily have spend 2 weeks on it ;o 
