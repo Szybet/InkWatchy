@@ -39,8 +39,8 @@
 #define VALID_PREVIOUS_SYNC_DELAY 300      // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
 #define WIFI_CONNECTION_TRIES 3            // Regular sync, number of tries
 #define WIFI_CONNECTION_TRIES_PERSISTENT 1 // Persistent sync (SYNC_WIFI), number of tries
-#define WIFI_SYNC_TIME 5000         // Ms, time for waiting to connect to wifi
-#define WIFI_ERROR_TIME 3000         // Ms, time for waiting when wifi failed before next try
+#define WIFI_SYNC_TIME 5000                // Ms, time for waiting to connect to wifi
+#define WIFI_ERROR_TIME 3000               // Ms, time for waiting when wifi failed before next try
 #define TIME_DRIFT_CORRECTION 0            // The RTC may drift, this should repair it. It basically on first ntp sync starts the measurment and on the second it ends it. I suggest disabling SYNC_WIFI because if it's triggered, it will cancel the drift calculation because its a persistent sync, it happens every few minutes. If you have a watchy V2, you should first try FORCE_INTERNAL_RTC instead of this option.
 #define TIME_DRIFT_MINIMUM_TIME 24         // Minimum amount of hours a drift calculation can go on, because measuring drift between 5 minutes will help you experience the back to the future movie. It's suggested to be minimum 24 hours.
 #define FORCE_INTERNAL_RTC 0               // If your device has an external RTC but it sucks, set this to 1
@@ -159,6 +159,7 @@
 #define PUT_LOGS_TO_FS 0            // Puts logs into littlefs
 #define WAIT_FOR_MONITOR 0          // If debug is enabled, waits for monitor in setup for x ms
 #define WAIT_FOR_INPUT 0            // If debug is enabled, waits for monitor until you click a button while serial monitor is opened
+#define WAIT_FOR_INPUT_MOTOR 0      // Vibrate lightly in WAIT_FOR_INPUT
 // Ah... too much allocated memory... 10 hours of my life...
 #define LOG_SERIAL_BUFFER_SIZE 1000
 #define LOG_FILE_BUFFER_SIZE 3000
@@ -176,6 +177,7 @@
 #define RESET_RTC_ON_BOOT 0            // Experimental.
 #define BATTERY_TIME_DROP 0            // If enabled, if battery drops below BATTERY_TIME_DROP_VOLTAGE. Doesn't need DEBUG
 #define BATTERY_TIME_DROP_VOLTAGE 3.50 // Needs to be float
+#define LP_CORE_TEST_RUN 1             // Yatchy only, why would anyone use it aside from me?
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
@@ -215,9 +217,9 @@
 #define BUTTONS_PRIORITY 12
 #define WIFI_PRIORITY_PERSISTENT 4
 #define SCOM_PRIORITY 3
-#define MOTOR_PRIORITY 15
+#define MOTOR_PRIORITY 22
 #define WATCHDOG_PRIORITY 1
-#define RGB_PRIORITY 5
+#define RGB_PRIORITY 22
 
 // Config
 #define CONF_BOOK_CURRENT_PAGE "current_page_"
