@@ -72,13 +72,13 @@ void setup()
   initLogs();
 
 #if LP_CORE_TEST_RUN
+  stopLpCore();
+  initRtcGpio();
   loadLpCore();
   runLpCore();
   monitorLpCore();
 #endif
 #endif
-
-
 
   initHardware();
   // debugLog("Starting millis: " + String(millisBetter()));

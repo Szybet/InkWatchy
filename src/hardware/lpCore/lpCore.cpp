@@ -7,6 +7,12 @@
 #include "export/lp_rust.h"
 #include <bootloader_common.h>
 
+void stopLpCore()
+{
+    ulp_lp_core_stop();
+    deInitRtcGpio();
+}
+
 bool loadLpCore()
 {
     debugLog("Loading lp core");
@@ -32,29 +38,95 @@ bool loadLpCore()
     return true;
 }
 
+/*
+const RES_PIN: u8 = 2; // Output
+const DC_PIN: u8 = 3; // Output
+const BUSY_PIN: u8 = 4; // Input
+pub const MOSI_PIN: u8 = 5; // Output
+pub const SCK_PIN: u8 = 7; // Output
+*/
+
+void initRtcInvidualGpio(int pin, bool input)
+{
+    // https://github.com/espressif/esp-idf/blob/3c99557eeea4e0945e77aabac672fbef52294d54/examples/system/ulp/ulp_riscv/gpio/main/ulp_riscv_example_main.c#L42
+    gpio_num_t gpio_pin = gpio_num_t(pin);
+    debugLog("Configuring RTC pin: " + String(gpio_pin));
+    ESP_ERROR_CHECK(rtc_gpio_init(gpio_pin));
+    if (input == true)
+    {
+        ESP_ERROR_CHECK(rtc_gpio_set_direction(gpio_pin, RTC_GPIO_MODE_INPUT_ONLY));
+    }
+    else
+    {
+        ESP_ERROR_CHECK(rtc_gpio_set_direction(gpio_pin, RTC_GPIO_MODE_OUTPUT_ONLY));
+    }
+    ESP_ERROR_CHECK(rtc_gpio_pulldown_dis(gpio_pin));
+    ESP_ERROR_CHECK(rtc_gpio_pullup_dis(gpio_pin));
+    // TODO: This messes up gpio when the hp core is not going to sleep, probably
+    // Or when it's not cleared up properly? - Nope, this is fine to call even without this, but this still messes things up, maybe its not needed at all
+    //ESP_ERROR_CHECK(rtc_gpio_hold_en(gpio_pin));
+}
+
+void initRtcGpio()
+{
+    // De init the screen before this!
+#if ATCHY_VER == YATCHY
+    // Also make sure about this
+    // Set screen cs to low
+    gpioExpander.setPinMode(YATCHY_DISPLAY_CS, MCP_OUTPUT);
+    // setPinPullUp(YATCHY_DISPLAY_CS, false); // Not needed, it's false at default
+    gpioExpander.setPinState(YATCHY_DISPLAY_CS, LOW);
+#endif
+    initRtcInvidualGpio(EPD_RESET, false);
+    initRtcInvidualGpio(EPD_DC, false);
+    initRtcInvidualGpio(EPD_BUSY, true);
+    initRtcInvidualGpio(EPD_SPI_MOSI, false);
+    initRtcInvidualGpio(EPD_SPI_SCK, false);
+}
+
+void deInitRtcInvidualGpio(int pin) {
+    gpio_num_t gpio_pin = gpio_num_t(pin);
+    debugLog("Deconfiguring RTC pin: " + String(gpio_pin));
+    ESP_ERROR_CHECK(rtc_gpio_deinit(gpio_pin));
+    ESP_ERROR_CHECK(rtc_gpio_hold_dis(gpio_pin));
+}
+
+void deInitRtcGpio()
+{
+    deInitRtcInvidualGpio(EPD_RESET);
+    deInitRtcInvidualGpio(EPD_DC);
+    deInitRtcInvidualGpio(EPD_BUSY);
+    deInitRtcInvidualGpio(EPD_SPI_MOSI);
+    deInitRtcInvidualGpio(EPD_SPI_SCK);
+}
+
 bool runLpCore()
 {
     ulp_lp_core_cfg_t cfg = {
         .wakeup_source = ULP_LP_CORE_WAKEUP_SOURCE_LP_TIMER,
-        .lp_timer_sleep_duration_us = 10 * 5,
+        .lp_timer_sleep_duration_us = 3 * 1000000,
     };
 
     debugLog("shared_mem->sleep_duration_ticks" + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
     debugLog("Running lp core");
     // It will fail to run if there was lp core already running
     esp_err_t err = ulp_lp_core_run(&cfg);
+    if(err != ESP_OK) {
+        debugLog("Failed to run lp core: " + String(esp_err_to_name(err)));
+        return false;
+    }
     debugLog("shared_mem->sleep_duration_ticks" + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
     return true;
 }
 
 #if DEBUG
-#define LP_DEBUG_ADDRESS 0x50002000 // The address of bootloader rtc memory
 void monitorLpCore()
 {
     uint8_t *rtc_retain_mem = bootloader_common_get_rtc_retain_mem()->custom;
     while (true)
     {
         uint8_t read = *((volatile uint8_t *)rtc_retain_mem);
+        // debugLog("Read is: " + String(read));
         if (read != LPOG_NOTHING_0)
         {
             debugLog("Lp log update: " + String(getLpLog(read)));
@@ -73,17 +145,17 @@ const char *getLpLog(uint8_t id)
     case 1:
         return LPOG_START_1_STR;
     case 2:
-        return LPOG_UNKNOWN_255_STR;
+        return LPOG_SCREEN_WRITE_START_2_STR;
     case 3:
-        return LPOG_UNKNOWN_255_STR;
+        return LPOG_INITIALIZED_PINS_3_STR;
     case 4:
-        return LPOG_UNKNOWN_255_STR;
+        return LPOG_SCREEN_INIT_4_STR;
     case 5:
-        return LPOG_UNKNOWN_255_STR;
+        return LPOG_SCREEN_FIRST_ACTION_5_STR;
     case 6:
-        return LPOG_UNKNOWN_255_STR;
+        return LPOG_SCREEN_END_6_STR;
     case 7:
-        return LPOG_UNKNOWN_255_STR;
+        return LPOG_SCREEN_POWEROFF_7_STR;
     case 8:
         return LPOG_UNKNOWN_255_STR;
     case 9:

@@ -5,7 +5,10 @@
 
 #if LP_CORE
 
+void stopLpCore();
 bool loadLpCore();
+void initRtcGpio();
+void deInitRtcGpio();
 bool runLpCore();
 
 #if DEBUG
