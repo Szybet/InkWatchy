@@ -71,7 +71,7 @@ void setup()
 #endif
   initLogs();
 
-#if LP_CORE_TEST_RUN
+#if LP_CORE_TEST_RUN && LP_CORE
   stopLpCore();
   initRtcGpio();
   loadLpCore();
