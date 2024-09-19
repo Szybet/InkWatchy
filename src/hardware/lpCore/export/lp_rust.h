@@ -18,6 +18,12 @@
 
 #define LPOG_ERROR_8 8
 
-void send_debug_message(uint8_t mess);
+#define NUMBER_WIDTH 32
 
-void draw_screen(void);
+#define NUMBER_HEIGHT 48
+
+#define TIMEZONE_OFFSET 0
+
+uint8_t do_rust_things(void);
+
+void send_debug_message(uint8_t mess);
