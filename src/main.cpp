@@ -70,14 +70,16 @@ void setup()
 #endif
 #endif
   initLogs();
+#endif
+#if LP_CORE_TEST_ENABLED
+  initRTC();
+  debugLog("Current unix time: " + String(getUnixTime(timeRTCUTC0)));
 
-#if LP_CORE_TEST_RUN && LP_CORE
   stopLpCore();
   initRtcGpio();
   loadLpCore();
   runLpCore();
   monitorLpCore();
-#endif
 #endif
 
   initHardware();

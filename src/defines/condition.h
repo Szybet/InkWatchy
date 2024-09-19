@@ -230,3 +230,8 @@ Template for versioning
 
 #endif
 #endif
+
+// Lp core
+#if DEBUG && LP_CORE_TEST_RUN && LP_CORE
+#define LP_CORE_TEST_ENABLED 1
+#endif
