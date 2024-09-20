@@ -100,6 +100,7 @@ void goSleep()
     runLpCore();
     // This enables the subsystem, so it doesn't shut it down or something
     // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#ulp-coprocessor-wakeup
+    // TODO: maybe this https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#power-down-of-rtc-peripherals-and-memories
     ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
 #else
     display.hibernate();
