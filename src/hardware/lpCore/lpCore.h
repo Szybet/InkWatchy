@@ -5,6 +5,7 @@
 
 #if LP_CORE
 
+void lpCoreScreenPrepare();
 void stopLpCore();
 bool loadLpCore();
 void initRtcGpio();

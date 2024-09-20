@@ -49,6 +49,12 @@ void initHardware()
     setCpuSpeed(CPU_SPEED);
 #endif
 
+#if LP_CORE
+    // Always, to be sure
+    stopLpCore();
+    deInitRtcGpio();
+#endif
+
     initRTC();
     initButtons();
 
@@ -267,6 +273,9 @@ int64_t millisBetter()
 
 void firstWakeUpManage()
 {
+#if DEBUG == true && LP_CORE == true
+    debugLog("This is a warning, first boot detected but nvs and coredump not cleared because of debug and lp core");
+#else
     if (fsSetup() == true)
     {
         int firstBoot = fsGetString(FIRST_BOOT_FILE, "0").toInt();
@@ -294,4 +303,5 @@ void firstWakeUpManage()
             }
         }
     }
+#endif
 }

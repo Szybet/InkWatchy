@@ -7,6 +7,19 @@
 #include "export/lp_rust.h"
 #include <bootloader_common.h>
 
+#define LP_CORE_SCREEN_X 14
+#define LP_CORE_SCREEN_Y 5
+#define LP_CORE_SCREEN_W 175
+#define LP_CORE_SCREEN_H 51
+
+void lpCoreScreenPrepare() {
+    display.fillRect(LP_CORE_SCREEN_X, LP_CORE_SCREEN_Y, LP_CORE_SCREEN_W, LP_CORE_SCREEN_H, GxEPD_WHITE);
+    display.display(PARTIAL_UPDATE);
+    delayTask(100);
+    display.fillRect(LP_CORE_SCREEN_X, LP_CORE_SCREEN_Y, LP_CORE_SCREEN_W, LP_CORE_SCREEN_H, GxEPD_WHITE);
+    display.display(PARTIAL_UPDATE);
+}
+
 void stopLpCore()
 {
     ulp_lp_core_stop();
@@ -104,7 +117,7 @@ bool runLpCore()
 {
     ulp_lp_core_cfg_t cfg = {
         .wakeup_source = ULP_LP_CORE_WAKEUP_SOURCE_LP_TIMER,
-        .lp_timer_sleep_duration_us = 3 * 1000000,
+        .lp_timer_sleep_duration_us = 10 * 1000000,
     };
 
     debugLog("shared_mem->sleep_duration_ticks" + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
