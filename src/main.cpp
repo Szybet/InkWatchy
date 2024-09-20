@@ -72,6 +72,8 @@ void setup()
   initLogs();
 #endif
 #if LP_CORE_TEST_ENABLED
+  bootStatus.fromWakeup = false; // To be sure
+  initDisplay();
   initRTC();
   debugLog("Current unix time: " + String(getUnixTime(timeRTCUTC0)));
 
@@ -79,7 +81,12 @@ void setup()
   initRtcGpio();
   loadLpCore();
   runLpCore();
+#if LP_CORE_SERIOUS_TEST == false
   monitorLpCore();
+#else
+  ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
+  esp_deep_sleep_start();
+#endif
 #endif
 
   initHardware();

@@ -234,4 +234,9 @@ Template for versioning
 // Lp core
 #if DEBUG && LP_CORE_TEST_RUN && LP_CORE
 #define LP_CORE_TEST_ENABLED 1
+#else
+#define LP_CORE_TEST_ENABLED 0
+#endif
+#ifndef LP_CORE
+#define LP_CORE 0
 #endif

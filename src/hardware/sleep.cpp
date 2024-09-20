@@ -90,14 +90,29 @@ void goSleep()
     //     debugLog("Waiting for motor task");
     //     delayTask(25);
     // }
-
+#if LP_CORE == true
+    lpCoreScreenPrepare();
+    delayTask(300);
     display.hibernate();
+    delayTask(100);
+    initRtcGpio();
+    loadLpCore();
+    runLpCore();
+    // This enables the subsystem, so it doesn't shut it down or something
+    // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#ulp-coprocessor-wakeup
+    ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
+#else
+    display.hibernate();
+#endif
 
     // https://esp32.com/viewtopic.php?t=34166
     // turnOffWifi();
 
     // deInitWatchdogTask();
+#if LP_CORE == false
     wakeUpManageRTC();
+#endif
+
     debugLog("Going sleep...");
 #if DEBUG
     logCleanup();
@@ -249,9 +264,9 @@ void manageSleep()
                 return;
             }
 
-#if ATCHY_VER == YATCHY 
-    debugLog("Battery voltage before sleep: " + String(BatteryRead()));
-    debugLog("Gpio expander stat in pin state: " + BOOL_STR(gpioExpander.digitalRead(MCP_STAT_IN)));
+#if ATCHY_VER == YATCHY
+            debugLog("Battery voltage before sleep: " + String(BatteryRead()));
+            debugLog("Gpio expander stat in pin state: " + BOOL_STR(gpioExpander.digitalRead(MCP_STAT_IN)));
 #endif
 
 #if DEBUG && DISABLE_SLEEP_PARTIAL

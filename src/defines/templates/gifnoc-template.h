@@ -177,7 +177,8 @@
 #define RESET_RTC_ON_BOOT 0            // Experimental.
 #define BATTERY_TIME_DROP 0            // If enabled, if battery drops below BATTERY_TIME_DROP_VOLTAGE. Doesn't need DEBUG
 #define BATTERY_TIME_DROP_VOLTAGE 3.50 // Needs to be float
-#define LP_CORE_TEST_RUN 1             // Yatchy only, why would anyone use it aside from me?
+#define LP_CORE_TEST_RUN 0             // Yatchy only, why would anyone use it aside from me?
+#define LP_CORE_SERIOUS_TEST 0
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20

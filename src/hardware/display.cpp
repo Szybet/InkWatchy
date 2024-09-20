@@ -42,7 +42,7 @@ void initDisplay()
     display.setTextColor(GxEPD_BLACK);
 
     // Only on first boot, only to be extra sure
-#if SCREEN_PARTIAL_GREY_WORKAROUND
+#if SCREEN_PARTIAL_GREY_WORKAROUND || LP_CORE_TEST_ENABLED
     if(bootStatus.fromWakeup == false) {
         display.setPartialWindow(0, 0, 200, 200);
         display.clearScreen();
@@ -50,7 +50,9 @@ void initDisplay()
         display.display(FULL_UPDATE);
     }
 #endif
-    resetHoldManage();
+    #if LP_CORE_TEST_ENABLED == false
+        resetHoldManage();
+    #endif
 
     // Default values
     setFont(&FreeSansBold9pt7b);
