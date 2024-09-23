@@ -13,6 +13,9 @@ float previousGoodRead = FALLBACK_BATTERY_VOLTAGE;
 #endif
 float getBatteryVoltage()
 {
+#if NO_CHARGING == true && DEBUG == true
+    return 4.0;
+#endif
     uint8_t readedTimes = 0;
 #if ATCHY_VER != YATCHY
     float sum = 0.0;

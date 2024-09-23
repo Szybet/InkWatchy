@@ -90,8 +90,11 @@ void drawTimeAfterApply()
     }
 }
 
-void showTimeFull() {
+void showTimeFull()
+{
+#if LP_CORE
     screenTimeChanged = true;
+#endif
     // Now UI
     setTextSize(1);
     setFont(TIME_FONT);
@@ -172,7 +175,8 @@ void drawBattery()
     drawProgressBar(BATT_BAR_CORD, TO_DAY_BAR_SIZE, batteryPercantageWF);
 }
 
-void cleanSomeDrawing() {
+void cleanSomeDrawing()
+{
     display.fillRect(SOME_RECT_X, SOME_RECT_Y, SOME_RECT_W, SOME_RECT_H, GxEPD_WHITE);
     display.drawFastHLine(111, 61, 13, GxEPD_WHITE);
 }

@@ -33,7 +33,7 @@ void loopWatchfaceLoop()
   {
     dUChange = true;
 
-    #if LP_CORE == true
+#if LP_CORE == true
     screenTimeChanged = true;
     if (screenForceNextFullTimeWrite == true)
     {
@@ -42,7 +42,7 @@ void loopWatchfaceLoop()
       showTimeFull();
     }
     else
-    #endif
+#endif
     {
       drawTimeBeforeApply();
 
@@ -116,6 +116,21 @@ void loopWatchfaceLoop()
     // sleepDelayMs = millisBetter() - SLEEP_EVERY_MS;
     wentToSleep = true;
   }
+
+#if LP_CORE == true
+  // Because the arduino program doesn't know about the screen buffer, if we update anything it will dissapear :(
+  debugLog("dUChange in the end of watchface: " + BOOL_STR(dUChange));
+  if (dUChange == true)
+  {
+    screenTimeChanged = true;
+    if (screenForceNextFullTimeWrite == true)
+    {
+      screenForceNextFullTimeWrite = false;
+      lpCoreScreenPrepare(false);
+      showTimeFull();
+    }
+  }
+#endif
 
   // We ignore sleep because probably we will want to go to sleep fast
   disUp(dUChange, false, true);
