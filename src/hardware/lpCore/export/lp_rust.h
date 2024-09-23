@@ -22,7 +22,7 @@
 
 #define NUMBER_HEIGHT 48
 
-#define TIMEZONE_OFFSET 0
+#define TIMEZONE_OFFSET (1 * 3600)
 
 uint8_t do_rust_things(void);
 
