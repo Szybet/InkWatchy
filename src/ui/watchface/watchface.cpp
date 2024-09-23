@@ -33,10 +33,27 @@ void loopWatchfaceLoop()
   {
     dUChange = true;
 
-    drawTimeBeforeApply();
+    #if LP_CORE == true
+    screenTimeChanged = true;
+    if (screenForceNextFullTimeWrite == true)
+    {
+      screenForceNextFullTimeWrite = false;
+      lpCoreScreenPrepare(false);
+      showTimeFull();
+    }
+    else
+    #endif
+    {
+      drawTimeBeforeApply();
 
-    wFTime.Minute = timeRTCLocal.Minute;
-    wFTime.Hour = timeRTCLocal.Hour;
+      wFTime.Minute = timeRTCLocal.Minute;
+      wFTime.Hour = timeRTCLocal.Hour;
+
+      if (disableSomeDrawing == false)
+      {
+        drawTimeAfterApply();
+      }
+    }
 
     if (disableSomeDrawing == false)
     {
@@ -102,7 +119,7 @@ void loopWatchfaceLoop()
 
   // We ignore sleep because probably we will want to go to sleep fast
   disUp(dUChange, false, true);
-  
+
   if (timeHappened == false && bt == None && wentToSleep == true)
   {
     debugLog("Nothing happened, delay...");

@@ -91,10 +91,13 @@ void goSleep()
     //     delayTask(25);
     // }
 #if LP_CORE == true
-    lpCoreScreenPrepare();
-    delayTask(300);
+    if (screenTimeChanged == true)
+    {
+        lpCoreScreenPrepare(true);
+        delayTask(30);
+    }
     display.hibernate();
-    delayTask(100);
+    delayTask(10);
     initRtcGpio();
     loadLpCore();
     runLpCore();

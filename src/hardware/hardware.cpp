@@ -52,7 +52,6 @@ void initHardware()
 #if LP_CORE
     // Always, to be sure
     stopLpCore();
-    deInitRtcGpio();
 #endif
 
     initRTC();
@@ -87,7 +86,10 @@ void initHardware()
     */
 
     initDisplay();
-    resetSleepDelay();
+
+#if LP_CORE
+    initManageLpCore();
+#endif
 }
 
 void resetSleepDelay(int addMs)

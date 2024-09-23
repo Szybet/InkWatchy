@@ -125,11 +125,13 @@ extern bufSize emptyBuff;
 #include "../hardware/motor/motor.h"
 #include "../hardware/rgb/rgb.h"
 #if LP_CORE
+#include "../hardware/lpCore/lpCore.h" // Always include it as there are some variables we want outside
+#include "../hardware/lpCore/export/lp_logs.h"
+#include "../hardware/lpCore/export/lp_rust.h" // Maybe don't call those functions from there
 #include "esp_sleep.h"
 #include "ulp_lp_core.h"
+#include <bootloader_common.h>
 #include <ulp_lp_core_memory_shared.h>
-
-#include "../hardware/lpCore/lpCore.h"
 #endif
 #include "../functions.h"
 #include "../network/wifi/wifiLogic.h"

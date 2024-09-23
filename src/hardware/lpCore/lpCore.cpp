@@ -2,28 +2,43 @@
 
 #if LP_CORE
 
-#include "export/lp_logs.h"
-// Maybe don't call those functions from there
-#include "export/lp_rust.h"
-#include <bootloader_common.h>
+bool screenForceNextFullTimeWrite = false; // Make the watchface update the whole time bar
+bool screenTimeChanged = false;            // If the watchface has written time (minutes / hours) to the screen
 
-#define LP_CORE_SCREEN_X 14
-#define LP_CORE_SCREEN_Y 5
-#define LP_CORE_SCREEN_W 175
-#define LP_CORE_SCREEN_H 51
+#define LP_CORE_SCREEN_X 8
+#define LP_CORE_SCREEN_Y 2
+#define LP_CORE_SCREEN_W 185
+#define LP_CORE_SCREEN_H 56
 
-void lpCoreScreenPrepare() {
+void lpCoreScreenPrepare(bool now)
+{
+    debugLog("Clearing screen space for lp core");
     display.fillRect(LP_CORE_SCREEN_X, LP_CORE_SCREEN_Y, LP_CORE_SCREEN_W, LP_CORE_SCREEN_H, GxEPD_WHITE);
-    display.display(PARTIAL_UPDATE);
-    delayTask(100);
-    display.fillRect(LP_CORE_SCREEN_X, LP_CORE_SCREEN_Y, LP_CORE_SCREEN_W, LP_CORE_SCREEN_H, GxEPD_WHITE);
-    display.display(PARTIAL_UPDATE);
+    if (now == true)
+    {
+        display.display(PARTIAL_UPDATE);
+    }
+    else
+    {
+        dUChange = true;
+    }
 }
 
 void stopLpCore()
 {
     ulp_lp_core_stop();
+    delayTask(10);
     deInitRtcGpio();
+    delayTask(10);
+}
+
+void clearLpCoreRtcMem()
+{
+    debugLog("Clearing lp core rtc mem");
+    rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
+#ifdef CONFIG_BOOTLOADER_CUSTOM_RESERVE_RTC
+    memset(rtc_mem->custom, 0, CONFIG_BOOTLOADER_CUSTOM_RESERVE_RTC_SIZE);
+#endif
 }
 
 bool loadLpCore()
@@ -77,7 +92,7 @@ void initRtcInvidualGpio(int pin, bool input)
     ESP_ERROR_CHECK(rtc_gpio_pullup_dis(gpio_pin));
     // TODO: This messes up gpio when the hp core is not going to sleep, probably
     // Or when it's not cleared up properly? - Nope, this is fine to call even without this, but this still messes things up, maybe its not needed at all
-    //ESP_ERROR_CHECK(rtc_gpio_hold_en(gpio_pin));
+    // ESP_ERROR_CHECK(rtc_gpio_hold_en(gpio_pin));
 }
 
 void initRtcGpio()
@@ -97,7 +112,8 @@ void initRtcGpio()
     initRtcInvidualGpio(EPD_SPI_SCK, false);
 }
 
-void deInitRtcInvidualGpio(int pin) {
+void deInitRtcInvidualGpio(int pin)
+{
     gpio_num_t gpio_pin = gpio_num_t(pin);
     debugLog("Deconfiguring RTC pin: " + String(gpio_pin));
     ESP_ERROR_CHECK(rtc_gpio_deinit(gpio_pin));
@@ -117,14 +133,19 @@ bool runLpCore()
 {
     ulp_lp_core_cfg_t cfg = {
         .wakeup_source = ULP_LP_CORE_WAKEUP_SOURCE_LP_TIMER,
-        .lp_timer_sleep_duration_us = 10 * 1000000,
+        .lp_timer_sleep_duration_us = uint32_t(0.5 * 1000000),
     };
 
+    if (screenTimeChanged == true)
+    {
+        clearLpCoreRtcMem();
+    }
     debugLog("shared_mem->sleep_duration_ticks" + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
     debugLog("Running lp core");
     // It will fail to run if there was lp core already running
     esp_err_t err = ulp_lp_core_run(&cfg);
-    if(err != ESP_OK) {
+    if (err != ESP_OK)
+    {
         debugLog("Failed to run lp core: " + String(esp_err_to_name(err)));
         return false;
     }
@@ -132,18 +153,54 @@ bool runLpCore()
     return true;
 }
 
+void initManageLpCore()
+{
+    if (bootStatus.fromWakeup == true)
+    {
+        screenForceNextFullTimeWrite = true;
+        rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
+        wFTime.Hour = rtc_mem->custom[1];
+        wFTime.Minute = rtc_mem->custom[2];
+        debugLog("Updated from lp core hour and minute: " + getHourMinute(wFTime));
+    }
+    else
+    {
+        // First boot
+        clearLpCoreRtcMem();
+    }
+}
+
 #if DEBUG
+void startLpCoreTest()
+{
+    bootStatus.fromWakeup = false; // To be sure
+    initDisplay();
+    initRTC();
+    debugLog("Current unix time: " + String(getUnixTime(timeRTCUTC0)));
+
+    stopLpCore();
+    initRtcGpio();
+    loadLpCore();
+    runLpCore();
+#if LP_CORE_SERIOUS_TEST == false
+    monitorLpCore();
+#else
+    ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
+    esp_deep_sleep_start();
+#endif
+}
+
 void monitorLpCore()
 {
-    uint8_t *rtc_retain_mem = bootloader_common_get_rtc_retain_mem()->custom;
+    uint8_t *rtc_custom = bootloader_common_get_rtc_retain_mem()->custom;
     while (true)
     {
-        uint8_t read = *((volatile uint8_t *)rtc_retain_mem);
+        uint8_t read = *((volatile uint8_t *)rtc_custom);
         // debugLog("Read is: " + String(read));
         if (read != LPOG_NOTHING_0)
         {
             debugLog("Lp log update: " + String(getLpLog(read)));
-            *((volatile uint8_t *)rtc_retain_mem) = 0;
+            *((volatile uint8_t *)rtc_custom) = 0;
         }
         delayTask(100);
     }

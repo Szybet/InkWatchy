@@ -90,13 +90,19 @@ void drawTimeAfterApply()
     }
 }
 
+void showTimeFull() {
+    screenTimeChanged = true;
+    // Now UI
+    setTextSize(1);
+    setFont(TIME_FONT);
+    writeTextReplaceBack(getHourMinute(timeRTCLocal), TIME_CORD);
+}
+
 void showFullWatchface()
 {
     writeImageN(0, 0, getImg("watchface"));
 
-    setTextSize(1);
-    setFont(TIME_FONT);
-    writeTextReplaceBack(getHourMinute(timeRTCLocal), TIME_CORD);
+    showTimeFull();
 
     setTextSize(1);
     setFont(DATE_FONT);

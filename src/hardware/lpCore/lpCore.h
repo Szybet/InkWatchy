@@ -5,14 +5,20 @@
 
 #if LP_CORE
 
-void lpCoreScreenPrepare();
+extern bool screenForceNextFullTimeWrite;
+extern bool screenTimeChanged;
+
+void clearLpCoreRtcMem();
+void lpCoreScreenPrepare(bool now);
 void stopLpCore();
 bool loadLpCore();
 void initRtcGpio();
 void deInitRtcGpio();
 bool runLpCore();
+void initManageLpCore();
 
 #if DEBUG
+void startLpCoreTest();
 void monitorLpCore();
 const char *getLpLog(uint8_t id);
 
