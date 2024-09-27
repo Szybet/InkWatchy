@@ -59,14 +59,18 @@ bool mcp23018::simplerInit()
 
 void mcp23018::setDefaultInterruptsEsp()
 {
-  // This is not needed here?
-  // if (simplerInit() == false)
-  //{
-  // return;
-  //}
-  // pinMode(MCP_INTERRUPT_PIN, INPUT); // maybe no
+// This is not needed here?
+// if (simplerInit() == false)
+//{
+// return;
+//}
+// pinMode(MCP_INTERRUPT_PIN, INPUT); // maybe no
+#if MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS == false || DEBUG == false
   debugLog("Attaching gpio expander interrupt pin");
   attachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN), manageGpioExpanderInt, FALLING);
+#else
+  debugLog("Not attaching mcp23018 interrupt");
+#endif
 }
 
 buttonState mcp23018::manageInterrupts()
@@ -138,6 +142,9 @@ buttonState mcp23018::manageInterrupts()
 
 bool mcp23018::manageInterruptsExit()
 {
+  #if MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS == true && DEBUG == true
+    return true;
+  #endif
   if (simplerInit() == false)
   {
     return true; // True here because of infinite loop
@@ -164,6 +171,9 @@ bool mcp23018::manageInterruptsExit()
 
 bool mcp23018::resetVerify()
 {
+#if MCP_GPIO_EXPANDER_DISABLE == true && DEBUG == true
+  return false;
+#endif
   // When this fails, we are lost
   if (initI2C() == false)
   {
@@ -212,11 +222,15 @@ bool mcp23018::resetVerify()
       somethingWrong = true;
     }
   }
+#if DEBUG == false
   if (BatteryRead() < 3.0)
   {
     debugLog("Battery is low, so interrupt too?");
     somethingWrong = true;
   }
+#else
+  debugLog("Not checking interrupt low for mcp23018 because we are in debug mode");
+#endif
   if (somethingWrong == true)
   {
     debugLog("Something is really wrong with the expander!");
@@ -288,7 +302,7 @@ void mcp23018::deInit()
     return;
   }
   setInterrupt(MCP_STAT_IN, false);
-  //dumpAllRegisters();
+  // dumpAllRegisters();
 }
 
 bool mcp23018::digitalRead(uint8_t pin)
