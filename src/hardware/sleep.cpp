@@ -129,6 +129,7 @@ void goSleep()
     LittleFS.end();
     // Not needed since small rtc 2.3.7
     // esp_err_t ext0Err = esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
+#if DISABLE_WAKEUP_INTERRUPTS == false || DEBUG == false
 #if ATCHY_VER != YATCHY
     esp_err_t ext1Err = esp_sleep_enable_ext1_wakeup(pinToMask(UP_PIN) | pinToMask(DOWN_PIN) | pinToMask(MENU_PIN) | pinToMask(BACK_PIN), EXT1_WAKEUP_STATE);
 #else
@@ -142,7 +143,8 @@ void goSleep()
         delayTask(3000);
         assert("Failed to make gpio interrupts");
     }
-    esp_deep_sleep_start();
+#endif
+    
 }
 
 // Should be executed in every sleep cancelation which can happen without user interaction (no buttons clicked and the watchy is woken up by RTC, then the button task is not turned on because why would it)

@@ -4,7 +4,8 @@ OPTIONS=("1" "Reset ESP"
          "2" "Reset and monitor"
          "3" "Backtrace resolver"
          "4" "Get coredump"
-         "5" "Erase ESP flash")
+         "5" "Erase ESP flash"
+         "6" "Put device into bootloader mode")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -43,5 +44,8 @@ case $CHOICE in
         ;;
     5)
         resources/tools/other/in/esptool erase_flash
+        ;;
+    6)
+        resources/tools/other/in/esptool --after no_reset chip_id
         ;;
 esac
