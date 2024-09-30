@@ -1,5 +1,7 @@
 #include "watchFaceModule.h"
 
+RTC_DATA_ATTR uint64_t latestModuleUpdate = 0;
+
 wfModule wfEmpty = {
     false,
     [](bool *showBool, bool *redrawBool) {},
@@ -158,6 +160,8 @@ void wfModuleSwitch(direction where)
 // TODO: because of fallback, forcerender is not needed anymore?
 void wfModulesManage(buttonState button, bool forceRender)
 {
+    latestModuleUpdate = getUnixTime(timeRTCLocal);
+    
     debugLog("Running wfModulesManage, current module is: " + String(currentModule));
     if (currentModule != -1 && button != None)
     {

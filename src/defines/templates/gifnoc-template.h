@@ -72,7 +72,7 @@
 
 // Watchface modules
 #define MODULE_PERSISTENT 1         // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space
-#define UPDATE_MODULE_IF_CHARGING 0 // Update modules very fast if its charging, not only every minute
+#define MODULE_UPDATE_LIMIT_S 600 // Every x minutes, update the modules. Not every minute, like it was for now. Change it to 60 for every minute
 #define WIFI_MODULE 1
 #define BITCOIN_MODULE 1   // Remember to define the api key for it in confidential.h
 #define SMALL_BTC_MODULE 1 // At default, show the small btc module mode, if 0 show the bigger one
@@ -173,12 +173,15 @@
 #define MINIMAL_LOGS 1                 // Don't put full file paths in logs
 #define SCOM_TASK 0                    // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
 #define FONT_PREVIEW_MENU 0            // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
-#define NO_CHARGING 0                  // Disable detection of charging, only in debug
+#define NO_CHARGING 0                  // Disable detection of charging, only in debug. Also locks in the voltage (for lp core to check if the time is changed bla bla)
 #define RESET_RTC_ON_BOOT 0            // Experimental.
 #define BATTERY_TIME_DROP 0            // If enabled, if battery drops below BATTERY_TIME_DROP_VOLTAGE. Doesn't need DEBUG
 #define BATTERY_TIME_DROP_VOLTAGE 3.50 // Needs to be float
 #define LP_CORE_TEST_RUN 0             // Yatchy only, why would anyone use it aside from me?
 #define LP_CORE_SERIOUS_TEST 0
+#define DISABLE_WAKEUP_INTERRUPTS 1 // As in buttons (or yatchy gpio expander)
+#define MCP_GPIO_EXPANDER_DISABLE 0
+#define MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS 1 // Yatchy with no battery, huh
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
