@@ -144,7 +144,7 @@ void goSleep()
         assert("Failed to make gpio interrupts");
     }
 #endif
-    
+    esp_deep_sleep_start();
 }
 
 // Should be executed in every sleep cancelation which can happen without user interaction (no buttons clicked and the watchy is woken up by RTC, then the button task is not turned on because why would it)
