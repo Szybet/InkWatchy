@@ -20,6 +20,7 @@ typedef enum {
 } direction;
 
 extern int currentModule;
+extern uint64_t latestModuleUpdate;
 
 void clearModuleArea();
 void nothingModule();
