@@ -5,6 +5,8 @@
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // Watchy_GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you want some more restrictive battery measurments
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
+#define VIBRATION_BUTTON_TIME_OVERWRITE 0 // This needs to be to 1 if you want the values below to be listened to. Otherwise it's device dependent in condition.h
+// Those are example values
 #define VIBRATION_BUTTON_TIME 90      // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_BUTTON_LONG_TIME 60 // This is just an addition to VIBRATION_BUTTON_TIME
 #define VIBRATION_ACTION_TIME 200     // Time in ms to the motor to vibrate when the UI receives an action
