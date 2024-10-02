@@ -181,9 +181,9 @@
 #define BATTERY_TIME_DROP_VOLTAGE 3.50 // Needs to be float
 #define LP_CORE_TEST_RUN 0             // Yatchy only, why would anyone use it aside from me?
 #define LP_CORE_SERIOUS_TEST 0
-#define DISABLE_WAKEUP_INTERRUPTS 1 // As in buttons (or yatchy gpio expander)
+#define DISABLE_WAKEUP_INTERRUPTS 0 // As in buttons (or yatchy gpio expander)
 #define MCP_GPIO_EXPANDER_DISABLE 0
-#define MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS 1 // Yatchy with no battery, huh
+#define MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS 0 // Yatchy with no battery, huh
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
