@@ -36,16 +36,19 @@ void tryToConnectWifi()
     debugLog("sizeof(wifiCredStatic): " + String(SIZE_WIFI_CRED_STAT));
     for (int i = 0; i < SIZE_WIFI_CRED_STAT; i++)
     {
-        debugLog("Trying to connect to wifi number: " + String(i) + " so: " + String(wifiCredStatic[i]->ssid) + " " + String(wifiCredStatic[i]->password));
-        softStartDelay();
         if (wifiCredStatic[i] == NULL || wifiCredStatic[i]->ssid == NULL || wifiCredStatic[i]->password == NULL)
         {
+            debugLog("Skipping wifi id: " + String(i) + " because of null");
             continue;
         }
         else if (strlen(wifiCredStatic[i]->ssid) == 0 || strlen(wifiCredStatic[i]->password) < 8)
         {
+            debugLog("Skipping wifi id: " + String(i) + " because bad length");
             continue;
         }
+        debugLog("Trying to connect to wifi number: " + String(i) + " so: " + String(wifiCredStatic[i]->ssid) + " " + String(wifiCredStatic[i]->password));
+        softStartDelay();
+
         WiFi.begin(wifiCredStatic[i]->ssid, wifiCredStatic[i]->password);
 
         for (int i = 0; i < WIFI_SYNC_TIME / 1000; i++)
