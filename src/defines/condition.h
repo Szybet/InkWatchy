@@ -39,7 +39,7 @@ Template for versioning
 #endif
 
 // Display init magic ;)
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #define EPD_CS 5
 #define EPD_DC 10
 #define EPD_RESET 9
@@ -49,10 +49,15 @@ Template for versioning
 #define EPD_DC 34
 #define EPD_RESET 35
 #define EPD_BUSY 36
+#elif ATCHY_VER == YATCHY
+#define EPD_CS -1 // Chip select
+#define EPD_DC 3
+#define EPD_RESET 2
+#define EPD_BUSY 4
 #endif
 
 // More display magic but SPI
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 // Unused really as defaults are good
 #define EPD_SPI_SCK 18
 #define EPD_SPI_MISO 19
@@ -64,10 +69,15 @@ Template for versioning
 #define EPD_SPI_MISO 46
 #define EPD_SPI_MOSI 48
 #define EPD_SPI_SS 33
+#elif ATCHY_VER == YATCHY
+#define EPD_SPI_SCK 7
+#define EPD_SPI_MISO -1
+#define EPD_SPI_MOSI 5
+#define EPD_SPI_SS -1 // Chip select!
 #endif
 
 // Button pins
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 // Maybe I could od a !not but whatever
 #define BUT_STATE LOW
 #define BUT_CLICK_STATE HIGH
@@ -75,7 +85,11 @@ Template for versioning
 #define MENU_PIN 26
 #define BACK_PIN 25
 #define DOWN_PIN 4
-#define UP_PIN 35 // Watchy 1.5 Has the pin 32 here
+#if ATCHY_VER == WATCHY_2
+#define UP_PIN 35
+#elif ATCHY_VER == WATCHY_1_5 || ATCHY_VER == WATCHY_1
+#define UP_PIN 32
+#endif
 #elif ATCHY_VER == WATCHY_3
 #define BUT_STATE HIGH
 #define BUT_CLICK_STATE LOW
@@ -84,21 +98,39 @@ Template for versioning
 #define BACK_PIN 6
 #define DOWN_PIN 8
 #define UP_PIN 0
+#elif ATCHY_VER == YATCHY
+// Don't define it, to show errors
+#define BUT_STATE LOW
+#define BUT_CLICK_STATE HIGH
 #endif
 
 // Other
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #define VIB_MOTOR_PIN 13
 #define RTC_INT_PIN 27
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_HIGH
+#define ADC_VOLTAGE_DIVIDER 500.0f // Shortened version, by GuruSR
+#if ATCHY_VER == WATCHY_2
 #define BATT_ADC_PIN 34
+#elif ATCHY_VER == WATCHY_1_5
+#define BATT_ADC_PIN 35
+#elif ATCHY_VER == WATCHY_1
+#define BATT_ADC_PIN 33
+#endif
 #elif ATCHY_VER == WATCHY_3
 #define VIB_MOTOR_PIN 17
 #define RTC_INT_PIN -1
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_LOW
 #define BATT_ADC_PIN 9
-#define ADC_VOLTAGE_DIVIDER ((360.0f + 100.0f) / 360.0f) // Voltage divider at battery ADC
+#define ADC_VOLTAGE_DIVIDER 739.750f // Voltage divider at battery ADC, original values were ((360.0f + 100.0f) / 360.0f), this math is done by GuruSR
 #define CHRG_STATUS_PIN 10 // If HIGH, usb is connected. Someone with a v3 is free to use interrupts for that and enable wakeups for this pin too
+#elif ATCHY_VER == YATCHY
+#define VIB_MOTOR_PIN 14
+#define RTC_INT_PIN -1
+#define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_LOW
+#define BATT_ADC_PIN 6
+#define ADC_VOLTAGE_DIVIDER 710.094f // 300K and 806K
+#define CHRG_STATUS_PIN -1
 #endif
 
 // RTC type
@@ -108,15 +140,52 @@ Template for versioning
 #define RTC_32KHZ_CRYSTAL 1
 #endif
 #else
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #define RTC_TYPE EXTERNAL_RTC
 #elif ATCHY_VER == WATCHY_3
 #define RTC_TYPE INTERNAL_RTC
 #define RTC_32KHZ_CRYSTAL 1
+// This won't work, needs to be in platformio.ini too
+#define SMALL_RTC_NO_DS3232 1
+#define SMALL_RTC_NO_PCF8563 1
+#elif ATCHY_VER == YATCHY
+#define RTC_TYPE INTERNAL_RTC
+#define RTC_32KHZ_CRYSTAL 0 // TODO: not yet!
+// This won't work, needs to be in platformio.ini too
+#define SMALL_RTC_NO_DS3232 1
+#define SMALL_RTC_NO_PCF8563 1
+#define SMALL_RTC_NO_EXT0 1 // esp32c6 simply doesn't have it, as a defined function
 #endif
 #endif
 #if RTC_32KHZ_CRYSTAL != 1
 #define RTC_32KHZ_CRYSTAL 0
+#endif
+
+// CPU
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5 || ATCHY_VER == WATCHY_3
+#define CPU_MINIMAL_SPEED 80
+#define CPU_NORMAL_SPEED 160
+#define CPU_FAST_SPEED 240
+#elif ATCHY_VER == YATCHY
+#define CPU_MINIMAL_SPEED 80
+#define CPU_NORMAL_SPEED 120
+#define CPU_FAST_SPEED 160
+#endif
+
+// AXC
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
+#define AXC_ENABLED 1
+#elif ATCHY_VER == WATCHY_3
+#define AXC_ENABLED 0 // I don't have this device
+#elif ATCHY_VER == YATCHY
+#define AXC_ENABLED 0 // Eh
+#endif
+
+// USB JTAG
+#if ATCHY_VER == YATCHY
+#define USB_JTAG 1
+#else
+#define USB_JTAG 0 // I don't have this device
 #endif
 
 // Temps
@@ -124,4 +193,69 @@ Template for versioning
 #define TEMP_CHECKS_ENABLED 1
 #else
 #define TEMP_CHECKS_ENABLED 0
+#endif
+
+// Yatchy specific things
+#if ATCHY_VER == YATCHY
+#define LP_CORE 1
+
+#define MENU_PIN 0 // A0
+#define DOWN_PIN 1 // A1
+#define UP_PIN 2 // A2
+
+#define YATCHY_DISPLAY_CS 8 // B0
+
+// Module definitions
+#define YATCHY_NO_MODULE 0
+#define YATCHY_DEFAULT_MODULE 1
+
+// Select the module
+#define YATCHY_MODULE YATCHY_DEFAULT_MODULE
+// Always define YATCHY_BACK_BTN, maybe just as 255 otherwise compiler errors, done because it simplified code
+
+#if YATCHY_MODULE == YATCHY_DEFAULT_MODULE
+// Everything here is optional
+#define BACK_PIN 3 // A3
+#define YATCHY_BACK_BTN
+#define RGB_DIODE 1
+#define RGB_DIODE_RED_PIN 12
+#define RGB_DIODE_GREEN_PIN 11
+#define RGB_DIODE_BLUE_PIN 10
+#define BATTERY_RGB_DIODE 1 // If to show battery charge / fully charge with rgb diode
+
+// For colors, look up to src/hardware/rgb/rgb.h
+#define BATTERY_CHARGING_COLOR IwYellow
+#define BATTERY_CHARGED_COLOR IwGreen
+#define BATTERY_DISCHARGING_COLOR IwRed // What color to show for a second if its starting to discharge
+
+#endif
+#endif
+
+// Lp core
+#ifndef LP_CORE
+#define LP_CORE 0
+#endif
+#if DEBUG && LP_CORE_TEST_RUN && LP_CORE
+#define LP_CORE_TEST_ENABLED 1
+#else
+#define LP_CORE_TEST_ENABLED 0
+#endif
+
+// Vibration time, device dependent
+#if VIBRATION_BUTTON_TIME_OVERWRITE == 0
+#undef VIBRATION_BUTTON_TIME
+#undef VIBRATION_BUTTON_LONG_TIME
+#undef VIBRATION_ACTION_TIME
+#undef VIBRATION_POWER
+#if ATCHY_VER != YATCHY
+#define VIBRATION_BUTTON_TIME 42
+#define VIBRATION_BUTTON_LONG_TIME 30
+#define VIBRATION_ACTION_TIME 50 
+#define VIBRATION_POWER 170  
+#else
+#define VIBRATION_BUTTON_TIME 90
+#define VIBRATION_BUTTON_LONG_TIME 60
+#define VIBRATION_ACTION_TIME 200 
+#define VIBRATION_POWER 170  
+#endif
 #endif

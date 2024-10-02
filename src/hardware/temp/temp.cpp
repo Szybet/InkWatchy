@@ -1,7 +1,7 @@
 #include "temp.h"
 
 #if TEMP_CHECKS_ENABLED
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #ifdef __cplusplus
 extern "C"
 {

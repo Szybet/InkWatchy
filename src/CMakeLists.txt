@@ -14,4 +14,4 @@ file(GLOB_RECURSE APP_SOURCES
 
 message(STATUS "App sources: ${APP_SOURCES}")
 
-idf_component_register(SRCS ${APP_SOURCES})
+idf_component_register(SRCS ${APP_SOURCES} REQUIRES "arduino")

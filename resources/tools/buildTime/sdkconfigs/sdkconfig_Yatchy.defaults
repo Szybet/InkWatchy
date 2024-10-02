@@ -1,0 +1,18 @@
+# Yatchy changes
+CONFIG_IDF_TARGET="esp32c6"
+CONFIG_ESPTOOLPY_FLASHSIZE_4MB=y
+CONFIG_ESPTOOLPY_FLASHSIZE="4MB"
+CONFIG_ARDUINO_VARIANT="esp32c6"
+# Enable external crystal properly
+CONFIG_RTC_CLK_SRC_EXT_CRYS=y
+CONFIG_ESP_SYSTEM_RTC_EXT_XTAL=y
+# This is not used on esp32c6, but we leave it enabled
+CONFIG_ESP_SYSTEM_RTC_EXT_XTAL_BOOTSTRAP_CYCLES=256
+# https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/kconfig.html#config-rtc-clk-cal-cycles
+CONFIG_RTC_CLK_CAL_CYCLES=3000
+# It doesn't exist on the esp32c6 :/
+# CONFIG_ESP_XT_WDT=y
+# LP Core
+CONFIG_ULP_COPROC_ENABLED=y
+CONFIG_ULP_COPROC_TYPE_LP_CORE=y
+CONFIG_ULP_COPROC_RESERVE_MEM=8192

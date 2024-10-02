@@ -5,7 +5,6 @@
 int memoryHeight;
 #define GeneralTextSize 1
 uint8_t usedHeapLast;
-SmallRTC rtc;
 uint16_t usedHeapWidth;
 uint16_t usedHeapLenght;
 
@@ -16,7 +15,7 @@ float previousTempUi;
 
 String getRtcType()
 {
-    int rtcType = rtc.getType();
+    int rtcType = SRTC.getType();
     switch (rtcType)
     {
     case 0:
@@ -58,8 +57,6 @@ void initGeneralDebugDisplay()
     writeLine("RTC type: " + String(RtcType), cursorX, &currentHeight);
 
     currentHeight = currentHeight + 2;
-
-    writeLine("Watchy version " + String(SRTC.getWatchyHWVer()), cursorX, &currentHeight);
 
     writeLine("Used Heap KB: " + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024), cursorX, &currentHeight);
     memoryHeight = currentHeight - maxHeight;
@@ -117,7 +114,6 @@ void initGeneralDebug()
 {
     debugLog("Chip Model: " + String(ESP.getChipModel()));
     debugLog("RTC type: " + String(getRtcType()));
-    debugLog("Watchy version " + String(SRTC.getWatchyHWVer()));
     debugLog("Used Heap KB: " + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024));
 }
 

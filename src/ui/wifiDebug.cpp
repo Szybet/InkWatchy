@@ -227,13 +227,13 @@ void loopWifiDebugDisplay()
         case SEL_ON:
         {
             turnOnWifiRegular();
-            vibrateMotor(VIBRATION_ACTION_TIME, true);
+            vibrateMotor(VIBRATION_ACTION_TIME);
             break;
         }
         case SEL_OFF:
         {
             turnOffWifi();
-            vibrateMotor(VIBRATION_ACTION_TIME, true);
+            vibrateMotor(VIBRATION_ACTION_TIME);
             break;
         }
         }
@@ -246,7 +246,7 @@ void loopWifiDebugDisplay()
     }
     disUp();
     // Never exit this wifi is on or connected
-    if (wifiStatusWrap() != WifiOff)
+    if (isWifiTaskCheck() == true)
     {
         resetSleepDelay();
     }

@@ -16,13 +16,15 @@ void loopButtonsTask(void *parameter);
 void manageButtonWakeUp();
 
 void turnOnButtons();
-void initButtons(bool isFromWakeUp);
+void initButtons();
 void initButtonTask();
 void deInitButtonTask();
 void setButton(buttonState button);
 void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton);
 void turnOnInterrupts();
+void resumeButtonTask();
 extern buttonState interruptedButton;
+bool buttonRead(uint8_t pin); // Wrapper for digitalRead for buttons
 
 #if DEBUG
 void dumpButtons();

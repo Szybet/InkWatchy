@@ -3,16 +3,27 @@
 
 #include "defines/defines.h"
 
-extern float HWVer;
 extern int64_t sleepDelayMs;
 
-void initHardware(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason);
+typedef enum
+{
+    unknown = 0,
+    rtc = 1,
+    button = 2,
+} wakeUpReason;
+
+struct wakeUpInfo {
+    bool fromWakeup = false;
+    wakeUpReason reason = unknown;
+    esp_sleep_wakeup_cause_t bareEspCause;
+    esp_reset_reason_t resetReason;
+};
+
+extern wakeUpInfo bootStatus;
+
+void initHardware();
 void resetSleepDelay(int addMs = 0);
 void setSleepDelay(int addMs);
-
-extern TaskHandle_t motorTask;
-extern bool motorTaskRunning;
-void vibrateMotor(int vTime = VIBRATION_BUTTON_TIME, bool add = true);
 
 typedef enum
 {
@@ -27,7 +38,6 @@ cpuSpeed getCpuSpeed();
 void restoreCpuSpeed();
 String resetReasonToString(esp_reset_reason_t reason);
 void softStartDelay();
-bool isRtcWakeUpReason(esp_sleep_source_t reason);
 
 #if DEBUG
 extern uint64_t loopDumpDelayMs;
@@ -37,5 +47,6 @@ String wakeupSourceToString(esp_sleep_source_t source);
 #endif
 
 int64_t millisBetter();
+void firstWakeUpManage();
 
 #endif

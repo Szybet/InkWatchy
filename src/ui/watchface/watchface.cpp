@@ -7,14 +7,14 @@ void initWatchfaceDisplay()
 {
   debugLog("Executing init watch face");
 
-  wFTime.Second = timeRTC.Second;
-  wFTime.Minute = timeRTC.Minute;
-  wFTime.Hour = timeRTC.Hour;
-  wFTime.Day = timeRTC.Day;
-  wFTime.Month = timeRTC.Month;
-  wFTime.Year = timeRTC.Year;
+  wFTime.Second = timeRTCLocal.Second;
+  wFTime.Minute = timeRTCLocal.Minute;
+  wFTime.Hour = timeRTCLocal.Hour;
+  wFTime.Day = timeRTCLocal.Day;
+  wFTime.Month = timeRTCLocal.Month;
+  wFTime.Year = timeRTCLocal.Year;
   // dumpRTCTime(wFTime);
-  // dumpRTCTime(timeRTC);
+  // dumpRTCTime(timeRTCLocal);
 
   showFullWatchface();
 
@@ -27,34 +27,61 @@ void initWatchfaceDisplay()
 bool wentToSleep = false; // Don't go to sleep after one try of noClickedButton - maybe a sync is going on?
 void loopWatchfaceLoop()
 {
-  // debugLog("Executing loop watch face");
-  if (wFTime.Minute != timeRTC.Minute || wFTime.Hour != timeRTC.Hour) // Hour too because of timezone
+  debugLog("Executing loop watch face");
+  bool timeHappened = true;
+  if (wFTime.Minute != timeRTCLocal.Minute || wFTime.Hour != timeRTCLocal.Hour) // Hour too because of timezone
   {
     dUChange = true;
 
-    drawTimeBeforeApply();
+#if LP_CORE == true
+    screenTimeChanged = true;
+    if (screenForceNextFullTimeWrite == true)
+    {
+      screenForceNextFullTimeWrite = false;
+      lpCoreScreenPrepare(false);
+      showTimeFull();
+    }
+    else
+#endif
+    {
+      drawTimeBeforeApply();
 
-    wFTime.Minute = timeRTC.Minute;
-    wFTime.Hour = timeRTC.Hour;
+      wFTime.Minute = timeRTCLocal.Minute;
+      wFTime.Hour = timeRTCLocal.Hour;
+
+      if (disableSomeDrawing == false)
+      {
+        drawTimeAfterApply();
+      }
+    }
 
     if (disableSomeDrawing == false)
     {
       drawTimeAfterApply();
 
-      if (wFTime.Day != timeRTC.Day)
+      if (wFTime.Day != timeRTCLocal.Day)
       {
-        wFTime.Day = timeRTC.Day;
+        wFTime.Day = timeRTCLocal.Day;
         drawDay();
       }
 
-      if (wFTime.Month != timeRTC.Month)
+      if (wFTime.Month != timeRTCLocal.Month)
       {
-        wFTime.Month = timeRTC.Month;
+        wFTime.Month = timeRTCLocal.Month;
         drawMonth();
       }
     }
-
-    wfModulesManage(None);
+    debugLog("getUnixTime(timeRTCLocal): " + String(getUnixTime(timeRTCLocal)));
+    debugLog("latestModuleUpdate: " + String(latestModuleUpdate));
+    if (getUnixTime(timeRTCLocal) - latestModuleUpdate > MODULE_UPDATE_LIMIT_S)
+    {
+      debugLog("Finally updating modules via time trigger");
+      wfModulesManage(None);
+    }
+  }
+  else
+  {
+    timeHappened = false;
   }
 
   // Hmm this could be in the minute checker
@@ -86,7 +113,7 @@ void loopWatchfaceLoop()
     resetSleepDelay(makeMinus);
   }
 #endif
-  if (bt == None && wentToSleep == false && (bat.isCharging == false)) // || SYNC_WIFI == 0
+  if (bt == None && wentToSleep == false)
   {
     // We dont want resetDelay because if something wants to sleep, we dont want to be the reason for forcing it
     debugLog("Watchface requesting sleep");
@@ -95,6 +122,27 @@ void loopWatchfaceLoop()
     wentToSleep = true;
   }
 
+#if LP_CORE == true
+  // Because the arduino program doesn't know about the screen buffer, if we update anything it will dissapear :(
+  debugLog("dUChange in the end of watchface: " + BOOL_STR(dUChange));
+  if (dUChange == true)
+  {
+    screenTimeChanged = true;
+    if (screenForceNextFullTimeWrite == true)
+    {
+      screenForceNextFullTimeWrite = false;
+      lpCoreScreenPrepare(false);
+      showTimeFull();
+    }
+  }
+#endif
+
   // We ignore sleep because probably we will want to go to sleep fast
   disUp(dUChange, false, true);
+
+  if (timeHappened == false && bt == None && wentToSleep == true)
+  {
+    debugLog("Nothing happened, delay...");
+    delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
+  }
 }

@@ -5,10 +5,12 @@
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // Watchy_GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you want some more restrictive battery measurments
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
-#define VIBRATION_BUTTON_TIME 35 // Time in ms to the motor to vibrate after clicking a button. 0 means none
-#define VIBRATION_ACTION_TIME 60 // Time in ms to the motor to vibrate when the UI receives an action
-// maybe a TLDR: if you don't feel any vibrations, turn the diviner smaller and in reverse. It kind of controls the power of the vibrations while the TIME variables the time its vibrating
-#define VIBRATION_DIVINE 7 // Divider for the time above for it to not vibrate and not just run. Imits PWM... hard to explain, just look at vibrateMotorTaskFun in hardware.cpp
+#define VIBRATION_BUTTON_TIME_OVERWRITE 0 // This needs to be to 1 if you want the values below to be listened to. Otherwise it's device dependent in condition.h
+// Those are example values
+#define VIBRATION_BUTTON_TIME 90      // Time in ms to the motor to vibrate after clicking a button. 0 means none
+#define VIBRATION_BUTTON_LONG_TIME 60 // This is just an addition to VIBRATION_BUTTON_TIME
+#define VIBRATION_ACTION_TIME 200     // Time in ms to the motor to vibrate when the UI receives an action
+#define VIBRATION_POWER 170           // From 1 to 255, PWM duty cycle. Too low and it can not even vibrate a little
 
 // Timezone! So:
 // - You don't set anything, it will try to ques based on IP, it can fail sometimes
@@ -28,18 +30,19 @@
 #define BUTTON_LONG_PRESS_MS 500     // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 60 // Make a full display update after x of partial ones
 #define LONG_BACK_FULL_REFRESH 1     // Make a full refresh at long back button clicked
-#define WATCHDOG_TASK 1              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
+#define WATCHDOG_TASK 0              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
 
 // Drift & NTP & Syncing
 #define SYNC_WIFI 0                        // Autimatically sync wifi - only if it's being charger and after the delay below
 #define SYNC_WIFI_SINCE_SUCC 72000         // 20h
 #define SYNC_WIFI_SINCE_FAIL 600           // 10m
+#define MANUAL_NTP_OFFSET 0                // In seconds, When your ntp server is wrong
 #define SYNC_NTP_ON_CHARGING_DELAY 90000   // Sync NTP when charging every, in Ms. Default 1.5 minute
 #define VALID_PREVIOUS_SYNC_DELAY 300      // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
 #define WIFI_CONNECTION_TRIES 3            // Regular sync, number of tries
 #define WIFI_CONNECTION_TRIES_PERSISTENT 1 // Persistent sync (SYNC_WIFI), number of tries
-#define WIFI_MULTI_SYNC_TIME 20000         // Ms, time for waiting to connect to wifi
-#define WIFI_MULTI_ERROR_TIME 10000        // Time in MS to try to connect next time (WIFI_CONNECTION_TRIES)
+#define WIFI_SYNC_TIME 5000                // Ms, time for waiting to connect to wifi
+#define WIFI_ERROR_TIME 3000               // Ms, time for waiting when wifi failed before next try
 #define TIME_DRIFT_CORRECTION 0            // The RTC may drift, this should repair it. It basically on first ntp sync starts the measurment and on the second it ends it. I suggest disabling SYNC_WIFI because if it's triggered, it will cancel the drift calculation because its a persistent sync, it happens every few minutes. If you have a watchy V2, you should first try FORCE_INTERNAL_RTC instead of this option.
 #define TIME_DRIFT_MINIMUM_TIME 24         // Minimum amount of hours a drift calculation can go on, because measuring drift between 5 minutes will help you experience the back to the future movie. It's suggested to be minimum 24 hours.
 #define FORCE_INTERNAL_RTC 0               // If your device has an external RTC but it sucks, set this to 1
@@ -71,7 +74,7 @@
 
 // Watchface modules
 #define MODULE_PERSISTENT 1         // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space
-#define UPDATE_MODULE_IF_CHARGING 0 // Update modules very fast if its charging, not only every minute
+#define MODULE_UPDATE_LIMIT_S 600 // Every x minutes, update the modules. Not every minute, like it was for now. Change it to 60 for every minute
 #define WIFI_MODULE 1
 #define BITCOIN_MODULE 1   // Remember to define the api key for it in confidential.h
 #define SMALL_BTC_MODULE 1 // At default, show the small btc module mode, if 0 show the bigger one
@@ -122,6 +125,7 @@
 #define ADD_BUTTON_DELAY 1.5
 #define SMALL_BUTTON_DELAY_MS 15
 #define BAT_MINIMAL_DIFFERENCE 0.02
+#define AVOID_SLEEP_USB_JTAG 1 // If your device has USB JTAG (Yatchy, I don't have a Watchy v3 to test) it will avoid going to sleep if it detects it is being used. Useful when you want to reprogram the watch but it goes to sleep
 
 // Temperature readings
 // This is highly experimental, dont enable this if you dont have a reason for it, possible reasons (but you still should read the code to understand if it will help you)
@@ -131,9 +135,9 @@
 #define TEMP_CHECKS 0
 // Those variables won't work for you, you need to edit them yourself after you see the temperature logs
 // Also everything in Celsius, americans need to metric (Or add support for burgers per inch for inkwatchy)
-// just joking
+// just joking :D
 #define TEMP_REAL_OFFSET 0 // On first boot a temperature will be taken, this will be added to it and that's the main temperature
-#define TEMP_HIGHER_LIMIT_RELATIVE 0 //
+#define TEMP_HIGHER_LIMIT_RELATIVE 0
 #define TEMP_LOWER_LIMIT_RELATIVE 0
 #define TEMP_REBOOT_LIMIT_RELATIVE 0
 #define TEMP_MAX_SCREEN_FIXES 5
@@ -151,10 +155,13 @@
 #define SPEED_THROUGH_TIME 0        // Speeds up time for watchface programming
 #define NO_SYNC 0                   // If debug and this is both true, it will not try to sync up automatically
 #define VOLTAGE_PRINT_ON 0          // Prints voltage on the screen, really fast
-#define DISABLE_SLEEP 0             // Disable sleep, so it will never go to sleep. Good for SCOM_TASK
+#define DISABLE_SLEEP 0             // Disable sleep, so it will never go to sleep. Good for SCOM_TASK. It disables the sleep logic fully
+#define DISABLE_SLEEP_PARTIAL 0     // Disable sleep, but remain the logic of it so it will return to the watchface for example
 #define PUT_LOGS_TO_SERIAL 1        // Puts logs to serial. Turn off if you want debug on the go
-#define PUT_LOGS_TO_FS 1            // Puts logs into littlefs
+#define PUT_LOGS_TO_FS 0            // Puts logs into littlefs
 #define WAIT_FOR_MONITOR 0          // If debug is enabled, waits for monitor in setup for x ms
+#define WAIT_FOR_INPUT 0            // If debug is enabled, waits for monitor until you click a button while serial monitor is opened
+#define WAIT_FOR_INPUT_MOTOR 0      // Vibrate lightly in WAIT_FOR_INPUT
 // Ah... too much allocated memory... 10 hours of my life...
 #define LOG_SERIAL_BUFFER_SIZE 1000
 #define LOG_FILE_BUFFER_SIZE 3000
@@ -165,15 +172,22 @@
 #define SERIAL_LOG_DELAY 0             // If 1, use the delay below to ensure good looking logs
 #define SERIAL_LOG_DELAY_MS 23
 #define SERIAL_BAUDRATE 115200
-#define MINIMAL_LOGS 1      // Don't put full file paths in logs
-#define SCOM_TASK 0         // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
-#define FONT_PREVIEW_MENU 0 // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
-#define NO_CHARGING 0       // Disable detection of charging, only in debug
-#define RESET_RTC_ON_BOOT 0 // Experimental.
+#define MINIMAL_LOGS 1                 // Don't put full file paths in logs
+#define SCOM_TASK 0                    // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
+#define FONT_PREVIEW_MENU 0            // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
+#define NO_CHARGING 0                  // Disable detection of charging, only in debug. Also locks in the voltage (for lp core to check if the time is changed bla bla)
+#define RESET_RTC_ON_BOOT 0            // Experimental.
+#define BATTERY_TIME_DROP 0            // If enabled, if battery drops below BATTERY_TIME_DROP_VOLTAGE. Doesn't need DEBUG
+#define BATTERY_TIME_DROP_VOLTAGE 3.50 // Needs to be float
+#define LP_CORE_TEST_RUN 0             // Yatchy only, why would anyone use it aside from me?
+#define LP_CORE_SERIOUS_TEST 0
+#define DISABLE_WAKEUP_INTERRUPTS 1 // As in buttons (or yatchy gpio expander)
+#define MCP_GPIO_EXPANDER_DISABLE 0
+#define MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS 1 // Yatchy with no battery, huh
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
-#define VOLTAGE_AVG_DELAY 5
+#define VOLTAGE_AVG_DELAY 1
 
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3
@@ -201,6 +215,7 @@
 #define TASK_STACK_WIFI 60000
 #define TASK_STACK_SCOM 10000
 #define TASK_STACK_WATCHDOG 3500
+#define TASK_STACK_RGB 2000
 
 // Priorities - max is 24
 #define MAIN_LOOP_PRIORITY 20
@@ -208,8 +223,9 @@
 #define BUTTONS_PRIORITY 12
 #define WIFI_PRIORITY_PERSISTENT 4
 #define SCOM_PRIORITY 3
-#define MOTOR_PRIORITY 1
+#define MOTOR_PRIORITY 22
 #define WATCHDOG_PRIORITY 1
+#define RGB_PRIORITY 22
 
 // Config
 #define CONF_BOOK_CURRENT_PAGE "current_page_"

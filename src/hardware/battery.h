@@ -2,7 +2,6 @@
 #define BATTERY_H
 
 #include "defines/defines.h"
-#include <SmallRTC.h>
 
 #define PREV_VOLTAGE_SIZE 3
 struct batteryInfo {
@@ -11,9 +10,8 @@ struct batteryInfo {
     float critV;
     float maxV;
     float charV;
-    float prevV[PREV_VOLTAGE_SIZE];
-    uint8_t prevVPos;
     bool isCharging;
+    bool isFullyCharged; // Only on the Yatchy really, v3 people are free to implement it
     uint8_t percentage;
     float prevVOne;
     bool oneCheck; // Force check once even if no voltage changed
@@ -22,9 +20,11 @@ struct batteryInfo {
 extern batteryInfo bat;
 extern bool isBatterySaving;
 
-double getBatteryVoltage();
+float BatteryRead();
+float getBatteryVoltage();
 
 void loopBattery();
+void isChargingCheck();
 void initBattery();
 void loopPowerSavings();
 bool reasonForVoltageSpikes();

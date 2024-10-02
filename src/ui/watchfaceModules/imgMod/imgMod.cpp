@@ -11,9 +11,9 @@ void wfImagecheckShow(bool *showBool, bool *redrawBool)
 {
     *showBool = true;
 #if IMG_MODULE_CHANGE_EVERY_HOUR
-    if (timeRTC.Hour != imageCurrentHour)
+    if (timeRTCLocal.Hour != imageCurrentHour)
     {
-        imageCurrentHour = timeRTC.Hour;
+        imageCurrentHour = timeRTCLocal.Hour;
         *redrawBool = true;
     }
     else
