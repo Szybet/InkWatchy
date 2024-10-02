@@ -13,6 +13,8 @@ int IPHeight;
 int SSIDHeight;
 int SignalStrengthHeight;
 int TaskStatusHeight;
+uint16_t macAddressHeight;
+String previousMac; // TODO into char list
 #define TextSize 1
 
 uint16_t wifiStatusLength;
@@ -44,9 +46,10 @@ void initWifiDebugDisplay()
     currentHeight = currentHeight + maxHeight;
     centerText("MAC address:", &currentHeight);
 
-    String macAddressStr = WiFi.macAddress();
-    getTextBounds(macAddressStr, NULL, NULL, &wifiStatusLength, NULL);
-    centerText(macAddressStr, &currentHeight);
+    previousMac = WiFi.macAddress();
+    getTextBounds(previousMac, NULL, NULL, &wifiStatusLength, NULL);
+    macAddressHeight = currentHeight;
+    centerText(previousMac, &currentHeight);
 
     centerText("Wifi status: ", &currentHeight);
 
@@ -110,6 +113,14 @@ void drawSelUi()
 
 void loopWifiDebugDisplay()
 {
+    String macNow = WiFi.macAddress();
+    if(previousMac != macNow) {
+        previousMac = macNow;
+        setFont(&FreeSansBold9pt7b);
+        setTextSize(TextSize);
+        writeTextCenterReplaceBack(previousMac, macAddressHeight);
+    }
+
     String wifiStatusStr = wifiStatus();
     // debugLog("Status here is: " + wifiStatusStr);
     uint16_t w;
