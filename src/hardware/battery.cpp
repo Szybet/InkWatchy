@@ -5,24 +5,56 @@
 RTC_DATA_ATTR batteryInfo bat;
 RTC_DATA_ATTR bool isBatterySaving = false;
 
-#if ATCHY_VER == WATCHY_2
-float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / 500.0f; } // Battery voltage goes through a 1/2 divider.
-#elif ATCHY_VER == WATCHY_3
-// 100.0f is the "correct" value, but the tolerance of the resistor and accuracy ESP's ADC may result in variation to the voltage reading. The voltage divider is 100K over 360K
-float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / 1000.0f * ADC_VOLTAGE_DIVIDER; }
+float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / ADC_VOLTAGE_DIVIDER; }
+
+#if ATCHY_VER == YATCHY
+#define FALLBACK_BATTERY_VOLTAGE 4.12345
+float previousGoodRead = FALLBACK_BATTERY_VOLTAGE;
 #endif
-
-double getBatteryVoltage()
+float getBatteryVoltage()
 {
-    double sum = 0;
-
+#if NO_CHARGING == true && DEBUG == true
+    return 4.0;
+#endif
+    uint8_t readedTimes = 0;
+#if ATCHY_VER != YATCHY
+    float sum = 0.0;
     for (int i = 0; i < VOLTAGE_AVG_COUNT; i++)
     {
-        sum += BatteryRead() - 0.0125;
+        sum += BatteryRead();
+        readedTimes = readedTimes + 1;
         delay(VOLTAGE_AVG_DELAY);
     }
+#else
+    float sum = 0.0;
+    float previousRead = 0.0;
+    for (int i = 0; i < VOLTAGE_AVG_COUNT; i++)
+    {
+        float readed = BatteryRead();
+        if ((previousRead != 0.0 && abs(previousRead - readed) > 0.6) || readed == 0.0)
+        {
+            if (previousRead > 3.3)
+            {
+                break;
+            }
+            else
+            {
+                if (previousGoodRead == FALLBACK_BATTERY_VOLTAGE)
+                {
+                    debugLog("Returning fallback battery voltage");
+                }
+                return previousGoodRead;
+            }
+        }
+        sum += readed;
+        readedTimes = readedTimes + 1;
+        delayTask(VOLTAGE_AVG_DELAY);
+    }
 
-    return sum / VOLTAGE_AVG_COUNT;
+#endif
+    float batVoltFinish = sum / readedTimes;
+    debugLog("So battery voltage: " + String(batVoltFinish));
+    return batVoltFinish;
 }
 
 void initBattery()
@@ -46,11 +78,7 @@ void initBattery()
         bat.charV = BAD_BATTERY_CHARGE_VOLTAGE;
     }
 #endif
-    bat.prevVPos = 0;
-    for (int i = 0; i < PREV_VOLTAGE_SIZE; i++)
-    {
-        bat.prevV[i] = 0.0;
-    }
+    bat.prevVOne = 0.0;
 
     bat.oneCheck = true;
     loopBattery();
@@ -60,18 +88,26 @@ void initBattery()
 #if DEBUG
 RTC_DATA_ATTR bool previousCharging = true;
 #endif
+
+#if ATCHY_VER == YATCHY
+RTC_DATA_ATTR bool previousStatInStateBefore = false;
+RTC_DATA_ATTR bool previousStatInStateAfter = true; // There is no such configuration, so it will always trigger at least once
+RTC_DATA_ATTR bool previousFiveVolt = false;        // false because it will be true after flashing
+#endif
 void isChargingCheck()
 {
 #if NO_CHARGING == 1 && DEBUG == 1
     bat.isCharging = false;
     return;
 #endif
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
     if (bat.curV >= bat.charV)
     {
         // debugLog("It's charging because of above voltage");
         bat.isCharging = true;
     }
+    // This did not worked well, sadly
+    /*
     else
     {
         float average = 0;
@@ -103,6 +139,7 @@ void isChargingCheck()
             bat.isCharging = false;
         }
     }
+    */
 #elif ATCHY_VER == WATCHY_3
     // Looks like bad code? go to definition of the pin
     if (analogRead(CHRG_STATUS_PIN) > 4000)
@@ -113,8 +150,96 @@ void isChargingCheck()
     {
         bat.isCharging = false;
     }
+#elif ATCHY_VER == YATCHY
+    /*
+    In main.cpp for testing:
+    loopBattery();
+    isChargingCheck();
+    debugLog("Yatchy gpio: " + uint16ToBinaryString(gpioExpander.readRegister(GPIO)));
+    delayTask(2000);
+    return;
+    Sadly not anymore, outdated:
+    Charging: Before is 0 and after is 0 (so is_falling on this pin for interrupt so we can detect charging)
+    Discharging: Before is 1 and after is 0
+    Fully charged: Before is 1 and after is 1
+
+    Basically now we can't detect if its between Hi-Z and L
+    */
+    gpioExpander.setInterrupt(MCP_STAT_IN, false); // Turn off interrupt
+    bool fiveVolt = gpioExpander.digitalRead(MCP_5V);
+    gpioExpander.setPinState(MCP_STAT_OUT, false);
+    delayTask(5);
+    bool statInStateBefore = gpioExpander.digitalRead(MCP_STAT_IN);
+    gpioExpander.setPinState(MCP_STAT_OUT, true);
+    delayTask(5);
+    bool statInStateAfter = gpioExpander.digitalRead(MCP_STAT_IN);
+#if DEBUG && true == false
+    debugLog("Executed isCharging");
+    debugLog("fiveVolt: " + String(fiveVolt));
+    debugLog("statInStateBefore: " + String(statInStateBefore));
+    debugLog("statInStateAfter: " + String(statInStateAfter));
 #endif
-#if DEBUG
+    if (previousStatInStateBefore != statInStateBefore || previousStatInStateAfter != statInStateAfter || previousFiveVolt != fiveVolt)
+    {
+        debugLog("Charging state changed for gpio expander");
+        bool isFine = true;
+        // Only charging
+        if (statInStateBefore == 0 && statInStateAfter == 0 && fiveVolt == true)
+        {
+            bat.isCharging = true;
+            bat.isFullyCharged = false;
+        } // Fully charged
+        else if (statInStateBefore == 1 && statInStateAfter == 1 && fiveVolt == true)
+        {
+            bat.isCharging = false;
+            bat.isFullyCharged = true;
+        } // Not charging
+        else if (statInStateBefore == 0 && statInStateAfter == 0 && fiveVolt == false)
+        {
+            bat.isCharging = false;
+            bat.isFullyCharged = false;
+        }
+        else
+        {
+            debugLog("SOMETHING IS WRONG WITH CHARGING");
+            isFine = false;
+        }
+        if (isFine == true)
+        {
+#if DEBUG && true == true
+            debugLog("bat.isCharging: " + BOOL_STR(bat.isCharging));
+            debugLog("bat.isFullyCharged: " + BOOL_STR(bat.isCharging));
+#endif
+#if BATTERY_RGB_DIODE
+            if (bat.isFullyCharged == true)
+            {
+                setRgb(BATTERY_CHARGED_COLOR);
+            }
+            else if (bat.isCharging == true)
+            {
+                setRgb(BATTERY_CHARGING_COLOR);
+            }
+            else
+            {
+                setRgb(BATTERY_DISCHARGING_COLOR, true, 1000);
+            }
+#endif
+        }
+        else
+        {
+#if BATTERY_RGB_DIODE
+            setRgb(IwNone);
+#endif
+        }
+        previousFiveVolt = fiveVolt;
+        previousStatInStateBefore = statInStateBefore;
+        previousStatInStateAfter = statInStateAfter;
+    }
+    // debugLog("Turning on interrupt back on");
+    delayTask(10);
+    gpioExpander.setInterrupt(MCP_STAT_IN, true); // Turn on interrupt
+#endif
+#if DEBUG && true == false
     if (bat.isCharging != previousCharging)
     {
         previousCharging = bat.isCharging;
@@ -129,17 +254,32 @@ void loopBattery()
     if (abs(bat.prevVOne - bat.curV) > BAT_MINIMAL_DIFFERENCE || bat.oneCheck == true)
     {
         debugLog("Voltage changed changed, doing things...");
+#if BATTERY_TIME_DROP
+        if (bat.curV < BATTERY_TIME_DROP_VOLTAGE)
+        {
+            if (fsFileExists("/bat_dump.txt") == false)
+            {
+                fsSetString("bat_dump.txt", String(getUnixTime(timeRTCUTC0)) + " at voltage " + String(bat.curV), "/");
+            }
+        }
+#endif
         debugLog("prevOne: " + String(bat.prevVOne) + " curV: " + String(bat.curV));
         bat.prevVOne = bat.curV;
-        bat.prevV[bat.prevVPos] = bat.curV;
         // debugLog("bat.curV: " + String(bat.curV));
         // debugLog("bat.charV: " + String(bat.charV));
-        bat.percentage = ((bat.curV - bat.minV) / (bat.maxV - bat.minV)) * 100.0;
-        if (bat.percentage > 100)
+        int batPercTemp = ((bat.curV - bat.minV) / (bat.maxV - bat.minV)) * 100.0;
+        debugLog("Calculated battery percentage, raw: " + String(batPercTemp));
+        if (batPercTemp > 100)
         {
-            // Charging
-            bat.percentage = 100;
+            // Charging for sure
+            batPercTemp = 100;
         }
+        if (batPercTemp < 0)
+        {
+            batPercTemp = 0;
+        }
+        bat.percentage = batPercTemp;
+        debugLog("Current voltage percentage: " + String(bat.percentage));
 
 #if DEBUG && true == 0
         debugLog("Dumping previous voltages:");
@@ -150,12 +290,6 @@ void loopBattery()
 #endif
 
         isChargingCheck();
-        bat.prevVPos = bat.prevVPos + 1;
-        if (bat.prevVPos >= PREV_VOLTAGE_SIZE)
-        {
-            bat.prevVPos = 0;
-        }
-
         loopPowerSavings();
     }
 #if ATCHY_VER == WATCHY_3
@@ -202,7 +336,6 @@ void dumpBatteryScreen(void *parameter)
         display.fillRect(80, 80, 40, 40, GxEPD_WHITE);
         display.setCursor(85, 100);
         display.print(String(getBatteryVoltage()));
-        display.display(true);
         resetSleepDelay();
     }
 }

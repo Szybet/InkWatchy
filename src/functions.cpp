@@ -191,7 +191,7 @@ void logFunction(String file, int line, String func, String message)
 void flushLogs()
 {
 #if DEBUG
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
   Serial.flush(true);
 #elif ATCHY_VER == WATCHY_3
   Serial.flush();

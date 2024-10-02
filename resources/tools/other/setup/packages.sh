@@ -4,6 +4,8 @@ if [ ! -f "other/in/magick" ]; then
     echo "Downloading image magick"
     wget -q -O magick https://github.com/ImageMagick/ImageMagick/releases/download/7.1.1-34/ImageMagick-b0b7b17-gcc-x86_64.AppImage
     chmod +x magick
+    # - If your resource generation doesn't work, you get errors about magick "file not found" go to `resources/tools/other/in` and execute `dd if=/dev/zero bs=1 count=3 seek=8 conv=notrunc of=magick`. Appimages are stupid.
+    dd if=/dev/zero bs=1 count=3 seek=8 conv=notrunc of=magick
     mv magick other/in/magick
     rm magick* 1>/dev/null 2>/dev/null # Not sure
 fi
@@ -48,15 +50,51 @@ if ! command -v pio &> /dev/null; then
     echo "install platformio (pio command). The rest will fail."
 fi
 
-if [ ! -d "/root/esp-idf/docs" ]; then
-    echo "Cloning esp idf"
-    cd /root/
-    rm -rf esp-idf-git/
-    git clone https://github.com/espressif/esp-idf.git esp-idf-git
-    # rm -rf esp-idf-git/.git # not sure about this one, if it will make problems for gitignore and vscode git support or smth
-    mv esp-idf-git/{.*,*} esp-idf/
-    rm -rf esp-idf-git
-    cd esp-idf/
-    git checkout tags/v5.1.2
-    ./install.sh
+current_path=$(pwd)
+# if [ ! -f "/root/esp-idf/package.json" ]; then
+#     echo "Getting esp idf"
+#     cd /root/
+#     rm -rf esp-idf-git/
+#     mkdir esp-idf-git
+#     cd esp-idf-git/
+#     wget -q -O esp-idf.zip https://github.com/pioarduino/esp-idf/releases/download/v5.1.4.240805/esp-idf-v5.1.4.zip
+#     unzip esp-idf.zip
+#     mv esp-idf-v5.1.4.240805/* .
+#     rm -rf esp-idf-v5.1.4.240805
+#     rm -rf esp-idf.zip
+#     cd ..
+#     sync
+
+#     # rm -rf esp-idf-git/.git # not sure about this one, if it will make problems for gitignore and vscode git support or smth
+#     # mv esp-idf-git/{.*,*} esp-idf/
+#     mv esp-idf-git/* esp-idf/
+#     rm -rf esp-idf-git
+#     cd esp-idf/
+#     chmod +x install.sh
+#     ./install.sh
+#     rm -rf .git
+# fi
+# cd $current_path
+
+cd ../../
+rm -rf .esp-idf/esp-idf
+ln -s $PWD/.platformio/packages/framework-espidf $PWD/.esp-idf/esp-idf
+cd $current_path
+
+if [ ! -d "../../components/arduino" ]; then
+    echo "Getting arduino core"
+    cd ../../
+    mkdir -p components/arduino
+    cd components
+    rm -rf arduino
+    mkdir arduino
+    cd arduino
+    #wget -q -O arduino.zip https://github.com/Szybet/arduino-esp32/archive/refs/heads/idf-release/v5.3.zip
+    wget -q -O arduino.zip https://github.com/espressif/arduino-esp32/archive/refs/tags/3.1.0-RC1.zip
+    unzip arduino.zip
+    mv arduino-esp32-*/* .
+    rm -rf arduino-esp32-*
+    rm -rf arduino.zip
+    cd ../../
 fi
+cd $current_path

@@ -1,8 +1,9 @@
 #!/bin/bash
 
-OPTIONS=("1" "Clean"
+OPTIONS=("1" "Full clean"
          "2" "First build"
-         "3" "Update build (after updating the code from github)")
+         "3" "Update build (after updating the code from github)"
+         "4" "Regular clean")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -24,14 +25,17 @@ CHOICE=$(dialog --clear \
 clear
 case $CHOICE in
     1)
-        resources/tools/other/compile/clean.sh
+        resources/tools/other/compile/fullClean.sh
         ;;
     2)
-        resources/tools/other/compile/clean.sh
+        resources/tools/other/compile/fullClean.sh
         resources/tools/other/compile/easySetup.sh
         ;;
     3)
         resources/tools/other/compile/updateClean.sh
         resources/tools/other/compile/updateEasySetup.sh
+        ;;
+    4)
+        resources/tools/other/compile/regularClean.sh
         ;;
 esac

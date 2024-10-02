@@ -26,6 +26,7 @@ void drawDay();
 void drawMonth();
 void drawBattery();
 
+void showTimeFull();
 void showFullWatchface();
 
 #define SOME_RECT_X 0

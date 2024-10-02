@@ -41,8 +41,8 @@ void drawTimeBeforeApply()
     setFont(TIME_FONT);
     debugLog("Getting hour minute for wFTime");
     String oldTime = getHourMinute(wFTime);
-    debugLog("Getting hour minute for timeRTC");
-    String newTime = getHourMinute(timeRTC);
+    debugLog("Getting hour minute for timeRTCLocal");
+    String newTime = getHourMinute(timeRTCLocal);
 
     for (int i = 0; i < 5; i++)
     {
@@ -90,13 +90,22 @@ void drawTimeAfterApply()
     }
 }
 
+void showTimeFull()
+{
+#if LP_CORE
+    screenTimeChanged = true;
+#endif
+    // Now UI
+    setTextSize(1);
+    setFont(TIME_FONT);
+    writeTextReplaceBack(getHourMinute(timeRTCLocal), TIME_CORD);
+}
+
 void showFullWatchface()
 {
     writeImageN(0, 0, getImg("watchface"));
 
-    setTextSize(1);
-    setFont(TIME_FONT);
-    writeTextReplaceBack(getHourMinute(timeRTC), TIME_CORD);
+    showTimeFull();
 
     setTextSize(1);
     setFont(DATE_FONT);
@@ -166,7 +175,8 @@ void drawBattery()
     drawProgressBar(BATT_BAR_CORD, TO_DAY_BAR_SIZE, batteryPercantageWF);
 }
 
-void cleanSomeDrawing() {
+void cleanSomeDrawing()
+{
     display.fillRect(SOME_RECT_X, SOME_RECT_Y, SOME_RECT_W, SOME_RECT_H, GxEPD_WHITE);
     display.drawFastHLine(111, 61, 13, GxEPD_WHITE);
 }

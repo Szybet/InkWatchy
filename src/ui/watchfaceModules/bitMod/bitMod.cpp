@@ -49,7 +49,7 @@ void wfBitcheckShow(bool *showBool, bool *redrawBool)
     }
 #endif
     // if (isBtcDataAvail == true && (isBtcDataNew == true || btcLastUpdate + 1 != btcLastUpdate) )
-    if (isBtcDataAvail == true && (isBtcDataNew == true || getHourDifference(getUnixTime(timeRTC), btcData.lastSyncUnix) != btcLastUpdate))
+    if (isBtcDataAvail == true && (isBtcDataNew == true || getHourDifference(getUnixTime(timeRTCLocal), btcData.lastSyncUnix) != btcLastUpdate))
     {
         debugLog("btc redraw bool is true!");
         *redrawBool = true;
@@ -95,7 +95,7 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         String lastSync = "Never";
         if (isBtcDataAvail == true)
         {
-            uint diff = getHourDifference(getUnixTime(timeRTC), btcData.lastSyncUnix);
+            uint diff = getHourDifference(getUnixTime(timeRTCLocal), btcData.lastSyncUnix);
             // uint diff = btcLastUpdate + 1;
             btcLastUpdate = diff;
             debugLog("diff: " + String(diff));
@@ -136,7 +136,7 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         String lastSync = "Never";
         if (isBtcDataAvail == true)
         {
-            uint diff = getHourDifference(getUnixTime(timeRTC), btcData.lastSyncUnix);
+            uint diff = getHourDifference(getUnixTime(timeRTCLocal), btcData.lastSyncUnix);
             // uint diff = btcLastUpdate + 1;
             btcLastUpdate = diff;
             debugLog("diff: " + String(diff));
@@ -185,7 +185,7 @@ void bitcoinSync(uint8_t tries)
 
     if (height != 0)
     {
-        btcData.lastSyncUnix = getUnixTime(timeRTC);
+        btcData.lastSyncUnix = getUnixTime(timeRTCLocal);
         if (strlen(COIN_LIB_API_KEY) != 0)
         {
             PriceData prices = btcApi.getBitcoinPrice();

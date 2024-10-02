@@ -18,47 +18,65 @@ void priorityLoopSet(void *parameter)
   }
 }
 
-esp_sleep_wakeup_cause_t wakeUpReason;
 void setup()
 {
 #if DEBUG
 #if PUT_LOGS_TO_SERIAL // This is here first because of watchy 3
   Serial.begin(SERIAL_BAUDRATE);
-#if ATCHY_VER == WATCHY_3
+#if ATCHY_VER == WATCHY_3 || ATCHY_VER == YATCHY
   Serial.setDebugOutput(true);
 #endif
 #endif
 #if WAIT_FOR_MONITOR
   delay(7500);
 #endif
+#if WAIT_FOR_INPUT
+  int theDelay = 500;
+#if WAIT_FOR_INPUT_MOTOR
+  pinMode(VIB_MOTOR_PIN, OUTPUT);
+#endif
+  Serial.flush();
+  while (true)
+  {
+    delayTask(theDelay / 2);
+    if (Serial.available() > 0 && Serial.readString().indexOf("123") >= 0)
+    {
+      Serial.println("Received input! launching in 3..");
+      delayTask(theDelay);
+      Serial.println("2...");
+      delayTask(theDelay);
+      Serial.println("1...");
+      delayTask(theDelay);
+      Serial.println("Go!");
+      break;
+    }
+#if WAIT_FOR_INPUT_MOTOR
+    digitalWrite(VIB_MOTOR_PIN, 1);
+    delayTask(theDelay / 10);
+    digitalWrite(VIB_MOTOR_PIN, 0);
+#endif
+#if ATCHY_VER == YATCHY
+    // usb_serial_jtag_driver_uninstall doesn't help
+    // if it can't connect after deep sleep consider using a better usb connection
+    if (usb_serial_jtag_is_connected() == false)
+    {
+      delayTask(1000);
+    }
+#endif
+    Serial.println("Waiting for input...");
+  }
+#if WAIT_FOR_INPUT_MOTOR
+  digitalWrite(VIB_MOTOR_PIN, 0);
+#endif
+#endif
   initLogs();
 #endif
+#if LP_CORE_TEST_ENABLED
+  startLpCoreTest();
+#endif
 
-  wakeUpReason = esp_sleep_get_wakeup_cause();
-  // ESP_SLEEP_WAKEUP_EXT0 RTC alarm
-  // ESP_SLEEP_WAKEUP_EXT1 Button press
-
-  debugLog("Sleep wakeup reason: " + wakeupSourceToString(wakeUpReason));
-  debugLog("esp_sleep_get_ext1_wakeup_status: " + String(esp_sleep_get_ext1_wakeup_status()));
-  bool wakedUpFromSleep = false;
-
-  if (isRtcWakeUpReason(wakeUpReason) == true || wakeUpReason == BUTTON_WAKEUP_REASON)
-  {
-    wakedUpFromSleep = true;
-    if (isRtcWakeUpReason(wakeUpReason) == true)
-    {
-      debugLog("Waked up because of RTC");
-    }
-    else if (wakeUpReason == BUTTON_WAKEUP_REASON)
-    {
-      debugLog("Waked up because of buttons");
-      manageButtonWakeUp();
-    }
-  }
-
-  initHardware(wakedUpFromSleep, wakeUpReason);
-
-  debugLog("Starting millis: " + String(millisBetter()));
+  initHardware();
+  // debugLog("Starting millis: " + String(millisBetter()));
 
 #if DEBUG
 #if DUMP_INIT_DEBUG
@@ -84,25 +102,25 @@ void setup()
 #endif
 
   initManager();
-  if (isRtcWakeUpReason(wakeUpReason) == false)
+
+  if (bootStatus.reason != rtc)
   {
+    // I trust myself enough now to not need watchdog task running all the time
+    initWatchdogTask();
+    watchdogPing();
+
     turnOnButtons();
+
+    xTaskCreate(
+        priorityLoopSet,
+        "priorityLoop",
+        1000,
+        NULL,
+        20,
+        &priorityLoopHandle);
   }
 
-  initWatchdogTask();
-  watchdogPing();
-
-  // Not sure
-  // if (wakeUpReason != RTC_WAKEUP_REASON)
-  //{
-  xTaskCreate(
-      priorityLoopSet,
-      "priorityLoop",
-      1000,
-      NULL,
-      20,
-      &priorityLoopHandle);
-  //}
+  resetSleepDelay();
 }
 
 void loop()
@@ -110,9 +128,11 @@ void loop()
 #if TEMP_CHECKS_ENABLED
   tempChecker();
 #endif
-  watchdogPing();
-  alarmManageRTC();
-  loopBattery();
+  if (bootStatus.reason != rtc)
+  {
+    watchdogPing();
+    alarmManageRTC();
+  }
   loopManager();
 
 #if !DEBUG || !NO_SYNC
@@ -125,31 +145,31 @@ void loop()
 
 #if DEBUG && SPEED_THROUGH_TIME
   debugLog("Speeding time");
-  timeRTC.Minute = timeRTC.Minute + 1;
-  if (String(timeRTC.Minute).indexOf("5") != -1)
+  timeRTCUTC0.Minute = timeRTCUTC0.Minute + 1;
+  if (String(timeRTCUTC0.Minute).indexOf("5") != -1)
   {
-    timeRTC.Hour = timeRTC.Hour + 1;
-    timeRTC.Day = timeRTC.Day + 1;
-    // timeRTC.Month = timeRTC.Month + 1; // We rely on previous day to clean up so this makes things break
+    timeRTCUTC0.Hour = timeRTCUTC0.Hour + 1;
+    timeRTCUTC0.Day = timeRTCUTC0.Day + 1;
+    // timeRTCUTC0.Month = timeRTCUTC0.Month + 1; // We rely on previous day to clean up so this makes things break
   }
-  if (timeRTC.Minute == 60)
+  if (timeRTCUTC0.Minute == 60)
   {
-    timeRTC.Minute = 0;
-    timeRTC.Hour = timeRTC.Hour + 1;
+    timeRTCUTC0.Minute = 0;
+    timeRTCUTC0.Hour = timeRTCUTC0.Hour + 1;
   }
-  if (timeRTC.Hour == 24)
+  if (timeRTCUTC0.Hour == 24)
   {
-    timeRTC.Hour = 0;
+    timeRTCUTC0.Hour = 0;
   }
-  if (timeRTC.Day == 32)
+  if (timeRTCUTC0.Day == 32)
   {
-    timeRTC.Day = 1;
+    timeRTCUTC0.Day = 1;
   }
-  if (timeRTC.Month == 12)
+  if (timeRTCUTC0.Month == 12)
   {
-    timeRTC.Month = 0;
+    timeRTCUTC0.Month = 0;
   }
-  saveRTC(timeRTC);
+  saveRTC(timeRTCUTC0);
   return;
 #endif
 

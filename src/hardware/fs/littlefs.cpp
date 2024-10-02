@@ -1,16 +1,22 @@
 #include "littlefs.h"
 
 bool fsInitDone = false;
+uint8_t fsSetupCount = 0;
 
 bool fsSetup()
 {
   if (fsInitDone == false)
   {
+    if(fsSetupCount > 5) {
+      return false;
+    }
     debugLog("Trying to mount littleFS");
     if (LittleFS.begin(false, "/littlefs", 65, "littlefs") == false)
     {
       debugLog("Failed to mount littlefs");
-      return false;
+      fsSetupCount = fsSetupCount + 1;
+      delayTask(10);
+      return fsSetup();
     }
     else
     {

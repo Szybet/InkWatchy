@@ -2,7 +2,7 @@
 
 void ForceInputs()
 {
-#if ATCHY_VER == WATCHY_2
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
     isDebug(Serial.end());
     uint8_t P = SRTC.getADCPin();
     /* Unused GPIO PINS */
@@ -52,6 +52,9 @@ void ForceInputs()
     // Stolen from the default firmware :)
     rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
     rtc_gpio_pullup_en((gpio_num_t)UP_PIN);
+#elif ATCHY_VER == YATCHY
+    gpioExpander.deInit();
+    deInitI2C();
 #endif
 }
 
@@ -71,23 +74,49 @@ void goSleep()
     {
         // deInitButtonTask(); // Should work now, reanable it later TODO
         // noInterrupts(); // Holy shit not this shit
+#if ATCHY_VER != YATCHY
         detachInterrupt(UP_PIN);
         detachInterrupt(DOWN_PIN);
         detachInterrupt(BACK_PIN);
         detachInterrupt(MENU_PIN);
+#else
+        detachInterrupt(MCP_INTERRUPT_PIN);
+#endif
     }
 
-    while (motorTaskRunning == true)
+    // Shouldn't ever happen, as no interactions are going on
+    // while (motorTaskRunning == true)
+    // {
+    //     debugLog("Waiting for motor task");
+    //     delayTask(25);
+    // }
+#if LP_CORE == true
+    if (screenTimeChanged == true)
     {
-        debugLog("Waiting for motor task");
-        delayTask(50); // not sure
+        lpCoreScreenPrepare(true);
+        delayTask(30);
     }
-
     display.hibernate();
+    delayTask(10);
+    initRtcGpio();
+    loadLpCore();
+    runLpCore();
+    // This enables the subsystem, so it doesn't shut it down or something
+    // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#ulp-coprocessor-wakeup
+    // TODO: maybe this https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#power-down-of-rtc-peripherals-and-memories
+    ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
+#else
+    display.hibernate();
+#endif
 
-    turnOffWifi(); // To be sure only
-    deInitWatchdogTask();
+    // https://esp32.com/viewtopic.php?t=34166
+    // turnOffWifi();
+
+    // deInitWatchdogTask();
+#if LP_CORE == false
     wakeUpManageRTC();
+#endif
+
     debugLog("Going sleep...");
 #if DEBUG
     logCleanup();
@@ -96,10 +125,16 @@ void goSleep()
 #endif
     ForceInputs();
 
+    // It will always be on, how couldn't it be not
     LittleFS.end();
     // Not needed since small rtc 2.3.7
     // esp_err_t ext0Err = esp_sleep_enable_ext0_wakeup((gpio_num_t)RTC_INT_PIN, 0);
+#if DISABLE_WAKEUP_INTERRUPTS == false || DEBUG == false
+#if ATCHY_VER != YATCHY
     esp_err_t ext1Err = esp_sleep_enable_ext1_wakeup(pinToMask(UP_PIN) | pinToMask(DOWN_PIN) | pinToMask(MENU_PIN) | pinToMask(BACK_PIN), EXT1_WAKEUP_STATE);
+#else
+    esp_err_t ext1Err = esp_sleep_enable_ext1_wakeup(pinToMask(MCP_INTERRUPT_PIN), EXT1_WAKEUP_STATE);
+#endif
     if (ext1Err != ESP_OK)
     {
         Serial.begin(SERIAL_BAUDRATE);
@@ -108,6 +143,7 @@ void goSleep()
         delayTask(3000);
         assert("Failed to make gpio interrupts");
     }
+#endif
     esp_deep_sleep_start();
 }
 
@@ -161,8 +197,42 @@ void manageSleep()
                 return;
             }
 #endif
+#if ATCHY_VER == YATCHY
+            // Yatchy should never go to sleep, because of RGB diode and the interrupt switching problem (from fully charged to discharging)
+            // Yes we test for both
+            if (bat.isCharging == true || bat.isFullyCharged == true)
+            {
+                debugLog("Yatchy is charging, avoid sleep");
+                isChargingCheck();
+                setSleepDelay(1000);
+                return;
+            }
+#endif
+#if USB_JTAG && AVOID_SLEEP_USB_JTAG
+            if (usb_serial_jtag_is_connected() == true)
+            {
+                debugLog("Usb jtag is connected, not going to sleep...");
+                resetSleepDelay();
+                return;
+            }
+            else
+            {
+                debugLog("USB jtag is not connected");
+            }
+#endif
 
-            if (digitalRead(BACK_PIN) == BUT_CLICK_STATE || digitalRead(MENU_PIN) == BUT_CLICK_STATE || digitalRead(UP_PIN) == BUT_CLICK_STATE || digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
+#if RGB_DIODE
+            rgbTaskMutex.lock();
+            if (rgbTaskRunning == true)
+            {
+                rgbTaskMutex.unlock();
+                setSleepDelay(1000);
+                return;
+            }
+            rgbTaskMutex.unlock();
+#endif
+
+            if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
             {
                 // Basically one more watchdog test
 #if WATCHDOG_TASK
@@ -177,14 +247,21 @@ void manageSleep()
             }
 
             uint currentSeconds = getCurrentSeconds();
-            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || currentSeconds < AVOID_SLEEPING_ON_FULL_MINUTE / 2)
+            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || wFTime.Minute != timeRTCLocal.Minute)
             {
-                int toSleepSec = ((AVOID_SLEEPING_ON_FULL_MINUTE - currentSeconds + 60) % 60) + 2; // + 2 to avoid triggering it again
-                debugLog("timeRTC.Second: " + String(timeRTC.Second));
+                int toSleepSec = (((AVOID_SLEEPING_ON_FULL_MINUTE / 2) - currentSeconds + 60) % 60);
+                debugLog("timeRTCLocal.Second: " + String(timeRTCLocal.Second));
                 debugLog("currentSeconds: " + String(currentSeconds));
                 // This message can appear a few times because watchface will attempt to force to go to sleep
-                debugLog("Too near a full second! delaying it a bit. This device will wait before going to sleep in seconds: " + String(toSleepSec));
-                setSleepDelay(toSleepSec * 1000);
+                if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE))
+                {
+                    debugLog("Too near a full second! delaying it a bit. This device will wait before going to sleep in seconds: " + String(toSleepSec));
+                    setSleepDelay(toSleepSec * 1000);
+                }
+                else
+                {
+                    debugLog("Minute not updated, delaying for one additional loop");
+                }
                 // To make sure the time updates
                 if (currentSeconds < AVOID_SLEEPING_ON_FULL_MINUTE)
                 {
@@ -192,9 +269,21 @@ void manageSleep()
                 }
                 return;
             }
+
+#if ATCHY_VER == YATCHY
+            debugLog("Battery voltage before sleep: " + String(BatteryRead()));
+            debugLog("Gpio expander stat in pin state: " + BOOL_STR(gpioExpander.digitalRead(MCP_STAT_IN)));
+#endif
+
+#if DEBUG && DISABLE_SLEEP_PARTIAL
+            debugLog("DISABLE_SLEEP_PARTIAL enabled, avoiding sleep");
+            resetSleepDelay();
+            return;
+#else
             debugLog("SLEEP_EVERY_MS runned out, going to sleep");
             // resetSleepDelay(); // Not needed as we are from the loop task
             goSleep();
+#endif
         }
     }
 }

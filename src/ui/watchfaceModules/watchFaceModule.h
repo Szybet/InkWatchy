@@ -3,7 +3,8 @@
 
 #include "../../defines/defines.h"
 
-#define MODULE_COUNT 10
+// Make sure this number is right, otherwise bad things will happen...
+#define MODULE_COUNT 5
 
 #define MODULE_RECT_X 7
 #define MODULE_RECT_Y 160
@@ -19,6 +20,7 @@ typedef enum {
 } direction;
 
 extern int currentModule;
+extern uint64_t latestModuleUpdate;
 
 void clearModuleArea();
 void nothingModule();

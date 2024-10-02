@@ -12,10 +12,12 @@ void syncNtp(bool doDriftThings)
 {
     debugLog("Running syncNtp");
     dontTouchTimeZone = true;
-    unsetenv("TZ");
-    tzset();
+    removeTimeZoneVars();
     WiFiUDP ntpUDP;
     NTPClient timeClient(ntpUDP);
+#if MANUAL_NTP_OFFSET != 0
+    timeClient.setTimeOffset(MANUAL_NTP_OFFSET);
+#endif
     timeClient.begin();
     if (timeClient.forceUpdate() == true)
     {
@@ -55,9 +57,8 @@ void syncNtp(bool doDriftThings)
         I haven't looked at your code, but the make and break Time functions outside of SmallRTC don't follow time.h for values, so the day and month will increase.
         */
 
-        tmElements_t timeTmp = {};
-        SRTC.doBreakTime(epochTime, timeTmp);
-        saveRTC(timeTmp);
+        SRTC.doBreakTime(epochTime, timeRTCUTC0);
+        saveRTC(timeRTCUTC0);
         debugLog("Reading rtc from ntp");
         dontTouchTimeZone = false;
         readRTC(); // After syncing time, remake the timezone
@@ -67,10 +68,10 @@ void syncNtp(bool doDriftThings)
 #if TIME_DRIFT_CORRECTION
         if (doDriftThings == true)
         {
-            if (SRTC.checkingDrift() == true && (getUnixTime(timeRTC) - driftStartUnix > TIME_DRIFT_MINIMUM_TIME * 3600 || driftStartUnix == 0))
+            if (SRTC.checkingDrift() == true && (getUnixTime(timeRTCLocal) - driftStartUnix > TIME_DRIFT_MINIMUM_TIME * 3600 || driftStartUnix == 0))
             {
                 debugLog("Ending drift");
-                SRTC.endDrift(timeRTC);
+                SRTC.endDrift(timeRTCLocal);
                 driftStartUnix = 0;
                 uint32_t driftValue = SRTC.getDrift();
                 bool driftIsFast = SRTC.isFastDrift();
@@ -82,8 +83,8 @@ void syncNtp(bool doDriftThings)
             {
                 debugLog("Beginning new drift");
                 // Drift is not going on or it's going on to quick to end it
-                SRTC.beginDrift(timeRTC);
-                driftStartUnix = getUnixTime(timeRTC);
+                SRTC.beginDrift(timeRTCLocal);
+                driftStartUnix = getUnixTime(timeRTCLocal);
             }
         } else {
             debugLog("Canceling drift");

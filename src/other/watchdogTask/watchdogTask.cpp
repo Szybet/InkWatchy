@@ -6,7 +6,7 @@ TaskHandle_t watchdogTask = NULL;
 
 bool allButtonCheck()
 {
-    if (digitalRead(BACK_PIN) == BUT_CLICK_STATE && digitalRead(MENU_PIN) == BUT_CLICK_STATE && digitalRead(UP_PIN) == BUT_CLICK_STATE && digitalRead(DOWN_PIN) == BUT_CLICK_STATE)
+    if (buttonRead(BACK_PIN) == BUT_CLICK_STATE && buttonRead(MENU_PIN) == BUT_CLICK_STATE && buttonRead(UP_PIN) == BUT_CLICK_STATE && buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
     {
         return true;
     }

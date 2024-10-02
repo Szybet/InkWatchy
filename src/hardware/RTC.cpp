@@ -1,23 +1,21 @@
 #include "RTC.h"
 
-tmElements_t timeRTC;
+tmElements_t timeRTCLocal;         // Local time
+tmElements_t timeRTCUTC0;          // UTC0 time
+int64_t timeZoneOffset = 0;        // The offset the timezone did, can be in minus
+uint64_t lastTimeRead = 999999999; // Millis of latest reading of the RTC, it's used to get accurate seconds, it's that much to trigger the alarm wakeup if something fails, llabs is there for this reason
+RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
 
 RTC_DATA_ATTR SmallRTC SRTC;
 
-RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
-
-int64_t timeZoneOffset = 0;
-
-// Millis of latest reading of the RTC
-uint64_t lastTimeRead = 999999; // it's that much to trigger the alarm wakeup if something fails, llabs is there for this reason
-
-void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
+void initRTC()
 {
-  timeRTC = {};
+  timeRTCLocal = {};
+  timeRTCUTC0 = {};
 #if RTC_TYPE == EXTERNAL_RTC
   pinMode(RTC_INT_PIN, INPUT);
 #endif
-  if (isFromWakeUp == false)
+  if (bootStatus.fromWakeup == false)
   {
 #if RTC_TYPE == INTERNAL_RTC
     SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
@@ -29,13 +27,12 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 #endif
 
 #if RESET_RTC_ON_BOOT && DEBUG
-    if (isFromWakeUp == false)
+    if (bootStatus.fromWakeup == false)
     {
       SRTC.rtc_pcf.initClock();
     }
 #endif
 
-    HWVer = SRTC.getWatchyHWVer();
 #if TIME_DRIFT_CORRECTION
     if (SRTC.getDrift() == 0)
     {
@@ -59,6 +56,51 @@ void initRTC(bool isFromWakeUp, esp_sleep_wakeup_cause_t wakeUpReason)
 
   readRTC();
   setupMillisComparators();
+
+#if DEBUG && RTC_TYPE == INTERNAL_RTC
+  // Should be 1 for external RTC quartz, if it's 0 then it's using the internal RTC which is not accurate
+  // It's set here: https://github.com/espressif/esp-idf/blob/dbce23f8a449eb436b0b574726fe6ce9a6df67cc/components/esp_system/port/soc/esp32c6/clk.c#L179
+  debugLog("Internal RTC source clock: " + String(rtc_clk_slow_src_get()));
+
+  // Some further testing:
+  // Go to (Adjust path for soc) /root/.platformio/packages/framework-espidf/components/esp_system/port/soc/esp32c6/clk.c and at line arround 195
+  // ESP_EARLY_LOGD(TAG, "RTC_SLOW_CLK calibration value: %" PRIu32, cal_val);
+  // Change ESP_EARLY_LOGD to ESP_EARLY_LOGE for the value to appear
+  // If you can't catch this log, edit the line ESP_EARLY_LOGD(TAG, "waiting for 32k oscillator to start up"); to
+  /*
+  for(int i = 0; i < 300; i++) {
+    ESP_EARLY_LOGE(TAG, "waiting for 32k oscillator to start up");
+  }
+  */
+  // The value should be arround, 16000000 because, explanation:
+  // This function, select_rtc_slow_clk and the while loop compares how many cycles pass for the 32Khz quartz in x ammount of time (cpu cycles) and compares it to the 160Khz internal clock, which it assumes is accurate to a degree.
+  // So for example:
+  // 16000593 is fine
+  // 15999959 for a 20 ppm clock is good
+  // 15997884 for watchy v3 lol
+
+  // Some more logs I gathered:
+  /*
+  D (1705) clk: waiting for 32k oscillator to start up
+  D (1710) clk: clk 32 enable
+  D (1713) clk: calibrate slow clk
+  W (1716) rtc_time: clk_ll_32k_calibration_set_target
+  W (1720) rtc_time: expected_freq: 32768
+  W (1724) rtc_time: us_time_estimate: 91552
+  W (1819) rtc_time: return cal_val: 3662245
+  W (1820) rtc_time: xtal_cycles: 1082652004
+  W (1820) clk: rtc_slow_clk_src: 1
+  W (1821) rtc_time: clk_ll_32k_calibration_set_target
+  W (1823) rtc_time: expected_freq: 32768
+  W (1827) rtc_time: us_time_estimate: 91552
+  W (1922) rtc_time: return cal_val: 3662245
+  W (1923) rtc_time: xtal_cycles: 1082652004
+  W (1923) clk: cal_val in todo: 16000593
+  D (1924) clk: RTC_SLOW_CLK calibration value: 16000593
+  */
+  // Links:
+  // https://github.com/espressif/esp-idf/issues/11755
+#endif
 }
 
 // Make sure you save bare UTC0 time here, no timezone
@@ -72,18 +114,6 @@ void saveRTC(tmElements_t timeToSave)
   SRTC.read(test);
   debugLog("Readed time back: " + String(getUnixTime(test)));
 #endif
-
-  // Test
-  /*
-  debugLog("Time test:");
-  SRTC.read(*timeRTC);
-  dumpRTCTimeSmall(timeRTC);
-  delay(1000);
-  SRTC.read(*timeRTC);
-  dumpRTCTimeSmall(timeRTC);
-  SRTC.read(*timeRTC);
-  dumpRTCTimeSmall(timeRTC);
-  */
 }
 
 tmElements_t convertToTmElements(const struct tm &tmStruct)
@@ -104,9 +134,9 @@ tmElements_t convertToTmElements(const struct tm &tmStruct)
 #define TIME_ZONE_DUMP 0
 // If you are setting time, turn this to true, then back to false
 bool dontTouchTimeZone = false;
-// Don't call this function when timeRTC is not UTC0 from a bare read
 void timeZoneApply()
 {
+  timeRTCLocal = timeRTCUTC0; // To have at least UTC0 there
   if (dontTouchTimeZone == true)
   {
     return;
@@ -118,15 +148,15 @@ void timeZoneApply()
 
 #if TIME_ZONE_DUMP
     debugLog("Before timezone:");
-    debugLog("seconds: " + String(timeRTC.Second));
-    debugLog("minutes: " + String(timeRTC.Minute));
-    debugLog("hours: " + String(timeRTC.Hour));
-    debugLog("day: " + String(timeRTC.Day));
-    debugLog("month: " + String(timeRTC.Month));
-    debugLog("day of the week: " + String(timeRTC.Wday));
-    debugLog("year: " + String(timeRTC.Year));
+    debugLog("seconds: " + String(timeRTCLocal.Second));
+    debugLog("minutes: " + String(timeRTCLocal.Minute));
+    debugLog("hours: " + String(timeRTCLocal.Hour));
+    debugLog("day: " + String(timeRTCLocal.Day));
+    debugLog("month: " + String(timeRTCLocal.Month));
+    debugLog("day of the week: " + String(timeRTCLocal.Wday));
+    debugLog("year: " + String(timeRTCLocal.Year));
 #endif
-    int64_t initialUnixTime = getUnixTime(timeRTC);
+    int64_t initialUnixTime = getUnixTime(timeRTCUTC0);
     // https://man7.org/linux/man-pages/man3/setenv.3.html
     if (setenv("TZ", posixTimeZone, 1) == 0)
     {
@@ -146,21 +176,21 @@ void timeZoneApply()
       debugLog("tempTM->tm_isdst: " + String(tempTM.tm_isdst));
 #endif
 
-      timeRTC = convertToTmElements(tempTM);
-      time_t timeZoneUnix = getUnixTime(timeRTC);
+      timeRTCLocal = convertToTmElements(tempTM);
+      time_t timeZoneUnix = getUnixTime(timeRTCLocal);
 
       timeZoneOffset = initialUnixTime - timeZoneUnix;
       debugLog("Unix times: " + String(initialUnixTime) + " " + String(timeZoneUnix) + " " + String(initialUnixTime - timeZoneUnix));
 
 #if TIME_ZONE_DUMP
       debugLog("After timezone:");
-      debugLog("seconds: " + String(timeRTC.Second));
-      debugLog("minutes: " + String(timeRTC.Minute));
-      debugLog("hours: " + String(timeRTC.Hour));
-      debugLog("day: " + String(timeRTC.Day));
-      debugLog("month: " + String(timeRTC.Month));
-      debugLog("day of the week: " + String(timeRTC.Wday));
-      debugLog("year: " + String(timeRTC.Year));
+      debugLog("seconds: " + String(timeRTCLocal.Second));
+      debugLog("minutes: " + String(timeRTCLocal.Minute));
+      debugLog("hours: " + String(timeRTCLocal.Hour));
+      debugLog("day: " + String(timeRTCLocal.Day));
+      debugLog("month: " + String(timeRTCLocal.Month));
+      debugLog("day of the week: " + String(timeRTCLocal.Wday));
+      debugLog("year: " + String(timeRTCLocal.Year));
 #endif
       // debugLog("Timezone set succes, current timezone: " + String(posixTimeZone));
       debugLog("Timezone working");
@@ -169,9 +199,7 @@ void timeZoneApply()
     {
       debugLog("Failed to set posix timezone");
     }
-
-    unsetenv("TZ");
-    tzset();
+    removeTimeZoneVars();
   }
   else
   {
@@ -200,43 +228,50 @@ void timeZoneApply()
   }
 }
 
+void removeTimeZoneVars()
+{
+  debugLog("Removing timezone variables");
+  unsetenv("TZ");
+  tzset();
+}
+
 void readRTC()
 {
   // debugLog("Reading RTC");
-  SRTC.read(timeRTC);
-  debugLog("Time saved in RTC: " + String(getUnixTime(timeRTC)));
+  SRTC.read(timeRTCUTC0);
+  debugLog("Time saved in RTC: " + String(getUnixTime(timeRTCUTC0)));
 
 #if RTC_TYPE == INTERNAL_RTC
   bool rtcGarbage = false;
-  if (timeRTC.Year < 50 || timeRTC.Year > 100)
+  if (timeRTCUTC0.Year < 50 || timeRTCUTC0.Year > 100)
   {
-    timeRTC.Year = 54;
+    timeRTCUTC0.Year = 54;
     rtcGarbage = true;
   }
-  if (timeRTC.Month > 11)
+  if (timeRTCUTC0.Month > 11)
   {
-    timeRTC.Month = 0;
+    timeRTCUTC0.Month = 0;
     rtcGarbage = true;
   }
-  if (timeRTC.Day > 31)
+  if (timeRTCUTC0.Day > 31)
   {
-    timeRTC.Day = 0;
+    timeRTCUTC0.Day = 0;
     rtcGarbage = true;
   }
-  if (timeRTC.Hour > 24)
+  if (timeRTCUTC0.Hour > 24)
   {
-    timeRTC.Hour = 0;
+    timeRTCUTC0.Hour = 0;
     rtcGarbage = true;
   }
-  if (timeRTC.Minute > 60)
+  if (timeRTCUTC0.Minute > 60)
   {
-    timeRTC.Minute = 0;
+    timeRTCUTC0.Minute = 0;
     rtcGarbage = true;
   }
   if (rtcGarbage == true)
   {
     debugLog("RTC garbage, repaired");
-    saveRTC(timeRTC);
+    saveRTC(timeRTCUTC0);
   }
 #endif
 
@@ -244,20 +279,22 @@ void readRTC()
   lastTimeRead = millisBetter();
 }
 
+// TODO: switch to timeRTCUTC0 here
 void wakeUpManageRTC()
 {
   SRTC.clearAlarm();
   if (disableWakeUp == false)
   {
-    readRTC();
+    // Not needed as we check if we go before next minute to sleep
+    // readRTC();
     // isDebug(dumpRTCTime());
-    uint hour = timeRTC.Hour;
-    // debugLog("timeRTC.Hour: " + String(hour));
+    uint hour = timeRTCLocal.Hour;
+    // debugLog("timeRTCLocal.Hour: " + String(hour));
     if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
       debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
       // isDebug(dumpRTCTime());
-      int fullMinutes = int((hour * 60) + timeRTC.Minute + NIGHT_SLEEP_FOR_M) + (timeZoneOffset / 60);
+      int fullMinutes = int((hour * 60) + timeRTCLocal.Minute + NIGHT_SLEEP_FOR_M) + (timeZoneOffset / 60);
       debugLog("fullMinutes: " + String(fullMinutes));
       // Timezone triggered backwards, it's on minutes, add secconds
       if (fullMinutes < 0)
@@ -299,6 +336,7 @@ void alarmManageRTC()
   if (getLastTimeReadSec() >= 60)
   {
     debugLog("RTC new minute");
+    loopBattery();
     readRTC();
   }
 }
@@ -326,7 +364,7 @@ String getHourMinute(tmElements_t timeEl)
 
 String getDayName(int offset)
 {
-  long unixTime = SRTC.doMakeTime(timeRTC);
+  long unixTime = SRTC.doMakeTime(timeRTCLocal);
   int weekDay = weekday(unixTime);
   debugLog("unixTime: " + String(unixTime));
   debugLog("weekDay reported: " + String(weekDay));
@@ -390,7 +428,7 @@ String getMonthName(int monthNumber)
   case 255:
   {
     // How?
-    timeRTC.Month = 0;
+    debugLog("We have a problem month 255");
     return "Jan";
   }
   default:
@@ -496,6 +534,7 @@ void dumpRTCTimeSmall(tmElements_t timeEl)
 
 // It is in fact needed
 // https://github.com/espressif/esp-idf/blob/5ca9f2a49aaabbfaf726da1cc3597c0edb3c4d37/components/newlib/port/esp_time_impl.c#L138
+// Ok maybe not, I'm really confused at this point
 void setupMillisComparators()
 {
   // Every value that compares to millis needs to be set here, or if it's used only locally, like it's initialized every time then we don't need it
@@ -516,6 +555,6 @@ uint64_t getLastTimeReadSec()
 uint getCurrentSeconds()
 {
   // debugLog("lastTimeReadSec: " + String(lastTimeReadSec));
-  uint currentSeconds = (getLastTimeReadSec() + timeRTC.Second) % 60;
+  uint currentSeconds = (getLastTimeReadSec() + timeRTCLocal.Second) % 60;
   return currentSeconds;
 }

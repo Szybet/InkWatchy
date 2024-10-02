@@ -12,7 +12,6 @@
 	"mounts": [
 		"source=/dev/,target=/dev/,type=bind,consistency=consistent",
         "source=${localWorkspaceFolder}/.platformio/,target=/root/.platformio/,type=bind,consistency=consistent",
-        "source=${localWorkspaceFolder}/.esp-idf/esp-idf/,target=/root/esp-idf/,type=bind,consistency=consistent",
         "source=${localWorkspaceFolder}/.esp-idf/espressif/,target=/root/.espressif/,type=bind,consistency=consistent",
         "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
 	],
