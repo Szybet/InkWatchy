@@ -25,7 +25,8 @@ typedef enum
     apple,
     apple2,
     calendar,
-    calendarMenu,
+    calendarDateMenu,
+    calendarEventMenu,
     fontPreview,
     fontPreviewMenu,
     // General places now:
