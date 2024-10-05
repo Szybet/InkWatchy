@@ -4,10 +4,6 @@ void initMainMenu()
 {
     int count = -1;
     entryMenu buttons[9];
-    {
-        count = count + 1;
-        buttons[count] = {"10.20.3040 Mon", getImg("book"), switchBookSelector};
-    }
 #if BOOK
     debugLog("Getting book here");
     String book = getCurrentBook();

@@ -61,10 +61,10 @@ void initCalendar()
             String end = getHourMinuteUnix(endUnix);
             String info = start + "-" + end + " " + String(i) + ": " + name;
             debugLog("Final info: " + info);
-            buttons[i] = {info, &emptyImgPack, initCalendar};
+            buttons[i] = {info, &emptyImgPack, switchBack};
         }
         initMenu(buttons, arraySize, date, 1);
-        generalSwitch(calendarMenu);
+        generalSwitch(calendarEventMenu);
     }
     else if (lastMenuSelected.indexOf(":") == 2 && lastMenuSelected.indexOf("-") == 5)
     {
@@ -81,15 +81,32 @@ void initCalendar()
                 break;
             }
         }
-        lastMenuSelected = "";
         debugLog("Found id: " + String(id));
         String retrPath = String(datePathSaved);
         debugLog("retrPath: " + String(retrPath));
+        lastMenuSelected = retrPath + " "; // Imit a date
         JsonDocument doc = getCalendarJson(retrPath);
         JsonArray array = doc.as<JsonArray>();
-        generalSwitch(textDialog);
+#if CALENDAR_SPLIT_DESCRIPTION
+        String str[CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE];
+        String des = array[id]["description"].as<String>();
+        debugLog("Got dec: " + des);
+        for (int i = 0; i < CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE; i++)
+        {
+            int firstSplit = des.indexOf(CALENDAR_SPLIT_DESCRIPTION_STRING);
+            debugLog("firstSplit: " + String(firstSplit));
+            str[i] = des.substring(0, firstSplit);
+            debugLog("Got string: " + str[i]);
+            des = des.substring(firstSplit + String(CALENDAR_SPLIT_DESCRIPTION_STRING).length(), des.length() - 1);
+            debugLog("Des after substring: " + des);
+        }
+        textPage("", str, CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE);
+#else
         String str[1] = {array[id]["description"].as<String>()};
         textPage("", str, 1);
+#endif
+        generalSwitch(textDialog);
+        resetSleepDelay(1000 * 10);
     }
     else
     {
@@ -100,7 +117,6 @@ void initCalendar()
 
 void initCalendarMenu()
 {
-    generalSwitch(calendarMenu);
     String buf = fsGetString("index.txt", "", "/calendar/");
     if (buf.length() <= 0)
     {
@@ -143,9 +159,10 @@ void initCalendarMenu()
         String dateStr = unixToDate(unixTime) + " " + unixToDayName(unixTime);
         debugLog("dateStr: " + dateStr);
 
-        buttons[i] = {dateStr, &emptyImgPack, initCalendar};
+        buttons[i] = {dateStr, &emptyImgPack, switchBack};
     }
     initMenu(buttons, dates, "Calendar", 1);
+    generalSwitch(calendarDateMenu);
 }
 
 #endif
