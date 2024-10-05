@@ -204,6 +204,7 @@ void loopManager()
     case vaultMenu:
     {
 #if VAULT
+        // TODO: generalMenuPlace? Ooh?
         managerLaunchFunc(generalMenuPlace, NULL, loopMenu, exitVault);
 #endif
         break;
@@ -219,6 +220,20 @@ void loopManager()
     {
 #if APPLE_JOKE
         managerLaunchFunc(apple2, initAppleSour, loopAppleSour, exitAppleSour);
+#endif
+        break;
+    }
+    case calendar:
+    {
+#if CALENDAR
+        managerLaunchFunc(calendar, initCalendar, NULL, NULL);
+#endif
+        break;
+    }
+    case calendarMenu:
+    {
+#if CALENDAR
+        managerLaunchFunc(calendar, NULL, loopMenu, switchCalendarMenu);
 #endif
         break;
     }

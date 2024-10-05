@@ -22,8 +22,9 @@ void alarmManageRTC();
 
 void setupMillisComparators();
 
-// Not using reference made it... really broken
+String getHourMinuteUnix(int64_t unixTime);
 String getHourMinute(tmElements_t timeEl);
+String unixToDayName(uint64_t unixTime, int offset = 0);
 String getDayName(int offset = 0);
 String getMonthName(int monthNumber);
 uint64_t getUnixTime(tmElements_t tme);

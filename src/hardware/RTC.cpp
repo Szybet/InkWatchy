@@ -341,9 +341,15 @@ void alarmManageRTC()
   }
 }
 
+String getHourMinuteUnix(int64_t unixTime) {
+  tmElements_t tmEl;
+  SRTC.doBreakTime(unixTime, tmEl);
+  return getHourMinute(tmEl);
+}
+
 String getHourMinute(tmElements_t timeEl)
 {
-  isDebug(dumpRTCTime(timeEl));
+  //isDebug(dumpRTCTime(timeEl));
   String h = String(timeEl.Hour);
   if (h.length() == 1)
   {
@@ -356,15 +362,13 @@ String getHourMinute(tmElements_t timeEl)
     m = "0" + m;
   }
 
-  debugLog("The bare hour: " + String(timeEl.Hour) + " and the bare minute: " + String(timeEl.Minute));
+  //debugLog("The bare hour: " + String(timeEl.Hour) + " and the bare minute: " + String(timeEl.Minute));
   String answer = h + ":" + m;
-  debugLog("Answer: " + answer);
+  //debugLog("Answer: " + answer);
   return answer;
 }
 
-String getDayName(int offset)
-{
-  long unixTime = SRTC.doMakeTime(timeRTCLocal);
+String unixToDayName(uint64_t unixTime, int offset) {
   int weekDay = weekday(unixTime);
   debugLog("unixTime: " + String(unixTime));
   debugLog("weekDay reported: " + String(weekDay));
@@ -389,6 +393,12 @@ String getDayName(int offset)
   default:
     return "How??";
   }
+}
+
+String getDayName(int offset)
+{
+  long unixTime = SRTC.doMakeTime(timeRTCLocal);
+  return unixToDayName(unixTime, offset);
 }
 
 uint64_t getUnixTime(tmElements_t tme)

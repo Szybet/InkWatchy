@@ -46,7 +46,7 @@ String fsGetString(String conf, String defaultValue, String dir)
     }
     String str = String((char *)buf);
     str = str.substring(0, fileSize); // Garbage?
-    debugLog("Conf file: " + conf + " value: " + str);
+    //debugLog("Conf file: " + conf + " value: " + str);
     file.close();
     return str;
 }

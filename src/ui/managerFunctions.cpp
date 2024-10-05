@@ -4,6 +4,10 @@ void initMainMenu()
 {
     int count = -1;
     entryMenu buttons[9];
+    {
+        count = count + 1;
+        buttons[count] = {"10.20.3040 Mon", getImg("book"), switchBookSelector};
+    }
 #if BOOK
     debugLog("Getting book here");
     String book = getCurrentBook();
@@ -24,6 +28,12 @@ void initMainMenu()
     {
         count = count + 1;
         buttons[count] = {"Weather", getImg("weather"), switchWeatherMenu};
+    }
+#endif
+#if CALENDAR
+    {
+        count = count + 1;
+        buttons[count] = {"Calendar", getImg("calendar"), switchCalendarMenu};
     }
 #endif
     {

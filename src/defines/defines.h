@@ -44,6 +44,7 @@ typedef struct {
 #include <nvs_flash.h> 
 #include "driver/rtc_io.h"
 #include <Olson2POSIX.h>
+#include <ArduinoJson.h>
 
 #include "confidential.h"
 
@@ -153,6 +154,9 @@ extern bufSize emptyBuff;
 #if BOOK
 #include "../ui/book/bookUi.h"
 #include "../ui/book/bookSelector.h"
+#endif
+#if CALENDAR
+#include "../ui/calendar/calendar.h"
 #endif
 #if VAULT
 #include "../ui/vault/vaultUi.h"
