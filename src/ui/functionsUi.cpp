@@ -150,6 +150,7 @@ void writeImageN(int16_t x, int16_t y, ImageDef *image, uint16_t frColor, uint16
 
 sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor, bool draw)
 {
+  debugLog("DRAWBUTTON CALLED");
   sizeInfo size = {};
   int toleranceSize = tolerance * 2 + borderWidth * 2;
   size.w = toleranceSize;
@@ -159,7 +160,6 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
   int16_t ty = 0;
   uint16_t tw = 0;
   uint16_t th = 0;
-  bool doubleLine = false;
   if (str != "")
   {
     display.setTextWrap(true);
@@ -171,7 +171,6 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
     if (size.w > display.width() - toleranceSize)
     {
       // th = th * 2;
-      doubleLine = true;
       size.h = size.h + toleranceSize;
       // debugLog("Second line in print button...");
     }
@@ -193,7 +192,7 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
   }
   else
   {
-    size.h += th;
+    size.h += th + tolerance; // Not sure + tolerance
   }
 
   // debugLog("Final size.h is: " + String(size.h));
@@ -220,26 +219,25 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
   if (str != "")
   {
     int yCursorTmp = 0;
-    if (doubleLine == false)
+
+    display.setTextWrap(false);
+    uint16_t thTmp = 0;
+    getTextBounds(str, NULL, NULL, NULL, &thTmp);
+    display.setTextWrap(true);
+    debugLog("thTmp: " + String(thTmp));
+    yCursorTmp = thTmp + tolerance;
+    if (containsBelowChar(str) == true)
     {
-      // yCursorTmp = th;
-      yCursorTmp = size.h - ((size.h - th) / 2) - 1;
-      if (containsBelowChar(str) == true)
-      {
-        // debugLog("We are below char for string: " + str);
-        yCursorTmp = yCursorTmp - 3;
-      }
-      else
-      {
-        // debugLog("Below char not applied for string: " + str);
-      }
+      debugLog("We are below char for string: " + str);
+      yCursorTmp = yCursorTmp - 3;
     }
     else
     {
-      yCursorTmp = th / 2;
+      debugLog("Below char not applied for string: " + str);
     }
-    canvasTmp.setCursor(canvasTmp.getCursorX(), yCursorTmp); // -1 for reasons? -3 for cutted j g etc.
-    // debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()) + "x" + String(canvasTmp.getCursorY()));
+
+    canvasTmp.setCursor(canvasTmp.getCursorX(), yCursorTmp);
+    debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()) + "x" + String(canvasTmp.getCursorY()) + " for size: " + String(canvasTmp.width()) + "x" + String(canvasTmp.height()));
     canvasTmp.print(str);
   }
 

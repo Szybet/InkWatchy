@@ -197,7 +197,7 @@ Template for versioning
 
 // Yatchy specific things
 #if ATCHY_VER == YATCHY
-#define LP_CORE 1
+#define LP_CORE 0
 
 #define MENU_PIN 0 // A0
 #define DOWN_PIN 1 // A1
@@ -248,8 +248,8 @@ Template for versioning
 #undef VIBRATION_ACTION_TIME
 #undef VIBRATION_POWER
 #if ATCHY_VER != YATCHY
-#define VIBRATION_BUTTON_TIME 42
-#define VIBRATION_BUTTON_LONG_TIME 30
+#define VIBRATION_BUTTON_TIME 30
+#define VIBRATION_BUTTON_LONG_TIME 42
 #define VIBRATION_ACTION_TIME 50 
 #define VIBRATION_POWER 170  
 #else

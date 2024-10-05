@@ -38,6 +38,7 @@ bool mcp23018::simplerInit()
     }
     if (initCount > 5)
     {
+      mcpMutex.unlock();
       return false;
     }
     initOngoing = true;

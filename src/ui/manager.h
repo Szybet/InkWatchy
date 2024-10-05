@@ -24,6 +24,8 @@ typedef enum
     vaultMenu, // because of exit function
     apple,
     apple2,
+    calendar,
+    calendarMenu,
     fontPreview,
     fontPreviewMenu,
     // General places now:

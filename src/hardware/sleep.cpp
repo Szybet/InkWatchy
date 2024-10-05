@@ -107,6 +107,11 @@ void goSleep()
     ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
 #else
     display.hibernate();
+    // Not needed
+#if true == false
+    digitalWrite(EPD_RESET, true);
+    digitalWrite(EPD_DC, true);
+#endif
 #endif
 
     // https://esp32.com/viewtopic.php?t=34166
@@ -162,6 +167,7 @@ void manageSleep()
     // debugLog("sleepDelayMs is:" + String(sleepDelayMs));
     if (millisBetter() - sleepDelayMs >= SLEEP_EVERY_MS)
     {
+        debugLog("Entering manageSleep");
         if (currentPlace != FIRST_PLACE)
         {
             debugLog("SLEEP_EVERY_MS runned out, Showing watchface");
@@ -225,6 +231,7 @@ void manageSleep()
             rgbTaskMutex.lock();
             if (rgbTaskRunning == true)
             {
+                debugLog("Rgb task running, delaying");
                 rgbTaskMutex.unlock();
                 setSleepDelay(1000);
                 return;
@@ -234,6 +241,7 @@ void manageSleep()
 
             if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
             {
+                debugLog("Some button is clicked, delaying");
                 // Basically one more watchdog test
 #if WATCHDOG_TASK
                 if (allButtonCheck() == true)
