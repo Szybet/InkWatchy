@@ -151,7 +151,9 @@ void showMenu()
     if (textToShow.length() > 18 && data.currentButton != i)
     {
       textToShow = textToShow.substring(0, 18);
-    } else if(textToShow.length() > 18 && data.currentButton == i) {
+    }
+    else if (textToShow.length() > 18 && data.currentButton == i)
+    {
       previousPageNumber = ""; // To reset the next iteration
     }
     buttonSize = drawButton(1, currentHeight, textToShow, data.entryList[i].image, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
@@ -186,6 +188,7 @@ void loopMenu()
     data.currentButton -= 1;
     checkMaxMin(&data.currentButton, data.totalMenus - 1);
     currentMenuItem = data.currentButton;
+    //debugLog("Updating currentMenuItem: " + String(currentMenuItem));
     showMenu();
     break;
   }
@@ -194,6 +197,7 @@ void loopMenu()
     data.currentButton += 1;
     checkMaxMin(&data.currentButton, data.totalMenus - 1);
     currentMenuItem = data.currentButton;
+    //debugLog("Updating currentMenuItem: " + String(currentMenuItem));
     showMenu();
     break;
   }

@@ -47,7 +47,7 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
         {
             if (currentPlaceIndex - 1 >= 0)
             {
-                debugLog("Saving to index " + String(currentPlaceIndex - 1) + " menu index " + String(currentMenuItem));
+                debugLog("Saving to index " + String(currentPlaceIndex - 1) + " menu index currentMenuItem:" + String(currentMenuItem));
                 menuSelectedTree[currentPlaceIndex - 1] = currentMenuItem;
                 // currentMenuItem = menuSelectedTree[currentPlaceIndex]; // Hehe no, it goes to another menu on the same level
                 currentMenuItem = 0;
@@ -55,7 +55,7 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
         }
         else
         {
-            debugLog("Restoring menu of tree index " + String(currentMenuItem) + " value " + String(menuSelectedTree[currentPlaceIndex]));
+            debugLog("Restoring menu of tree index " + String(currentPlaceIndex) + " value " + String(menuSelectedTree[currentPlaceIndex]));
             currentMenuItem = menuSelectedTree[currentPlaceIndex];
             wasBacked = false;
         }

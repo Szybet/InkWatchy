@@ -1,5 +1,7 @@
 #include "calendar.h"
 
+// TODO: It doesn't remember menu positions because before exit call is called this inits a new menu, this should be fully converted to use switchers instead, not switchBack
+
 #if CALENDAR
 
 #define DATE_BYTES 11 // unix is 10 bytes + \n

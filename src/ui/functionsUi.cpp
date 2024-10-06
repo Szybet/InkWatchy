@@ -150,7 +150,7 @@ void writeImageN(int16_t x, int16_t y, ImageDef *image, uint16_t frColor, uint16
 
 sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor, bool draw)
 {
-  debugLog("DRAWBUTTON CALLED");
+  //debugLog("DRAWBUTTON CALLED");
   sizeInfo size = {};
   int toleranceSize = tolerance * 2 + borderWidth * 2;
   size.w = toleranceSize;
@@ -224,20 +224,20 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
     uint16_t thTmp = 0;
     getTextBounds(str, NULL, NULL, NULL, &thTmp);
     display.setTextWrap(true);
-    debugLog("thTmp: " + String(thTmp));
+    //debugLog("thTmp: " + String(thTmp));
     yCursorTmp = thTmp + tolerance;
     if (containsBelowChar(str) == true)
     {
-      debugLog("We are below char for string: " + str);
+      //debugLog("We are below char for string: " + str);
       yCursorTmp = yCursorTmp - 3;
     }
     else
     {
-      debugLog("Below char not applied for string: " + str);
+      //debugLog("Below char not applied for string: " + str);
     }
 
     canvasTmp.setCursor(canvasTmp.getCursorX(), yCursorTmp);
-    debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()) + "x" + String(canvasTmp.getCursorY()) + " for size: " + String(canvasTmp.width()) + "x" + String(canvasTmp.height()));
+    //debugLog("Printing text to canvas: " + str + " at: " + String(canvasTmp.getCursorX()) + "x" + String(canvasTmp.getCursorY()) + " for size: " + String(canvasTmp.width()) + "x" + String(canvasTmp.height()));
     canvasTmp.print(str);
   }
 
