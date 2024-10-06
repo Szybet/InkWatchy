@@ -72,6 +72,13 @@
 #define CONWAY_CPU_SPEED 0    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
 #define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
 
+// Calendar
+#define CALENDAR 0
+// Shorter names needed
+#define CALENDAR_SPLIT_DESCRIPTION 1
+#define CALENDAR_SPLIT_DESCRIPTION_STRING "\\n"
+#define CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE 2
+
 // Watchface modules
 #define MODULE_PERSISTENT 1         // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space
 #define MODULE_UPDATE_LIMIT_S 600 // Every x seconds, update the modules. Not every minute, like it was for now. Change it to 60 for every minute
@@ -103,21 +110,8 @@
 #define SOFT_START_THINGS 1               // Slowly starts things, like wifi to prevent brownout reset.
 #define SOFT_START_DELAY_MS 4500
 
-// For now those features are:
-// DISABLE_BUTTON_VIBRATION
-// DISABLE_WAKE_UP - don't wake up - at all
-// Those are also editable via vns storage
-
 // Vault
-#define VAULT 0
-
-// Now external tools, so they are configured in platformio.ini
-// Wifi tool
-// In platformio!
-
-// Apple joke
-#define APPLE_JOKE_DEVICE_NAME "Airpods"
-#define APPLE_JOKE_DELAY 800 // The default one, it's changeable via up/down buttons
+#define VAULT 1
 
 // Advanced
 #define BUTTON_TASK_DELAY 60 // In ms, lower means faster button detection but more cpu usage
@@ -182,7 +176,7 @@
 #define LP_CORE_TEST_RUN 0             // Yatchy only, why would anyone use it aside from me?
 #define LP_CORE_SERIOUS_TEST 0
 #define DISABLE_WAKEUP_INTERRUPTS 0 // As in buttons (or yatchy gpio expander)
-#define MCP_GPIO_EXPANDER_DISABLE 0
+#define MCP_GPIO_EXPANDER_DISABLE 0 // Bad idea, may increase power consumption
 #define MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS 0 // Yatchy with no battery, huh
 
 // Voltage reading average
