@@ -5,7 +5,8 @@ source resources/tools/globalFunctions.sh
 OPTIONS=("1" "Patch wifi" 
         "2" "Create demo image"
         "3" "Launch watchy-scom"
-        "4" "Compile, Upload, Scom")
+        "4" "Compile, Upload, Scom"
+        "5" "Get calendar events and upload them")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -49,5 +50,8 @@ case $CHOICE in
         ./generate_symlinks.sh
         cd watchy-scom/
         cargo run --release -- -b $baudrate -p $device
+        ;;
+    5)
+        resources/tools/other/calendar/getEvents.sh
         ;;
 esac

@@ -22,4 +22,7 @@ STATIC_WIFI_CRED wifi_credential10 = {.ssid = "hotspot", .password = "12345678"}
 
 #define VAULT_PASSWORD "" // This must be a numerical PIN, don't start it with 0
 
+// If you want just a path, implement it yourself, look up the script and the program arguments
+#define CALENDAR_URL "" // https://MyIcsFileSomewhere.toDownload
+
 #endif
