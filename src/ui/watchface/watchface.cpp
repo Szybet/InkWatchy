@@ -73,11 +73,13 @@ void loopWatchfaceLoop()
     }
     debugLog("getUnixTime(timeRTCLocal): " + String(getUnixTime(timeRTCLocal)));
     debugLog("latestModuleUpdate: " + String(latestModuleUpdate));
+#if MODULE_UPDATE_LIMIT_S != 0
     if (getUnixTime(timeRTCLocal) - latestModuleUpdate > MODULE_UPDATE_LIMIT_S)
     {
       debugLog("Finally updating modules via time trigger");
       wfModulesManage(None);
     }
+#endif
   }
   else
   {
