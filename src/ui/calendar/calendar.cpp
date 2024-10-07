@@ -102,7 +102,7 @@ void initCalendar()
             des = des.substring(firstSplit + String(CALENDAR_SPLIT_DESCRIPTION_STRING).length(), des.length() - 1);
             debugLog("Des after substring: " + des);
         }
-        textPage("", str, CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE);
+        textPage("", str, CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE, &FreeSansBold9pt7b);
 #else
         String str[1] = {array[id]["description"].as<String>()};
         textPage("", str, 1);
