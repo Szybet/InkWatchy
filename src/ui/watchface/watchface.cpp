@@ -18,6 +18,7 @@ void initWatchfaceDisplay()
 
   showFullWatchface();
 
+  // TODO: test and remote it, its done in showfull watchface?
   wfModulesManage(None);
   drawPosMarker();
 
