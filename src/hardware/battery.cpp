@@ -105,6 +105,9 @@ void isChargingCheck()
     {
         // debugLog("It's charging because of above voltage");
         bat.isCharging = true;
+    } else {
+        // debugLog("It's charging because of below voltage");
+        bat.isCharging = false;
     }
     // This did not worked well, sadly
     /*
