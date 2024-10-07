@@ -243,7 +243,7 @@ void showWeatherCond()
     {
         weatherCond[i] = weatherConditionIdToStr(forecast.data.weather_code[i]);
     }
-    textPage("Weather conditions", weatherCond, OM_WEATHER_MAX_HOURS);
+    textPage("Weather conditions", weatherCond, OM_WEATHER_MAX_HOURS, getFont("DisposableDroidBB9"));
     generalSwitch(ChartPlace);
 }
 
