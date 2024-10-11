@@ -46,7 +46,14 @@ void initHardware()
 #if DEBUG == 1
     setCpuSpeed(DEBUG_CPU_SPEED);
 #else
-    setCpuSpeed(CPU_SPEED);
+    if (bootStatus.reason == button)
+    {
+        setCpuSpeed(BUTTON_CPU_SPEED);
+    }
+    else
+    {
+        setCpuSpeed(CPU_SPEED);
+    }
 #endif
 
 #if LP_CORE

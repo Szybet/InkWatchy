@@ -80,7 +80,7 @@
 #define CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE 2
 
 // Watchface modules
-#define MODULE_PERSISTENT 1         // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space
+#define MODULE_PERSISTENT 1       // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space
 #define MODULE_UPDATE_LIMIT_S 600 // Every x seconds, update the modules. Not every minute, like it was for now. Change it to 60 for every minute. Change it to 0 to completly disable modules updating automatically
 #define WIFI_MODULE 1
 #define BITCOIN_MODULE 1   // Remember to define the api key for it in confidential.h
@@ -97,6 +97,8 @@
 #define IMAGE_MODULE 1
 #define IMG_MODULE_CHANGE_EVERY_HOUR 1 // Change the image every hour
 
+#define API_MODULE 0 // With it, consider setting BUTTON_CPU_SPEED to something faster to make it faster
+
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
 #define NIGHT_SLEEP_AFTER_HOUR 23
@@ -107,6 +109,7 @@
 #define LOOP_NO_SCREEN_WRITE_DELAY_MS 225 // Go to "sleep" for x ms if the device is woken up (in a menu for example) and the screen didn't update. This value is fine tuned, but if you want a faster menu, feel free to make it smaller
 #define HARDWARE_POWER_SAVINGS 1          // Like wifi modem in power saving mode
 #define CPU_SPEED minimalSpeed            // Possible values: minimalSpeed, normalSpeed, maxSpeed. Obviously higher speeds decrease battery life - but it's only when you interact with the watch. This is mostly for the people who "ugh this watch is slow!". Well first, it's a watch, it should show time, any other features are battery wasters in some way and secondly you should first remove some features you don't use, most noticibly unused watchface moduls. In debug mode, this feature is overritten by DEBUG_CPU_SPEED when DEBUG
+#define BUTTON_CPU_SPEED maxSpeed         // Cpu speed when it has woken up by a button
 #define SOFT_START_THINGS 1               // Slowly starts things, like wifi to prevent brownout reset.
 #define SOFT_START_DELAY_MS 4500
 
@@ -120,6 +123,10 @@
 #define SMALL_BUTTON_DELAY_MS 15
 #define BAT_MINIMAL_DIFFERENCE 0.02
 #define AVOID_SLEEP_USB_JTAG 1 // If your device has USB JTAG (Yatchy, I don't have a Watchy v3 to test) it will avoid going to sleep if it detects it is being used. Useful when you want to reprogram the watch but it goes to sleep
+
+// Wifi Quick settings
+#define WIFI_QUICK_CHECK_MS 30
+#define WIFI_QUICK_MAX_MS 1250 // And half of it for tcp
 
 // Temperature readings
 // This is highly experimental, dont enable this if you dont have a reason for it, possible reasons (but you still should read the code to understand if it will help you)
@@ -175,8 +182,8 @@
 #define BATTERY_TIME_DROP_VOLTAGE 3.50 // Needs to be float
 #define LP_CORE_TEST_RUN 0             // Yatchy only, why would anyone use it aside from me?
 #define LP_CORE_SERIOUS_TEST 0
-#define DISABLE_WAKEUP_INTERRUPTS 0 // As in buttons (or yatchy gpio expander)
-#define MCP_GPIO_EXPANDER_DISABLE 0 // Bad idea, may increase power consumption
+#define DISABLE_WAKEUP_INTERRUPTS 0            // As in buttons (or yatchy gpio expander)
+#define MCP_GPIO_EXPANDER_DISABLE 0            // Bad idea, may increase power consumption
 #define MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS 0 // Yatchy with no battery, huh
 
 // Voltage reading average

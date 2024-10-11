@@ -8,6 +8,7 @@
 
 extern tmElements_t wFTime;
 extern bool disableSomeDrawing;
+extern bool disableWatchfaceFastOperating;
 
 void initWatchfaceDisplay();
 void loopWatchfaceLoop();
