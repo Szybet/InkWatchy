@@ -76,18 +76,19 @@ struct ImageDef {
 
 extern ImageDef emptyImgPack;
 
+// It's converted to int by api mod
 typedef enum 
 {
-    Unknown, // For the task to look for answers, used on the yatchy
-    None,
-    Back,
-    Menu,
-    Up,
-    Down,
-    LongBack,
-    LongMenu,
-    LongUp,
-    LongDown,
+    Unknown = 0, // For the task to look for answers, used on the yatchy
+    None = 1,
+    Back = 2,
+    Menu = 3,
+    Up = 4,
+    Down = 5,
+    LongBack = 6,
+    LongMenu = 7,
+    LongUp = 8,
+    LongDown = 9,
 } buttonState; // This needs to be here because watchface modules use it too and idk why it doesn't work if its in buttons.h :( send help
 
 typedef enum {
@@ -137,6 +138,7 @@ extern bufSize emptyBuff;
 #include "../functions.h"
 #include "../network/wifi/wifiLogic.h"
 #include "../network/wifi/wifiTask.h"
+#include "../network/wifi/wifiQuick.h"
 #include "../network/ntp.h"
 #include "../network/getTimezone.h"
 #if WEATHER_INFO
@@ -196,6 +198,9 @@ extern bufSize emptyBuff;
 #endif
 #if IMAGE_MODULE
 #include "../ui/watchfaceModules/imgMod/imgMod.h"
+#endif
+#if API_MODULE
+#include "../ui/watchfaceModules/apiMod/apiMod.h"
 #endif
 
 #endif

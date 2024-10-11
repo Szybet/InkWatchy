@@ -2,6 +2,7 @@
 
 RTC_DATA_ATTR tmElements_t wFTime;
 RTC_DATA_ATTR bool disableSomeDrawing = false;
+bool disableWatchfaceFastOperating = false;
 
 void initWatchfaceDisplay()
 {
@@ -108,12 +109,20 @@ void loopWatchfaceLoop()
 #if MODULES_OPERATING_FAST
   if (bt != None && currentPlaceIndex == 0)
   {
-    // Should be simplfied to setSleepDelay
-    debugLog("Watchface modules fast operating done");
     wentToSleep = true;
-    int makeMinus = -1 * (SLEEP_EVERY_MS * MODULES_WAITING_DIVISION);
-    debugLog("makeMinus: " + String(makeMinus));
-    resetSleepDelay(makeMinus);
+    if (disableWatchfaceFastOperating == false)
+    {
+      // Should be simplfied to setSleepDelay
+      debugLog("Watchface modules fast operating done");
+      int makeMinus = -1 * (SLEEP_EVERY_MS * MODULES_WAITING_DIVISION);
+      debugLog("makeMinus: " + String(makeMinus));
+      resetSleepDelay(makeMinus);
+    }
+    else
+    {
+      debugLog("Watchface modules fast operating is disabled");
+      sleepDelayMs = sleepDelayMs - SLEEP_EVERY_MS;
+    }
   }
 #endif
   if (bt == None && wentToSleep == false)
