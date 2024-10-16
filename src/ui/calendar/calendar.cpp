@@ -131,6 +131,7 @@ void initCalendarMenu()
     debugLog("buf.size: " + String(buf.length()));
     entryMenu buttons[dates];
     int64_t currentTime = getUnixTime(timeRTCLocal);
+    debugLog("Current time: " + String(currentTime));
     int64_t smallestDifference = 9223372036854775807;
     int indexOfCurrTime = 0;
     for (int i = 0; i < dates; i++)
@@ -139,7 +140,7 @@ void initCalendarMenu()
         String retrUnix = buf.substring(stringIndex, stringIndex + DATE_BYTES - 1);
         debugLog("Got unix: " + retrUnix);
         int64_t newUnix = retrUnix.toInt();
-        int diff = abs(currentTime - smallestDifference);
+        int diff = abs(currentTime - newUnix);
         if (diff < smallestDifference)
         {
             smallestDifference = diff;

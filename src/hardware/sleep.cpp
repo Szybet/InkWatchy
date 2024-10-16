@@ -109,6 +109,7 @@ void goSleep()
     display.hibernate();
     // Not needed
 #if true == false
+    gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
     digitalWrite(EPD_RESET, true);
     digitalWrite(EPD_DC, true);
 #endif
@@ -239,6 +240,7 @@ void manageSleep()
             rgbTaskMutex.unlock();
 #endif
 
+#if !MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS
             if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
             {
                 debugLog("Some button is clicked, delaying");
@@ -253,6 +255,7 @@ void manageSleep()
                 resetSleepDelay();
                 return;
             }
+#endif
 
             uint currentSeconds = getCurrentSeconds();
             if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || wFTime.Minute != timeRTCLocal.Minute)
