@@ -143,9 +143,9 @@ buttonState mcp23018::manageInterrupts()
 
 bool mcp23018::manageInterruptsExit()
 {
-  #if MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS == true && DEBUG == true
-    return true;
-  #endif
+#if MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS == true && DEBUG == true
+  return true;
+#endif
   if (simplerInit() == false)
   {
     return true; // True here because of infinite loop
@@ -302,7 +302,10 @@ void mcp23018::deInit()
   {
     return;
   }
+  // gpioExpander.setPinState(MCP_STAT_OUT, true); // test
+#if MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS == false
   setInterrupt(MCP_STAT_IN, false);
+#endif
   // dumpAllRegisters();
 }
 
@@ -319,6 +322,7 @@ bool mcp23018::digitalRead(uint8_t pin)
 
 void mcp23018::setDefaultInterrupts()
 {
+#if !MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS
   if (bootStatus.fromWakeup == false)
   {
     // Buttons
@@ -344,6 +348,7 @@ void mcp23018::setDefaultInterrupts()
 
   // This was disabled in sleep, now we disable it
   setInterrupt(MCP_STAT_IN, true);
+#endif
 }
 
 void mcp23018::setInterrupt(uint8_t pin, bool interrupt)
