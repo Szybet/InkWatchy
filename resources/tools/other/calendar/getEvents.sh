@@ -12,4 +12,8 @@ rm -rf resources/tools/fs/littlefs/calendar/*
 cargo run --manifest-path src/ui/calendar/ics-to-json-rs/Cargo.toml -- -u $url -o resources/tools/fs/littlefs/calendar/
 
 cd resources/tools/fs
-./flashFs.sh
+./getFs.sh
+rm -rf out/fsDump/calendar/
+mkdir -p out/fsDump/calendar/
+cp -r littlefs/calendar/* out/fsDump/calendar/
+./flashPersonalFs.sh

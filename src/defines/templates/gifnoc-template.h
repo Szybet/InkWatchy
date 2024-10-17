@@ -99,6 +99,8 @@
 
 #define API_MODULE 0 // With it, consider setting BUTTON_CPU_SPEED to something faster to make it faster
 
+#define EVENT_MODULE 1 // Needs the CALENDAR feature enabled
+
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
 #define NIGHT_SLEEP_AFTER_HOUR 23
