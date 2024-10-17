@@ -202,5 +202,8 @@ extern bufSize emptyBuff;
 #if API_MODULE
 #include "../ui/watchfaceModules/apiMod/apiMod.h"
 #endif
+#if EVENT_MODULE
+#include "../ui/watchfaceModules/eventMod/eventMod.h"
+#endif
 
 #endif
