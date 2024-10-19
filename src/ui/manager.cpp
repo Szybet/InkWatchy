@@ -71,7 +71,9 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
                 debugLog("Saving exit func");
                 exitFuncGlob = exitFunc;
             }
-        } else {
+        }
+        else
+        {
             debugLog("No init function supplied");
         }
     }
@@ -239,10 +241,17 @@ void loopManager()
 #endif
         break;
     }
-        case calendarEventMenu:
+    case calendarEventMenu:
     {
 #if CALENDAR
         managerLaunchFunc(calendarEventMenu, NULL, loopMenu, NULL);
+#endif
+        break;
+    }
+    case pong:
+    {
+#if PONG
+        managerLaunchFunc(pong, initPong, loopPong, NULL);
 #endif
         break;
     }

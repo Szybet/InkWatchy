@@ -27,6 +27,7 @@ typedef enum
     calendar,
     calendarDateMenu,
     calendarEventMenu,
+    pong,
     fontPreview,
     fontPreviewMenu,
     // General places now:
@@ -80,6 +81,7 @@ void switchVault();
 void switchBack();
 void switchApple();
 void switchApple2();
+void switchPong();
 #if FONT_MENU_ENABLED
 void switchFontsPreview();
 #endif

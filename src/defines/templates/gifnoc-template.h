@@ -118,6 +118,9 @@
 // Vault
 #define VAULT 1
 
+// Pong
+#define PONG 1
+
 // Advanced
 #define BUTTON_TASK_DELAY 60 // In ms, lower means faster button detection but more cpu usage
 #define TIME_FOR_WATCHFACE_TO_SHOW_MS 2000
@@ -203,7 +206,7 @@
 #define BATTERY_CHARGE_DETECTION_DIFFERENCE 0.10 // The minimum difference to detect that the battery is charging
 
 // Other
-#define MAX_MENU_ITEMS 20
+#define MAX_MENU_ITEMS 35
 
 // Other other, resources thing
 #define RESOURCES_NAME_LENGTH 50
