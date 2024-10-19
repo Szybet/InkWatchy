@@ -163,6 +163,9 @@ extern bufSize emptyBuff;
 #if VAULT
 #include "../ui/vault/vaultUi.h"
 #endif
+#if PONG
+#include "../ui/pong/pong.h"
+#endif
 #if WIFI_TOOL
 #include "../other/wifiTool/wifiTool.h"
 #endif

@@ -3,7 +3,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[9];
+    entryMenu buttons[10];
 #if CALENDAR
     {
         count = count + 1;
@@ -71,6 +71,13 @@ void initMainMenu()
         debugLog("Adding apple joke to menu");
         count = count + 1;
         buttons[count] = {"Smashing apples", getImg("apple"), switchApple2};
+    }
+#endif
+#if PONG
+    {
+        debugLog("Adding pong");
+        count = count + 1;
+        buttons[count] = {"Pong", getImg("pong"), switchPong};
     }
 #endif
 

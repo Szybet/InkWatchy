@@ -66,6 +66,10 @@ void switchApple2()
     generalSwitch(apple2);
 }
 
+void switchPong() {
+    generalSwitch(pong);
+}
+
 #if FONT_MENU_ENABLED
 void switchFontsPreview()
 {
