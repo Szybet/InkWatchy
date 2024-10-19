@@ -3,7 +3,8 @@
 OPTIONS=("1" "Full clean"
          "2" "First build"
          "3" "Update build (after updating the code from github)"
-         "4" "Regular clean")
+         "4" "Regular clean"
+         "5" "Auto update personal configs")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -37,5 +38,8 @@ case $CHOICE in
         ;;
     4)
         resources/tools/other/compile/regularClean.sh
+        ;;
+    5)
+        resources/tools/other/compile/autoDiff.sh
         ;;
 esac
