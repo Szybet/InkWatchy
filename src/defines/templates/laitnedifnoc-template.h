@@ -14,9 +14,9 @@ STATIC_WIFI_CRED wifi_credential9 = {.ssid = "", .password = ""};
 STATIC_WIFI_CRED wifi_credential10 = {.ssid = "hotspot", .password = "12345678"};
 
 // Wifi Quick settings
-#define WIFI_QUICK_SSID ""
-#define WIFI_QUICK_PASS ""
-#define WIFI_QUICK_BSSID "" // Mac, splitted by ":"
+#define WQ_SSID ""
+#define WQ_PASS ""
+#define WQ_BSSID "" // Mac, splitted by ":"
 // Yes, this is the format, without ""
 #define WQ_STAT_IP 0, 0, 0, 0
 #define WQ_GATEWAY 0, 0, 0, 0
