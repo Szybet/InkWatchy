@@ -16,7 +16,7 @@ void lpCoreScreenPrepare(bool now)
     display.fillRect(LP_CORE_SCREEN_X, LP_CORE_SCREEN_Y, LP_CORE_SCREEN_W, LP_CORE_SCREEN_H, GxEPD_WHITE);
     if (now == true)
     {
-        display.display(PARTIAL_UPDATE);
+        updateDisplay(PARTIAL_UPDATE);
     }
     else
     {

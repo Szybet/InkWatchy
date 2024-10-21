@@ -10,6 +10,7 @@ extern int updateCounter;
 extern bool dUChange; // Display update change boolean, to simplify the code
 void disUp(bool reallyUpdate = false, bool ignoreCounter = false, bool ignoreSleep = false);
 void resetHoldManage();
+void updateDisplay(bool mode);
 
 #if DEBUG
 void initDisplayDebug();
