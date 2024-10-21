@@ -96,7 +96,7 @@ void modulesButtons(buttonState bt)
     case LongBack:
     {
         debugLog("Because of LONG_BACK_FULL_REFRESH in watchface, I shall now refresh the screen fully");
-        display.display(FULL_UPDATE);
+        updateDisplay(FULL_UPDATE);
         break;
     }
 #endif

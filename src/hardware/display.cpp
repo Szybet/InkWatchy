@@ -43,16 +43,17 @@ void initDisplay()
 
     // Only on first boot, only to be extra sure
 #if SCREEN_PARTIAL_GREY_WORKAROUND || LP_CORE_TEST_ENABLED
-    if(bootStatus.fromWakeup == false) {
+    if (bootStatus.fromWakeup == false)
+    {
         display.setPartialWindow(0, 0, 200, 200);
         display.clearScreen();
         display.fillScreen(GxEPD_WHITE);
-        display.display(FULL_UPDATE);
+        updateDisplay(FULL_UPDATE);
     }
 #endif
-    #if LP_CORE_TEST_ENABLED == false
-        resetHoldManage();
-    #endif
+#if LP_CORE_TEST_ENABLED == false
+    resetHoldManage();
+#endif
 
     // Default values
     setFont(&FreeSansBold9pt7b);
@@ -72,7 +73,7 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
         if (updateCounter >= FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
         {
             updateCounter = 0;
-            display.display(FULL_UPDATE);
+            updateDisplay(FULL_UPDATE);
             updatedScreen = true;
         }
         else
@@ -81,7 +82,7 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
             {
                 updateCounter += 1;
             }
-            display.display(PARTIAL_UPDATE);
+            updateDisplay(PARTIAL_UPDATE);
             updatedScreen = true;
         }
 #if SCOM_TASK_ENABLED
@@ -159,7 +160,7 @@ void resetHoldManage()
             centerText("To continue", &h);
         }
 #endif
-        display.display(FULL_UPDATE);
+        updateDisplay(FULL_UPDATE);
 #if STOP_ON_RESET
         if (resetReasonHold(bootStatus.resetReason) == true) // ESP_RST_SW only for ESP.reset() in coredump cleaning
         {
@@ -180,4 +181,20 @@ void resetHoldManage()
         }
 #endif
     }
+}
+
+void updateDisplay(bool mode)
+{
+#if SCREEN_FULL_WHITE_WORKAROUND == 0
+    // Normal
+    display.display(mode);
+#else
+    // The workaround
+    display.display(mode);
+    if (mode == FULL_UPDATE)
+    {
+        delayTask(50);
+        display.display(PARTIAL_UPDATE);
+    }
+#endif
 }
