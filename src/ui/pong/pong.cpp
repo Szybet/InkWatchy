@@ -47,17 +47,22 @@ void drawPoint()
     writeTextCenterReplaceBack(String(points), POINT_Y);
 }
 
-void zeroBalls() {
-    if(ball.x < 0) {
+void zeroBalls()
+{
+    if (ball.x < 0)
+    {
         ball.x = 0;
     }
-    if(ball.x > display.width()) {
+    if (ball.x > display.width())
+    {
         ball.x = display.width();
     }
-    if(ball.y < 0) {
+    if (ball.y < 0)
+    {
         ball.y = 0;
     }
-    if(ball.y > display.height()) {
+    if (ball.y > display.height())
+    {
         ball.y = display.height();
     }
 }
@@ -76,7 +81,7 @@ void drawBall()
         ball.y = ball.y + ballDirection.y * BALL_SPEED;
     }
     zeroBalls();
-    
+
     if (ball.x >= display.width() - BALL_BORDER_MINUS || ball.x <= 0 + BALL_BORDER_MINUS)
     {
         // Point?
@@ -216,7 +221,10 @@ void loopPong()
     }
 
     disUp(true);
-    resetSleepDelay();
+    if (btn != None)
+    {
+        resetSleepDelay(SLEEP_EVERY_MS);
+    }
 }
 
 #endif
