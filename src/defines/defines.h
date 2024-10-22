@@ -110,6 +110,9 @@ struct bufSize {
 
 extern bufSize emptyBuff;
 
+#if DEBUG
+#include "../other/debugMain/debugMain.h"
+#endif
 #include "../hardware/hardware.h"
 #include "../hardware/battery.h"
 #include "../hardware/RTC.h"
