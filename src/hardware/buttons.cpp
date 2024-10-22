@@ -70,6 +70,8 @@ void useButtonBlank()
         buttonPressed = None;
     }
     buttMut.unlock();
+    // This function is used by UI without a loop update, so we should delayTask here to not be so fast
+    delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
 }
 
 void initButtons()

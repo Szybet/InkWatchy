@@ -3,7 +3,7 @@
 #if EVENT_MODULE
 
 #define DATE_BYTES 11 // unix is 10 bytes + \n
-#define LINE_LIMIT 29
+#define LINE_LIMIT 28
 
 RTC_DATA_ATTR int64_t currentEventTime = 0;
 RTC_DATA_ATTR int8_t currentDay = -1;

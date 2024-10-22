@@ -115,6 +115,7 @@ void loopManager()
         }
     }
 
+    debugLog("Current place: " + String(placeTree[currentPlaceIndex]));
     // Don't forget break...
     switch (placeTree[currentPlaceIndex])
     {
@@ -227,24 +228,17 @@ void loopManager()
 #endif
         break;
     }
-    case calendar:
-    {
-#if CALENDAR
-        managerLaunchFunc(calendar, initCalendar, NULL, NULL);
-#endif
-        break;
-    }
     case calendarDateMenu:
     {
 #if CALENDAR
-        managerLaunchFunc(calendarDateMenu, NULL, loopMenu, NULL);
+        managerLaunchFunc(calendarDateMenu, initCalendar, loopMenu, NULL);
 #endif
         break;
     }
     case calendarEventMenu:
     {
 #if CALENDAR
-        managerLaunchFunc(calendarEventMenu, NULL, loopMenu, NULL);
+        managerLaunchFunc(calendarEventMenu, initCalendar, loopMenu, NULL);
 #endif
         break;
     }

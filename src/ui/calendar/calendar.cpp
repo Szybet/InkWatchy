@@ -1,14 +1,19 @@
 #include "calendar.h"
 
-// TODO: It doesn't remember menu positions because before exit call is called this inits a new menu, this should be fully converted to use switchers instead, not switchBack
+// It doesn't remember menu positions because before exit call is called this inits a new menu, this should be fully converted to use switchers instead, not switchBack
+// Fixed now
 
 #if CALENDAR
 
 #define DATE_BYTES 11 // unix is 10 bytes + \n
 
-void switchCalendarMenu()
+void switchCalendarDateMenu()
 {
-    generalSwitch(calendar);
+    generalSwitch(calendarDateMenu);
+}
+
+void switchCalendarEventMenu() {
+    generalSwitch(calendarEventMenu);
 }
 
 JsonDocument getCalendarJson(String date)
@@ -38,6 +43,7 @@ char datePathSaved[STR_DATE_BYTES] = {0};
 void initCalendar()
 {
     debugLog("lastMenuSelected: " + lastMenuSelected);
+
     // debugLog("lastMenuSelected.indexOf dot: " + String(lastMenuSelected.indexOf(".")));
     // debugLog("lastMenuSelected.lastIndexOf: " + String(lastMenuSelected.lastIndexOf(".")));
     // debugLog("lastMenuSelected.indexOf: " + String(lastMenuSelected.indexOf(" ")));
@@ -63,10 +69,10 @@ void initCalendar()
             String end = getHourMinuteUnix(endUnix);
             String info = start + "-" + end + " " + String(i) + ": " + name;
             debugLog("Final info: " + info);
-            buttons[i] = {info, &emptyImgPack, switchBack};
+            buttons[i] = {info, &emptyImgPack, initCalendar};
         }
         initMenu(buttons, arraySize, date, 1);
-        generalSwitch(calendarEventMenu);
+        // generalSwitch(calendarEventMenu);
     }
     else if (lastMenuSelected.indexOf(":") == 2 && lastMenuSelected.indexOf("-") == 5)
     {
@@ -162,10 +168,10 @@ void initCalendarMenu()
         String dateStr = unixToDate(unixTime) + " " + unixToDayName(unixTime);
         debugLog("dateStr: " + dateStr);
 
-        buttons[i] = {dateStr, &emptyImgPack, switchBack};
+        buttons[i] = {dateStr, &emptyImgPack, switchCalendarEventMenu};
     }
     initMenu(buttons, dates, "Calendar", 1);
-    generalSwitch(calendarDateMenu);
+    // generalSwitch(calendarDateMenu);
 }
 
 #endif
