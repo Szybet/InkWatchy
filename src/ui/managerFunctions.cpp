@@ -7,7 +7,7 @@ void initMainMenu()
 #if CALENDAR
     {
         count = count + 1;
-        buttons[count] = {"Calendar", getImg("calendar"), switchCalendarMenu};
+        buttons[count] = {"Calendar", getImg("calendar"), switchCalendarDateMenu};
     }
 #endif
 #if BOOK

@@ -6,7 +6,7 @@
 #if CALENDAR
 
 JsonDocument getCalendarJson(String date);
-void switchCalendarMenu();
+void switchCalendarDateMenu();
 void initCalendar();
 void initCalendarMenu();
 
