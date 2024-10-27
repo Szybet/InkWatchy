@@ -24,7 +24,7 @@
 // https://support.cyberdata.net/portal/en/kb/articles/010d63c0cfce3676151e1f2d5442e311
 // From the Posix timezone string table column
 // This function overwrites the TIMEZONE_OLSON variable if it's set
-#define TIMEZONE_POSIX "" // Example value: "CEST-1CET,M3.2.0/2:00:00,M11.1.0/2:00:00"
+#define TIMEZONE_POSIX "" // Example value for poland: "CET-1CEST,M3.5.0,M10.5.0/3"
 
 #define MENU_LINES false             // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500     // Duration until long press registers in miliseconds
