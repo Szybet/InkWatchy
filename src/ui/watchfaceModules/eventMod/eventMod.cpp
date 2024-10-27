@@ -111,7 +111,10 @@ void wfEventrequestShow(buttonState button, bool *showBool)
         display.print(btnStr);
     } else {
         String btnStr1 = btnStr.substring(0, LINE_LIMIT);
-        String btnStr2 = btnStr.substring(LINE_LIMIT, btnStr.length());
+        //String btnStr2 = btnStr.substring(LINE_LIMIT, btnStr.length());
+        //String btnStr2 = btnStr2.substring(0, LINE_LIMIT);
+        // Not tested yet
+        String btnStr2 = btnStr.substring(LINE_LIMIT, LINE_LIMIT + LINE_LIMIT);
         display.print(btnStr1);
         display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + 10 + 10);
         display.print(btnStr2);
