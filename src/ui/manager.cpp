@@ -121,7 +121,7 @@ void loopManager()
     {
     case watchface:
     {
-        managerLaunchFunc(watchface, initWatchfaceDisplay, loopWatchfaceLoop);
+        managerLaunchFunc(watchface, initWatchfaceManage, loopWatchfaceManage);
         break;
     }
     case mainMenu:

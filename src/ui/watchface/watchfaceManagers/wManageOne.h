@@ -16,6 +16,7 @@ struct watchfaceDefOne {
     bool watchfaceModules; // To enable modules. All things below are only used if this is enabled
     cordInfo watchfacePos; // Position of watchface modules
     void (*cleanSomeDrawing)(); // TODO: look into it to properly support watchface modules
+    bool (*isModuleEngaged)(); // Replaces watchfacePos == MODULE_ENG_POS && positionEngaged == true
 };
 
 void wManageOne(watchfaceDefOne* wdo);
