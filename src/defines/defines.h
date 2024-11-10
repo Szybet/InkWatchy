@@ -13,18 +13,9 @@
 #define EXTERNAL_RTC 1
 #define INTERNAL_RTC 2
 
-typedef struct {
-    const char* ssid;
-    const char* password;
-} WiFiCred;
-
-#define STATIC_WIFI_CRED static const WiFiCred
-
 // It's before the libraries to be able to affect them (until it doesn't work)
 #include "config.h" // Needs to be first!
 #include "condition.h"
-
-#define ARDUINOJSON_ENABLE_PROGMEM 0
 
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
@@ -44,10 +35,15 @@ typedef struct {
 #include <nvs_flash.h> 
 #include "driver/rtc_io.h"
 #include <Olson2POSIX.h>
+#define ARDUINOJSON_ENABLE_PROGMEM 0 // Needed
 #include <ArduinoJson.h>
 
+// Order important
+#include "macros.h"
+#include "definesVars.h"
 #include "confidential.h"
 
+// Needs to be after confidential.h and definesVars.h
 static const WiFiCred* wifiCredStatic[] = {
     &wifi_credential1,
     &wifi_credential2,
@@ -62,53 +58,9 @@ static const WiFiCred* wifiCredStatic[] = {
 };
 #define SIZE_WIFI_CRED_STAT sizeof(wifiCredStatic) / sizeof(wifiCredStatic[0])
 
-#include "macros.h"
-
 #if WEATHER_INFO
 #include <OpenMeteo.h>
 #endif
-
-struct ImageDef {
-    int16_t bw;
-    int16_t bh;
-    uint8_t *bitmap;
-};
-
-extern ImageDef emptyImgPack;
-
-// It's converted to int by api mod
-typedef enum 
-{
-    Unknown = 0, // For the task to look for answers, used on the yatchy
-    None = 1,
-    Back = 2,
-    Menu = 3,
-    Up = 4,
-    Down = 5,
-    LongBack = 6,
-    LongMenu = 7,
-    LongUp = 8,
-    LongDown = 9,
-} buttonState; // This needs to be here because watchface modules use it too and idk why it doesn't work if its in buttons.h :( send help
-
-typedef enum {
-    WifiOff,
-    WifiOn,
-    WifiConnected,
-} wifiStatusSimple; // This too
-
-struct wfModule {
-    bool show;
-    void (*checkShow)(bool* showBool, bool* redrawBool);
-    void (*requestShow)(buttonState button, bool* showBool);
-}; // Madness -,-
-
-struct bufSize {
-    uint8_t *buf;
-    int size;
-};
-
-extern bufSize emptyBuff;
 
 #if DEBUG
 #include "../other/debugMain/debugMain.h"
@@ -155,7 +107,9 @@ extern bufSize emptyBuff;
 #include "../ui/menu.h"
 #include "../ui/chart.h"
 #include "../ui/manager.h"
-#include "../ui/watchface/watchface.h"
+#include "../ui/watchface/watchFaceLogic.h"
+#include "../ui/watchface/watchfaceManagers/wManageOne.h"
+#include "../ui/watchface/watchfaceManagers/wManageAll.h"
 #if BOOK
 #include "../ui/book/bookUi.h"
 #include "../ui/book/bookSelector.h"
@@ -210,6 +164,9 @@ extern bufSize emptyBuff;
 #endif
 #if EVENT_MODULE
 #include "../ui/watchfaceModules/eventMod/eventMod.h"
+#endif
+#if INKFIELD_SZYBET
+#include "../ui/watchface/watchfaces/InkField_Szybet/inkField.h"
 #endif
 
 #endif

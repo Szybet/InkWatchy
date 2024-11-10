@@ -3,18 +3,6 @@
 
 #include "defines/defines.h"
 
-struct sizeInfo
-{
-    uint16_t w;
-    uint16_t h;
-};
-
-struct cordInfo
-{
-    uint16_t x;
-    uint16_t y;
-};
-
 extern const GFXfont *font;
 extern uint16_t maxHeight;
 extern int textSize;

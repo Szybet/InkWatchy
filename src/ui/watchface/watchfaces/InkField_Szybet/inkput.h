@@ -1,7 +1,7 @@
 #ifndef MODULES_LOGIC_H
 #define MODULES_LOGIC_H
 
-#include "../../defines/defines.h"
+#include "inkField.h"
 
 #define WATCHFACE_POSITIONS 3 // There is one "empty" on 0 too ????????
 #define EMPTY_POS 0

@@ -1,7 +1,26 @@
-#include "watchFaceDraw.h"
+#include "inkField.h"
+#include "inkput.h"
 
 RTC_DATA_ATTR int percentOfDay;
-RTC_DATA_ATTR int batteryPercantageWF;
+
+#define TIME_FONT getFont("JackInput40")
+#define DATE_FONT getFont("JackInput17")
+#define DAY_NAME_FONT getFont("Speculum13")
+#define MONTH_NAME_FONT getFont("Speculum9")
+
+#define DAY_NAME_CORD 13, 87
+#define DATE_CORD 8, 113
+#define MONTH_NAME_CORD 46, 109
+#define MONTH_NUMBER_1_CORD 89, 93 // Not used?
+#define MONTH_NUMBER_2_CORD 89, 102 // Not used?
+#define TO_DAY_BAR_CORD 136, 68
+#define TO_DAY_BAR_SIZE 54, 6
+#define BATT_BAR_CORD 136, 83
+
+#define SOME_RECT_X 0
+#define SOME_RECT_Y 62
+#define SOME_RECT_W 200
+#define SOME_RECT_H 138
 
 /*
 // Even with monospaced font, it differs a bit...
@@ -180,3 +199,22 @@ void cleanSomeDrawing()
     display.fillRect(SOME_RECT_X, SOME_RECT_Y, SOME_RECT_W, SOME_RECT_H, GxEPD_WHITE);
     display.drawFastHLine(111, 61, 13, GxEPD_WHITE);
 }
+
+/*
+    void (*drawTimeBeforeApply)(); // Draw the time. Here you can compare the times to draw only whats needed, or just draw it all
+    void (*drawTimeAfterApply)(); // Do things after time is applied. Like update the step counter
+    void (*drawDay)(); //  Do things after the day changed, like update the date
+    void (*drawMonth)(); // Do things after the month changed, like updating the month
+    void (*showTimeFull)(); // Fully draw the time. Used bto handle  the lp core on yatchy, you can call this function on drawTimeAfterApply simply
+    void (*initWatchface)(); // Called on init once. Draw here static images and all other things
+    void (*drawBattery)(); // Draw the battery, it's to avoid logic replication as every watchface will show it. This function is only called when battery percentage changed
+    void (*manageInput)(buttonState bt);
+
+    bool watchfaceModules; // To enable modules. All things below are only used if this is enabled
+    cordInfo watchfacePos; // Position of watchface modules
+    void (*cleanSomeDrawing)(); // TODO: look into it to properly support watchface modules
+
+const watchfaceDefOne inkFieldDef = {
+    .drawTimeBeforeApply = 
+}
+*/
