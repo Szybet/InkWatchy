@@ -78,7 +78,7 @@ enum watchFaceManager {
 };
 
 struct watchfaceDef {
-    watchFaceManager choosedManager;
+    watchFaceManager manager;
     const char* name;
     genPointer data;
 };

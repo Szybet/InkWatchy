@@ -4,6 +4,8 @@
 #include "../../../defines/defines.h"
 
 extern uint8_t watchfaceSelected;
-void watchfaceManageAll(bool init);
+
+void initWatchfaceManage();
+void loopWatchfaceManage();
 
 #endif

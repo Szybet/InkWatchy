@@ -110,6 +110,7 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../ui/watchface/watchFaceLogic.h"
 #include "../ui/watchface/watchfaceManagers/wManageOne.h"
 #include "../ui/watchface/watchfaceManagers/wManageAll.h"
+#include "../ui/watchface/watchfaceManagers/wFunctions.h"
 #if BOOK
 #include "../ui/book/bookUi.h"
 #include "../ui/book/bookSelector.h"

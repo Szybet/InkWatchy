@@ -17,11 +17,6 @@ RTC_DATA_ATTR int percentOfDay;
 #define TO_DAY_BAR_SIZE 54, 6
 #define BATT_BAR_CORD 136, 83
 
-#define SOME_RECT_X 0
-#define SOME_RECT_Y 62
-#define SOME_RECT_W 200
-#define SOME_RECT_H 138
-
 /*
 // Even with monospaced font, it differs a bit...
 {
@@ -120,7 +115,7 @@ void showTimeFull()
     writeTextReplaceBack(getHourMinute(timeRTCLocal), TIME_CORD);
 }
 
-void showFullWatchface()
+void inkShowFullWatchface()
 {
     writeImageN(0, 0, getImg("watchface"));
 
@@ -194,12 +189,6 @@ void drawBattery()
     drawProgressBar(BATT_BAR_CORD, TO_DAY_BAR_SIZE, batteryPercantageWF);
 }
 
-void cleanSomeDrawing()
-{
-    display.fillRect(SOME_RECT_X, SOME_RECT_Y, SOME_RECT_W, SOME_RECT_H, GxEPD_WHITE);
-    display.drawFastHLine(111, 61, 13, GxEPD_WHITE);
-}
-
 /*
     void (*drawTimeBeforeApply)(); // Draw the time. Here you can compare the times to draw only whats needed, or just draw it all
     void (*drawTimeAfterApply)(); // Do things after time is applied. Like update the step counter
@@ -218,3 +207,22 @@ const watchfaceDefOne inkFieldDef = {
     .drawTimeBeforeApply = 
 }
 */
+
+const watchfaceDefOne inkFieldDef = {
+    .drawTimeBeforeApply = []() { 
+        /* Implementation for drawing time before apply */
+        debugLog("Nice. Nice. Nice.");
+    },
+    .drawTimeAfterApply = []() { /* Implementation for drawing time after apply */ },
+    .drawDay = []() { /* Implementation for drawing day */ },
+    .drawMonth = []() { /* Implementation for drawing month */ },
+    .showTimeFull = []() { /* Implementation for fully drawing time */ },
+    .initWatchface = []() { /* Implementation for initializing watchface */ },
+    .drawBattery = []() { /* Implementation for drawing battery */ },
+    .manageInput = [](buttonState bt) { /* Implementation for managing input */ },
+
+    .watchfaceModules = true, // Set watchfaceModules to true or false as needed
+    .watchfacePos = {0, 0}, // Initialize watchfacePos with appropriate values
+    .cleanSomeDrawing = []() { /* Implementation for cleaning some drawing */ },
+    .isModuleEngaged = []() { return false; /* Implementation for checking if module is engaged */ }
+};

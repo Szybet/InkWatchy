@@ -3,8 +3,9 @@
 
 #include "../../../../defines/defines.h"
 
-// const extern watchfaceDefOne inkFieldDef;
+// This is a forward declaration
+struct watchfaceDefOne;
 
-// void cleanSomeDrawing(); // disableSomeDrawing controls, TODO: write a wrapper for it
+const extern watchfaceDefOne inkFieldDef;
 
 #endif
