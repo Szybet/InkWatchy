@@ -27,7 +27,7 @@ void createWifiTask(uint8_t tries, void (*functionToRunAfterConnection)(), uint8
     }
     else
     {
-        debugLog("The task is already running? why?");
+        debugLog("The task is already running? The user is spamming the button...");
     }
 }
 

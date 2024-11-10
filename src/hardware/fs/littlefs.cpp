@@ -263,13 +263,13 @@ void fsListDir(String dirname, uint8_t levels)
     theLog = theLog + String(file.name()) + " Size: " + String(file.size());
     time_t t = file.getLastWrite();
     struct tm *tmstruct = localtime(&t);
-
+    /*
     char buffer[50] = {0};
     snprintf(buffer, sizeof(buffer), " Last write: %d-%02d-%02d %02d:%02d:%02d",
              (tmstruct->tm_year) + 1900, (tmstruct->tm_mon) + 1, tmstruct->tm_mday,
              tmstruct->tm_hour, tmstruct->tm_min, tmstruct->tm_sec);
-
     theLog = theLog + String(buffer);
+    */
     debugLog(theLog);
     if (file.isDirectory() && levels > 0)
     {

@@ -9,9 +9,11 @@ void syncWeather()
 {
   if (strlen(WEATHER_LONGTIT) == 0 || strlen(WEATHER_LATIT) == 0)
   {
+    debugLog("Weather location not supplied, skipping");
     return;
   }
 
+  debugLog("Syncing weather");
   OM_HourlyForecast *forecast = new OM_HourlyForecast;
 
   removeDir(WEATHER_DIR);

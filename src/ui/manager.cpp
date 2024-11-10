@@ -40,8 +40,8 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
     }
     else
     {
-        debugLog("currentPlace: " + String(currentPlace));
-        debugLog("place: " + String(place));
+        // debugLog("currentPlace: " + String(currentPlace));
+        // debugLog("place: " + String(place));
         currentPlace = place;
         if (wasBacked == false)
         {
@@ -115,7 +115,7 @@ void loopManager()
         }
     }
 
-    debugLog("Current place: " + String(placeTree[currentPlaceIndex]));
+    // debugLog("Current place: " + String(placeTree[currentPlaceIndex]));
     // Don't forget break...
     switch (placeTree[currentPlaceIndex])
     {
