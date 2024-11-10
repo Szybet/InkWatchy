@@ -8,6 +8,15 @@ TaskHandle_t wifiTask;
 uint8_t wifiConnectionTries = 0;
 void (*wifiFunction)() = NULL;
 
+// Where it should be placed correctly? Idk, so I put it everywhere
+void setWifiCountryCode()
+{
+#if WIFI_COUNTRY_FIX
+    debugLog("Setting wifi country code to: " + String(WIFI_COUNTRY_CODE));
+    esp_wifi_set_country_code(WIFI_COUNTRY_CODE, !WIFI_COUNTRY_FORCE);
+#endif
+}
+
 void createWifiTask(uint8_t tries, void (*functionToRunAfterConnection)(), uint8_t wifiPriority)
 {
     debugLog("Creating wifi task");
@@ -49,7 +58,9 @@ void tryToConnectWifi()
         debugLog("Trying to connect to wifi number: " + String(i) + " so: " + String(wifiCredStatic[i]->ssid) + " " + String(wifiCredStatic[i]->password));
         softStartDelay();
 
+        setWifiCountryCode();
         WiFi.begin(wifiCredStatic[i]->ssid, wifiCredStatic[i]->password);
+        setWifiCountryCode();
 
         for (int i = 0; i < WIFI_SYNC_TIME / 1000; i++)
         {
@@ -91,7 +102,9 @@ void turnOnWifiTask(void *parameter)
         // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/partition-tables.html
         // 0x3000 bytes we need
         softStartDelay();
+        setWifiCountryCode();
         WiFi.mode(WIFI_STA);
+        setWifiCountryCode();
         softStartDelay();
 
         debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));
