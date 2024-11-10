@@ -22,6 +22,7 @@
 #define TIMEZONE_OLSON "" // Example value: "Europe/Warsaw"
 // Here is an example table:
 // https://support.cyberdata.net/portal/en/kb/articles/010d63c0cfce3676151e1f2d5442e311
+// Better one probably: https://github.com/yuan910715/Esp8266_Wifi_Matrix_Clock/blob/master/posix.md
 // From the Posix timezone string table column
 // This function overwrites the TIMEZONE_OLSON variable if it's set
 #define TIMEZONE_POSIX "" // Example value for poland: "CET-1CEST,M3.5.0,M10.5.0/3"
@@ -111,7 +112,7 @@
 #define LOOP_NO_SCREEN_WRITE_DELAY_MS 225 // Go to "sleep" for x ms if the device is woken up (in a menu for example) and the screen didn't update. This value is fine tuned, but if you want a faster menu, feel free to make it smaller
 #define HARDWARE_POWER_SAVINGS 1          // Like wifi modem in power saving mode
 #define CPU_SPEED minimalSpeed            // Possible values: minimalSpeed, normalSpeed, maxSpeed. Obviously higher speeds decrease battery life - but it's only when you interact with the watch. This is mostly for the people who "ugh this watch is slow!". Well first, it's a watch, it should show time, any other features are battery wasters in some way and secondly you should first remove some features you don't use, most noticibly unused watchface moduls. In debug mode, this feature is overritten by DEBUG_CPU_SPEED when DEBUG
-#define BUTTON_CPU_SPEED normalSpeed         // Cpu speed when it has woken up by a button
+#define BUTTON_CPU_SPEED normalSpeed      // Cpu speed when it has woken up by a button
 #define SOFT_START_THINGS 1               // Slowly starts things, like wifi to prevent brownout reset.
 #define SOFT_START_DELAY_MS 4500
 
@@ -147,6 +148,16 @@
 #define TEMP_LOWER_LIMIT_RELATIVE 0
 #define TEMP_REBOOT_LIMIT_RELATIVE 0
 #define TEMP_MAX_SCREEN_FIXES 5
+
+// Wifi country
+// If your wifi connects to ghost networks, freaks out in general, try setting the wifi country for your country
+// https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/network/esp_wifi.html#_CPPv425esp_wifi_set_country_codePKcb
+#define WIFI_COUNTRY_FIX 0 // Enable this to 1 to enable the fix
+/*
+Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA","CH","CN","CY","CZ","DE","DK","EE","ES","FI","FR","GB","GR","HK","HR","HU", "IE","IN","IS","IT","JP","KR","LI","LT","LU","LV","MT","MX","NL","NO","NZ","PL","PT", "RO","SE","SI","SK","TW","US"
+*/
+#define WIFI_COUNTRY_CODE ""
+#define WIFI_COUNTRY_FORCE false // This should be false, you can set it to true to check if something starts working
 
 // Debugging help
 #define DEBUG 0

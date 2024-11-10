@@ -103,6 +103,8 @@ void showTimeFull()
 
 void showFullWatchface()
 {
+    debugLog("Showing full watchface");
+    
     writeImageN(0, 0, getImg("watchface"));
 
     showTimeFull();
