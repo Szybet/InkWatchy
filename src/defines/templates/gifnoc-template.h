@@ -52,6 +52,7 @@
 #define WEATHER_INFO 1                     // Enable weather
 #define WEATHER_TRIES 3                    // Ammount of times to try to sync weather
 #define CONNECT_TO_HIDDEN_NETWORKS 0       // This makes the wifi manager connect to hidden networks too. For some reason it takes more time and power to do so, that's why it's not on default, otherwise it should work
+#define NTP_SERVER_URL "ntp.ubuntu.com" // Change it to something else if it doesn't work as a first step to troubleshoot. pool.ntp.org has a rate limiter apparently
 
 // Book things
 #define BOOK 0
