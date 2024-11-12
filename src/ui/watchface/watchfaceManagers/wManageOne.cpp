@@ -20,7 +20,7 @@ void wManageOneInit(watchfaceDefOne *wdo)
 
     wdo->initWatchface();
 
-    // TODO: test and remote it, its done in showfull watchface?
+    // TODO: test and remove it, its done in showfull watchface?
     // wfModulesManage(None);
     // drawPosMarker();
 }
@@ -156,4 +156,16 @@ void wManageOneLoop(watchfaceDefOne *wdo)
         debugLog("Nothing happened, delay...");
         delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
     }
+}
+
+void wManageOneLaunch(watchfaceDefOne* wdo, bool init) {
+    if(init == true) {
+        wManageOneInit(wdo);
+    } else {
+        wManageOneLoop(wdo);
+    }
+}
+
+void wManageOneDrawAll(watchfaceDefOne* wdo) {
+    
 }

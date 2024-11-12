@@ -12,16 +12,43 @@ const watchfaceDef szybetStarfield = {
 
 const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {&szybetStarfield};
 
-void watchfaceManageAll(bool init) {
+// const watchfaceDef *watchfaceSel = getCurrentWatchface();
+const watchfaceDef *getCurrentWatchface() {
     const watchfaceDef *watchfaceSel = watchfacesList[watchfaceSelected];
     debugLog("Watchface selected: " + String(watchfaceSel->name));
+    return watchfaceSel;
+}
 
+// const watchfaceDefOne * wFO = getwatchfaceDefOne();
+const watchfaceDefOne *getwatchfaceDefOne() {
+    const watchfaceDef *watchfaceSel = getCurrentWatchface();
+    if(watchfaceSel->manager == wfmOne) {
+        watchfaceDefOne *wOne = (watchfaceDefOne*)watchfaceSel->data;
+        return wOne;
+    }
+    debugLog("Get watchface one failed, returning NULL. This should not happen");
+    return NULL;
+}
+
+void watchfaceManageAll(bool init) {
+    
+    const watchfaceDef *watchfaceSel = getCurrentWatchface();
     switch(watchfaceSel->manager)
     {
         case wfmOne: {
             debugLog("wfmOne selected");
             watchfaceDefOne *wOne = (watchfaceDefOne*)watchfaceSel->data;
-            wOne->drawTimeBeforeApply();
+            wManageOneLaunch(wOne, init);
+            break;
+        }
+        case wfmTwo: {
+            debugLog("wfmTwo selected");
+            wfmTwoRet (*wfTwoFunc)(wfmTwoArg) = (wfmTwoRet (*)(wfmTwoArg))watchfaceSel->data;
+            wfmTwoArg arg = wfmTwoArg::wTloop;
+            if(init == true) {
+                arg = wfmTwoArg::wTinit;
+            }
+            wfTwoFunc(arg);
             break;
         }
         default: {

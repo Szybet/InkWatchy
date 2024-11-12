@@ -13,6 +13,6 @@ extern bool positionEngaged;
 
 void drawPosMarker();
 void movePos(int add);
-void modulesButtons(buttonState bt);
+void inkFieldManageInput(buttonState bt);
 
 #endif

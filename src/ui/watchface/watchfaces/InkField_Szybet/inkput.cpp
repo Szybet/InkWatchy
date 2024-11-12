@@ -10,7 +10,7 @@ void movePos(int add)
     drawPosMarker();
 }
 
-void modulesButtons(buttonState bt)
+void inkFieldManageInput(buttonState bt)
 {
     if (watchfacePos == MODULE_ENG_POS && positionEngaged == true && bt != None)
     {
