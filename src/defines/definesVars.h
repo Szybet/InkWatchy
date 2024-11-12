@@ -73,8 +73,20 @@ struct squareInfo
 };
 
 enum watchFaceManager {
+    wfmNone = -1, // None, doesn't exist
     wfmOne = 1, // InkWatchy default, Szybet certified
-    wfmTwo = 2,
+    wfmTwo = 2, // Do what you want mode
+};
+
+enum wfmTwoArg {
+    wTloop,
+    wTinit,
+};
+
+enum wfmTwoRet {
+    wTNone,
+    wTYes,
+    wTNo,
 };
 
 struct watchfaceDef {

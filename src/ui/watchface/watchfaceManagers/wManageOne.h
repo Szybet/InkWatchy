@@ -3,6 +3,13 @@
 
 #include "../../../defines/defines.h"
 
+/*
+#define SOME_RECT_X 0
+#define SOME_RECT_Y 62
+#define SOME_RECT_W 200
+#define SOME_RECT_H 138
+*/
+
 struct watchfaceDefOne {
     void (*drawTimeBeforeApply)(); // Draw the time. Here you can compare the times to draw only whats needed, or just draw it all
     void (*drawTimeAfterApply)(); // Do things after time is applied. Like update the step counter
@@ -14,12 +21,13 @@ struct watchfaceDefOne {
     void (*manageInput)(buttonState bt);
 
     bool watchfaceModules; // To enable modules. All things below are only used if this is enabled
-    cordInfo watchfacePos; // Position of watchface modules
-    void (*cleanSomeDrawing)(); // TODO: look into it to properly support watchface modules
+    cordInfo watchfaceModPos; // Position of watchface modules
+    squareInfo someDrawingSize; // Should probably not be different then SOME_RECT_X
     bool (*isModuleEngaged)(); // Replaces watchfacePos == MODULE_ENG_POS && positionEngaged == true
 };
 
-void wManageOne(watchfaceDefOne* wdo);
+void wManageOneLaunch(const watchfaceDefOne* wdo, bool init);
+void wManageOneDrawAll(const watchfaceDefOne* wdo);
 
 extern tmElements_t wFTime;
 extern bool disableSomeDrawing;

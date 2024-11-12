@@ -48,7 +48,7 @@ RTC_DATA_ATTR int percentOfDay;
 #define TIME_CORD_Y 53
 #define TIME_CORD TIME_CORD_X, TIME_CORD_Y
 
-void drawTimeBeforeApply()
+static void drawTimeBeforeApply()
 {
     debugLog("Called");
     setTextSize(1);
@@ -93,7 +93,7 @@ void drawTimeBeforeApply()
     }
 }
 
-void drawTimeAfterApply()
+static void drawTimeAfterApply()
 {
     // Draw the percentage on the right
     int percentOfDayTmp = calculatePercentageOfDay(wFTime.Hour, wFTime.Minute);
@@ -104,7 +104,7 @@ void drawTimeAfterApply()
     }
 }
 
-void showTimeFull()
+static void showTimeFull()
 {
 #if LP_CORE
     screenTimeChanged = true;
@@ -115,7 +115,7 @@ void showTimeFull()
     writeTextReplaceBack(getHourMinute(timeRTCLocal), TIME_CORD);
 }
 
-void inkShowFullWatchface()
+static void initWatchface()
 {
     writeImageN(0, 0, getImg("watchface"));
 
@@ -153,7 +153,7 @@ void inkShowFullWatchface()
     drawPosMarker();
 }
 
-void drawDay()
+static void drawDay()
 {
     setFont(DATE_FONT);
     String dayDate = String(wFTime.Day);
@@ -176,7 +176,7 @@ void drawDay()
     writeTextReplaceBack(day, DAY_NAME_CORD);
 }
 
-void drawMonth()
+static void drawMonth()
 {
     setFont(MONTH_NAME_FONT);
     String month = getMonthName(wFTime.Month);
@@ -184,45 +184,23 @@ void drawMonth()
     writeTextReplaceBack(month, MONTH_NAME_CORD);
 }
 
-void drawBattery()
+static void drawBattery()
 {
     drawProgressBar(BATT_BAR_CORD, TO_DAY_BAR_SIZE, batteryPercantageWF);
 }
 
-/*
-    void (*drawTimeBeforeApply)(); // Draw the time. Here you can compare the times to draw only whats needed, or just draw it all
-    void (*drawTimeAfterApply)(); // Do things after time is applied. Like update the step counter
-    void (*drawDay)(); //  Do things after the day changed, like update the date
-    void (*drawMonth)(); // Do things after the month changed, like updating the month
-    void (*showTimeFull)(); // Fully draw the time. Used bto handle  the lp core on yatchy, you can call this function on drawTimeAfterApply simply
-    void (*initWatchface)(); // Called on init once. Draw here static images and all other things
-    void (*drawBattery)(); // Draw the battery, it's to avoid logic replication as every watchface will show it. This function is only called when battery percentage changed
-    void (*manageInput)(buttonState bt);
-
-    bool watchfaceModules; // To enable modules. All things below are only used if this is enabled
-    cordInfo watchfacePos; // Position of watchface modules
-    void (*cleanSomeDrawing)(); // TODO: look into it to properly support watchface modules
-
 const watchfaceDefOne inkFieldDef = {
-    .drawTimeBeforeApply = 
-}
-*/
+    .drawTimeBeforeApply = drawTimeBeforeApply,
+    .drawTimeAfterApply = drawTimeAfterApply,
+    .drawDay = drawDay,
+    .drawMonth = drawMonth,
+    .showTimeFull = showTimeFull,
+    .initWatchface = initWatchface,
+    .drawBattery = drawBattery,
+    .manageInput = inkFieldManageInput,
 
-const watchfaceDefOne inkFieldDef = {
-    .drawTimeBeforeApply = []() { 
-        /* Implementation for drawing time before apply */
-        debugLog("Nice. Nice. Nice.");
-    },
-    .drawTimeAfterApply = []() { /* Implementation for drawing time after apply */ },
-    .drawDay = []() { /* Implementation for drawing day */ },
-    .drawMonth = []() { /* Implementation for drawing month */ },
-    .showTimeFull = []() { /* Implementation for fully drawing time */ },
-    .initWatchface = []() { /* Implementation for initializing watchface */ },
-    .drawBattery = []() { /* Implementation for drawing battery */ },
-    .manageInput = [](buttonState bt) { /* Implementation for managing input */ },
-
-    .watchfaceModules = true, // Set watchfaceModules to true or false as needed
-    .watchfacePos = {0, 0}, // Initialize watchfacePos with appropriate values
-    .cleanSomeDrawing = []() { /* Implementation for cleaning some drawing */ },
+    .watchfaceModules = true,
+    .watchfaceModPos = {0, 0},
+    .someDrawingSize = {0, 0 ,0 ,0},
     .isModuleEngaged = []() { return false; /* Implementation for checking if module is engaged */ }
 };

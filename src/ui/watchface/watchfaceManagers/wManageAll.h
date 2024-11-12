@@ -3,8 +3,11 @@
 
 #include "../../../defines/defines.h"
 
-extern uint8_t watchfaceSelected;
+// This is a forward declaration
+struct watchfaceDefOne;
 
+const watchfaceDef *getCurrentWatchface();
+const watchfaceDefOne *getwatchfaceDefOne();
 void initWatchfaceManage();
 void loopWatchfaceManage();
 
