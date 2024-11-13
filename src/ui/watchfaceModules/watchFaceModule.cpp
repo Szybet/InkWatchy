@@ -51,7 +51,8 @@ RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
 void clearModuleArea()
 {
     debugLog("clearModuleArea: extecuted...");
-    display.fillRect(MODULE_RECT_X, MODULE_RECT_Y, MODULE_W, MODULE_H, GxEPD_WHITE);
+    squareInfo modSq = getWatchModuleSquare();
+    display.fillRect(modSq.cord.x, modSq.cord.y, modSq.size.w, modSq.size.h, GxEPD_WHITE);
     dUChange = true;
 }
 

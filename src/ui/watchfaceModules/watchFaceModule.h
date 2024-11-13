@@ -6,12 +6,6 @@
 // Make sure this number is right, otherwise bad things will happen...
 #define MODULE_COUNT 7
 
-#define MODULE_RECT_X 7
-#define MODULE_RECT_Y 160
-
-#define MODULE_W 177
-#define MODULE_H 37
-
 extern wfModule *wfModulesList[MODULE_COUNT];
 
 typedef enum {

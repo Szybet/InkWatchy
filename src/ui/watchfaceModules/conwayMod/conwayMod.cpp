@@ -76,7 +76,8 @@ void wfConwayrequestShow(buttonState button, bool *showBool)
         initModuleConway();
     }
 
-    drawGrid(conwayModuleGrid, CONWAY_MODULE_HEIGHT, CONWAY_MODULE_WIDTH, MODULE_RECT_X + CONWAY_MODULE_OFFSET_X, MODULE_RECT_Y + CONWAY_MODULE_OFFSET_Y);
+    squareInfo modSq = getWatchModuleSquare();
+    drawGrid(conwayModuleGrid, CONWAY_MODULE_HEIGHT, CONWAY_MODULE_WIDTH, modSq.cord.x + CONWAY_MODULE_OFFSET_X, modSq.cord.y + CONWAY_MODULE_OFFSET_Y);
     dUChange = true;
 #if CONWAY_CPU_SPEED
     restoreCpuSpeed();

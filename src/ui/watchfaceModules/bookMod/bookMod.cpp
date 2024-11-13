@@ -54,24 +54,25 @@ void wfBookrequestShow(buttonState button, bool *showBool)
     }
 
     String curBook = getCurrentBook();
+    squareInfo modSq = getWatchModuleSquare();
     if (disableSomeDrawing == false)
     {
         if (curBook == "")
         {
             debugLog("Entered no book selected");
-            drawTextSimple("No book selected", "UbuntuMono-Regular10", MODULE_RECT_X, MODULE_RECT_Y);
+            drawTextSimple("No book selected", "UbuntuMono-Regular10", modSq.cord.x, modSq.cord.y);
         }
         else
         {
             debugLog("Entered book selected");
-            sizeInfo s = drawTextSimple("Selected book:", "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y);
+            sizeInfo s = drawTextSimple("Selected book:", "dogicapixel4", modSq.cord.x, modSq.cord.y);
             // Max BOOK_NAME_MODULE_NAME_MAX
             String curBookTmp = curBook;
             if(curBookTmp.length() > BOOK_NAME_MODULE_NAME_MAX) {
                 curBookTmp = curBookTmp.substring(0, BOOK_NAME_MODULE_NAME_MAX);
             }
-            sizeInfo ss = drawTextSimple(curBookTmp, "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y + s.h + 2);
-            drawTextSimple(bookGetPages(BOOK_MODULE_CHARS_PER_PAGE), "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y + s.h + ss.h + 4);
+            sizeInfo ss = drawTextSimple(curBookTmp, "dogicapixel4", modSq.cord.x, modSq.cord.y + s.h + 2);
+            drawTextSimple(bookGetPages(BOOK_MODULE_CHARS_PER_PAGE), "dogicapixel4", modSq.cord.x, modSq.cord.y + s.h + ss.h + 4);
         }
     }
     else
@@ -84,7 +85,7 @@ void wfBookrequestShow(buttonState button, bool *showBool)
             cleanSomeDrawing();
             setFont(BOOK_FONT);
             setTextSize(1);
-            display.setCursor(1, startHeightBook + SOME_RECT_Y);
+            display.setCursor(1, startHeightBook + modSq.cord.y);
             display.setTextWrap(true);
             display.print(text);
         }
