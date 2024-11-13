@@ -7,10 +7,10 @@ void showFullWatchface(); // Can be also used by modules
 
 // Module functions -- used by modules
 bool isModuleEngaged();
-cordInfo getWatchModulePos();
+squareInfo getWatchModuleSquare();
 
 // Extended modules size and place
 void cleanSomeDrawing(); // disableSomeDrawing controls
-squareInfo getSomeDrawingSize();
+squareInfo getSomeDrawingSquare();
 
 #endif

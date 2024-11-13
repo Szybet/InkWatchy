@@ -5,7 +5,7 @@ RTC_DATA_ATTR bool disableSomeDrawing = false;
 RTC_DATA_ATTR uint8_t batteryPercantageWF;
 bool disableWatchfaceFastOperating = false;
 
-void wManageOneInit(watchfaceDefOne *wdo)
+void wManageOneInit(const watchfaceDefOne *wdo)
 {
     debugLog("Executing init watch face");
 
@@ -18,7 +18,9 @@ void wManageOneInit(watchfaceDefOne *wdo)
     // dumpRTCTime(wFTime);
     // dumpRTCTime(timeRTCLocal);
 
-    wdo->initWatchface();
+    wManageOneDrawAll(wdo);
+
+    // wdo->initWatchface();
 
     // TODO: test and remove it, its done in showfull watchface?
     // wfModulesManage(None);
@@ -26,9 +28,9 @@ void wManageOneInit(watchfaceDefOne *wdo)
 }
 
 bool wentToSleep = false; // Don't go to sleep after one try of noClickedButton - maybe a sync is going on?
-void wManageOneLoop(watchfaceDefOne *wdo)
+void wManageOneLoop(const watchfaceDefOne *wdo)
 {
-   debugLog("Executing loop watch face");
+    debugLog("Executing loop watch face");
     bool timeHappened = true;
     if (wFTime.Minute != timeRTCLocal.Minute || wFTime.Hour != timeRTCLocal.Hour) // Hour too because of timezone
     {
@@ -72,15 +74,18 @@ void wManageOneLoop(watchfaceDefOne *wdo)
                 wdo->drawMonth();
             }
         }
-        debugLog("getUnixTime(timeRTCLocal): " + String(getUnixTime(timeRTCLocal)));
-        debugLog("latestModuleUpdate: " + String(latestModuleUpdate));
-#if MODULE_UPDATE_LIMIT_S != 0
-        if (getUnixTime(timeRTCLocal) - latestModuleUpdate > MODULE_UPDATE_LIMIT_S)
+        if (wdo->watchfaceModules == true)
         {
-            debugLog("Finally updating modules via time trigger");
-            wfModulesManage(None);
-        }
+            debugLog("getUnixTime(timeRTCLocal): " + String(getUnixTime(timeRTCLocal)));
+            debugLog("latestModuleUpdate: " + String(latestModuleUpdate));
+#if MODULE_UPDATE_LIMIT_S != 0
+            if (getUnixTime(timeRTCLocal) - latestModuleUpdate > MODULE_UPDATE_LIMIT_S)
+            {
+                debugLog("Finally updating modules via time trigger");
+                wfModulesManage(None);
+            }
 #endif
+        }
     }
     else
     {
@@ -106,21 +111,25 @@ void wManageOneLoop(watchfaceDefOne *wdo)
 // Always go to sleep in watchface after loop
 // Well not if it's charging
 #if MODULES_OPERATING_FAST
-    if (bt != None && currentPlaceIndex == 0)
+    if (wdo->watchfaceModules == true)
     {
-        wentToSleep = true;
-        if (disableWatchfaceFastOperating == false)
+
+        if (bt != None && currentPlaceIndex == 0)
         {
-            // Should be simplfied to setSleepDelay
-            debugLog("Watchface modules fast operating done");
-            int makeMinus = -1 * (SLEEP_EVERY_MS * MODULES_WAITING_DIVISION);
-            debugLog("makeMinus: " + String(makeMinus));
-            resetSleepDelay(makeMinus);
-        }
-        else
-        {
-            debugLog("Watchface modules fast operating is disabled");
-            sleepDelayMs = sleepDelayMs - SLEEP_EVERY_MS;
+            wentToSleep = true;
+            if (disableWatchfaceFastOperating == false)
+            {
+                // TODO: Should be simplified to setSleepDelay
+                debugLog("Watchface modules fast operating done");
+                int makeMinus = -1 * (SLEEP_EVERY_MS * MODULES_WAITING_DIVISION);
+                debugLog("makeMinus: " + String(makeMinus));
+                resetSleepDelay(makeMinus);
+            }
+            else
+            {
+                debugLog("Watchface modules fast operating is disabled");
+                sleepDelayMs = sleepDelayMs - SLEEP_EVERY_MS;
+            }
         }
     }
 #endif
@@ -158,14 +167,31 @@ void wManageOneLoop(watchfaceDefOne *wdo)
     }
 }
 
-void wManageOneLaunch(watchfaceDefOne* wdo, bool init) {
-    if(init == true) {
+void wManageOneLaunch(const watchfaceDefOne *wdo, bool init)
+{
+    if (init == true)
+    {
         wManageOneInit(wdo);
-    } else {
+    }
+    else
+    {
         wManageOneLoop(wdo);
     }
 }
 
-void wManageOneDrawAll(watchfaceDefOne* wdo) {
-    
+void wManageOneDrawAll(const watchfaceDefOne *wdo)
+{
+    wdo->initWatchface();
+    wdo->showTimeFull();
+    wdo->drawBattery();
+    wdo->drawTimeAfterApply();
+    wdo->drawDay();
+    wdo->drawMonth();
+
+    if (wdo->watchfaceModules == true)
+    {
+        wfModulesManage(None);
+    }
+
+    disUp(true, false, true);
 }

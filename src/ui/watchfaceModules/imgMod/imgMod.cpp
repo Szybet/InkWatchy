@@ -71,7 +71,8 @@ void redrawModuleImage()
                         return;
                     }
                     imageNameCrc32 = romCRC;
-                    writeImageN(MODULE_RECT_X, MODULE_RECT_Y, getImg(IMAGE_MODULE_PATH + String(file.name())));
+                    squareInfo modSq = getWatchModuleSquare();
+                    writeImageN(modSq.cord.x, modSq.cord.y, getImg(IMAGE_MODULE_PATH + String(file.name())));
                     dUChange = true;
                 }
             }

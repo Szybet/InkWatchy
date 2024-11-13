@@ -11,7 +11,7 @@ RTC_DATA_ATTR int percentOfDay;
 #define DAY_NAME_CORD 13, 87
 #define DATE_CORD 8, 113
 #define MONTH_NAME_CORD 46, 109
-#define MONTH_NUMBER_1_CORD 89, 93 // Not used?
+#define MONTH_NUMBER_1_CORD 89, 93  // Not used?
 #define MONTH_NUMBER_2_CORD 89, 102 // Not used?
 #define TO_DAY_BAR_CORD 136, 68
 #define TO_DAY_BAR_SIZE 54, 6
@@ -200,7 +200,7 @@ const watchfaceDefOne inkFieldDef = {
     .manageInput = inkFieldManageInput,
 
     .watchfaceModules = true,
-    .watchfaceModPos = {0, 0},
-    .someDrawingSize = {0, 0 ,0 ,0},
-    .isModuleEngaged = []() { return false; /* Implementation for checking if module is engaged */ }
-};
+    .watchfaceModSquare = {0, 0, 0, 0},
+    .someDrawingSquare = {0, 0, 0, 0},
+    .isModuleEngaged = []()
+    { return false; /* Implementation for checking if module is engaged */ }};

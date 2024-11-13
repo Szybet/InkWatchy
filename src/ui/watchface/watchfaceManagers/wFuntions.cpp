@@ -1,40 +1,48 @@
 #include "wFunctions.h"
 
-void showFullWatchface() {
-    const watchfaceDefOne * wFO = getwatchfaceDefOne();
-    if(wFO == NULL) {
+void showFullWatchface()
+{
+    const watchfaceDefOne *wFO = getwatchfaceDefOne();
+    if (wFO == NULL)
+    {
         return;
     }
     return wManageOneDrawAll(wFO);
 }
 
-bool isModuleEngaged() {
-    const watchfaceDefOne * wFO = getwatchfaceDefOne();
-    if(wFO == NULL) {
+bool isModuleEngaged()
+{
+    const watchfaceDefOne *wFO = getwatchfaceDefOne();
+    if (wFO == NULL)
+    {
         return false;
     }
     return wFO->isModuleEngaged();
 }
 
-cordInfo getWatchModulePos() {
-    const watchfaceDefOne * wFO = getwatchfaceDefOne();
-    if(wFO == NULL) {
-        return {0,0};
+squareInfo getWatchModuleSquare()
+{
+    const watchfaceDefOne *wFO = getwatchfaceDefOne();
+    if (wFO == NULL)
+    {
+        return {0, 0, 0, 0};
     }
-    return wFO->watchfaceModPos;
+    return wFO->watchfaceModSquare;
 }
 
 void cleanSomeDrawing()
 {
-    squareInfo square = getSomeDrawingSize();
+    squareInfo square = getSomeDrawingSquare();
     display.fillRect(square.cord.x, square.cord.x, square.size.w, square.size.h, GxEPD_WHITE);
     // display.drawFastHLine(111, 61, 13, GxEPD_WHITE);
 }
 
-squareInfo getSomeDrawingSize() {
-    const watchfaceDefOne * wFO = getwatchfaceDefOne();
-    if(wFO == NULL) {
-        return {0,0,0,0};
+squareInfo getSomeDrawingSquare()
+{
+    const watchfaceDefOne *wFO = getwatchfaceDefOne();
+    if (wFO == NULL)
+    {
+        return {0, 0, 0, 0};
     }
-    return wFO->someDrawingSize;
+    return wFO->someDrawingSquare;
 }

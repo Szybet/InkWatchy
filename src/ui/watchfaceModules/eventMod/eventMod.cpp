@@ -31,7 +31,8 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     dUChange = true;
     setFont(getFont("dogicapixel4"));
     setTextSize(1);
-    display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + 10);
+    squareInfo modSq = getWatchModuleSquare();
+    display.setCursor(modSq.cord.x, modSq.cord.y + 10);
     if (fsFileExists("/calendar/index.txt") == false)
     {
         display.print("No calendar data");
@@ -116,14 +117,14 @@ void wfEventrequestShow(buttonState button, bool *showBool)
         // Not tested yet
         String btnStr2 = btnStr.substring(LINE_LIMIT, LINE_LIMIT + LINE_LIMIT);
         display.print(btnStr1);
-        display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + 10 + 10);
+        display.setCursor(modSq.cord.x, modSq.cord.y + 10 + 10);
         display.print(btnStr2);
     }
 
     String details = array[finalI]["description"].as<String>();
     details.replace(CALENDAR_SPLIT_DESCRIPTION_STRING, ", ");
     details = details.substring(0, LINE_LIMIT);
-    display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + MODULE_H - 1);
+    display.setCursor(modSq.cord.x, modSq.cord.y + modSq.size.h - 1);
     display.print(details);
 
     // Set the next redraw, kind of

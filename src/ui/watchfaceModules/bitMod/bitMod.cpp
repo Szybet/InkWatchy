@@ -73,25 +73,26 @@ void wfBitrequestShow(buttonState button, bool *showBool)
     }
     debugLog("Launched");
     loadBitcoinData();
+    squareInfo modSq = getWatchModuleSquare();
     if (smallBtcData == true)
     {
 
-        writeImageN(MODULE_RECT_X, MODULE_RECT_Y, getImg("bitcoin"));
-        writeImageN(MODULE_RECT_X, MODULE_RECT_Y + MODULE_H - getImgWidth("pickaxe"), getImg("pickaxe"));
+        writeImageN(modSq.cord.x, modSq.cord.y, getImg("bitcoin"));
+        writeImageN(modSq.cord.x, modSq.cord.y + modSq.size.h - getImgWidth("pickaxe"), getImg("pickaxe"));
         if (isBtcDataAvail == true)
         {
-            display.setCursor(MODULE_RECT_X + getImgWidth("pickaxe"), MODULE_RECT_Y + MODULE_H - 1);
+            display.setCursor(modSq.cord.x + getImgWidth("pickaxe"), modSq.cord.y + modSq.size.h - 1);
             setFont(getFont("dogicapixel4"));
             setTextSize(1);
             display.print(btcData.height);
         }
         setFont(getFont("dogicapixel4"));
         setTextSize(1);
-        display.setCursor(MODULE_RECT_X + MODULE_W - 60, MODULE_RECT_Y + 7 - 1); // font is 7 pixels
+        display.setCursor(modSq.cord.x + modSq.size.w - 60, modSq.cord.y + 7 - 1); // font is 7 pixels
         display.print("Last sync:");
 
         setFont(getFont("dogicapixel4"));
-        display.setCursor(MODULE_RECT_X + MODULE_W, MODULE_RECT_Y + 7);
+        display.setCursor(modSq.cord.x + modSq.size.w, modSq.cord.y + 7);
         String lastSync = "Never";
         if (isBtcDataAvail == true)
         {
@@ -104,18 +105,18 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         uint16_t h;
         uint16_t w;
         getTextBounds(lastSync, NULL, NULL, &w, &h);
-        display.setCursor(MODULE_RECT_X + MODULE_W - w - SYNC_INFO_OFFSET, MODULE_RECT_Y + 7 + h + SYNC_INFO_OFFSET);
+        display.setCursor(modSq.cord.x + modSq.size.w - w - SYNC_INFO_OFFSET, modSq.cord.y + 7 + h + SYNC_INFO_OFFSET);
         display.print(lastSync);
 
         if (btcData.change1h != 0.0 || btcData.change24 != 0.0 || btcData.change7d != 0.0 || btcData.change30d != 0.0 || btcData.price != 0.0)
         {
-            display.setCursor(MODULE_RECT_X + getImgWidth("bitcoin"), MODULE_RECT_Y + getImgHeight("bitcoin") - 2);
+            display.setCursor(modSq.cord.x + getImgWidth("bitcoin"), modSq.cord.y + getImgHeight("bitcoin") - 2);
             setFont(getFont("dogicapixel4"));
             setTextSize(1);
             display.print(":" + String(btcData.price) + "$");
-            display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + getImgHeight("bitcoin") * 2);
+            display.setCursor(modSq.cord.x, modSq.cord.y + getImgHeight("bitcoin") * 2);
             display.print("1h:" + String(btcData.change1h) + "% 24h:" + String(btcData.change24) + "%");
-            display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + getImgHeight("bitcoin") * 3);
+            display.setCursor(modSq.cord.x, modSq.cord.y + getImgHeight("bitcoin") * 3);
             display.print("7d:" + String(btcData.change7d) + "% 30d:" + String(btcData.change30d) + "%");
         }
         else
@@ -128,11 +129,11 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         // Sync time
         setFont(getFont("dogicapixel4"));
         setTextSize(1);
-        display.setCursor(MODULE_RECT_X + MODULE_W - 60, MODULE_RECT_Y + 7 - 1); // font is 7 pixels
+        display.setCursor(modSq.cord.x + modSq.size.w - 60, modSq.cord.y + 7 - 1); // font is 7 pixels
         display.print("Last sync:");
 
         setFont(getFont("dogicapixel4"));
-        display.setCursor(MODULE_RECT_X + MODULE_W, MODULE_RECT_Y + 7);
+        display.setCursor(modSq.cord.x + modSq.size.w, modSq.cord.y + 7);
         String lastSync = "Never";
         if (isBtcDataAvail == true)
         {
@@ -145,11 +146,11 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         uint16_t h;
         uint16_t w;
         getTextBounds(lastSync, NULL, NULL, &w, &h);
-        display.setCursor(MODULE_RECT_X + MODULE_W - w - SYNC_INFO_OFFSET, MODULE_RECT_Y + 7 + h + SYNC_INFO_OFFSET);
+        display.setCursor(modSq.cord.x + modSq.size.w - w - SYNC_INFO_OFFSET, modSq.cord.y + 7 + h + SYNC_INFO_OFFSET);
         display.print(lastSync);
 
         // Bitclock
-        display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + MODULE_H - 1);
+        display.setCursor(modSq.cord.x, modSq.cord.y + modSq.size.h - 1);
         setFont(getFont("smileandwave20"));
         setTextSize(1);
         display.print(btcData.height);
