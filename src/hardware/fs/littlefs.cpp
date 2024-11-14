@@ -142,6 +142,8 @@ int fsItemsInDir(String dir)
     file = root.openNextFile();
     count = count + 1;
   }
+  root.close();
+  file.close();
   return count;
 }
 

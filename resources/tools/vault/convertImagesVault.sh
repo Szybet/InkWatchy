@@ -87,3 +87,10 @@ mv out/ ../fs/littlefs/vault
 #cat encrypted_data.bin | openssl enc -aes-128-ecb -d -k "$vault_password" | xxd > decrypted_image.bin
 
 #xxd -i -n $fnel encrypted_data.bin | sed 's/unsigned/const unsigned/g' >> vault.h
+
+# Latest linux command testing
+# Pure image hash:
+# ../other/in/magick ../../personal/vault/dog.jpg -dither FloydSteinberg -define dither:diffusion-amount=90% -remap ../images/img/eink-2color.png -depth 1 gray:- | md5sum
+
+# Encrypted, decrypted hash
+# ../other/in/magick ../../personal/vault/dog.jpg -dither FloydSteinberg -define dither:diffusion-amount=90% -remap ../images/img/eink-2color.png -depth 1 gray:- | openssl enc -aes-256-ecb -k "keykeykeyykeykey" -base64 | openssl enc -aes-256-ecb -d -k "keykeykeyykeykey" -base64 | md5sum

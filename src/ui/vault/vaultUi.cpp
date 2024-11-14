@@ -36,14 +36,13 @@ bool checkKey()
     size_t written = 0;
 
     debugLog("Before base64 encoding");
-    flushLogs();
 
     int baseResult = mbedtls_base64_decode(realImage, encCheckLen, &written, (const unsigned char *)encCheck.c_str(), encCheckLen);
 
     debugLog("Written base64 bytes: " + String(written));
     debugLog("base64 result: " + String(baseResult));
 
-    debugLog("Original base64 image:");
+    // debugLog("Original base64 image:");
 
     mbedtls_aes_context aes;
 
@@ -83,20 +82,20 @@ String getSault()
 {
     debugLog("Starting getSault");
     String saultEnc = fsGetString("sault", "", "/vault/conf/");
+    debugLog("Sault is: " + saultEnc);
+
     if (saultEnc == "")
     {
         debugLog("There is no sault");
         return "";
     }
     int saultLen = saultEnc.length();
-    debugLog("Sault is: " + saultEnc);
 
     unsigned char *realImage = new unsigned char[saultLen];
 
     size_t written = 0;
 
     debugLog("Before base64 encoding");
-    flushLogs();
 
     int baseResult = mbedtls_base64_decode(realImage, saultLen, &written, (const unsigned char *)saultEnc.c_str(), saultLen);
 
@@ -215,7 +214,7 @@ void exitVault()
     debugLog("Exiting vault");
     debugLog("currentPlace: " + String(currentPlace));
     debugLog("placeTree[currentPlaceIndex]: " + String(placeTree[currentPlaceIndex]));
-    if (currentPlace == FIRST_PLACE || currentPlace == NoPlace || placeTree[currentPlaceIndex] == FIRST_PLACE || placeTree[currentPlaceIndex] == NoPlace)
+    if (currentPlaceIndex <= 1)
     {
         debugLog("Cleaning key");
         key = -1;
@@ -243,7 +242,6 @@ void showVaultImage(String file)
         size_t written = 0;
 
         debugLog("Before base64 encoding");
-        flushLogs();
 
         int baseResult = mbedtls_base64_decode(realImage, vaultItem.size, &written, vaultItem.buf, vaultItem.size);
 
@@ -272,6 +270,12 @@ void showVaultImage(String file)
 
         ImageDef newImage = {200, 200, realImage};
         writeImageN(0, 0, &newImage);
+        // This is a workarround for random pixels at the top. I didn't found the cause
+        /*
+            On PC every checksum, before, after decrypting looks fine
+            so the issue is here, in decrypting. Maybe in the base64 part, maybe in the decrypting itself, idk
+        */
+        display.drawFastHLine(0, 0, 200, GxEPD_WHITE);
         disUp(true);
 
         delete[] realImage;
