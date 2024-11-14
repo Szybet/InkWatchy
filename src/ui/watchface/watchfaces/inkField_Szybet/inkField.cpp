@@ -1,6 +1,8 @@
 #include "inkField.h"
 #include "inkput.h"
 
+#if WATCHFACE_INKFIELD_SZYBET
+
 RTC_DATA_ATTR int percentOfDay;
 
 #define TIME_FONT getFont("JackInput40")
@@ -200,7 +202,15 @@ const watchfaceDefOne inkFieldDef = {
     .manageInput = inkFieldManageInput,
 
     .watchfaceModules = true,
-    .watchfaceModSquare = {0, 0, 0, 0},
-    .someDrawingSquare = {0, 0, 0, 0},
+    .watchfaceModSquare = {.size{.w = 177, .h = 37}, .cord{.x = 7, .y = 160}},
+    .someDrawingSquare = {.size{.w = 200, .h = 138}, .cord{.x = 0, .y = 62}},
     .isModuleEngaged = []()
-    { return false; /* Implementation for checking if module is engaged */ }};
+    {
+        if (watchfacePos == MODULE_ENG_POS && positionEngaged == true)
+        {
+            return true;
+        }
+        return false;
+    }};
+
+#endif

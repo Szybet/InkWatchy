@@ -4,13 +4,28 @@ RTC_DATA_ATTR uint8_t watchfaceSelected = 0;
 
 #define WATCHFACE_COUNT 1
 
-const watchfaceDef szybetStarfield = {
-    .manager = wfmOne, 
-    .name = "Szybet's starfield", 
-    .data = (genPointer)&inkFieldDef,
+const watchfaceDef noWatchFace
+{
+    .manager = wfmNone,
+    .name = "No watchface",
+    .data = 0,
 };
 
-const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {&szybetStarfield};
+#if WATCHFACE_INKFIELD_SZYBET
+const watchfaceDef szybetStarfield = {
+    .manager = wfmOne,
+    .name = "Szybet's starfield",
+    .data = (genPointer)&inkFieldDef,
+};
+#endif
+
+const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
+#if WATCHFACE_INKFIELD_SZYBET
+&szybetStarfield
+#else
+&noWatchFace
+#endif
+};
 
 // const watchfaceDef *watchfaceSel = getCurrentWatchface();
 const watchfaceDef *getCurrentWatchface() {
@@ -49,6 +64,9 @@ void watchfaceManageAll(bool init) {
                 arg = wfmTwoArg::wTinit;
             }
             wfTwoFunc(arg);
+            break;
+        }
+        case wfmNone: {
             break;
         }
         default: {

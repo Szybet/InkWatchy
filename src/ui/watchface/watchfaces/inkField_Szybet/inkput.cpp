@@ -1,5 +1,7 @@
 #include "inkput.h"
 
+#if WATCHFACE_INKFIELD_SZYBET
+
 RTC_DATA_ATTR int watchfacePos = 0;
 RTC_DATA_ATTR bool positionEngaged = true;
 
@@ -106,3 +108,5 @@ void inkFieldManageInput(buttonState bt)
     }
     }
 }
+
+#endif
