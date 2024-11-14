@@ -1,5 +1,7 @@
 #include "inkput.h"
 
+#if WATCHFACE_INKFIELD_SZYBET
+
 void drawMarker1(uint16_t c, bool active)
 {
     display.drawPixel(108, 60, c);
@@ -62,3 +64,5 @@ void drawPosMarker()
     }
     dUChange = true; 
 }
+
+#endif

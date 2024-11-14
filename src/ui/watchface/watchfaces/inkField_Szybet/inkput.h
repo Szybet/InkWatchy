@@ -3,6 +3,8 @@
 
 #include "inkField.h"
 
+#if WATCHFACE_INKFIELD_SZYBET
+
 #define WATCHFACE_POSITIONS 3 // There is one "empty" on 0 too ????????
 #define EMPTY_POS 0
 #define MODULE_POS 1
@@ -15,4 +17,5 @@ void drawPosMarker();
 void movePos(int add);
 void inkFieldManageInput(buttonState bt);
 
+#endif
 #endif

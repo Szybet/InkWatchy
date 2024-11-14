@@ -28,8 +28,8 @@ struct watchfaceDefOne {
 
     bool watchfaceModules; // To enable modules. All things below are only used if this is enabled
     squareInfo watchfaceModSquare; // Position of watchface modules
-    squareInfo someDrawingSquare; // Should probably not be different then SOME_RECT_X
-    bool (*isModuleEngaged)(); // Replaces watchfacePos == MODULE_ENG_POS && positionEngaged == true
+    squareInfo someDrawingSquare; // Should probably not be different then the default
+    bool (*isModuleEngaged)(); // This is how the module checks if more button inputs are available to him. You should use this check to know when to provide those buttons
 };
 
 void wManageOneLaunch(const watchfaceDefOne* wdo, bool init);
