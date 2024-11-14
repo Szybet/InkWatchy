@@ -81,7 +81,7 @@ rm -rf .esp-idf/esp-idf
 ln -s $PWD/.platformio/packages/framework-espidf $PWD/.esp-idf/esp-idf
 cd $current_path
 
-if [ ! -d "../../components/arduino" ]; then
+if [ ! -d "../../components/arduino/docs" ]; then
     echo "Getting arduino core"
     cd ../../
     mkdir -p components/arduino

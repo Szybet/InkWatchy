@@ -2,8 +2,6 @@
 
 RTC_DATA_ATTR uint8_t watchfaceSelected = 0;
 
-#define WATCHFACE_COUNT 1
-
 const watchfaceDef noWatchFace
 {
     .manager = wfmNone,
