@@ -1,6 +1,10 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// Watchfaces!
+// Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
+#define WATCHFACE_INKFIELD_SZYBET 1
+
 // Basics
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // Watchy_GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you want some more restrictive battery measurments
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
@@ -11,6 +15,7 @@
 #define VIBRATION_BUTTON_LONG_TIME 60 // This is just an addition to VIBRATION_BUTTON_TIME
 #define VIBRATION_ACTION_TIME 200     // Time in ms to the motor to vibrate when the UI receives an action
 #define VIBRATION_POWER 170           // From 1 to 255, PWM duty cycle. Too low and it can not even vibrate a little
+#define STEPS_GOAL 1000
 
 // Timezone! So:
 // - You don't set anything, it will try to ques based on IP, it can fail sometimes
@@ -22,6 +27,7 @@
 #define TIMEZONE_OLSON "" // Example value: "Europe/Warsaw"
 // Here is an example table:
 // https://support.cyberdata.net/portal/en/kb/articles/010d63c0cfce3676151e1f2d5442e311
+// Better one probably: https://github.com/yuan910715/Esp8266_Wifi_Matrix_Clock/blob/master/posix.md
 // From the Posix timezone string table column
 // This function overwrites the TIMEZONE_OLSON variable if it's set
 #define TIMEZONE_POSIX "" // Example value for poland: "CET-1CEST,M3.5.0,M10.5.0/3"
@@ -51,6 +57,7 @@
 #define WEATHER_INFO 1                     // Enable weather
 #define WEATHER_TRIES 3                    // Ammount of times to try to sync weather
 #define CONNECT_TO_HIDDEN_NETWORKS 0       // This makes the wifi manager connect to hidden networks too. For some reason it takes more time and power to do so, that's why it's not on default, otherwise it should work
+#define NTP_SERVER_URL "ntp.ubuntu.com" // Change it to something else if it doesn't work as a first step to troubleshoot. pool.ntp.org has a rate limiter apparently
 
 // Book things
 #define BOOK 0
@@ -148,6 +155,16 @@
 #define TEMP_REBOOT_LIMIT_RELATIVE 0
 #define TEMP_MAX_SCREEN_FIXES 5
 
+// Wifi country
+// If your wifi connects to ghost networks, freaks out in general, try setting the wifi country for your country
+// https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/network/esp_wifi.html#_CPPv425esp_wifi_set_country_codePKcb
+#define WIFI_COUNTRY_FIX 0 // Enable this to 1 to enable the fix
+/*
+Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA","CH","CN","CY","CZ","DE","DK","EE","ES","FI","FR","GB","GR","HK","HR","HU", "IE","IN","IS","IT","JP","KR","LI","LT","LU","LV","MT","MX","NL","NO","NZ","PL","PT", "RO","SE","SI","SK","TW","US"
+*/
+#define WIFI_COUNTRY_CODE ""
+#define WIFI_COUNTRY_FORCE false // This should be false, you can set it to true to check if something starts working
+
 // Debugging help
 #define DEBUG 0
 #define DEBUG_CPU_SPEED normalSpeed // Possible values: minimalSpeed, normalSpeed, maxSpeed
@@ -178,7 +195,7 @@
 #define SERIAL_LOG_DELAY 0             // If 1, use the delay below to ensure good looking logs
 #define SERIAL_LOG_DELAY_MS 23
 #define SERIAL_BAUDRATE 115200
-#define MINIMAL_LOGS 1                 // Don't put full file paths in logs
+#define MINIMAL_LOGS 1                 // Don't put full file paths in logs. Scom task requires this to be 0
 #define SCOM_TASK 0                    // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
 #define FONT_PREVIEW_MENU 0            // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
 #define NO_CHARGING 0                  // Disable detection of charging, only in debug. Also locks in the voltage (for lp core to check if the time is changed bla bla)

@@ -11,4 +11,7 @@ void initAxc();
 void deInitAxc();
 
 #endif
+
+uint16_t getSteps();
+
 #endif

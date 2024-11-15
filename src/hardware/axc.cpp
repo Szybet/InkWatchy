@@ -25,11 +25,13 @@ uint16_t writeRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t 
     return (0 != Wire.endTransmission());
 }
 
-bool initedAxc = false;
+RTC_DATA_ATTR bool initedAxc = false;
+RTC_DATA_ATTR bool onAxc = false;
 void initAxc()
 {
-    debugLog("Launched");
-    if(initedAxc == false) {
+    debugLog("initAxc Launched");
+    if (initedAxc == false)
+    {
         uint8_t Type = SRTC.getType();
         if (SBMA.begin(readRegisterBMA, writeRegisterBMA, delay, Type) == false)
         {
@@ -43,19 +45,76 @@ void initAxc()
             return;
         }
         initedAxc = true;
-    } else {
+    }
+    else
+    {
         debugLog("Axc is already inited");
+    }
+
+    if(onAxc == false) {
+        SBMA.wakeUp();
+        onAxc = true;
+    } else {
+        debugLog("Axc is already on");
     }
 }
 
 void deInitAxc()
 {
-    debugLog("Launched");
-    if(initedAxc == true) {
+    debugLog("deInitAxc Launched");
+    if (onAxc == true)
+    {
         SBMA.shutDown();
-        initedAxc = false;
-    } else {
+        onAxc = false;
+    }
+    else
+    {
         debugLog("Ignoring SBMA shutdown");
     }
 }
+
+bool didStepInitedAxc = false;
+RTC_DATA_ATTR bool stepsInited = false;
+RTC_DATA_ATTR uint8_t stepDay = 0;
+// All in one function to get steps, it managed everything
+uint16_t getSteps()
+{
+    uint16_t steps = 0;
+    if (onAxc == true)
+    {
+        if (stepsInited == false)
+        {
+            stepsInited = true;
+            SBMA.enableFeature(BMA423_STEP_CNTR, true);
+            SBMA.resetStepCounter();
+        } else {
+            if(stepDay != timeRTCLocal.Day) {
+                stepDay = timeRTCLocal.Day;
+                SBMA.resetStepCounter();
+            } else {
+                steps = (uint16_t)SBMA.getCounter();
+            }
+        }
+        if(didStepInitedAxc == true) {
+            didStepInitedAxc = false;
+            deInitAxc();
+        }
+    }
+    else
+    {
+        didStepInitedAxc = true;
+        initAxc();
+        return getSteps();
+    }
+    debugLog("Returning steps: " + String(steps));
+    return steps;
+}
+#else
+
+uint16_t getSteps()
+{
+    debugLog("AXC is turned off. This is a fallback function");
+    return 1234;
+}
+
 #endif

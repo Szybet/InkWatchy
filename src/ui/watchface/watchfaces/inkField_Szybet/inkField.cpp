@@ -3,8 +3,6 @@
 
 #if WATCHFACE_INKFIELD_SZYBET
 
-RTC_DATA_ATTR int percentOfDay;
-
 #define TIME_FONT getFont("JackInput40")
 #define DATE_FONT getFont("JackInput17")
 #define DAY_NAME_FONT getFont("Speculum13")
@@ -18,6 +16,7 @@ RTC_DATA_ATTR int percentOfDay;
 #define TO_DAY_BAR_CORD 136, 68
 #define TO_DAY_BAR_SIZE 54, 6
 #define BATT_BAR_CORD 136, 83
+#define STEPS_BAR_CORD 136, 98
 
 /*
 // Even with monospaced font, it differs a bit...
@@ -95,6 +94,8 @@ static void drawTimeBeforeApply()
     }
 }
 
+RTC_DATA_ATTR uint8_t percentOfDay = 0;
+RTC_DATA_ATTR uint8_t percentSteps = 0;
 static void drawTimeAfterApply(bool forceDraw)
 {
     // Draw the percentage on the right
@@ -103,6 +104,12 @@ static void drawTimeAfterApply(bool forceDraw)
     {
         percentOfDay = percentOfDayTmp;
         drawProgressBar(TO_DAY_BAR_CORD, TO_DAY_BAR_SIZE, percentOfDay);
+    }
+
+    uint16_t percentStepsTmp = (getSteps() / STEPS_GOAL) * 100;
+    if(percentSteps != percentStepsTmp || forceDraw == true) {
+        percentSteps = percentStepsTmp;
+        drawProgressBar(STEPS_BAR_CORD, TO_DAY_BAR_SIZE, percentSteps);
     }
 }
 
