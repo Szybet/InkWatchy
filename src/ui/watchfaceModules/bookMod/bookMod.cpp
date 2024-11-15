@@ -55,6 +55,7 @@ void wfBookrequestShow(buttonState button, bool *showBool)
 
     String curBook = getCurrentBook();
     squareInfo modSq = getWatchModuleSquare();
+    squareInfo someSq = getSomeDrawingSquare();
     if (disableSomeDrawing == false)
     {
         if (curBook == "")
@@ -85,7 +86,7 @@ void wfBookrequestShow(buttonState button, bool *showBool)
             cleanSomeDrawing();
             setFont(BOOK_FONT);
             setTextSize(1);
-            display.setCursor(1, startHeightBook + modSq.cord.y);
+            display.setCursor(1, startHeightBook + someSq.cord.y);
             display.setTextWrap(true);
             display.print(text);
         }

@@ -33,8 +33,7 @@ squareInfo getWatchModuleSquare()
 void cleanSomeDrawing()
 {
     squareInfo square = getSomeDrawingSquare();
-    display.fillRect(square.cord.x, square.cord.x, square.size.w, square.size.h, GxEPD_WHITE);
-    // display.drawFastHLine(111, 61, 13, GxEPD_WHITE);
+    display.fillRect(square.cord.x, square.cord.y, square.size.w, square.size.h, GxEPD_WHITE);
 }
 
 squareInfo getSomeDrawingSquare()

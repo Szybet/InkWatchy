@@ -15,16 +15,12 @@ void wManageOneInit(const watchfaceDefOne *wdo)
     wFTime.Day = timeRTCLocal.Day;
     wFTime.Month = timeRTCLocal.Month;
     wFTime.Year = timeRTCLocal.Year;
+    batteryPercantageWF = bat.percentage;
+
     // dumpRTCTime(wFTime);
     // dumpRTCTime(timeRTCLocal);
 
     wManageOneDrawAll(wdo);
-
-    // wdo->initWatchface();
-
-    // TODO: test and remove it, its done in showfull watchface?
-    // wfModulesManage(None);
-    // drawPosMarker();
 }
 
 bool wentToSleep = false; // Don't go to sleep after one try of noClickedButton - maybe a sync is going on?
@@ -34,6 +30,7 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
     bool timeHappened = true;
     if (wFTime.Minute != timeRTCLocal.Minute || wFTime.Hour != timeRTCLocal.Hour) // Hour too because of timezone
     {
+        debugLog("Watchface updating something");
         dUChange = true;
 
 #if LP_CORE == true
@@ -54,13 +51,24 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
 
             if (disableSomeDrawing == false)
             {
-                wdo->drawTimeAfterApply();
+                wdo->drawTimeAfterApply(false);
             }
         }
 
         if (disableSomeDrawing == false)
         {
-            wdo->drawTimeAfterApply();
+            // wdo->drawTimeAfterApply(); // TODO: lp core not sure
+
+            // If we are running for a long time, like wifi sync:
+            if (bootStatus.reason == wakeUpReason::rtc)
+            {
+                loopBattery();
+            }
+            if (batteryPercantageWF != bat.percentage)
+            {
+                batteryPercantageWF = bat.percentage;
+                wdo->drawBattery();
+            }
 
             if (wFTime.Day != timeRTCLocal.Day)
             {
@@ -90,17 +98,6 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
     else
     {
         timeHappened = false;
-    }
-
-    // Hmm this could be in the minute checker
-    if (disableSomeDrawing == false)
-    {
-        if (batteryPercantageWF != bat.percentage)
-        {
-            batteryPercantageWF = bat.percentage;
-            wdo->drawBattery();
-            dUChange = true;
-        }
     }
 
     buttonState bt = useAllButtons();
@@ -184,13 +181,14 @@ void wManageOneDrawAll(const watchfaceDefOne *wdo)
     wdo->initWatchface();
     wdo->showTimeFull();
     wdo->drawBattery();
-    wdo->drawTimeAfterApply();
+    wdo->drawTimeAfterApply(true);
     wdo->drawDay();
     wdo->drawMonth();
 
     if (wdo->watchfaceModules == true)
     {
-        wfModulesManage(None);
+        wfModulesManage(None, true);
+        drawModuleCount(true);
     }
 
     disUp(true, false, true);

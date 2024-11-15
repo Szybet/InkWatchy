@@ -59,30 +59,37 @@ float getBatteryVoltage()
 
 void initBattery()
 {
-#if GSR_MINIMUM_BATTERY_VOLTAGE
-    bat.minV = SRTC.getRTCBattery(false);
-    bat.maxV = BATTERY_CHARGE_VOLTAGE;
-    bat.critV = SRTC.getRTCBattery(true);
-    bat.charV = BATTERY_CHARGE_VOLTAGE;
-#else
-    bat.minV = BATTERY_MIN_VOLTAGE;
-    bat.critV = BATTERY_CRIT_VOLTAGE;
-    if (BAD_BATTERY == false)
+    if (bootStatus.fromWakeup == false)
     {
-        bat.maxV = BATTERY_MAX_VOLTAGE;
-        bat.charV = BATTERY_CHARGE_VOLTAGE;
-    }
-    else
-    {
-        bat.maxV = BAD_BATTERY_MAX_VOLTAGE;
-        bat.charV = BAD_BATTERY_CHARGE_VOLTAGE;
-    }
-#endif
-    bat.prevVOne = 0.0;
 
-    bat.oneCheck = true;
-    loopBattery();
-    bat.oneCheck = false;
+#if GSR_MINIMUM_BATTERY_VOLTAGE
+        bat.minV = SRTC.getRTCBattery(false);
+        bat.maxV = BATTERY_CHARGE_VOLTAGE;
+        bat.critV = SRTC.getRTCBattery(true);
+        bat.charV = BATTERY_CHARGE_VOLTAGE;
+#else
+        bat.minV = BATTERY_MIN_VOLTAGE;
+        bat.critV = BATTERY_CRIT_VOLTAGE;
+        if (BAD_BATTERY == false)
+        {
+            bat.maxV = BATTERY_MAX_VOLTAGE;
+            bat.charV = BATTERY_CHARGE_VOLTAGE;
+        }
+        else
+        {
+            bat.maxV = BAD_BATTERY_MAX_VOLTAGE;
+            bat.charV = BAD_BATTERY_CHARGE_VOLTAGE;
+        }
+#endif
+        bat.prevVOne = 0.0;
+    }
+
+    if (bootStatus.fromWakeup == false || bootStatus.reason == wakeUpReason::rtc)
+    {
+        bat.oneCheck = true;
+        loopBattery();
+        bat.oneCheck = false;
+    }
 }
 
 #if DEBUG
@@ -105,7 +112,9 @@ void isChargingCheck()
     {
         // debugLog("It's charging because of above voltage");
         bat.isCharging = true;
-    } else {
+    }
+    else
+    {
         // debugLog("It's charging because of below voltage");
         bat.isCharging = false;
     }
