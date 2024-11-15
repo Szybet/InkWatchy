@@ -245,9 +245,6 @@ void exitBook()
         changePageDown();
     }
     resetBookVars();
-#if AXC_ENABLED
-    deInitAxc();
-#endif
 }
 
 int filledAxcLine = 0;
