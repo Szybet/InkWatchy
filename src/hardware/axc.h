@@ -8,7 +8,6 @@
 extern StableBMA SBMA;
 
 void initAxc();
-void deInitAxc();
 
 #endif
 

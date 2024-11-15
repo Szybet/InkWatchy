@@ -26,13 +26,12 @@ uint16_t writeRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t 
 }
 
 RTC_DATA_ATTR bool initedAxc = false;
-RTC_DATA_ATTR bool onAxc = false;
 void initAxc()
 {
     debugLog("initAxc Launched");
     if (initedAxc == false)
     {
-        uint8_t Type = SRTC.getType();
+        uint8_t Type = SRTC.getType(); // TODO: fix this
         if (SBMA.begin(readRegisterBMA, writeRegisterBMA, delay, Type) == false)
         {
             debugLog("Failed to init bma");
@@ -50,37 +49,16 @@ void initAxc()
     {
         debugLog("Axc is already inited");
     }
-
-    if(onAxc == false) {
-        SBMA.wakeUp();
-        onAxc = true;
-    } else {
-        debugLog("Axc is already on");
-    }
 }
 
-void deInitAxc()
-{
-    debugLog("deInitAxc Launched");
-    if (onAxc == true)
-    {
-        SBMA.shutDown();
-        onAxc = false;
-    }
-    else
-    {
-        debugLog("Ignoring SBMA shutdown");
-    }
-}
-
-bool didStepInitedAxc = false;
 RTC_DATA_ATTR bool stepsInited = false;
 RTC_DATA_ATTR uint8_t stepDay = 0;
 // All in one function to get steps, it managed everything
+// TODO: after changing watchface that doesn't use steps, the acc is still turned on with this feature while its not used
 uint16_t getSteps()
 {
     uint16_t steps = 0;
-    if (onAxc == true)
+    if (initedAxc == true)
     {
         if (stepsInited == false)
         {
@@ -95,14 +73,9 @@ uint16_t getSteps()
                 steps = (uint16_t)SBMA.getCounter();
             }
         }
-        if(didStepInitedAxc == true) {
-            didStepInitedAxc = false;
-            deInitAxc();
-        }
     }
     else
     {
-        didStepInitedAxc = true;
         initAxc();
         return getSteps();
     }
