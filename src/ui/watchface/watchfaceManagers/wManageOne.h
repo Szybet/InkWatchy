@@ -18,7 +18,7 @@
 
 struct watchfaceDefOne {
     void (*drawTimeBeforeApply)(); // Draw the time. Here you can compare the times to draw only whats needed, or just draw it all. If you don't want to implement this mess, in this function call showTimeFull
-    void (*drawTimeAfterApply)(); // Do things after time is applied. Like update the step counter, some bars
+    void (*drawTimeAfterApply)(bool forceDraw); // Do things after time is applied. Like update the step counter, some bars
     void (*drawDay)(); //  Do things after the day changed, like update the date
     void (*drawMonth)(); // Do things after the month changed, like updating the month
     void (*showTimeFull)(); // Fully draw the current time

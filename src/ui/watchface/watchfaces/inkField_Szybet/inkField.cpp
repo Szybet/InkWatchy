@@ -95,11 +95,11 @@ static void drawTimeBeforeApply()
     }
 }
 
-static void drawTimeAfterApply()
+static void drawTimeAfterApply(bool forceDraw)
 {
     // Draw the percentage on the right
     int percentOfDayTmp = calculatePercentageOfDay(wFTime.Hour, wFTime.Minute);
-    if (percentOfDay != percentOfDayTmp)
+    if (percentOfDay != percentOfDayTmp || forceDraw == true)
     {
         percentOfDay = percentOfDayTmp;
         drawProgressBar(TO_DAY_BAR_CORD, TO_DAY_BAR_SIZE, percentOfDay);
@@ -120,38 +120,6 @@ static void showTimeFull()
 static void initWatchface()
 {
     writeImageN(0, 0, getImg("watchface"));
-
-    showTimeFull();
-
-    setTextSize(1);
-    setFont(DATE_FONT);
-    String dayDate = String(wFTime.Day);
-    if (dayDate.length() < 2)
-    {
-        dayDate = "0" + dayDate;
-    }
-    writeTextReplaceBack(dayDate, DATE_CORD);
-
-    setTextSize(1);
-    setFont(DAY_NAME_FONT);
-    String day = getDayName();
-    day.toUpperCase();
-    writeTextReplaceBack(day, DAY_NAME_CORD);
-
-    setTextSize(1);
-    setFont(MONTH_NAME_FONT);
-    String month = getMonthName(wFTime.Month);
-    month.toUpperCase();
-    writeTextReplaceBack(month, MONTH_NAME_CORD);
-
-    percentOfDay = calculatePercentageOfDay(wFTime.Hour, wFTime.Minute);
-    drawProgressBar(TO_DAY_BAR_CORD, TO_DAY_BAR_SIZE, percentOfDay);
-
-    batteryPercantageWF = bat.percentage;
-    drawProgressBar(BATT_BAR_CORD, TO_DAY_BAR_SIZE, batteryPercantageWF);
-
-    wfModulesManage(None, true);
-    drawModuleCount(true);
     drawPosMarker();
 }
 
@@ -203,7 +171,7 @@ const watchfaceDefOne inkFieldDef = {
 
     .watchfaceModules = true,
     .watchfaceModSquare = {.size{.w = 177, .h = 37}, .cord{.x = 7, .y = 160}},
-    .someDrawingSquare = {.size{.w = 200, .h = 138}, .cord{.x = 0, .y = 62}},
+    .someDrawingSquare = {.size{.w = 200, .h = 139}, .cord{.x = 0, .y = 61}},
     .isModuleEngaged = []()
     {
         if (watchfacePos == MODULE_ENG_POS && positionEngaged == true)

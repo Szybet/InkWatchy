@@ -72,14 +72,10 @@ void initHardware()
     if (bootStatus.fromWakeup == false)
     {
         loadAllStorage();
-        initBattery();
+        
     }
-    else
-    {
-        // This is for RTC wakeup
-        // We could put loop battery inside init battery and pass a bool, but for now this
-        loopBattery();
-    }
+
+    initBattery();
 
     /*
     // Implement in the future?
