@@ -60,7 +60,7 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
             // wdo->drawTimeAfterApply(); // TODO: lp core not sure
 
             // If we are running for a long time, like wifi sync:
-            if (bootStatus.reason == wakeUpReason::rtc)
+            if (bootStatus.reason != wakeUpReason::rtc)
             {
                 loopBattery();
             }
