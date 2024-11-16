@@ -4,6 +4,8 @@
 // Watchfaces!
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
 #define WATCHFACE_INKFIELD_SZYBET 1
+#define WATCHFACE_SHADES_SZYBET 1
+#define WATCHFACE_ANALOG_SHARP_SZYBET 1
 
 // Basics
 #define GSR_MINIMUM_BATTERY_VOLTAGE 0 // Watchy_GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you want some more restrictive battery measurments
