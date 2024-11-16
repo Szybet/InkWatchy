@@ -34,11 +34,7 @@ void initMainMenu()
 #endif
     {
         count = count + 1;
-        buttons[count] = {"Debug", getImg("debug"), switchDebugMenu};
-    }
-    {
-        count = count + 1;
-        buttons[count] = {"Power settings", getImg("battery"), switchPowerMenu};
+        buttons[count] = {"Settings", getImg("settings"), switchSettingsMenu};
     }
 #if VAULT
     {
@@ -80,7 +76,6 @@ void initMainMenu()
         buttons[count] = {"Pong", getImg("pong"), switchPong};
     }
 #endif
-
     count = count + 1;
     initMenu(buttons, count, "Main menu", 1);
 }
@@ -88,7 +83,7 @@ void initMainMenu()
 void initDebugMenu()
 {
     int count = -1;
-    entryMenu buttons[8];
+    entryMenu buttons[4];
     {
         debugLog("Adding general to menu");
         count = count + 1;
@@ -99,11 +94,6 @@ void initDebugMenu()
         count = count + 1;
         buttons[count] = {"Battery", &emptyImgPack, switchBatteryDebug};
     }
-    {
-        debugLog("Adding wifi to menu");
-        count = count + 1;
-        buttons[count] = {"Wifi", &emptyImgPack, switchWifiDebug};
-    }
 #if FONT_MENU_ENABLED
     {
         debugLog("Adding font preview to menu");
@@ -111,9 +101,32 @@ void initDebugMenu()
         buttons[count] = {"Font preview", &emptyImgPack, switchFontsPreviewMenu};
     }
 #endif
-
     count = count + 1;
     initMenu(buttons, count, "Debug menu", 1);
+}
+
+void initSettingsMenu() {
+    int count = -1;
+    entryMenu buttons[5];
+    {
+        debugLog("Adding wifi to menu");
+        count = count + 1;
+        buttons[count] = {"Wifi", getImg("wifiIcon"), switchWifiDebug};
+    }
+    {
+        count = count + 1;
+        buttons[count] = {"Debug", getImg("debug"), switchDebugMenu};
+    }
+    {
+        count = count + 1;
+        buttons[count] = {"Power settings", getImg("battery"), switchPowerMenu};
+    }
+    {
+        count = count + 1;
+        buttons[count] = {"Change watchface", getImg("watchfaceIcon"), switchWatchfaceSelectorMenu};
+    }
+    count = count + 1;
+    initMenu(buttons, count, "Settings menu", 1);
 }
 
 void toggleDisableVibrationsEntry()

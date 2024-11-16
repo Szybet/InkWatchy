@@ -4,6 +4,7 @@ void generalSwitch(UiPlace place)
 {
     currentPlaceIndex += 1;
     placeTree[currentPlaceIndex] = place;
+    // debugLog("Current place: " + String(placeTree[currentPlaceIndex]) + " and index: " + String(currentPlaceIndex));
 }
 
 void overwriteSwitch(UiPlace place)
@@ -14,6 +15,16 @@ void overwriteSwitch(UiPlace place)
 void switchDebugMenu()
 {
     generalSwitch(debugMenu);
+}
+
+void switchSettingsMenu()
+{
+    generalSwitch(settingsMenu);
+}
+
+void switchWatchfaceSelectorMenu()
+{
+    generalSwitch(watchfaceSelector);
 }
 
 void switchGeneralDebug()
@@ -66,7 +77,8 @@ void switchApple2()
     generalSwitch(apple2);
 }
 
-void switchPong() {
+void switchPong()
+{
     generalSwitch(pong);
 }
 

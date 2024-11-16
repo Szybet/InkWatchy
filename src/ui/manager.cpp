@@ -84,7 +84,6 @@ void loopManager()
     // We want watchface to be able to use
     if (currentPlaceIndex != 0)
     {
-
         buttonState backButton = useButtonBack();
         if (backButton != None)
         {
@@ -115,7 +114,7 @@ void loopManager()
         }
     }
 
-    debugLog("Current place: " + String(placeTree[currentPlaceIndex]));
+    debugLog("Current place: " + String(placeTree[currentPlaceIndex]) + " and index: " + String(currentPlaceIndex));
     // Don't forget break...
     switch (placeTree[currentPlaceIndex])
     {
@@ -132,6 +131,11 @@ void loopManager()
     case debugMenu:
     {
         managerLaunchFunc(debugMenu, initDebugMenu, loopMenu);
+        break;
+    }
+    case settingsMenu:
+    {
+        managerLaunchFunc(settingsMenu, initSettingsMenu, loopMenu);
         break;
     }
     case generalDebug:
@@ -261,6 +265,11 @@ void loopManager()
 #if FONT_MENU_ENABLED
         managerLaunchFunc(fontPreviewMenu, initFontMenu, loopMenu, NULL);
 #endif
+        break;
+    }
+    case watchfaceSelector:
+    {
+        managerLaunchFunc(watchfaceSelector, watchfaceSelInit, loopMenu);
         break;
     }
     case imagePlace:

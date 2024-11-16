@@ -11,6 +11,7 @@ typedef enum
     watchface,
     mainMenu,
     debugMenu,
+    settingsMenu,
     generalDebug,
     batteryDebug,
     wifiDebug,
@@ -29,6 +30,7 @@ typedef enum
     pong,
     fontPreview,
     fontPreviewMenu,
+    watchfaceSelector,
     // General places now:
     inputPinPlace,
     generalMenuPlace,
@@ -52,6 +54,7 @@ void loopManager();
 // Manager functions
 void initMainMenu();
 void initDebugMenu();
+void initSettingsMenu();
 #if WEATHER_INFO
 void initWeatherMenu();
 void initWeatherConditionMenu();
@@ -67,12 +70,14 @@ void generalSwitch(UiPlace place);
 void overwriteSwitch(UiPlace place);
 
 void switchDebugMenu();
+void switchSettingsMenu();
 void switchGeneralDebug();
 void switchBatteryDebug();
 void switchWifiDebug();
 void switchWeatherMenu();
 void switchWeatherSelectorMenu();
 void switchPowerMenu();
+void switchWatchfaceSelectorMenu();
 
 void switchBook();
 void switchBookSelector();
