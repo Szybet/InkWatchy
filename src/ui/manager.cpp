@@ -192,7 +192,7 @@ void loopManager()
     case bookSelector:
     {
 #if BOOK
-        managerLaunchFunc(book, initBookSelector, loopMenu, NULL);
+        managerLaunchFunc(book, initBookSelector, loopMenu);
 #endif
         break;
     }
@@ -235,35 +235,42 @@ void loopManager()
     case calendarDateMenu:
     {
 #if CALENDAR
-        managerLaunchFunc(calendarDateMenu, initCalendar, loopMenu, NULL);
+        managerLaunchFunc(calendarDateMenu, initCalendar, loopMenu);
 #endif
         break;
     }
     case calendarEventMenu:
     {
 #if CALENDAR
-        managerLaunchFunc(calendarEventMenu, initCalendar, loopMenu, NULL);
+        managerLaunchFunc(calendarEventMenu, initCalendar, loopMenu);
 #endif
         break;
     }
     case pong:
     {
 #if PONG
-        managerLaunchFunc(pong, initPong, loopPong, NULL);
+        managerLaunchFunc(pong, initPong, loopPong);
+#endif
+        break;
+    }
+    case conwayApp:
+    {
+#if CONWAY
+        managerLaunchFunc(conwayApp, initConway, loopConway);
 #endif
         break;
     }
     case fontPreview:
     {
 #if FONT_MENU_ENABLED
-        managerLaunchFunc(fontPreview, initFontPreview, NULL, NULL);
+        managerLaunchFunc(fontPreview, initFontPreview);
 #endif
         break;
     }
     case fontPreviewMenu:
     {
 #if FONT_MENU_ENABLED
-        managerLaunchFunc(fontPreviewMenu, initFontMenu, loopMenu, NULL);
+        managerLaunchFunc(fontPreviewMenu, initFontMenu, loopMenu);
 #endif
         break;
     }

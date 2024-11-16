@@ -76,6 +76,13 @@ void initMainMenu()
         buttons[count] = {"Pong", getImg("pong"), switchPong};
     }
 #endif
+#if CONWAY
+    {
+        debugLog("Adding Conway");
+        count = count + 1;
+        buttons[count] = {"Conway", getImg("conway"), switchConway};
+    }
+#endif
     count = count + 1;
     initMenu(buttons, count, "Main menu", 1);
 }
