@@ -3,7 +3,7 @@
 
 #include "../../../defines/defines.h"
 
-#define WATCHFACE_COUNT 2
+#define WATCHFACE_COUNT 3
 
 extern uint8_t watchfaceSelected;
 
