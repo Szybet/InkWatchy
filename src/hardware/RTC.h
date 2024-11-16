@@ -27,6 +27,7 @@ String getHourMinute(tmElements_t timeEl);
 String unixToDayName(uint64_t unixTime, int offset = 0);
 String getDayName(int offset = 0);
 String getMonthName(int monthNumber);
+String getMonthNameFull(int monthNumber);
 uint64_t getUnixTime(tmElements_t tme);
 uint64_t simplifyUnix(uint64_t unixTime);
 uint64_t dateToUnix(String date);
