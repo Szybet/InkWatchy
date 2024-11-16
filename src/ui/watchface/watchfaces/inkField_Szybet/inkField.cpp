@@ -3,10 +3,10 @@
 
 #if WATCHFACE_INKFIELD_SZYBET
 
-#define TIME_FONT getFont("JackInput40")
+#define TIME_FONT getFont("inkfield/JackInput40")
 #define DATE_FONT getFont("JackInput17")
-#define DAY_NAME_FONT getFont("Speculum13")
-#define MONTH_NAME_FONT getFont("Speculum9")
+#define DAY_NAME_FONT getFont("inkfield/Speculum13")
+#define MONTH_NAME_FONT getFont("inkfield/Speculum9")
 
 #define DAY_NAME_CORD 13, 87
 #define DATE_CORD 8, 113
@@ -126,7 +126,7 @@ static void showTimeFull()
 
 static void initWatchface()
 {
-    writeImageN(0, 0, getImg("watchface"));
+    writeImageN(0, 0, getImg("inkfield/watchface"));
     drawPosMarker();
 }
 
