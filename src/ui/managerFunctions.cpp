@@ -3,7 +3,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[10];
+    entryMenu buttons[11];
 #if CALENDAR
     {
         count = count + 1;
