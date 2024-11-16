@@ -341,7 +341,8 @@ void alarmManageRTC()
   }
 }
 
-String getHourMinuteUnix(int64_t unixTime) {
+String getHourMinuteUnix(int64_t unixTime)
+{
   tmElements_t tmEl;
   SRTC.doBreakTime(unixTime, tmEl);
   return getHourMinute(tmEl);
@@ -349,7 +350,7 @@ String getHourMinuteUnix(int64_t unixTime) {
 
 String getHourMinute(tmElements_t timeEl)
 {
-  //isDebug(dumpRTCTime(timeEl));
+  // isDebug(dumpRTCTime(timeEl));
   String h = String(timeEl.Hour);
   if (h.length() == 1)
   {
@@ -362,13 +363,14 @@ String getHourMinute(tmElements_t timeEl)
     m = "0" + m;
   }
 
-  //debugLog("The bare hour: " + String(timeEl.Hour) + " and the bare minute: " + String(timeEl.Minute));
+  // debugLog("The bare hour: " + String(timeEl.Hour) + " and the bare minute: " + String(timeEl.Minute));
   String answer = h + ":" + m;
-  //debugLog("Answer: " + answer);
+  // debugLog("Answer: " + answer);
   return answer;
 }
 
-String unixToDayName(uint64_t unixTime, int offset) {
+String unixToDayName(uint64_t unixTime, int offset)
+{
   int weekDay = weekday(unixTime);
   debugLog("unixTime: " + String(unixTime));
   debugLog("weekDay reported: " + String(weekDay));
@@ -443,6 +445,46 @@ String getMonthName(int monthNumber)
   }
   default:
     return "Inv";
+  }
+}
+
+String getMonthNameFull(int monthNumber)
+{
+  debugLog("Month given: " + String(monthNumber));
+  switch (monthNumber)
+  {
+  case 0:
+    return "January";
+  case 1:
+    return "February";
+  case 2:
+    return "March";
+  case 3:
+    return "April";
+  case 4:
+    return "May";
+  case 5:
+    return "June";
+  case 6:
+    return "July";
+  case 7:
+    return "August";
+  case 8:
+    return "September";
+  case 9:
+    return "October";
+  case 10:
+    return "November";
+  case 11:
+    return "December";
+  case 255:
+  {
+    // Handle the special case for month 255
+    debugLog("We have a problem month 255");
+    return "January"; // or any other default month you prefer
+  }
+  default:
+    return "Invalid"; // Changed from "Inv" to "Invalid" for clarity
   }
 }
 

@@ -1,6 +1,6 @@
 #include "wManageAll.h"
 
-RTC_DATA_ATTR uint8_t watchfaceSelected = 0;
+RTC_DATA_ATTR uint8_t watchfaceSelected = 1;
 
 const watchfaceDef noWatchFace{
     .manager = wfmNone,
