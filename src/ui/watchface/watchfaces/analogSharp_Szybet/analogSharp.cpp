@@ -2,7 +2,7 @@
 
 #if WATCHFACE_ANALOG_SHARP_SZYBET
 
-void drawHand(int centerX, int centerY, float angle, int length)
+void drawHand(int centerX, int centerY, uint16_t angle, int length)
 {
     float adjustedAngle = 90 - angle;
     float rad = adjustedAngle * (PI / 180);
@@ -19,8 +19,9 @@ wfmTwoRet analogConwayDef(wfmTwoArg arg)
     debugLog("Launched analog conway");
     display.fillRect(0, 0, 200, 200, GxEPD_WHITE);
 
-    float hourAngle = (timeRTCLocal.Hour + timeRTCLocal.Minute / 60.0) * 15;
-    float minuteAngle = (timeRTCLocal.Minute / 60.0) * 6;
+    debugLog("Hour: " + String(timeRTCLocal.Hour) + " Minute: " + String(timeRTCLocal.Minute));
+    uint16_t hourAngle = ((360 * timeRTCLocal.Hour) / 24);
+    uint16_t minuteAngle = ((360 * timeRTCLocal.Minute) / 60);
 
     debugLog("Hour angle: " + String(hourAngle));
     debugLog("Minute angle: " + String(minuteAngle));
