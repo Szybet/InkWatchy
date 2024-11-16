@@ -170,5 +170,8 @@ static const WiFiCred* wifiCredStatic[] = {
 #if WATCHFACE_INKFIELD_SZYBET
 #include "../ui/watchface/watchfaces/inkField_Szybet/inkField.h"
 #endif
+#if WATCHFACE_SHADES_SZYBET
+#include "../ui/watchface/watchfaces/shades_szybet/shades.h"
+#endif
 
 #endif

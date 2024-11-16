@@ -102,3 +102,20 @@ extract_monitor_speed() {
         echo "File not found: $file_path"
     fi
 }
+
+check_define() {
+    local define="$1"
+    local file_path="$2"
+
+    if [[ ! -f "$file_path" ]]; then
+        echo "File not found: $file_path"
+        return 1
+    fi
+
+    # Check if the define is turned on
+    if grep -q "#define $define 1" "$file_path"; then
+        return 1  # Define is turned on
+    else
+        return 0  # Define is not turned on
+    fi
+}

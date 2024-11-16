@@ -26,6 +26,37 @@ generate_img () {
 rm -rf out 1>/dev/null 2>/dev/null
 mkdir -p out
 
+# Generate condition images
+for dir in img/condition/*/; do    
+    if [ -d "$dir" ]; then
+        # echo "Checking directory: ${dir}"
+
+        if [ -f "$dir/define.txt" ]; then
+            define=$(<"$dir/define.txt")
+            # echo "The define is: ${define}"
+
+            check_define "$define" "../../../src/defines/config.h"
+            exists=$?
+            # echo "Is define enabled: ${exists}"
+            if [ $exists -eq 1 ]; then
+                last_dir=$(basename "$dir")
+                echo "The define ${define} in ${dir} is turned on"
+                mkdir -p out/$last_dir
+                for f in $dir/*
+                do
+                    if [[ $f == *".txt"* ]]; then
+                        continue
+                    fi
+                    echo "Processing $f"
+                    generate_img $f out/$last_dir
+                done
+            else
+                echo "The define ${define} in ${dir} is turned off"
+            fi
+        fi
+    fi
+done
+
 # Generate regular images
 for f in img/*
 do
