@@ -81,7 +81,12 @@ void switchPong()
 {
     generalSwitch(pong);
 }
-
+#if CONWAY
+void switchConway()
+{
+    generalSwitch(conwayApp);
+}
+#endif
 #if FONT_MENU_ENABLED
 void switchFontsPreview()
 {

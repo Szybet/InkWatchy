@@ -121,12 +121,17 @@ void initConway()
     display.fillScreen(GxEPD_WHITE);
     initConwayGrid(conwayAppGrid, 42, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH);
     drawGrid(conwayAppGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH, 0 , 0);
-    delay(200);
 }
 
 void loopConway()
 {
+    display.fillScreen(GxEPD_WHITE);
     computeNewGeneration(conwayAppGrid, conwayAppNewGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH);
     drawGrid(conwayAppGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH, 0 , 0);
+    disUp(true);
+    if(useButton() == Menu) {
+        initConway();
+    }
+    resetSleepDelay();
 }
 #endif
