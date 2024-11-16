@@ -45,6 +45,7 @@ void initBatteryDebugDisplay()
 
 void loopBatteryDebugDisplay()
 {
+    loopBattery();
     if (ui.battery.curV > bat.curV + 0.01 || ui.battery.curV < bat.curV - 0.01)
     {
         ui.battery.curV = bat.curV;
