@@ -11,7 +11,7 @@ void drawHand(int centerX, int centerY, uint16_t angle, int length)
     display.drawLine(centerX, centerY, x, y, GxEPD_BLACK);
 }
 
-#define LINE_WIDTH 7
+#define LINE_WIDTH 6
 
 wfmTwoRet analogConwayDef(wfmTwoArg arg)
 {
@@ -19,8 +19,11 @@ wfmTwoRet analogConwayDef(wfmTwoArg arg)
     debugLog("Launched analog conway");
     display.fillRect(0, 0, 200, 200, GxEPD_WHITE);
 
-    debugLog("Hour: " + String(timeRTCLocal.Hour) + " Minute: " + String(timeRTCLocal.Minute));
-    uint16_t hourAngle = ((360 * timeRTCLocal.Hour) / 24);
+    uint8_t hour = timeRTCLocal.Hour;
+    hour = hour % 12;
+    debugLog("Hour: " + String(hour) + " Minute: " + String(timeRTCLocal.Minute));
+
+    uint16_t hourAngle = ((360 * hour) / 12);
     uint16_t minuteAngle = ((360 * timeRTCLocal.Minute) / 60);
 
     debugLog("Hour angle: " + String(hourAngle));
@@ -28,7 +31,9 @@ wfmTwoRet analogConwayDef(wfmTwoArg arg)
 
     for(int i = 100 - LINE_WIDTH; i < 100 + LINE_WIDTH; i++) {
         drawHand(i, i, hourAngle, 50);
+        drawHand(i, i + 1, hourAngle, 50);
         drawHand(i, i, minuteAngle, 90);
+        drawHand(i, i + 1, minuteAngle, 90);
     }
 
     disUp(true, false, true);
