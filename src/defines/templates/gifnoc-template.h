@@ -17,7 +17,7 @@
 #define VIBRATION_BUTTON_LONG_TIME 60 // This is just an addition to VIBRATION_BUTTON_TIME
 #define VIBRATION_ACTION_TIME 200     // Time in ms to the motor to vibrate when the UI receives an action
 #define VIBRATION_POWER 170           // From 1 to 255, PWM duty cycle. Too low and it can not even vibrate a little
-#define STEPS_GOAL 1000
+#define STEPS_GOAL 7000
 
 // Timezone! So:
 // - You don't set anything, it will try to ques based on IP, it can fail sometimes

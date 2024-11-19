@@ -106,7 +106,8 @@ static void drawTimeAfterApply(bool forceDraw)
         drawProgressBar(TO_DAY_BAR_CORD, TO_DAY_BAR_SIZE, percentOfDay);
     }
 
-    uint16_t percentStepsTmp = (getSteps() / STEPS_GOAL) * 100;
+    uint16_t percentStepsTmp = uint16_t(((float)getSteps() / (float)STEPS_GOAL) * 100.0);
+    debugLog("percentStepsTmp: " + String(percentStepsTmp));
     if(percentSteps != percentStepsTmp || forceDraw == true) {
         percentSteps = percentStepsTmp;
         drawProgressBar(STEPS_BAR_CORD, TO_DAY_BAR_SIZE, percentSteps);
