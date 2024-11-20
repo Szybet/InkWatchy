@@ -76,7 +76,7 @@
 #define BOOK_CHARS_PER_PAGE 200 // This is dependent on the font. It must be Mono
 #define BOOK_FONT getFont("UbuntuMono-Regular10")
 
-// Conway
+// Conway, It will drain your battery a lot
 #define CONWAY 1
 #define CONWAY_CPU_SPEED 0    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
 #define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
