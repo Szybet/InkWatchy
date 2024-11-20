@@ -13,11 +13,13 @@ bool allButtonCheck()
     return false;
 }
 
+#define WATCHDOG_DELAY 15000
+
 #if WATCHDOG_TASK
 void loopWatchdogTask(void *parameter)
 {
     debugLog("Watchdog starting, slowly");
-    delayTask(30000);
+    delayTask(WATCHDOG_DELAY);
     debugLog("Watchdog finally started!");
     while (true)
     {
@@ -37,10 +39,10 @@ void loopWatchdogTask(void *parameter)
         {
             everythingIsFine = false;
             watchdogFine.unlock();
-            delayTask(30000);
+            delayTask(WATCHDOG_DELAY);
         }
         // It's at the end to run the button check at the start (of the watch)
-        delayTask(30000);
+        delayTask(WATCHDOG_DELAY);
     }
 }
 

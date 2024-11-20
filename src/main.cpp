@@ -37,7 +37,6 @@ void setup()
   {
     // I trust myself enough now to not need watchdog task running all the time
     initWatchdogTask();
-    watchdogPing();
 
     turnOnButtons();
 

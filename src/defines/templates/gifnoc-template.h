@@ -38,7 +38,7 @@
 #define BUTTON_LONG_PRESS_MS 500     // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 60 // Make a full display update after x of partial ones
 #define LONG_BACK_FULL_REFRESH 1     // Make a full refresh at long back button clicked
-#define WATCHDOG_TASK 0              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
+#define WATCHDOG_TASK 1              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
 
 // Drift & NTP & Syncing
 #define SYNC_WIFI 0                        // Autimatically sync wifi - only if it's being charger and after the delay below
