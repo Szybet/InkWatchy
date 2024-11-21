@@ -1,7 +1,7 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
-#include "../defines/defines.h"
+#include "defines.h"
 
 #define FIRST_PLACE watchface
 #define PLACE_TREE_MAX_DEPTH 30
@@ -94,18 +94,5 @@ void switchConway();
 void switchFontsPreview();
 #endif
 void showTextDialog(String str);
-
-// Switches for weather
-#if WEATHER_INFO
-void showTemp();
-void showPressure();
-void showHumidity();
-void showWeatherCond();
-void showClouds();
-void showWindSpeed();
-void showWindGuts();
-void showVisibility();
-void showPop();
-#endif
 
 #endif

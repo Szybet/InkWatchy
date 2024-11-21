@@ -1,7 +1,7 @@
 #ifndef WMANAGE_ONE_H
 #define WMANAGE_ONE_H
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 /*
 #define SOME_RECT_X 0

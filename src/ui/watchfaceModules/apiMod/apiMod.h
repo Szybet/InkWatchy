@@ -1,7 +1,7 @@
 #ifndef APIMOD_H
 #define APIMOD_H
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if API_MODULE
 

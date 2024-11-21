@@ -1,7 +1,7 @@
 #ifndef EVENTMOD_H
 #define EVENTMOD_H
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if EVENT_MODULE
 

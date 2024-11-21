@@ -1,7 +1,7 @@
-#ifndef NVS_SETTING_H
-#define NVS_SETTING_H
+#ifndef POWER_SETTING_H
+#define POWER_SETTING_H
 
-#include "../../defines/defines.h"
+#include "defines.h"
 
 extern bool disableAllVibration;
 extern bool disableWakeUp;

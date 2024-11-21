@@ -1,6 +1,6 @@
 #ifndef RTC_H
 #define RTC_H
-#include "defines/defines.h"
+#include "defines.h"
 
 extern tmElements_t timeRTCLocal;
 extern tmElements_t timeRTCUTC0;

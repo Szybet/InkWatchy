@@ -1,7 +1,7 @@
 #ifndef BUTTONS_H
 #define BUTTONS_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 extern bool buttonsActivated;
 extern std::mutex buttMut;

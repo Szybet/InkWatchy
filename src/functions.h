@@ -1,7 +1,7 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 extern std::mutex serialWrite;
 #if DEBUG

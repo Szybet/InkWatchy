@@ -1,7 +1,7 @@
 #ifndef NETMOD_H
 #define NETMOD_H
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if WIFI_MODULE
 

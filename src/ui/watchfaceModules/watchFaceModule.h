@@ -1,7 +1,7 @@
 #ifndef WATCHFACE_MODULE_H
 #define WATCHFACE_MODULE_H
 
-#include "../../defines/defines.h"
+#include "defines.h"
 
 // Make sure this number is right, otherwise bad things will happen...
 #define MODULE_COUNT 7

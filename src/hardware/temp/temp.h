@@ -1,7 +1,7 @@
 #ifndef TEMPS_H
 #define TEMPS_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 #if TEMP_CHECKS_ENABLED
 

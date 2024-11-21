@@ -1,7 +1,7 @@
 #ifndef IMGMOD_H
 #define IMGMOD_H
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if IMAGE_MODULE
 

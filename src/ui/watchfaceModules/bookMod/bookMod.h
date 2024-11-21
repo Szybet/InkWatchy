@@ -1,7 +1,7 @@
 #ifndef BOOKMOD_H
 #define BOOKMOD_H
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if BOOK_MODULE_ENABLED
 

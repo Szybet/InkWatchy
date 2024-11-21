@@ -1,7 +1,7 @@
 #ifndef DEBUG_MAIN_H
 #define DEBUG_MAIN_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 #if DEBUG
 

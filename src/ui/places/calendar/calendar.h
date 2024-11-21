@@ -1,7 +1,7 @@
 #ifndef CALENDAR_H
 #define CALENDAR_H
 
-#include "../../defines/defines.h"
+#include "defines.h"
 
 #if CALENDAR
 

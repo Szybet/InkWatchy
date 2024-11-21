@@ -1,7 +1,7 @@
 #ifndef CONWAYMOD_H
 #define CONWAYMOD_H
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if CONWAY_MODULE_ENABLED
 

@@ -66,12 +66,12 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../other/debugMain/debugMain.h"
 #endif
 #include "../hardware/hardware.h"
-#include "../hardware/battery.h"
-#include "../hardware/RTC.h"
-#include "../hardware/sleep.h"
-#include "../hardware/buttons.h"
-#include "../hardware/display.h"
-#include "../hardware/axc.h"
+#include "../hardware/battery/battery.h"
+#include "../hardware/rtc/rtc.h"
+#include "../hardware/sleep/sleep.h"
+#include "../hardware/input/buttons.h"
+#include "../hardware/display/display.h"
+#include "../hardware/acc/acc.h"
 #include "../hardware/fs/littlefs.h"
 #if ATCHY_VER == YATCHY
 #include "../hardware/i2c.h"
@@ -98,32 +98,33 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../network/getTimezone.h"
 #if WEATHER_INFO
 #include "../network/weather.h"
+#include "../ui/places/weather/weatherSwitches.h"
 #endif
 #include "../ui/functionsUi.h"
-#include "../ui/debug.h"
-#include "../ui/batteryDebug.h"
-#include "../ui/wifiDebug.h"
-#include "../ui/generalDebug.h"
-#include "../ui/menu.h"
-#include "../ui/chart.h"
-#include "../ui/manager.h"
+#include "../other/debug/debug.h"
+#include "../ui/places/batteryDebug/batteryDebug.h"
+#include "../ui/places/wifiDebug/wifiDebug.h"
+#include "../ui/places/generalDebug/generalDebug.h"
+#include "../ui/reUse/menu/menu.h"
+#include "../ui/reUse/chart/chart.h"
+#include "../ui/manager/manager.h"
 #include "../ui/watchface/watchFaceLogic.h"
 #include "../ui/watchface/watchfaceManagers/wManageOne.h"
 #include "../ui/watchface/watchfaceManagers/wManageAll.h"
 #include "../ui/watchface/watchfaceManagers/wFunctions.h"
 #include "../ui/watchface/watchfaceSelector/watchfaceSel.h"
 #if BOOK
-#include "../ui/book/bookUi.h"
-#include "../ui/book/bookSelector.h"
+#include "../ui/places/book/bookUi.h"
+#include "../ui/places/book/bookSelector.h"
 #endif
 #if CALENDAR
-#include "../ui/calendar/calendar.h"
+#include "../ui/places/calendar/calendar.h"
 #endif
 #if VAULT
-#include "../ui/vault/vaultUi.h"
+#include "../ui/places/vault/vaultUi.h"
 #endif
 #if PONG
-#include "../ui/pong/pong.h"
+#include "../ui/places/pong/pong.h"
 #endif
 #if WIFI_TOOL
 #include "../other/wifiTool/wifiTool.h"
@@ -140,13 +141,13 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../other/fontPreview/fontPreview.h"
 #endif
 #if CONWAY
-#include "../other/conway/conway.h"
+#include "../ui/places/conway/conway.h"
 #endif
 #if ATCHY_VER == YATCHY
 #include "../other/mcp23018/mcp23018.h"
 #endif
-#include "../ui/pinInput/pinInput.h"
-#include "../ui/settings/nvsSettings.h"
+#include "../ui/reUse/pinInput/pinInput.h"
+#include "../ui/places/settings/powerSettings.h"
 #include "../ui/watchfaceModules/netMod/netMod.h"
 #include "../ui/watchfaceModules/watchFaceModule.h"
 #if BITCOIN_MODULE

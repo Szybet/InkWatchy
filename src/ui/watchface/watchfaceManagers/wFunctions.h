@@ -1,7 +1,7 @@
 #ifndef WFUNCTIONS_H
 #define WFUNCTIONS_H
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 void showFullWatchface(); // Can be also used by modules
 

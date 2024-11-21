@@ -1,4 +1,4 @@
-#include "RTC.h"
+#include "rtc.h"
 
 tmElements_t timeRTCLocal;         // Local time
 tmElements_t timeRTCUTC0;          // UTC0 time

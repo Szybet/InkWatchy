@@ -1,7 +1,7 @@
 #ifndef PONG_H
 #define PONG_H
 
-#include "../../defines/defines.h"
+#include "defines.h"
 
 #if PONG
 

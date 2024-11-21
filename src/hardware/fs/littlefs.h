@@ -1,7 +1,7 @@
 #ifndef LITTLEFS_H
 #define LITTLEFS_H
 
-#include "defines/defines.h"
+#include "defines.h"
 // https://github.com/espressif/arduino-esp32/blob/master/libraries/LittleFS/examples/LITTLEFS_test/LITTLEFS_test.ino
 
 bool fsSetup();

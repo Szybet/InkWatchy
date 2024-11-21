@@ -1,7 +1,7 @@
 #ifndef VAULT_UI_H
 #define VAULT_UI_H
 
-#include "../../defines/defines.h"
+#include "defines.h"
 
 extern long long int key;
 
