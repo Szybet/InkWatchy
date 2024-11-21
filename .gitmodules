@@ -1,6 +1,6 @@
 [submodule "src/other/scomTask/watchy-scom"]
 	path = src/other/scomTask/watchy-scom
 	url = https://github.com/Szybet/watchy-scom.git
-[submodule "src/ui/calendar/ics-to-json-rs"]
-	path = src/ui/calendar/ics-to-json-rs
+[submodule "src/ui/places/calendar/ics-to-json-rs"]
+	path = src/ui/places/calendar/ics-to-json-rs
 	url = https://github.com/Szybet/ics-to-json-rs.git

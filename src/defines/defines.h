@@ -61,10 +61,16 @@ static const WiFiCred* wifiCredStatic[] = {
 #if WEATHER_INFO
 #include <OpenMeteo.h>
 #endif
-
-#if DEBUG
-#include "../other/debugMain/debugMain.h"
+#if LP_CORE
+#include "esp_sleep.h"
+#include "ulp_lp_core.h"
+#include <bootloader_common.h>
+#include <ulp_lp_core_memory_shared.h>
 #endif
+
+#include "../functions.h"
+
+// Hardware
 #include "../hardware/hardware.h"
 #include "../hardware/battery/battery.h"
 #include "../hardware/rtc/rtc.h"
@@ -81,27 +87,30 @@ static const WiFiCred* wifiCredStatic[] = {
 #endif
 #include "../hardware/motor/motor.h"
 #include "../hardware/rgb/rgb.h"
+#if ATCHY_VER == YATCHY
+#include "../hardware/mcp23018/mcp23018.h"
+#endif
 #if LP_CORE
 #include "../hardware/lpCore/lpCore.h" // Always include it as there are some variables we want outside
 #include "../hardware/lpCore/export/lp_logs.h"
 #include "../hardware/lpCore/export/lp_rust.h" // Maybe don't call those functions from there
-#include "esp_sleep.h"
-#include "ulp_lp_core.h"
-#include <bootloader_common.h>
-#include <ulp_lp_core_memory_shared.h>
 #endif
-#include "../functions.h"
+
+// Network
 #include "../network/wifi/wifiLogic.h"
 #include "../network/wifi/wifiTask.h"
 #include "../network/wifi/wifiQuick.h"
 #include "../network/ntp.h"
 #include "../network/getTimezone.h"
+
+// Weather
 #if WEATHER_INFO
 #include "../network/weather.h"
 #include "../ui/places/weather/weatherSwitches.h"
 #endif
+
+// Ui
 #include "../ui/functionsUi.h"
-#include "../other/debug/debug.h"
 #include "../ui/places/batteryDebug/batteryDebug.h"
 #include "../ui/places/wifiDebug/wifiDebug.h"
 #include "../ui/places/generalDebug/generalDebug.h"
@@ -126,25 +135,15 @@ static const WiFiCred* wifiCredStatic[] = {
 #if PONG
 #include "../ui/places/pong/pong.h"
 #endif
-#if WIFI_TOOL
-#include "../other/wifiTool/wifiTool.h"
-#endif
-#include "../other/watchdogTask/watchdogTask.h"
-#if SCOM_TASK_ENABLED
-#include "../other/scomTask/scomTask.h"
-#endif
 #if APPLE_JOKE
 #include "../ui/appleJoke/appleJoke.h"
 #include "../ui/appleJoke/appleSour.h"
 #endif
 #if FONT_MENU_ENABLED
-#include "../other/fontPreview/fontPreview.h"
+#include "../ui/places/fontPreview/fontPreview.h"
 #endif
 #if CONWAY
 #include "../ui/places/conway/conway.h"
-#endif
-#if ATCHY_VER == YATCHY
-#include "../other/mcp23018/mcp23018.h"
 #endif
 #include "../ui/reUse/pinInput/pinInput.h"
 #include "../ui/places/settings/powerSettings.h"
@@ -176,6 +175,19 @@ static const WiFiCred* wifiCredStatic[] = {
 #endif
 #if WATCHFACE_ANALOG_SHARP_SZYBET
 #include "../ui/watchface/watchfaces/analogSharp_Szybet/analogSharp.h"
+#endif
+
+// Other
+#if DEBUG
+#include "../other/debugMain/debugMain.h"
+#include "../other/debug/debug.h"
+#endif
+#if WIFI_TOOL
+#include "../other/wifiTool/wifiTool.h"
+#endif
+#include "../other/watchdogTask/watchdogTask.h"
+#if SCOM_TASK_ENABLED
+#include "../other/scomTask/scomTask.h"
 #endif
 
 #endif
