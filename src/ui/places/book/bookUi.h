@@ -3,6 +3,8 @@
 
 #include "defines.h"
 
+#if BOOK
+
 void initBook();
 void loopBook();
 String bookGetPages(int charsPerPage = BOOK_CHARS_PER_PAGE);
@@ -17,4 +19,5 @@ int getPageNumber();
 extern uint16_t startHeightBook;
 void calculateBookTextHeight();
 
+#endif
 #endif

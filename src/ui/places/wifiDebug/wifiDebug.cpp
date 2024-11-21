@@ -1,6 +1,5 @@
 #include "wifiDebug.h"
 
-#if DEBUG == 1 || DEBUG_MENUS == 1
 #define SEL_ON 0
 #define SEL_OFF 1
 // Copy from file to file...
@@ -262,4 +261,3 @@ void loopWifiDebugDisplay()
         resetSleepDelay();
     }
 }
-#endif

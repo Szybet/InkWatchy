@@ -87,6 +87,7 @@ void initMainMenu()
     initMenu(buttons, count, "Main menu", 1);
 }
 
+#if DEBUG_MENUS
 void initDebugMenu()
 {
     int count = -1;
@@ -111,6 +112,7 @@ void initDebugMenu()
     count = count + 1;
     initMenu(buttons, count, "Debug menu", 1);
 }
+#endif
 
 void initSettingsMenu() {
     int count = -1;
@@ -120,10 +122,12 @@ void initSettingsMenu() {
         count = count + 1;
         buttons[count] = {"Wifi", getImg("wifiIcon"), switchWifiDebug};
     }
+#if DEBUG_MENUS
     {
         count = count + 1;
         buttons[count] = {"Debug", getImg("debug"), switchDebugMenu};
     }
+#endif
     {
         count = count + 1;
         buttons[count] = {"Power settings", getImg("battery"), switchPowerMenu};
