@@ -1,7 +1,7 @@
 #ifndef HARDWARE_H
 #define HARDWARE_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 extern int64_t sleepDelayMs;
 

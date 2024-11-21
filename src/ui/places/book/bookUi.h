@@ -1,7 +1,7 @@
 #ifndef BOOK_UI_H
 #define BOOK_UI_H
 
-#include "../../defines/defines.h"
+#include "defines.h"
 
 void initBook();
 void loopBook();

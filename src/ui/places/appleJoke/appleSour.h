@@ -1,7 +1,7 @@
 #ifndef APPLE_SOUR_H
 #define APPLE_SOUR_H
 
-#include "../../defines/defines.h"
+#include "defines.h"
 
 void initAppleSour();
 void loopAppleSour();

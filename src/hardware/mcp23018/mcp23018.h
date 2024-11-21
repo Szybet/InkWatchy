@@ -1,7 +1,7 @@
 #ifndef MCP23018_H
 #define MCP23018_H
 
-#include <defines/defines.h>
+#include "defines.h"
 
 #if ATCHY_VER == YATCHY
 

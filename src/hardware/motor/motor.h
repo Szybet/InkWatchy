@@ -1,7 +1,7 @@
 #ifndef MOTOR_H
 #define MOTOR_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 void initMotor();
 extern TaskHandle_t motorTask;

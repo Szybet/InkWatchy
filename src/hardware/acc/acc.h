@@ -1,7 +1,7 @@
 #ifndef AXC_H
 #define AXC_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 #if AXC_ENABLED
 

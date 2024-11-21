@@ -1,7 +1,7 @@
 #ifndef WIFI_LOGIC_H
 #define WIFI_LOGIC_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 void turnOnWifiRegular();
 void turnOnWifiPersistent();

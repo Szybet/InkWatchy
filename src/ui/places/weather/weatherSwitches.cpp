@@ -1,4 +1,4 @@
-#include "manager.h"
+#include "weatherSwitches.h"
 
 #if WEATHER_INFO
 

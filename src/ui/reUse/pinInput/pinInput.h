@@ -1,7 +1,7 @@
 #ifndef PIN_INPUT_H
 #define PIN_INPUT_H
 
-#include "../../defines/defines.h"
+#include "defines.h"
 
 extern long long int* pinInputVar;
 

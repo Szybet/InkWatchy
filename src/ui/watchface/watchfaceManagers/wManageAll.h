@@ -1,7 +1,7 @@
 #ifndef WMANAGE_ALL_H
 #define WMANAGE_ALL_H
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #define WATCHFACE_COUNT 3
 

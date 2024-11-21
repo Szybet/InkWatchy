@@ -1,7 +1,7 @@
 #ifndef BOOK_SELECTOR_H
 #define BOOK_SELECTOR_H
 
-#include "../../defines/defines.h"
+#include "defines.h"
 
 void initBookSelector();
 void selectedBook();

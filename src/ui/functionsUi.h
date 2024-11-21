@@ -1,7 +1,7 @@
 #ifndef FUNCTIONSUI_H
 #define FUNCTIONSUI_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 extern const GFXfont *font;
 extern uint16_t maxHeight;

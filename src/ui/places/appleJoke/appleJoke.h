@@ -1,7 +1,7 @@
 #ifndef APPLE_JOKE_H
 #define APPLE_JOKE_H
 
-#include "../../defines/defines.h"
+#include "defines.h"
 
 extern bool appleJokeRunning;
 

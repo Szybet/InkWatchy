@@ -1,7 +1,7 @@
 #ifndef WATCHDOG_TASK_H
 #define WATCHDOG_TASK_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 extern TaskHandle_t watchdogTask;
 

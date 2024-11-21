@@ -1,7 +1,7 @@
 #ifndef SHADES_H
 #define SHADES_H
 
-#include "../../../../defines/defines.h"
+#include "defines.h"
 
 #if WATCHFACE_SHADES_SZYBET
 

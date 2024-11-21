@@ -1,4 +1,5 @@
-#include "../../defines/config.h"
+#include "defines.h"
+
 #if VAULT
 #include "vaultUi.h"
 

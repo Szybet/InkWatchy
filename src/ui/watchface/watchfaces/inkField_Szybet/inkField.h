@@ -1,7 +1,7 @@
 #ifndef INKFIELD_H
 #define INKFIELD_H
 
-#include "../../../../defines/defines.h"
+#include "defines.h"
 
 #if WATCHFACE_INKFIELD_SZYBET
 

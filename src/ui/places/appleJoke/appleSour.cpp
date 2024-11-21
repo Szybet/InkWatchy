@@ -1,4 +1,5 @@
-#include "../../defines/config.h"
+#include "defines.h"
+
 #if APPLE_JOKE
 #include "appleJoke.h"
 #include "appleSour.h"

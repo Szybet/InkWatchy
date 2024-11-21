@@ -1,7 +1,9 @@
 #include "batteryDebug.h"
 
 #if DEBUG == 1 || DEBUG_MENUS == 1
-debugDisplay ui;
+
+batteryInfo bDdata;
+
 #define cursorX 0
 int currentVoltageHeight;
 int ChargingHeight;
@@ -12,7 +14,7 @@ void initBatteryDebugDisplay()
 {
     debugLog("initBatteryDebugDisplay called");
     uint16_t h;
-    ui.battery = bat;
+    bDdata = bat;
     setFont(&FreeSansBold9pt7b);
     setTextSize(batteryTextSize);
     display.setCursor(cursorX, 1);
@@ -26,19 +28,19 @@ void initBatteryDebugDisplay()
     display.fillRect(0, currentHeight, display.width(), 3, GxEPD_BLACK);
     currentHeight = currentHeight + maxHeight;
 
-    writeLine("Current V: " + String(ui.battery.curV), cursorX, &currentHeight);
+    writeLine("Current V: " + String(bDdata.curV), cursorX, &currentHeight);
     currentVoltageHeight = currentHeight - maxHeight;
 
-    writeLine("Minimum V: " + String(ui.battery.minV), cursorX, &currentHeight);
+    writeLine("Minimum V: " + String(bDdata.minV), cursorX, &currentHeight);
 
-    writeLine("Maximum V: " + String(ui.battery.maxV), cursorX, &currentHeight);
+    writeLine("Maximum V: " + String(bDdata.maxV), cursorX, &currentHeight);
 
-    writeLine("Critical V: " + String(ui.battery.critV), cursorX, &currentHeight);
+    writeLine("Critical V: " + String(bDdata.critV), cursorX, &currentHeight);
 
-    writeLine("Level %: " + String(ui.battery.percentage), cursorX, &currentHeight);
+    writeLine("Level %: " + String(bDdata.percentage), cursorX, &currentHeight);
     PercentageHeight = currentHeight - maxHeight;
 
-    writeLine("Charging: " + BOOL_STR(ui.battery.isCharging), cursorX, &currentHeight);
+    writeLine("Charging: " + BOOL_STR(bDdata.isCharging), cursorX, &currentHeight);
     ChargingHeight = currentHeight - maxHeight;
     disUp(true);
 }
@@ -46,9 +48,9 @@ void initBatteryDebugDisplay()
 void loopBatteryDebugDisplay()
 {
     loopBattery();
-    if (ui.battery.curV > bat.curV + 0.01 || ui.battery.curV < bat.curV - 0.01)
+    if (bDdata.curV > bat.curV + 0.01 || bDdata.curV < bat.curV - 0.01)
     {
-        ui.battery.curV = bat.curV;
+        bDdata.curV = bat.curV;
         display.setCursor(cursorX, currentVoltageHeight);
         setTextSize(batteryTextSize);
 
@@ -61,9 +63,9 @@ void loopBatteryDebugDisplay()
         writeTextReplaceBack("Current V: " + battVoltageStr, cursorX, currentVoltageHeight);
         dUChange = true;
     }
-    if (ui.battery.isCharging != bat.isCharging)
+    if (bDdata.isCharging != bat.isCharging)
     {
-        ui.battery.isCharging = bat.isCharging;
+        bDdata.isCharging = bat.isCharging;
         display.setCursor(cursorX, ChargingHeight);
         setTextSize(batteryTextSize);
 
@@ -76,9 +78,9 @@ void loopBatteryDebugDisplay()
         writeTextReplaceBack("Charging: " + chargingStr, cursorX, ChargingHeight);
         dUChange = true;
     }
-    if (ui.battery.percentage != bat.percentage)
+    if (bDdata.percentage != bat.percentage)
     {
-        ui.battery.percentage = bat.percentage;
+        bDdata.percentage = bat.percentage;
         display.setCursor(cursorX, PercentageHeight);
         setTextSize(batteryTextSize);
 

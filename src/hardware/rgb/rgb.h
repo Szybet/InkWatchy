@@ -1,7 +1,7 @@
 #ifndef RGB_H
 #define RGB_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 extern bool rgbTaskRunning;
 extern std::mutex rgbTaskMutex;

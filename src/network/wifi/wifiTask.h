@@ -1,7 +1,7 @@
 #ifndef WIFI_TASK_H
 #define WIFI_TASK_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 extern TaskHandle_t wifiTask;
 extern std::mutex wifiTaskMutex;

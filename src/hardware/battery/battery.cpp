@@ -1,6 +1,4 @@
-#include "hardware.h"
 #include "battery.h"
-#include "../functions.h"
 
 RTC_DATA_ATTR batteryInfo bat;
 RTC_DATA_ATTR bool isBatterySaving = false;

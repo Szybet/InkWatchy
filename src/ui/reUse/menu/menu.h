@@ -1,7 +1,7 @@
 #ifndef MENU_H
 #define MENU_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 // Width and height for font size 1: 105x19. 8 buttons with 1 pixel offset
 // Width and height for font size 2: 203x32  6 buttons with 1 pixel offset and 3 pixel offset between menu label and buttons

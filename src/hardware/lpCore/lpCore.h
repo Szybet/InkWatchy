@@ -1,7 +1,7 @@
 #ifndef LP_CORE_H
 #define LP_CORE_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 #if LP_CORE
 

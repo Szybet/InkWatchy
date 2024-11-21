@@ -1,7 +1,7 @@
 #ifndef BATTERY_H
 #define BATTERY_H
 
-#include "defines/defines.h"
+#include "defines.h"
 
 #define PREV_VOLTAGE_SIZE 3
 struct batteryInfo {

@@ -1,4 +1,4 @@
-#include "nvsSettings.h"
+#include "powerSettings.h"
 
 bool RTC_DATA_ATTR disableAllVibration = false;
 bool RTC_DATA_ATTR disableWakeUp = false;

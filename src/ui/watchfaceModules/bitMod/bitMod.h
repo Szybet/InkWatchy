@@ -1,7 +1,7 @@
 #ifndef BITMOD_H
 #define BITMOD_H
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if BITCOIN_MODULE
 
