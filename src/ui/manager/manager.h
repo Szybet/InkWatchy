@@ -54,7 +54,9 @@ void loopManager();
 
 // Manager functions
 void initMainMenu();
+#if DEBUG_MENUS
 void initDebugMenu();
+#endif
 void initSettingsMenu();
 #if WEATHER_INFO
 void initWeatherMenu();

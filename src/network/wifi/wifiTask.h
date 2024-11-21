@@ -12,9 +12,7 @@ void turnOffWifiMinimal();
 void turnOffWifi();
 
 bool isWifiTaskCheck();
-#if DEBUG || DEBUG_MENUS == 1
 String wifiStatus();
-#endif
 wifiStatusSimple wifiStatusWrap();
 
 #endif

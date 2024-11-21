@@ -130,7 +130,9 @@ void loopManager()
     }
     case debugMenu:
     {
+#if DEBUG_MENUS
         managerLaunchFunc(debugMenu, initDebugMenu, loopMenu);
+#endif
         break;
     }
     case settingsMenu:
@@ -140,12 +142,16 @@ void loopManager()
     }
     case generalDebug:
     {
+#if DEBUG_MENUS
         managerLaunchFunc(generalDebug, initGeneralDebugDisplay, loopGeneralDebugDisplay);
+#endif
         break;
     }
     case batteryDebug:
     {
+#if DEBUG_MENUS
         managerLaunchFunc(batteryDebug, initBatteryDebugDisplay, loopBatteryDebugDisplay);
+#endif
         break;
     }
     case wifiDebug:
