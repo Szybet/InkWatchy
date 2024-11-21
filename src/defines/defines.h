@@ -179,7 +179,7 @@ static const WiFiCred* wifiCredStatic[] = {
 
 // Other
 #if DEBUG
-#include "../other/debugMain/debugMain.h"
+#include "../other/debug/debugMain.h"
 #include "../other/debug/debug.h"
 #endif
 #if WIFI_TOOL
