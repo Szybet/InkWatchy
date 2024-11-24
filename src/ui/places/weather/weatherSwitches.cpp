@@ -124,7 +124,7 @@ void initWeatherConditionMenu()
         lastMenuSelected.toCharArray(weatherDayChoosed, 12);
         weatherDayChoosed[11] = '\0';
     }
-    else if(String(weatherDayChoosed).indexOf(".") == -1)
+    else if (String(weatherDayChoosed).indexOf(".") == -1)
     {
         debugLog("Error finding date for weather condition");
         overwriteSwitch(textDialog);
@@ -145,12 +145,6 @@ void initWeatherConditionMenu()
     entryMenu buttons[9] = {{"Temperature", &emptyImgPack, showTemp}, {"Pressure", &emptyImgPack, showPressure}, {"Humidity", &emptyImgPack, showHumidity}, {"Weather conditions", &emptyImgPack, showWeatherCond}, {"Cloudiness", &emptyImgPack, showClouds}, {"Wind speed", &emptyImgPack, showWindSpeed}, {"Wind gusts", &emptyImgPack, showWindGuts}, {"Visibility", &emptyImgPack, showVisibility}, {"% of precipitation", &emptyImgPack, showPop}};
     initMenu(buttons, 9, "Weather stat", 1);
 }
-
-struct OM_HourlyForecastReturn
-{
-    bool fine;
-    OM_HourlyForecast data;
-};
 
 OM_HourlyForecastReturn generalWeatherGetData()
 {
@@ -176,10 +170,62 @@ OM_HourlyForecastReturn generalWeatherGetData()
     return forecast;
 }
 
+OM_OneHourWeather weatherGetDataHourly(uint8_t hourOffset)
+{
+    String unixTimeWeather = String(simplifyUnix(getUnixTime(timeRTCLocal)));
+    debugLog("Getting weather for unix: " + unixTimeWeather);
+    bufSize weatherData = fsGetBlob(unixTimeWeather, String(WEATHER_HOURLY_DIR) + "/");
+    debugLog("Weather size is: " + String(weatherData.size) + " While is should be: " + String(sizeof(OM_HourlyForecast)));
+    OM_OneHourWeather forecast = {0};
+    if (weatherData.size != sizeof(OM_HourlyForecast))
+    {
+        debugLog("Weather data is bad.");
+        free(weatherData.buf);
+        forecast.fine = false;
+        return forecast;
+    }
+    OM_HourlyForecast *weatherDataWork = (OM_HourlyForecast *)weatherData.buf;
+    int64_t unixNow = getUnixTime(timeRTCLocal) + (60 * 60) * hourOffset;
+    int64_t smallestDiffUnix = 0;
+    uint8_t smallestDiffIndex = 0;
+    for (int i = 0; i < OM_WEATHER_MAX_HOURS; i++)
+    {
+        if (llabs(unixNow - (int64_t)weatherDataWork->hourly_time[i]) < llabs(unixNow - smallestDiffUnix))
+        {
+            smallestDiffUnix = weatherDataWork->hourly_time[i];
+            smallestDiffIndex = i;
+        }
+        debugLog("Current time: " + String(unixNow) + " choosed time: " + String(weatherDataWork->hourly_time[i]) + " diff: " + String(llabs(unixNow - weatherDataWork->hourly_time[i])));
+    }
+    debugLog("FINAL time: " + String(unixNow) + " choosed time: " + String(weatherDataWork->hourly_time[smallestDiffIndex]) + " diff: " + String(llabs(unixNow - weatherDataWork->hourly_time[smallestDiffIndex])) + " so it's index is: " + String(smallestDiffIndex));
+
+    forecast.hourly_time = weatherDataWork->hourly_time[smallestDiffIndex];
+    forecast.temp = weatherDataWork->temp[smallestDiffIndex];
+    forecast.humidity = weatherDataWork->humidity[smallestDiffIndex];
+    forecast.apparent_temp = weatherDataWork->apparent_temp[smallestDiffIndex];
+    forecast.pressure = weatherDataWork->pressure[smallestDiffIndex];
+    forecast.precipitation = weatherDataWork->precipitation[smallestDiffIndex];
+    forecast.cloud_cover = weatherDataWork->cloud_cover[smallestDiffIndex];
+    forecast.visibility = weatherDataWork->visibility[smallestDiffIndex];
+    forecast.wind_speed = weatherDataWork->wind_speed[smallestDiffIndex];
+    forecast.wind_deg = weatherDataWork->wind_deg[smallestDiffIndex];
+    forecast.wind_gust = weatherDataWork->wind_gust[smallestDiffIndex];
+    forecast.weather_code = weatherDataWork->weather_code[smallestDiffIndex];
+    forecast.is_day = weatherDataWork->is_day[smallestDiffIndex];
+    forecast.daily_time = weatherDataWork->daily_time[smallestDiffIndex];
+    forecast.sunrise = weatherDataWork->sunrise[smallestDiffIndex];
+    forecast.sunset = weatherDataWork->sunset[smallestDiffIndex];
+
+    free(weatherData.buf);
+    forecast.fine = true;
+    return forecast;
+}
+
 void showTemp()
 {
     OM_HourlyForecastReturn forecast = generalWeatherGetData();
-    if(forecast.fine == false) {
+    if (forecast.fine == false)
+    {
         return;
     }
 #if DEBUG
@@ -196,7 +242,8 @@ void showTemp()
 void showPressure()
 {
     OM_HourlyForecastReturn forecast = generalWeatherGetData();
-    if(forecast.fine == false) {
+    if (forecast.fine == false)
+    {
         return;
     }
 #if DEBUG
@@ -213,7 +260,8 @@ void showPressure()
 void showHumidity()
 {
     OM_HourlyForecastReturn forecast = generalWeatherGetData();
-    if(forecast.fine == false) {
+    if (forecast.fine == false)
+    {
         return;
     }
 #if DEBUG
@@ -235,7 +283,8 @@ void showHumidity()
 void showWeatherCond()
 {
     OM_HourlyForecastReturn forecast = generalWeatherGetData();
-    if(forecast.fine == false) {
+    if (forecast.fine == false)
+    {
         return;
     }
     String weatherCond[OM_WEATHER_MAX_HOURS];
@@ -250,7 +299,8 @@ void showWeatherCond()
 void showClouds()
 {
     OM_HourlyForecastReturn forecast = generalWeatherGetData();
-    if(forecast.fine == false) {
+    if (forecast.fine == false)
+    {
         return;
     }
 #if DEBUG
@@ -272,7 +322,8 @@ void showClouds()
 void showWindSpeed()
 {
     OM_HourlyForecastReturn forecast = generalWeatherGetData();
-    if(forecast.fine == false) {
+    if (forecast.fine == false)
+    {
         return;
     }
 #if DEBUG
@@ -289,7 +340,8 @@ void showWindSpeed()
 void showWindGuts()
 {
     OM_HourlyForecastReturn forecast = generalWeatherGetData();
-    if(forecast.fine == false) {
+    if (forecast.fine == false)
+    {
         return;
     }
 #if DEBUG
@@ -306,7 +358,8 @@ void showWindGuts()
 void showVisibility()
 {
     OM_HourlyForecastReturn forecast = generalWeatherGetData();
-    if(forecast.fine == false) {
+    if (forecast.fine == false)
+    {
         return;
     }
 #if DEBUG
@@ -328,7 +381,8 @@ void showVisibility()
 void showPop()
 {
     OM_HourlyForecastReturn forecast = generalWeatherGetData();
-    if(forecast.fine == false) {
+    if (forecast.fine == false)
+    {
         return;
     }
 #if DEBUG

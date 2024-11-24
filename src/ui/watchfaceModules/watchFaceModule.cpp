@@ -76,6 +76,7 @@ void moveModule(direction where)
     debugLog("currentModule: " + String(currentModule));
 }
 
+// TODO: move this to watchface manager
 #define MODULE_NUM_POS_X 185
 #define MODULE_NUM_POS_Y 170
 #define MODULE_COUNT_POS_X 185
