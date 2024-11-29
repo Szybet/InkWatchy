@@ -97,7 +97,7 @@ static void drawTimeBeforeApply()
 RTC_DATA_ATTR uint8_t percentOfDay = 0;
 RTC_DATA_ATTR uint8_t percentSteps = 0;
 
-RTC_DATA_ATTR uint8_t weatherMinutes = 0;
+RTC_DATA_ATTR uint16_t weatherMinutes = 0;
 #define TEMP_CORD 48, 120
 #define HUMIDITY_CORD 25, 124
 #define PRESSURE_CORD 25, 132
@@ -243,9 +243,9 @@ static void drawTimeAfterApply(bool forceDraw)
         drawProgressBar(STEPS_BAR_CORD, TO_DAY_BAR_SIZE, percentSteps);
     }
 
-    uint8_t minutes = timeRTCLocal.Minute;
-    if (abs(weatherMinutes - minutes) > 25 || forceDraw == true)
+    if (abs(weatherMinutes - timeRTCLocal.Minute + (60 * timeRTCLocal.Hour)) > 25 || forceDraw == true)
     {
+        weatherMinutes = timeRTCLocal.Minute + (60 * timeRTCLocal.Hour);
         debugLog("Drawing weather in watchface");
         setTextSize(1);
         setFont(getFont("dogicapixel4"));
