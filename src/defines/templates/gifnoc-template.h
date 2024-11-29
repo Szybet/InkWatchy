@@ -56,10 +56,19 @@
 #define FORCE_INTERNAL_RTC 0               // If your device has an external RTC but it sucks, set this to 1
 #define FORCED_INTERNAL_RTC_QUARTZ 0       // If you forced the internal RTC and if you have an external quartz crystal, set this to 1
 #define AVOID_SLEEPING_ON_FULL_MINUTE 4    // This value shouldn't be really touched, it checks if in x seconds a full minute passess, if yes, it waits to x / 2 seconds
-#define WEATHER_INFO 1                     // Enable weather
-#define WEATHER_TRIES 3                    // Ammount of times to try to sync weather
 #define CONNECT_TO_HIDDEN_NETWORKS 0       // This makes the wifi manager connect to hidden networks too. For some reason it takes more time and power to do so, that's why it's not on default, otherwise it should work
 #define NTP_SERVER_URL "ntp.ubuntu.com" // Change it to something else if it doesn't work as a first step to troubleshoot. pool.ntp.org has a rate limiter apparently
+
+// Weather
+#define WEATHER_INFO 1                     // Enable weather
+#define WEATHER_TRIES 3                    // Ammount of times to try to sync weather
+#define WEATHER_WATCHFACE_HOUR_OFFSET 1
+#define PRESSURE_HPA_MAX 1100 // 1013 is 50%
+#define PRESSURE_HPA_MIN 850
+#define VISIBILITY_M_MAX 150
+#define VISIBILITY_M_MIN 0
+#define WIND_SPEED_MAX 30 // Km/h
+#define WIND_SPEED_MIN 0
 
 // Book things
 #define BOOK 0
