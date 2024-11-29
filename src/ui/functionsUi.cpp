@@ -35,20 +35,28 @@ void centerText(String str, uint16_t *currentHeight)
   *currentHeight = *currentHeight + maxHeight;
 }
 
-void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor)
+void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor, bool manualWidth, uint8_t manualWidthAdd)
 {
-  // debugLog("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
+  debugLog("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
-  // debugLog("w: " + String(w));
-  // debugLog("h: " + String(h));
-  w = w + 5;
+  debugLog("w: " + String(w) + " h: " + String(h));
+  if (manualWidth == false) {
+    w = w + 5;
+  } else {
+    w = w + manualWidthAdd;
+  }
   if (containsBelowChar(str) == true)
   {
     GFXcanvas1 canvasTmp(w, h + 3);
+    canvasTmp.setTextWrap(false);
     canvasTmp.setFont(font);
     canvasTmp.setTextSize(textSize);
     canvasTmp.setCursor(0, h - 3);
+    if (manualWidth == true)
+    {
+      canvasTmp.setTextWrap(false);
+    }
     canvasTmp.print(str);
     display.drawBitmap(x, y - h + 3, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
@@ -61,6 +69,10 @@ void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, ui
     canvasTmp.setFont(font);
     canvasTmp.setTextSize(textSize);
     canvasTmp.setCursor(0, h);
+    if (manualWidth == true)
+    {
+      canvasTmp.setTextWrap(false);
+    }
     canvasTmp.print(str);
     display.drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT

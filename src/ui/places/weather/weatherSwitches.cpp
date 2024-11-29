@@ -212,9 +212,10 @@ OM_OneHourWeather weatherGetDataHourly(uint8_t hourOffset)
     forecast.wind_gust = weatherDataWork->wind_gust[smallestDiffIndex];
     forecast.weather_code = weatherDataWork->weather_code[smallestDiffIndex];
     forecast.is_day = weatherDataWork->is_day[smallestDiffIndex];
-    forecast.daily_time = weatherDataWork->daily_time[smallestDiffIndex];
-    forecast.sunrise = weatherDataWork->sunrise[smallestDiffIndex];
-    forecast.sunset = weatherDataWork->sunset[smallestDiffIndex];
+    // Daily things!
+    forecast.daily_time = weatherDataWork->daily_time[0];
+    forecast.sunrise = weatherDataWork->sunrise[0];
+    forecast.sunset = weatherDataWork->sunset[0];
 
     free(weatherData.buf);
     forecast.fine = true;
@@ -292,7 +293,7 @@ void showWeatherCond()
     {
         weatherCond[i] = weatherConditionIdToStr(forecast.data.weather_code[i]);
     }
-    textPage("Weather conditions", weatherCond, OM_WEATHER_MAX_HOURS, getFont("DisposableDroidBB9"));
+    textPage("Weather conditions", weatherCond, OM_WEATHER_MAX_HOURS, getFont("dogicapixel4"));
     generalSwitch(ChartPlace);
 }
 
