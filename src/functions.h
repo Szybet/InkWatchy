@@ -15,6 +15,7 @@ bool containsBelowChar(String str);
 void delayTask(int timeMs);
 void checkMaxMin(int *value, int max, int min = 0, bool wrapback = true);
 String strTime(time_t unixTime);
+String addZero(String str, uint8_t minimumLength);
 
 float findHighest(float* numbers, int size);
 float findLowest(float* numbers, int size);

@@ -257,6 +257,14 @@ String strTime(time_t unixTime)
   return String(ctime(&unixTime));
 }
 
+String addZero(String str, uint8_t minimumLength) {
+  String str_tmp = str;
+  while(str_tmp.length() < minimumLength) {
+    str_tmp = "0" + str_tmp;
+  }
+  return str_tmp;
+}
+
 float findHighest(float *numbers, int size)
 {
   if (size == 0)
