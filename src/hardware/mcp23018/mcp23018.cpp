@@ -256,8 +256,7 @@ bool mcp23018::resetVerify()
     expectInterruptState = RISING;
   }
   */
-  uint8_t bitToHigh = 0;
-  bitToHigh = 2;
+  uint8_t bitToHigh = 2;
   if (BatteryRead() < 3.0)
   {
     debugLog("Interrupt is already low?");
@@ -268,6 +267,19 @@ bool mcp23018::resetVerify()
 
   writeSingleRegister(IOCON, iocon);
   writeSingleRegister(IOCON + 1, iocon);
+
+// For testing pure power consumption
+#if DEBUG && true == false
+  // Setting to output reduces power consumption
+  /*
+    for(int i = 0; i < 16; i++) {
+      setPinMode(i, MCP_OUTPUT);
+    }
+  */
+  debugLog("Dumping registers after verify and iocon apply, and exiting");
+  isDebug(dumpAllRegisters());
+  return true;
+#endif
 
   iodirReg = FULL_REG;
   gpintenReg = EMPTY_REG;
