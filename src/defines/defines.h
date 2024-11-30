@@ -80,7 +80,7 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../hardware/acc/acc.h"
 #include "../hardware/fs/littlefs.h"
 #if ATCHY_VER == YATCHY
-#include "../hardware/i2c.h"
+#include "../hardware/i2c/i2c.h"
 #endif
 #if TEMP_CHECKS_ENABLED
 #include "../hardware/temp/temp.h"
