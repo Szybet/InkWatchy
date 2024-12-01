@@ -75,9 +75,9 @@ This is a passion project at this point. To help an open source developer - who 
 
 Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a option. 
 
-Oh and as it seems bitcoin is also preferred, just contact me and ask me for an address because creating a new address for every transaction is more secure, right?
+Bitcoin address: `bc1qm2d3w6a3qd93zrfuz4l6rs9yr30dmkl2t2z3y5`
 
-For a small coffe donation I can manage your firmware and provide you personalised binaries, if you can't compile it yourself, even add some features for you
+For a small coffe I can manage your firmware and provide you personalised binaries, if you can't compile it yourself, even add some features for you
 
 ## Sister projects
 - https://github.com/Szybet/WatchySourcingHub
