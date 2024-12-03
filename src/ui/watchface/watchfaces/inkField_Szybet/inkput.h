@@ -1,5 +1,5 @@
-#ifndef MODULES_LOGIC_H
-#define MODULES_LOGIC_H
+#ifndef INKPUT_H
+#define INKPUT_H
 
 #include "inkField.h"
 
