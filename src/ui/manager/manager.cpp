@@ -114,7 +114,7 @@ void loopManager()
         }
     }
 
-    debugLog("Current place: " + String(placeTree[currentPlaceIndex]) + " and index: " + String(currentPlaceIndex));
+    // debugLog("Current place: " + String(placeTree[currentPlaceIndex]) + " and index: " + String(currentPlaceIndex));
     // Don't forget break...
     switch (placeTree[currentPlaceIndex])
     {

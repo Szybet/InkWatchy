@@ -37,10 +37,10 @@ void centerText(String str, uint16_t *currentHeight)
 
 void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor, bool manualWidth, uint8_t manualWidthAdd)
 {
-  debugLog("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
+  // debugLog("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
-  debugLog("w: " + String(w) + " h: " + String(h));
+  // debugLog("w: " + String(w) + " h: " + String(h));
   if (manualWidth == false) {
     w = w + 5;
   } else {

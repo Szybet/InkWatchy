@@ -9,7 +9,7 @@ echo $url
 
 mkdir -p resources/tools/fs/littlefs/calendar/
 rm -rf resources/tools/fs/littlefs/calendar/*
-cargo run --manifest-path src/ui/calendar/ics-to-json-rs/Cargo.toml -- -u $url -o resources/tools/fs/littlefs/calendar/
+cargo run --manifest-path src/ui/places/calendar/ics-to-json-rs/Cargo.toml -- -u $url -o resources/tools/fs/littlefs/calendar/
 
 cd resources/tools/fs
 ./getFs.sh
