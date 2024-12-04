@@ -26,7 +26,7 @@ void wManageOneInit(const watchfaceDefOne *wdo)
 bool wentToSleep = false; // Don't go to sleep after one try of noClickedButton - maybe a sync is going on?
 void wManageOneLoop(const watchfaceDefOne *wdo)
 {
-    debugLog("Executing loop watch face");
+    // debugLog("Executing loop watch face");
     bool timeHappened = true;
     if (wFTime.Minute != timeRTCLocal.Minute || wFTime.Hour != timeRTCLocal.Hour) // Hour too because of timezone
     {

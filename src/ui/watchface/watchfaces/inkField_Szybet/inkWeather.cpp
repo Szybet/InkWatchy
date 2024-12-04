@@ -1,4 +1,5 @@
 #include "inkField.h"
+#include <MoonPhase.h>
 
 #define TEMP_CORD 48, 120
 #define HUMIDITY_CORD 25, 124
@@ -189,4 +190,21 @@ void inkDrawWeather()
     writeTextReplaceBack("ER", SUNSET_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
     writeImageN(WEATHER_ICON_CORD, getImg("inkfield/meteor"));
 #endif
+}
+
+// Moon stuff
+void inkDrawMoon() {
+    MoonPhase mp;
+    mp.calculate(getUnixTime(timeRTCLocal));
+    /*
+    double mp.age;		// Age in days of the current cycle.
+    double mp.fraction;	// The illumination fraction, from 0% - 100%.
+    double mp.distance;	// Moon distance in earth radii.
+    const char * mp.phaseName;	// The name of the moon phase: New, Full, etc. - https://github.com/signetica/MoonPhase/blob/d6944c576b418a897ad5cf158041389a7c668a04/MoonPhase.cpp#L20-L22
+    
+    So:
+    age: Days, 1-31 I ques
+    illumination fraction, Percents
+    distance, radius, defined by MOON_MIN_RADIUS and MOON_MAX_RADIUS
+    */
 }

@@ -98,6 +98,7 @@ RTC_DATA_ATTR bool previousCharging = true;
 RTC_DATA_ATTR bool previousStatInStateBefore = false;
 RTC_DATA_ATTR bool previousStatInStateAfter = true; // There is no such configuration, so it will always trigger at least once
 RTC_DATA_ATTR bool previousFiveVolt = false;        // false because it will be true after flashing
+bool isSomethingWrong = false;
 #endif
 void isChargingCheck()
 {
@@ -183,7 +184,7 @@ void isChargingCheck()
     gpioExpander.setPinState(MCP_STAT_OUT, true);
     delayTask(5);
     bool statInStateAfter = gpioExpander.digitalRead(MCP_STAT_IN);
-#if DEBUG && true == false
+#if DEBUG && true == true
     debugLog("Executed isCharging");
     debugLog("fiveVolt: " + String(fiveVolt));
     debugLog("statInStateBefore: " + String(statInStateBefore));
@@ -211,11 +212,20 @@ void isChargingCheck()
         }
         else
         {
+            if(isSomethingWrong == false) {
+                debugLog("Somethign is messed up with charging detection, trying again soon");
+                isSomethingWrong = true;
+                delayTask(100);
+                isChargingCheck();
+                return;
+            }
             debugLog("SOMETHING IS WRONG WITH CHARGING");
+            isSomethingWrong = false;
             isFine = false;
         }
         if (isFine == true)
         {
+            isSomethingWrong = false;
 #if DEBUG && true == true
             debugLog("bat.isCharging: " + BOOL_STR(bat.isCharging));
             debugLog("bat.isFullyCharged: " + BOOL_STR(bat.isCharging));
@@ -231,6 +241,7 @@ void isChargingCheck()
             }
             else
             {
+                debugLog("Setting color to discharging!");
                 setRgb(BATTERY_DISCHARGING_COLOR, true, 1000);
             }
 #endif

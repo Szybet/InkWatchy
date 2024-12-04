@@ -52,7 +52,7 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 const watchfaceDef *getCurrentWatchface()
 {
     const watchfaceDef *watchfaceSel = watchfacesList[watchfaceSelected];
-    debugLog("Watchface selected: " + String(watchfaceSel->name));
+    // debugLog("Watchface selected: " + String(watchfaceSel->name));
     return watchfaceSel;
 }
 
@@ -65,7 +65,7 @@ const watchfaceDefOne *getwatchfaceDefOne()
         watchfaceDefOne *wOne = (watchfaceDefOne *)watchfaceSel->data;
         return wOne;
     }
-    debugLog("Get watchface one failed, returning NULL. This should not happen");
+    // debugLog("Get watchface one failed, returning NULL. This should not happen");
     return NULL;
 }
 
@@ -77,14 +77,14 @@ void watchfaceManageAll(bool init)
     {
     case wfmOne:
     {
-        debugLog("wfmOne selected");
+        // debugLog("wfmOne selected");
         watchfaceDefOne *wOne = (watchfaceDefOne *)watchfaceSel->data;
         wManageOneLaunch(wOne, init);
         break;
     }
     case wfmTwo:
     {
-        debugLog("wfmTwo selected");
+        // debugLog("wfmTwo selected");
         wfmTwoRet (*wfTwoFunc)(wfmTwoArg) = (wfmTwoRet(*)(wfmTwoArg))watchfaceSel->data;
         wfmTwoArg arg = wfmTwoArg::wTloop;
         if (init == true)
