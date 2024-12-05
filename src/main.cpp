@@ -50,29 +50,30 @@ void setup()
   }
 
   // resetSleepDelay();
+  // HOLY SHIT I WAS DOING A SHORT but now it doesnt work?
+  gpioExpander.setPinState(MCP_5V, true);
+  gpioExpander.setPinMode(MCP_5V, MCP_OUTPUT);
+  setCpuSpeed(maxSpeed);
 }
 
+int fuck = 0;
 void loop()
 {
-#if TEMP_CHECKS_ENABLED
-  tempChecker();
-#endif
-  if (bootStatus.reason != rtc)
+  // gpioExpander.setPinState(MCP_5V, false);
+  // gpioExpander.setPinState(MCP_5V, true);
+  bool fiveVolt = gpioExpander.digitalRead(MCP_5V);
+  display.setCursor(100, 100);
+  display.fillRect(0, 0, 200, 200, GxEPD_WHITE);
+  display.print(String(fiveVolt));
+  watchdogPing();
+  fuck = fuck + 1;
+  display.setCursor(100, 150);
+  display.print(String(fuck));
+  display.display(PARTIAL_UPDATE);
+  if (fuck > 30)
   {
-    watchdogPing();
-    alarmManageRTC();
+    gpioExpander.setPinMode(MCP_5V, MCP_INPUT);
+    goSleep();
   }
-  loopManager();
-
-#if !DEBUG || !NO_SYNC
-  regularSync();
-#endif
-
-#if DEBUG
-  endLoopDebug();
-#endif
-
-#if !DISABLE_SLEEP
-  manageSleep();
-#endif
+  delayTask(1000);
 }

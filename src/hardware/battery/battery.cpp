@@ -181,7 +181,7 @@ void isChargingCheck()
     gpioExpander.setPinState(MCP_STAT_OUT, false);
     delayTask(5);
     bool statInStateBefore = gpioExpander.digitalRead(MCP_STAT_IN);
-    gpioExpander.setPinState(MCP_STAT_OUT, true);
+    // gpioExpander.setPinState(MCP_STAT_OUT, true);
     delayTask(5);
     bool statInStateAfter = gpioExpander.digitalRead(MCP_STAT_IN);
 #if DEBUG && true == true

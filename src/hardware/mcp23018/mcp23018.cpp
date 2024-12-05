@@ -299,8 +299,9 @@ bool mcp23018::resetVerify()
   setPinMode(RGB_DIODE_BLUE_PIN, MCP_OUTPUT);
 #endif
 
-  setPinState(MCP_STAT_OUT, true);
+  setPinState(MCP_STAT_OUT, false);
   setPinMode(MCP_STAT_OUT, MCP_OUTPUT);
+  setPinState(MCP_STAT_OUT, false);
 
   setDefaultInterrupts();
   isDebug(dumpAllRegisters());
@@ -355,10 +356,11 @@ void mcp23018::setDefaultInterrupts()
     setPinPullUp(UP_PIN, true);
     setInterrupt(UP_PIN, true);
 
+    setInterruptCause(MCP_5V, true, true);
     setInterrupt(MCP_5V, true);
   }
 
-  // This was disabled in sleep, now we disable it
+  // This was disabled in sleep, now we enable it
   setInterrupt(MCP_STAT_IN, true);
 #endif
 }
