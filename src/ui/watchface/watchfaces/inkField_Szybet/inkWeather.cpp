@@ -193,6 +193,10 @@ void inkDrawWeather()
 }
 
 // Moon stuff
+#define MOON_AGE_CORD 136,133
+#define MOON_LIGHT_CORD 125,145
+#define MOON_DISTANCE_CORD 125,157
+
 void inkDrawMoon() {
     MoonPhase mp;
     mp.calculate(getUnixTime(timeRTCLocal));
@@ -207,4 +211,11 @@ void inkDrawMoon() {
     illumination fraction, Percents
     distance, radius, defined by MOON_MIN_RADIUS and MOON_MAX_RADIUS
     */
+    setTextSize(1);
+    getFont("inkfield/Speculum9");
+    writeTextReplaceBack(String(int(mp.age)), MOON_AGE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(String(int(mp.fraction)), MOON_LIGHT_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    debugLog("mp.distance: " + String(mp.distance));
+    int distance = int((mp.distance - MOON_MIN_RADIUS) * 100 / (MOON_MAX_RADIUS - MOON_MIN_RADIUS));
+    writeTextReplaceBack(String(int(distance)), MOON_DISTANCE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
 }
