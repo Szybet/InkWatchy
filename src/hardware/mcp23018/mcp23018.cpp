@@ -81,6 +81,10 @@ buttonState mcp23018::manageInterrupts()
     return Unknown;
   }
   debugLog("Launched manageInterrupts");
+  // For an unknown reason to me, it doesn't work if this is not called here:
+  BatteryRead();
+  // Maybe it clears the interrupt or something, idk, not worth my time
+  
   debugLog("BatteryRead1: " + String(BatteryRead()));
   // First read the cause
   uint16_t gpio_cause = readRegister(INTF);
