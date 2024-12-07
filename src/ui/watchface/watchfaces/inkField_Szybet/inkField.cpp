@@ -12,8 +12,8 @@
 #define DAY_NAME_CORD 13, 87
 #define DATE_CORD 8, 113
 #define MONTH_NAME_CORD 46, 109
-#define MONTH_NUMBER_1_CORD 92, 99  
-#define MONTH_NUMBER_2_CORD 92, 108
+#define MONTH_NUMBER_1_CORD 91, 99
+#define MONTH_NUMBER_2_CORD 91, 108
 #define GENERAL_BAR_SIZE 54, 10
 #define MONTH_BAR_CORD 136, 64
 #define DAY_BAR_CORD 136, 64 + 15
@@ -103,7 +103,8 @@ RTC_DATA_ATTR uint16_t weatherMinutes = 0;
 
 static void drawTimeAfterApply(bool forceDraw)
 {
-    if(dayBar != timeRTCLocal.Day || forceDraw == true) {
+    if (dayBar != timeRTCLocal.Day || forceDraw == true)
+    {
         dayBar = timeRTCLocal.Day;
         uint8_t percentOfMonth = uint8_t(((float)dayBar / (float)31) * 100.0);
         drawProgressBar(MONTH_BAR_CORD, GENERAL_BAR_SIZE, percentOfMonth);
@@ -181,13 +182,17 @@ static void drawMonth()
     writeTextReplaceBack(month, MONTH_NAME_CORD);
 
     String realMonthNumber = String(wFTime.Month + 1);
-    if(realMonthNumber.length() == 1) {
+    if (realMonthNumber.length() == 1)
+    {
         realMonthNumber = "0" + realMonthNumber;
     }
 
     setFont(getFont("dogicapixel4"));
-    writeTextReplaceBack(String(realMonthNumber.begin()), MONTH_NUMBER_1_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(String(realMonthNumber.end()), MONTH_NUMBER_2_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    String f = String(realMonthNumber.substring(0, 1));
+    String e = String(realMonthNumber.substring(1, 2));
+    debugLog("f e: \"" + f + "\" and \"" + e + "\" Where full is: " + realMonthNumber);
+    writeTextReplaceBack(f, MONTH_NUMBER_1_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1, 1);
+    writeTextReplaceBack(e, MONTH_NUMBER_2_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1, 1);
 }
 
 static void drawBattery()

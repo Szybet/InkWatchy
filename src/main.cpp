@@ -72,7 +72,7 @@ void loop()
   endLoopDebug();
 #endif
 
-#if !DISABLE_SLEEP
+#if !DISABLE_SLEEP || !DEBUG
   manageSleep();
 #endif
 }
