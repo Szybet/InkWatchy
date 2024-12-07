@@ -17,6 +17,7 @@ void initHardware()
 
     bootStatus.bareEspCause = esp_sleep_get_wakeup_cause();
     bootStatus.resetReason = esp_reset_reason();
+    debugLog("Sleep wakeup reason: " + wakeupSourceToString(bootStatus.bareEspCause));
     if (bootStatus.bareEspCause == ESP_SLEEP_WAKEUP_EXT0 || bootStatus.bareEspCause == ESP_SLEEP_WAKEUP_TIMER)
     {
         debugLog("Waked up because of RTC");
@@ -59,6 +60,8 @@ void initHardware()
 #if LP_CORE
     // Always, to be sure
     stopLpCore();
+#else
+    deInitRtcGpio();
 #endif
 
     initRTC();

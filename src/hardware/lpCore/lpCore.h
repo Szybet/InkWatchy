@@ -12,8 +12,6 @@ void clearLpCoreRtcMem();
 void lpCoreScreenPrepare(bool now);
 void stopLpCore();
 bool loadLpCore();
-void initRtcGpio();
-void deInitRtcGpio();
 bool runLpCore();
 void initManageLpCore();
 
