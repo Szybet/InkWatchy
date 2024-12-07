@@ -280,7 +280,6 @@ bool mcp23018::resetVerify()
 
 // For testing pure power consumption
 #if DEBUG && true == false
-
   debugLog("Dumping registers after verify and iocon apply, and exiting");
   isDebug(dumpAllRegisters());
   return true;
