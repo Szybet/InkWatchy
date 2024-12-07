@@ -35,7 +35,7 @@ void centerText(String str, uint16_t *currentHeight)
   *currentHeight = *currentHeight + maxHeight;
 }
 
-void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor, bool manualWidth, uint8_t manualWidthAdd)
+void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor, bool manualWidth, uint8_t manualWidthAdd, uint8_t manualHeighAdd)
 {
   // debugLog("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
   uint16_t w, h;
@@ -48,24 +48,24 @@ void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, ui
   }
   if (containsBelowChar(str) == true)
   {
-    GFXcanvas1 canvasTmp(w, h + 3);
+    GFXcanvas1 canvasTmp(w, h + manualHeighAdd);
     canvasTmp.setTextWrap(false);
     canvasTmp.setFont(font);
     canvasTmp.setTextSize(textSize);
-    canvasTmp.setCursor(0, h - 3);
+    canvasTmp.setCursor(0, h - manualHeighAdd);
     if (manualWidth == true)
     {
       canvasTmp.setTextWrap(false);
     }
     canvasTmp.print(str);
-    display.drawBitmap(x, y - h + 3, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
+    display.drawBitmap(x, y - h + manualHeighAdd, canvasTmp.getBuffer(), w, h + manualHeighAdd, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
-    display.drawRect(x, y - h + 3, w, h + 3, frColor);
+    display.drawRect(x, y - h + manualHeighAdd, w, h + manualHeighAdd, frColor);
 #endif
   }
   else
   {
-    GFXcanvas1 canvasTmp(w, h + 3);
+    GFXcanvas1 canvasTmp(w, h + manualHeighAdd);
     canvasTmp.setFont(font);
     canvasTmp.setTextSize(textSize);
     canvasTmp.setCursor(0, h);
@@ -74,9 +74,9 @@ void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, ui
       canvasTmp.setTextWrap(false);
     }
     canvasTmp.print(str);
-    display.drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
+    display.drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + manualHeighAdd, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
-    display.drawRect(x, y - h, w, h + 3, frColor);
+    display.drawRect(x, y - h, w, h + manualHeighAdd, frColor);
 #endif
   }
 }

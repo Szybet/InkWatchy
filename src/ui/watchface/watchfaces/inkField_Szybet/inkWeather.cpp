@@ -193,11 +193,27 @@ void inkDrawWeather()
 }
 
 // Moon stuff
-#define MOON_AGE_CORD 136,133
-#define MOON_LIGHT_CORD 125,145
-#define MOON_DISTANCE_CORD 125,157
+#define MOON_AGE_CORD 136, 133
+#define MOON_LIGHT_CORD 125, 145
+#define MOON_DISTANCE_CORD 125, 157
+#define MOON_IMG_CORD 160, 124
 
-void inkDrawMoon() {
+String removeSpaces(String input)
+{
+    String output = "";
+    for (int i = 0; i < input.length(); i++)
+    {
+        char character = input.charAt(i);
+        if (character != ' ')
+        {
+            output = output + String(character);
+        }
+    }
+    return output;
+}
+
+void inkDrawMoon()
+{
     MoonPhase mp;
     mp.calculate(getUnixTime(timeRTCLocal));
     /*
@@ -205,17 +221,20 @@ void inkDrawMoon() {
     double mp.fraction;	// The illumination fraction, from 0% - 100%.
     double mp.distance;	// Moon distance in earth radii.
     const char * mp.phaseName;	// The name of the moon phase: New, Full, etc. - https://github.com/signetica/MoonPhase/blob/d6944c576b418a897ad5cf158041389a7c668a04/MoonPhase.cpp#L20-L22
-    
+
     So:
     age: Days, 1-31 I ques
     illumination fraction, Percents
     distance, radius, defined by MOON_MIN_RADIUS and MOON_MAX_RADIUS
     */
     setTextSize(1);
-    getFont("inkfield/Speculum9");
-    writeTextReplaceBack(String(int(mp.age)), MOON_AGE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(String(int(mp.fraction)), MOON_LIGHT_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    setFont(getFont("inkfield/Speculum9"));
+    writeTextReplaceBack(String(int(mp.age)), MOON_AGE_CORD, GxEPD_BLACK, GxEPD_WHITE);
+    debugLog("mp.fraction: " + String(mp.fraction));
+    writeTextReplaceBack(String(int(mp.fraction * 100.0)), MOON_LIGHT_CORD, GxEPD_BLACK, GxEPD_WHITE);
     debugLog("mp.distance: " + String(mp.distance));
     int distance = int((mp.distance - MOON_MIN_RADIUS) * 100 / (MOON_MAX_RADIUS - MOON_MIN_RADIUS));
-    writeTextReplaceBack(String(int(distance)), MOON_DISTANCE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(String(int(distance)), MOON_DISTANCE_CORD, GxEPD_BLACK, GxEPD_WHITE);
+
+    writeImageN(MOON_IMG_CORD, getImg("inkfield/" + removeSpaces(String(mp.phaseName))));
 }
