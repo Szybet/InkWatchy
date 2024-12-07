@@ -39,7 +39,7 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
         {
             screenForceNextFullTimeWrite = false;
             lpCoreScreenPrepare(false);
-            showTimeFull();
+            wdo->showTimeFull();
         }
         else
 #endif
@@ -149,7 +149,7 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
         {
             screenForceNextFullTimeWrite = false;
             lpCoreScreenPrepare(false);
-            showTimeFull();
+            wdo->showTimeFull();
         }
     }
 #endif

@@ -24,6 +24,8 @@
 
 #define TIMEZONE_OFFSET (1 * 3600)
 
+#define WAKEUP_MODULO 29
+
 uint8_t do_rust_things(void);
 
 void send_debug_message(uint8_t mess);
