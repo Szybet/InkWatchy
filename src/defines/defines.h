@@ -89,6 +89,7 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../hardware/rgb/rgb.h"
 #if ATCHY_VER == YATCHY
 #include "../hardware/mcp23018/mcp23018.h"
+#include "../hardware/lpCore/rtcPins.h"
 #endif
 #if LP_CORE
 #include "../hardware/lpCore/lpCore.h" // Always include it as there are some variables we want outside

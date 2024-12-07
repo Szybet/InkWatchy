@@ -257,10 +257,12 @@ bool mcp23018::resetVerify()
   }
   */
   uint8_t bitToHigh = 2;
+  #if DEBUG
   if (BatteryRead() < 3.0)
   {
     debugLog("Interrupt is already low?");
   }
+  #endif
 
   uint8_t iocon = 0b01000001 | (1 << bitToHigh);
   debugLog("Final iocon is: " + uint8ToBinaryString(iocon));
@@ -268,14 +270,17 @@ bool mcp23018::resetVerify()
   writeSingleRegister(IOCON, iocon);
   writeSingleRegister(IOCON + 1, iocon);
 
+
+  // Setting to output reduces power consumption
+  // But first we need not to do a short...
+  for(int i = 0; i < 16; i++) {
+    setPinState(i, true);
+    setPinMode(i, MCP_OUTPUT);
+  }
+
 // For testing pure power consumption
 #if DEBUG && true == false
-  // Setting to output reduces power consumption
-  /*
-    for(int i = 0; i < 16; i++) {
-      setPinMode(i, MCP_OUTPUT);
-    }
-  */
+
   debugLog("Dumping registers after verify and iocon apply, and exiting");
   isDebug(dumpAllRegisters());
   return true;
@@ -291,12 +296,21 @@ bool mcp23018::resetVerify()
 
   // isDebug(dumpAllRegisters());
 
+  // Set pins to inputs as they are outputs now
+  setPinMode(MCP_5V, MCP_INPUT);
+  #ifdef YATCHY_BACK_BTN
+  setPinMode(BACK_PIN, MCP_INPUT);
+  #endif
+  setPinMode(MENU_PIN, MCP_INPUT);
+  setPinMode(DOWN_PIN, MCP_INPUT);
+  setPinMode(UP_PIN, MCP_INPUT);
+
 #if RGB_DIODE
-  // This does the setPinState(RGB_DIODE_RED_PIN, true);
+  // This does the setPinState(RGB_DIODE_PIN, true);
   setRgb(IwNone);
-  setPinMode(RGB_DIODE_RED_PIN, MCP_OUTPUT);
-  setPinMode(RGB_DIODE_GREEN_PIN, MCP_OUTPUT);
-  setPinMode(RGB_DIODE_BLUE_PIN, MCP_OUTPUT);
+  // setPinMode(RGB_DIODE_RED_PIN, MCP_OUTPUT);
+  // setPinMode(RGB_DIODE_GREEN_PIN, MCP_OUTPUT);
+  // setPinMode(RGB_DIODE_BLUE_PIN, MCP_OUTPUT);
 #endif
 
   setPinState(MCP_STAT_OUT, true);
@@ -317,6 +331,7 @@ void mcp23018::deInit()
   // gpioExpander.setPinState(MCP_STAT_OUT, true); // test
 #if MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS == false
   setInterrupt(MCP_STAT_IN, false);
+  setPinMode(MCP_STAT_IN, MCP_OUTPUT);
 #endif
   // dumpAllRegisters();
 }
@@ -358,7 +373,8 @@ void mcp23018::setDefaultInterrupts()
     setInterrupt(MCP_5V, true);
   }
 
-  // This was disabled in sleep, now we disable it
+  // This was disabled in sleep, now we enable it
+  setPinState(MCP_STAT_IN, MCP_INPUT);
   setInterrupt(MCP_STAT_IN, true);
 #endif
 }

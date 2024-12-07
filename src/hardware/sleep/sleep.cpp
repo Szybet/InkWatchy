@@ -53,6 +53,11 @@ void ForceInputs()
     rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
     rtc_gpio_pullup_en((gpio_num_t)UP_PIN);
 #elif ATCHY_VER == YATCHY
+#if LP_CORE == false
+    initRtcGpio();
+    gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
+#endif
+
     gpioExpander.deInit();
     deInitI2C();
 #endif
