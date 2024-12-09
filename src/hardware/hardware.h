@@ -10,6 +10,7 @@ typedef enum
     unknown = 0,
     rtc = 1,
     button = 2,
+    ulp = 3,
 } wakeUpReason;
 
 struct wakeUpInfo {

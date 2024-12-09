@@ -82,7 +82,7 @@ void initBattery()
         bat.prevVOne = 0.0;
     }
 
-    if (bootStatus.fromWakeup == false || bootStatus.reason == wakeUpReason::rtc)
+    if (bootStatus.fromWakeup == false || bootStatus.reason == wakeUpReason::rtc || bootStatus.reason == wakeUpReason::ulp)
     {
         bat.oneCheck = true;
         loopBattery();

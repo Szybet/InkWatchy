@@ -6,7 +6,7 @@ bool motorTaskRunning = false;
 int vibrateTime;
 
 void initMotor() {
-    if(bootStatus.reason != rtc) {
+    if(bootStatus.reason != rtc && bootStatus.reason != ulp) {
         pinMode(VIB_MOTOR_PIN, OUTPUT);
         digitalWrite(VIB_MOTOR_PIN, false); // To reset the motor button if esp crashed when it was vibrating
     }
