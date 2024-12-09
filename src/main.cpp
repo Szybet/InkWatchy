@@ -33,7 +33,7 @@ void setup()
 
   initManager();
 
-  if (bootStatus.reason != rtc)
+  if (bootStatus.reason != rtc && bootStatus.reason != ulp)
   {
     // I trust myself enough now to not need watchdog task running all the time
     initWatchdogTask();
@@ -57,7 +57,7 @@ void loop()
 #if TEMP_CHECKS_ENABLED
   tempChecker();
 #endif
-  if (bootStatus.reason != rtc)
+  if (bootStatus.reason != rtc && bootStatus.reason != ulp)
   {
     watchdogPing();
     alarmManageRTC();

@@ -32,6 +32,12 @@ void initHardware()
         bootStatus.reason = button;
         manageButtonWakeUp();
     }
+    #if ATCHY_VER == YATCHY
+    else if(bootStatus.bareEspCause == ESP_SLEEP_WAKEUP_ULP) {
+        bootStatus.fromWakeup = true;
+        bootStatus.reason = ulp;
+    }
+    #endif
 
     if (bootStatus.fromWakeup == false)
     {
