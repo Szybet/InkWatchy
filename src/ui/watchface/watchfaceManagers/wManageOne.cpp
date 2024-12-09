@@ -141,7 +141,7 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
 
 #if LP_CORE == true
     // Because the arduino program doesn't know about the screen buffer, if we update anything it will dissapear :(
-    debugLog("dUChange in the end of watchface: " + BOOL_STR(dUChange));
+    // debugLog("dUChange in the end of watchface: " + BOOL_STR(dUChange));
     if (dUChange == true)
     {
         screenTimeChanged = true;
