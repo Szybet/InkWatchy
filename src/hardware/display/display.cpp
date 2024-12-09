@@ -73,6 +73,10 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
         if (updateCounter >= FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
         {
             updateCounter = 0;
+            if(bootStatus.reason == ulp) {
+                showFullWatchface();
+                clearLpCoreRtcMem(); // To force full redraw in lp core
+            }
             updateDisplay(FULL_UPDATE);
             updatedScreen = true;
         }
@@ -81,6 +85,10 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
             if (ignoreCounter == false)
             {
                 updateCounter += 1;
+            }
+            if(bootStatus.reason == ulp) {
+                showTimeFullGlobal();
+                clearLpCoreRtcMem(); // To force full redraw in lp core
             }
             updateDisplay(PARTIAL_UPDATE);
             updatedScreen = true;

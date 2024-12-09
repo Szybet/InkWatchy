@@ -274,14 +274,6 @@ bool mcp23018::resetVerify()
   writeSingleRegister(IOCON, iocon);
   writeSingleRegister(IOCON + 1, iocon);
 
-
-  // Setting to output reduces power consumption
-  // But first we need not to do a short...
-  for(int i = 0; i < 16; i++) {
-    setPinState(i, true);
-    setPinMode(i, MCP_OUTPUT);
-  }
-
 // For testing pure power consumption
 #if DEBUG && true == false
   debugLog("Dumping registers after verify and iocon apply, and exiting");
@@ -296,6 +288,14 @@ bool mcp23018::resetVerify()
 
   intconReg = EMPTY_REG;
   defvalReg = EMPTY_REG;
+
+  // Setting to output reduces power consumption
+  // But first we need not to do a short...
+  // But after setting all registers to null like above...
+  for(int i = 0; i < 16; i++) {
+    setPinState(i, true);
+    setPinMode(i, MCP_OUTPUT);
+  }
 
   // isDebug(dumpAllRegisters());
 

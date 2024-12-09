@@ -213,7 +213,7 @@ void isChargingCheck()
         else
         {
             if(isSomethingWrong == false) {
-                debugLog("Somethign is messed up with charging detection, trying again soon");
+                debugLog("Something is messed up with charging detection, trying again soon");
                 isSomethingWrong = true;
                 delayTask(100);
                 isChargingCheck();
@@ -233,10 +233,12 @@ void isChargingCheck()
 #if BATTERY_RGB_DIODE
             if (bat.isFullyCharged == true)
             {
+                debugLog("Setting color to fully charged!");
                 setRgb(BATTERY_CHARGED_COLOR);
             }
             else if (bat.isCharging == true)
             {
+                debugLog("Setting color to charging!");
                 setRgb(BATTERY_CHARGING_COLOR);
             }
             else
