@@ -107,6 +107,7 @@ buttonState mcp23018::manageInterrupts()
       debugLog("Stat pin or 5V detected");
       isChargingCheck();
       loopBattery();
+      break;
     }
 
 #ifdef YATCHY_BACK_BTN

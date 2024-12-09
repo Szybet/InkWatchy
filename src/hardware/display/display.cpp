@@ -72,23 +72,36 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
         dUChange = false;
         if (updateCounter >= FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
         {
-            updateCounter = 0;
-            if(bootStatus.reason == ulp) {
+#if LP_CORE == true
+            if (bootStatus.reason == ulp)
+            {
                 showFullWatchface();
                 clearLpCoreRtcMem(); // To force full redraw in lp core
             }
+            if (bootStatus.reason != ulp && screenForceNextFullTimeWrite == true && currentPlaceIndex == 0)
+            {
+                screenForceNextFullTimeWrite = false;
+                showTimeFullGlobal();
+                clearLpCoreRtcMem();
+            }
+#endif
+            updateCounter = 0;
             updateDisplay(FULL_UPDATE);
             updatedScreen = true;
         }
         else
         {
+#if LP_CORE == true
+            if (bootStatus.reason == ulp || (screenForceNextFullTimeWrite == true && currentPlaceIndex == 0))
+            {
+                screenForceNextFullTimeWrite = false;
+                showTimeFullGlobal();
+                clearLpCoreRtcMem(); // To force full redraw in lp core
+            }
+#endif
             if (ignoreCounter == false)
             {
                 updateCounter += 1;
-            }
-            if(bootStatus.reason == ulp) {
-                showTimeFullGlobal();
-                clearLpCoreRtcMem(); // To force full redraw in lp core
             }
             updateDisplay(PARTIAL_UPDATE);
             updatedScreen = true;
