@@ -57,7 +57,6 @@ void ForceInputs()
     initRtcGpio();
     gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
 #endif
-
     gpioExpander.deInit();
     deInitI2C();
 #endif
@@ -96,11 +95,6 @@ void goSleep()
     //     delayTask(25);
     // }
 #if LP_CORE == true
-    if (screenTimeChanged == true)
-    {
-        lpCoreScreenPrepare(true);
-        delayTask(30);
-    }
     display.hibernate();
     delayTask(10);
     initRtcGpio();

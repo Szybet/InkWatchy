@@ -26,6 +26,14 @@
 
 #define WAKEUP_MODULO 29
 
+#define TIME_RECT_X_LO 8
+
+#define TIME_RECT_X_HI 192
+
+#define TIME_RECT_Y_LO 2
+
+#define TIME_RECT_Y_HI 56
+
 uint8_t do_rust_things(void);
 
 void send_debug_message(uint8_t mess);

@@ -70,7 +70,7 @@ bool runLpCore()
 {
     ulp_lp_core_cfg_t cfg = {
         .wakeup_source = ULP_LP_CORE_WAKEUP_SOURCE_LP_TIMER,
-        .lp_timer_sleep_duration_us = uint32_t(1 * 1000000),
+        .lp_timer_sleep_duration_us = uint32_t((1 + (60 - getCurrentSeconds())) * 1000000),
     };
 
     if (screenTimeChanged == true)
@@ -112,9 +112,12 @@ void startLpCoreTest()
 {
     bootStatus.fromWakeup = false; // To be sure
     initDisplay();
+    display.fillRect(0, 0, 200, 200, GxEPD_BLACK);
+    disUp(true);
     initRTC();
     debugLog("Current unix time: " + String(getUnixTime(timeRTCUTC0)));
 
+    clearLpCoreRtcMem();
     stopLpCore();
     initRtcGpio();
     loadLpCore();
