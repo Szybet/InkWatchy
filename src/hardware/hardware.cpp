@@ -63,11 +63,13 @@ void initHardware()
     }
 #endif
 
+#if ATCHY_VER == YATCHY
 #if LP_CORE
     // Always, to be sure
     stopLpCore();
 #else
     deInitRtcGpio();
+#endif
 #endif
 
     initRTC();
