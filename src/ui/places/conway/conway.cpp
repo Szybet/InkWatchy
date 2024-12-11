@@ -67,7 +67,7 @@ void initConwayGrid(uint8_t *conwayGrid, uint8_t randomPerc, uint8_t conwayHeigh
             else
             {
                 bool pixelColor = false;
-                uint8_t randomChoosed = random(0, 101);
+                uint8_t randomChoosed = betterRandom(0, 101);
                 if (randomChoosed <= randomPerc)
                 {
                     pixelColor = true;

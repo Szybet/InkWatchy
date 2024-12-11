@@ -23,5 +23,7 @@ void sortList(float* numbers, int size);
 void concatenateFloatLists(float* sourceList1, int size1, float* sourceList2, int size2, float* destinationList);
 float precision(float f, int places);
 void setBoolMutex(std::mutex* theMutex, bool* theBool, bool boolValue);
+int betterRandom(int min, int max);
+int betterRandom(int max);
 
 #endif

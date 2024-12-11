@@ -266,6 +266,13 @@ void loopManager()
 #endif
         break;
     }
+    case partyApp:
+    {
+#if RGB_DIODE
+        managerLaunchFunc(partyApp, initParty, loopParty, exitParty);
+#endif
+        break;
+    }
     case fontPreview:
     {
 #if FONT_MENU_ENABLED

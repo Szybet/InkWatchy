@@ -29,6 +29,7 @@ typedef enum
     calendarEventMenu,
     pong,
     conwayApp,
+    partyApp,
     fontPreview,
     fontPreviewMenu,
     watchfaceSelector,
@@ -91,6 +92,9 @@ void switchApple2();
 void switchPong();
 #if CONWAY
 void switchConway();
+#endif
+#if RGB_DIODE
+void switchParty();
 #endif
 #if FONT_MENU_ENABLED
 void switchFontsPreview();

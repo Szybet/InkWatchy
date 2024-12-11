@@ -69,6 +69,9 @@
 #define VISIBILITY_M_MIN 0
 #define WIND_SPEED_MAX 30 // Km/h
 #define WIND_SPEED_MIN 0
+// Moon
+#define MOON_MIN_RADIUS 57.0
+#define MOON_MAX_RADIUS 63.6
 
 // Book things
 #define BOOK 0

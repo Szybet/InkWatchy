@@ -81,12 +81,21 @@ void switchPong()
 {
     generalSwitch(pong);
 }
+
 #if CONWAY
 void switchConway()
 {
     generalSwitch(conwayApp);
 }
 #endif
+
+#if RGB_DIODE
+void switchParty()
+{
+    generalSwitch(partyApp);
+}
+#endif
+
 #if FONT_MENU_ENABLED
 void switchFontsPreview()
 {
