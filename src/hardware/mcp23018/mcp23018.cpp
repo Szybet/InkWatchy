@@ -160,8 +160,13 @@ bool mcp23018::manageInterruptsExit()
   {
     debugLog("Voltage below 3.0, Clearing interrupt: " + String(BatteryRead()));
     // We need to read the register one more time because it clears only when the interrupt condition clears eg the button is not clicked
-    readRegister(INTCAP);
-    delayTask(10); // Give it time to restore the voltage
+    for(uint8_t i = 0; i < 10; i++ ) {
+      readRegister(INTF);
+      readRegister(INTCAP);
+      BatteryRead();
+      delayTask(10); // Give it time to restore the voltage
+    }
+    debugLog("Voltage after clearing it: " + String(BatteryRead()));
     if (BatteryRead() < 3.0)
     {
       debugLog("Voltage still low after reading register, running again...");
