@@ -76,6 +76,7 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../hardware/rtc/rtc.h"
 #include "../hardware/sleep/sleep.h"
 #include "../hardware/input/buttons.h"
+#include "../hardware/input/combinations.h"
 #include "../hardware/display/display.h"
 #include "../hardware/acc/acc.h"
 #include "../hardware/fs/littlefs.h"

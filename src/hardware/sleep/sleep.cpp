@@ -229,9 +229,9 @@ void manageSleep()
 
 #if RGB_DIODE
             rgbTaskMutex.lock();
-            if (rgbTaskRunning == true)
+            if (rgbTaskRunning == true || currentColor != IwNone)
             {
-                debugLog("Rgb task running, delaying");
+                debugLog("Rgb task running or rgb diode not turned off, delaying");
                 rgbTaskMutex.unlock();
                 setSleepDelay(1000);
                 return;

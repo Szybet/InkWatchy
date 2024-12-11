@@ -107,11 +107,20 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
 {
     int startime = millisBetter();
     int elapsedtime = 0;
+    initCombinations();
     while (buttonRead(buttonPin) == BUT_CLICK_STATE && elapsedtime < BUTTON_LONG_PRESS_MS)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
         elapsedtime = millisBetter() - startime;
+        loopCombinations();
     }
+    if (endCombinations(buttonPin) == true)
+    {
+        vibrateMotor(VIBRATION_BUTTON_LONG_TIME);
+        delayTask(BUTTON_TASK_DELAY * 3);
+        return;
+    }
+
     debugLog("elapsed time: " + String(elapsedtime) + " BUTTON_LONG_PRESS_MS:" + String(BUTTON_LONG_PRESS_MS));
     if (elapsedtime > BUTTON_LONG_PRESS_MS)
     {
@@ -290,6 +299,8 @@ void deInitButtonTask()
 
 void wakeUpLong(int pin, buttonState normal, buttonState hold)
 {
+    longButtonCheck(pin, normal, hold);
+    /*
     long timeTime = millisBetter();
 
     while (buttonRead(pin) == BUT_CLICK_STATE && timeTime + BUTTON_LONG_PRESS_MS > millisBetter())
@@ -306,6 +317,7 @@ void wakeUpLong(int pin, buttonState normal, buttonState hold)
         buttonPressed = normal;
     }
     buttMut.unlock();
+    */
 }
 
 void manageButtonWakeUp()

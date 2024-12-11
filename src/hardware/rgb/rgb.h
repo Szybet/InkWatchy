@@ -18,6 +18,8 @@ typedef enum
     IwWhite = 7,
 } IWColors; // IW as inkwatchy
 
+extern IWColors currentColor;
+
 void setRgb(IWColors color, bool clearPrevious = true, uint timeMs = 0);
 
 #endif
