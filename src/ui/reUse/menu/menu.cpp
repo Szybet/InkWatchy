@@ -53,7 +53,7 @@ void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSiz
 
   if (textSize == 1)
   {
-    data.itemsOnPage = 8;
+    data.itemsOnPage = 7;
   }
   else
   {

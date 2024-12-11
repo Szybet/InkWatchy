@@ -342,3 +342,19 @@ void setBoolMutex(std::mutex *theMutex, bool *theBool, bool boolValue)
   *theBool = boolValue;
   theMutex->unlock();
 }
+
+int betterRandom(int min, int max) {
+  if (min > max) {
+    int temp = min;
+    min = max;
+    max = temp;
+  }
+  
+  uint32_t range = max - min; // +1 to make max inclusive
+  
+  return min + (esp_random() % range);
+}
+
+int betterRandom(int max) {
+  return betterRandom(0, max);
+}

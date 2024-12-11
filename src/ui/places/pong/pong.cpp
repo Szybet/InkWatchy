@@ -32,7 +32,7 @@ bool lostPong = false;
 
 int ballRandomGet()
 {
-    int rand = random(0 - BALL_RANDOM_RANGE, 0 + BALL_RANDOM_RANGE + 1);
+    int rand = betterRandom(0 - BALL_RANDOM_RANGE, 0 + BALL_RANDOM_RANGE + 1);
     if (rand >= -1 && rand <= 1)
     {
         return ballRandomGet();

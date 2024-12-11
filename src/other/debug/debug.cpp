@@ -17,8 +17,8 @@ void showEinkCounter()
         if (randomChoosed == false)
         {
             randomChoosed = true;
-            counterX = random(50, 150);
-            counterY = random(150, 180);
+            counterX = betterRandom(50, 150);
+            counterY = betterRandom(150, 180);
         }
         display.setCursor(counterX, counterY);
         counter = counter + 1;

@@ -3,7 +3,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[11];
+    entryMenu buttons[12];
 #if CALENDAR
     {
         count = count + 1;
@@ -81,6 +81,13 @@ void initMainMenu()
         debugLog("Adding Conway");
         count = count + 1;
         buttons[count] = {"Conway", getImg("conway"), switchConway};
+    }
+#endif
+#if RGB_DIODE
+    {
+        debugLog("Adding party");
+        count = count + 1;
+        buttons[count] = {"Party", getImg("rgb"), switchParty};
     }
 #endif
     count = count + 1;

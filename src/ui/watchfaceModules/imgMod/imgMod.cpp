@@ -47,7 +47,7 @@ void redrawModuleImage()
         file.close();
     }
     debugLog("There are so many module images: " + String(c));
-    u8_t finalImageIndex = random(1, c + 1);
+    u8_t finalImageIndex = betterRandom(1, c + 1);
     debugLog("We want the image: " + String(finalImageIndex));
     u8_t cFinal = 0;
     {

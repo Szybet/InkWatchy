@@ -141,6 +141,9 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../ui/appleJoke/appleJoke.h"
 #include "../ui/appleJoke/appleSour.h"
 #endif
+#if RGB_DIODE
+#include "../ui/places/party/party.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif

@@ -46,7 +46,7 @@ void loopAppleJoke()
     esp_bd_addr_t dummy_addr = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     for (int i = 0; i < 6; i++)
     {
-        dummy_addr[i] = random(256);
+        dummy_addr[i] = betterRandom(256);
 
         // It seems for some reason first 4 bits
         // Need to be high (aka 0b1111), so we
@@ -62,15 +62,15 @@ void loopAppleJoke()
     // Randomly pick data from one of the devices
     // First decide short or long
     // 0 = long (headphones), 1 = short (misc stuff like Apple TV)
-    int device_choice = random(2);
+    int device_choice = betterRandom(2);
     if (device_choice == 0)
     {
-        int index = random(17);
+        int index = betterRandom(17);
         oAdvertisementData.addData(std::string((char *)DEVICES[index], 31));
     }
     else
     {
-        int index = random(12);
+        int index = betterRandom(12);
         oAdvertisementData.addData(std::string((char *)SHORT_DEVICES[index], 23));
     }
 
@@ -87,7 +87,7 @@ void loopAppleJoke()
                             Consider using only these PDU types if you want to target Airpods Gen 2 specifically.
       */
 
-    int adv_type_choice = random(3);
+    int adv_type_choice = betterRandom(3);
     if (adv_type_choice == 0)
     {
         pAdvertising->setAdvertisementType(ADV_TYPE_IND);
