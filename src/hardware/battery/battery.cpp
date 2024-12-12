@@ -204,7 +204,7 @@ void isChargingCheck()
         } // Fully charged
         else if (statInStateBefore == 1 && statInStateAfter == 1 && fiveVolt == true)
         {
-            bat.isCharging = false;
+            bat.isCharging = true;
             bat.isFullyCharged = true;
         } // Not charging
         else if (statInStateBefore == 0 && statInStateAfter == 0 && fiveVolt == false)
@@ -275,6 +275,7 @@ void isChargingCheck()
 #if DEBUG_MENUS
     if(previousChargingState != bat.isCharging && previousChargingState == false) {
         if(fsGetString(CONF_UNIX_LAST_SYNC, "") != "") {
+            readRTC();
             fsSetString(CONF_UNIX_LAST_CHARGE, String(getUnixTime(timeRTCUTC0)));
         }
     }

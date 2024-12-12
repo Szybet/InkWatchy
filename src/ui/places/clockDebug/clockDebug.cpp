@@ -56,11 +56,11 @@ void initClockDebug()
     currentHeight = currentHeight + maxHeight;
 
     timeClockHeight = currentHeight;
+    readRTC();
     centerText(getClockPrecise(), &currentHeight);
 
     writeLine("Drift between synces:", 0, &currentHeight);
     writeLine(fsGetString(CONF_SECONDS_DRIFT, "Not available"), 0, &currentHeight);
-    readRTC();
     {
         writeLine("Last sync:", 0, &currentHeight);
         String lastSync = fsGetString(CONF_UNIX_LAST_SYNC, "");
