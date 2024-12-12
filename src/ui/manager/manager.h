@@ -13,6 +13,7 @@ typedef enum
     debugMenu,
     settingsMenu,
     generalDebug,
+    clockDebug,
     batteryDebug,
     wifiDebug,
     weatherMenu,
@@ -76,6 +77,7 @@ void overwriteSwitch(UiPlace place);
 void switchDebugMenu();
 void switchSettingsMenu();
 void switchGeneralDebug();
+void switchClockDebug();
 void switchBatteryDebug();
 void switchWifiDebug();
 void switchWeatherMenu();

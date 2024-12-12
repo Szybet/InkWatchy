@@ -96,6 +96,7 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
     canvasTmp.setTextSize(textSize);
     canvasTmp.setCursor(0, h - 3);
     canvasTmp.print(str);
+    display.fillRect(0, y - h, 200, h + 3, GxEPD_WHITE);
     display.drawBitmap(x, y - h + 3, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
     display.drawRect(x, y - h + 3, w, h + 3, frColor);
@@ -108,6 +109,7 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
     canvasTmp.setTextSize(textSize);
     canvasTmp.setCursor(0, h);
     canvasTmp.print(str);
+    display.fillRect(0, y - h, 200, h + 3, GxEPD_WHITE);
     display.drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
     display.drawRect(x, y - h, w, h + 3, frColor);

@@ -56,12 +56,30 @@ void syncNtp(bool doDriftThings)
 
         I haven't looked at your code, but the make and break Time functions outside of SmallRTC don't follow time.h for values, so the day and month will increase.
         */
+#if DEBUG_MENUS
+        // Maybe this adds to much of a delay?
+        readRTC();
+        tmElements_t secondsDriftTmp = timeRTCUTC0;
+#endif
 
         SRTC.doBreakTime(epochTime, timeRTCUTC0);
         saveRTC(timeRTCUTC0);
         debugLog("Reading rtc from ntp");
         dontTouchTimeZone = false;
         readRTC(); // After syncing time, remake the timezone
+
+#if DEBUG_MENUS
+        if (fsGetString(CONF_UNIX_LAST_SYNC, "") != "")
+        {
+            fsSetString(CONF_UNIX_PREVIOUS_SYNC, fsGetString(CONF_UNIX_LAST_SYNC, ""));
+        }
+        if (fsGetString(CONF_UNIX_PREVIOUS_SYNC, "") != "")
+        {
+            fsSetString(CONF_SECONDS_DRIFT, String(int64_t(getUnixTime(secondsDriftTmp)) - int64_t(epochTime)));
+        }
+        fsSetString(CONF_UNIX_LAST_SYNC, String(epochTime));
+#endif
+
         // Reset
         firstNTPSync = true;
         ntpTries = 0;
@@ -86,7 +104,9 @@ void syncNtp(bool doDriftThings)
                 SRTC.beginDrift(timeRTCLocal);
                 driftStartUnix = getUnixTime(timeRTCLocal);
             }
-        } else {
+        }
+        else
+        {
             debugLog("Canceling drift");
             SRTC.setDrift(0, 0);
         }
