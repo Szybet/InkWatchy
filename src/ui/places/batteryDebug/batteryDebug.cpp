@@ -7,6 +7,7 @@ batteryInfo bDdata;
 #define cursorX 0
 int currentVoltageHeight;
 int ChargingHeight;
+int fullyChargedHeight;
 int PercentageHeight;
 #define batteryTextSize 1
 
@@ -42,12 +43,20 @@ void initBatteryDebugDisplay()
 
     writeLine("Charging: " + BOOL_STR(bDdata.isCharging), cursorX, &currentHeight);
     ChargingHeight = currentHeight - maxHeight;
+
+#if ATCHY_VER == YATCHY
+    writeLine("Fully: " + BOOL_STR(bDdata.isFullyCharged), cursorX, &currentHeight);
+    fullyChargedHeight = currentHeight - maxHeight;
+#endif
+
+    resetSleepDelay();
     disUp(true);
 }
 
 void loopBatteryDebugDisplay()
 {
     loopBattery();
+    isChargingCheck();
     if (bDdata.curV > bat.curV + 0.01 || bDdata.curV < bat.curV - 0.01)
     {
         bDdata.curV = bat.curV;
@@ -78,6 +87,23 @@ void loopBatteryDebugDisplay()
         writeTextReplaceBack("Charging: " + chargingStr, cursorX, ChargingHeight);
         dUChange = true;
     }
+#if ATCHY_VER == YATCHY
+    if (bDdata.isFullyCharged != bat.isFullyCharged)
+    {
+        bDdata.isFullyCharged = bat.isFullyCharged;
+        display.setCursor(cursorX, fullyChargedHeight);
+        setTextSize(batteryTextSize);
+
+        String chargingStr = BOOL_STR(bat.isCharging);
+        while (chargingStr.length() < 6)
+        {
+            chargingStr = chargingStr + " ";
+        }
+
+        writeTextReplaceBack("Fully: " + chargingStr, cursorX, ChargingHeight);
+        dUChange = true;
+    }
+#endif
     if (bDdata.percentage != bat.percentage)
     {
         bDdata.percentage = bat.percentage;
