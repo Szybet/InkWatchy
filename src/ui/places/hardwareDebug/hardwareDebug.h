@@ -1,7 +1,9 @@
-#ifndef GENERALDEBUG_H
-#define GENERALDEBUG_H
+#ifndef HARDWARE_DEBUG_H
+#define HARDWARE_DEBUG_H
 
 #include "defines.h"
+
+#if DEBUG == 1 || DEBUG_MENUS == 1
 
 void initGeneralDebugDisplay();
 void loopGeneralDebugDisplay();
@@ -11,4 +13,5 @@ void loopGeneralDebug();
 void initGeneralDebug();
 #endif
 
+#endif
 #endif

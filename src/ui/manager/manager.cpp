@@ -147,6 +147,13 @@ void loopManager()
 #endif
         break;
     }
+    case clockDebug:
+    {
+#if DEBUG_MENUS
+        managerLaunchFunc(clockDebug, initClockDebug, loopClockDebug);
+#endif
+        break;
+    }
     case batteryDebug:
     {
 #if DEBUG_MENUS

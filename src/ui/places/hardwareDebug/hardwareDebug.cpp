@@ -1,4 +1,4 @@
-#include "generalDebug.h"
+#include "hardwareDebug.h"
 
 #if DEBUG == 1 || DEBUG_MENUS == 1
 #define cursorX 0
@@ -38,7 +38,7 @@ void initGeneralDebugDisplay()
     setFont(&FreeSansBold9pt7b);
     setTextSize(GeneralTextSize);
     display.setCursor(cursorX, 1);
-    String menuName = "Debug Menu: General";
+    String menuName = "Debug Menu: Hardware";
     getTextBounds(menuName, NULL, NULL, NULL, &h);
     if(containsBelowChar(menuName) == true) {
         h = h + 2;

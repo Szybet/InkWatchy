@@ -32,6 +32,10 @@ void switchGeneralDebug()
     generalSwitch(generalDebug);
 }
 
+void switchClockDebug() {
+    generalSwitch(clockDebug);
+}
+
 void switchBatteryDebug()
 {
     generalSwitch(batteryDebug);

@@ -100,9 +100,14 @@ void initDebugMenu()
     int count = -1;
     entryMenu buttons[4];
     {
+        debugLog("Adding clock to menu");
+        count = count + 1;
+        buttons[count] = {"Clock", &emptyImgPack, switchClockDebug};
+    }
+    {
         debugLog("Adding general to menu");
         count = count + 1;
-        buttons[count] = {"General", &emptyImgPack, switchGeneralDebug};
+        buttons[count] = {"Hardware", &emptyImgPack, switchGeneralDebug};
     }
     {
         debugLog("Adding battery to menu");

@@ -102,6 +102,8 @@ bool isSomethingWrong = false;
 #endif
 void isChargingCheck()
 {
+    bool previousChargingState = bat.isCharging;
+
 #if NO_CHARGING == 1 && DEBUG == 1
     bat.isCharging = false;
     return;
@@ -267,6 +269,14 @@ void isChargingCheck()
     {
         previousCharging = bat.isCharging;
         debugLog("Charging is now: " + BOOL_STR(bat.isCharging));
+    }
+#endif
+
+#if DEBUG_MENUS
+    if(previousChargingState != bat.isCharging && previousChargingState == false) {
+        if(fsGetString(CONF_UNIX_LAST_SYNC, "") != "") {
+            fsSetString(CONF_UNIX_LAST_CHARGE, String(getUnixTime(timeRTCUTC0)));
+        }
     }
 #endif
 }

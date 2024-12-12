@@ -17,6 +17,7 @@ source ../../globalFunctions.sh
 /root/.platformio/penv/bin/python /root/.platformio/packages/framework-espidf/tools/idf_tools.py install
 ln -s /usr/bin/python3 /usr/bin/python
 #env -i /root/.platformio/packages/framework-espidf/tools/idf_tools.py install-python-env
+source ~/.platformio/packages/framework-espidf/export.sh
 idf_tools.py install-python-env
 source ~/.platformio/packages/framework-espidf/export.sh
 
