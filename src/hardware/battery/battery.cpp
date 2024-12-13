@@ -273,7 +273,7 @@ void isChargingCheck()
 #endif
 
 #if DEBUG_MENUS
-    if(previousChargingState != bat.isCharging && previousChargingState == false) {
+    if(bat.isCharging == false && previousChargingState == true) {
         if(fsGetString(CONF_UNIX_LAST_SYNC, "") != "") {
             readRTC();
             fsSetString(CONF_UNIX_LAST_CHARGE, String(getUnixTime(timeRTCUTC0)));
