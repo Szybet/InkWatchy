@@ -83,7 +83,6 @@ void initHardware()
     if (bootStatus.fromWakeup == false)
     {
         loadAllStorage();
-        
     }
 
     initBattery();

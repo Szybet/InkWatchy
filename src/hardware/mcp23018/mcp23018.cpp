@@ -383,7 +383,7 @@ void mcp23018::setDefaultInterrupts()
   }
 
   // This was disabled in sleep, now we enable it
-  setPinState(MCP_STAT_IN, MCP_INPUT);
+  setPinMode(MCP_STAT_IN, MCP_INPUT);
   setInterrupt(MCP_STAT_IN, true);
 #endif
 }
