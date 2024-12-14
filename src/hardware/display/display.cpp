@@ -70,41 +70,29 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
     if (dUChange == true || reallyUpdate == true)
     {
         dUChange = false;
+#if LP_CORE == true
+        if (bootStatus.reason == ulp || (screenForceNextFullTimeWrite == true && currentPlaceIndex == 0))
+        {
+            screenForceNextFullTimeWrite = false;
+            lpCoreScreenPrepare(false, false);
+            showTimeFullGlobal();
+            clearLpCoreRtcMem();
+        }
+#endif
+        updatedScreen = true;
         if (updateCounter >= FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
         {
-#if LP_CORE == true
-            if (bootStatus.reason == ulp)
-            {
-                showFullWatchface();
-                clearLpCoreRtcMem(); // To force full redraw in lp core
-            }
-            if (bootStatus.reason != ulp && screenForceNextFullTimeWrite == true && currentPlaceIndex == 0)
-            {
-                screenForceNextFullTimeWrite = false;
-                showTimeFullGlobal();
-                clearLpCoreRtcMem();
-            }
-#endif
+
             updateCounter = 0;
             updateDisplay(FULL_UPDATE);
-            updatedScreen = true;
         }
         else
         {
-#if LP_CORE == true
-            if (bootStatus.reason == ulp || (screenForceNextFullTimeWrite == true && currentPlaceIndex == 0))
-            {
-                screenForceNextFullTimeWrite = false;
-                showTimeFullGlobal();
-                clearLpCoreRtcMem(); // To force full redraw in lp core
-            }
-#endif
             if (ignoreCounter == false)
             {
                 updateCounter += 1;
             }
             updateDisplay(PARTIAL_UPDATE);
-            updatedScreen = true;
         }
 #if SCOM_TASK_ENABLED
         scomChanged = true;
