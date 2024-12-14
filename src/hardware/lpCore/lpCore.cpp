@@ -10,7 +10,7 @@ bool screenTimeChanged = false;            // If the watchface has written time 
 #define LP_CORE_SCREEN_W 185
 #define LP_CORE_SCREEN_H 56
 
-void lpCoreScreenPrepare(bool now)
+void lpCoreScreenPrepare(bool now, bool setDuChange)
 {
     debugLog("Clearing screen space for lp core");
     display.fillRect(LP_CORE_SCREEN_X, LP_CORE_SCREEN_Y, LP_CORE_SCREEN_W, LP_CORE_SCREEN_H, GxEPD_WHITE);
@@ -18,7 +18,7 @@ void lpCoreScreenPrepare(bool now)
     {
         updateDisplay(PARTIAL_UPDATE);
     }
-    else
+    else if (setDuChange == true)
     {
         dUChange = true;
     }
@@ -95,9 +95,12 @@ void initManageLpCore()
     if (bootStatus.fromWakeup == true)
     {
         screenForceNextFullTimeWrite = true;
-        rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
-        wFTime.Hour = rtc_mem->custom[1];
-        wFTime.Minute = rtc_mem->custom[2];
+        // We want it to update on it's own
+        if(bootStatus.reason != wakeUpReason::ulp) {
+            rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
+            wFTime.Hour = rtc_mem->custom[1];
+            wFTime.Minute = rtc_mem->custom[2];
+        }
         debugLog("Updated from lp core hour and minute: " + getHourMinute(wFTime));
     }
     else
