@@ -1,5 +1,4 @@
-#ifndef RTC_H
-#define RTC_H
+#pragma once
 #include "defines.h"
 
 extern tmElements_t timeRTCLocal;
@@ -44,4 +43,3 @@ void dumpRTCTime(tmElements_t timeEl);
 void dumpRTCTimeSmall(tmElements_t timeEl);
 #endif
 
-#endif

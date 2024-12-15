@@ -1,5 +1,4 @@
-#ifndef RGB_H
-#define RGB_H
+#pragma once
 
 #include "defines.h"
 
@@ -22,4 +21,3 @@ extern IWColors currentColor;
 
 void setRgb(IWColors color, bool clearPrevious = true, uint timeMs = 0);
 
-#endif

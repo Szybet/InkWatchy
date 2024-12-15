@@ -1,5 +1,4 @@
-#ifndef LP_CORE_H
-#define LP_CORE_H
+#pragma once
 
 #include "defines.h"
 
@@ -20,6 +19,5 @@ void startLpCoreTest();
 void monitorLpCore();
 const char *getLpLog(uint8_t id);
 
-#endif
 #endif
 #endif

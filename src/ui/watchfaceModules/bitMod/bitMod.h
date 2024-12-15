@@ -1,5 +1,4 @@
-#ifndef BITMOD_H
-#define BITMOD_H
+#pragma once
 
 #include "defines.h"
 
@@ -22,5 +21,4 @@ extern bool isBtcDataNew;
 extern wfModule wfBit;
 void bitcoinSync(uint8_t tries);
 
-#endif
 #endif

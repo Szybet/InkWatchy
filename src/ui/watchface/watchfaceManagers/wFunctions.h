@@ -1,5 +1,4 @@
-#ifndef WFUNCTIONS_H
-#define WFUNCTIONS_H
+#pragma once
 
 #include "defines.h"
 
@@ -14,4 +13,3 @@ squareInfo getWatchModuleSquare();
 void cleanSomeDrawing(); // disableSomeDrawing controls
 squareInfo getSomeDrawingSquare();
 
-#endif

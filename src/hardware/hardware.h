@@ -1,5 +1,4 @@
-#ifndef HARDWARE_H
-#define HARDWARE_H
+#pragma once
 
 #include "defines.h"
 
@@ -50,4 +49,3 @@ String wakeupSourceToString(esp_sleep_source_t source);
 int64_t millisBetter();
 void firstWakeUpManage();
 
-#endif

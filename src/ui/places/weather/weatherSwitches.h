@@ -1,5 +1,4 @@
-#ifndef WEATHER_SWITCHES_H
-#define WEATHER_SWITCHES_H
+#pragma once
 
 #include "defines.h"
 
@@ -55,5 +54,4 @@ void showWindGuts();
 void showVisibility();
 void showPop();
 
-#endif
 #endif

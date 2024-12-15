@@ -1,5 +1,4 @@
-#ifndef CONWAYMOD_H
-#define CONWAYMOD_H
+#pragma once
 
 #include "defines.h"
 
@@ -9,4 +8,3 @@ extern wfModule wfConway;
 
 #endif
 
-#endif

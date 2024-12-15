@@ -1,5 +1,4 @@
-#ifndef FUNCTIONSUI_H
-#define FUNCTIONSUI_H
+#pragma once
 
 #include "defines.h"
 
@@ -21,4 +20,3 @@ void textPage(String title, String *strList, int listCount, const GFXfont * cust
 void drawProgressBar(int x, int y, int width, int height, int progress);
 sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y);
 
-#endif

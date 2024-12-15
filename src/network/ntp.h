@@ -1,8 +1,6 @@
-#ifndef NTP_H
-#define NTP_H
+#pragma once
 
 #include "defines.h"
 
 void syncNtp(bool doDriftThings = true);
 
-#endif

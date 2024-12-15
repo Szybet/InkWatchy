@@ -1,5 +1,4 @@
-#ifndef VAULT_UI_H
-#define VAULT_UI_H
+#pragma once
 
 #include "defines.h"
 
@@ -12,4 +11,3 @@ void exitVault();
 
 void hexStringToByteArray(const char* hexString, unsigned char* byteArray, size_t byteArraySize);
 
-#endif

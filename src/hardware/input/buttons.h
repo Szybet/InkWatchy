@@ -1,5 +1,4 @@
-#ifndef BUTTONS_H
-#define BUTTONS_H
+#pragma once
 
 #include "defines.h"
 
@@ -31,4 +30,3 @@ void dumpButtons();
 String getButtonString(buttonState state);
 #endif
 
-#endif

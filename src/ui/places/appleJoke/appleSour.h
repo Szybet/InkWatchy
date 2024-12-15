@@ -1,5 +1,4 @@
-#ifndef APPLE_SOUR_H
-#define APPLE_SOUR_H
+#pragma once
 
 #include "defines.h"
 
@@ -7,4 +6,3 @@ void initAppleSour();
 void loopAppleSour();
 void exitAppleSour();
 
-#endif

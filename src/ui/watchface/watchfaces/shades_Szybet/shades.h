@@ -1,5 +1,4 @@
-#ifndef SHADES_H
-#define SHADES_H
+#pragma once
 
 #include "defines.h"
 
@@ -10,5 +9,4 @@ struct watchfaceDefOne;
 
 const extern watchfaceDefOne shadesDef;
 
-#endif
 #endif

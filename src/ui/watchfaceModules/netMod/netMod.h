@@ -1,5 +1,4 @@
-#ifndef NETMOD_H
-#define NETMOD_H
+#pragma once
 
 #include "defines.h"
 
@@ -8,5 +7,4 @@
 extern wifiStatusSimple previousWifiState;
 extern wfModule wfNet;
 
-#endif
 #endif

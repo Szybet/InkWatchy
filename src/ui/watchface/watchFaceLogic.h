@@ -1,8 +1,6 @@
-#ifndef WATCHFACE_LOGIC_H
-#define WATCHFACE_LOGIC_H
+#pragma once
 
 #include "defines.h"
 
 int calculatePercentageOfDay(int hour, int minute);
 
-#endif

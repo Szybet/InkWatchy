@@ -1,5 +1,4 @@
-#ifndef CALENDAR_H
-#define CALENDAR_H
+#pragma once
 
 #include "defines.h"
 
@@ -10,5 +9,4 @@ void switchCalendarDateMenu();
 void initCalendar();
 void initCalendarMenu();
 
-#endif
 #endif

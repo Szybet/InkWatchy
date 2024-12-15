@@ -1,5 +1,4 @@
-#ifndef EVENTMOD_H
-#define EVENTMOD_H
+#pragma once
 
 #include "defines.h"
 
@@ -7,5 +6,4 @@
 
 extern wfModule wfEvent;
 
-#endif
 #endif

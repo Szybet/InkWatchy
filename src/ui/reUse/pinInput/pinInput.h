@@ -1,5 +1,4 @@
-#ifndef PIN_INPUT_H
-#define PIN_INPUT_H
+#pragma once
 
 #include "defines.h"
 
@@ -9,4 +8,3 @@ void exitPinInput();
 void initPinInput();
 void loopPinInput();
 
-#endif

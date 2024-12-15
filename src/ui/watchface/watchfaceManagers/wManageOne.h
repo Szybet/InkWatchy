@@ -1,5 +1,4 @@
-#ifndef WMANAGE_ONE_H
-#define WMANAGE_ONE_H
+#pragma once
 
 #include "defines.h"
 
@@ -43,4 +42,3 @@ extern bool disableWatchfaceFastOperating;
 void initWatchfaceDisplay();
 void loopWatchfaceLoop();
 
-#endif

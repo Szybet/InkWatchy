@@ -1,5 +1,4 @@
-#ifndef WATCHDOG_TASK_H
-#define WATCHDOG_TASK_H
+#pragma once
 
 #include "defines.h"
 
@@ -12,4 +11,3 @@ void deInitWatchdogTask();
 
 void watchdogPing();
 
-#endif

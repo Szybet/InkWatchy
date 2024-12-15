@@ -1,5 +1,4 @@
-#ifndef DEBUG_H
-#define DEBUG_H
+#pragma once
 
 #include "defines.h"
 
@@ -7,4 +6,3 @@
 void showEinkCounter();
 #endif
 
-#endif

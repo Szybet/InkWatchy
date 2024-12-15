@@ -1,5 +1,4 @@
-#ifndef POWER_SETTING_H
-#define POWER_SETTING_H
+#pragma once
 
 #include "defines.h"
 
@@ -12,4 +11,3 @@ void saveAllStorage();
 void toggleAllVibration();
 void toggleWakeUp();
 
-#endif

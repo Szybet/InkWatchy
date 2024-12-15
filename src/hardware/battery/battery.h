@@ -1,5 +1,4 @@
-#ifndef BATTERY_H
-#define BATTERY_H
+#pragma once
 
 #include "defines.h"
 
@@ -37,4 +36,3 @@ void dumpBattery();
 void dumpBatteryScreen(void *parameter);
 #endif
 
-#endif

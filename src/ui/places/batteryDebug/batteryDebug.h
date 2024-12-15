@@ -1,5 +1,4 @@
-#ifndef BATTERYDEBUG_H
-#define BATTERYDEBUG_H
+#pragma once
 
 #include "defines.h"
 
@@ -8,5 +7,4 @@
 void loopBatteryDebugDisplay();
 void initBatteryDebugDisplay();
 
-#endif
 #endif

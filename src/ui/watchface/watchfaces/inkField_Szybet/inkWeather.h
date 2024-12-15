@@ -1,5 +1,4 @@
-#ifndef INKWEATHER_H
-#define INKWEATHER_H
+#pragma once
 
 #include "inkField.h"
 
@@ -8,5 +7,4 @@
 void inkDrawWeather();
 void inkDrawMoon();
 
-#endif
 #endif

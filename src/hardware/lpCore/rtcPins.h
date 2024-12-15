@@ -1,9 +1,7 @@
-#ifndef RTC_PINS_H
-#define RTC_PINS_H
+#pragma once
 
 #include "defines.h"
 
 void initRtcGpio();
 void deInitRtcGpio();
 
-#endif

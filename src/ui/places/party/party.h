@@ -1,5 +1,4 @@
-#ifndef PARTY_H
-#define PARTY_H
+#pragma once
 
 #include "defines.h"
 
@@ -9,5 +8,4 @@ void initParty();
 void loopParty();
 void exitParty();
 
-#endif
 #endif

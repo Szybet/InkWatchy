@@ -1,5 +1,4 @@
-#ifndef ANALOG_CONWAY_H
-#define ANALOG_CONWAY_H
+#pragma once
 
 #include "defines.h"
 
@@ -7,5 +6,4 @@
 
 wfmTwoRet analogConwayDef(wfmTwoArg arg);
 
-#endif
 #endif
