@@ -4,8 +4,6 @@
 
 #if AXC_ENABLED
 
-extern StableBMA SBMA;
-
 void initAxc();
 
 #endif
