@@ -84,8 +84,7 @@
  **************************************************************************/
 /*! \file bma4.h
     \brief Sensor Driver for BMA4 family of sensors */
-#ifndef BMA4_H__
-#define BMA4_H__
+#pragma once
 
 /*********************************************************************/
 /* header files */
@@ -1597,5 +1596,4 @@ uint16_t bma4_aux_read(uint8_t aux_reg_addr, uint8_t *aux_data, uint16_t len,
 uint16_t bma4_aux_write(uint8_t aux_reg_addr, uint8_t *aux_data, uint16_t len,
                         struct bma4_dev *dev);
 
-#endif
 /* End of __BMA4_H__ */

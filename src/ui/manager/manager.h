@@ -1,5 +1,4 @@
-#ifndef MANAGER_H
-#define MANAGER_H
+#pragma once
 
 #include "defines.h"
 
@@ -103,4 +102,3 @@ void switchFontsPreview();
 #endif
 void showTextDialog(String str);
 
-#endif

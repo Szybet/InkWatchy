@@ -84,8 +84,7 @@
  **************************************************************************/
 /*! \file bma4_defs.h
     \brief Sensor Driver for BMA4 family of sensors */
-#ifndef BMA4_DEFS_H__
-#define BMA4_DEFS_H__
+#pragma once
 /*********************************************************************/
 /**\ header files */
 #ifdef __KERNEL__
@@ -953,5 +952,4 @@ struct bma4_mag_fifo_data {
   uint8_t mag_r_y2_msb;
 };
 
-#endif
 /* End of __BMA4_H__ */

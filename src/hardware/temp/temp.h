@@ -1,5 +1,4 @@
-#ifndef TEMPS_H
-#define TEMPS_H
+#pragma once
 
 #include "defines.h"
 
@@ -9,5 +8,4 @@ float getTemp();
 extern float initialTemp;
 void tempChecker();
 
-#endif
 #endif

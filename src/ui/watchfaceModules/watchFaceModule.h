@@ -1,5 +1,4 @@
-#ifndef WATCHFACE_MODULE_H
-#define WATCHFACE_MODULE_H
+#pragma once
 
 #include "defines.h"
 
@@ -22,4 +21,3 @@ void drawModuleCount(bool force = false);
 void wfModuleSwitch(direction where);
 void wfModulesManage(buttonState button, bool forceRender = false);
 
-#endif

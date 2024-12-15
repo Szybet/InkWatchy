@@ -1,5 +1,4 @@
-#ifndef LITTLEFS_H
-#define LITTLEFS_H
+#pragma once
 
 #include "defines.h"
 // https://github.com/espressif/arduino-esp32/blob/master/libraries/LittleFS/examples/LITTLEFS_test/LITTLEFS_test.ino
@@ -35,4 +34,3 @@ bool fsSetBlob(String conf, uint8_t* value, int size, String dir = "/conf/");
 void fsListDir(String dirname, uint8_t levels);
 #endif
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef APIMOD_H
-#define APIMOD_H
+#pragma once
 
 #include "defines.h"
 
@@ -7,5 +6,4 @@
 
 extern wfModule wfApi;
 
-#endif
 #endif

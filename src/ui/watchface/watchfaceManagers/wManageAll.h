@@ -1,5 +1,4 @@
-#ifndef WMANAGE_ALL_H
-#define WMANAGE_ALL_H
+#pragma once
 
 #include "defines.h"
 
@@ -16,4 +15,3 @@ const watchfaceDefOne *getwatchfaceDefOne();
 void initWatchfaceManage();
 void loopWatchfaceManage();
 
-#endif

@@ -1,5 +1,4 @@
-#ifndef BOOKMOD_H
-#define BOOKMOD_H
+#pragma once
 
 #include "defines.h"
 
@@ -8,5 +7,4 @@
 extern wfModule wfBook;
 void bitcoinSync();
 
-#endif
 #endif

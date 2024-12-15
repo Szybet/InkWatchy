@@ -1,5 +1,4 @@
-#ifndef AXC_H
-#define AXC_H
+#pragma once
 
 #include "defines.h"
 
@@ -13,4 +12,3 @@ void initAxc();
 
 uint16_t getSteps();
 
-#endif

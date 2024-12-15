@@ -1,5 +1,4 @@
-#ifndef DEFINES_VARS_H
-#define DEFINES_VARS_H
+#pragma once
 
 #include "defines.h"
 
@@ -95,4 +94,3 @@ struct watchfaceDef {
     genPointer data;
 };
 
-#endif

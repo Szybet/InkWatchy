@@ -1,5 +1,4 @@
-#ifndef CLOCK_DEBUG_H
-#define CLOCK_DEBUG_H
+#pragma once
 
 #include "defines.h"
 
@@ -8,5 +7,4 @@
 void initClockDebug();
 void loopClockDebug();
 
-#endif
 #endif

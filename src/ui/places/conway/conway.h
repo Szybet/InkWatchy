@@ -1,5 +1,4 @@
-#ifndef CONWAY_H
-#define CONWAY_H
+#pragma once
 
 #include "defines.h"
 
@@ -12,5 +11,4 @@ void computeNewGeneration(uint8_t *currentGrid, uint8_t *newGrid, uint8_t conway
 void initConway();
 void loopConway();
 
-#endif
 #endif

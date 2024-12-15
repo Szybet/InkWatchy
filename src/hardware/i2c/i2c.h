@@ -1,5 +1,4 @@
-#ifndef INK2C_H // I2C_H is taken for sure lol
-#define INK2C_H
+#pragma once
 
 #include "defines.h"
 
@@ -8,5 +7,4 @@
 bool initI2C();
 void deInitI2C();
 
-#endif
 #endif

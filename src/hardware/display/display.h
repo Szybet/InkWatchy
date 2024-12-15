@@ -1,5 +1,4 @@
-#ifndef DISPLAY_H
-#define DISPLAY_H
+#pragma once
 
 #include "defines.h"
 
@@ -16,4 +15,3 @@ void updateDisplay(bool mode);
 void initDisplayDebug();
 #endif
 
-#endif

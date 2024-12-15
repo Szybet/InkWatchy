@@ -1,5 +1,4 @@
-#ifndef WIFI_TASK_H
-#define WIFI_TASK_H
+#pragma once
 
 #include "defines.h"
 
@@ -15,4 +14,3 @@ bool isWifiTaskCheck();
 String wifiStatus();
 wifiStatusSimple wifiStatusWrap();
 
-#endif

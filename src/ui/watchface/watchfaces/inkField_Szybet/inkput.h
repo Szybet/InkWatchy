@@ -1,5 +1,4 @@
-#ifndef INKPUT_H
-#define INKPUT_H
+#pragma once
 
 #include "inkField.h"
 
@@ -17,5 +16,4 @@ void drawPosMarker();
 void movePos(int add);
 void inkFieldManageInput(buttonState bt);
 
-#endif
 #endif

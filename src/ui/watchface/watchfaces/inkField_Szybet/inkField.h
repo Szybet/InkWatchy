@@ -1,5 +1,4 @@
-#ifndef INKFIELD_H
-#define INKFIELD_H
+#pragma once
 
 #include "defines.h"
 
@@ -10,5 +9,4 @@ struct watchfaceDefOne;
 
 const extern watchfaceDefOne inkFieldDef;
 
-#endif
 #endif

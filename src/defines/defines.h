@@ -1,5 +1,4 @@
-#ifndef DEFINES_H
-#define DEFINES_H
+#pragma once
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
@@ -197,4 +196,3 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../other/scomTask/scomTask.h"
 #endif
 
-#endif

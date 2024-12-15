@@ -1,5 +1,4 @@
-#ifndef MCP23018_H
-#define MCP23018_H
+#pragma once
 
 #include "defines.h"
 
@@ -123,5 +122,4 @@ String uint8ToBinaryString(uint8_t value);
 String decimalToHexString(int decimal);
 #endif
 
-#endif
 #endif

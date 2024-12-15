@@ -1,5 +1,4 @@
-#ifndef BOOK_UI_H
-#define BOOK_UI_H
+#pragma once
 
 #include "defines.h"
 
@@ -19,5 +18,4 @@ int getPageNumber();
 extern uint16_t startHeightBook;
 void calculateBookTextHeight();
 
-#endif
 #endif

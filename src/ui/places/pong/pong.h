@@ -1,5 +1,4 @@
-#ifndef PONG_H
-#define PONG_H
+#pragma once
 
 #include "defines.h"
 
@@ -8,5 +7,4 @@
 void initPong();
 void loopPong();
 
-#endif
 #endif

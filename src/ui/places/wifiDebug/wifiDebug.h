@@ -1,9 +1,7 @@
-#ifndef WIFIDEBUG_H
-#define WIFIDEBUG_H
+#pragma once
 
 #include "defines.h"
 
 void initWifiDebugDisplay();
 void loopWifiDebugDisplay();
 
-#endif

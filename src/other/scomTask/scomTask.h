@@ -1,5 +1,4 @@
-#ifndef SCOM_TASK_H
-#define SCOM_TASK_H
+#pragma once
 
 #include "defines.h"
 
@@ -13,4 +12,3 @@ void initScomTask();
 void getMainTask();
 #endif
 
-#endif

@@ -1,3 +1,5 @@
+#pragma once
+
 #include "defines.h"
 
 /*
@@ -259,3 +261,4 @@ Template for versioning
 #define VIBRATION_POWER 170  
 #endif
 #endif
+

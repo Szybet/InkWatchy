@@ -1,5 +1,4 @@
-#ifndef BOOK_SELECTOR_H
-#define BOOK_SELECTOR_H
+#pragma once
 
 #include "defines.h"
 
@@ -8,5 +7,4 @@
 void initBookSelector();
 void selectedBook();
 
-#endif
 #endif

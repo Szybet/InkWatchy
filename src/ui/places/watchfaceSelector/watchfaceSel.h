@@ -1,8 +1,6 @@
-#ifndef WATCHFACE_SEL_H
-#define WATCHFACE_SEL_H
+#pragma once
 
 #include "defines.h"
 
 void watchfaceSelInit();
 
-#endif

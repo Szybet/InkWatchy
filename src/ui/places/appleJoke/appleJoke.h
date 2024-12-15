@@ -1,5 +1,4 @@
-#ifndef APPLE_JOKE_H
-#define APPLE_JOKE_H
+#pragma once
 
 #include "defines.h"
 
@@ -9,4 +8,3 @@ void initAppleJoke();
 void loopAppleJoke();
 void exitAppleJoke();
 
-#endif

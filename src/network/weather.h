@@ -1,5 +1,4 @@
-#ifndef WEATHER_H
-#define WEATHER_H
+#pragma once
 
 #include "defines.h"
 
@@ -13,5 +12,4 @@ void dumpWeather();
 
 String weatherConditionIdToStr(u8_t weatherCode);
 
-#endif
 #endif

@@ -84,8 +84,7 @@
  **************************************************************************/
 /*! \file bma423.h
     \brief Sensor Driver for BMA423 sensor */
-#ifndef BMA423_H
-#define BMA423_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -812,4 +811,3 @@ uint16_t bma423_tap_selection(const uint8_t tap_select, struct bma4_dev *dev);
 }
 #endif /*End of CPP guard */
 
-#endif /*End of header guard macro */

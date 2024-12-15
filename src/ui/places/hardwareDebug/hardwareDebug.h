@@ -1,5 +1,4 @@
-#ifndef HARDWARE_DEBUG_H
-#define HARDWARE_DEBUG_H
+#pragma once
 
 #include "defines.h"
 
@@ -13,5 +12,4 @@ void loopGeneralDebug();
 void initGeneralDebug();
 #endif
 
-#endif
 #endif

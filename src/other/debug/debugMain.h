@@ -1,5 +1,4 @@
-#ifndef DEBUG_MAIN_H
-#define DEBUG_MAIN_H
+#pragma once
 
 #include "defines.h"
 
@@ -9,5 +8,4 @@ void initLog();
 void showInitLogs();
 void endLoopDebug();
 
-#endif
 #endif

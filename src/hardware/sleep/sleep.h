@@ -1,5 +1,4 @@
-#ifndef SLEEP_H
-#define SLEEP_H
+#pragma once
 
 #include "defines.h"
 
@@ -8,4 +7,3 @@ void ForceInputs();
 void manageSleep();
 uint64_t pinToMask(uint8_t pin);
 
-#endif

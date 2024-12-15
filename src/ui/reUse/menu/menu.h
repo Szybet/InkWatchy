@@ -1,5 +1,4 @@
-#ifndef MENU_H
-#define MENU_H
+#pragma once
 
 #include "defines.h"
 
@@ -30,4 +29,3 @@ void initMenu(entryMenu entryList[MAX_MENU_ITEMS], int totalMenus, String menuNa
 void showMenu();
 void loopMenu();
 
-#endif

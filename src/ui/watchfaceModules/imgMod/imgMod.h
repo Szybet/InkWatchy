@@ -1,5 +1,4 @@
-#ifndef IMGMOD_H
-#define IMGMOD_H
+#pragma once
 
 #include "defines.h"
 
@@ -7,5 +6,4 @@
 
 extern wfModule wfImage;
 
-#endif
 #endif

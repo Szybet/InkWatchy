@@ -1,5 +1,4 @@
-#ifndef FONT_PREVIEW_H
-#define FONT_PREVIEW_H
+#pragma once
 
 #include "defines.h"
 
@@ -8,5 +7,4 @@
 void initFontPreview();
 void loopFontPreview();
 
-#endif
 #endif

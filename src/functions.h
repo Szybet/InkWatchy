@@ -1,5 +1,4 @@
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+#pragma once
 
 #include "defines.h"
 
@@ -26,4 +25,3 @@ void setBoolMutex(std::mutex* theMutex, bool* theBool, bool boolValue);
 int betterRandom(int min, int max);
 int betterRandom(int max);
 
-#endif
