@@ -1,4 +1,5 @@
 #include "batteryDebug.h"
+#include "rtcMem.h"
 
 #if DEBUG == 1 || DEBUG_MENUS == 1
 
@@ -15,7 +16,7 @@ void initBatteryDebugDisplay()
 {
     debugLog("initBatteryDebugDisplay called");
     uint16_t h;
-    bDdata = bat;
+    bDdata = rM.bat;
     setFont(&FreeSansBold9pt7b);
     setTextSize(batteryTextSize);
     display.setCursor(cursorX, 1);
@@ -57,13 +58,13 @@ void loopBatteryDebugDisplay()
 {
     loopBattery();
     isChargingCheck();
-    if (bDdata.curV > bat.curV + 0.01 || bDdata.curV < bat.curV - 0.01)
+    if (bDdata.curV > rM.bat.curV + 0.01 || bDdata.curV < rM.bat.curV - 0.01)
     {
-        bDdata.curV = bat.curV;
+        bDdata.curV = rM.bat.curV;
         display.setCursor(cursorX, currentVoltageHeight);
         setTextSize(batteryTextSize);
 
-        String battVoltageStr = String(bat.curV);
+        String battVoltageStr = String(rM.bat.curV);
         while (battVoltageStr.length() < 5)
         {
             battVoltageStr = battVoltageStr + " ";
@@ -72,13 +73,13 @@ void loopBatteryDebugDisplay()
         writeTextReplaceBack("Current V: " + battVoltageStr, cursorX, currentVoltageHeight);
         dUChange = true;
     }
-    if (bDdata.isCharging != bat.isCharging)
+    if (bDdata.isCharging != rM.bat.isCharging)
     {
-        bDdata.isCharging = bat.isCharging;
+        bDdata.isCharging = rM.bat.isCharging;
         display.setCursor(cursorX, ChargingHeight);
         setTextSize(batteryTextSize);
 
-        String chargingStr = BOOL_STR(bat.isCharging);
+        String chargingStr = BOOL_STR(rM.bat.isCharging);
         while (chargingStr.length() < 6)
         {
             chargingStr = chargingStr + " ";
@@ -88,13 +89,13 @@ void loopBatteryDebugDisplay()
         dUChange = true;
     }
 #if ATCHY_VER == YATCHY
-    if (bDdata.isFullyCharged != bat.isFullyCharged)
+    if (bDdata.isFullyCharged != rM.bat.isFullyCharged)
     {
-        bDdata.isFullyCharged = bat.isFullyCharged;
+        bDdata.isFullyCharged = rM.bat.isFullyCharged;
         display.setCursor(cursorX, fullyChargedHeight);
         setTextSize(batteryTextSize);
 
-        String chargingStr = BOOL_STR(bat.isCharging);
+        String chargingStr = BOOL_STR(rM.bat.isCharging);
         while (chargingStr.length() < 6)
         {
             chargingStr = chargingStr + " ";
@@ -104,13 +105,13 @@ void loopBatteryDebugDisplay()
         dUChange = true;
     }
 #endif
-    if (bDdata.percentage != bat.percentage)
+    if (bDdata.percentage != rM.bat.percentage)
     {
-        bDdata.percentage = bat.percentage;
+        bDdata.percentage = rM.bat.percentage;
         display.setCursor(cursorX, PercentageHeight);
         setTextSize(batteryTextSize);
 
-        String percentageStr = String(bat.percentage);
+        String percentageStr = String(rM.bat.percentage);
         while (percentageStr.length() < 6)
         {
             percentageStr = percentageStr + " ";

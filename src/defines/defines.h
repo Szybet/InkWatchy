@@ -195,4 +195,3 @@ static const WiFiCred* wifiCredStatic[] = {
 #if SCOM_TASK_ENABLED
 #include "../other/scomTask/scomTask.h"
 #endif
-
