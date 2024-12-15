@@ -4,9 +4,9 @@
 #include "defines.h"
 
 #if FONT_MENU_ENABLED
-void exitFontPreview();
+
 void initFontPreview();
 void loopFontPreview();
-#endif
 
+#endif
 #endif

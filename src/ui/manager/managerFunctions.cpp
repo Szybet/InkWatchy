@@ -208,21 +208,3 @@ void initpowerMenu()
     count = count + 1;
     initMenu(buttons, count, "Power menu", 1);
 }
-
-#if FONT_MENU_ENABLED
-void initFontMenu()
-{
-    /*
-    entryMenu buttons[FONT_COUNT];
-    for (int i = 0; i < FONT_COUNT; i++)
-    {
-        String str = fontListStr[i];
-        if(str.length() > 20) {
-            str = str.substring(0, 20);
-        }
-        buttons[i] = {str, &emptyImgPack, switchFontsPreview};
-    }
-    initMenu(buttons, FONT_COUNT, "Preview fonts");
-    */
-}
-#endif
