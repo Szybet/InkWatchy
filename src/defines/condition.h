@@ -35,7 +35,7 @@ Template for versioning
 #endif
 
 #if FONT_PREVIEW_MENU == 1 && DEBUG == 1 && DEBUG_MENUS == 1
-#define FONT_MENU_ENABLED 0 // For now depracated
+#define FONT_MENU_ENABLED 1
 #endif
 
 // Display init magic ;)

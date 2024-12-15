@@ -1,19 +1,34 @@
 #include "fontPreview.h"
 
 #if FONT_MENU_ENABLED
-void exitFontPreview() {
 
+void initFontMenu()
+{
+    int itemsInDir = fsItemsInDir("/font/");
+    entryMenu buttons[itemsInDir];
+
+    File root = LittleFS.open("/font/");
+    File file = root.openNextFile();
+    int counter = 0;
+    while (file)
+    {
+        if (file.isDirectory() == false)
+        {
+            buttons[counter] = {String(file.name()), &emptyImgPack, switchFontsPreview};
+            counter = counter + 1;
+        }
+        file = root.openNextFile();
+    }
+    file.close();
+    root.close();
+
+    initMenu(buttons, counter, "Choose font");
 }
 
-void initFontPreview() {
-    /*
+void initFontPreview()
+{
     display.fillScreen(GxEPD_WHITE);
-    for(int i = 0; i < FONT_COUNT; i++) {
-        if(lastMenuSelected.indexOf(fontListStr[i]) != -1) {
-            setFont(&fontListRef[i]);
-            break;
-        }
-    }
+    setFont(getFont(lastMenuSelected));
     setTextSize(1);
     display.setTextWrap(true);
     String heighTest = "123";
@@ -23,10 +38,9 @@ void initFontPreview() {
     display.setCursor(0, h);
     display.print(preview);
     disUp(true);
-    */
 }
 
-void loopFontPreview() {
-
+void loopFontPreview()
+{
 }
 #endif

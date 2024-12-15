@@ -283,7 +283,7 @@ void loopManager()
     case fontPreview:
     {
 #if FONT_MENU_ENABLED
-        managerLaunchFunc(fontPreview, initFontPreview);
+        managerLaunchFunc(fontPreview, initFontPreview, useButtonBlank);
 #endif
         break;
     }
