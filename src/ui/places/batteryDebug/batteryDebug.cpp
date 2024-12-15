@@ -33,11 +33,11 @@ void initBatteryDebugDisplay()
     writeLine("Current V: " + String(bDdata.curV), cursorX, &currentHeight);
     currentVoltageHeight = currentHeight - maxHeight;
 
-    writeLine("Minimum V: " + String(bDdata.minV), cursorX, &currentHeight);
+    writeLine("Minimum V: " + String(BATTERY_MIN_VOLTAGE), cursorX, &currentHeight);
 
-    writeLine("Maximum V: " + String(bDdata.maxV), cursorX, &currentHeight);
+    writeLine("Maximum V: " + String(BATTERY_MAX_VOLTAGE), cursorX, &currentHeight);
 
-    writeLine("Critical V: " + String(bDdata.critV), cursorX, &currentHeight);
+    writeLine("Critical V: " + String(BATTERY_CRIT_VOLTAGE), cursorX, &currentHeight);
 
     writeLine("Level %: " + String(bDdata.percentage), cursorX, &currentHeight);
     PercentageHeight = currentHeight - maxHeight;

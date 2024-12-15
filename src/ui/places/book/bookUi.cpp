@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "rtcMem.h"
 
 #if BOOK
 #include "bookUi.h"
@@ -124,7 +125,7 @@ int axis_ZBott;
 void resetStartAxc()
 {
     bma4_accel accel;
-    SBMA.getAccel(accel);
+    rM.SBMA.getAccel(accel);
     staAx_X = accel.x;
     staAx_Y = accel.y;
     staAx_Z = accel.z;
@@ -221,7 +222,7 @@ void initBook()
     resetSleepDelayBook();
 #if AXC_ENABLED
     initAxc();
-    SBMA.enableAccel();
+    rM.SBMA.enableAccel();
     resetStartAxc();
 #endif
     calculateBookTextHeight();
@@ -311,7 +312,7 @@ void loopBook()
 
 #if AXC_ENABLED
     bma4_accel accel;
-    if (excOn == true && SBMA.getAccel(accel))
+    if (excOn == true && rM.SBMA.getAccel(accel))
     {
         // for button change...
         if (changedPageAxis == 0)
