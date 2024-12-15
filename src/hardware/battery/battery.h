@@ -16,7 +16,6 @@ struct batteryInfo {
     bool oneCheck; // Force check once even if no voltage changed
 };
 
-extern batteryInfo bat;
 extern bool isBatterySaving;
 
 float BatteryRead();

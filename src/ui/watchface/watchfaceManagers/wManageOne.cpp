@@ -1,4 +1,5 @@
 #include "wManageOne.h"
+#include "rtcMem.h"
 
 RTC_DATA_ATTR tmElements_t wFTime;
 RTC_DATA_ATTR bool disableSomeDrawing = false;
@@ -15,7 +16,7 @@ void wManageOneInit(const watchfaceDefOne *wdo)
     wFTime.Day = timeRTCLocal.Day;
     wFTime.Month = timeRTCLocal.Month;
     wFTime.Year = timeRTCLocal.Year;
-    batteryPercantageWF = bat.percentage;
+    batteryPercantageWF = rM.bat.percentage;
 
     // dumpRTCTime(wFTime);
     // dumpRTCTime(timeRTCLocal);
@@ -64,9 +65,9 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
             {
                 loopBattery();
             }
-            if (batteryPercantageWF != bat.percentage)
+            if (batteryPercantageWF != rM.bat.percentage)
             {
-                batteryPercantageWF = bat.percentage;
+                batteryPercantageWF = rM.bat.percentage;
                 wdo->drawBattery();
             }
 

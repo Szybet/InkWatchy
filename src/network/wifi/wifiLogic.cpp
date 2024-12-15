@@ -1,4 +1,5 @@
 #include "wifiLogic.h"
+#include "rtcMem.h"
 
 RTC_DATA_ATTR long lastSyncUnix = 0;
 RTC_DATA_ATTR long lastTryUnix = 0;
@@ -27,11 +28,11 @@ void wifiRegular()
 void wifiPersistent()
 {
     debugLog("Launching");
-    while (WiFi.status() == WL_CONNECTED && bat.isCharging == true)
+    while (WiFi.status() == WL_CONNECTED && rM.bat.isCharging == true)
     {
         syncNtp(false);
         int counter = 0;
-        while (counter < SYNC_NTP_ON_CHARGING_DELAY && WiFi.status() == WL_CONNECTED && bat.isCharging == true)
+        while (counter < SYNC_NTP_ON_CHARGING_DELAY && WiFi.status() == WL_CONNECTED && rM.bat.isCharging == true)
         {
             delayTask(1000);
             counter = counter + 1000;
@@ -73,8 +74,8 @@ void turnOnWifiKindOfPersistent()
 void regularSync()
 {
     // debugLog("Entering regular sync");
-    // debugLog("bat.isCharging:" + BOOL_STR(bat.isCharging));
-    if (SYNC_WIFI == 1 && bat.isCharging == true && isWifiTaskCheck() == false)
+    // debugLog("rM.bat.isCharging:" + BOOL_STR(rM.bat.isCharging));
+    if (SYNC_WIFI == 1 && rM.bat.isCharging == true && isWifiTaskCheck() == false)
     {
         if (getUnixTime(timeRTCLocal) - lastSyncUnix > SYNC_WIFI_SINCE_SUCC)
         {
@@ -100,7 +101,7 @@ void regularSync()
     }
     else
     {
-        // debugLog("Not doing regular sync: " + String(getUnixTime(timeRTCLocal) - lastSyncUnix) + " " + BOOL_STR(bat.isCharging));
+        // debugLog("Not doing regular sync: " + String(getUnixTime(timeRTCLocal) - lastSyncUnix) + " " + BOOL_STR(rM.bat.isCharging));
     }
 }
 

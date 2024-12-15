@@ -1,6 +1,6 @@
 #include "battery.h"
+#include "rtcMem.h"
 
-RTC_DATA_ATTR batteryInfo bat;
 RTC_DATA_ATTR bool isBatterySaving = false;
 
 float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / ADC_VOLTAGE_DIVIDER; }
@@ -61,32 +61,32 @@ void initBattery()
     {
 
 #if GSR_MINIMUM_BATTERY_VOLTAGE
-        bat.minV = SRTC.getRTCBattery(false);
-        bat.maxV = BATTERY_CHARGE_VOLTAGE;
-        bat.critV = SRTC.getRTCBattery(true);
-        bat.charV = BATTERY_CHARGE_VOLTAGE;
+        rM.bat.minV = SRTC.getRTCBattery(false);
+        rM.bat.maxV = BATTERY_CHARGE_VOLTAGE;
+        rM.bat.critV = SRTC.getRTCBattery(true);
+        rM.bat.charV = BATTERY_CHARGE_VOLTAGE;
 #else
-        bat.minV = BATTERY_MIN_VOLTAGE;
-        bat.critV = BATTERY_CRIT_VOLTAGE;
+        rM.bat.minV = BATTERY_MIN_VOLTAGE;
+        rM.bat.critV = BATTERY_CRIT_VOLTAGE;
         if (BAD_BATTERY == false)
         {
-            bat.maxV = BATTERY_MAX_VOLTAGE;
-            bat.charV = BATTERY_CHARGE_VOLTAGE;
+            rM.bat.maxV = BATTERY_MAX_VOLTAGE;
+            rM.bat.charV = BATTERY_CHARGE_VOLTAGE;
         }
         else
         {
-            bat.maxV = BAD_BATTERY_MAX_VOLTAGE;
-            bat.charV = BAD_BATTERY_CHARGE_VOLTAGE;
+            rM.bat.maxV = BAD_BATTERY_MAX_VOLTAGE;
+            rM.bat.charV = BAD_BATTERY_CHARGE_VOLTAGE;
         }
 #endif
-        bat.prevVOne = 0.0;
+        rM.bat.prevVOne = 0.0;
     }
 
     if (bootStatus.fromWakeup == false || bootStatus.reason == wakeUpReason::rtc || bootStatus.reason == wakeUpReason::ulp)
     {
-        bat.oneCheck = true;
+        rM.bat.oneCheck = true;
         loopBattery();
-        bat.oneCheck = false;
+        rM.bat.oneCheck = false;
     }
 }
 
@@ -102,22 +102,22 @@ bool isSomethingWrong = false;
 #endif
 void isChargingCheck()
 {
-    bool previousChargingState = bat.isCharging;
+    bool previousChargingState = rM.bat.isCharging;
 
 #if NO_CHARGING == 1 && DEBUG == 1
-    bat.isCharging = false;
+    rM.bat.isCharging = false;
     return;
 #endif
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
-    if (bat.curV >= bat.charV)
+    if (rM.bat.curV >= rM.bat.charV)
     {
         // debugLog("It's charging because of above voltage");
-        bat.isCharging = true;
+        rM.bat.isCharging = true;
     }
     else
     {
         // debugLog("It's charging because of below voltage");
-        bat.isCharging = false;
+        rM.bat.isCharging = false;
     }
     // This did not worked well, sadly
     /*
@@ -127,9 +127,9 @@ void isChargingCheck()
         int averageDivision = PREV_VOLTAGE_SIZE;
         for (int i = 0; i < PREV_VOLTAGE_SIZE; i++)
         {
-            if (bat.prevV[i] != 0.0 && i != bat.prevVPos)
+            if (rM.bat.prevV[i] != 0.0 && i != rM.bat.prevVPos)
             {
-                average = average + bat.prevV[i];
+                average = average + rM.bat.prevV[i];
             }
             else
             {
@@ -139,17 +139,17 @@ void isChargingCheck()
         average = average / averageDivision;
         if (average == 0.0)
         {
-            bat.isCharging = false;
+            rM.bat.isCharging = false;
             return;
         }
         debugLog("The average previous voltage battery is: " + String(average));
-        if (bat.prevV[bat.prevVPos] - average >= BATTERY_CHARGE_DETECTION_DIFFERENCE || average >= bat.charV)
+        if (rM.bat.prevV[rM.bat.prevVPos] - average >= BATTERY_CHARGE_DETECTION_DIFFERENCE || average >= rM.bat.charV)
         {
-            bat.isCharging = true;
+            rM.bat.isCharging = true;
         }
         else
         {
-            bat.isCharging = false;
+            rM.bat.isCharging = false;
         }
     }
     */
@@ -157,11 +157,11 @@ void isChargingCheck()
     // Looks like bad code? go to definition of the pin
     if (analogRead(CHRG_STATUS_PIN) > 4000)
     {
-        bat.isCharging = true;
+        rM.bat.isCharging = true;
     }
     else
     {
-        bat.isCharging = false;
+        rM.bat.isCharging = false;
     }
 #elif ATCHY_VER == YATCHY
     /*
@@ -199,18 +199,18 @@ void isChargingCheck()
         // Only charging
         if (statInStateBefore == 0 && statInStateAfter == 0 && fiveVolt == true)
         {
-            bat.isCharging = true;
-            bat.isFullyCharged = false;
+            rM.bat.isCharging = true;
+            rM.bat.isFullyCharged = false;
         } // Fully charged
         else if (statInStateBefore == 1 && statInStateAfter == 1 && fiveVolt == true)
         {
-            bat.isCharging = true;
-            bat.isFullyCharged = true;
+            rM.bat.isCharging = true;
+            rM.bat.isFullyCharged = true;
         } // Not charging
         else if (statInStateBefore == 0 && statInStateAfter == 0 && fiveVolt == false)
         {
-            bat.isCharging = false;
-            bat.isFullyCharged = false;
+            rM.bat.isCharging = false;
+            rM.bat.isFullyCharged = false;
         }
         else
         {
@@ -229,16 +229,16 @@ void isChargingCheck()
         {
             isSomethingWrong = false;
 #if DEBUG && true == true
-            debugLog("bat.isCharging: " + BOOL_STR(bat.isCharging));
-            debugLog("bat.isFullyCharged: " + BOOL_STR(bat.isCharging));
+            debugLog("rM.bat.isCharging: " + BOOL_STR(rM.bat.isCharging));
+            debugLog("rM.bat.isFullyCharged: " + BOOL_STR(rM.bat.isCharging));
 #endif
 #if BATTERY_RGB_DIODE
-            if (bat.isFullyCharged == true)
+            if (rM.bat.isFullyCharged == true)
             {
                 debugLog("Setting color to fully charged!");
                 setRgb(BATTERY_CHARGED_COLOR);
             }
-            else if (bat.isCharging == true)
+            else if (rM.bat.isCharging == true)
             {
                 debugLog("Setting color to charging!");
                 setRgb(BATTERY_CHARGING_COLOR);
@@ -265,15 +265,15 @@ void isChargingCheck()
     gpioExpander.setInterrupt(MCP_STAT_IN, true); // Turn on interrupt
 #endif
 #if DEBUG && true == false
-    if (bat.isCharging != previousCharging)
+    if (rM.bat.isCharging != previousCharging)
     {
-        previousCharging = bat.isCharging;
-        debugLog("Charging is now: " + BOOL_STR(bat.isCharging));
+        previousCharging = rM.bat.isCharging;
+        debugLog("Charging is now: " + BOOL_STR(rM.bat.isCharging));
     }
 #endif
 
 #if DEBUG_MENUS
-    if(bat.isCharging == false && previousChargingState == true) {
+    if(rM.bat.isCharging == false && previousChargingState == true) {
         if(fsGetString(CONF_UNIX_LAST_SYNC, "") != "") {
             readRTC();
             fsSetString(CONF_UNIX_LAST_CHARGE, String(getUnixTime(timeRTCUTC0)));
@@ -284,24 +284,24 @@ void isChargingCheck()
 
 void loopBattery()
 {
-    bat.curV = getBatteryVoltage();
-    if (abs(bat.prevVOne - bat.curV) > BAT_MINIMAL_DIFFERENCE || bat.oneCheck == true)
+    rM.bat.curV = getBatteryVoltage();
+    if (abs(rM.bat.prevVOne - rM.bat.curV) > BAT_MINIMAL_DIFFERENCE || rM.bat.oneCheck == true)
     {
         debugLog("Voltage changed changed, doing things...");
 #if BATTERY_TIME_DROP
-        if (bat.curV < BATTERY_TIME_DROP_VOLTAGE)
+        if (rM.bat.curV < BATTERY_TIME_DROP_VOLTAGE)
         {
             if (fsFileExists("/bat_dump.txt") == false)
             {
-                fsSetString("bat_dump.txt", String(getUnixTime(timeRTCUTC0)) + " at voltage " + String(bat.curV), "/");
+                fsSetString("bat_dump.txt", String(getUnixTime(timeRTCUTC0)) + " at voltage " + String(rM.bat.curV), "/");
             }
         }
 #endif
-        debugLog("prevOne: " + String(bat.prevVOne) + " curV: " + String(bat.curV));
-        bat.prevVOne = bat.curV;
-        // debugLog("bat.curV: " + String(bat.curV));
-        // debugLog("bat.charV: " + String(bat.charV));
-        int batPercTemp = ((bat.curV - bat.minV) / (bat.maxV - bat.minV)) * 100.0;
+        debugLog("prevOne: " + String(rM.bat.prevVOne) + " curV: " + String(rM.bat.curV));
+        rM.bat.prevVOne = rM.bat.curV;
+        // debugLog("rM.bat.curV: " + String(rM.bat.curV));
+        // debugLog("rM.bat.charV: " + String(rM.bat.charV));
+        int batPercTemp = ((rM.bat.curV - rM.bat.minV) / (rM.bat.maxV - rM.bat.minV)) * 100.0;
         debugLog("Calculated battery percentage, raw: " + String(batPercTemp));
         if (batPercTemp > 100)
         {
@@ -312,14 +312,14 @@ void loopBattery()
         {
             batPercTemp = 0;
         }
-        bat.percentage = batPercTemp;
-        debugLog("Current voltage percentage: " + String(bat.percentage));
+        rM.bat.percentage = batPercTemp;
+        debugLog("Current voltage percentage: " + String(rM.bat.percentage));
 
 #if DEBUG && true == 0
         debugLog("Dumping previous voltages:");
         for (int i = 0; i < PREV_VOLTAGE_SIZE; i++)
         {
-            debugLog(String(i) + " - " + String(bat.prevV[i]));
+            debugLog(String(i) + " - " + String(rM.bat.prevV[i]));
         }
 #endif
 
@@ -333,14 +333,14 @@ void loopBattery()
 
 void loopPowerSavings()
 {
-    if (isBatterySaving == false && bat.percentage < POWER_SAVING_AFTER && reasonForVoltageSpikes() == false)
+    if (isBatterySaving == false && rM.bat.percentage < POWER_SAVING_AFTER && reasonForVoltageSpikes() == false)
     {
         debugLog("Turning on power settings");
         isBatterySaving = true;
         disableAllVibration = true;
         disableWakeUp = true;
     }
-    else if (isBatterySaving == true && bat.percentage + POWER_SAVING_OFF_AFTER > POWER_SAVING_AFTER && bat.isCharging == false)
+    else if (isBatterySaving == true && rM.bat.percentage + POWER_SAVING_OFF_AFTER > POWER_SAVING_AFTER && rM.bat.isCharging == false)
     {
         debugLog("Turning off power settings");
         isBatterySaving = false;
@@ -358,7 +358,7 @@ bool reasonForVoltageSpikes()
 void dumpBattery()
 {
     loopBattery();
-    debugLog("Battery voltage: " + String(bat.curV));
+    debugLog("Battery voltage: " + String(rM.bat.curV));
 }
 
 void dumpBatteryScreen(void *parameter)
