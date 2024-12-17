@@ -49,7 +49,7 @@ void syncNtp(bool doDriftThings)
         debugLog("millis are: " + String(millisBetter()));
 
         /* GuruSR:
-        SmallRTC doesn't cause time to drift.  The drift values are all reset on init, they never change anything when like that.  Are you using the SRTC's make and break time functions, if not, that is what is happening, the standard makeTime and breakTime are not compliant to time.h, they add month and day onto the values.  With the correct TimeZone (TZ) used, using localTime against the RTC having UTC values, you'll get accurate DST calculations.
+        SmallRTC doesn't cause time to drift.  The drift values are all reset on init, they never change anything when like that.  Are you using the rM.SRTC's make and break time functions, if not, that is what is happening, the standard makeTime and breakTime are not compliant to time.h, they add month and day onto the values.  With the correct TimeZone (TZ) used, using localTime against the RTC having UTC values, you'll get accurate DST calculations.
 
         I haven't looked at your code, but the make and break Time functions outside of SmallRTC don't follow time.h for values, so the day and month will increase.
         */
@@ -59,7 +59,7 @@ void syncNtp(bool doDriftThings)
         tmElements_t secondsDriftTmp = timeRTCUTC0;
 #endif
 
-        SRTC.doBreakTime(epochTime, timeRTCUTC0);
+        rM.SRTC.doBreakTime(epochTime, timeRTCUTC0);
         saveRTC(timeRTCUTC0);
         debugLog("Reading rtc from ntp");
         dontTouchTimeZone = false;
@@ -83,13 +83,13 @@ void syncNtp(bool doDriftThings)
 #if TIME_DRIFT_CORRECTION
         if (doDriftThings == true)
         {
-            if (SRTC.checkingDrift() == true && (getUnixTime(timeRTCLocal) - rM.driftStartUnix > TIME_DRIFT_MINIMUM_TIME * 3600 || rM.driftStartUnix == 0))
+            if (rM.SRTC.checkingDrift() == true && (getUnixTime(timeRTCLocal) - rM.driftStartUnix > TIME_DRIFT_MINIMUM_TIME * 3600 || rM.driftStartUnix == 0))
             {
                 debugLog("Ending drift");
-                SRTC.endDrift(timeRTCLocal);
+                rM.SRTC.endDrift(timeRTCLocal);
                 rM.driftStartUnix = 0;
-                uint32_t driftValue = SRTC.getDrift();
-                bool driftIsFast = SRTC.isFastDrift();
+                uint32_t driftValue = rM.SRTC.getDrift();
+                bool driftIsFast = rM.SRTC.isFastDrift();
                 debugLog("isFast: " + String(driftIsFast) + " drift value: " + String(driftValue));
                 fsSetString(CONF_DRIFT, String(driftValue));
                 fsSetString(CONF_DRIFT_FAST, String(driftIsFast));
@@ -98,14 +98,14 @@ void syncNtp(bool doDriftThings)
             {
                 debugLog("Beginning new drift");
                 // Drift is not going on or it's going on to quick to end it
-                SRTC.beginDrift(timeRTCLocal);
+                rM.SRTC.beginDrift(timeRTCLocal);
                 rM.driftStartUnix = getUnixTime(timeRTCLocal);
             }
         }
         else
         {
             debugLog("Canceling drift");
-            SRTC.setDrift(0, 0);
+            rM.SRTC.setDrift(0, 0);
         }
 #endif
 

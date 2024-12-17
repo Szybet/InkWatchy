@@ -5,7 +5,7 @@ void ForceInputs()
 {
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
     isDebug(Serial.end());
-    uint8_t P = SRTC.getADCPin();
+    uint8_t P = rM.SRTC.getADCPin();
     /* Unused GPIO PINS */
     pinMode(0, INPUT);  /*  ??      */
     pinMode(2, INPUT);  /*  ??      */
