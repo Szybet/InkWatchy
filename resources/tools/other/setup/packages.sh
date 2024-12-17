@@ -81,20 +81,20 @@ rm -rf .esp-idf/esp-idf
 ln -s $PWD/.platformio/packages/framework-espidf $PWD/.esp-idf/esp-idf
 cd $current_path
 
-if [ ! -d "../../components/arduino/docs" ]; then
-    echo "Getting arduino core"
-    cd ../../
-    mkdir -p components/arduino
-    cd components
-    rm -rf arduino
-    mkdir arduino
-    cd arduino
-    #wget -q -O arduino.zip https://github.com/Szybet/arduino-esp32/archive/refs/heads/idf-release/v5.3.zip
-    wget -q -O arduino.zip https://github.com/espressif/arduino-esp32/archive/refs/tags/3.1.0.zip
-    unzip arduino.zip
-    mv arduino-esp32-*/* .
-    rm -rf arduino-esp32-*
-    rm -rf arduino.zip
-    cd ../../
-fi
-cd $current_path
+# if [ ! -d "../../components/arduino/docs" ]; then
+#     echo "Getting arduino core"
+#     cd ../../
+#     mkdir -p components/arduino
+#     cd components
+#     rm -rf arduino
+#     mkdir arduino
+#     cd arduino
+#     #wget -q -O arduino.zip https://github.com/Szybet/arduino-esp32/archive/refs/heads/idf-release/v5.3.zip
+#     wget -q -O arduino.zip https://github.com/espressif/arduino-esp32/archive/refs/tags/3.1.0.zip
+#     unzip arduino.zip
+#     mv arduino-esp32-*/* .
+#     rm -rf arduino-esp32-*
+#     rm -rf arduino.zip
+#     cd ../../
+# fi
+# cd $current_path
