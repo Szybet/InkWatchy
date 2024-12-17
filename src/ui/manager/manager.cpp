@@ -2,11 +2,11 @@
 #include "rtcMem.h"
 
 int currentPlaceIndex = 0;
-RTC_DATA_ATTR UiPlace placeTree[PLACE_TREE_MAX_DEPTH] = {NoPlace};
-RTC_DATA_ATTR UiPlace currentPlace = NoPlace; // For loop manager for launching init or loop of a function
+UiPlace placeTree[PLACE_TREE_MAX_DEPTH] = {NoPlace};
+UiPlace currentPlace = NoPlace; // For loop manager for launching init or loop of a function
 int menuSelectedTree[PLACE_TREE_MAX_DEPTH] = {0};
 bool wasBacked = false;
-RTC_DATA_ATTR void (*exitFuncGlob)() = nullptr; // Executed when a place is exiting and it was requested
+void (*exitFuncGlob)() = nullptr; // Executed when a place is exiting and it was requested
 
 void initManager()
 {
