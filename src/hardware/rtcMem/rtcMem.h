@@ -13,6 +13,7 @@ struct rtcMem {
     uint8_t stepDay; // TODO: too low
     // Display
     GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
+    uint8_t updateCounter;
 };
 
 extern rtcMem rM;

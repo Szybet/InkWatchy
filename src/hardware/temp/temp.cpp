@@ -37,9 +37,9 @@ float getTemp()
 RTC_DATA_ATTR uint8_t fixCounts = 0;
 void screenTempFix()
 {
-    if (fixCounts <= TEMP_MAX_SCREEN_FIXES && updateCounter < FULL_DISPLAY_UPDATE_QUEUE)
+    if (fixCounts <= TEMP_MAX_SCREEN_FIXES && rM.updateCounter < FULL_DISPLAY_UPDATE_QUEUE)
     {
-        updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
+        rM.updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
         fixCounts = fixCounts + 1;
     }
 }

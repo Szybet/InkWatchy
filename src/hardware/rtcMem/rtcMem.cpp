@@ -18,4 +18,5 @@ RTC_DATA_ATTR rtcMem rM = {
     .stepDay = 0,
     // Display
     .display = GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY),
+    .updateCounter = 0,
 };
