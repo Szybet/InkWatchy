@@ -1,4 +1,5 @@
 #include "motor.h"
+#include "rtcMem.h"
 
 TaskHandle_t motorTask = NULL;
 std::mutex motorMutex;
@@ -34,7 +35,7 @@ void vibrateMotorTaskFun(void *parameter)
 
 void vibrateMotor(int vTime)
 {
-    if (disableAllVibration == true)
+    if (rM.disableAllVibration == true)
     {
         debugLog("Vibrations are disabled");
         if (motorTaskRunning == true)

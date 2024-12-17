@@ -281,7 +281,7 @@ void readRTC()
 void wakeUpManageRTC()
 {
   rM.SRTC.clearAlarm();
-  if (disableWakeUp == false)
+  if (rM.disableWakeUp == false)
   {
     // Not needed as we check if we go before next minute to sleep
     // readRTC();
