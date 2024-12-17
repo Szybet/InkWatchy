@@ -1,4 +1,5 @@
 #include "buttons.h"
+#include "rtcMem.h"
 
 bool buttonsActivated = false;
 buttonState buttonPressed = None;
@@ -160,7 +161,7 @@ void loopButtonsTask(void *parameter)
         if (interruptedButtonCopy == Unknown)
         {
 #if ATCHY_VER == YATCHY
-            interruptedButtonCopy = gpioExpander.manageInterrupts();
+            interruptedButtonCopy = rM.gpioExpander.manageInterrupts();
             interruptedButton = interruptedButtonCopy; // to make sure it can "rest" at the end
             debugLog("Received button from gpio expander: " + getButtonString(interruptedButtonCopy));
 #endif
@@ -196,7 +197,7 @@ void loopButtonsTask(void *parameter)
         if (interruptedButtonCopy == interruptedButton)
         {
 #if ATCHY_VER == YATCHY
-            if (gpioExpander.manageInterruptsExit() == false)
+            if (rM.gpioExpander.manageInterruptsExit() == false)
             {
                 continue;
             }
@@ -348,7 +349,7 @@ void manageButtonWakeUp()
         return;
     }
 #else
-    buttonState btn = gpioExpander.manageInterrupts();
+    buttonState btn = rM.gpioExpander.manageInterrupts();
 #ifdef YATCHY_BACK_BTN
     if (btn == Back)
     {
@@ -442,11 +443,11 @@ bool buttonRead(uint8_t pin)
     return digitalRead(pin);
 #else
     // It will return false from digitalRead if this fails
-    if (gpioExpander.simplerInit() == false)
+    if (rM.gpioExpander.simplerInit() == false)
     {
         return false;
     }
     // NOT here
-    return !gpioExpander.digitalRead(pin);
+    return !rM.gpioExpander.digitalRead(pin);
 #endif
 }

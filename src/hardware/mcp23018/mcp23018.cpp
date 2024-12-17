@@ -2,8 +2,6 @@
 
 #if ATCHY_VER == YATCHY
 
-RTC_DATA_ATTR mcp23018 gpioExpander;
-
 #define EMPTY_REG 0
 #define FULL_REG 0xFFFF
 
@@ -337,7 +335,7 @@ void mcp23018::deInit()
   {
     return;
   }
-  // gpioExpander.setPinState(MCP_STAT_OUT, true); // test
+  // rM.gpioExpander.setPinState(MCP_STAT_OUT, true); // test
 #if MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS == false
   setInterrupt(MCP_STAT_IN, false);
   setPinMode(MCP_STAT_IN, MCP_OUTPUT);

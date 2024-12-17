@@ -1,4 +1,5 @@
 #include "sleep.h"
+#include "rtcMem.h"
 
 void ForceInputs()
 {
@@ -55,9 +56,9 @@ void ForceInputs()
 #elif ATCHY_VER == YATCHY
 #if LP_CORE == false
     initRtcGpio();
-    gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
+    rM.gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
 #endif
-    gpioExpander.deInit();
+    rM.gpioExpander.deInit();
     deInitI2C();
 #endif
 }
@@ -108,7 +109,7 @@ void goSleep()
     dis->hibernate();
     // Not needed
 #if true == false
-    gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
+    rM.gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
     digitalWrite(EPD_RESET, true);
     digitalWrite(EPD_DC, true);
 #endif
@@ -206,7 +207,7 @@ void manageSleep()
 #if ATCHY_VER == YATCHY
             // Yatchy should never go to sleep, because of RGB diode and the interrupt switching problem (from fully charged to discharging)
             // Yes we test for both
-            if (bat.isCharging == true || bat.isFullyCharged == true)
+            if (rM.bat.isCharging == true || rM.bat.isFullyCharged == true)
             {
                 debugLog("Yatchy is charging, avoid sleep");
                 isChargingCheck();
@@ -282,7 +283,7 @@ void manageSleep()
 
 #if ATCHY_VER == YATCHY
             debugLog("Battery voltage before sleep: " + String(BatteryRead()));
-            debugLog("Gpio expander stat in pin state: " + BOOL_STR(gpioExpander.digitalRead(MCP_STAT_IN)));
+            debugLog("Gpio expander stat in pin state: " + BOOL_STR(rM.gpioExpander.digitalRead(MCP_STAT_IN)));
 #endif
 
 #if DEBUG && DISABLE_SLEEP_PARTIAL

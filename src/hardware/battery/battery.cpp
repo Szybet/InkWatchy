@@ -141,7 +141,7 @@ void isChargingCheck()
     In main.cpp for testing:
     loopBattery();
     isChargingCheck();
-    debugLog("Yatchy gpio: " + uint16ToBinaryString(gpioExpander.readRegister(GPIO)));
+    debugLog("Yatchy gpio: " + uint16ToBinaryString(rM.gpioExpander.readRegister(GPIO)));
     delayTask(2000);
     return;
     Sadly not anymore, outdated:
@@ -151,14 +151,14 @@ void isChargingCheck()
 
     Basically now we can't detect if its between Hi-Z and L
     */
-    gpioExpander.setInterrupt(MCP_STAT_IN, false); // Turn off interrupt
-    bool fiveVolt = gpioExpander.digitalRead(MCP_5V);
-    gpioExpander.setPinState(MCP_STAT_OUT, false);
+    rM.gpioExpander.setInterrupt(MCP_STAT_IN, false); // Turn off interrupt
+    bool fiveVolt = rM.gpioExpander.digitalRead(MCP_5V);
+    rM.gpioExpander.setPinState(MCP_STAT_OUT, false);
     delayTask(5);
-    bool statInStateBefore = gpioExpander.digitalRead(MCP_STAT_IN);
-    gpioExpander.setPinState(MCP_STAT_OUT, true);
+    bool statInStateBefore = rM.gpioExpander.digitalRead(MCP_STAT_IN);
+    rM.gpioExpander.setPinState(MCP_STAT_OUT, true);
     delayTask(5);
-    bool statInStateAfter = gpioExpander.digitalRead(MCP_STAT_IN);
+    bool statInStateAfter = rM.gpioExpander.digitalRead(MCP_STAT_IN);
 #if DEBUG && true == false
     debugLog("Executed isCharging");
     debugLog("fiveVolt: " + String(fiveVolt));
@@ -236,7 +236,7 @@ void isChargingCheck()
     }
     // debugLog("Turning on interrupt back on");
     delayTask(10);
-    gpioExpander.setInterrupt(MCP_STAT_IN, true); // Turn on interrupt
+    rM.gpioExpander.setInterrupt(MCP_STAT_IN, true); // Turn on interrupt
 #endif
 #if DEBUG && true == false
     if (rM.bat.isCharging != previousCharging)

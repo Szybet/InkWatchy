@@ -19,4 +19,8 @@ RTC_DATA_ATTR rtcMem rM = {
     // Display
     .display = GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY),
     .updateCounter = 0,
+    // Mcp23018
+    #if ATCHY_VER == YATCHY
+    .gpioExpander = mcp23018 {},
+    #endif
 };

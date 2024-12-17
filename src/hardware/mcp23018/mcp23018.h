@@ -114,8 +114,6 @@ private:
   std::mutex mcpMutex; // it can be called from another task, mostly the button task? Just to be sure
 };
 
-extern mcp23018 gpioExpander;
-
 #if DEBUG
 String uint16ToBinaryString(uint16_t value);
 String uint8ToBinaryString(uint8_t value);

@@ -1,4 +1,5 @@
 #include "rtcPins.h"
+#include "rtcMem.h"
 
 /*
 const RES_PIN: u8 = 2; // Output
@@ -37,9 +38,9 @@ void initRtcGpio()
 #if ATCHY_VER == YATCHY
     // Also make sure about this
     // Set screen cs to low
-    gpioExpander.setPinMode(YATCHY_DISPLAY_CS, MCP_OUTPUT);
+    rM.gpioExpander.setPinMode(YATCHY_DISPLAY_CS, MCP_OUTPUT);
     // setPinPullUp(YATCHY_DISPLAY_CS, false); // Not needed, it's false at default
-    gpioExpander.setPinState(YATCHY_DISPLAY_CS, LOW);
+    rM.gpioExpander.setPinState(YATCHY_DISPLAY_CS, LOW);
 #endif
 
     initRtcInvidualGpio(EPD_RESET, RTC_GPIO_MODE_OUTPUT_ONLY); // This funny guy increases power consumption up to 600 uA :(
