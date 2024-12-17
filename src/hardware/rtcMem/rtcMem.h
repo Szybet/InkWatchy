@@ -35,6 +35,10 @@ struct rtcMem
 #if TIME_DRIFT_CORRECTION
     uint64_t driftStartUnix;
 #endif
+// Watchdog
+#if WATCHDOG_TASK
+    bool everythingIsFine : 1;
+#endif
 };
 
 extern rtcMem rM;

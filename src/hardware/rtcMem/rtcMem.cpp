@@ -11,7 +11,7 @@ RTC_DATA_ATTR rtcMem rM = {
         .prevVOne = 0.0,
         .oneCheck = false},
     .isBatterySaving = false,
-    // Acc
+// Acc
 #if AXC_ENABLED
     .SBMA = StableBMA{}, // Class
     .initedAxc = false,
@@ -21,11 +21,11 @@ RTC_DATA_ATTR rtcMem rM = {
     // Display
     .display = GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY),
     .updateCounter = 0,
-    // Mcp23018
+// Mcp23018
 #if ATCHY_VER == YATCHY
     .gpioExpander = mcp23018{},
 #endif
-    // Temp
+// Temp
 #if TEMP_CHECKS_ENABLED
     .fixCounts = 0,
     .initialTemp = 0.0,
@@ -34,9 +34,13 @@ RTC_DATA_ATTR rtcMem rM = {
     // Wifi logic
     .lastSyncUnix = 0,
     .lastTryUnix = 0,
-    // Ntp
-    // Time drift correction
-    #if TIME_DRIFT_CORRECTION
+// Ntp
+// Time drift correction
+#if TIME_DRIFT_CORRECTION
     .driftStartUnix = 0,
-    #endif
+#endif
+// Watchdog
+#if WATCHDOG_TASK
+    .everythingIsFine = true,
+#endif
 };
