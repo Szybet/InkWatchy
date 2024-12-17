@@ -11,9 +11,9 @@ void initDisplay()
 #endif
 #if ATCHY_VER == YATCHY
     // Set screen cs to low
-    gpioExpander.setPinMode(YATCHY_DISPLAY_CS, MCP_OUTPUT);
+    rM.gpioExpander.setPinMode(YATCHY_DISPLAY_CS, MCP_OUTPUT);
     // setPinPullUp(YATCHY_DISPLAY_CS, false); // Not needed, it's false at default
-    gpioExpander.setPinState(YATCHY_DISPLAY_CS, LOW);
+    rM.gpioExpander.setPinState(YATCHY_DISPLAY_CS, LOW);
 #endif
     pinMode(EPD_RESET, OUTPUT);
     pinMode(EPD_DC, OUTPUT);
@@ -182,7 +182,7 @@ void resetHoldManage()
             turnOnButtons();
             while (useAllButtons() == None)
             {
-                // gpioExpander.dumpAllRegisters();
+                // rM.gpioExpander.dumpAllRegisters();
                 // debugLog("Battery voltage: " + String(BatteryRead()));
                 delayTask(1000);
             }

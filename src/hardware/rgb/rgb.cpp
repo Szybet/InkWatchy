@@ -1,4 +1,5 @@
 #include "rgb.h"
+#include "rtcMem.h"
 
 uint rgbTimer = 0;
 TaskHandle_t rgbTask = NULL;
@@ -23,7 +24,7 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
 {
 #if RGB_DIODE
 #if ATCHY_VER == YATCHY
-    if (gpioExpander.simplerInit() == false)
+    if (rM.gpioExpander.simplerInit() == false)
     {
         return;
     }
@@ -64,24 +65,24 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
     {
     case IwNone:
     {
-        gpioExpander.setPinState(RGB_DIODE_RED_PIN, true);
-        gpioExpander.setPinState(RGB_DIODE_GREEN_PIN, true);
-        gpioExpander.setPinState(RGB_DIODE_BLUE_PIN, true);
+        rM.gpioExpander.setPinState(RGB_DIODE_RED_PIN, true);
+        rM.gpioExpander.setPinState(RGB_DIODE_GREEN_PIN, true);
+        rM.gpioExpander.setPinState(RGB_DIODE_BLUE_PIN, true);
         break;
     }
     case IwRed:
     {
-        gpioExpander.setPinState(RGB_DIODE_RED_PIN, false);
+        rM.gpioExpander.setPinState(RGB_DIODE_RED_PIN, false);
         break;
     }
     case IwGreen:
     {
-        gpioExpander.setPinState(RGB_DIODE_GREEN_PIN, false);
+        rM.gpioExpander.setPinState(RGB_DIODE_GREEN_PIN, false);
         break;
     }
     case IwBlue:
     {
-        gpioExpander.setPinState(RGB_DIODE_BLUE_PIN, false);
+        rM.gpioExpander.setPinState(RGB_DIODE_BLUE_PIN, false);
         break;
     }
     case IwYellow:

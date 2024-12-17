@@ -1,4 +1,5 @@
 #include "buttons.h"
+#include "rtcMem.h"
 
 buttonState interruptedButton = None;
 
@@ -52,6 +53,6 @@ void turnOnInterrupts()
     attachInterrupt(digitalPinToInterrupt(DOWN_PIN), downIntBut, BUTTON_INTER_COND);
     debugLog("Attached interrupts!");
 #else
-    gpioExpander.setDefaultInterruptsEsp();
+    rM.gpioExpander.setDefaultInterruptsEsp();
 #endif
 }
