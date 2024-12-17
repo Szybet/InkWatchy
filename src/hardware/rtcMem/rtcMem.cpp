@@ -12,15 +12,23 @@ RTC_DATA_ATTR rtcMem rM = {
         .oneCheck = false},
     .isBatterySaving = false,
     // Acc
-    .SBMA = StableBMA {}, // Class
+#if AXC_ENABLED
+    .SBMA = StableBMA{}, // Class
     .initedAxc = false,
     .stepsInited = false,
     .stepDay = 0,
+#endif
     // Display
     .display = GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY),
     .updateCounter = 0,
     // Mcp23018
-    #if ATCHY_VER == YATCHY
-    .gpioExpander = mcp23018 {},
-    #endif
+#if ATCHY_VER == YATCHY
+    .gpioExpander = mcp23018{},
+#endif
+    // Temp
+#if TEMP_CHECKS_ENABLED
+    .fixCounts = 0,
+    .initialTemp = 0.0,
+    .previousTemp = 0.0,
+#endif
 };
