@@ -30,6 +30,11 @@ struct rtcMem
     // Wifi logic
     uint64_t lastSyncUnix;
     uint64_t lastTryUnix;
+// Ntp
+// Time drift correction
+#if TIME_DRIFT_CORRECTION
+    uint64_t driftStartUnix;
+#endif
 };
 
 extern rtcMem rM;

@@ -34,4 +34,9 @@ RTC_DATA_ATTR rtcMem rM = {
     // Wifi logic
     .lastSyncUnix = 0,
     .lastTryUnix = 0,
+    // Ntp
+    // Time drift correction
+    #if TIME_DRIFT_CORRECTION
+    .driftStartUnix = 0,
+    #endif
 };
