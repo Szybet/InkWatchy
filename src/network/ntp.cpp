@@ -1,12 +1,9 @@
 #include "ntp.h"
+#include "rtcMem.h"
 
 bool firstNTPSync = true;
 time_t initialRTCTime = 0;
 int ntpTries = 0;
-
-#if TIME_DRIFT_CORRECTION
-RTC_DATA_ATTR uint64_t driftStartUnix = 0;
-#endif
 
 void syncNtp(bool doDriftThings)
 {
@@ -86,11 +83,11 @@ void syncNtp(bool doDriftThings)
 #if TIME_DRIFT_CORRECTION
         if (doDriftThings == true)
         {
-            if (SRTC.checkingDrift() == true && (getUnixTime(timeRTCLocal) - driftStartUnix > TIME_DRIFT_MINIMUM_TIME * 3600 || driftStartUnix == 0))
+            if (SRTC.checkingDrift() == true && (getUnixTime(timeRTCLocal) - rM.driftStartUnix > TIME_DRIFT_MINIMUM_TIME * 3600 || rM.driftStartUnix == 0))
             {
                 debugLog("Ending drift");
                 SRTC.endDrift(timeRTCLocal);
-                driftStartUnix = 0;
+                rM.driftStartUnix = 0;
                 uint32_t driftValue = SRTC.getDrift();
                 bool driftIsFast = SRTC.isFastDrift();
                 debugLog("isFast: " + String(driftIsFast) + " drift value: " + String(driftValue));
@@ -102,7 +99,7 @@ void syncNtp(bool doDriftThings)
                 debugLog("Beginning new drift");
                 // Drift is not going on or it's going on to quick to end it
                 SRTC.beginDrift(timeRTCLocal);
-                driftStartUnix = getUnixTime(timeRTCLocal);
+                rM.driftStartUnix = getUnixTime(timeRTCLocal);
             }
         }
         else
