@@ -49,7 +49,7 @@ bool wasClicked(uint8_t pin)
 
 void executeCombination()
 {
-    if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true)
+    if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true && currentPlace != wifiDebug)
     {
         debugLog("Executed switch wifi combination");
         switchWifiDebug();

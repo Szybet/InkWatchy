@@ -3,7 +3,7 @@
 #include "defines.h"
 
 #define FIRST_PLACE watchface
-#define PLACE_TREE_MAX_DEPTH 30
+#define PLACE_TREE_MAX_DEPTH 15
 
 typedef enum
 {
