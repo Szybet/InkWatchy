@@ -65,7 +65,7 @@ void initGeneralDebugDisplay()
     writeLine("CPU temp: " + String(getTemp()), cursorX, &currentHeight);
     tempHeight = currentHeight - maxHeight;
 
-    writeLine("Init temp: " + String(initialTemp), cursorX, &currentHeight);
+    writeLine("Init temp: " + String(rM.initialTemp), cursorX, &currentHeight);
 #endif
 
     // Double the time before sleeping

@@ -34,45 +34,42 @@ float getTemp()
 }
 #endif
 
-RTC_DATA_ATTR uint8_t fixCounts = 0;
 void screenTempFix()
 {
-    if (fixCounts <= TEMP_MAX_SCREEN_FIXES && rM.updateCounter < FULL_DISPLAY_UPDATE_QUEUE)
+    if (rM.fixCounts <= TEMP_MAX_SCREEN_FIXES && rM.updateCounter < FULL_DISPLAY_UPDATE_QUEUE)
     {
         rM.updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
-        fixCounts = fixCounts + 1;
+        rM.fixCounts = rM.fixCounts + 1;
     }
 }
 
-RTC_DATA_ATTR float initialTemp = 0.0;
-RTC_DATA_ATTR float previousTemp = 0.0;
 void tempChecker()
 {
     float newTemp = getTemp();
-    if (newTemp > previousTemp + 1.5 || newTemp < previousTemp - 1.5)
+    if (newTemp > rM.previousTemp + 1.5 || newTemp < rM.previousTemp - 1.5)
     {
-        if (initialTemp == 0.0)
+        if (rM.initialTemp == 0.0)
         {
             debugLog("Initial temp is: " + String(newTemp));
-            initialTemp = newTemp;
+            rM.initialTemp = newTemp;
         }
         debugLog("Temperature changed to: " + String(newTemp));
-        previousTemp = newTemp;
-        if (newTemp > initialTemp + float(TEMP_REBOOT_LIMIT_RELATIVE))
+        rM.previousTemp = newTemp;
+        if (newTemp > rM.initialTemp + float(TEMP_REBOOT_LIMIT_RELATIVE))
         {
             debugLog("Temperature too high, exiting");
             assert(true == false);
-        } else if (newTemp > initialTemp + float(TEMP_HIGHER_LIMIT_RELATIVE))
+        } else if (newTemp > rM.initialTemp + float(TEMP_HIGHER_LIMIT_RELATIVE))
         {
             screenTempFix();
         }
-        else if (newTemp < initialTemp + float(TEMP_LOWER_LIMIT_RELATIVE))
+        else if (newTemp < rM.initialTemp + float(TEMP_LOWER_LIMIT_RELATIVE))
         {
             screenTempFix();
         }
         else
         {
-            fixCounts = 0;
+            rM.fixCounts = 0;
         }
     }
 }
