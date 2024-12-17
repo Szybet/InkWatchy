@@ -61,7 +61,6 @@ void initDisplay()
     setTextSize(1);
 }
 
-RTC_DATA_ATTR int updateCounter = 0;
 bool dUChange = false;
 // Display update
 void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
@@ -81,17 +80,17 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
         }
 #endif
         updatedScreen = true;
-        if (updateCounter >= FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
+        if (rM.updateCounter >= FULL_DISPLAY_UPDATE_QUEUE && ignoreCounter == false)
         {
 
-            updateCounter = 0;
+            rM.updateCounter = 0;
             updateDisplay(FULL_UPDATE);
         }
         else
         {
             if (ignoreCounter == false)
             {
-                updateCounter += 1;
+                rM.updateCounter += 1;
             }
             updateDisplay(PARTIAL_UPDATE);
         }

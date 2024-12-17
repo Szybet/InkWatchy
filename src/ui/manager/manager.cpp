@@ -1,4 +1,5 @@
 #include "manager.h"
+#include "rtcMem.h"
 
 int currentPlaceIndex = 0;
 RTC_DATA_ATTR UiPlace placeTree[PLACE_TREE_MAX_DEPTH] = {NoPlace};
@@ -105,7 +106,7 @@ void loopManager()
 #if LONG_BACK_FULL_REFRESH
                     debugLog("Forcing full update because of long back button");
                     dUChange = true;
-                    updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
+                    rM.updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
 #endif
                     currentPlaceIndex = 0;
                 }
