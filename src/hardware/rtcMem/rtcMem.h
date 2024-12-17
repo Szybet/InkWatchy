@@ -27,6 +27,9 @@ struct rtcMem
     float initialTemp;
     float previousTemp;
 #endif
+    // Wifi logic
+    uint64_t lastSyncUnix;
+    uint64_t lastTryUnix;
 };
 
 extern rtcMem rM;

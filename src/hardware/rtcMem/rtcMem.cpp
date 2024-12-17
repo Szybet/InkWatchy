@@ -31,4 +31,7 @@ RTC_DATA_ATTR rtcMem rM = {
     .initialTemp = 0.0,
     .previousTemp = 0.0,
 #endif
+    // Wifi logic
+    .lastSyncUnix = 0,
+    .lastTryUnix = 0,
 };

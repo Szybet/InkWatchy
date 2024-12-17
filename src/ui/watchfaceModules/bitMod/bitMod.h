@@ -11,7 +11,7 @@ struct bitcoinData {
     float change24;
     float change7d;
     float change30d;
-    long lastSyncUnix;
+    long btcLastSyncUnix;
 };
 extern bitcoinData btcData;
 extern bool isBtcDataAvail;
