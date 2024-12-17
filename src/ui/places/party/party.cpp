@@ -8,10 +8,10 @@ uint8_t maxParty = PARTY_DEFAULT;
 uint8_t previousColor = 0;
 
 void initParty() {
-    display.fillScreen(GxEPD_WHITE);
+    dis->fillScreen(GxEPD_WHITE);
     setFont(font);
     setTextSize(1);
-    writeTextCenterReplaceBack("Party party", display.height() / 2);
+    writeTextCenterReplaceBack("Party party", dis->height() / 2);
     disUp(true);
 }
 

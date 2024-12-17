@@ -32,17 +32,17 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     setFont(getFont("dogicapixel4"));
     setTextSize(1);
     squareInfo modSq = getWatchModuleSquare();
-    display.setCursor(modSq.cord.x, modSq.cord.y + 10);
+    dis->setCursor(modSq.cord.x, modSq.cord.y + 10);
     if (fsFileExists("/calendar/index.txt") == false)
     {
-        display.print("No calendar data");
+        dis->print("No calendar data");
         wfEventresetValues();
         return;
     }
     String buf = fsGetString("index.txt", "", "/calendar/");
     if (buf.length() <= 0)
     {
-        display.print("Failed to read index");
+        dis->print("Failed to read index");
         wfEventresetValues();
         return;
     }
@@ -70,7 +70,7 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     debugLog("Current time: " + String(currentTime));
     if (day(theUnix) != day(currentTime) || month(theUnix) != month(currentTime))
     {
-        display.print("No events today");
+        dis->print("No events today");
         wfEventresetValues();
         return;
     }
@@ -78,7 +78,7 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     JsonArray array = doc.as<JsonArray>();
     int arraySize = array.size();
     if(array == 0) {
-        display.print("Invalid json?");
+        dis->print("Invalid json?");
         wfEventresetValues();
         return;
     }
@@ -98,7 +98,7 @@ void wfEventrequestShow(buttonState button, bool *showBool)
         }
     }
     if(finalI == -1) {
-        display.print("No more events");
+        dis->print("No more events");
         wfEventresetValues();
         return;
     }
@@ -109,23 +109,23 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     debugLog("btnStr: " + btnStr);
 
     if(btnStr.length() <= LINE_LIMIT) {
-        display.print(btnStr);
+        dis->print(btnStr);
     } else {
         String btnStr1 = btnStr.substring(0, LINE_LIMIT);
         //String btnStr2 = btnStr.substring(LINE_LIMIT, btnStr.length());
         //String btnStr2 = btnStr2.substring(0, LINE_LIMIT);
         // Not tested yet
         String btnStr2 = btnStr.substring(LINE_LIMIT, LINE_LIMIT + LINE_LIMIT);
-        display.print(btnStr1);
-        display.setCursor(modSq.cord.x, modSq.cord.y + 10 + 10);
-        display.print(btnStr2);
+        dis->print(btnStr1);
+        dis->setCursor(modSq.cord.x, modSq.cord.y + 10 + 10);
+        dis->print(btnStr2);
     }
 
     String details = array[finalI]["description"].as<String>();
     details.replace(CALENDAR_SPLIT_DESCRIPTION_STRING, ", ");
     details = details.substring(0, LINE_LIMIT);
-    display.setCursor(modSq.cord.x, modSq.cord.y + modSq.size.h - 1);
-    display.print(details);
+    dis->setCursor(modSq.cord.x, modSq.cord.y + modSq.size.h - 1);
+    dis->print(details);
 
     // Set the next redraw, kind of
     currentEventTime = eventUnix;

@@ -39,7 +39,7 @@ void initClockDebug()
     uint16_t h;
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
-    display.setCursor(0, 1);
+    dis->setCursor(0, 1);
     String menuName = "Debug Menu: Clock";
     debugLog(menuName);
     getTextBounds(menuName, NULL, NULL, NULL, &h);
@@ -49,10 +49,10 @@ void initClockDebug()
     }
     maxHeight = h;
     uint16_t currentHeight = maxHeight;
-    display.setCursor(0, currentHeight - 3);
-    display.print(menuName);
+    dis->setCursor(0, currentHeight - 3);
+    dis->print(menuName);
 
-    display.fillRect(0, currentHeight, display.width(), 3, GxEPD_BLACK);
+    dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
     currentHeight = currentHeight + maxHeight;
 
     timeClockHeight = currentHeight;
@@ -126,7 +126,7 @@ void loopClockDebug()
         fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_SYNC));
         fsRemoveFile("/conf/" + String(CONF_UNIX_PREVIOUS_SYNC));
         fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_CHARGE));
-        display.fillScreen(GxEPD_WHITE);
+        dis->fillScreen(GxEPD_WHITE);
         initClockDebug();
     }
 

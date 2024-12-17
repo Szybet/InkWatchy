@@ -161,8 +161,8 @@ String showPage(int page, bool actuallyShowIt, int charsPerPage)
         setFont(BOOK_FONT);
         setTextSize(1);
 
-        display.setCursor(1, startHeightBook);
-        display.fillScreen(GxEPD_WHITE);
+        dis->setCursor(1, startHeightBook);
+        dis->fillScreen(GxEPD_WHITE);
     }
     if (openedBook == false)
     {
@@ -193,9 +193,9 @@ String showPage(int page, bool actuallyShowIt, int charsPerPage)
     debugLog("book str is now: " + str);
     if (actuallyShowIt == true)
     {
-        display.print(str);
+        dis->print(str);
     }
-    // display.print(fsGetString(String(getPageNumber()), "Failed to open page: " + String(getPageNumber()) + " book isin't probably in filesystem?", "/book/"));
+    // dis->print(fsGetString(String(getPageNumber()), "Failed to open page: " + String(getPageNumber()) + " book isin't probably in filesystem?", "/book/"));
     dUChange = true;
     return str;
 }
@@ -207,7 +207,7 @@ void calculateBookTextHeight()
     getTextBounds(test, NULL, NULL, NULL, &startHeightBook);
     // startHeightBook = startHeightBook - 3;
     startHeightBook = startHeightBook + 2;
-    display.setTextWrap(true);
+    dis->setTextWrap(true);
 }
 
 void initBook()
@@ -292,7 +292,7 @@ void loopBook()
     case LongMenu:
     {
         excOn = !excOn;
-        display.fillRect(0, 0, 200, BOOK_AXC_LINE_WIDTH, GxEPD_WHITE);
+        dis->fillRect(0, 0, 200, BOOK_AXC_LINE_WIDTH, GxEPD_WHITE);
         dUChange = true;
         break;
     }
@@ -451,12 +451,12 @@ void loopBook()
         if (abs(newFilledWidth - filledAxcLine) > BOOK_AXC_DIFFERENCE_CHANGE)
         {
             filledAxcLine = newFilledWidth;
-            // display.drawFastHLine(0, 1, 200, GxEPD_WHITE);
-            // display.drawFastHLine(0, 1, filledAxcLine, GxEPD_BLACK);
-            display.fillRect(0, 0, 200, BOOK_AXC_LINE_WIDTH, GxEPD_WHITE);
+            // dis->drawFastHLine(0, 1, 200, GxEPD_WHITE);
+            // dis->drawFastHLine(0, 1, filledAxcLine, GxEPD_BLACK);
+            dis->fillRect(0, 0, 200, BOOK_AXC_LINE_WIDTH, GxEPD_WHITE);
             if (waitForReturn == false)
             {
-                display.fillRect(0, 0, newFilledWidth, BOOK_AXC_LINE_WIDTH, GxEPD_BLACK);
+                dis->fillRect(0, 0, newFilledWidth, BOOK_AXC_LINE_WIDTH, GxEPD_BLACK);
             }
             else
             {

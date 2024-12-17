@@ -125,7 +125,7 @@ void switchBookSelector()
 // call generalSwitch(textDialog); or overwriteSwitch(textDialog); before this
 void showTextDialog(String str)
 {
-    display.fillScreen(GxEPD_WHITE);
+    dis->fillScreen(GxEPD_WHITE);
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
     simpleCenterText(str);

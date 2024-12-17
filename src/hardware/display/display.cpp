@@ -1,6 +1,7 @@
 #include "display.h"
+#include "rtcMem.h"
 
-RTC_DATA_ATTR GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display(GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY));
+GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> *dis = &rM.display;
 
 void initDisplay()
 {
@@ -18,14 +19,14 @@ void initDisplay()
     pinMode(EPD_DC, OUTPUT);
     pinMode(EPD_BUSY, INPUT);
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
-    display.epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
-    display.init(0, !bootStatus.fromWakeup, 10, true);
+    dis->epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
+    dis->init(0, !bootStatus.fromWakeup, 10, true);
 #elif ATCHY_VER == WATCHY_3
     SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
-    display.init(0, !bootStatus.fromWakeup, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
+    dis->init(0, !bootStatus.fromWakeup, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
 #elif ATCHY_VER == YATCHY
     SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
-    display.init(0, !bootStatus.fromWakeup, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
+    dis->init(0, !bootStatus.fromWakeup, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
 #endif
     /*
     Here, to remove border you need to go to GxEPD2_154_D67::_InitDisplay()
@@ -36,18 +37,18 @@ void initDisplay()
     _writeData(0x00);
     */
     // And we can do this from here! ( by using the magic script )
-    // display.epd2._writeCommand(0x3C);
-    // display.epd2._writeCommand(0x00);
+    // dis->epd2._writeCommand(0x3C);
+    // dis->epd2._writeCommand(0x00);
 
-    display.setTextColor(GxEPD_BLACK);
+    dis->setTextColor(GxEPD_BLACK);
 
     // Only on first boot, only to be extra sure
 #if SCREEN_PARTIAL_GREY_WORKAROUND || LP_CORE_TEST_ENABLED
     if (bootStatus.fromWakeup == false)
     {
-        display.setPartialWindow(0, 0, 200, 200);
-        display.clearScreen();
-        display.fillScreen(GxEPD_WHITE);
+        dis->setPartialWindow(0, 0, 200, 200);
+        dis->clearScreen();
+        dis->fillScreen(GxEPD_WHITE);
         updateDisplay(FULL_UPDATE);
     }
 #endif
@@ -108,7 +109,7 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
 #if DEBUG
 void initDisplayDebug()
 {
-    debugLog("Screen size: " + String(display.width()) + "x" + String(display.height()));
+    debugLog("Screen size: " + String(dis->width()) + "x" + String(dis->height()));
 }
 #endif
 
@@ -151,7 +152,7 @@ void resetHoldManage()
 {
     if (bootStatus.fromWakeup == false && bootStatus.resetReason != ESP_RST_DEEPSLEEP)
     {
-        display.fillScreen(GxEPD_WHITE);
+        dis->fillScreen(GxEPD_WHITE);
         setFont(&FreeSansBold9pt7b);
         setTextSize(1);
         uint16_t h = 100;
@@ -196,14 +197,14 @@ void updateDisplay(bool mode)
 {
 #if SCREEN_FULL_WHITE_WORKAROUND == 0
     // Normal
-    display.display(mode);
+    dis->display(mode);
 #else
     // The workaround
-    display.display(mode);
+    dis->display(mode);
     if (mode == FULL_UPDATE)
     {
         delayTask(50);
-        display.display(PARTIAL_UPDATE);
+        dis->display(PARTIAL_UPDATE);
     }
 #endif
 }

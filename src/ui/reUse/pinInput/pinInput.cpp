@@ -13,8 +13,8 @@ int currentPinButton;
 
 void showPin()
 {
-    display.setTextWrap(false);
-    display.fillScreen(GxEPD_WHITE);
+    dis->setTextWrap(false);
+    dis->fillScreen(GxEPD_WHITE);
     setTextSize(1);
     uint16_t currentHeight = 30;
     //debugLog("Current height before center text: " + String(currentHeight));

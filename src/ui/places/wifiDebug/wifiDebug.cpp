@@ -31,17 +31,17 @@ void initWifiDebugDisplay()
 {
     setFont(&FreeSansBold9pt7b);
     setTextSize(TextSize);
-    display.setCursor(cursorXwifi, 1);
+    dis->setCursor(cursorXwifi, 1);
     String menuName = "Debug Menu: Wifi";
     getTextBounds(menuName, NULL, NULL, NULL, &maxHeight);
 
     uint16_t currentHeight = maxHeight;
     debugLog("maxHeight for wifi debug menu: " + String(maxHeight));
     maxHeight = maxHeight + 1; // Add here for more space between lines
-    display.setCursor(cursorXwifi, currentHeight - 3);
-    display.print(menuName);
+    dis->setCursor(cursorXwifi, currentHeight - 3);
+    dis->print(menuName);
 
-    display.fillRect(0, currentHeight, display.width(), 3, GxEPD_BLACK);
+    dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
     currentHeight = currentHeight + maxHeight;
     centerText("MAC address:", &currentHeight);
 
@@ -73,7 +73,7 @@ void initWifiDebugDisplay()
     TaskStatusHeight = currentHeight - maxHeight;
 
     currentHeight = currentHeight - maxHeight + 6;
-    display.fillRect(0, currentHeight, display.width(), 1, GxEPD_BLACK);
+    dis->fillRect(0, currentHeight, dis->width(), 1, GxEPD_BLACK);
     currentHeight = currentHeight + 8;
 
     onButtonCord.x = 3;

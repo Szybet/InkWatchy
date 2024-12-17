@@ -2,7 +2,7 @@
 
 #include "defines.h"
 
-extern GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
+extern GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> *dis;
 
 void initDisplay();
 extern int updateCounter;

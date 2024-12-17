@@ -1,7 +1,7 @@
 #include "chart.h"
 #include "Grafici.h"
 
-Grafici plot{display};
+Grafici plot{*dis};
 
 const ColorMapArray<2> really_black{
     black,
@@ -17,7 +17,7 @@ const ColorMapArray<2> really_black{
 // Values in data1 need to be higher that in data2 in the same index
 void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, String chartName)
 {
-  display.fillScreen(GxEPD_WHITE);
+  dis->fillScreen(GxEPD_WHITE);
   float highNum = findHighest(data1Max, dataCount);
   float lowNum = findLowest(data2Min, dataCount);
 
@@ -40,7 +40,7 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
   plot.bar(x, data1Arr, data2Arr, size, opts);
   plot.bar(x, data2Arr, white, size, opts);
 
-  display.setCursor(1, 1);
+  dis->setCursor(1, 1);
   setTextSize(1);
   uint16_t y;
   getTextBounds(chartName, NULL, NULL, NULL, &y);
@@ -71,7 +71,7 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
 
 void showChart(float *data, uint dataCount, String chartName)
 {
-  display.fillScreen(GxEPD_WHITE);
+  dis->fillScreen(GxEPD_WHITE);
   float highNum = findHighest(data, dataCount);
   float lowNum = findLowest(data, dataCount);
 
@@ -91,7 +91,7 @@ void showChart(float *data, uint dataCount, String chartName)
 
   plot.bar(x, dataArr, black, size, opts);
 
-  display.setCursor(1, 1);
+  dis->setCursor(1, 1);
   setTextSize(1);
   uint16_t y;
   getTextBounds(chartName, NULL, NULL, NULL, &y);
@@ -177,12 +177,12 @@ void showSideText(float *bothList, int bothSize) {
 
   debugLog("valuesCount: " + String(valuesCount));
   debugLog("Highest value: " + String(values[valuesCount - 1]));
-  float currentHeightDown = display.height() - 23;
+  float currentHeightDown = dis->height() - 23;
   float currentHeightUp = SIDE_TEXT_OFFSET;
 
-  float offset = (display.height() - (SIDE_TEXT_OFFSET - SIDE_TEXT_REPAIR)) / valuesCount ;
+  float offset = (dis->height() - (SIDE_TEXT_OFFSET - SIDE_TEXT_REPAIR)) / valuesCount ;
   bool down = false;
-  display.setFont();
+  dis->setFont();
   for (float i = 0; i < float(valuesCount) / 2; i += 0.5)
   {
     int ji = int(floor(i));
@@ -191,11 +191,11 @@ void showSideText(float *bothList, int bothSize) {
 
     if (down == true)
     {
-      display.setCursor(0, round(currentHeightDown));
+      dis->setCursor(0, round(currentHeightDown));
     }
     else
     {
-      display.setCursor(0, round(currentHeightUp));
+      dis->setCursor(0, round(currentHeightUp));
     }
 
     String number;
@@ -220,7 +220,7 @@ void showSideText(float *bothList, int bothSize) {
       /*
       if (isDecimalZero(bothList[i]) == true && String(int(bothList[i])).length() <= 3)
       {
-        display.print(String(int(bothList[i])));
+        dis->print(String(int(bothList[i])));
       }
       else
       */
@@ -231,13 +231,13 @@ void showSideText(float *bothList, int bothSize) {
         {
           part2 = part2.substring(0, 3);
         }
-        display.println(part1);
-        display.print(part2);
+        dis->println(part1);
+        dis->print(part2);
       }
     }
     else
     {
-      display.print(number);
+      dis->print(number);
     }
 
     if (down == true)
@@ -252,8 +252,8 @@ void showSideText(float *bothList, int bothSize) {
   }
 
   if(values[0] == 0.0) {
-    display.setCursor(0, round(currentHeightUp));
-    display.print("0");
+    dis->setCursor(0, round(currentHeightUp));
+    dis->print("0");
   }
 
   setFont(font);

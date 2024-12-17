@@ -27,16 +27,16 @@ void initFontMenu()
 
 void initFontPreview()
 {
-    display.fillScreen(GxEPD_WHITE);
+    dis->fillScreen(GxEPD_WHITE);
     setFont(getFont(lastMenuSelected));
     setTextSize(1);
-    display.setTextWrap(true);
+    dis->setTextWrap(true);
     String heighTest = "123";
     String preview = "1234567890abcdefghijklmnopqrstuvwxyz!\"#$%&'()*+,-./:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`qrstuvwxyz{|}~";
     uint16_t h;
     getTextBounds(heighTest, NULL, NULL, NULL, &h);
-    display.setCursor(0, h);
-    display.print(preview);
+    dis->setCursor(0, h);
+    dis->print(preview);
     disUp(true);
 }
 

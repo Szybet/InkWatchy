@@ -90,7 +90,7 @@ static void drawTimeBeforeApply()
             // debugLog("finalWidthStart: " + String(finalWidthStart));
 
             // debugLog("Writing to screen: " + toWrite);
-            display.fillRect(TIME_CORD_X + finalWidthStart, TIME_CORD_Y - hToWrite, TIME_LETTERS_SPACING, hToWrite, GxEPD_WHITE); // Clear things up
+            dis->fillRect(TIME_CORD_X + finalWidthStart, TIME_CORD_Y - hToWrite, TIME_LETTERS_SPACING, hToWrite, GxEPD_WHITE); // Clear things up
             writeTextReplaceBack(toWrite, TIME_CORD_X + finalWidthStart, TIME_CORD_Y);
         }
     }
@@ -170,7 +170,7 @@ static void drawDay()
     uint16_t wDay;
     uint16_t hDay;
     getTextBounds(previousDay, NULL, NULL, &wDay, &hDay);
-    display.fillRect(DAY_NAME_CORD - hDay, wDay + 1, hDay + 1, GxEPD_WHITE); // Clear things up
+    dis->fillRect(DAY_NAME_CORD - hDay, wDay + 1, hDay + 1, GxEPD_WHITE); // Clear things up
     writeTextReplaceBack(day, DAY_NAME_CORD);
 }
 

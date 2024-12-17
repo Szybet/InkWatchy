@@ -62,7 +62,7 @@ void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSiz
 
   resetPreviousItems();
 
-  display.fillScreen(GxEPD_WHITE);
+  dis->fillScreen(GxEPD_WHITE);
   showMenu();
 }
 
@@ -77,7 +77,7 @@ void showMenu()
   int startingButton = 0;
   setFont(&FreeSansBold9pt7b);
   setTextSize(1);
-  display.setCursor(1, 1);
+  dis->setCursor(1, 1);
   getTextBounds(data.menuName, NULL, NULL, NULL, &textHeight);
 
   currentPage = data.currentButton / data.itemsOnPage;
@@ -88,34 +88,34 @@ void showMenu()
   getTextBounds(pageString, NULL, NULL, &pageStringWidth, NULL);
   // debugLog("Page string width: " + String(pageStringWidth));
   currentHeight = textHeight + 1; // +1 to offset between edge of screen and menu name
-  display.setCursor(display.width() - pageStringWidth - 10, currentHeight);
+  dis->setCursor(dis->width() - pageStringWidth - 10, currentHeight);
 
   if (previousPageNumber != pageString)
   {
     // uint16_t hTmp;
     // uint16_t wTmp;
     // getTextBounds(previousPageNumber, NULL, NULL, &wTmp, &hTmp);
-    // display.fillRect(display.width() - pageStringWidth - 10, currentHeight - hTmp, wTmp, hTmp, GxEPD_WHITE);
+    // dis->fillRect(dis->width() - pageStringWidth - 10, currentHeight - hTmp, wTmp, hTmp, GxEPD_WHITE);
 
-    display.fillScreen(GxEPD_WHITE);
+    dis->fillScreen(GxEPD_WHITE);
     resetPreviousItems();
 
-    display.print(pageString);
+    dis->print(pageString);
     previousPageNumber = pageString;
     debugLog("Printing page numbers");
   }
 
-  display.setCursor(1, currentHeight);
+  dis->setCursor(1, currentHeight);
   if (showedMenuName == false)
   {
-    display.print(data.menuName);
+    dis->print(data.menuName);
     showedMenuName = true;
     debugLog("Printing menu name");
   }
 
   currentHeight = currentHeight + 4; // +2 to offset between line and menu name
 
-  display.fillRect(0, currentHeight, display.width(), 1, GxEPD_BLACK);
+  dis->fillRect(0, currentHeight, dis->width(), 1, GxEPD_BLACK);
   currentHeight = currentHeight + 4; // +2 to offset line and button
 
   while (startingButton + data.itemsOnPage <= data.currentButton)
@@ -162,15 +162,15 @@ void showMenu()
     {
       if (invert == true)
       {
-        display.fillRect(1 + buttonSize.w, currentHeight, display.width() - buttonSize.w - 1, buttonSize.h, GxEPD_BLACK);
+        dis->fillRect(1 + buttonSize.w, currentHeight, dis->width() - buttonSize.w - 1, buttonSize.h, GxEPD_BLACK);
       }
       else
       {
-        display.fillRect(1 + buttonSize.w, currentHeight, display.width() - buttonSize.w - 1, buttonSize.h, GxEPD_WHITE);
+        dis->fillRect(1 + buttonSize.w, currentHeight, dis->width() - buttonSize.w - 1, buttonSize.h, GxEPD_WHITE);
       }
       if (i != startingButton && MENU_LINES == true)
       {
-        display.fillRect(0, currentHeight - 2, display.width(), 2, GxEPD_BLACK);
+        dis->fillRect(0, currentHeight - 2, dis->width(), 2, GxEPD_BLACK);
       }
     }
     currentHeight = currentHeight + buttonSize.h + buttonsOffset;

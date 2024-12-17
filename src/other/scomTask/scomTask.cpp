@@ -29,9 +29,9 @@ void printPacket(const uint8_t *packet)
 
 void loopScomTask(void *parameter)
 {
-    debugLog("display.width(): " + String(display.width()));
-    debugLog("display.height():" + String(display.height()));
-    displayBufferSize = (int(display.width()) / 8) * int(display.height()); // GxEPD2_Type::WIDTH / 8) * page_height
+    debugLog("dis->width(): " + String(dis->width()));
+    debugLog("dis->height():" + String(dis->height()));
+    displayBufferSize = (int(dis->width()) / 8) * int(dis->height()); // GxEPD2_Type::WIDTH / 8) * page_height
     debugLog("Buffer size is:" + String(displayBufferSize));
     Serial.setTimeout(300);
 
@@ -119,18 +119,18 @@ void loopScomTask(void *parameter)
             }
             serialWrite.lock();
             //vTaskSuspend(mainTask); //
-            //memcpy(coppiedBuffer, display._buffer, displayBufferSize);
+            //memcpy(coppiedBuffer, dis->_buffer, displayBufferSize);
             for (int i = 0; i < displayBufferSize; i++)
             {
                 // (GxEPD2_Type::WIDTH / 8) * page_height
-                coppiedBuffer[i] = display._buffer[i];
+                coppiedBuffer[i] = dis->_buffer[i];
             }
             */
 
             printPacket(startPacket);
             for (int i = 0; i < displayBufferSize; i++)
             {
-                Serial.write(display._buffer[i]);
+                Serial.write(dis->_buffer[i]);
             }
         }
         // Print EOF
