@@ -20,7 +20,7 @@ void showEinkCounter()
             counterX = betterRandom(50, 150);
             counterY = betterRandom(150, 180);
         }
-        display.setCursor(counterX, counterY);
+        dis->setCursor(counterX, counterY);
         counter = counter + 1;
         debugLog("Showing einkCounter: " + String(counter));
         writeTextReplaceBack(String(counter), counterX, counterY);

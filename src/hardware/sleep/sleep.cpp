@@ -67,10 +67,10 @@ void goSleep()
     debugLog("goSleep activated");
 
 #if DEBUG && SCREEN_SLEEP_INFO
-    display.setCursor(50, 190);
-    display.setFont();
-    display.setTextSize(2);
-    display.print("Sleeping");
+    dis->setCursor(50, 190);
+    dis->setFont();
+    dis->setTextSize(2);
+    dis->print("Sleeping");
     disUp(true);
 #endif
 
@@ -95,7 +95,7 @@ void goSleep()
     //     delayTask(25);
     // }
 #if LP_CORE == true
-    display.hibernate();
+    dis->hibernate();
     delayTask(10);
     initRtcGpio();
     loadLpCore();
@@ -105,7 +105,7 @@ void goSleep()
     // TODO: maybe this https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#power-down-of-rtc-peripherals-and-memories
     ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
 #else
-    display.hibernate();
+    dis->hibernate();
     // Not needed
 #if true == false
     gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);

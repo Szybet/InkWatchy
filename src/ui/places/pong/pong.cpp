@@ -53,23 +53,23 @@ void zeroBalls()
     {
         ball.x = 0;
     }
-    if (ball.x > display.width())
+    if (ball.x > dis->width())
     {
-        ball.x = display.width();
+        ball.x = dis->width();
     }
     if (ball.y < 0)
     {
         ball.y = 0;
     }
-    if (ball.y > display.height())
+    if (ball.y > dis->height())
     {
-        ball.y = display.height();
+        ball.y = dis->height();
     }
 }
 
 void drawBall()
 {
-    display.fillCircle(ball.x, ball.y, BALL_RADIUS, GxEPD_WHITE);
+    dis->fillCircle(ball.x, ball.y, BALL_RADIUS, GxEPD_WHITE);
     if (ball.x > BALL_CENTER_FASTER_X)
     {
         ball.x = ball.x + ballDirection.x * (BALL_SPEED * BALL_CENTER_FASTER);
@@ -82,7 +82,7 @@ void drawBall()
     }
     zeroBalls();
 
-    if (ball.x >= display.width() - BALL_BORDER_MINUS || ball.x <= 0 + BALL_BORDER_MINUS)
+    if (ball.x >= dis->width() - BALL_BORDER_MINUS || ball.x <= 0 + BALL_BORDER_MINUS)
     {
         // Point?
         if (ball.x < BALL_BORDER_MINUS * 1.5)
@@ -97,7 +97,7 @@ void drawBall()
             else
             {
                 lostPong = true;
-                writeTextCenterReplaceBack("You lost!", display.height() / 2);
+                writeTextCenterReplaceBack("You lost!", dis->height() / 2);
             }
         }
         ballDirection.x = ballDirection.x * -1;
@@ -108,30 +108,30 @@ void drawBall()
             rand = rand * -1;
         }
         ballDirection.x = rand;
-        if (ball.x > display.width() - BALL_BORDER_MINUS)
+        if (ball.x > dis->width() - BALL_BORDER_MINUS)
         {
-            ball.x = display.width() - BALL_BORDER_MINUS - 3;
+            ball.x = dis->width() - BALL_BORDER_MINUS - 3;
         }
         if (ball.x < 0 + BALL_BORDER_MINUS)
         {
             ball.x = ball.x + BALL_BORDER_MINUS + 3;
         }
     }
-    if (ball.y > display.height() - BALL_BORDER_MINUS || ball.y < 0 + BALL_BORDER_MINUS)
+    if (ball.y > dis->height() - BALL_BORDER_MINUS || ball.y < 0 + BALL_BORDER_MINUS)
     {
         ballDirection.y = ballDirection.y * -1;
     }
 
-    display.fillCircle(ball.x, ball.y, BALL_RADIUS, GxEPD_BLACK);
+    dis->fillCircle(ball.x, ball.y, BALL_RADIUS, GxEPD_BLACK);
 }
 
 void movePaddle(int h)
 {
     h = h * -1;
     paddle = paddle + h;
-    if (paddle > display.height() - PADDLE_H)
+    if (paddle > dis->height() - PADDLE_H)
     {
-        paddle = display.height() - PADDLE_H;
+        paddle = dis->height() - PADDLE_H;
     }
     if (paddle < 0)
     {
@@ -177,24 +177,24 @@ void drawPaddle(buttonState btn, bool force)
         break;
     }
     }
-    display.fillRect(PADDLE_X, oldPaddle, PADDLE_W, PADDLE_H, GxEPD_WHITE);
-    display.fillRect(PADDLE_X, paddle, PADDLE_W, PADDLE_H, GxEPD_BLACK);
+    dis->fillRect(PADDLE_X, oldPaddle, PADDLE_W, PADDLE_H, GxEPD_WHITE);
+    dis->fillRect(PADDLE_X, paddle, PADDLE_W, PADDLE_H, GxEPD_BLACK);
 }
 
 void initPong()
 {
-    display.fillScreen(GxEPD_WHITE);
+    dis->fillScreen(GxEPD_WHITE);
     disUp(true);
 
-    ball.x = display.width() / 2;
-    ball.y = display.height() / 2;
+    ball.x = dis->width() / 2;
+    ball.y = dis->height() / 2;
     ballDirection.x = ballRandomGet();
     if (ballDirection.x < 0)
     {
         ballDirection.x = ballDirection.x * -1;
     }
     ballDirection.y = INIT_BALL_DIR_Y;
-    paddle = display.height() / 2;
+    paddle = dis->height() / 2;
     points = 0;
     lostPong = false;
 

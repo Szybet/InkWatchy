@@ -39,7 +39,7 @@ void initAppleSour() {
     appleJokeRunning = true;
     debugLog("Executing initAppleSour");
     // Show text
-    display.fillScreen(GxEPD_WHITE);
+    dis->fillScreen(GxEPD_WHITE);
     simpleCenterText("Smashing apples");
     disUp(true);
 

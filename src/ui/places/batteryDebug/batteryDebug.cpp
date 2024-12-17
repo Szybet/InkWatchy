@@ -19,15 +19,15 @@ void initBatteryDebugDisplay()
     bDdata = rM.bat;
     setFont(&FreeSansBold9pt7b);
     setTextSize(batteryTextSize);
-    display.setCursor(cursorX, 1);
+    dis->setCursor(cursorX, 1);
     String menuName = "Debug Menu: Batt";
     getTextBounds(menuName, NULL, NULL, NULL, &h);
     maxHeight = h;
     uint16_t currentHeight = maxHeight;
-    display.setCursor(cursorX, currentHeight - 3);
-    display.print(menuName);
+    dis->setCursor(cursorX, currentHeight - 3);
+    dis->print(menuName);
 
-    display.fillRect(0, currentHeight, display.width(), 3, GxEPD_BLACK);
+    dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
     currentHeight = currentHeight + maxHeight;
 
     writeLine("Current V: " + String(bDdata.curV), cursorX, &currentHeight);
@@ -61,7 +61,7 @@ void loopBatteryDebugDisplay()
     if (bDdata.curV > rM.bat.curV + 0.01 || bDdata.curV < rM.bat.curV - 0.01)
     {
         bDdata.curV = rM.bat.curV;
-        display.setCursor(cursorX, currentVoltageHeight);
+        dis->setCursor(cursorX, currentVoltageHeight);
         setTextSize(batteryTextSize);
 
         String battVoltageStr = String(rM.bat.curV);
@@ -76,7 +76,7 @@ void loopBatteryDebugDisplay()
     if (bDdata.isCharging != rM.bat.isCharging)
     {
         bDdata.isCharging = rM.bat.isCharging;
-        display.setCursor(cursorX, ChargingHeight);
+        dis->setCursor(cursorX, ChargingHeight);
         setTextSize(batteryTextSize);
 
         String chargingStr = BOOL_STR(rM.bat.isCharging);
@@ -92,7 +92,7 @@ void loopBatteryDebugDisplay()
     if (bDdata.isFullyCharged != rM.bat.isFullyCharged)
     {
         bDdata.isFullyCharged = rM.bat.isFullyCharged;
-        display.setCursor(cursorX, fullyChargedHeight);
+        dis->setCursor(cursorX, fullyChargedHeight);
         setTextSize(batteryTextSize);
 
         String chargingStr = BOOL_STR(rM.bat.isCharging);
@@ -108,7 +108,7 @@ void loopBatteryDebugDisplay()
     if (bDdata.percentage != rM.bat.percentage)
     {
         bDdata.percentage = rM.bat.percentage;
-        display.setCursor(cursorX, PercentageHeight);
+        dis->setCursor(cursorX, PercentageHeight);
         setTextSize(batteryTextSize);
 
         String percentageStr = String(rM.bat.percentage);

@@ -139,7 +139,7 @@ void inkDrawWeather()
     if (wData.fine == true)
     {
         // Temp
-        display.fillRect(TEMP_RECT_CORD, TEMP_RECT_SIZE, GxEPD_WHITE);
+        dis->fillRect(TEMP_RECT_CORD, TEMP_RECT_SIZE, GxEPD_WHITE);
         writeTextReplaceBack(String(uint16_t(roundf(wData.temp))) + "C", TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
         // Humidity, already %
         weatherDrawHelper(wData.humidity, 99, 0, HUMIDITY_CORD);

@@ -38,10 +38,10 @@ void wfNetrequestShow(buttonState button, bool *showBool)
     else if (previousWifiState == WifiConnected)
     {
         writeImageN(modSq.cord.x, modSq.cord.y, getImg("wifiConnected"));
-        display.setCursor(modSq.cord.x, modSq.cord.y + 25);
+        dis->setCursor(modSq.cord.x, modSq.cord.y + 25);
         setFont(getFont("dogicapixel4"));
         setTextSize(1);
-        display.print(WiFi.SSID());
+        dis->print(WiFi.SSID());
     }
     dUChange = true;
 }

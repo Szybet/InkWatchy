@@ -341,11 +341,11 @@ void dumpBatteryScreen(void *parameter)
 {
     while (true)
     {
-        display.setFont(getFont("dogicalpixel4"));
-        display.setTextSize(1);
-        display.fillRect(80, 80, 40, 40, GxEPD_WHITE);
-        display.setCursor(85, 100);
-        display.print(String(getBatteryVoltage()));
+        dis->setFont(getFont("dogicalpixel4"));
+        dis->setTextSize(1);
+        dis->fillRect(80, 80, 40, 40, GxEPD_WHITE);
+        dis->setCursor(85, 100);
+        dis->print(String(getBatteryVoltage()));
         resetSleepDelay();
     }
 }

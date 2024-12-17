@@ -12,9 +12,10 @@ RTC_DATA_ATTR rtcMem rM = {
         .oneCheck = false},
     .isBatterySaving = false,
     // Acc
-    // SBMA
-    .SBMA = StableBMA {},
+    .SBMA = StableBMA {}, // Class
     .initedAxc = false,
     .stepsInited = false,
     .stepDay = 0,
+    // Display
+    .display = GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY),
 };

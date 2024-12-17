@@ -39,8 +39,8 @@ void wfApirequestShow(buttonState button, bool *showBool)
     {
         setFont(&FreeSansBold9pt7b);
         setTextSize(1);
-        display.setCursor(modSq.cord.x, modSq.cord.y + modSq.size.h / 2);
-        display.print("Api awaits");
+        dis->setCursor(modSq.cord.x, modSq.cord.y + modSq.size.h / 2);
+        dis->print("Api awaits");
     }
     else
     {

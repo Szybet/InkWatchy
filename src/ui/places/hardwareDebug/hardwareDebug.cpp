@@ -37,7 +37,7 @@ void initGeneralDebugDisplay()
     uint16_t h;
     setFont(&FreeSansBold9pt7b);
     setTextSize(GeneralTextSize);
-    display.setCursor(cursorX, 1);
+    dis->setCursor(cursorX, 1);
     String menuName = "Debug Menu: Hardware";
     getTextBounds(menuName, NULL, NULL, NULL, &h);
     if(containsBelowChar(menuName) == true) {
@@ -45,10 +45,10 @@ void initGeneralDebugDisplay()
     }
     maxHeight = h;
     uint16_t currentHeight = maxHeight;
-    display.setCursor(cursorX, currentHeight - 3);
-    display.print(menuName);
+    dis->setCursor(cursorX, currentHeight - 3);
+    dis->print(menuName);
 
-    display.fillRect(0, currentHeight, display.width(), 3, GxEPD_BLACK);
+    dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
     currentHeight = currentHeight + maxHeight;
     String RtcType = getRtcType();
 

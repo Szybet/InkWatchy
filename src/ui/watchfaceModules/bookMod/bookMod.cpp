@@ -86,9 +86,9 @@ void wfBookrequestShow(buttonState button, bool *showBool)
             cleanSomeDrawing();
             setFont(BOOK_FONT);
             setTextSize(1);
-            display.setCursor(1, startHeightBook + someSq.cord.y);
-            display.setTextWrap(true);
-            display.print(text);
+            dis->setCursor(1, startHeightBook + someSq.cord.y);
+            dis->setTextWrap(true);
+            dis->print(text);
         }
         else
         {

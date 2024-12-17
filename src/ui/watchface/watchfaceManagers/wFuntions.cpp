@@ -46,7 +46,7 @@ squareInfo getWatchModuleSquare()
 void cleanSomeDrawing()
 {
     squareInfo square = getSomeDrawingSquare();
-    display.fillRect(square.cord.x, square.cord.y, square.size.w, square.size.h, GxEPD_WHITE);
+    dis->fillRect(square.cord.x, square.cord.y, square.size.w, square.size.h, GxEPD_WHITE);
 }
 
 squareInfo getSomeDrawingSquare()
