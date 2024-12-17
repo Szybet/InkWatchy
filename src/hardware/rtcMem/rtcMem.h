@@ -42,6 +42,9 @@ struct rtcMem
 #if WATCHDOG_TASK
     bool everythingIsFine : 1;
 #endif
+    // Power settings
+    bool disableAllVibration : 1;
+    bool disableWakeUp : 1;
 };
 
 extern rtcMem rM;

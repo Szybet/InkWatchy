@@ -26,7 +26,7 @@ RTC_DATA_ATTR rtcMem rM = {
     .gpioExpander = mcp23018{},
 #endif
     // RTC
-    .SRTC = SmallRTC {}, // Class
+    .SRTC = SmallRTC{}, // Class
     .posixTimeZone = TIMEZONE_POSIX,
 // Temp
 #if TEMP_CHECKS_ENABLED
@@ -46,4 +46,7 @@ RTC_DATA_ATTR rtcMem rM = {
 #if WATCHDOG_TASK
     .everythingIsFine = true,
 #endif
+    // Power settings
+    .disableAllVibration = false,
+    .disableWakeUp = false,
 };

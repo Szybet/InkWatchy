@@ -1,4 +1,5 @@
 #include "manager.h"
+#include "rtcMem.h"
 
 void initMainMenu()
 {
@@ -162,7 +163,7 @@ void toggleWakeUpEntry()
 {
     toggleWakeUp();
     /*
-    if (disableWakeUp == false)
+    if (rM.disableWakeUp == false)
     {
         wakeUpManageRTC();
     }
@@ -182,7 +183,7 @@ void initpowerMenu()
     {
         count = count + 1;
         ImageDef *image;
-        if (disableAllVibration == true)
+        if (rM.disableAllVibration == true)
         {
             image = getImg("accept");
         }
@@ -195,7 +196,7 @@ void initpowerMenu()
     {
         count = count + 1;
         ImageDef *image;
-        if (disableWakeUp == true)
+        if (rM.disableWakeUp == true)
         {
             image = getImg("accept");
         }

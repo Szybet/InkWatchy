@@ -313,8 +313,8 @@ void loopPowerSavings()
     {
         debugLog("Turning on power settings");
         rM.isBatterySaving = true;
-        disableAllVibration = true;
-        disableWakeUp = true;
+        rM.disableAllVibration = true;
+        rM.disableWakeUp = true;
     }
     else if (rM.isBatterySaving == true && rM.bat.percentage + POWER_SAVING_OFF_AFTER > POWER_SAVING_AFTER && rM.bat.isCharging == false)
     {

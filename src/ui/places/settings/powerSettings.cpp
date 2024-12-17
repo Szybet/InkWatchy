@@ -1,25 +1,23 @@
 #include "powerSettings.h"
-
-bool RTC_DATA_ATTR disableAllVibration = false;
-bool RTC_DATA_ATTR disableWakeUp = false;
+#include "rtcMem.h"
 
 void loadAllStorage() {
-    disableAllVibration = bool(fsGetString(CONF_DISABLE_ALL_VIBRATION, "0").toInt());
-    disableWakeUp = bool(fsGetString(CONF_DISABLE_WAKE_UP, "0").toInt());
+    rM.disableAllVibration = bool(fsGetString(CONF_DISABLE_ALL_VIBRATION, "0").toInt());
+    rM.disableWakeUp = bool(fsGetString(CONF_DISABLE_WAKE_UP, "0").toInt());
 
-    debugLog("disableAllVibration: " + BOOL_STR(disableAllVibration));
-    debugLog("disableWakeUp: " + BOOL_STR(disableWakeUp));
+    debugLog("rM.disableAllVibration: " + BOOL_STR(rM.disableAllVibration));
+    debugLog("rM.disableWakeUp: " + BOOL_STR(rM.disableWakeUp));
 }
 
 void saveAllStorage() {
-    fsSetString(CONF_DISABLE_ALL_VIBRATION, String(disableAllVibration));
-    fsSetString(CONF_DISABLE_WAKE_UP, String(disableWakeUp));
+    fsSetString(CONF_DISABLE_ALL_VIBRATION, String(rM.disableAllVibration));
+    fsSetString(CONF_DISABLE_WAKE_UP, String(rM.disableWakeUp));
 }
 
 void toggleAllVibration() {
-    disableAllVibration = !disableAllVibration;
+    rM.disableAllVibration = !rM.disableAllVibration;
 }
 
 void toggleWakeUp() {
-    disableWakeUp = !disableWakeUp;
+    rM.disableWakeUp = !rM.disableWakeUp;
 }
