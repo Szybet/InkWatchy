@@ -168,7 +168,7 @@ void toggleWakeUpEntry()
     }
     else
     {
-        SRTC.clearAlarm();
+        rM.SRTC.clearAlarm();
     }
     */
     initpowerMenu();

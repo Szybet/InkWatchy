@@ -21,6 +21,9 @@ struct rtcMem
 #if ATCHY_VER == YATCHY
     mcp23018 gpioExpander;
 #endif
+    // RTC
+    SmallRTC SRTC;
+    char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH];
     // Temp
 #if TEMP_CHECKS_ENABLED
     uint8_t fixCounts;

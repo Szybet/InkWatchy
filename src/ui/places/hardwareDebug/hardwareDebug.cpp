@@ -1,4 +1,5 @@
 #include "hardwareDebug.h"
+#include "rtcMem.h"
 
 #if DEBUG == 1 || DEBUG_MENUS == 1
 #define cursorX 0
@@ -15,7 +16,7 @@ float previousTempUi;
 
 String getRtcType()
 {
-    int rtcType = SRTC.getType();
+    int rtcType = rM.SRTC.getType();
     switch (rtcType)
     {
     case 0:

@@ -25,6 +25,9 @@ RTC_DATA_ATTR rtcMem rM = {
 #if ATCHY_VER == YATCHY
     .gpioExpander = mcp23018{},
 #endif
+    // RTC
+    .SRTC = SmallRTC {}, // Class
+    .posixTimeZone = TIMEZONE_POSIX,
 // Temp
 #if TEMP_CHECKS_ENABLED
     .fixCounts = 0,

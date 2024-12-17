@@ -1,12 +1,10 @@
 #include "rtc.h"
+#include "rtcMem.h"
 
 tmElements_t timeRTCLocal;         // Local time
 tmElements_t timeRTCUTC0;          // UTC0 time
 int64_t timeZoneOffset = 0;        // The offset the timezone did, can be in minus
 uint64_t lastTimeRead = 999999999; // Millis of latest reading of the RTC, it's used to get accurate seconds, it's that much to trigger the alarm wakeup if something fails, llabs is there for this reason
-RTC_DATA_ATTR char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH] = TIMEZONE_POSIX;
-
-RTC_DATA_ATTR SmallRTC SRTC;
 
 void initRTC()
 {
@@ -18,23 +16,23 @@ void initRTC()
   if (bootStatus.fromWakeup == false)
   {
 #if RTC_TYPE == INTERNAL_RTC
-    SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
+    rM.SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
 #endif
-    SRTC.init();
+    rM.SRTC.init();
     // I don't trust it
 #if RTC_TYPE == INTERNAL_RTC
-    SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
+    rM.SRTC.useESP32(true, RTC_32KHZ_CRYSTAL);
 #endif
 
 #if RESET_RTC_ON_BOOT && DEBUG
     if (bootStatus.fromWakeup == false)
     {
-      SRTC.rtc_pcf.initClock();
+      rM.SRTC.rtc_pcf.initClock();
     }
 #endif
 
 #if TIME_DRIFT_CORRECTION
-    if (SRTC.getDrift() == 0)
+    if (rM.SRTC.getDrift() == 0)
     {
       uint32_t driftValue = fsGetString(CONF_DRIFT, "0").toInt();
       if (driftValue != 0)
@@ -42,7 +40,7 @@ void initRTC()
         debugLog("Setting initial drift value, as it's not set and the watchy is not from wakeup");
         bool isFast = bool(fsGetString(CONF_DRIFT_FAST, "0").toInt());
         debugLog("isFast: " + String(isFast) + " drift value: " + String(driftValue));
-        SRTC.setDrift(driftValue, isFast); // not sure about internal here
+        rM.SRTC.setDrift(driftValue, isFast); // not sure about internal here
       }
       else
       {
@@ -52,7 +50,7 @@ void initRTC()
 #endif
   }
 
-  debugLog("Using internal RTC clock: " + BOOL_STR(SRTC.onESP32()));
+  debugLog("Using internal RTC clock: " + BOOL_STR(rM.SRTC.onESP32()));
 
   readRTC();
   setupMillisComparators();
@@ -107,11 +105,11 @@ void initRTC()
 void saveRTC(tmElements_t timeToSave)
 {
   debugLog("Saving time to RTC: " + String(getUnixTime(timeToSave)));
-  SRTC.set(timeToSave);
+  rM.SRTC.set(timeToSave);
 
 #if DEBUG
   tmElements_t test;
-  SRTC.read(test);
+  rM.SRTC.read(test);
   debugLog("Readed time back: " + String(getUnixTime(test)));
 #endif
 }
@@ -143,7 +141,7 @@ void timeZoneApply()
   }
   // https://github.com/Michal-Szczepaniak/TinyWatchy/commit/cb9082fe0f8df6ac4dc3ff682a7ddc80ef07d78f
   // https://docs.espressif.com/projects/esp-idf/en/v5.1.4/esp32/api-reference/system/system_time.html
-  if (strlen(posixTimeZone) > 0)
+  if (strlen(rM.posixTimeZone) > 0)
   {
 
 #if TIME_ZONE_DUMP
@@ -158,7 +156,7 @@ void timeZoneApply()
 #endif
     int64_t initialUnixTime = getUnixTime(timeRTCUTC0);
     // https://man7.org/linux/man-pages/man3/setenv.3.html
-    if (setenv("TZ", posixTimeZone, 1) == 0)
+    if (setenv("TZ", rM.posixTimeZone, 1) == 0)
     {
       tzset();
       time_t tempTime = initialUnixTime;
@@ -192,7 +190,7 @@ void timeZoneApply()
       debugLog("day of the week: " + String(timeRTCLocal.Wday));
       debugLog("year: " + String(timeRTCLocal.Year));
 #endif
-      // debugLog("Timezone set succes, current timezone: " + String(posixTimeZone));
+      // debugLog("Timezone set succes, current timezone: " + String(rM.posixTimeZone));
       debugLog("Timezone working");
     }
     else
@@ -212,8 +210,8 @@ void timeZoneApply()
       uint8_t posixLength = posix.length();
       if (posixLength < POSIX_TIMEZONE_MAX_LENGTH)
       {
-        strncpy(posixTimeZone, posix.c_str(), posix.length());
-        posixTimeZone[posix.length()] = '\0';
+        strncpy(rM.posixTimeZone, posix.c_str(), posix.length());
+        rM.posixTimeZone[posix.length()] = '\0';
         timeZoneApply();
       }
       else
@@ -238,7 +236,7 @@ void removeTimeZoneVars()
 void readRTC()
 {
   // debugLog("Reading RTC");
-  SRTC.read(timeRTCUTC0);
+  rM.SRTC.read(timeRTCUTC0);
   debugLog("Time saved in RTC: " + String(getUnixTime(timeRTCUTC0)));
 
 #if RTC_TYPE == INTERNAL_RTC
@@ -282,7 +280,7 @@ void readRTC()
 // TODO: switch to timeRTCUTC0 here
 void wakeUpManageRTC()
 {
-  SRTC.clearAlarm();
+  rM.SRTC.clearAlarm();
   if (disableWakeUp == false)
   {
     // Not needed as we check if we go before next minute to sleep
@@ -310,12 +308,12 @@ void wakeUpManageRTC()
       uint finalMinute = fullMinutes - (finalHour * 60);
       debugLog("The watch will wake up at exactly (in UTC0, taking in account your timezone) hour: " + String(finalHour) + " and minute: " + String(finalMinute));
 
-      SRTC.atTimeWake(finalHour, finalMinute, true);
+      rM.SRTC.atTimeWake(finalHour, finalMinute, true);
     }
     else
     {
       debugLog("Next minute wake up");
-      SRTC.nextMinuteWake(true);
+      rM.SRTC.nextMinuteWake(true);
     }
   }
   else
@@ -344,7 +342,7 @@ void alarmManageRTC()
 String getHourMinuteUnix(int64_t unixTime)
 {
   tmElements_t tmEl;
-  SRTC.doBreakTime(unixTime, tmEl);
+  rM.SRTC.doBreakTime(unixTime, tmEl);
   return getHourMinute(tmEl);
 }
 
@@ -399,13 +397,13 @@ String unixToDayName(uint64_t unixTime, int offset)
 
 String getDayName(int offset)
 {
-  long unixTime = SRTC.doMakeTime(timeRTCLocal);
+  long unixTime = rM.SRTC.doMakeTime(timeRTCLocal);
   return unixToDayName(unixTime, offset);
 }
 
 uint64_t getUnixTime(tmElements_t tme)
 {
-  return SRTC.doMakeTime(tme);
+  return rM.SRTC.doMakeTime(tme);
 }
 
 String getMonthName(int monthNumber)
@@ -556,16 +554,16 @@ long getHourDifference(time_t currentTime, time_t targetTime)
 #if DEBUG
 void initRTCDebug()
 {
-  debugLog("Get RTC battery level: " + String(SRTC.getRTCBattery(false)));
-  debugLog("Get critical RTC battery level: " + String(SRTC.getRTCBattery(true)));
-  debugLog("Get RTC type used: " + String(SRTC.getType()));
+  debugLog("Get RTC battery level: " + String(rM.SRTC.getRTCBattery(false)));
+  debugLog("Get critical RTC battery level: " + String(rM.SRTC.getRTCBattery(true)));
+  debugLog("Get RTC type used: " + String(rM.SRTC.getType()));
 }
 
 void loopRTCDebug()
 {
-  debugLog("SRTC.isOperating: " + BOOL_STR(SRTC.isOperating()));
-  debugLog("SRTC.getADCPin: " + String(SRTC.getADCPin()));
-  debugLog("SRTC.temperature(): " + String(SRTC.temperature()));
+  debugLog("rM.SRTC.isOperating: " + BOOL_STR(rM.SRTC.isOperating()));
+  debugLog("rM.SRTC.getADCPin: " + String(rM.SRTC.getADCPin()));
+  debugLog("rM.SRTC.temperature(): " + String(rM.SRTC.temperature()));
 }
 
 void dumpRTCTime(tmElements_t timeEl)
