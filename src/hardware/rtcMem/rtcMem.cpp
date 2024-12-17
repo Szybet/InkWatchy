@@ -51,4 +51,21 @@ RTC_DATA_ATTR rtcMem rM = {
     .disableWakeUp = false,
     // wManageAll
     .watchfaceSelected = 0,
+// Inkfield watchface
+#if WATCHFACE_INKFIELD_SZYBET
+    .inkfield = {
+        .dayBar = 0,
+        .percentOfDay = 0,
+        .percentSteps = 0,
+        .weatherMinutes = 0,
+        // inkput
+        .watchfacePos = 0,
+        .positionEngaged = false,
+    },
+#endif
+#if WATCHFACE_SHADES_SZYBET
+    .shades = {
+        .stepsSaved = 0,
+    },
+#endif
 };

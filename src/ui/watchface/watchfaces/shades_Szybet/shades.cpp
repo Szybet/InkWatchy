@@ -1,4 +1,5 @@
 #include "shades.h"
+#include "rtcMem.h"
 
 #if WATCHFACE_SHADES_SZYBET
 
@@ -14,15 +15,13 @@ void showTimeFull()
 #define SHADE_HEIGHT_PIXELS 30
 #define BOTTOM_ADD 5
 
-RTC_DATA_ATTR uint16_t stepsSaved = 0;
-
 const watchfaceDefOne shadesDef = {
     .drawTimeBeforeApply = showTimeFull,
     .drawTimeAfterApply = [](bool forceDraw)
     {
         uint16_t steps = getSteps();
-        if(steps != stepsSaved || forceDraw == true) {
-            stepsSaved = steps;
+        if(steps != rM.shades.stepsSaved || forceDraw == true) {
+            rM.shades.stepsSaved = steps;
             setTextSize(1);
             setFont(getFont(SHADE_NORMAL_FONT));
             int y = 125;

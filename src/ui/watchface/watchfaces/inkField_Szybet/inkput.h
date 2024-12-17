@@ -9,9 +9,6 @@
 #define MODULE_POS 1
 #define MODULE_ENG_POS 2
 
-extern int watchfacePos;
-extern bool positionEngaged;
-
 void drawPosMarker();
 void movePos(int add);
 void inkFieldManageInput(buttonState bt);

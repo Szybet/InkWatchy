@@ -1,6 +1,7 @@
 #include "inkField.h"
 #include "inkput.h"
 #include "inkWeather.h"
+#include "rtcMem.h"
 
 #if WATCHFACE_INKFIELD_SZYBET
 
@@ -96,40 +97,35 @@ static void drawTimeBeforeApply()
     }
 }
 
-RTC_DATA_ATTR uint8_t dayBar = 0;
-RTC_DATA_ATTR uint8_t percentOfDay = 0;
-RTC_DATA_ATTR uint8_t percentSteps = 0;
-RTC_DATA_ATTR uint16_t weatherMinutes = 0;
-
 static void drawTimeAfterApply(bool forceDraw)
 {
-    if (dayBar != timeRTCLocal.Day || forceDraw == true)
+    if (rM.inkfield.dayBar != timeRTCLocal.Day || forceDraw == true)
     {
-        dayBar = timeRTCLocal.Day;
-        uint8_t percentOfMonth = uint8_t(((float)dayBar / (float)31) * 100.0);
+        rM.inkfield.dayBar = timeRTCLocal.Day;
+        uint8_t percentOfMonth = uint8_t(((float)rM.inkfield.dayBar / (float)31) * 100.0);
         drawProgressBar(MONTH_BAR_CORD, GENERAL_BAR_SIZE, percentOfMonth);
         inkDrawMoon();
     }
 
     // Draw the percentage on the right
     int percentOfDayTmp = calculatePercentageOfDay(wFTime.Hour, wFTime.Minute);
-    if (percentOfDay != percentOfDayTmp || forceDraw == true)
+    if (rM.inkfield.percentOfDay != percentOfDayTmp || forceDraw == true)
     {
-        percentOfDay = percentOfDayTmp;
-        drawProgressBar(DAY_BAR_CORD, GENERAL_BAR_SIZE, percentOfDay);
+        rM.inkfield.percentOfDay = percentOfDayTmp;
+        drawProgressBar(DAY_BAR_CORD, GENERAL_BAR_SIZE, rM.inkfield.percentOfDay);
     }
 
     uint16_t percentStepsTmp = uint16_t(((float)getSteps() / (float)STEPS_GOAL) * 100.0);
     debugLog("percentStepsTmp: " + String(percentStepsTmp));
-    if (percentSteps != percentStepsTmp || forceDraw == true)
+    if (rM.inkfield.percentSteps != percentStepsTmp || forceDraw == true)
     {
-        percentSteps = percentStepsTmp;
-        drawProgressBar(STEPS_BAR_CORD, GENERAL_BAR_SIZE, percentSteps);
+        rM.inkfield.percentSteps = percentStepsTmp;
+        drawProgressBar(STEPS_BAR_CORD, GENERAL_BAR_SIZE, rM.inkfield.percentSteps);
     }
 
-    if (abs(weatherMinutes - timeRTCLocal.Minute + (60 * timeRTCLocal.Hour)) > 25 || forceDraw == true)
+    if (abs(rM.inkfield.weatherMinutes - timeRTCLocal.Minute + (60 * timeRTCLocal.Hour)) > 25 || forceDraw == true)
     {
-        weatherMinutes = timeRTCLocal.Minute + (60 * timeRTCLocal.Hour);
+        rM.inkfield.weatherMinutes = timeRTCLocal.Minute + (60 * timeRTCLocal.Hour);
         inkDrawWeather();
     }
 }
@@ -215,7 +211,7 @@ const watchfaceDefOne inkFieldDef = {
     .someDrawingSquare = {.size{.w = 200, .h = 139}, .cord{.x = 0, .y = 61}},
     .isModuleEngaged = []()
     {
-        if (watchfacePos == MODULE_ENG_POS && positionEngaged == true)
+        if (rM.inkfield.watchfacePos == MODULE_ENG_POS && rM.inkfield.positionEngaged == true)
         {
             return true;
         }
