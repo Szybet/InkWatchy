@@ -1,20 +1,18 @@
 #include "inkput.h"
+#include "rtcMem.h"
 
 #if WATCHFACE_INKFIELD_SZYBET
 
-RTC_DATA_ATTR int watchfacePos = 0;
-RTC_DATA_ATTR bool positionEngaged = true;
-
 void movePos(int add)
 {
-    watchfacePos = watchfacePos + add;
-    checkMaxMin(&watchfacePos, WATCHFACE_POSITIONS - 1);
+    rM.inkfield.watchfacePos = rM.inkfield.watchfacePos + add;
+    checkMaxMin(&rM.inkfield.watchfacePos, WATCHFACE_POSITIONS - 1);
     drawPosMarker();
 }
 
 void inkFieldManageInput(buttonState bt)
 {
-    if (watchfacePos == MODULE_ENG_POS && positionEngaged == true && bt != None)
+    if (rM.inkfield.watchfacePos == MODULE_ENG_POS && rM.inkfield.positionEngaged == true && bt != None)
     {
         debugLog("Module eng entered");
         if (bt != LongMenu)
@@ -24,7 +22,7 @@ void inkFieldManageInput(buttonState bt)
         else
         {
             debugLog("Dis engage mogule eng pos");
-            positionEngaged = false;
+            rM.inkfield.positionEngaged = false;
             drawPosMarker();
         }
         return;
@@ -33,13 +31,13 @@ void inkFieldManageInput(buttonState bt)
     {
     case Up:
     {
-        if (positionEngaged == false)
+        if (rM.inkfield.positionEngaged == false)
         {
             movePos(1);
         }
         else
         {
-            if (watchfacePos == MODULE_POS)
+            if (rM.inkfield.watchfacePos == MODULE_POS)
             {
                 wfModuleSwitch(Right);
                 drawModuleCount();
@@ -49,13 +47,13 @@ void inkFieldManageInput(buttonState bt)
     }
     case Down:
     {
-        if (positionEngaged == false)
+        if (rM.inkfield.positionEngaged == false)
         {
             movePos(-1);
         }
         else
         {
-            if (watchfacePos == MODULE_POS)
+            if (rM.inkfield.watchfacePos == MODULE_POS)
             {
                 wfModuleSwitch(Left);
                 drawModuleCount();
@@ -65,12 +63,12 @@ void inkFieldManageInput(buttonState bt)
     }
     case Menu:
     {
-        debugLog("watchfacePos: " + String(watchfacePos));
-        if (watchfacePos == EMPTY_POS)
+        debugLog("rM.inkfield.watchfacePos: " + String(rM.inkfield.watchfacePos));
+        if (rM.inkfield.watchfacePos == EMPTY_POS)
         {
             generalSwitch(mainMenu);
         }
-        else if (watchfacePos == MODULE_POS)
+        else if (rM.inkfield.watchfacePos == MODULE_POS)
         {
             wfModulesManage(Menu);
         }
@@ -78,7 +76,7 @@ void inkFieldManageInput(buttonState bt)
     }
     case LongUp:
     {
-        if (watchfacePos == MODULE_POS)
+        if (rM.inkfield.watchfacePos == MODULE_POS)
         {
             wfModulesManage(LongUp);
         }
@@ -90,7 +88,7 @@ void inkFieldManageInput(buttonState bt)
     }
     case LongMenu:
     {
-        positionEngaged = !positionEngaged;
+        rM.inkfield.positionEngaged = !rM.inkfield.positionEngaged;
         drawPosMarker();
         break;
     }

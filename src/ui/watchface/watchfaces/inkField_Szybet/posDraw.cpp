@@ -1,4 +1,5 @@
 #include "inkput.h"
+#include "rtcMem.h"
 
 #if WATCHFACE_INKFIELD_SZYBET
 
@@ -51,16 +52,16 @@ void drawPosMarker()
     cleanMarkers();
 
     // Then draw the one
-    if (watchfacePos == EMPTY_POS)
+    if (rM.inkfield.watchfacePos == EMPTY_POS)
     {
-        drawMarker1(GxEPD_BLACK, positionEngaged);
+        drawMarker1(GxEPD_BLACK, rM.inkfield.positionEngaged);
     }
-    else if (watchfacePos == MODULE_POS)
+    else if (rM.inkfield.watchfacePos == MODULE_POS)
     {
-        drawMarker2(GxEPD_BLACK, positionEngaged);
-    } if (watchfacePos == MODULE_ENG_POS)
+        drawMarker2(GxEPD_BLACK, rM.inkfield.positionEngaged);
+    } if (rM.inkfield.watchfacePos == MODULE_ENG_POS)
     {
-        drawMarker3(GxEPD_BLACK, positionEngaged);
+        drawMarker3(GxEPD_BLACK, rM.inkfield.positionEngaged);
     }
     dUChange = true; 
 }
