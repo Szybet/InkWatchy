@@ -49,4 +49,6 @@ RTC_DATA_ATTR rtcMem rM = {
     // Power settings
     .disableAllVibration = false,
     .disableWakeUp = false,
+    // wManageAll
+    .watchfaceSelected = 0,
 };
