@@ -1,6 +1,5 @@
 #include "wManageAll.h"
-
-RTC_DATA_ATTR uint8_t watchfaceSelected = 0;
+#include "rtcMem.h"
 
 const watchfaceDef noWatchFace{
     .manager = wfmNone,
@@ -51,7 +50,7 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 // const watchfaceDef *watchfaceSel = getCurrentWatchface();
 const watchfaceDef *getCurrentWatchface()
 {
-    const watchfaceDef *watchfaceSel = watchfacesList[watchfaceSelected];
+    const watchfaceDef *watchfaceSel = watchfacesList[rM.watchfaceSelected];
     // debugLog("Watchface selected: " + String(watchfaceSel->name));
     return watchfaceSel;
 }

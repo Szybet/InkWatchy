@@ -45,6 +45,8 @@ struct rtcMem
     // Power settings
     bool disableAllVibration : 1;
     bool disableWakeUp : 1;
+    // wManageAll
+    uint8_t watchfaceSelected = 0;
 };
 
 extern rtcMem rM;
