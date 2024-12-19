@@ -1,6 +1,5 @@
 #include "watchFaceModule.h"
-
-RTC_DATA_ATTR uint64_t latestModuleUpdate = 0;
+#include "rtcMem.h"
 
 wfModule wfEmpty = {
     false,
@@ -8,16 +7,15 @@ wfModule wfEmpty = {
     [](buttonState button, bool *showBool) {},
 };
 
-RTC_DATA_ATTR int currentModule = -1;
 // MAKE SURE HERE ARE ALL MODULES INSERTED
-RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
+wfModule *wfModulesList[MODULE_COUNT] = {
 #if WIFI_MODULE
     &wfNet,
 #else
     &wfEmpty,
 #endif
 #if BITCOIN_MODULE
-    &wfBit,
+    &rM.wfBit,
 #else
     &wfEmpty,
 #endif
@@ -37,7 +35,7 @@ RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
     &wfEmpty,
 #endif
 #if API_MODULE
-    &wfApi,
+    &rM.wfApi,
 #else
     &wfEmpty,
 #endif
@@ -66,14 +64,14 @@ void moveModule(direction where)
 {
     if (where == Right)
     {
-        currentModule = currentModule + 1;
+        rM.currentModule = rM.currentModule + 1;
     }
     else if (where == Left)
     {
-        currentModule = currentModule - 1;
+        rM.currentModule = rM.currentModule - 1;
     }
-    checkMaxMin(&currentModule, MODULE_COUNT - 1);
-    debugLog("currentModule: " + String(currentModule));
+    checkMaxMin(&rM.currentModule, MODULE_COUNT - 1);
+    debugLog("rM.currentModule: " + String(rM.currentModule));
 }
 
 // TODO: move this to watchface manager
@@ -83,8 +81,6 @@ void moveModule(direction where)
 #define MODULE_COUNT_POS_Y 181
 #define MC_W 6
 #define MC_H 8
-RTC_DATA_ATTR int previousModuleCount = -1;
-RTC_DATA_ATTR int previousCurrentModule = -1; // The translated one!
 void drawModuleCount(bool force)
 {
     // debugLog("drawModuleCount executed");
@@ -103,7 +99,7 @@ void drawModuleCount(bool force)
     int currentModuleTranslated = 0;
     for (int i = 0; i < listIndexer; i++)
     {
-        if (listShows[i] == currentModule)
+        if (listShows[i] == rM.currentModule)
         {
             currentModuleTranslated = i;
             break;
@@ -111,11 +107,11 @@ void drawModuleCount(bool force)
     }
 
     // debugLog("counter: " + String(counter));
-    // debugLog("currentModule: " + String(currentModuleTranslated));
-    if (previousModuleCount != counter || previousCurrentModule != currentModuleTranslated || force == true)
+    // debugLog("rM.currentModule: " + String(currentModuleTranslated));
+    if (rM.previousModuleCount != counter || rM.previousCurrentModule != currentModuleTranslated || force == true)
     {
-        previousModuleCount = counter;
-        previousCurrentModule = currentModuleTranslated;
+        rM.previousModuleCount = counter;
+        rM.previousCurrentModule = currentModuleTranslated;
         setFont(getFont("dogicapixel4"));
         setTextSize(1);
 
@@ -152,7 +148,7 @@ void wfModuleSwitch(direction where)
 #endif
     moveModule(where);
     int counter = 0;
-    while (wfModulesList[currentModule]->show != true && counter < MODULE_COUNT * 2)
+    while (wfModulesList[rM.currentModule]->show != true && counter < MODULE_COUNT * 2)
     {
         moveModule(where);
         counter = counter + 1;
@@ -165,22 +161,22 @@ void wfModuleSwitch(direction where)
     else
     {
         nothingModule();
-        currentModule = -1;
+        rM.currentModule = -1;
     }
 }
 
 // TODO: because of fallback, forcerender is not needed anymore?
 void wfModulesManage(buttonState button, bool forceRender)
 {
-    latestModuleUpdate = getUnixTime(timeRTCLocal);
+    rM.latestModuleUpdate = getUnixTime(timeRTCLocal);
     
-    debugLog("Running wfModulesManage, current module is: " + String(currentModule));
-    if (currentModule != -1 && button != None)
+    debugLog("Running wfModulesManage, current module is: " + String(rM.currentModule));
+    if (rM.currentModule != -1 && button != None)
     {
-        wfModulesList[currentModule]->requestShow(button, &wfModulesList[currentModule]->show);
-        if (wfModulesList[currentModule]->show == false)
+        wfModulesList[rM.currentModule]->requestShow(button, &wfModulesList[rM.currentModule]->show);
+        if (wfModulesList[rM.currentModule]->show == false)
         {
-            currentModule = -1;
+            rM.currentModule = -1;
         }
         else
         {
@@ -201,15 +197,15 @@ void wfModulesManage(buttonState button, bool forceRender)
             isThereAShow = true;
         }
         // Force management
-        if (forceRender == true && i == currentModule)
+        if (forceRender == true && i == rM.currentModule)
         {
             doIt = true;
         }
-        if ((i == currentModule || currentModule == -1) && render == true)
+        if ((i == rM.currentModule || rM.currentModule == -1) && render == true)
         {
-            if (currentModule == -1)
+            if (rM.currentModule == -1)
             {
-                currentModule = i;
+                rM.currentModule = i;
             }
             doIt = true;
         }
@@ -223,7 +219,7 @@ void wfModulesManage(buttonState button, bool forceRender)
     }
     // debugLog("Exited for loop in wfModulesManage");
     //  Now a loop for if nothing was found because nothing wants to render but we need to show something and maybe there is something to show
-    if (isThereAShow == true && doIt == false && currentModule == -1)
+    if (isThereAShow == true && doIt == false && rM.currentModule == -1)
     {
         debugLog("Looking for fallback module to show");
         for (int i = 0; i < MODULE_COUNT; i++)
@@ -233,7 +229,7 @@ void wfModulesManage(buttonState button, bool forceRender)
             if (wfModulesList[i]->show == true)
             {
                 debugLog("Found fallback module to show");
-                currentModule = i;
+                rM.currentModule = i;
                 doIt = true;
                 clearModuleArea();
                 wfModulesList[i]->requestShow(button, &wfModulesList[i]->show);

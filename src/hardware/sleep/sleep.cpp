@@ -258,7 +258,7 @@ void manageSleep()
 #endif
 
             uint currentSeconds = getCurrentSeconds();
-            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || wFTime.Minute != timeRTCLocal.Minute)
+            if (currentSeconds > (60 - AVOID_SLEEPING_ON_FULL_MINUTE) || rM.wFTime.Minute != timeRTCLocal.Minute)
             {
                 int toSleepSec = (((AVOID_SLEEPING_ON_FULL_MINUTE / 2) - currentSeconds + 60) % 60);
                 debugLog("timeRTCLocal.Second: " + String(timeRTCLocal.Second));

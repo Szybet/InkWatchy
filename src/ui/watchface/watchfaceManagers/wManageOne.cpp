@@ -1,24 +1,21 @@
 #include "wManageOne.h"
 #include "rtcMem.h"
 
-RTC_DATA_ATTR tmElements_t wFTime;
-RTC_DATA_ATTR bool disableSomeDrawing = false;
-RTC_DATA_ATTR uint8_t batteryPercantageWF;
 bool disableWatchfaceFastOperating = false;
 
 void wManageOneInit(const watchfaceDefOne *wdo)
 {
     debugLog("Executing init watch face");
 
-    wFTime.Second = timeRTCLocal.Second;
-    wFTime.Minute = timeRTCLocal.Minute;
-    wFTime.Hour = timeRTCLocal.Hour;
-    wFTime.Day = timeRTCLocal.Day;
-    wFTime.Month = timeRTCLocal.Month;
-    wFTime.Year = timeRTCLocal.Year;
-    batteryPercantageWF = rM.bat.percentage;
+    rM.wFTime.Second = timeRTCLocal.Second;
+    rM.wFTime.Minute = timeRTCLocal.Minute;
+    rM.wFTime.Hour = timeRTCLocal.Hour;
+    rM.wFTime.Day = timeRTCLocal.Day;
+    rM.wFTime.Month = timeRTCLocal.Month;
+    rM.wFTime.Year = timeRTCLocal.Year;
+    rM.batteryPercantageWF = rM.bat.percentage;
 
-    // dumpRTCTime(wFTime);
+    // dumpRTCTime(rM.wFTime);
     // dumpRTCTime(timeRTCLocal);
 
     wManageOneDrawAll(wdo);
@@ -29,7 +26,7 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
 {
     // debugLog("Executing loop watch face");
     bool timeHappened = true;
-    if (wFTime.Minute != timeRTCLocal.Minute || wFTime.Hour != timeRTCLocal.Hour) // Hour too because of timezone
+    if (rM.wFTime.Minute != timeRTCLocal.Minute || rM.wFTime.Hour != timeRTCLocal.Hour) // Hour too because of timezone
     {
         debugLog("Watchface updating something");
         dUChange = true;
@@ -47,16 +44,16 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
         {
             wdo->drawTimeBeforeApply();
 
-            wFTime.Minute = timeRTCLocal.Minute;
-            wFTime.Hour = timeRTCLocal.Hour;
+            rM.wFTime.Minute = timeRTCLocal.Minute;
+            rM.wFTime.Hour = timeRTCLocal.Hour;
 
-            if (disableSomeDrawing == false)
+            if (rM.disableSomeDrawing == false)
             {
                 wdo->drawTimeAfterApply(false);
             }
         }
 
-        if (disableSomeDrawing == false)
+        if (rM.disableSomeDrawing == false)
         {
             // wdo->drawTimeAfterApply(); // TODO: lp core not sure
 
@@ -65,30 +62,30 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
             {
                 loopBattery();
             }
-            if (batteryPercantageWF != rM.bat.percentage)
+            if (rM.batteryPercantageWF != rM.bat.percentage)
             {
-                batteryPercantageWF = rM.bat.percentage;
+                rM.batteryPercantageWF = rM.bat.percentage;
                 wdo->drawBattery();
             }
 
-            if (wFTime.Day != timeRTCLocal.Day)
+            if (rM.wFTime.Day != timeRTCLocal.Day)
             {
-                wFTime.Day = timeRTCLocal.Day;
+                rM.wFTime.Day = timeRTCLocal.Day;
                 wdo->drawDay();
             }
 
-            if (wFTime.Month != timeRTCLocal.Month)
+            if (rM.wFTime.Month != timeRTCLocal.Month)
             {
-                wFTime.Month = timeRTCLocal.Month;
+                rM.wFTime.Month = timeRTCLocal.Month;
                 wdo->drawMonth();
             }
         }
         if (wdo->watchfaceModules == true)
         {
             debugLog("getUnixTime(timeRTCLocal): " + String(getUnixTime(timeRTCLocal)));
-            debugLog("latestModuleUpdate: " + String(latestModuleUpdate));
+            debugLog("rM.latestModuleUpdate: " + String(rM.latestModuleUpdate));
 #if MODULE_UPDATE_LIMIT_S != 0
-            if (getUnixTime(timeRTCLocal) - latestModuleUpdate > MODULE_UPDATE_LIMIT_S)
+            if (getUnixTime(timeRTCLocal) - rM.latestModuleUpdate > MODULE_UPDATE_LIMIT_S)
             {
                 debugLog("Finally updating modules via time trigger");
                 wfModulesManage(None);

@@ -1,4 +1,5 @@
 #include "bookMod.h"
+#include "rtcMem.h"
 
 #if BOOK_MODULE_ENABLED
 #define BOOK_NAME_MODULE_NAME_MAX 25
@@ -18,16 +19,16 @@ void wfBookrequestShow(buttonState button, bool *showBool)
     {
         if (isModuleEngaged() == true)
         {
-            if (disableSomeDrawing == false)
+            if (rM.disableSomeDrawing == false)
             {
-                disableSomeDrawing = true;
+                rM.disableSomeDrawing = true;
                 calculateBookTextHeight();
                 startHeightBook = startHeightBook - 3;
                 showPageChecker = true;
             }
             else
             {
-                disableSomeDrawing = false;
+                rM.disableSomeDrawing = false;
                 showFullWatchface();
             }
         }
@@ -56,7 +57,7 @@ void wfBookrequestShow(buttonState button, bool *showBool)
     String curBook = getCurrentBook();
     squareInfo modSq = getWatchModuleSquare();
     squareInfo someSq = getSomeDrawingSquare();
-    if (disableSomeDrawing == false)
+    if (rM.disableSomeDrawing == false)
     {
         if (curBook == "")
         {

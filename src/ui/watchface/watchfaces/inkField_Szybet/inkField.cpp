@@ -57,8 +57,8 @@ static void drawTimeBeforeApply()
     debugLog("Called");
     setTextSize(1);
     setFont(TIME_FONT);
-    debugLog("Getting hour minute for wFTime");
-    String oldTime = getHourMinute(wFTime);
+    debugLog("Getting hour minute for rM.wFTime");
+    String oldTime = getHourMinute(rM.wFTime);
     debugLog("Getting hour minute for timeRTCLocal");
     String newTime = getHourMinute(timeRTCLocal);
 
@@ -108,7 +108,7 @@ static void drawTimeAfterApply(bool forceDraw)
     }
 
     // Draw the percentage on the right
-    int percentOfDayTmp = calculatePercentageOfDay(wFTime.Hour, wFTime.Minute);
+    int percentOfDayTmp = calculatePercentageOfDay(rM.wFTime.Hour, rM.wFTime.Minute);
     if (rM.inkfield.percentOfDay != percentOfDayTmp || forceDraw == true)
     {
         rM.inkfield.percentOfDay = percentOfDayTmp;
@@ -150,7 +150,7 @@ static void initWatchface()
 static void drawDay()
 {
     setFont(DATE_FONT);
-    String dayDate = String(wFTime.Day);
+    String dayDate = String(rM.wFTime.Day);
     if (dayDate.length() < 2)
     {
         dayDate = "0" + dayDate;
@@ -173,11 +173,11 @@ static void drawDay()
 static void drawMonth()
 {
     setFont(MONTH_NAME_FONT);
-    String month = getMonthName(wFTime.Month);
+    String month = getMonthName(rM.wFTime.Month);
     month.toUpperCase();
     writeTextReplaceBack(month, MONTH_NAME_CORD);
 
-    String realMonthNumber = String(wFTime.Month + 1);
+    String realMonthNumber = String(rM.wFTime.Month + 1);
     if (realMonthNumber.length() == 1)
     {
         realMonthNumber = "0" + realMonthNumber;
@@ -193,7 +193,7 @@ static void drawMonth()
 
 static void drawBattery()
 {
-    drawProgressBar(BATT_BAR_CORD, GENERAL_BAR_SIZE, batteryPercantageWF);
+    drawProgressBar(BATT_BAR_CORD, GENERAL_BAR_SIZE, rM.batteryPercantageWF);
 }
 
 const watchfaceDefOne inkFieldDef = {

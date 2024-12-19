@@ -1,4 +1,5 @@
 #include "analogSharp.h"
+#include "rtcMem.h"
 
 #if WATCHFACE_ANALOG_SHARP_SZYBET
 
@@ -15,7 +16,7 @@ void drawHand(int centerX, int centerY, uint16_t angle, int length)
 
 wfmTwoRet analogConwayDef(wfmTwoArg arg)
 {
-    wFTime = timeRTCLocal;
+    rM.wFTime = timeRTCLocal;
     debugLog("Launched analog conway");
     dis->fillRect(0, 0, 200, 200, GxEPD_WHITE);
 

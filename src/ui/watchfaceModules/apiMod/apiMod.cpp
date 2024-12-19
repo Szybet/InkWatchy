@@ -1,4 +1,5 @@
 #include "apiMod.h"
+#include "rtcMem.h"
 
 #if API_MODULE
 
@@ -15,13 +16,13 @@ void wfApirequestShow(buttonState button, bool *showBool)
     {
         if (isModuleEngaged() == true)
         {
-            if (disableSomeDrawing == false)
+            if (rM.disableSomeDrawing == false)
             {
-                disableSomeDrawing = true;
+                rM.disableSomeDrawing = true;
             }
             else
             {
-                disableSomeDrawing = false;
+                rM.disableSomeDrawing = false;
                 showFullWatchface();
             }
         }
@@ -35,7 +36,7 @@ void wfApirequestShow(buttonState button, bool *showBool)
 
     squareInfo modSq = getWatchModuleSquare();
     squareInfo someSq = getSomeDrawingSquare();
-    if (disableSomeDrawing == false)
+    if (rM.disableSomeDrawing == false)
     {
         setFont(&FreeSansBold9pt7b);
         setTextSize(1);
@@ -75,12 +76,5 @@ void wfApirequestShow(buttonState button, bool *showBool)
     }
     dUChange = true;
 }
-
-// Lambda doesn't work here
-RTC_DATA_ATTR wfModule wfApi = {
-    true,
-    wfApicheckShow,
-    wfApirequestShow,
-};
 
 #endif

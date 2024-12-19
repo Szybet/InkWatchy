@@ -30,8 +30,8 @@ const watchfaceDefOne shadesDef = {
         } },
     .drawDay = []()
     {
-        String dayDate = String(wFTime.Day);
-        String month = getMonthName(wFTime.Month);
+        String dayDate = String(rM.wFTime.Day);
+        String month = getMonthName(rM.wFTime.Month);
         String finalStr = dayDate + " " + month;
         setTextSize(1);
         setFont(getFont(SHADE_NORMAL_FONT));
@@ -47,7 +47,7 @@ const watchfaceDefOne shadesDef = {
         setFont(getFont(SHADE_NORMAL_FONT));
         int y = 170;
         dis->fillRect(0, y - SHADE_HEIGHT_PIXELS, 200, SHADE_HEIGHT_PIXELS + BOTTOM_ADD, GxEPD_WHITE);
-        writeTextCenterReplaceBack(String(batteryPercantageWF) + "%", y); },
+        writeTextCenterReplaceBack(String(rM.batteryPercantageWF) + "%", y); },
     .manageInput = [](buttonState bt)
     {
     switch (bt)
