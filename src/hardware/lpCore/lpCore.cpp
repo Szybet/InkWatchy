@@ -1,4 +1,5 @@
 #include "lpCore.h"
+#include "rtcMem.h"
 
 #if LP_CORE
 
@@ -98,10 +99,10 @@ void initManageLpCore()
         // We want it to update on it's own
         if(bootStatus.reason != wakeUpReason::ulp) {
             rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
-            wFTime.Hour = rtc_mem->custom[1];
-            wFTime.Minute = rtc_mem->custom[2];
+            rM.wFTime.Hour = rtc_mem->custom[1];
+            rM.wFTime.Minute = rtc_mem->custom[2];
         }
-        debugLog("Updated from lp core hour and minute: " + getHourMinute(wFTime));
+        debugLog("Updated from lp core hour and minute: " + getHourMinute(rM.wFTime));
     }
     else
     {

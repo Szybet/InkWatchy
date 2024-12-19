@@ -7,6 +7,11 @@ struct rtcMem
     // Battery
     batteryInfo bat;
     bool isBatterySaving : 1;
+#if ATCHY_VER == YATCHY
+    bool previousStatInStateBefore : 1;
+    bool previousStatInStateAfter : 1;
+    bool previousFiveVolt : 1;
+#endif
     // Accelerometer
 #if AXC_ENABLED
     StableBMA SBMA; // Class
@@ -45,6 +50,10 @@ struct rtcMem
     // Power settings
     bool disableAllVibration : 1;
     bool disableWakeUp : 1;
+    // wManageOne
+    tmElements_t wFTime;
+    bool disableSomeDrawing : 1;
+    uint8_t batteryPercantageWF : 7;
     // wManageAll
     uint8_t watchfaceSelected = 0;
 // Inkfield watchface
@@ -67,6 +76,21 @@ struct rtcMem
     } shades;
 #endif
 #endif
+    // Watchface modules
+    uint64_t latestModuleUpdate;
+    int currentModule; // Int because checkMinMax again
+    int8_t previousModuleCount;
+    int8_t previousCurrentModule;
+    // wFApi
+    #if API_MODULE
+    wfModule wfApi;
+    #endif
+    // wFBit
+    wfModule wfBit;
+    bool isBtcDataAvail : 1;
+    bool isBtcDataNew : 1;
+    bool smallBtcData : 1;
+    uint btcLastUpdate;
 };
 
 extern rtcMem rM;

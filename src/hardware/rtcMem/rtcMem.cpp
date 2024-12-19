@@ -11,6 +11,11 @@ RTC_DATA_ATTR rtcMem rM = {
         .prevVOne = 0.0,
         .oneCheck = false},
     .isBatterySaving = false,
+#if ATCHY_VER == YATCHY
+    .previousStatInStateBefore = false,
+    .previousStatInStateAfter = true, // There is no such configuration, so it will always trigger at least once
+    .previousFiveVolt = false,        // false because it will be true after flashing
+#endif
 // Acc
 #if AXC_ENABLED
     .SBMA = StableBMA{}, // Class
@@ -49,6 +54,10 @@ RTC_DATA_ATTR rtcMem rM = {
     // Power settings
     .disableAllVibration = false,
     .disableWakeUp = false,
+    // wManageOne
+    .wFTime = {0},
+    .disableSomeDrawing = false,
+    .batteryPercantageWF = 0,
     // wManageAll
     .watchfaceSelected = 0,
 // Inkfield watchface
@@ -67,5 +76,34 @@ RTC_DATA_ATTR rtcMem rM = {
     .shades = {
         .stepsSaved = 0,
     },
+#endif
+    // Watchface modules
+    .latestModuleUpdate = 0,
+    .currentModule = -1,
+    .previousModuleCount = -1,
+    .previousCurrentModule = -1, // The translated one!
+// wFApi
+#if API_MODULE
+    .wfApi = {
+        true,
+        wfApicheckShow,
+        wfApirequestShow,
+    },
+#endif
+// wFBit
+#if BITCOIN_MODULE
+    .wfBit = {
+#if MODULE_PERSISTENT
+        true,
+#else
+        false,
+#endif
+        wfBitcheckShow,
+        wfBitrequestShow,
+    },
+    .isBtcDataAvail = false,
+    .isBtcDataNew = false,
+    .smallBtcData = SMALL_BTC_MODULE,
+    .btcLastUpdate = 0,
 #endif
 };

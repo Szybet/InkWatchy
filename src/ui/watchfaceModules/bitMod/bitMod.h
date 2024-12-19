@@ -13,12 +13,9 @@ struct bitcoinData {
     float change30d;
     long btcLastSyncUnix;
 };
-extern bitcoinData btcData;
-extern bool isBtcDataAvail;
-extern bool isBtcDataNew;
 
-
-extern wfModule wfBit;
 void bitcoinSync(uint8_t tries);
+void wfBitcheckShow(bool *showBool, bool *redrawBool);
+void wfBitrequestShow(buttonState button, bool *showBool);
 
 #endif

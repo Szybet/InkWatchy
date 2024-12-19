@@ -6,16 +6,12 @@
 #include <blockClockClient.h>
 
 bitcoinData btcData = {};
-RTC_DATA_ATTR bool isBtcDataAvail = false;
-RTC_DATA_ATTR bool isBtcDataNew = false;
-RTC_DATA_ATTR bool smallBtcData = SMALL_BTC_MODULE;
-RTC_DATA_ATTR uint btcLastUpdate = 0;
 
 void saveBitcoinData()
 {
     size_t dataSize = sizeof(bitcoinData);
     fsSetBlob(CONF_BITCOIN, (uint8_t *)&btcData, dataSize);
-    isBtcDataAvail = true;
+    rM.isBtcDataAvail = true;
 }
 
 void loadBitcoinData()
@@ -27,7 +23,7 @@ void loadBitcoinData()
     if (serializedData.size != dataSize)
     {
         debugLog("Bitcoin data size is wrong");
-        isBtcDataAvail = false;
+        rM.isBtcDataAvail = false;
         if (serializedData.buf != NULL && serializedData.size != 0)
         {
             debugLog("Freeing bitcoin?");
@@ -36,7 +32,7 @@ void loadBitcoinData()
         return;
     }
     memcpy(&btcData, serializedData.buf, dataSize);
-    isBtcDataAvail = true;
+    rM.isBtcDataAvail = true;
 }
 
 void wfBitcheckShow(bool *showBool, bool *redrawBool)
@@ -44,13 +40,13 @@ void wfBitcheckShow(bool *showBool, bool *redrawBool)
 #if MODULE_PERSISTENT
     *showBool = true;
 #else
-    if (isBtcDataNew == true && isBtcDataAvail == true)
+    if (rM.isBtcDataNew == true && rM.isBtcDataAvail == true)
     {
         *showBool = true;
     }
 #endif
-    // if (isBtcDataAvail == true && (isBtcDataNew == true || btcLastUpdate + 1 != btcLastUpdate) )
-    if (isBtcDataAvail == true && (isBtcDataNew == true || getHourDifference(getUnixTime(timeRTCLocal), btcData.btcLastSyncUnix) != btcLastUpdate))
+    // if (rM.isBtcDataAvail == true && (rM.isBtcDataNew == true || rM.btcLastUpdate + 1 != rM.btcLastUpdate) )
+    if (rM.isBtcDataAvail == true && (rM.isBtcDataNew == true || getHourDifference(getUnixTime(timeRTCLocal), btcData.btcLastSyncUnix) != rM.btcLastUpdate))
     {
         debugLog("btc redraw bool is true!");
         *redrawBool = true;
@@ -69,18 +65,18 @@ void wfBitrequestShow(buttonState button, bool *showBool)
 #endif
     if (button == Down)
     {
-        smallBtcData = !smallBtcData;
+        rM.smallBtcData = !rM.smallBtcData;
         clearModuleArea();
     }
     debugLog("Launched");
     loadBitcoinData();
     squareInfo modSq = getWatchModuleSquare();
-    if (smallBtcData == true)
+    if (rM.smallBtcData == true)
     {
 
         writeImageN(modSq.cord.x, modSq.cord.y, getImg("bitcoin"));
         writeImageN(modSq.cord.x, modSq.cord.y + modSq.size.h - getImgWidth("pickaxe"), getImg("pickaxe"));
-        if (isBtcDataAvail == true)
+        if (rM.isBtcDataAvail == true)
         {
             dis->setCursor(modSq.cord.x + getImgWidth("pickaxe"), modSq.cord.y + modSq.size.h - 1);
             setFont(getFont("dogicapixel4"));
@@ -95,11 +91,11 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         setFont(getFont("dogicapixel4"));
         dis->setCursor(modSq.cord.x + modSq.size.w, modSq.cord.y + 7);
         String lastSync = "Never";
-        if (isBtcDataAvail == true)
+        if (rM.isBtcDataAvail == true)
         {
             uint diff = getHourDifference(getUnixTime(timeRTCLocal), btcData.btcLastSyncUnix);
-            // uint diff = btcLastUpdate + 1;
-            btcLastUpdate = diff;
+            // uint diff = rM.btcLastUpdate + 1;
+            rM.btcLastUpdate = diff;
             debugLog("diff: " + String(diff));
             lastSync = String(diff) + "h ago";
         }
@@ -136,11 +132,11 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         setFont(getFont("dogicapixel4"));
         dis->setCursor(modSq.cord.x + modSq.size.w, modSq.cord.y + 7);
         String lastSync = "Never";
-        if (isBtcDataAvail == true)
+        if (rM.isBtcDataAvail == true)
         {
             uint diff = getHourDifference(getUnixTime(timeRTCLocal), btcData.btcLastSyncUnix);
-            // uint diff = btcLastUpdate + 1;
-            btcLastUpdate = diff;
+            // uint diff = rM.btcLastUpdate + 1;
+            rM.btcLastUpdate = diff;
             debugLog("diff: " + String(diff));
             lastSync = String(diff) + "h ago";
         }
@@ -157,19 +153,9 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         dis->print(btcData.height);
     }
 
-    isBtcDataNew = false;
+    rM.isBtcDataNew = false;
     dUChange = true;
 }
-
-RTC_DATA_ATTR wfModule wfBit = {
-#if MODULE_PERSISTENT
-    true,
-#else
-    false,
-#endif
-    wfBitcheckShow,
-    wfBitrequestShow,
-};
 
 void bitcoinSync(uint8_t tries)
 {
@@ -223,7 +209,7 @@ void bitcoinSync(uint8_t tries)
             btcData.change30d = 0.0;
         }
         saveBitcoinData();
-        isBtcDataNew = true;
+        rM.isBtcDataNew = true;
     }
     else
     {

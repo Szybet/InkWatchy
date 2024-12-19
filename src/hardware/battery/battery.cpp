@@ -64,13 +64,10 @@ void initBattery()
 }
 
 #if DEBUG
-RTC_DATA_ATTR bool previousCharging = true;
+bool previousCharging = true;
 #endif
 
 #if ATCHY_VER == YATCHY
-RTC_DATA_ATTR bool previousStatInStateBefore = false;
-RTC_DATA_ATTR bool previousStatInStateAfter = true; // There is no such configuration, so it will always trigger at least once
-RTC_DATA_ATTR bool previousFiveVolt = false;        // false because it will be true after flashing
 bool isSomethingWrong = false;
 #endif
 void isChargingCheck()
@@ -165,7 +162,7 @@ void isChargingCheck()
     debugLog("statInStateBefore: " + String(statInStateBefore));
     debugLog("statInStateAfter: " + String(statInStateAfter));
 #endif
-    if (previousStatInStateBefore != statInStateBefore || previousStatInStateAfter != statInStateAfter || previousFiveVolt != fiveVolt)
+    if (rM.previousStatInStateBefore != statInStateBefore || rM.previousStatInStateAfter != statInStateAfter || rM.previousFiveVolt != fiveVolt)
     {
         debugLog("Charging state changed for gpio expander");
         bool isFine = true;
@@ -230,9 +227,9 @@ void isChargingCheck()
             setRgb(IwNone);
 #endif
         }
-        previousFiveVolt = fiveVolt;
-        previousStatInStateBefore = statInStateBefore;
-        previousStatInStateAfter = statInStateAfter;
+        rM.previousFiveVolt = fiveVolt;
+        rM.previousStatInStateBefore = statInStateBefore;
+        rM.previousStatInStateAfter = statInStateAfter;
     }
     // debugLog("Turning on interrupt back on");
     delayTask(10);
