@@ -1,5 +1,3 @@
-#pragma once
-
 #define LPOG_UNKNOWN_255_STR "Unknown"
 #define LPOG_NOTHING_0_STR "Nothing"
 #define LPOG_START_1_STR "Start"
@@ -10,4 +8,3 @@
 #define LPOG_SCREEN_END_6_STR "Screen end"
 #define LPOG_SCREEN_POWEROFF_7_STR "Screen power off"
 #define LPOG_ERROR_8_STR "Lp core ERROR"
-

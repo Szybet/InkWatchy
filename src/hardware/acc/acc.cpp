@@ -25,6 +25,65 @@ uint16_t writeRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t 
     return (0 != Wire.endTransmission());
 }
 
+void lookForFalse(bool newBool, bool *oldValue)
+{
+    if (*oldValue == false)
+    {
+        return;
+    }
+    if (newBool == false)
+    {
+        *oldValue = false;
+        return;
+    }
+}
+
+// Credits to TinyWatchy
+bool accConfig()
+{
+    bool status = true;
+    Acfg cfg = {
+        .odr = BMA4_OUTPUT_DATA_RATE_100HZ,
+        .bandwidth = BMA4_ACCEL_NORMAL_AVG4,
+        .perf_mode = BMA4_CIC_AVG_MODE,
+        .range = BMA4_ACCEL_RANGE_2G,
+    };
+
+    lookForFalse(rM.SBMA.setAccelConfig(cfg), &status);
+    rM.SBMA.wakeUp();
+    lookForFalse(rM.SBMA.enableAccel(), &status);
+
+    struct bma4_int_pin_config config = {
+        .edge_ctrl = BMA4_EDGE_TRIGGER,
+        .lvl = BMA4_ACTIVE_HIGH,
+        .od = BMA4_PUSH_PULL,
+        .output_en = BMA4_OUTPUT_ENABLE,
+        .input_en = BMA4_INPUT_DISABLE,
+    };
+
+    // lookForFalse(rM.SBMA.setINTPinConfig(config, BMA4_INTR1_MAP), status);
+
+    struct bma423_axes_remap remap_data = {
+        .x_axis = 1,
+        .x_axis_sign = 0,
+        .y_axis = 0,
+        .y_axis_sign = 0,
+        .z_axis = 2,
+        .z_axis_sign = 1,
+    };
+
+    lookForFalse(rM.SBMA.setRemapAxes(&remap_data), &status);
+    lookForFalse(rM.SBMA.enableFeature(BMA423_STEP_CNTR, true), &status);
+
+    // lookForFalse(rM.SBMA.enableFeature(BMA423_WAKEUP, true), status);
+
+    // lookForFalse(rM.SBMA.resetStepCounter(), &status);
+
+    // lookForFalse(rM.SBMA.enableWakeupInterrupt(), status);
+
+    return status;
+}
+
 void initAxc()
 {
     debugLog("initAxc Launched");
@@ -37,7 +96,7 @@ void initAxc()
             return;
         }
 
-        if (!rM.SBMA.defaultConfig())
+        if (!accConfig())
         {
             debugLog("Failed to init bma - default config");
             return;
@@ -62,11 +121,16 @@ uint16_t getSteps()
             rM.stepsInited = true;
             rM.SBMA.enableFeature(BMA423_STEP_CNTR, true);
             rM.SBMA.resetStepCounter();
-        } else {
-            if(rM.stepDay != timeRTCLocal.Day) {
+        }
+        else
+        {
+            if (rM.stepDay != timeRTCLocal.Day)
+            {
                 rM.stepDay = timeRTCLocal.Day;
                 rM.SBMA.resetStepCounter();
-            } else {
+            }
+            else
+            {
                 steps = (uint16_t)rM.SBMA.getCounter();
             }
         }

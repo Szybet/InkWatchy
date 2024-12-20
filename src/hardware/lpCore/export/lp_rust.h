@@ -1,5 +1,3 @@
-#pragma once
-
 #define LPOG_UNKNOWN_255 255
 
 #define LPOG_NOTHING_0 0
@@ -41,4 +39,3 @@ uint8_t do_rust_things(void);
 void send_debug_message(uint8_t mess);
 
 void send_debug_message(uint8_t _mess);
-
