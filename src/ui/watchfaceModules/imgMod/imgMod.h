@@ -4,6 +4,7 @@
 
 #if IMAGE_MODULE
 
-extern wfModule wfImage;
+void wfImagecheckShow(bool *showBool, bool *redrawBool);
+void wfImagerequestShow(buttonState button, bool *showBool);
 
 #endif

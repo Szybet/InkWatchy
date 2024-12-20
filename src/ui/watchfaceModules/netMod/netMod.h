@@ -4,7 +4,7 @@
 
 #if WIFI_MODULE
 
-extern wifiStatusSimple previousWifiState;
-extern wfModule wfNet;
+void wfNetcheckShow(bool *showBool, bool *redrawBool);
+void wfNetrequestShow(buttonState button, bool *showBool);
 
 #endif

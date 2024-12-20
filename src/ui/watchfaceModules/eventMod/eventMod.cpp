@@ -1,26 +1,24 @@
 #include "eventMod.h"
+#include "rtcMem.h"
 
 #if EVENT_MODULE
 
 #define DATE_BYTES 11 // unix is 10 bytes + \n
 #define LINE_LIMIT 28
 
-RTC_DATA_ATTR int64_t currentEventTime = 0;
-RTC_DATA_ATTR int8_t currentDay = -1;
-
 // Makes redrawing turned off for the current day
 void wfEventresetValues() {
-    currentEventTime = 0;
-    currentDay = day(getUnixTime(timeRTCLocal));
+    rM.currentEventTime = 0;
+    rM.currentDay = day(getUnixTime(timeRTCLocal));
 }
 
 void wfEventcheckShow(bool *showBool, bool *redrawBool)
 {
     *showBool = true;
-    if(currentDay == day(getUnixTime(timeRTCLocal))) {
+    if(rM.currentDay == day(getUnixTime(timeRTCLocal))) {
         return;
     } else {
-        if(currentEventTime < getUnixTime(timeRTCLocal)) {
+        if(rM.currentEventTime < getUnixTime(timeRTCLocal)) {
             *redrawBool = true;
         }
     }
@@ -128,18 +126,11 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     dis->print(details);
 
     // Set the next redraw, kind of
-    currentEventTime = eventUnix;
-    currentDay = -1;
+    rM.currentEventTime = eventUnix;
+    rM.currentDay = -1;
 
     // No.
     //drawButton(MODULE_RECT_X + img->bw + 2, MODULE_RECT_Y + 10, btnStr, &emptyImgPack, false, 2, 0, GxEPD_BLACK, GxEPD_WHITE, true, getFont("dogicapixel4"));
 }
-
-// Lambda doesn't work here
-RTC_DATA_ATTR wfModule wfEvent = {
-    true,
-    wfEventcheckShow,
-    wfEventrequestShow,
-};
 
 #endif

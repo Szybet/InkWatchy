@@ -4,6 +4,7 @@
 
 #if EVENT_MODULE
 
-extern wfModule wfEvent;
+void wfEventcheckShow(bool *showBool, bool *redrawBool);
+void wfEventrequestShow(buttonState button, bool *showBool);
 
 #endif

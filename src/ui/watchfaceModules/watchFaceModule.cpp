@@ -10,7 +10,7 @@ wfModule wfEmpty = {
 // MAKE SURE HERE ARE ALL MODULES INSERTED
 wfModule *wfModulesList[MODULE_COUNT] = {
 #if WIFI_MODULE
-    &wfNet,
+    &rM.wfNet,
 #else
     &wfEmpty,
 #endif
@@ -20,17 +20,17 @@ wfModule *wfModulesList[MODULE_COUNT] = {
     &wfEmpty,
 #endif
 #if CONWAY_MODULE_ENABLED
-    &wfConway,
+    &rM.wfImage,
 #else
     &wfEmpty,
 #endif
 #if BOOK_MODULE_ENABLED
-    &wfBook,
+    &rM.wfBook,
 #else
     &wfEmpty,
 #endif
 #if IMAGE_MODULE
-    &wfImage,
+    &rM.wfConway,
 #else
     &wfEmpty,
 #endif
@@ -40,7 +40,7 @@ wfModule *wfModulesList[MODULE_COUNT] = {
     &wfEmpty,
 #endif
 #if EVENT_MODULE
-    &wfEvent,
+    &rM.wfEvent,
 #else
     &wfEmpty,
 #endif

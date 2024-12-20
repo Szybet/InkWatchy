@@ -106,4 +106,52 @@ RTC_DATA_ATTR rtcMem rM = {
     .smallBtcData = SMALL_BTC_MODULE,
     .btcLastUpdate = 0,
 #endif
+// wFBook
+#if BOOK_MODULE_ENABLED
+    .wfBook = {
+        true,
+        wfBookcheckShow,
+        wfBookrequestShow,
+    },
+#endif
+// wFConway
+#if CONWAY_MODULE_ENABLED
+    .wfConway = {
+        true,
+        wfConwaycheckShow,
+        wfConwayrequestShow,
+    },
+    .timeChangeCheck = INIT_CONWAY_MOD_VAL, // if INIT_CONWAY_MOD_VAL, init the grid
+    .conwayModuleGrid = {0},
+#endif
+// wFEvent
+#if EVENT_MODULE
+    .wfEvent = {
+        true,
+        wfEventcheckShow,
+        wfEventrequestShow,
+    },
+    .currentEventTime = 0,
+    .currentDay = -1,
+#endif
+// wFImg
+#if IMAGE_MODULE
+    .wfImage = {
+        true,
+        wfImagecheckShow,
+        wfImagerequestShow,
+    },
+#if IMG_MODULE_CHANGE_EVERY_HOUR
+    .imageCurrentHour = -1,
+#endif
+    .imageNameCrc32 = 0,
+#endif
+// wFNet
+#if WIFI_MODULE
+    .wfNet = {
+        false,
+        wfNetcheckShow,
+        wfNetrequestShow,
+    },
+#endif
 };
