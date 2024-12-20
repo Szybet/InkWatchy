@@ -4,6 +4,7 @@
 void ForceInputs()
 {
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
+    // Saves 70 uA
     isDebug(Serial.end());
     uint8_t P = rM.SRTC.getADCPin();
     /* Unused GPIO PINS */
