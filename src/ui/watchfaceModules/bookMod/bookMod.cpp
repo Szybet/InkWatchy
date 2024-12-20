@@ -100,10 +100,4 @@ void wfBookrequestShow(buttonState button, bool *showBool)
     dUChange = true;
 }
 
-RTC_DATA_ATTR wfModule wfBook = {
-    true,
-    wfBookcheckShow,
-    wfBookrequestShow,
-};
-
 #endif

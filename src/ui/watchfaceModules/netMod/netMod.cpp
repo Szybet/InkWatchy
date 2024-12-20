@@ -2,7 +2,7 @@
 
 #if WIFI_MODULE
 
-RTC_DATA_ATTR wifiStatusSimple previousWifiState = WifiOff;
+wifiStatusSimple previousWifiState = WifiOff;
 
 void wfNetcheckShow(bool *showBool, bool *redrawBool)
 {
@@ -46,10 +46,4 @@ void wfNetrequestShow(buttonState button, bool *showBool)
     dUChange = true;
 }
 
-// Lambda doesn't work here
-RTC_DATA_ATTR wfModule wfNet = {
-    false,
-    wfNetcheckShow,
-    wfNetrequestShow,
-};
 #endif
