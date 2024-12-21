@@ -46,6 +46,11 @@ void switchWifiDebug()
     generalSwitch(wifiDebug);
 }
 
+void switchGitDebug()
+{
+    generalSwitch(gitDebug);
+}
+
 void switchWeatherMenu()
 {
     generalSwitch(weatherMenu);

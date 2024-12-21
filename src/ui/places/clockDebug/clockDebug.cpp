@@ -1,6 +1,6 @@
 #include "clockDebug.h"
 
-#if DEBUG_MENUS == 1
+#if DEBUG_MENUS
 
 uint16_t timeClockHeight;
 

@@ -120,10 +120,13 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../ui/watchface/watchfaceManagers/wManageAll.h"
 #include "../ui/watchface/watchfaceManagers/wFunctions.h"
 // Places
-#include "../ui/places/batteryDebug/batteryDebug.h"
 #include "../ui/places/wifiDebug/wifiDebug.h"
+#if DEBUG_MENUS
+#include "../ui/places/batteryDebug/batteryDebug.h"
 #include "../ui/places/hardwareDebug/hardwareDebug.h"
 #include "../ui/places/clockDebug/clockDebug.h"
+#include "../ui/places/gitDebug/gitDebug.h"
+#endif
 #include "../ui/places/watchfaceSelector/watchfaceSel.h"
 #if BOOK
 #include "../ui/places/book/bookUi.h"
