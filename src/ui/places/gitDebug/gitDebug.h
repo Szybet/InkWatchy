@@ -4,7 +4,6 @@
 
 #if DEBUG_MENUS
 
-void initClockDebug();
-void loopClockDebug();
+void initGitDebug();
 
 #endif

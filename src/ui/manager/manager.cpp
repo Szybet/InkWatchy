@@ -155,6 +155,13 @@ void loopManager()
 #endif
         break;
     }
+    case gitDebug:
+    {
+#if DEBUG_MENUS
+        managerLaunchFunc(gitDebug, initGitDebug, useButtonBlank);
+#endif
+        break;
+    }
     case batteryDebug:
     {
 #if DEBUG_MENUS

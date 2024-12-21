@@ -99,7 +99,7 @@ void initMainMenu()
 void initDebugMenu()
 {
     int count = -1;
-    entryMenu buttons[4];
+    entryMenu buttons[5];
     {
         debugLog("Adding clock to menu");
         count = count + 1;
@@ -115,6 +115,11 @@ void initDebugMenu()
         count = count + 1;
         buttons[count] = {"Battery", &emptyImgPack, switchBatteryDebug};
     }
+    {
+        debugLog("Adding git to menu");
+        count = count + 1;
+        buttons[count] = {"Git", &emptyImgPack, switchGitDebug};
+    }
 #if FONT_MENU_ENABLED
     {
         debugLog("Adding font preview to menu");
@@ -127,7 +132,8 @@ void initDebugMenu()
 }
 #endif
 
-void initSettingsMenu() {
+void initSettingsMenu()
+{
     int count = -1;
     entryMenu buttons[5];
     {
