@@ -21,6 +21,7 @@ void wfImagecheckShow(bool *showBool, bool *redrawBool)
 #else
     *redrawBool = false;
 #endif
+    debugLog("wfImage redrawBool: " + String(*redrawBool));
 }
 
 #define MAX_TRIES 3
@@ -28,6 +29,7 @@ uint8_t tries = 0;
 
 void redrawModuleImage()
 {
+    tries = 0;
     u8_t c = 0;
     {
         File root = LittleFS.open("/img/" + String(IMAGE_MODULE_PATH));
