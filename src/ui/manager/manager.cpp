@@ -2,15 +2,13 @@
 #include "rtcMem.h"
 
 int currentPlaceIndex = 0;
-UiPlace placeTree[PLACE_TREE_MAX_DEPTH] = {NoPlace};
-UiPlace currentPlace = NoPlace; // For loop manager for launching init or loop of a function
 int menuSelectedTree[PLACE_TREE_MAX_DEPTH] = {0};
 bool wasBacked = false;
 void (*exitFuncGlob)() = nullptr; // Executed when a place is exiting and it was requested
 
 void initManager()
 {
-    placeTree[0] = FIRST_PLACE;
+    rM.placeTree[0] = FIRST_PLACE;
 }
 
 // in managerLaunchFunc, sleep and in manager long back.
@@ -31,7 +29,7 @@ void executeExitFunc()
 
 void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), void (*exitFunc)() = nullptr)
 {
-    if (currentPlace == place)
+    if (rM.currentPlace == place)
     {
         // debugLog("Executing loop function?");
         if (loopFunc != nullptr)
@@ -41,9 +39,9 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
     }
     else
     {
-        debugLog("currentPlace: " + String(currentPlace));
+        debugLog("rM.currentPlace: " + String(rM.currentPlace));
         debugLog("place: " + String(place));
-        currentPlace = place;
+        rM.currentPlace = place;
         if (wasBacked == false)
         {
             if (currentPlaceIndex - 1 >= 0)
@@ -93,7 +91,7 @@ void loopManager()
             {
                 if (backButton == Back)
                 {
-                    placeTree[currentPlaceIndex] = NoPlace;
+                    rM.placeTree[currentPlaceIndex] = NoPlace;
                     currentPlaceIndex -= 1;
                     wasBacked = true;
                 }
@@ -101,7 +99,7 @@ void loopManager()
                 {
                     for (int i = 1; i < PLACE_TREE_MAX_DEPTH; i++)
                     {
-                        placeTree[i] = NoPlace;
+                        rM.placeTree[i] = NoPlace;
                     }
 #if LONG_BACK_FULL_REFRESH
                     debugLog("Forcing full update because of long back button");
@@ -115,9 +113,9 @@ void loopManager()
         }
     }
 
-    // debugLog("Current place: " + String(placeTree[currentPlaceIndex]) + " and index: " + String(currentPlaceIndex));
+    // debugLog("Current place: " + String(rM.placeTree[currentPlaceIndex]) + " and index: " + String(currentPlaceIndex));
     // Don't forget break...
-    switch (placeTree[currentPlaceIndex])
+    switch (rM.placeTree[currentPlaceIndex])
     {
     case watchface:
     {

@@ -50,6 +50,9 @@ struct rtcMem
     // Power settings
     bool disableAllVibration : 1;
     bool disableWakeUp : 1;
+    // Manager
+    UiPlace placeTree[PLACE_TREE_MAX_DEPTH];
+    UiPlace currentPlace;
     // wManageOne
     tmElements_t wFTime;
     bool disableSomeDrawing : 1;

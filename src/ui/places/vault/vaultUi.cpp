@@ -1,4 +1,5 @@
 #include "defines.h"
+#include "rtcMem.h"
 
 #if VAULT
 #include "vaultUi.h"
@@ -214,9 +215,9 @@ void loopVault()
 void exitVault()
 {
     debugLog("Exiting vault");
-    debugLog("currentPlace: " + String(currentPlace));
-    debugLog("placeTree[currentPlaceIndex]: " + String(placeTree[currentPlaceIndex]));
-    if (currentPlace == FIRST_PLACE || currentPlace == NoPlace || placeTree[currentPlaceIndex] == FIRST_PLACE || placeTree[currentPlaceIndex] == NoPlace)
+    debugLog("rM.currentPlace: " + String(rM.currentPlace));
+    debugLog("rM.placeTree[currentPlaceIndex]: " + String(rM.placeTree[currentPlaceIndex]));
+    if (rM.currentPlace == FIRST_PLACE || rM.currentPlace == NoPlace || rM.placeTree[currentPlaceIndex] == FIRST_PLACE || rM.placeTree[currentPlaceIndex] == NoPlace)
     {
         debugLog("Cleaning key");
         key = -1;

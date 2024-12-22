@@ -170,10 +170,10 @@ void manageSleep()
     if (millisBetter() - sleepDelayMs >= SLEEP_EVERY_MS)
     {
         debugLog("Entering manageSleep");
-        if (currentPlace != FIRST_PLACE)
+        if (rM.currentPlace != FIRST_PLACE)
         {
             debugLog("SLEEP_EVERY_MS runned out, Showing watchface");
-            currentPlace = NoPlace;
+            rM.currentPlace = NoPlace;
             currentPlaceIndex = 0;
             executeExitFunc();
             setSleepDelay(TIME_FOR_WATCHFACE_TO_SHOW_MS);

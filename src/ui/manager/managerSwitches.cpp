@@ -1,15 +1,16 @@
 #include "manager.h"
+#include "rtcMem.h"
 
 void generalSwitch(UiPlace place)
 {
     currentPlaceIndex += 1;
-    placeTree[currentPlaceIndex] = place;
-    // debugLog("Current place: " + String(placeTree[currentPlaceIndex]) + " and index: " + String(currentPlaceIndex));
+    rM.placeTree[currentPlaceIndex] = place;
+    // debugLog("Current place: " + String(rM.placeTree[currentPlaceIndex]) + " and index: " + String(currentPlaceIndex));
 }
 
 void overwriteSwitch(UiPlace place)
 {
-    placeTree[currentPlaceIndex] = place;
+    rM.placeTree[currentPlaceIndex] = place;
 }
 
 void switchDebugMenu()
