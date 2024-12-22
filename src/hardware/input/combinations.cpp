@@ -1,4 +1,5 @@
 #include "combinations.h"
+#include "rtcMem.h"
 
 #define BACK_INDEX 0
 #define MENU_INDEX 1
@@ -49,7 +50,7 @@ bool wasClicked(uint8_t pin)
 
 void executeCombination()
 {
-    if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true && currentPlace != wifiDebug)
+    if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true && rM.currentPlace != wifiDebug)
     {
         debugLog("Executed switch wifi combination");
         switchWifiDebug();
