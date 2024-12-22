@@ -123,9 +123,11 @@ static void drawTimeAfterApply(bool forceDraw)
         drawProgressBar(STEPS_BAR_CORD, GENERAL_BAR_SIZE, rM.inkfield.percentSteps);
     }
 
-    if (abs(rM.inkfield.weatherMinutes - timeRTCLocal.Minute + (60 * timeRTCLocal.Hour)) > 25 || forceDraw == true)
+    uint16_t weatherMinutes = timeRTCLocal.Minute + (60 * timeRTCLocal.Hour);
+    // debugLog("Weather force: " + String(forceDraw));
+    if (abs(rM.inkfield.weatherMinutes - weatherMinutes) > 25 || forceDraw == true)
     {
-        rM.inkfield.weatherMinutes = timeRTCLocal.Minute + (60 * timeRTCLocal.Hour);
+        rM.inkfield.weatherMinutes = weatherMinutes;
         inkDrawWeather();
     }
 }
