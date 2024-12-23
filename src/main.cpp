@@ -1,4 +1,4 @@
-#include "defines/defines.h"
+#include "defines.h"
 
 // https://github.com/espressif/arduino-esp32/blob/337058ac94e7e3df11d273a93e88d1ea605e6f5f/cores/esp32/main.cpp#L105
 // Why is that? well anyway this task set's it and exits
@@ -33,11 +33,10 @@ void setup()
 
   initManager();
 
-  if (bootStatus.reason != rtc)
+  if (bootStatus.reason != rtc && bootStatus.reason != ulp)
   {
     // I trust myself enough now to not need watchdog task running all the time
     initWatchdogTask();
-    watchdogPing();
 
     turnOnButtons();
 
@@ -58,7 +57,7 @@ void loop()
 #if TEMP_CHECKS_ENABLED
   tempChecker();
 #endif
-  if (bootStatus.reason != rtc)
+  if (bootStatus.reason != rtc && bootStatus.reason != ulp)
   {
     watchdogPing();
     alarmManageRTC();
@@ -73,7 +72,7 @@ void loop()
   endLoopDebug();
 #endif
 
-#if !DISABLE_SLEEP
+#if !DISABLE_SLEEP || !DEBUG
   manageSleep();
 #endif
 }

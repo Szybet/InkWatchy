@@ -8,19 +8,19 @@ int textSize = 1;
 void setTextSize(int i)
 {
   textSize = i;
-  display.setTextSize(i);
+  dis->setTextSize(i);
 }
 
 void setFont(const GFXfont *fontTmp)
 {
   font = fontTmp;
-  display.setFont(font);
+  dis->setFont(font);
 }
 
 void writeLine(String strToWrite, int cursorX, uint16_t *currentHeight)
 {
-  display.setCursor(cursorX, *currentHeight);
-  display.print(strToWrite);
+  dis->setCursor(cursorX, *currentHeight);
+  dis->print(strToWrite);
   *currentHeight = *currentHeight + maxHeight;
 }
 
@@ -29,42 +29,54 @@ void centerText(String str, uint16_t *currentHeight)
 {
   uint16_t w;
   getTextBounds(str, NULL, NULL, &w, NULL);
-  int x = (display.width() - w) / 2;
-  display.setCursor(x, *currentHeight);
-  display.print(str);
+  int x = (dis->width() - w) / 2;
+  dis->setCursor(x, *currentHeight);
+  dis->print(str);
   *currentHeight = *currentHeight + maxHeight;
 }
 
-void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor)
+void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, uint16_t bgColor, bool manualWidth, uint8_t manualWidthAdd, uint8_t manualHeighAdd)
 {
   // debugLog("Drawing bitmap with text: " + str + " at: " + String(x) + "x" + String(y));
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
-  // debugLog("w: " + String(w));
-  // debugLog("h: " + String(h));
-  w = w + 5;
+  // debugLog("w: " + String(w) + " h: " + String(h));
+  if (manualWidth == false) {
+    w = w + 5;
+  } else {
+    w = w + manualWidthAdd;
+  }
   if (containsBelowChar(str) == true)
   {
-    GFXcanvas1 canvasTmp(w, h + 3);
+    GFXcanvas1 canvasTmp(w, h + manualHeighAdd);
+    canvasTmp.setTextWrap(false);
     canvasTmp.setFont(font);
     canvasTmp.setTextSize(textSize);
-    canvasTmp.setCursor(0, h - 3);
+    canvasTmp.setCursor(0, h - manualHeighAdd);
+    if (manualWidth == true)
+    {
+      canvasTmp.setTextWrap(false);
+    }
     canvasTmp.print(str);
-    display.drawBitmap(x, y - h + 3, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
+    dis->drawBitmap(x, y - h + manualHeighAdd, canvasTmp.getBuffer(), w, h + manualHeighAdd, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
-    display.drawRect(x, y - h + 3, w, h + 3, frColor);
+    dis->drawRect(x, y - h + manualHeighAdd, w, h + manualHeighAdd, frColor);
 #endif
   }
   else
   {
-    GFXcanvas1 canvasTmp(w, h + 3);
+    GFXcanvas1 canvasTmp(w, h + manualHeighAdd);
     canvasTmp.setFont(font);
     canvasTmp.setTextSize(textSize);
     canvasTmp.setCursor(0, h);
+    if (manualWidth == true)
+    {
+      canvasTmp.setTextWrap(false);
+    }
     canvasTmp.print(str);
-    display.drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
+    dis->drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + manualHeighAdd, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
-    display.drawRect(x, y - h, w, h + 3, frColor);
+    dis->drawRect(x, y - h, w, h + manualHeighAdd, frColor);
 #endif
   }
 }
@@ -76,7 +88,7 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
   // debugLog("w: " + String(w));
   // debugLog("h: " + String(h));
   w = w + 5;
-  int16_t x = (display.width() - w) / 2;
+  int16_t x = (dis->width() - w) / 2;
   if (containsBelowChar(str) == true)
   {
     GFXcanvas1 canvasTmp(w, h + 3);
@@ -84,9 +96,10 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
     canvasTmp.setTextSize(textSize);
     canvasTmp.setCursor(0, h - 3);
     canvasTmp.print(str);
-    display.drawBitmap(x, y - h + 3, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
+    dis->fillRect(0, y - h, 200, h + 3, GxEPD_WHITE);
+    dis->drawBitmap(x, y - h + 3, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
-    display.drawRect(x, y - h + 3, w, h + 3, frColor);
+    dis->drawRect(x, y - h + 3, w, h + 3, frColor);
 #endif
   }
   else
@@ -96,9 +109,10 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
     canvasTmp.setTextSize(textSize);
     canvasTmp.setCursor(0, h);
     canvasTmp.print(str);
-    display.drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
+    dis->fillRect(0, y - h, 200, h + 3, GxEPD_WHITE);
+    dis->drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
-    display.drawRect(x, y - h, w, h + 3, frColor);
+    dis->drawRect(x, y - h, w, h + 3, frColor);
 #endif
   }
 }
@@ -109,14 +123,14 @@ uint16_t wS;
 uint16_t hS;
 void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t *ha, int16_t cxa, int16_t cya)
 {
-  int16_t cx = display.getCursorX();
-  int16_t cy = display.getCursorY();
-  display.setCursor(10, 100);
+  int16_t cx = dis->getCursorX();
+  int16_t cy = dis->getCursorY();
+  dis->setCursor(10, 100);
   xS = 0;
   yS = 0;
   wS = 0;
   hS = 0;
-  display.getTextBounds(str, cxa, cya, &xS, &yS, &wS, &hS);
+  dis->getTextBounds(str, cxa, cya, &xS, &yS, &wS, &hS);
   if (xa != NULL)
   {
     *xa = xS;
@@ -133,7 +147,7 @@ void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t
   {
     *ha = hS;
   }
-  display.setCursor(cx, cy);
+  dis->setCursor(cx, cy);
 }
 
 // Use the image pack here to make it easier
@@ -141,11 +155,11 @@ void getTextBounds(String &str, int16_t *xa, int16_t *ya, uint16_t *wa, uint16_t
 // writeImageN(100, 100, testSomethiongImgPack);
 void writeImageN(int16_t x, int16_t y, ImageDef *image, uint16_t frColor, uint16_t bgColor)
 {
-  int16_t cx = display.getCursorX();
-  int16_t cy = display.getCursorY();
-  display.setCursor(0, 0);
-  display.drawBitmap(x, y, image->bitmap, image->bw, image->bh, frColor, bgColor);
-  display.setCursor(cx, cy);
+  int16_t cx = dis->getCursorX();
+  int16_t cy = dis->getCursorY();
+  dis->setCursor(0, 0);
+  dis->drawBitmap(x, y, image->bitmap, image->bw, image->bh, frColor, bgColor);
+  dis->setCursor(cx, cy);
 }
 
 sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool invert, int tolerance, int borderWidth, uint16_t frColor, uint16_t bgColor, bool draw, const GFXfont *buttonFont)
@@ -162,13 +176,13 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
   uint16_t th = 0;
   if (str != "")
   {
-    display.setTextWrap(true);
+    dis->setTextWrap(true);
     getTextBounds(str, &tx, &ty, &tw, &th);
     // debugLog("tw: " + String(tw) + " th: " + String(th));
     // debugLog("tx: " + String(tx) + " ty: " + String(ty));
     size.w += tw;
     size.w += 1;
-    if (size.w > display.width() - toleranceSize)
+    if (size.w > dis->width() - toleranceSize)
     {
       // th = th * 2;
       size.h = size.h + toleranceSize;
@@ -220,10 +234,10 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
   {
     int yCursorTmp = 0;
 
-    display.setTextWrap(false);
+    dis->setTextWrap(false);
     uint16_t thTmp = 0;
     getTextBounds(str, NULL, NULL, NULL, &thTmp);
-    display.setTextWrap(true);
+    dis->setTextWrap(true);
     // debugLog("thTmp: " + String(thTmp));
     yCursorTmp = thTmp + tolerance;
     if (containsBelowChar(str) == true)
@@ -257,33 +271,33 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
   }
   canvasTmp.setCursor(canvasCursorXTmp, canvasCursorYTmp);
 
-  int16_t cx = display.getCursorX();
-  int16_t cy = display.getCursorY();
-  display.setCursor(0, 0);
+  int16_t cx = dis->getCursorX();
+  int16_t cy = dis->getCursorY();
+  dis->setCursor(0, 0);
   if (invert == false)
   {
     // debugLog("Drawing non inverted button");
-    display.drawBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, frColor, bgColor); // why inverted?
+    dis->drawBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, frColor, bgColor); // why inverted?
   }
   else
   {
-    display.drawBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, bgColor, frColor);
-    // display.drawInvertedBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, frColor);
+    dis->drawBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, bgColor, frColor);
+    // dis->drawInvertedBitmap(x, y, canvasTmp.getBuffer(), size.w, size.h, frColor);
   }
-  display.setCursor(cx, cy);
+  dis->setCursor(cx, cy);
   return size;
 }
 
 void simpleCenterText(String text)
 {
-  display.fillScreen(GxEPD_WHITE);
-  writeTextCenterReplaceBack(text, display.height() / 2);
+  dis->fillScreen(GxEPD_WHITE);
+  writeTextCenterReplaceBack(text, dis->height() / 2);
   disUp(true);
 }
 
 void textPage(String title, String *strList, int listCount, const GFXfont *customFont)
 {
-  display.fillScreen(GxEPD_WHITE);
+  dis->fillScreen(GxEPD_WHITE);
 
   uint16_t h;
   setFont(&FreeSansBold9pt7b);
@@ -295,10 +309,10 @@ void textPage(String title, String *strList, int listCount, const GFXfont *custo
   }
   writeTextCenterReplaceBack(title, h);
   h = h + 1;
-  display.fillRect(0, h, display.width(), 1, GxEPD_BLACK);
+  dis->fillRect(0, h, dis->width(), 1, GxEPD_BLACK);
   h = h + 3;
 
-  display.setFont(customFont);
+  dis->setFont(customFont);
 
   uint16_t textHeight;
   getTextBounds(strList[0], NULL, NULL, NULL, &textHeight);
@@ -307,8 +321,8 @@ void textPage(String title, String *strList, int listCount, const GFXfont *custo
 
   for (int i = 0; i < listCount; i++)
   {
-    display.setCursor(0, h);
-    display.print(strList[i]);
+    dis->setCursor(0, h);
+    dis->print(strList[i]);
     h = h + textHeight;
     h = h + 3;
   }
@@ -317,15 +331,15 @@ void textPage(String title, String *strList, int listCount, const GFXfont *custo
   /*
   if (h > 200 && listCount > 1)
   {
-    display.fillRect(0, firstHeight, 200, 200, GxEPD_WHITE);
-    display.setTextWrap(true);
-    display.setCursor(0, firstHeight);
+    dis->fillRect(0, firstHeight, 200, 200, GxEPD_WHITE);
+    dis->setTextWrap(true);
+    dis->setCursor(0, firstHeight);
     for (int i = 0; i < listCount; i++)
     {
-      display.print(strList[i]);
+      dis->print(strList[i]);
       if (i != listCount - 1)
       {
-        display.print(", ");
+        dis->print(", ");
       }
     }
   }
@@ -341,16 +355,16 @@ void drawProgressBar(int x, int y, int width, int height, int progress)
 
   int filledWidth = map(progress, 0, 100, 0, width);
 
-  display.fillRect(x, y, width, height, GxEPD_WHITE); // clean
-  display.fillRect(x, y, filledWidth, height, GxEPD_BLACK);
+  dis->fillRect(x, y, width, height, GxEPD_WHITE); // clean
+  dis->fillRect(x, y, filledWidth, height, GxEPD_BLACK);
 
   for (int16_t i = filledWidth; i < width; i += 2)
   {
     for (int16_t j = 0; j < height; j += 2)
     {
       // Draw dots diagonally
-      display.drawPixel(x + i, y + j, GxEPD_BLACK);
-      display.drawPixel(x + i + 1, y + j + 1, GxEPD_BLACK);
+      dis->drawPixel(x + i, y + j, GxEPD_BLACK);
+      dis->drawPixel(x + i + 1, y + j + 1, GxEPD_BLACK);
     }
   }
 }
@@ -362,8 +376,8 @@ sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y)
   setFont(getFont(font));
   setTextSize(1);
   getTextBounds(text, NULL, NULL, &w, &h);
-  display.setCursor(x, y + h);
-  display.print(text);
+  dis->setCursor(x, y + h);
+  dis->print(text);
   dUChange = true;
   return {w, h}; // hm?
 }

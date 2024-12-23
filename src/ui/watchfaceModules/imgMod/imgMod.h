@@ -1,11 +1,10 @@
-#ifndef IMGMOD_H
-#define IMGMOD_H
+#pragma once
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if IMAGE_MODULE
 
-extern wfModule wfImage;
+void wfImagecheckShow(bool *showBool, bool *redrawBool);
+void wfImagerequestShow(buttonState button, bool *showBool);
 
-#endif
 #endif

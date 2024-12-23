@@ -1,13 +1,10 @@
-#ifndef TEMPS_H
-#define TEMPS_H
+#pragma once
 
-#include "defines/defines.h"
+#include "defines.h"
 
 #if TEMP_CHECKS_ENABLED
 
 float getTemp();
-extern float initialTemp;
 void tempChecker();
 
-#endif
 #endif

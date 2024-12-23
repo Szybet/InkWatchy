@@ -1,4 +1,4 @@
-#include "watchface.h"
+#include "watchFaceLogic.h"
 
 int calculatePercentageOfDay(int hour, int minute)
 {

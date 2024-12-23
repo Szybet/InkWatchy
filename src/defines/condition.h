@@ -1,3 +1,5 @@
+#pragma once
+
 #include "defines.h"
 
 /*
@@ -197,7 +199,7 @@ Template for versioning
 
 // Yatchy specific things
 #if ATCHY_VER == YATCHY
-#define LP_CORE 0
+#define LP_CORE 1
 
 #define MENU_PIN 0 // A0
 #define DOWN_PIN 1 // A1
@@ -259,3 +261,4 @@ Template for versioning
 #define VIBRATION_POWER 170  
 #endif
 #endif
+

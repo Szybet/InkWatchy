@@ -1,7 +1,6 @@
 #include "wifiLogic.h"
+#include "rtcMem.h"
 
-RTC_DATA_ATTR long lastSyncUnix = 0;
-RTC_DATA_ATTR long lastTryUnix = 0;
 
 void wifiSyncModules()
 {
@@ -21,27 +20,27 @@ void wifiRegular()
     syncNtp();
     syncTimezone();
     wifiSyncModules();
-    lastSyncUnix = getUnixTime(timeRTCLocal);
+    rM.lastSyncUnix = getUnixTime(timeRTCLocal);
 }
 
 void wifiPersistent()
 {
     debugLog("Launching");
-    while (WiFi.status() == WL_CONNECTED && bat.isCharging == true)
+    while (WiFi.status() == WL_CONNECTED && rM.bat.isCharging == true)
     {
         syncNtp(false);
         int counter = 0;
-        while (counter < SYNC_NTP_ON_CHARGING_DELAY && WiFi.status() == WL_CONNECTED && bat.isCharging == true)
+        while (counter < SYNC_NTP_ON_CHARGING_DELAY && WiFi.status() == WL_CONNECTED && rM.bat.isCharging == true)
         {
             delayTask(1000);
             counter = counter + 1000;
         }
-        lastTryUnix = getUnixTime(timeRTCLocal);
+        rM.lastTryUnix = getUnixTime(timeRTCLocal);
     }
     if (WiFi.status() == WL_CONNECTED)
     {
         syncNtp(false);
-        lastTryUnix = getUnixTime(timeRTCLocal);
+        rM.lastTryUnix = getUnixTime(timeRTCLocal);
     }
 }
 
@@ -50,7 +49,7 @@ void wifiKindOfPersistent()
     debugLog("Launching");
     syncNtp(false); // Because we are connected to usb for some time now so the drift drifted too much in a bad way
     wifiSyncModules();
-    lastSyncUnix = getUnixTime(timeRTCLocal);
+    rM.lastSyncUnix = getUnixTime(timeRTCLocal);
 }
 
 void turnOnWifiRegular()
@@ -73,19 +72,19 @@ void turnOnWifiKindOfPersistent()
 void regularSync()
 {
     // debugLog("Entering regular sync");
-    // debugLog("bat.isCharging:" + BOOL_STR(bat.isCharging));
-    if (SYNC_WIFI == 1 && bat.isCharging == true && isWifiTaskCheck() == false)
+    // debugLog("rM.bat.isCharging:" + BOOL_STR(rM.bat.isCharging));
+    if (SYNC_WIFI == 1 && rM.bat.isCharging == true && isWifiTaskCheck() == false)
     {
-        if (getUnixTime(timeRTCLocal) - lastSyncUnix > SYNC_WIFI_SINCE_SUCC)
+        if (getUnixTime(timeRTCLocal) - rM.lastSyncUnix > SYNC_WIFI_SINCE_SUCC)
         {
             debugLog("Regular sync going on");
             turnOnWifiRegular();
-            lastSyncUnix = getUnixTime(timeRTCLocal);
+            rM.lastSyncUnix = getUnixTime(timeRTCLocal);
         }
-        else if (getUnixTime(timeRTCLocal) - lastTryUnix > SYNC_WIFI_SINCE_FAIL)
+        else if (getUnixTime(timeRTCLocal) - rM.lastTryUnix > SYNC_WIFI_SINCE_FAIL)
         {
             // We dont want persistent without regular first, so we launch a "in between" mode
-            if (getUnixTime(timeRTCLocal) - lastSyncUnix > SYNC_WIFI_SINCE_SUCC)
+            if (getUnixTime(timeRTCLocal) - rM.lastSyncUnix > SYNC_WIFI_SINCE_SUCC)
             {
                 debugLog("Kind of persistent sync going on");
                 turnOnWifiKindOfPersistent();
@@ -95,12 +94,12 @@ void regularSync()
                 debugLog("Persistent sync going on");
                 turnOnWifiPersistent();
             }
-            lastTryUnix = getUnixTime(timeRTCLocal);
+            rM.lastTryUnix = getUnixTime(timeRTCLocal);
         }
     }
     else
     {
-        // debugLog("Not doing regular sync: " + String(getUnixTime(timeRTCLocal) - lastSyncUnix) + " " + BOOL_STR(bat.isCharging));
+        // debugLog("Not doing regular sync: " + String(getUnixTime(timeRTCLocal) - rM.lastSyncUnix) + " " + BOOL_STR(rM.bat.isCharging));
     }
 }
 

@@ -1,19 +1,17 @@
 #include "imgMod.h"
-#include <esp32/rom/crc.h>
+#include "rtcMem.h"
 
 #if IMAGE_MODULE
 
-#if IMG_MODULE_CHANGE_EVERY_HOUR
-RTC_DATA_ATTR int8_t imageCurrentHour = -1;
-#endif
+#include <esp32/rom/crc.h>
 
 void wfImagecheckShow(bool *showBool, bool *redrawBool)
 {
     *showBool = true;
 #if IMG_MODULE_CHANGE_EVERY_HOUR
-    if (timeRTCLocal.Hour != imageCurrentHour)
+    if (timeRTCLocal.Hour != rM.imageCurrentHour)
     {
-        imageCurrentHour = timeRTCLocal.Hour;
+        rM.imageCurrentHour = timeRTCLocal.Hour;
         *redrawBool = true;
     }
     else
@@ -23,14 +21,15 @@ void wfImagecheckShow(bool *showBool, bool *redrawBool)
 #else
     *redrawBool = false;
 #endif
+    debugLog("wfImage redrawBool: " + String(*redrawBool));
 }
 
-RTC_DATA_ATTR uint32_t imageNameCrc32 = 0;
 #define MAX_TRIES 3
 uint8_t tries = 0;
 
 void redrawModuleImage()
 {
+    tries = 0;
     u8_t c = 0;
     {
         File root = LittleFS.open("/img/" + String(IMAGE_MODULE_PATH));
@@ -47,7 +46,7 @@ void redrawModuleImage()
         file.close();
     }
     debugLog("There are so many module images: " + String(c));
-    u8_t finalImageIndex = random(1, c + 1);
+    u8_t finalImageIndex = betterRandom(1, c + 1);
     debugLog("We want the image: " + String(finalImageIndex));
     u8_t cFinal = 0;
     {
@@ -62,7 +61,7 @@ void redrawModuleImage()
                 {
                     uint32_t romCRC = (~crc32_le((uint32_t) ~(0xffffffff), (const uint8_t *)file.name(), strlen(file.name()))) ^ 0xffffffff;
                     debugLog("Got new crc: " + String(romCRC) + " from file: " + String(file.name()));
-                    if (imageNameCrc32 == romCRC && tries < MAX_TRIES)
+                    if (rM.imageNameCrc32 == romCRC && tries < MAX_TRIES)
                     {
                         tries = tries + 1;
                         root.close();
@@ -70,8 +69,9 @@ void redrawModuleImage()
                         redrawModuleImage();
                         return;
                     }
-                    imageNameCrc32 = romCRC;
-                    writeImageN(MODULE_RECT_X, MODULE_RECT_Y, getImg(IMAGE_MODULE_PATH + String(file.name())));
+                    rM.imageNameCrc32 = romCRC;
+                    squareInfo modSq = getWatchModuleSquare();
+                    writeImageN(modSq.cord.x, modSq.cord.y, getImg(IMAGE_MODULE_PATH + String(file.name())));
                     dUChange = true;
                 }
             }
@@ -86,12 +86,5 @@ void wfImagerequestShow(buttonState button, bool *showBool)
 {
     redrawModuleImage();
 }
-
-// Lambda doesn't work here
-RTC_DATA_ATTR wfModule wfImage = {
-    true,
-    wfImagecheckShow,
-    wfImagerequestShow,
-};
 
 #endif

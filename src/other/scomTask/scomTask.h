@@ -1,7 +1,6 @@
-#ifndef SCOM_TASK_H
-#define SCOM_TASK_H
+#pragma once
 
-#include "defines/defines.h"
+#include "defines.h"
 
 #if SCOM_TASK_ENABLED
 extern bool scomChanged;
@@ -13,4 +12,3 @@ void initScomTask();
 void getMainTask();
 #endif
 
-#endif

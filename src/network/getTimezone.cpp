@@ -1,9 +1,10 @@
 #include "getTimezone.h"
+#include "rtcMem.h"
 
 // This should be executed after NTP sync
 void syncTimezone()
 {   
-    // We could here also strlen(posixTimeZone) == 0 but what if we move?
+    // We could here also strlen(rM.posixTimeZone) == 0 but what if we move?
     if (strlen(TIMEZONE_OLSON) == 0 && strlen(TIMEZONE_POSIX) == 0)
     {
         Olson2POSIX timezoneMagic;
@@ -30,8 +31,8 @@ void syncTimezone()
             uint8_t posixLength = posix.length();
             if (posixLength < POSIX_TIMEZONE_MAX_LENGTH)
             {
-                strncpy(posixTimeZone, posix.c_str(), posix.length());
-                posixTimeZone[posix.length() - 1] = '\0';
+                strncpy(rM.posixTimeZone, posix.c_str(), posix.length());
+                rM.posixTimeZone[posix.length() - 1] = '\0';
             }
             else
             {

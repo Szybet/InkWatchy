@@ -1,7 +1,6 @@
-#ifndef BITMOD_H
-#define BITMOD_H
+#pragma once
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if BITCOIN_MODULE
 
@@ -12,15 +11,11 @@ struct bitcoinData {
     float change24;
     float change7d;
     float change30d;
-    long lastSyncUnix;
+    long btcLastSyncUnix;
 };
-extern bitcoinData btcData;
-extern bool isBtcDataAvail;
-extern bool isBtcDataNew;
 
-
-extern wfModule wfBit;
 void bitcoinSync(uint8_t tries);
+void wfBitcheckShow(bool *showBool, bool *redrawBool);
+void wfBitrequestShow(buttonState button, bool *showBool);
 
-#endif
 #endif

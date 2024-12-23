@@ -1,11 +1,10 @@
-#ifndef APIMOD_H
-#define APIMOD_H
+#pragma once
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if API_MODULE
 
-extern wfModule wfApi;
+void wfApicheckShow(bool *showBool, bool *redrawBool);
+void wfApirequestShow(buttonState button, bool *showBool);
 
-#endif
 #endif

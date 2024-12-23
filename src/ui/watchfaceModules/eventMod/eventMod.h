@@ -1,11 +1,10 @@
-#ifndef EVENTMOD_H
-#define EVENTMOD_H
+#pragma once
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if EVENT_MODULE
 
-extern wfModule wfEvent;
+void wfEventcheckShow(bool *showBool, bool *redrawBool);
+void wfEventrequestShow(buttonState button, bool *showBool);
 
-#endif
 #endif

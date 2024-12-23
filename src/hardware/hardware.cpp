@@ -17,6 +17,7 @@ void initHardware()
 
     bootStatus.bareEspCause = esp_sleep_get_wakeup_cause();
     bootStatus.resetReason = esp_reset_reason();
+    debugLog("Sleep wakeup reason: " + wakeupSourceToString(bootStatus.bareEspCause));
     if (bootStatus.bareEspCause == ESP_SLEEP_WAKEUP_EXT0 || bootStatus.bareEspCause == ESP_SLEEP_WAKEUP_TIMER)
     {
         debugLog("Waked up because of RTC");
@@ -31,6 +32,12 @@ void initHardware()
         bootStatus.reason = button;
         manageButtonWakeUp();
     }
+    #if ATCHY_VER == YATCHY
+    else if(bootStatus.bareEspCause == ESP_SLEEP_WAKEUP_ULP) {
+        bootStatus.fromWakeup = true;
+        bootStatus.reason = ulp;
+    }
+    #endif
 
     if (bootStatus.fromWakeup == false)
     {
@@ -56,9 +63,13 @@ void initHardware()
     }
 #endif
 
+#if ATCHY_VER == YATCHY
 #if LP_CORE
     // Always, to be sure
     stopLpCore();
+#else
+    deInitRtcGpio();
+#endif
 #endif
 
     initRTC();
@@ -72,14 +83,9 @@ void initHardware()
     if (bootStatus.fromWakeup == false)
     {
         loadAllStorage();
-        initBattery();
     }
-    else
-    {
-        // This is for RTC wakeup
-        // We could put loop battery inside init battery and pass a bool, but for now this
-        loopBattery();
-    }
+
+    initBattery();
 
     /*
     // Implement in the future?

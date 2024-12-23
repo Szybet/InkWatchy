@@ -36,3 +36,5 @@ trash/
 build/
 
 resources/personal/oldConfigs/*
+
+src/idf_component.yml*

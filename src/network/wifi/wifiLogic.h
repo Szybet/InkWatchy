@@ -1,11 +1,9 @@
-#ifndef WIFI_LOGIC_H
-#define WIFI_LOGIC_H
+#pragma once
 
-#include "defines/defines.h"
+#include "defines.h"
 
 void turnOnWifiRegular();
 void turnOnWifiPersistent();
 int getSignalStrength();
 void regularSync();
 
-#endif

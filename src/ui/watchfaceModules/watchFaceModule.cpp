@@ -1,6 +1,5 @@
 #include "watchFaceModule.h"
-
-RTC_DATA_ATTR uint64_t latestModuleUpdate = 0;
+#include "rtcMem.h"
 
 wfModule wfEmpty = {
     false,
@@ -8,50 +7,11 @@ wfModule wfEmpty = {
     [](buttonState button, bool *showBool) {},
 };
 
-RTC_DATA_ATTR int currentModule = -1;
-// MAKE SURE HERE ARE ALL MODULES INSERTED
-RTC_DATA_ATTR wfModule *wfModulesList[MODULE_COUNT] = {
-#if WIFI_MODULE
-    &wfNet,
-#else
-    &wfEmpty,
-#endif
-#if BITCOIN_MODULE
-    &wfBit,
-#else
-    &wfEmpty,
-#endif
-#if CONWAY_MODULE_ENABLED
-    &wfConway,
-#else
-    &wfEmpty,
-#endif
-#if BOOK_MODULE_ENABLED
-    &wfBook,
-#else
-    &wfEmpty,
-#endif
-#if IMAGE_MODULE
-    &wfImage,
-#else
-    &wfEmpty,
-#endif
-#if API_MODULE
-    &wfApi,
-#else
-    &wfEmpty,
-#endif
-#if EVENT_MODULE
-    &wfEvent,
-#else
-    &wfEmpty,
-#endif
-};
-
 void clearModuleArea()
 {
     debugLog("clearModuleArea: extecuted...");
-    display.fillRect(MODULE_RECT_X, MODULE_RECT_Y, MODULE_W, MODULE_H, GxEPD_WHITE);
+    squareInfo modSq = getWatchModuleSquare();
+    dis->fillRect(modSq.cord.x, modSq.cord.y, modSq.size.w, modSq.size.h, GxEPD_WHITE);
     dUChange = true;
 }
 
@@ -65,24 +25,23 @@ void moveModule(direction where)
 {
     if (where == Right)
     {
-        currentModule = currentModule + 1;
+        rM.currentModule = rM.currentModule + 1;
     }
     else if (where == Left)
     {
-        currentModule = currentModule - 1;
+        rM.currentModule = rM.currentModule - 1;
     }
-    checkMaxMin(&currentModule, MODULE_COUNT - 1);
-    debugLog("currentModule: " + String(currentModule));
+    checkMaxMin(&rM.currentModule, MODULE_COUNT - 1);
+    debugLog("rM.currentModule: " + String(rM.currentModule));
 }
 
+// TODO: move this to watchface manager
 #define MODULE_NUM_POS_X 185
 #define MODULE_NUM_POS_Y 170
 #define MODULE_COUNT_POS_X 185
 #define MODULE_COUNT_POS_Y 181
 #define MC_W 6
 #define MC_H 8
-RTC_DATA_ATTR int previousModuleCount = -1;
-RTC_DATA_ATTR int previousCurrentModule = -1; // The translated one!
 void drawModuleCount(bool force)
 {
     // debugLog("drawModuleCount executed");
@@ -91,7 +50,7 @@ void drawModuleCount(bool force)
     int listIndexer = 0;
     for (int i = 0; i < MODULE_COUNT; i++)
     {
-        if (wfModulesList[i]->show == true)
+        if (rM.wfModulesList[i]->show == true)
         {
             listShows[listIndexer] = i;
             listIndexer = listIndexer + 1;
@@ -101,7 +60,7 @@ void drawModuleCount(bool force)
     int currentModuleTranslated = 0;
     for (int i = 0; i < listIndexer; i++)
     {
-        if (listShows[i] == currentModule)
+        if (listShows[i] == rM.currentModule)
         {
             currentModuleTranslated = i;
             break;
@@ -109,27 +68,27 @@ void drawModuleCount(bool force)
     }
 
     // debugLog("counter: " + String(counter));
-    // debugLog("currentModule: " + String(currentModuleTranslated));
-    if (previousModuleCount != counter || previousCurrentModule != currentModuleTranslated || force == true)
+    // debugLog("rM.currentModule: " + String(currentModuleTranslated));
+    if (rM.previousModuleCount != counter || rM.previousCurrentModule != currentModuleTranslated || force == true)
     {
-        previousModuleCount = counter;
-        previousCurrentModule = currentModuleTranslated;
+        rM.previousModuleCount = counter;
+        rM.previousCurrentModule = currentModuleTranslated;
         setFont(getFont("dogicapixel4"));
         setTextSize(1);
 
         debugLog("Printing the current module");
-        display.fillRect(MODULE_NUM_POS_X, MODULE_NUM_POS_Y - MC_H + 1, MC_W, MC_H + 1, GxEPD_WHITE);
-        display.setCursor(MODULE_NUM_POS_X, MODULE_NUM_POS_Y);
+        dis->fillRect(MODULE_NUM_POS_X, MODULE_NUM_POS_Y - MC_H + 1, MC_W, MC_H + 1, GxEPD_WHITE);
+        dis->setCursor(MODULE_NUM_POS_X, MODULE_NUM_POS_Y);
         if (counter != 0)
         {
             currentModuleTranslated = currentModuleTranslated + 1;
         }
-        display.print(String(currentModuleTranslated));
+        dis->print(String(currentModuleTranslated));
 
         debugLog("Printing the counter");
-        display.fillRect(MODULE_COUNT_POS_X, MODULE_COUNT_POS_Y - MC_H + 1, MC_W, MC_H + 1, GxEPD_WHITE);
-        display.setCursor(MODULE_COUNT_POS_X, MODULE_COUNT_POS_Y);
-        display.print(String(counter));
+        dis->fillRect(MODULE_COUNT_POS_X, MODULE_COUNT_POS_Y - MC_H + 1, MC_W, MC_H + 1, GxEPD_WHITE);
+        dis->setCursor(MODULE_COUNT_POS_X, MODULE_COUNT_POS_Y);
+        dis->print(String(counter));
 
         dUChange = true;
 
@@ -145,12 +104,12 @@ void wfModuleSwitch(direction where)
 #if DEBUG && true == false
     for (int i = 0; i < MODULE_COUNT; i++)
     {
-        debugLog("Dump show values: " + String(i) + " " + BOOL_STR(wfModulesList[i]->show));
+        debugLog("Dump show values: " + String(i) + " " + BOOL_STR(rM.wfModulesList[i]->show));
     }
 #endif
     moveModule(where);
     int counter = 0;
-    while (wfModulesList[currentModule]->show != true && counter < MODULE_COUNT * 2)
+    while (rM.wfModulesList[rM.currentModule]->show != true && counter < MODULE_COUNT * 2)
     {
         moveModule(where);
         counter = counter + 1;
@@ -163,22 +122,22 @@ void wfModuleSwitch(direction where)
     else
     {
         nothingModule();
-        currentModule = -1;
+        rM.currentModule = -1;
     }
 }
 
 // TODO: because of fallback, forcerender is not needed anymore?
 void wfModulesManage(buttonState button, bool forceRender)
 {
-    latestModuleUpdate = getUnixTime(timeRTCLocal);
+    rM.latestModuleUpdate = getUnixTime(timeRTCLocal);
     
-    debugLog("Running wfModulesManage, current module is: " + String(currentModule));
-    if (currentModule != -1 && button != None)
+    debugLog("Running wfModulesManage, current module is: " + String(rM.currentModule));
+    if (rM.currentModule != -1 && button != None)
     {
-        wfModulesList[currentModule]->requestShow(button, &wfModulesList[currentModule]->show);
-        if (wfModulesList[currentModule]->show == false)
+        rM.wfModulesList[rM.currentModule]->requestShow(button, &rM.wfModulesList[rM.currentModule]->show);
+        if (rM.wfModulesList[rM.currentModule]->show == false)
         {
-            currentModule = -1;
+            rM.currentModule = -1;
         }
         else
         {
@@ -192,22 +151,22 @@ void wfModulesManage(buttonState button, bool forceRender)
     {
         bool render = false;
         //debugLog("Checking if show for index: " + String(i));
-        wfModulesList[i]->checkShow(&wfModulesList[i]->show, &render);
+        rM.wfModulesList[i]->checkShow(&rM.wfModulesList[i]->show, &render);
         //debugLog("Render is: " + BOOL_STR(render));
-        if (wfModulesList[i]->show == true)
+        if (rM.wfModulesList[i]->show == true)
         {
             isThereAShow = true;
         }
         // Force management
-        if (forceRender == true && i == currentModule)
+        if (forceRender == true && i == rM.currentModule)
         {
             doIt = true;
         }
-        if ((i == currentModule || currentModule == -1) && render == true)
+        if ((i == rM.currentModule || rM.currentModule == -1) && render == true)
         {
-            if (currentModule == -1)
+            if (rM.currentModule == -1)
             {
-                currentModule = i;
+                rM.currentModule = i;
             }
             doIt = true;
         }
@@ -215,26 +174,26 @@ void wfModulesManage(buttonState button, bool forceRender)
         {
             clearModuleArea();
             debugLog("Launching module show request: " + String(i));
-            wfModulesList[i]->requestShow(button, &wfModulesList[i]->show);
+            rM.wfModulesList[i]->requestShow(button, &rM.wfModulesList[i]->show);
             break;
         }
     }
     // debugLog("Exited for loop in wfModulesManage");
     //  Now a loop for if nothing was found because nothing wants to render but we need to show something and maybe there is something to show
-    if (isThereAShow == true && doIt == false && currentModule == -1)
+    if (isThereAShow == true && doIt == false && rM.currentModule == -1)
     {
         debugLog("Looking for fallback module to show");
         for (int i = 0; i < MODULE_COUNT; i++)
         {
             bool render = false;
-            wfModulesList[i]->checkShow(&wfModulesList[i]->show, &render);
-            if (wfModulesList[i]->show == true)
+            rM.wfModulesList[i]->checkShow(&rM.wfModulesList[i]->show, &render);
+            if (rM.wfModulesList[i]->show == true)
             {
                 debugLog("Found fallback module to show");
-                currentModule = i;
+                rM.currentModule = i;
                 doIt = true;
                 clearModuleArea();
-                wfModulesList[i]->requestShow(button, &wfModulesList[i]->show);
+                rM.wfModulesList[i]->requestShow(button, &rM.wfModulesList[i]->show);
                 break;
             }
         }

@@ -1,4 +1,5 @@
 #include "bookMod.h"
+#include "rtcMem.h"
 
 #if BOOK_MODULE_ENABLED
 #define BOOK_NAME_MODULE_NAME_MAX 25
@@ -16,18 +17,18 @@ void wfBookrequestShow(buttonState button, bool *showBool)
     {
     case Menu:
     {
-        if (watchfacePos == MODULE_ENG_POS && positionEngaged == true)
+        if (isModuleEngaged() == true)
         {
-            if (disableSomeDrawing == false)
+            if (rM.disableSomeDrawing == false)
             {
-                disableSomeDrawing = true;
+                rM.disableSomeDrawing = true;
                 calculateBookTextHeight();
                 startHeightBook = startHeightBook - 3;
                 showPageChecker = true;
             }
             else
             {
-                disableSomeDrawing = false;
+                rM.disableSomeDrawing = false;
                 showFullWatchface();
             }
         }
@@ -54,24 +55,26 @@ void wfBookrequestShow(buttonState button, bool *showBool)
     }
 
     String curBook = getCurrentBook();
-    if (disableSomeDrawing == false)
+    squareInfo modSq = getWatchModuleSquare();
+    squareInfo someSq = getSomeDrawingSquare();
+    if (rM.disableSomeDrawing == false)
     {
         if (curBook == "")
         {
             debugLog("Entered no book selected");
-            drawTextSimple("No book selected", "UbuntuMono-Regular10", MODULE_RECT_X, MODULE_RECT_Y);
+            drawTextSimple("No book selected", "UbuntuMono-Regular10", modSq.cord.x, modSq.cord.y);
         }
         else
         {
             debugLog("Entered book selected");
-            sizeInfo s = drawTextSimple("Selected book:", "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y);
+            sizeInfo s = drawTextSimple("Selected book:", "dogicapixel4", modSq.cord.x, modSq.cord.y);
             // Max BOOK_NAME_MODULE_NAME_MAX
             String curBookTmp = curBook;
             if(curBookTmp.length() > BOOK_NAME_MODULE_NAME_MAX) {
                 curBookTmp = curBookTmp.substring(0, BOOK_NAME_MODULE_NAME_MAX);
             }
-            sizeInfo ss = drawTextSimple(curBookTmp, "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y + s.h + 2);
-            drawTextSimple(bookGetPages(BOOK_MODULE_CHARS_PER_PAGE), "dogicapixel4", MODULE_RECT_X, MODULE_RECT_Y + s.h + ss.h + 4);
+            sizeInfo ss = drawTextSimple(curBookTmp, "dogicapixel4", modSq.cord.x, modSq.cord.y + s.h + 2);
+            drawTextSimple(bookGetPages(BOOK_MODULE_CHARS_PER_PAGE), "dogicapixel4", modSq.cord.x, modSq.cord.y + s.h + ss.h + 4);
         }
     }
     else
@@ -84,9 +87,9 @@ void wfBookrequestShow(buttonState button, bool *showBool)
             cleanSomeDrawing();
             setFont(BOOK_FONT);
             setTextSize(1);
-            display.setCursor(1, startHeightBook + SOME_RECT_Y);
-            display.setTextWrap(true);
-            display.print(text);
+            dis->setCursor(1, startHeightBook + someSq.cord.y);
+            dis->setTextWrap(true);
+            dis->print(text);
         }
         else
         {
@@ -96,11 +99,5 @@ void wfBookrequestShow(buttonState button, bool *showBool)
 
     dUChange = true;
 }
-
-RTC_DATA_ATTR wfModule wfBook = {
-    true,
-    wfBookcheckShow,
-    wfBookrequestShow,
-};
 
 #endif

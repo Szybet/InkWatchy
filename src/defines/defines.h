@@ -1,5 +1,4 @@
-#ifndef DEFINES_H
-#define DEFINES_H
+#pragma once
 
 #define PARTIAL_UPDATE true
 #define FULL_UPDATE false
@@ -13,18 +12,9 @@
 #define EXTERNAL_RTC 1
 #define INTERNAL_RTC 2
 
-typedef struct {
-    const char* ssid;
-    const char* password;
-} WiFiCred;
-
-#define STATIC_WIFI_CRED static const WiFiCred
-
 // It's before the libraries to be able to affect them (until it doesn't work)
 #include "config.h" // Needs to be first!
 #include "condition.h"
-
-#define ARDUINOJSON_ENABLE_PROGMEM 0
 
 #include <Arduino.h>
 #include <Adafruit_GFX.h>
@@ -44,10 +34,15 @@ typedef struct {
 #include <nvs_flash.h> 
 #include "driver/rtc_io.h"
 #include <Olson2POSIX.h>
+#define ARDUINOJSON_ENABLE_PROGMEM 0 // Needed
 #include <ArduinoJson.h>
 
+// Order important
+#include "macros.h"
+#include "definesVars.h"
 #include "confidential.h"
 
+// Needs to be after confidential.h and definesVars.h
 static const WiFiCred* wifiCredStatic[] = {
     &wifi_credential1,
     &wifi_credential2,
@@ -62,135 +57,108 @@ static const WiFiCred* wifiCredStatic[] = {
 };
 #define SIZE_WIFI_CRED_STAT sizeof(wifiCredStatic) / sizeof(wifiCredStatic[0])
 
-#include "macros.h"
-
 #if WEATHER_INFO
 #include <OpenMeteo.h>
 #endif
-
-struct ImageDef {
-    int16_t bw;
-    int16_t bh;
-    uint8_t *bitmap;
-};
-
-extern ImageDef emptyImgPack;
-
-// It's converted to int by api mod
-typedef enum 
-{
-    Unknown = 0, // For the task to look for answers, used on the yatchy
-    None = 1,
-    Back = 2,
-    Menu = 3,
-    Up = 4,
-    Down = 5,
-    LongBack = 6,
-    LongMenu = 7,
-    LongUp = 8,
-    LongDown = 9,
-} buttonState; // This needs to be here because watchface modules use it too and idk why it doesn't work if its in buttons.h :( send help
-
-typedef enum {
-    WifiOff,
-    WifiOn,
-    WifiConnected,
-} wifiStatusSimple; // This too
-
-struct wfModule {
-    bool show;
-    void (*checkShow)(bool* showBool, bool* redrawBool);
-    void (*requestShow)(buttonState button, bool* showBool);
-}; // Madness -,-
-
-struct bufSize {
-    uint8_t *buf;
-    int size;
-};
-
-extern bufSize emptyBuff;
-
-#if DEBUG
-#include "../other/debugMain/debugMain.h"
+#if LP_CORE
+#include "esp_sleep.h"
+#include "ulp_lp_core.h"
+#include <bootloader_common.h>
+#include <ulp_lp_core_memory_shared.h>
 #endif
+
+#include "../functions.h"
+
+// Hardware
 #include "../hardware/hardware.h"
-#include "../hardware/battery.h"
-#include "../hardware/RTC.h"
-#include "../hardware/sleep.h"
-#include "../hardware/buttons.h"
-#include "../hardware/display.h"
-#include "../hardware/axc.h"
+#include "../hardware/battery/battery.h"
+#include "../hardware/rtc/rtc.h"
+#include "../hardware/sleep/sleep.h"
+#include "../hardware/input/buttons.h"
+#include "../hardware/input/combinations.h"
+#include "../hardware/display/display.h"
+#include "../hardware/acc/acc.h"
 #include "../hardware/fs/littlefs.h"
 #if ATCHY_VER == YATCHY
-#include "../hardware/i2c.h"
+#include "../hardware/i2c/i2c.h"
 #endif
 #if TEMP_CHECKS_ENABLED
 #include "../hardware/temp/temp.h"
 #endif
 #include "../hardware/motor/motor.h"
 #include "../hardware/rgb/rgb.h"
+#if ATCHY_VER == YATCHY
+#include "../hardware/mcp23018/mcp23018.h"
+#include "../hardware/lpCore/rtcPins.h"
+#endif
 #if LP_CORE
 #include "../hardware/lpCore/lpCore.h" // Always include it as there are some variables we want outside
 #include "../hardware/lpCore/export/lp_logs.h"
 #include "../hardware/lpCore/export/lp_rust.h" // Maybe don't call those functions from there
-#include "esp_sleep.h"
-#include "ulp_lp_core.h"
-#include <bootloader_common.h>
-#include <ulp_lp_core_memory_shared.h>
 #endif
-#include "../functions.h"
+
+// Network
 #include "../network/wifi/wifiLogic.h"
 #include "../network/wifi/wifiTask.h"
 #include "../network/wifi/wifiQuick.h"
 #include "../network/ntp.h"
 #include "../network/getTimezone.h"
+
+// Weather
 #if WEATHER_INFO
 #include "../network/weather.h"
+#include "../ui/places/weather/weatherSwitches.h"
 #endif
+
+// Ui
 #include "../ui/functionsUi.h"
-#include "../ui/debug.h"
-#include "../ui/batteryDebug.h"
-#include "../ui/wifiDebug.h"
-#include "../ui/generalDebug.h"
-#include "../ui/menu.h"
-#include "../ui/chart.h"
-#include "../ui/manager.h"
-#include "../ui/watchface/watchface.h"
+#include "../ui/reUse/menu/menu.h"
+#include "../ui/reUse/chart/chart.h"
+#include "../ui/manager/manager.h"
+#include "../ui/watchface/watchFaceLogic.h"
+#include "../ui/watchface/watchfaceManagers/wManageOne.h"
+#include "../ui/watchface/watchfaceManagers/wManageAll.h"
+#include "../ui/watchface/watchfaceManagers/wFunctions.h"
+// Places
+#include "../ui/places/wifiDebug/wifiDebug.h"
+#if DEBUG_MENUS
+#include "../ui/places/batteryDebug/batteryDebug.h"
+#include "../ui/places/hardwareDebug/hardwareDebug.h"
+#include "../ui/places/clockDebug/clockDebug.h"
+#include "../ui/places/gitDebug/gitDebug.h"
+#endif
+#include "../ui/places/watchfaceSelector/watchfaceSel.h"
 #if BOOK
-#include "../ui/book/bookUi.h"
-#include "../ui/book/bookSelector.h"
+#include "../ui/places/book/bookUi.h"
+#include "../ui/places/book/bookSelector.h"
 #endif
 #if CALENDAR
-#include "../ui/calendar/calendar.h"
+#include "../ui/places/calendar/calendar.h"
 #endif
 #if VAULT
-#include "../ui/vault/vaultUi.h"
+#include "../ui/places/vault/vaultUi.h"
 #endif
 #if PONG
-#include "../ui/pong/pong.h"
+#include "../ui/places/pong/pong.h"
 #endif
-#if WIFI_TOOL
-#include "../other/wifiTool/wifiTool.h"
-#endif
-#include "../other/watchdogTask/watchdogTask.h"
-#if SCOM_TASK_ENABLED
-#include "../other/scomTask/scomTask.h"
+#if CREDITS
+#include "../ui/places/credits/credits.h"
 #endif
 #if APPLE_JOKE
 #include "../ui/appleJoke/appleJoke.h"
 #include "../ui/appleJoke/appleSour.h"
 #endif
+#if RGB_DIODE
+#include "../ui/places/party/party.h"
+#endif
 #if FONT_MENU_ENABLED
-#include "../other/fontPreview/fontPreview.h"
+#include "../ui/places/fontPreview/fontPreview.h"
 #endif
 #if CONWAY
-#include "../other/conway/conway.h"
+#include "../ui/places/conway/conway.h"
 #endif
-#if ATCHY_VER == YATCHY
-#include "../other/mcp23018/mcp23018.h"
-#endif
-#include "../ui/pinInput/pinInput.h"
-#include "../ui/settings/nvsSettings.h"
+#include "../ui/reUse/pinInput/pinInput.h"
+#include "../ui/places/settings/powerSettings.h"
 #include "../ui/watchfaceModules/netMod/netMod.h"
 #include "../ui/watchfaceModules/watchFaceModule.h"
 #if BITCOIN_MODULE
@@ -211,5 +179,25 @@ extern bufSize emptyBuff;
 #if EVENT_MODULE
 #include "../ui/watchfaceModules/eventMod/eventMod.h"
 #endif
+#if WATCHFACE_INKFIELD_SZYBET
+#include "../ui/watchface/watchfaces/inkField_Szybet/inkField.h"
+#endif
+#if WATCHFACE_SHADES_SZYBET
+#include "../ui/watchface/watchfaces/shades_Szybet/shades.h"
+#endif
+#if WATCHFACE_ANALOG_SHARP_SZYBET
+#include "../ui/watchface/watchfaces/analogSharp_Szybet/analogSharp.h"
+#endif
 
+// Other
+#if DEBUG
+#include "../other/debug/debugMain.h"
+#include "../other/debug/debug.h"
+#endif
+#if WIFI_TOOL
+#include "../other/wifiTool/wifiTool.h"
+#endif
+#include "../other/watchdogTask/watchdogTask.h"
+#if SCOM_TASK_ENABLED
+#include "../other/scomTask/scomTask.h"
 #endif

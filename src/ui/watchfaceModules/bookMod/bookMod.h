@@ -1,12 +1,10 @@
-#ifndef BOOKMOD_H
-#define BOOKMOD_H
+#pragma once
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if BOOK_MODULE_ENABLED
 
-extern wfModule wfBook;
-void bitcoinSync();
+void wfBookcheckShow(bool *showBool, bool *redrawBool);
+void wfBookrequestShow(buttonState button, bool *showBool);
 
-#endif
 #endif

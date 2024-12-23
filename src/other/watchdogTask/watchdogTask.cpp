@@ -1,8 +1,5 @@
 #include "watchdogTask.h"
-
-RTC_DATA_ATTR bool everythingIsFine = true;
-std::mutex watchdogFine;
-TaskHandle_t watchdogTask = NULL;
+#include "rtcMem.h"
 
 bool allButtonCheck()
 {
@@ -14,10 +11,16 @@ bool allButtonCheck()
 }
 
 #if WATCHDOG_TASK
+
+std::mutex watchdogFine;
+TaskHandle_t watchdogTask = NULL;
+
+#define WATCHDOG_DELAY 15000
+
 void loopWatchdogTask(void *parameter)
 {
     debugLog("Watchdog starting, slowly");
-    delayTask(30000);
+    delayTask(WATCHDOG_DELAY);
     debugLog("Watchdog finally started!");
     while (true)
     {
@@ -28,19 +31,19 @@ void loopWatchdogTask(void *parameter)
             assert(true == false);
         }
         watchdogFine.lock();
-        if (everythingIsFine == false)
+        if (rM.everythingIsFine == false)
         {
-            debugLog("everythingIsFine is false, resetting...");
+            debugLog("rM.everythingIsFine is false, resetting...");
             assert(true == false);
         }
         else
         {
-            everythingIsFine = false;
+            rM.everythingIsFine = false;
             watchdogFine.unlock();
-            delayTask(30000);
+            delayTask(WATCHDOG_DELAY);
         }
         // It's at the end to run the button check at the start (of the watch)
-        delayTask(30000);
+        delayTask(WATCHDOG_DELAY);
     }
 }
 
@@ -70,7 +73,7 @@ void watchdogPing()
 {
     // debugLog("watchdogPing called");
     watchdogFine.lock();
-    everythingIsFine = true;
+    rM.everythingIsFine = true;
     watchdogFine.unlock();
 }
 
