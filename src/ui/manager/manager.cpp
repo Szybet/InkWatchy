@@ -39,8 +39,8 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
     }
     else
     {
-        debugLog("rM.currentPlace: " + String(rM.currentPlace));
-        debugLog("place: " + String(place));
+        // debugLog("rM.currentPlace: " + String(rM.currentPlace));
+        // debugLog("place: " + String(place));
         rM.currentPlace = place;
         if (wasBacked == false)
         {
