@@ -257,12 +257,13 @@ void fsListDir(String dirname, uint8_t levels)
     if (file.isDirectory() == true)
     {
       theLog = "Dir: ";
+      theLog = theLog + String(file.name());
     }
     else
     {
       theLog = "File: ";
+      theLog = theLog + String(file.name()) + " Size: " + String(file.size());
     }
-    theLog = theLog + String(file.name()) + " Size: " + String(file.size());
     time_t t = file.getLastWrite();
     struct tm *tmstruct = localtime(&t);
     /*

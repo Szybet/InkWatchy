@@ -1,4 +1,5 @@
 #include "hardware.h"
+#include "rtcMem.h"
 
 int64_t sleepDelayMs;
 #define FIRST_BOOT_FILE "first_boot"
@@ -42,6 +43,7 @@ void initHardware()
     if (bootStatus.fromWakeup == false)
     {
         debugLog("Watchy is starting!");
+        debugLog("RTC memory used: " + String(sizeof(rtcMem)) + " bytes");
         firstWakeUpManage();
     }
     else
