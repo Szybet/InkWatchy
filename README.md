@@ -91,6 +91,7 @@ or via matrix: @szybet:matrix.org
 ## [Outdated demo of version 0.1](https://www.youtube.com/watch?v=gFOCqalJidQ)
 
 ## Some credits
+- [Can in a hoodie](https://www.youtube.com/@cat_in_a_hoodie_27) - Many awesome graphics, the logo
 - [GuruSR](https://github.com/GuruSR/Watchy_GSR) - I used some of his awesome libraries and looked at the code for how the watchy hardware should be handled. Also answered a few questions on discord. Thanks!
 - [Prokuon](https://github.com/Prokuon/watchy-starfield/) - I really liked the design of this watchface and almost coppied it. Thanks! - well the code is completly diffrent
 - [Jason2866](https://github.com/Jason2866) - Help with solving platformio hackery
