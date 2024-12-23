@@ -7,7 +7,6 @@
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
 
 // Basics
-#define GSR_MINIMUM_BATTERY_VOLTAGE 0 // Watchy_GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you want some more restrictive battery measurments
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
 #define VIBRATION_BUTTON_TIME_OVERWRITE 0 // This needs to be to 1 if you want the values below to be listened to. Otherwise it's device dependent in condition.h
@@ -141,6 +140,9 @@
 // Pong
 #define PONG 1
 
+// Credits page
+#define CREDITS 1 // Feel free to disable it for your own usage :D
+
 // Advanced
 #define BUTTON_TASK_DELAY 60 // In ms, lower means faster button detection but more cpu usage
 #define TIME_FOR_WATCHFACE_TO_SHOW_MS 2000
@@ -230,9 +232,8 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define BATTERY_CRIT_VOLTAGE 3.15
 #define BATTERY_CHARGE_VOLTAGE 4.14
 #define BATTERY_MAX_VOLTAGE 4.18 // For calculating percentages, upper limit
-#define BAD_BATTERY 0            // This true makes it use the values below, for when your battery doesn't hold the upper voltages anymore
-#define BAD_BATTERY_MAX_VOLTAGE 4.00
-#define BAD_BATTERY_CHARGE_VOLTAGE 4.05
+// #define BAD_BATTERY_MAX_VOLTAGE 4.00
+// #define BAD_BATTERY_CHARGE_VOLTAGE 4.05
 #define BATTERY_CHARGE_DETECTION_DIFFERENCE 0.10 // The minimum difference to detect that the battery is charging
 
 // Other

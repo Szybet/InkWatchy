@@ -29,6 +29,7 @@ typedef enum
     calendarDateMenu,
     calendarEventMenu,
     pong,
+    credits,
     conwayApp,
     partyApp,
     fontPreview,
@@ -93,6 +94,9 @@ void switchBack();
 void switchApple();
 void switchApple2();
 void switchPong();
+#if CREDITS
+void switchCredits();
+#endif
 #if CONWAY
 void switchConway();
 #endif

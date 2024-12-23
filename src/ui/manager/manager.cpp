@@ -272,6 +272,13 @@ void loopManager()
 #endif
         break;
     }
+    case credits:
+    {
+#if CREDITS
+        managerLaunchFunc(credits, initCredits, loopCredits);
+#endif
+        break;
+    }
     case conwayApp:
     {
 #if CONWAY

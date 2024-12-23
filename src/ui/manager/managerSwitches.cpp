@@ -92,6 +92,12 @@ void switchPong()
     generalSwitch(pong);
 }
 
+#if CREDITS
+void switchCredits() {
+    generalSwitch(credits);
+}
+#endif
+
 #if CONWAY
 void switchConway()
 {
