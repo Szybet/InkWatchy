@@ -84,6 +84,13 @@ void initMainMenu()
         buttons[count] = {"Conway", getImg("conway"), switchConway};
     }
 #endif
+#if CREDITS
+    {
+        debugLog("Adding Credits");
+        count = count + 1;
+        buttons[count] = {"Credits", getImg("credits/qr"), switchCredits};
+    }
+#endif
 #if RGB_DIODE
     {
         debugLog("Adding party");
