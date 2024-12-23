@@ -50,6 +50,7 @@ bool wasClicked(uint8_t pin)
 
 void executeCombination()
 {
+    resetSleepDelay(); // Faster so it won't escape...
     if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true && rM.currentPlace != wifiDebug)
     {
         debugLog("Executed switch wifi combination");

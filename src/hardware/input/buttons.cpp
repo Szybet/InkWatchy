@@ -115,6 +115,9 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
         elapsedtime = millisBetter() - startime;
         loopCombinations();
     }
+    while(anyButtonCheck() == true) {
+        delayTask(SMALL_BUTTON_DELAY_MS);
+    }
     if (endCombinations(buttonPin) == true)
     {
         vibrateMotor(VIBRATION_BUTTON_LONG_TIME);

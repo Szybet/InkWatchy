@@ -10,6 +10,15 @@ bool allButtonCheck()
     return false;
 }
 
+bool anyButtonCheck()
+{
+    if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
+    {
+        return true;
+    }
+    return false;
+}
+
 #if WATCHDOG_TASK
 
 std::mutex watchdogFine;
