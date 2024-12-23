@@ -1,26 +1,24 @@
 #include "eventMod.h"
+#include "rtcMem.h"
 
 #if EVENT_MODULE
 
 #define DATE_BYTES 11 // unix is 10 bytes + \n
 #define LINE_LIMIT 28
 
-RTC_DATA_ATTR int64_t currentEventTime = 0;
-RTC_DATA_ATTR int8_t currentDay = -1;
-
 // Makes redrawing turned off for the current day
 void wfEventresetValues() {
-    currentEventTime = 0;
-    currentDay = day(getUnixTime(timeRTCLocal));
+    rM.currentEventTime = 0;
+    rM.currentDay = day(getUnixTime(timeRTCLocal));
 }
 
 void wfEventcheckShow(bool *showBool, bool *redrawBool)
 {
     *showBool = true;
-    if(currentDay == day(getUnixTime(timeRTCLocal))) {
+    if(rM.currentDay == day(getUnixTime(timeRTCLocal))) {
         return;
     } else {
-        if(currentEventTime < getUnixTime(timeRTCLocal)) {
+        if(rM.currentEventTime < getUnixTime(timeRTCLocal)) {
             *redrawBool = true;
         }
     }
@@ -31,17 +29,18 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     dUChange = true;
     setFont(getFont("dogicapixel4"));
     setTextSize(1);
-    display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + 10);
+    squareInfo modSq = getWatchModuleSquare();
+    dis->setCursor(modSq.cord.x, modSq.cord.y + 10);
     if (fsFileExists("/calendar/index.txt") == false)
     {
-        display.print("No calendar data");
+        dis->print("No calendar data");
         wfEventresetValues();
         return;
     }
     String buf = fsGetString("index.txt", "", "/calendar/");
     if (buf.length() <= 0)
     {
-        display.print("Failed to read index");
+        dis->print("Failed to read index");
         wfEventresetValues();
         return;
     }
@@ -69,7 +68,7 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     debugLog("Current time: " + String(currentTime));
     if (day(theUnix) != day(currentTime) || month(theUnix) != month(currentTime))
     {
-        display.print("No events today");
+        dis->print("No events today");
         wfEventresetValues();
         return;
     }
@@ -77,7 +76,7 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     JsonArray array = doc.as<JsonArray>();
     int arraySize = array.size();
     if(array == 0) {
-        display.print("Invalid json?");
+        dis->print("Invalid json?");
         wfEventresetValues();
         return;
     }
@@ -97,7 +96,7 @@ void wfEventrequestShow(buttonState button, bool *showBool)
         }
     }
     if(finalI == -1) {
-        display.print("No more events");
+        dis->print("No more events");
         wfEventresetValues();
         return;
     }
@@ -108,37 +107,30 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     debugLog("btnStr: " + btnStr);
 
     if(btnStr.length() <= LINE_LIMIT) {
-        display.print(btnStr);
+        dis->print(btnStr);
     } else {
         String btnStr1 = btnStr.substring(0, LINE_LIMIT);
         //String btnStr2 = btnStr.substring(LINE_LIMIT, btnStr.length());
         //String btnStr2 = btnStr2.substring(0, LINE_LIMIT);
         // Not tested yet
         String btnStr2 = btnStr.substring(LINE_LIMIT, LINE_LIMIT + LINE_LIMIT);
-        display.print(btnStr1);
-        display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + 10 + 10);
-        display.print(btnStr2);
+        dis->print(btnStr1);
+        dis->setCursor(modSq.cord.x, modSq.cord.y + 10 + 10);
+        dis->print(btnStr2);
     }
 
     String details = array[finalI]["description"].as<String>();
     details.replace(CALENDAR_SPLIT_DESCRIPTION_STRING, ", ");
     details = details.substring(0, LINE_LIMIT);
-    display.setCursor(MODULE_RECT_X, MODULE_RECT_Y + MODULE_H - 1);
-    display.print(details);
+    dis->setCursor(modSq.cord.x, modSq.cord.y + modSq.size.h - 1);
+    dis->print(details);
 
     // Set the next redraw, kind of
-    currentEventTime = eventUnix;
-    currentDay = -1;
+    rM.currentEventTime = eventUnix;
+    rM.currentDay = -1;
 
     // No.
     //drawButton(MODULE_RECT_X + img->bw + 2, MODULE_RECT_Y + 10, btnStr, &emptyImgPack, false, 2, 0, GxEPD_BLACK, GxEPD_WHITE, true, getFont("dogicapixel4"));
 }
-
-// Lambda doesn't work here
-RTC_DATA_ATTR wfModule wfEvent = {
-    true,
-    wfEventcheckShow,
-    wfEventrequestShow,
-};
 
 #endif

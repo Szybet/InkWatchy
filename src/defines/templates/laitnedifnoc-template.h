@@ -1,5 +1,4 @@
-#ifndef CONFIDETNIAL_H
-#define CONFIDETNIAL_H
+#pragma once
 
 // The priority (order) here matters a bit
 STATIC_WIFI_CRED wifi_credential1 = {.ssid = "", .password = ""};
@@ -37,4 +36,3 @@ STATIC_WIFI_CRED wifi_credential10 = {.ssid = "hotspot", .password = "12345678"}
 // Link to your ICS file to download it
 #define CALENDAR_URL "" // https://MyIcsFileSomewhere.toDownload
 
-#endif

@@ -1,7 +1,6 @@
-#ifndef HARDWARE_H
-#define HARDWARE_H
+#pragma once
 
-#include "defines/defines.h"
+#include "defines.h"
 
 extern int64_t sleepDelayMs;
 
@@ -10,6 +9,7 @@ typedef enum
     unknown = 0,
     rtc = 1,
     button = 2,
+    ulp = 3,
 } wakeUpReason;
 
 struct wakeUpInfo {
@@ -49,4 +49,3 @@ String wakeupSourceToString(esp_sleep_source_t source);
 int64_t millisBetter();
 void firstWakeUpManage();
 
-#endif

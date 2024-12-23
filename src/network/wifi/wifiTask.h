@@ -1,7 +1,6 @@
-#ifndef WIFI_TASK_H
-#define WIFI_TASK_H
+#pragma once
 
-#include "defines/defines.h"
+#include "defines.h"
 
 extern TaskHandle_t wifiTask;
 extern std::mutex wifiTaskMutex;
@@ -12,9 +11,6 @@ void turnOffWifiMinimal();
 void turnOffWifi();
 
 bool isWifiTaskCheck();
-#if DEBUG || DEBUG_MENUS == 1
 String wifiStatus();
-#endif
 wifiStatusSimple wifiStatusWrap();
 
-#endif

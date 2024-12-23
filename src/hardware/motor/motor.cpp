@@ -1,4 +1,5 @@
 #include "motor.h"
+#include "rtcMem.h"
 
 TaskHandle_t motorTask = NULL;
 std::mutex motorMutex;
@@ -6,7 +7,7 @@ bool motorTaskRunning = false;
 int vibrateTime;
 
 void initMotor() {
-    if(bootStatus.reason != rtc) {
+    if(bootStatus.reason != rtc && bootStatus.reason != ulp) {
         pinMode(VIB_MOTOR_PIN, OUTPUT);
         digitalWrite(VIB_MOTOR_PIN, false); // To reset the motor button if esp crashed when it was vibrating
     }
@@ -34,7 +35,7 @@ void vibrateMotorTaskFun(void *parameter)
 
 void vibrateMotor(int vTime)
 {
-    if (disableAllVibration == true)
+    if (rM.disableAllVibration == true)
     {
         debugLog("Vibrations are disabled");
         if (motorTaskRunning == true)

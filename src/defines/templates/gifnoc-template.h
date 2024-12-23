@@ -1,8 +1,12 @@
-#ifndef CONFIG_H
-#define CONFIG_H
+#pragma once
+
+// Watchfaces!
+// Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
+#define WATCHFACE_INKFIELD_SZYBET 1
+#define WATCHFACE_SHADES_SZYBET 1
+#define WATCHFACE_ANALOG_SHARP_SZYBET 1
 
 // Basics
-#define GSR_MINIMUM_BATTERY_VOLTAGE 0 // Watchy_GSR uses higher, RTC something something based minimum voltage levels. Change this to 1 if you want some more restrictive battery measurments
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
 #define VIBRATION_BUTTON_TIME_OVERWRITE 0 // This needs to be to 1 if you want the values below to be listened to. Otherwise it's device dependent in condition.h
@@ -11,6 +15,7 @@
 #define VIBRATION_BUTTON_LONG_TIME 60 // This is just an addition to VIBRATION_BUTTON_TIME
 #define VIBRATION_ACTION_TIME 200     // Time in ms to the motor to vibrate when the UI receives an action
 #define VIBRATION_POWER 170           // From 1 to 255, PWM duty cycle. Too low and it can not even vibrate a little
+#define STEPS_GOAL 7000
 
 // Timezone! So:
 // - You don't set anything, it will try to ques based on IP, it can fail sometimes
@@ -23,6 +28,7 @@
 // Here is an example table:
 // https://support.cyberdata.net/portal/en/kb/articles/010d63c0cfce3676151e1f2d5442e311
 // Better one probably: https://github.com/yuan910715/Esp8266_Wifi_Matrix_Clock/blob/master/posix.md
+// Better one probably: https://github.com/yuan910715/Esp8266_Wifi_Matrix_Clock/blob/master/posix.md
 // From the Posix timezone string table column
 // This function overwrites the TIMEZONE_OLSON variable if it's set
 #define TIMEZONE_POSIX "" // Example value for poland: "CET-1CEST,M3.5.0,M10.5.0/3"
@@ -31,7 +37,7 @@
 #define BUTTON_LONG_PRESS_MS 500     // Duration until long press registers in miliseconds
 #define FULL_DISPLAY_UPDATE_QUEUE 60 // Make a full display update after x of partial ones
 #define LONG_BACK_FULL_REFRESH 1     // Make a full refresh at long back button clicked
-#define WATCHDOG_TASK 0              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
+#define WATCHDOG_TASK 1              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
 
 // Drift & NTP & Syncing
 #define SYNC_WIFI 0                        // Autimatically sync wifi - only if it's being charger and after the delay below
@@ -49,10 +55,22 @@
 #define FORCE_INTERNAL_RTC 0               // If your device has an external RTC but it sucks, set this to 1
 #define FORCED_INTERNAL_RTC_QUARTZ 0       // If you forced the internal RTC and if you have an external quartz crystal, set this to 1
 #define AVOID_SLEEPING_ON_FULL_MINUTE 4    // This value shouldn't be really touched, it checks if in x seconds a full minute passess, if yes, it waits to x / 2 seconds
-#define WEATHER_INFO 1                     // Enable weather
-#define WEATHER_TRIES 3                    // Ammount of times to try to sync weather
 #define CONNECT_TO_HIDDEN_NETWORKS 0       // This makes the wifi manager connect to hidden networks too. For some reason it takes more time and power to do so, that's why it's not on default, otherwise it should work
 #define NTP_SERVER_URL "ntp.ubuntu.com" // Change it to something else if it doesn't work as a first step to troubleshoot. pool.ntp.org has a rate limiter apparently
+
+// Weather
+#define WEATHER_INFO 1                     // Enable weather
+#define WEATHER_TRIES 3                    // Ammount of times to try to sync weather
+#define WEATHER_WATCHFACE_HOUR_OFFSET 1
+#define PRESSURE_HPA_MAX 1100 // 1013 is 50%
+#define PRESSURE_HPA_MIN 850
+#define VISIBILITY_M_MAX 150
+#define VISIBILITY_M_MIN 0
+#define WIND_SPEED_MAX 30 // Km/h
+#define WIND_SPEED_MIN 0
+// Moon
+#define MOON_MIN_RADIUS 57.0
+#define MOON_MAX_RADIUS 63.6
 
 // Book things
 #define BOOK 0
@@ -69,7 +87,7 @@
 #define BOOK_CHARS_PER_PAGE 200 // This is dependent on the font. It must be Mono
 #define BOOK_FONT getFont("UbuntuMono-Regular10")
 
-// Conway
+// Conway, It will drain your battery a lot
 #define CONWAY 1
 #define CONWAY_CPU_SPEED 0    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
 #define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
@@ -122,6 +140,9 @@
 
 // Pong
 #define PONG 1
+
+// Credits page
+#define CREDITS 1 // Feel free to disable it for your own usage :D
 
 // Advanced
 #define BUTTON_TASK_DELAY 60 // In ms, lower means faster button detection but more cpu usage
@@ -212,9 +233,8 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define BATTERY_CRIT_VOLTAGE 3.15
 #define BATTERY_CHARGE_VOLTAGE 4.14
 #define BATTERY_MAX_VOLTAGE 4.18 // For calculating percentages, upper limit
-#define BAD_BATTERY 0            // This true makes it use the values below, for when your battery doesn't hold the upper voltages anymore
-#define BAD_BATTERY_MAX_VOLTAGE 4.00
-#define BAD_BATTERY_CHARGE_VOLTAGE 4.05
+// #define BAD_BATTERY_MAX_VOLTAGE 4.00
+// #define BAD_BATTERY_CHARGE_VOLTAGE 4.05
 #define BATTERY_CHARGE_DETECTION_DIFFERENCE 0.10 // The minimum difference to detect that the battery is charging
 
 // Other
@@ -253,10 +273,13 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define CONF_BITCOIN "bitcoin"
 #define CONF_DRIFT "drift"
 #define CONF_DRIFT_FAST "drift_fast"
+#define CONF_UNIX_LAST_SYNC "last_sync_unix"
+#define CONF_UNIX_PREVIOUS_SYNC "previous_sync_unix"
+#define CONF_SECONDS_DRIFT "drift_sync_seconds"
+#define CONF_UNIX_LAST_CHARGE "last_charge_unix"
 
 #define WEATHER_HOURLY_DIR "/weather/hourly"
 #define WEATHER_DIR "/weather"
 
 #define IMAGE_MODULE_PATH "watchfaceImages/"
 
-#endif

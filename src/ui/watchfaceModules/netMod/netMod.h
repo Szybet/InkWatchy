@@ -1,12 +1,10 @@
-#ifndef NETMOD_H
-#define NETMOD_H
+#pragma once
 
-#include "../../../defines/defines.h"
+#include "defines.h"
 
 #if WIFI_MODULE
 
-extern wifiStatusSimple previousWifiState;
-extern wfModule wfNet;
+void wfNetcheckShow(bool *showBool, bool *redrawBool);
+void wfNetrequestShow(buttonState button, bool *showBool);
 
-#endif
 #endif

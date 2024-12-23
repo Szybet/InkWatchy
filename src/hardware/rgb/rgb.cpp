@@ -1,9 +1,13 @@
 #include "rgb.h"
+#include "rtcMem.h"
 
 uint rgbTimer = 0;
 TaskHandle_t rgbTask = NULL;
 bool rgbTaskRunning = false;
 std::mutex rgbTaskMutex;
+
+std::mutex currentColorMutex;
+IWColors currentColor = IWColors::IwNone;
 
 void rgbTaskRun(void *parameter)
 {
@@ -20,7 +24,7 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
 {
 #if RGB_DIODE
 #if ATCHY_VER == YATCHY
-    if (gpioExpander.simplerInit() == false)
+    if (rM.gpioExpander.simplerInit() == false)
     {
         return;
     }
@@ -49,55 +53,68 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
             }
         }
     }
+
+    bool lockedColor = false;
+    if (currentColorMutex.try_lock() == true)
+    {
+        lockedColor = true;
+        currentColor = color;
+    }
+
     switch (color)
     {
     case IwNone:
     {
-        gpioExpander.setPinState(RGB_DIODE_RED_PIN, true);
-        gpioExpander.setPinState(RGB_DIODE_GREEN_PIN, true);
-        gpioExpander.setPinState(RGB_DIODE_BLUE_PIN, true);
-        return;
+        rM.gpioExpander.setPinState(RGB_DIODE_RED_PIN, true);
+        rM.gpioExpander.setPinState(RGB_DIODE_GREEN_PIN, true);
+        rM.gpioExpander.setPinState(RGB_DIODE_BLUE_PIN, true);
+        break;
     }
     case IwRed:
     {
-        gpioExpander.setPinState(RGB_DIODE_RED_PIN, false);
-        return;
+        rM.gpioExpander.setPinState(RGB_DIODE_RED_PIN, false);
+        break;
     }
     case IwGreen:
     {
-        gpioExpander.setPinState(RGB_DIODE_GREEN_PIN, false);
-        return;
+        rM.gpioExpander.setPinState(RGB_DIODE_GREEN_PIN, false);
+        break;
     }
     case IwBlue:
     {
-        gpioExpander.setPinState(RGB_DIODE_BLUE_PIN, false);
-        return;
+        rM.gpioExpander.setPinState(RGB_DIODE_BLUE_PIN, false);
+        break;
     }
     case IwYellow:
     {
         setRgb(IwRed, true);
         setRgb(IwGreen, false);
-        return;
+        break;
     }
     case IwPink:
     {
         setRgb(IwRed, true);
         setRgb(IwBlue, false);
-        return;
+        break;
     }
     case IwCyan:
     {
         setRgb(IwGreen, true);
         setRgb(IwBlue, false);
-        return;
+        break;
     }
     case IwWhite:
     {
         setRgb(IwRed, true);
         setRgb(IwBlue, false);
         setRgb(IwGreen, false);
-        return;
+        break;
     }
+    }
+
+    if (lockedColor == true)
+    {
+        currentColorMutex.unlock();
     }
 #endif
 #endif

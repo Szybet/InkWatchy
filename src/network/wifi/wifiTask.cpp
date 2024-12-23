@@ -196,7 +196,6 @@ bool isWifiTaskCheck()
     return tmp;
 }
 
-#if DEBUG == 1 || DEBUG_MENUS == 1
 String wifiStatus()
 {
     wl_status_t wifiStatus = WiFi.status();
@@ -224,7 +223,6 @@ String wifiStatus()
         return "UNKNOWN: " + String(wifiStatus);
     }
 }
-#endif
 
 #if DEBUG
 void loopwifiDebug()
