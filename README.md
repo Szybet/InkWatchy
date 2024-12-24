@@ -1,14 +1,24 @@
-# InkWatchy
-A new innovative **firmware** written from the ground up for the [watchy](https://watchy.sqfmi.com/)
+<h1 align="center">
+  InkWatchy
+</h1>
 
+<p align="center">
+<img src="https://github.com/user-attachments/assets/848177ae-2931-4a7a-bb6a-09255235c6c0" alt="02-demo-10mb" width=200px height=200px />
+</p>
+<p align="center">
+A new innovative <b>firmware</b> written from the ground up for the <a href="https://watchy.sqfmi.com">watchy</a>
+</p>
+  
+<details>
+<summary>Demo</summary>
+  
+<sub>This 3> minute demo was heavily compressed, so it looks like it looks. The speed is also messed up because of missing frames</sub>
 <p align="center">
   <img src="https://github.com/Szybet/InkWatchy/assets/53944559/0c85d516-ff50-4440-9351-32780107e998" alt="02-demo-10mb""/>
 </p>
 
-<p align="center">
-<sub>This 3> minute demo was heavily compressed, so it looks like it looks. The speed is also messed up because of missing frames</sub>
-</p>
-
+</details>
+  
 ## User features
 Apart from code things, here are the key features for now:
 - Easy to install [demo](https://github.com/Szybet/InkWatchy/wiki/Trying-out-the-demo-firmware) (no compiling!)
@@ -32,6 +42,7 @@ Apart from code things, here are the key features for now:
       - Disable wake up - The watch will sleep until you press a button
       - Disable all vibrations (For button clicks) - Spikes caused by the motor are heavy for the battery
 - A "vault" which allows to save encrypted images to the watchy and view them if provided the correct PIN. All generated dynamically via a script. Uses AES128 cbc/ecb. Example use is a backup phone book, bitcoin key backup in the form of a QR code
+- Pong game
 - Reset cause shower. If your battery will be the cause of a reset, you will be informed about it on boot.
 - ~~I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.~~
 - ~~https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.~~ <sub>Those 2 options were removed because I updated the build system and didn't bother to make it work with it, with some cmake you should be able to easily re-add those features, I you can't use cmake, then you shouldn't probably use either of those features anyway</sub>
