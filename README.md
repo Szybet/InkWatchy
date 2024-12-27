@@ -14,8 +14,15 @@ A new innovative <b>firmware</b> written from the ground up for the <a href="htt
   
 <sub>This 3> minute demo was heavily compressed, so it looks like it looks. The speed is also messed up because of missing frames</sub>
 <p align="center">
-  <img src="https://github.com/Szybet/InkWatchy/assets/53944559/0c85d516-ff50-4440-9351-32780107e998" alt="02-demo-10mb""/>
+ 
+https://github.com/user-attachments/assets/91d169da-298a-425a-859c-2c9bc7fb6cf7
+  
 </p>
+
+
+
+
+
 
 </details>
   
@@ -99,7 +106,22 @@ Create a github issue or get in touch with me on Quill OS or <a href="https://di
 
 or via matrix: @szybet:matrix.org
 
-## [Outdated demo of version 0.1](https://www.youtube.com/watch?v=gFOCqalJidQ)
+<details>
+<summary><h1>Outdated demos</h1></summary>
+
+[Outdated demo of version 0.1](https://www.youtube.com/watch?v=gFOCqalJidQ)
+
+<details>
+<summary>Demo of version 0.4</summary>
+  
+<sub>This 3> minute demo was heavily compressed, so it looks like it looks. The speed is also messed up because of missing frames</sub>
+<p align="center">
+  <img src="https://github.com/Szybet/InkWatchy/assets/53944559/0c85d516-ff50-4440-9351-32780107e998" alt="02-demo-10mb""/>
+</p>
+
+</details>
+
+</details>
 
 ## Some credits
 - [Can in a hoodie](https://www.youtube.com/@cat_in_a_hoodie_27) - Many awesome graphics, the logo
