@@ -19,11 +19,6 @@ https://github.com/user-attachments/assets/91d169da-298a-425a-859c-2c9bc7fb6cf7
   
 </p>
 
-
-
-
-
-
 </details>
   
 ## User features
@@ -81,6 +76,8 @@ Watchy 2.0 is supported, 1.0 or 1.5 should too but less used, less tested
 
 Watchy 3.0 is now also fully supported, thanks to the community :)
 
+Yatchy is now also fully supported
+
 ## Easy to install demo, Compiling, Some instructions, Further informations
 Don't try anything by yourself without the wiki, you will probably fail.
 
@@ -100,6 +97,7 @@ For a small coffe I can manage your firmware and provide you personalised binari
 ## Sister projects
 - https://github.com/Szybet/WatchySourcingHub
 - https://github.com/Szybet/watchy-scom
+- https://github.com/Szybet/Yatchy
 
 ## Questions / Contact
 Create a github issue or get in touch with me on Quill OS or <a href="https://discord.gg/6PUmRXZRGD">*atchy community</a> discord servers
