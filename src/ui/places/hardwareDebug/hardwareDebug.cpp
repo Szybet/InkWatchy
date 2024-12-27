@@ -34,6 +34,7 @@ String getRtcType()
 
 void initGeneralDebugDisplay()
 {
+    dis->setTextWrap(false);
     debugLog("initGeneralDebugDisplay called");
     uint16_t h;
     setFont(&FreeSansBold9pt7b);
