@@ -6,9 +6,9 @@
 
 struct bitcoinData {
     int height; // Btc clock
-    float price;
+    int price;
     float change1h;
-    float change24;
+    float change24h;
     float change7d;
     float change30d;
     long btcLastSyncUnix;

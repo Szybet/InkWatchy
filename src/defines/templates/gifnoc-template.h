@@ -48,7 +48,7 @@
 #define VALID_PREVIOUS_SYNC_DELAY 300      // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
 #define WIFI_CONNECTION_TRIES 3            // Regular sync, number of tries
 #define WIFI_CONNECTION_TRIES_PERSISTENT 1 // Persistent sync (SYNC_WIFI), number of tries
-#define WIFI_SYNC_TIME 5000                // Ms, time for waiting to connect to wifi
+#define WIFI_SYNC_TIME 10000                // Ms, time for waiting to connect to wifi
 #define WIFI_ERROR_TIME 3000               // Ms, time for waiting when wifi failed before next try
 #define TIME_DRIFT_CORRECTION 0            // The RTC may drift, this should repair it. It basically on first ntp sync starts the measurment and on the second it ends it. I suggest disabling SYNC_WIFI because if it's triggered, it will cancel the drift calculation because its a persistent sync, it happens every few minutes. If you have a watchy V2, you should first try FORCE_INTERNAL_RTC instead of this option.
 #define TIME_DRIFT_MINIMUM_TIME 24         // Minimum amount of hours a drift calculation can go on, because measuring drift between 5 minutes will help you experience the back to the future movie. It's suggested to be minimum 24 hours.

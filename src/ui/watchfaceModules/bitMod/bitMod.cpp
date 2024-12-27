@@ -3,9 +3,12 @@
 
 #if BITCOIN_MODULE
 
-#include <blockClockClient.h>
+#include <HTTPClient.h>
 
-bitcoinData btcData = {};
+#define MEMPOOL_BASEURL "https://mempool.space/api"
+#define BINANCE_BASEURL "https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=1&startTime="
+
+bitcoinData btcData = {0};
 
 void saveBitcoinData()
 {
@@ -105,14 +108,14 @@ void wfBitrequestShow(buttonState button, bool *showBool)
         dis->setCursor(modSq.cord.x + modSq.size.w - w - SYNC_INFO_OFFSET, modSq.cord.y + 7 + h + SYNC_INFO_OFFSET);
         dis->print(lastSync);
 
-        if (btcData.change1h != 0.0 || btcData.change24 != 0.0 || btcData.change7d != 0.0 || btcData.change30d != 0.0 || btcData.price != 0.0)
+        if (btcData.change1h != 0.0 || btcData.change24h != 0.0 || btcData.change7d != 0.0 || btcData.change30d != 0.0 || btcData.price != 0.0)
         {
             dis->setCursor(modSq.cord.x + getImgWidth("bitcoin"), modSq.cord.y + getImgHeight("bitcoin") - 2);
             setFont(getFont("dogicapixel4"));
             setTextSize(1);
             dis->print(":" + String(btcData.price) + "$");
             dis->setCursor(modSq.cord.x, modSq.cord.y + getImgHeight("bitcoin") * 2);
-            dis->print("1h:" + String(btcData.change1h) + "% 24h:" + String(btcData.change24) + "%");
+            dis->print("1h:" + String(btcData.change1h) + "% 24h:" + String(btcData.change24h) + "%");
             dis->setCursor(modSq.cord.x, modSq.cord.y + getImgHeight("bitcoin") * 3);
             dis->print("7d:" + String(btcData.change7d) + "% 30d:" + String(btcData.change30d) + "%");
         }
@@ -157,6 +160,53 @@ void wfBitrequestShow(buttonState button, bool *showBool)
     dUChange = true;
 }
 
+int getBitcoinPriceForUnix(uint64_t unixTime)
+{
+    HTTPClient http;
+    http.addHeader("Content-Type", "application/json");
+    // http.addHeader("User-Agent", "YourUserAgent");
+    String binanceUrl = String(BINANCE_BASEURL) + String((unixTime - 1800) * 1000); // - 30m as we can make it for this exact second
+    debugLog("Binance URL: " + binanceUrl);
+    bool beginErr = http.begin(binanceUrl);
+    if (beginErr == false)
+    {
+        debugLog("beginErr is 0");
+        return 0;
+    }
+    int httpCode = http.GET();
+    debugLog("httpCode is: " + String(httpCode));
+    if (httpCode == HTTP_CODE_OK)
+    {
+        String output = http.getString();
+        http.end();
+        output = output.substring(1, output.length() - 1);
+        debugLog("Received from binance: " + output);
+
+        JsonDocument doc;
+        DeserializationError error = deserializeJson(doc, output);
+
+        if (error.code() != DeserializationError::Ok)
+        {
+            debugLog("Failed to deserialise");
+            return 0;
+        }
+
+        float two = String(doc[2]).toFloat();
+        float thri = String(doc[3]).toFloat();
+        debugLog("two is: " + String(two));
+        int average = int(round((two + thri) / 2));
+        debugLog("Final average is: " + String(average));
+        return average;
+    }
+    http.end();
+    return 0;
+}
+
+float roundToDecimal(float value, int decimalPlaces) {
+    float scale = pow(10.0, decimalPlaces);
+    return round(value * scale) / scale;
+}
+
 void bitcoinSync(uint8_t tries)
 {
     debugLog("Launching bitcoinSync");
@@ -165,56 +215,58 @@ void bitcoinSync(uint8_t tries)
         debugLog("Too many tries, exiting");
         return;
     }
-    BlockClockClient btcApi(COIN_LIB_API_KEY);
-    String height = btcApi.getBlockHeight();
-    debugLog("Got bitcoin height: " + height);
+    if(tries == 1) {
+        // Zero it out
+        btcData = {0};
+    }
 
-    btcData.height = height.toInt();
-
-    if (height != 0)
+    String height = "";
     {
-        btcData.btcLastSyncUnix = getUnixTime(timeRTCLocal);
-        if (strlen(COIN_LIB_API_KEY) != 0)
+        HTTPClient http;
+        http.begin(String(MEMPOOL_BASEURL) + "/blocks/tip/height");
+        int httpCode = http.GET();
+        debugLog("Height http code: " + String(httpCode));
+        if (httpCode == HTTP_CODE_OK)
         {
-            PriceData prices = btcApi.getBitcoinPrice();
-            if (prices.error == false)
-            {
-                debugLog("price " + String(prices.price));
-                debugLog("change1h " + String(prices.change1h));
-                debugLog("change24h " + String(prices.change24h));
-                debugLog("change7d " + String(prices.change7d));
-                debugLog("change30d " + String(prices.change30d));
-                btcData.price = prices.price.toFloat();
-                btcData.change1h = prices.change1h;
-                btcData.change24 = prices.change24h;
-                btcData.change7d = prices.change7d;
-                btcData.change30d = prices.change30d;
-            }
-            else
-            {
-                debugLog("Failed to get prices of btc");
-                btcData.price = 0.0;
-                btcData.change1h = 0.0;
-                btcData.change24 = 0.0;
-                btcData.change7d = 0.0;
-                btcData.change30d = 0.0;
-            }
+            height = http.getString();
+            http.end();
         }
         else
         {
-            btcData.price = 0.0;
-            btcData.change1h = 0.0;
-            btcData.change24 = 0.0;
-            btcData.change7d = 0.0;
-            btcData.change30d = 0.0;
+            http.end();
+            height = String("ERR ") + String(httpCode);
         }
-        saveBitcoinData();
-        rM.isBtcDataNew = true;
     }
-    else
-    {
+
+    debugLog("Got bitcoin height: " + height);
+
+    if(btcData.height == 0) {
+        btcData.height = height.toInt();
+    }
+    uint64_t unixTimeNow = getUnixTime(timeRTCUTC0);
+    if(btcData.price == 0) {
+        btcData.price = getBitcoinPriceForUnix(unixTimeNow);
+    }
+
+    int price1h = getBitcoinPriceForUnix(unixTimeNow - 3600);
+    int price24h = getBitcoinPriceForUnix(unixTimeNow - 86400);
+    int price7d = getBitcoinPriceForUnix(unixTimeNow - 604800);
+    int price30d = getBitcoinPriceForUnix(unixTimeNow - 2592000);
+    
+    if(price1h != 0 && price24h != 0 && price7d != 0 && price30d != 0) {
+        btcData.change1h = roundToDecimal((float(btcData.price - price1h) / float(price1h)) * 100.0, 1);
+        btcData.change24h = roundToDecimal((float(btcData.price - price24h) / float(price24h)) * 100.0, 1);
+        btcData.change7d = roundToDecimal((float(btcData.price - price7d) / float(price7d)) * 100.0, 1);
+        btcData.change30d = roundToDecimal((float(btcData.price - price30d) / float(price30d)) * 100.0, 1);
+    }
+
+    if(btcData.height == 0 || btcData.price == 0 || price1h == 0 || price24h == 0 || price7d == 0 || price30d == 0) {
+        debugLog("Running again, next try: " + String(tries + 1));
         bitcoinSync(tries + 1);
-        return;
+    } else {
+        debugLog("Bitcoin is fine!");
+        btcData.btcLastSyncUnix = getUnixTime(timeRTCLocal);
+        saveBitcoinData();
     }
 }
 

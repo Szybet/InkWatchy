@@ -28,8 +28,6 @@ STATIC_WIFI_CRED wifi_credential10 = {.ssid = "hotspot", .password = "12345678"}
 #define WEATHER_LATIT ""   // 53.55073
 #define WEATHER_LONGTIT "" // 9.99302
 
-#define COIN_LIB_API_KEY "" // It will work without it, just with less informations
-
 #define VAULT_PASSWORD "" // This must be a numerical PIN, don't start it with 0
 
 // If you want just a path, implement it yourself, look up the script and the program arguments
