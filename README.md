@@ -12,7 +12,7 @@ A new innovative <b>firmware</b> written from the ground up for the <a href="htt
 <details>
 <summary>Demo</summary>
   
-<sub>This 3> minute demo was heavily compressed, so it looks like it looks. The speed is also messed up because of missing frames</sub>
+<sub>This demo was heavily compressed, so it looks like it looks. The speed is also messed up because of missing frames</sub>
 <p align="center">
  
 https://github.com/user-attachments/assets/91d169da-298a-425a-859c-2c9bc7fb6cf7
