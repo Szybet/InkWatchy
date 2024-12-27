@@ -104,11 +104,13 @@ void setButton(buttonState button)
     debugLog("setButton done");
 }
 
+bool wasCombination = false;
 void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longButton)
 {
     int startime = millisBetter();
     int elapsedtime = 0;
     initCombinations();
+    loopCombinations();
     while (buttonRead(buttonPin) == BUT_CLICK_STATE && elapsedtime < BUTTON_LONG_PRESS_MS)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
@@ -117,12 +119,18 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
     }
     if (endCombinations(buttonPin) == true)
     {
+        wasCombination = true;
         vibrateMotor(VIBRATION_BUTTON_LONG_TIME);
-        delayTask(BUTTON_TASK_DELAY * 3);
-        while (anyButtonCheck() == true)
+        uint8_t counter = 0;
+        while (counter <= 3)
         {
+            if(anyButtonCheck() == false) {
+                counter = counter + 1;
+                delayTask((BUTTON_TASK_DELAY * 3));
+            }
             delayTask(SMALL_BUTTON_DELAY_MS);
         }
+        delayTask((BUTTON_TASK_DELAY * 3));
         return;
     }
 
@@ -156,6 +164,7 @@ void loopButtonsTask(void *parameter)
     interruptedButton = None;
     while (true)
     {
+        wasCombination = false;
         // debugLog("Button task looping...");
         buttonState interruptedButtonCopy = interruptedButton;
         // debugLog("interruptedButtonCopy: " + getButtonString(interruptedButtonCopy));
@@ -198,7 +207,7 @@ void loopButtonsTask(void *parameter)
             buttMut.lock();
         }
         buttMut.unlock();
-        if (interruptedButtonCopy == interruptedButton)
+        if (interruptedButtonCopy == interruptedButton || wasCombination == true)
         {
 #if ATCHY_VER == YATCHY
             if (rM.gpioExpander.manageInterruptsExit() == false)
@@ -207,6 +216,7 @@ void loopButtonsTask(void *parameter)
             }
 #endif
             interruptedButton = None;
+            wasCombination = false;
             debugLog("Button task going to sleep!"); // That's normal and very efficient
             vTaskSuspend(NULL);
         }
