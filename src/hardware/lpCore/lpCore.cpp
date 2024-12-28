@@ -101,8 +101,14 @@ void initManageLpCore()
             rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
             rM.wFTime.Hour = rtc_mem->custom[1];
             rM.wFTime.Minute = rtc_mem->custom[2];
+            debugLog("Updated from lp core hour and minute: " + getHourMinute(rM.wFTime));
         }
-        debugLog("Updated from lp core hour and minute: " + getHourMinute(rM.wFTime));
+        if(bootStatus.reason == wakeUpReason::ulp) {
+            // Force a rewrite, be sure about it, the read was done previously
+            readRTC();
+            rM.wFTime.Minute = 255;
+            rM.wFTime.Hour = 255;
+        }
     }
     else
     {
