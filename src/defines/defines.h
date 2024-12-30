@@ -141,6 +141,9 @@ static const WiFiCred* wifiCredStatic[] = {
 #if PONG
 #include "../ui/places/pong/pong.h"
 #endif
+#if TETRIS
+#include "../ui/places/tetris/tetrisPlace.h"
+#endif
 #if CREDITS
 #include "../ui/places/credits/credits.h"
 #endif

@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[12];
+    entryMenu buttons[11];
 #if CALENDAR
     {
         count = count + 1;
@@ -70,32 +70,16 @@ void initMainMenu()
         buttons[count] = {"Smashing apples", getImg("apple"), switchApple2};
     }
 #endif
-#if PONG
     {
-        debugLog("Adding pong");
+        debugLog("Adding games");
         count = count + 1;
-        buttons[count] = {"Pong", getImg("pong"), switchPong};
+        buttons[count] = {"Games", getImg("games"), switchGamesMenu};
     }
-#endif
-#if CONWAY
-    {
-        debugLog("Adding Conway");
-        count = count + 1;
-        buttons[count] = {"Conway", getImg("conway"), switchConway};
-    }
-#endif
 #if CREDITS
     {
         debugLog("Adding Credits");
         count = count + 1;
         buttons[count] = {"Credits", getImg("credits/qr"), switchCredits};
-    }
-#endif
-#if RGB_DIODE
-    {
-        debugLog("Adding party");
-        count = count + 1;
-        buttons[count] = {"Party", getImg("rgb"), switchParty};
     }
 #endif
     count = count + 1;
@@ -164,6 +148,42 @@ void initSettingsMenu()
     }
     count = count + 1;
     initMenu(buttons, count, "Settings menu", 1);
+}
+
+void initGamesMenu()
+{
+    int count = -1;
+    entryMenu buttons[4];
+#if TETRIS
+    {
+        debugLog("Adding Tetris");
+        count = count + 1;
+        buttons[count] = {"Tetris", getImg("tetris/tetrisIcon"), switchTetris};
+    }
+#endif
+#if PONG
+    {
+        debugLog("Adding pong");
+        count = count + 1;
+        buttons[count] = {"Pong", getImg("pong"), switchPong};
+    }
+#endif
+#if CONWAY
+    {
+        debugLog("Adding Conway");
+        count = count + 1;
+        buttons[count] = {"Conway", getImg("conway"), switchConway};
+    }
+#endif
+#if RGB_DIODE
+    {
+        debugLog("Adding party");
+        count = count + 1;
+        buttons[count] = {"Party", getImg("rgb"), switchParty};
+    }
+#endif
+    count = count + 1;
+    initMenu(buttons, count, "Games menu", 1);
 }
 
 void toggleDisableVibrationsEntry()
