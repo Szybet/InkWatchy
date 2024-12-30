@@ -73,7 +73,7 @@ void changePageCredits()
         break;
     }
     };
-    disUp(true);
+    dUChange = true;
 }
 
 void initCredits()
@@ -102,6 +102,7 @@ void loopCredits()
         changePageCredits();
     }
     resetSleepDelay();
+    disUp();
 }
 
 #endif
