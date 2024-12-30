@@ -237,7 +237,7 @@ void readRTC()
 {
   // debugLog("Reading RTC");
   rM.SRTC.read(timeRTCUTC0);
-  debugLog("Time saved in RTC: " + String(getUnixTime(timeRTCUTC0)));
+  debugLog("Time retrieved from RTC: " + String(getUnixTime(timeRTCUTC0)));
 
 #if RTC_TYPE == INTERNAL_RTC
   bool rtcGarbage = false;
