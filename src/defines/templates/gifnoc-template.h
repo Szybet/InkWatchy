@@ -141,6 +141,9 @@
 // Pong
 #define PONG 1
 
+// Tetris
+#define TETRIS 1
+
 // Credits page
 #define CREDITS 1 // Feel free to disable it for your own usage :D
 
