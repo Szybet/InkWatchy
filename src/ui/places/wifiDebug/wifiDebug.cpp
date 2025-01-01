@@ -16,7 +16,6 @@ uint16_t macAddressHeight;
 String previousMac; // TODO into char list
 #define TextSize 1
 
-uint16_t wifiStatusLength;
 uint16_t ipAddressLength;
 uint16_t ssidLength;
 uint16_t signalLength;
@@ -31,6 +30,7 @@ void initWifiDebugDisplay()
 {
     setFont(&FreeSansBold9pt7b);
     setTextSize(TextSize);
+    dis->setTextWrap(false);
     dis->setCursor(cursorXwifi, 1);
     String menuName = "Debug Menu: Wifi";
     getTextBounds(menuName, NULL, NULL, NULL, &maxHeight);
@@ -46,15 +46,12 @@ void initWifiDebugDisplay()
     centerText("MAC address:", &currentHeight);
 
     previousMac = WiFi.macAddress();
-    getTextBounds(previousMac, NULL, NULL, &wifiStatusLength, NULL);
     macAddressHeight = currentHeight;
     centerText(previousMac, &currentHeight);
 
     centerText("Wifi status: ", &currentHeight);
 
     wifiStatusLastStr = wifiStatus();
-    getTextBounds(wifiStatusLastStr, NULL, NULL, &wifiStatusLength, NULL);
-    // wifiStatusLength = w;
 
     centerText(wifiStatusLastStr, &currentHeight);
     StatusHeight = currentHeight - maxHeight;
@@ -128,16 +125,6 @@ void loopWifiDebugDisplay()
         wifiStatusLastStr = wifiStatusStr;
         setFont(&FreeSansBold9pt7b);
         setTextSize(TextSize);
-
-        getTextBounds(wifiStatusStr, NULL, NULL, &w, NULL);
-        debugLog("w: " + String(w) + " wifiStatusLength: " + String(wifiStatusLength));
-        while (w < wifiStatusLength)
-        {
-            wifiStatusStr = " " + wifiStatusStr + " ";
-            getTextBounds(wifiStatusStr, NULL, NULL, &w, NULL);
-        }
-        wifiStatusLength = w;
-
         writeTextCenterReplaceBack(wifiStatusStr, StatusHeight);
 
         String ipAddressStr = "IP: " + WiFi.localIP().toString();
