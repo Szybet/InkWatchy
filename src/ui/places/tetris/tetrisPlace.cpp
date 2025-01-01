@@ -46,8 +46,8 @@ void drawTetrisText()
     setTextSize(1);
     dis->setTextWrap(false);
 
-    dis->setCursor(121, 17);
-    dis->print("Tetris");
+    dis->setCursor(96, 17);
+    dis->print("Blockchy");
 
     dis->setCursor(96, 34);
     dis->print("Line clears:");
