@@ -29,6 +29,8 @@ typedef enum
     calendarDateMenu,
     calendarEventMenu,
     pong,
+    tetris,
+    gamesMenu,
     credits,
     conwayApp,
     partyApp,
@@ -61,6 +63,7 @@ void initMainMenu();
 void initDebugMenu();
 #endif
 void initSettingsMenu();
+void initGamesMenu();
 #if WEATHER_INFO
 void initWeatherMenu();
 void initWeatherConditionMenu();
@@ -77,6 +80,7 @@ void overwriteSwitch(UiPlace place);
 
 void switchDebugMenu();
 void switchSettingsMenu();
+void switchGamesMenu();
 void switchGeneralDebug();
 void switchClockDebug();
 void switchBatteryDebug();
@@ -94,6 +98,9 @@ void switchBack();
 void switchApple();
 void switchApple2();
 void switchPong();
+#if TETRIS
+void switchTetris();
+#endif
 #if CREDITS
 void switchCredits();
 #endif

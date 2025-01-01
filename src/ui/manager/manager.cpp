@@ -272,6 +272,18 @@ void loopManager()
 #endif
         break;
     }
+    case tetris:
+    {
+#if TETRIS
+        managerLaunchFunc(tetris, initTetris, loopTetris, exitTetris);
+#endif
+        break;
+    }
+    case gamesMenu:
+    {
+        managerLaunchFunc(gamesMenu, initGamesMenu, loopMenu);
+        break;
+    }
     case credits:
     {
 #if CREDITS
@@ -330,6 +342,11 @@ void loopManager()
     case NoPlace:
     {
         debugLog("This shouldn't happen?");
+        break;
+    }
+    default:
+    {
+        debugLog("You forgot to implement a place!");
         break;
     }
     }

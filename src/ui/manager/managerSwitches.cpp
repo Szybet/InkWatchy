@@ -23,6 +23,10 @@ void switchSettingsMenu()
     generalSwitch(settingsMenu);
 }
 
+void switchGamesMenu() {
+    generalSwitch(gamesMenu);
+}
+
 void switchWatchfaceSelectorMenu()
 {
     generalSwitch(watchfaceSelector);
@@ -91,6 +95,13 @@ void switchPong()
 {
     generalSwitch(pong);
 }
+
+#if TETRIS
+void switchTetris()
+{
+    generalSwitch(tetris);
+}
+#endif
 
 #if CREDITS
 void switchCredits() {

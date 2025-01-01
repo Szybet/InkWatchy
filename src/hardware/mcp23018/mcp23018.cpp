@@ -82,7 +82,7 @@ buttonState mcp23018::manageInterrupts()
   // For an unknown reason to me, it doesn't work if this is not called here:
   BatteryRead();
   // Maybe it clears the interrupt or something, idk, not worth my time
-  
+
   debugLog("BatteryRead1: " + String(BatteryRead()));
   // First read the cause
   uint16_t gpio_cause = readRegister(INTF);
@@ -96,52 +96,40 @@ buttonState mcp23018::manageInterrupts()
   //  What is going on here
 
   debugLog("BatteryRead2: " + String(BatteryRead()));
-  buttonState selectedbtn = None;
   // I want a break call here
-  while (true)
+  if (checkBit(gpio_cause, MCP_STAT_IN) == true || checkBit(gpio_cause, MCP_5V) == true)
   {
-    if (checkBit(gpio_cause, MCP_STAT_IN) == true || checkBit(gpio_cause, MCP_5V) == true)
-    {
-      debugLog("Stat pin or 5V detected");
-      isChargingCheck();
-      loopBattery();
-      break;
-    }
-
-#ifdef YATCHY_BACK_BTN
-    if (checkBit(gpio_ints, BACK_PIN) == false)
-    {
-      debugLog("Gpio expander back");
-      selectedbtn = Back;
-      break;
-    }
-#endif
-
-    if (checkBit(gpio_ints, MENU_PIN) == false)
-    {
-      debugLog("Gpio expander menu");
-      selectedbtn = Menu;
-      break;
-    }
-
-    if (checkBit(gpio_ints, DOWN_PIN) == false)
-    {
-      debugLog("Gpio expander down pin");
-      selectedbtn = Down;
-      break;
-    }
-
-    if (checkBit(gpio_ints, UP_PIN) == false)
-    {
-      debugLog("Gpio expander up pin");
-      selectedbtn = Up;
-      break;
-    }
-
-    break;
+    debugLog("Stat pin or 5V detected");
+    isChargingCheck();
+    loopBattery();
+    return None;
   }
 
-  return selectedbtn;
+#ifdef YATCHY_BACK_BTN
+  if (checkBit(gpio_cause, BACK_PIN) == true)
+  {
+    debugLog("Gpio expander back");
+    return Back;
+  }
+#endif
+
+  if (checkBit(gpio_cause, MENU_PIN) == true)
+  {
+    debugLog("Gpio expander menu");
+    return Menu;
+  }
+
+  if (checkBit(gpio_cause, DOWN_PIN) == true)
+  {
+    debugLog("Gpio expander down pin");
+    return Down;
+  }
+
+  if (checkBit(gpio_cause, UP_PIN) == true)
+  {
+    debugLog("Gpio expander up pin");
+    return Up;
+  }
 }
 
 bool mcp23018::manageInterruptsExit()
@@ -158,7 +146,8 @@ bool mcp23018::manageInterruptsExit()
   {
     debugLog("Voltage below 3.0, Clearing interrupt: " + String(BatteryRead()));
     // We need to read the register one more time because it clears only when the interrupt condition clears eg the button is not clicked
-    for(uint8_t i = 0; i < 10; i++ ) {
+    for (uint8_t i = 0; i < 10; i++)
+    {
       readRegister(INTF);
       readRegister(INTCAP);
       BatteryRead();
@@ -265,12 +254,12 @@ bool mcp23018::resetVerify()
   }
   */
   uint8_t bitToHigh = 2;
-  #if DEBUG
+#if DEBUG
   if (BatteryRead() < 3.0)
   {
     debugLog("Interrupt is already low?");
   }
-  #endif
+#endif
 
   uint8_t iocon = 0b01000001 | (1 << bitToHigh);
   debugLog("Final iocon is: " + uint8ToBinaryString(iocon));
@@ -296,7 +285,8 @@ bool mcp23018::resetVerify()
   // Setting to output reduces power consumption
   // But first we need not to do a short...
   // But after setting all registers to null like above...
-  for(int i = 0; i < 16; i++) {
+  for (int i = 0; i < 16; i++)
+  {
     setPinState(i, true);
     setPinMode(i, MCP_OUTPUT);
   }
@@ -305,9 +295,9 @@ bool mcp23018::resetVerify()
 
   // Set pins to inputs as they are outputs now
   setPinMode(MCP_5V, MCP_INPUT);
-  #ifdef YATCHY_BACK_BTN
+#ifdef YATCHY_BACK_BTN
   setPinMode(BACK_PIN, MCP_INPUT);
-  #endif
+#endif
   setPinMode(MENU_PIN, MCP_INPUT);
   setPinMode(DOWN_PIN, MCP_INPUT);
   setPinMode(UP_PIN, MCP_INPUT);
