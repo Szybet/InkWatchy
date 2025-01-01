@@ -94,7 +94,7 @@ Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 
 This is a passion project at this point. To help an open source developer - who is still a student and motivate him to create this software feel free to donate
 
-Here is [my libera pay](https://liberapay.com/Szybet/). Direct paypall is also a option. 
+For paypall you need to contact me
 
 Bitcoin address: `bc1qm2d3w6a3qd93zrfuz4l6rs9yr30dmkl2t2z3y5`
 
