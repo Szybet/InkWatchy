@@ -158,7 +158,7 @@ void initGamesMenu()
     {
         debugLog("Adding Tetris");
         count = count + 1;
-        buttons[count] = {"Tetris", getImg("tetris/tetrisIcon"), switchTetris};
+        buttons[count] = {"Blockchy", getImg("tetris/tetrisIcon"), switchTetris};
     }
 #endif
 #if PONG
