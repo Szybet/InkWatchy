@@ -29,6 +29,10 @@ uint8_t tries = 0;
 
 void redrawModuleImage()
 {
+    if(fsSetup() == false) {
+        debugLog("Fs failed, no image module");
+        return;
+    }
     tries = 0;
     u8_t c = 0;
     {
