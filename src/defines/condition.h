@@ -180,7 +180,7 @@ Template for versioning
 #elif ATCHY_VER == WATCHY_3
 #define AXC_ENABLED 0 // I don't have this device
 #elif ATCHY_VER == YATCHY
-#define AXC_ENABLED 0 // Eh
+#define AXC_ENABLED 1
 #endif
 
 // USB JTAG

@@ -25,6 +25,8 @@ bool initI2C()
             i2cInitCount = i2cInitCount + 1;
             delayTask(10);
             return initI2C();
+        } else {
+            debugLog("Inited I2C line");
         }
         initedI2C = true;
     }
