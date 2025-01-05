@@ -40,6 +40,7 @@
 #define WATCHDOG_TASK 1              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
 
 // Drift & NTP & Syncing
+// For now, SYNC_WIFI is not advised to be used, thank you
 #define SYNC_WIFI 0                        // Autimatically sync wifi - only if it's being charger and after the delay below
 #define SYNC_WIFI_SINCE_SUCC 72000         // 20h
 #define SYNC_WIFI_SINCE_FAIL 600           // 10m
