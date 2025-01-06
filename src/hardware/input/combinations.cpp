@@ -18,19 +18,19 @@ void initCombinations()
 
 void loopCombinations()
 {
-    if (buttonRead(BACK_PIN) == true)
+    if (buttonRead(BACK_PIN) == BUT_CLICK_STATE)
     {
         combinationsChecks[BACK_INDEX] = BACK_PIN;
     }
-    if (buttonRead(MENU_PIN) == true)
+    if (buttonRead(MENU_PIN) == BUT_CLICK_STATE)
     {
         combinationsChecks[MENU_INDEX] = MENU_PIN;
     }
-    if (buttonRead(UP_PIN) == true)
+    if (buttonRead(UP_PIN) == BUT_CLICK_STATE)
     {
         combinationsChecks[UP_INDEX] = UP_PIN;
     }
-    if (buttonRead(DOWN_PIN) == true)
+    if (buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
     {
         combinationsChecks[DOWN_INDEX] = DOWN_PIN;
     }
