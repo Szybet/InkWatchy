@@ -29,11 +29,11 @@ uint8_t tries = 0;
 
 void redrawModuleImage()
 {
-    if(fsSetup() == false) {
+    if (fsSetup() == false)
+    {
         debugLog("Fs failed, no image module");
         return;
     }
-    tries = 0;
     u8_t c = 0;
     {
         File root = LittleFS.open("/img/" + String(IMAGE_MODULE_PATH));
@@ -56,25 +56,28 @@ void redrawModuleImage()
     {
         File root = LittleFS.open("/img/" + String(IMAGE_MODULE_PATH));
         File file = root.openNextFile();
-        while (file)
+        String anyFile;
+        squareInfo modSq = getWatchModuleSquare();
+        while (file && tries < MAX_TRIES)
         {
             if (file.isDirectory() == false)
             {
                 cFinal = cFinal + 1;
+                debugLog("cFinal:" + String(cFinal));
                 if (cFinal == finalImageIndex)
                 {
+                    tries = tries + 1;
                     uint32_t romCRC = (~crc32_le((uint32_t) ~(0xffffffff), (const uint8_t *)file.name(), strlen(file.name()))) ^ 0xffffffff;
                     debugLog("Got new crc: " + String(romCRC) + " from file: " + String(file.name()));
-                    if (rM.imageNameCrc32 == romCRC && tries < MAX_TRIES)
+                    anyFile = String(file.name());
+                    if (rM.imageNameCrc32 == romCRC && tries < MAX_TRIES && c > 1)
                     {
-                        tries = tries + 1;
                         root.close();
                         file.close();
                         redrawModuleImage();
                         return;
                     }
                     rM.imageNameCrc32 = romCRC;
-                    squareInfo modSq = getWatchModuleSquare();
                     writeImageN(modSq.cord.x, modSq.cord.y, getImg(IMAGE_MODULE_PATH + String(file.name())));
                     dUChange = true;
                 }
@@ -83,11 +86,19 @@ void redrawModuleImage()
         }
         root.close();
         file.close();
+        if (tries > MAX_TRIES)
+        {
+            tries = 0;
+            debugLog("Failed to find an image to update, showing any image");
+            writeImageN(modSq.cord.x, modSq.cord.y, getImg(IMAGE_MODULE_PATH + anyFile));
+            dUChange = true;
+        }
     }
 }
 
 void wfImagerequestShow(buttonState button, bool *showBool)
 {
+    tries = 0;
     redrawModuleImage();
 }
 
