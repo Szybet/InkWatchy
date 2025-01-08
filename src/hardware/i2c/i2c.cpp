@@ -4,7 +4,7 @@
 #if ATCHY_VER == YATCHY
 #define I2C_SDA_PIN 22
 #define I2C_SCL_PIN 23
-#define I2C_FREQ 10 // In Khz
+#define I2C_FREQ 50 // In Khz
 #endif
 
 bool initedI2C = false;
