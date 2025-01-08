@@ -5,6 +5,12 @@
 
 uint16_t readRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {
+#if ATCHY_VER == YATCHY && 1 == 0
+    if (initI2C() == false)
+    {
+        return 0;
+    }
+#endif
     Wire.beginTransmission(address);
     Wire.write(reg);
     Wire.endTransmission();
@@ -19,6 +25,12 @@ uint16_t readRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t l
 
 uint16_t writeRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {
+#if ATCHY_VER == YATCHY && 1 == 0
+    if (initI2C() == false)
+    {
+        return 0;
+    }
+#endif
     Wire.beginTransmission(address);
     Wire.write(reg);
     Wire.write(data, len);
@@ -42,6 +54,8 @@ void lookForFalse(bool newBool, bool *oldValue)
 bool accConfig()
 {
     bool status = true;
+    // Setting BMA4_OUTPUT_DATA_RATE_0_78HZ gives good power consumption but probably sucks
+    // rM.SBMA.shutDown() shuts down power consumption, duh
     Acfg cfg = {
         .odr = BMA4_OUTPUT_DATA_RATE_100HZ,
         .bandwidth = BMA4_ACCEL_NORMAL_AVG4,
