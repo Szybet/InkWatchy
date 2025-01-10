@@ -24,7 +24,8 @@ void initTetrisStuff()
     showedGameOver = false;
 }
 
-void exitTetris() {
+void exitTetris()
+{
     deInitTetrisStuff();
     restoreCpuSpeed();
 }
@@ -144,6 +145,10 @@ void loopTetris()
                     uint16_t rectX = BOARD_LEFT_X + (x * SQUARE_SIZE);
                     uint16_t rectY = BOARD_UP_Y + (y * SQUARE_SIZE);
                     dis->fillRect(rectX, rectY, SQUARE_SIZE, SQUARE_SIZE, GxEPD_BLACK);
+                    if (tg->active_board.board[y][x] != tg->board.board[y][x])
+                    {
+                        dis->drawRect(rectX + 2, rectY + 2, 6, 6, GxEPD_WHITE);
+                    }
                 }
             }
         }
