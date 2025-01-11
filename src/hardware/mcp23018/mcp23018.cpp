@@ -130,6 +130,8 @@ buttonState mcp23018::manageInterrupts()
     debugLog("Gpio expander up pin");
     return Up;
   }
+  
+  return None;
 }
 
 bool mcp23018::manageInterruptsExit()

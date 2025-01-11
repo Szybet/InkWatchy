@@ -104,6 +104,10 @@ void initAxc()
     if (rM.initedAxc == false)
     {
         uint8_t Type = rM.SRTC.getType(); // TODO: fix this
+        if(Type == 0) {
+            debugLog("Type SRTC is invalid, fix this, defaulting to 2");
+            Type = 2;
+        }
         if (rM.SBMA.begin(readRegisterBMA, writeRegisterBMA, delay, Type) == false)
         {
             debugLog("Failed to init bma");
