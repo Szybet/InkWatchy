@@ -51,13 +51,16 @@ bool wasClicked(uint8_t pin)
 void executeCombination()
 {
     resetSleepDelay(); // Faster so it won't escape...
-    if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true && rM.currentPlace != wifiDebug)
-    {
-        debugLog("Executed switch wifi combination");
-        switchWifiDebug();
+    if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true && wasClicked(MENU_PIN) == false && wasClicked(DOWN_PIN) == false)
+    {   
+        if(rM.currentPlace != wifiDebug) {
+            debugLog("Executed switch wifi combination");
+            switchWifiDebug();
+        }
+        return;
     }
 #if RGB_DIODE
-    if (wasClicked(UP_PIN) == true && wasClicked(DOWN_PIN) == true)
+    if (wasClicked(UP_PIN) == true && wasClicked(DOWN_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(DOWN_PIN) == false)
     {
         if (currentColor != IwWhite)
         {
@@ -67,6 +70,7 @@ void executeCombination()
         {
             setRgb(IwNone);
         }
+        return;
     }
 #endif
 }

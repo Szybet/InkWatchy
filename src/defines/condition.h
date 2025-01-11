@@ -262,3 +262,7 @@ Template for versioning
 #endif
 #endif
 
+#if FORCE_DISABLE_ACC == 1
+#undef AXC_ENABLED
+#define AXC_ENABLED 0
+#endif

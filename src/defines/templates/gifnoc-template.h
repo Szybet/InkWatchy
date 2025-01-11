@@ -129,12 +129,13 @@
 #define SLEEP_EVERY_MS 10000              // Goes to sleep timer, is resetted by button presses and other things
 #define POWER_SAVING_AFTER 40             // Turn on power saving features after a certain battery percantage.
 #define POWER_SAVING_OFF_AFTER 20         // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
-#define LOOP_NO_SCREEN_WRITE_DELAY_MS 225 // Go to "sleep" for x ms if the device is woken up (in a menu for example) and the screen didn't update. This value is fine tuned, but if you want a faster menu, feel free to make it smaller
+#define LOOP_NO_SCREEN_WRITE_DELAY_MS 112 // Go to "sleep" for x ms if the device is woken up (in a menu for example) and the screen didn't update. This value is fine tuned, but if you want a faster menu, feel free to make it smaller. 225 is good for me, but a very small percent of people say it's too much, let's do 112 and be happy. Power saving with this option will do really nothing, barely anything
 #define HARDWARE_POWER_SAVINGS 1          // Like wifi modem in power saving mode
 #define CPU_SPEED minimalSpeed            // Possible values: minimalSpeed, normalSpeed, maxSpeed. Obviously higher speeds decrease battery life - but it's only when you interact with the watch. This is mostly for the people who "ugh this watch is slow!". Well first, it's a watch, it should show time, any other features are battery wasters in some way and secondly you should first remove some features you don't use, most noticibly unused watchface moduls. In debug mode, this feature is overritten by DEBUG_CPU_SPEED when DEBUG
 #define BUTTON_CPU_SPEED normalSpeed      // Cpu speed when it has woken up by a button
 #define SOFT_START_THINGS 1               // Slowly starts things, like wifi to prevent brownout reset.
 #define SOFT_START_DELAY_MS 4500
+#define FORCE_DISABLE_ACC 0 // 1 Means ACC is disabled
 
 // Vault
 #define VAULT 1
