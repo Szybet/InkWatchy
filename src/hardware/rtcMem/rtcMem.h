@@ -71,13 +71,13 @@ struct rtcMem
         int watchfacePos; // It needs to be int because it's used in checkMinMax
         bool positionEngaged : 1;
     } inkfield;
+#endif
 // Shades watchface
 #if WATCHFACE_SHADES_SZYBET
     struct
     {
         uint16_t stepsSaved;
     } shades;
-#endif
 #endif
     // Watchface modules
     wfModule *wfModulesList[MODULE_COUNT];
