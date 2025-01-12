@@ -52,6 +52,15 @@ const watchfaceDef *getCurrentWatchface()
 {
     const watchfaceDef *watchfaceSel = watchfacesList[rM.watchfaceSelected];
     // debugLog("Watchface selected: " + String(watchfaceSel->name));
+    if(watchfaceSel->manager == wfmNone) {
+        for(uint8_t i = 0; i < WATCHFACE_COUNT; i++) {
+            if(watchfacesList[i]->manager != wfmNone) {
+                rM.watchfaceSelected = i;
+                return getCurrentWatchface();
+            }
+        }
+        debugLog("I'm pretty sure no watchfaces are enabled, well, crap");
+    }
     return watchfaceSel;
 }
 
