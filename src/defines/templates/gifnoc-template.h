@@ -5,6 +5,9 @@
 #define WATCHFACE_INKFIELD_SZYBET 1
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
+#define WATCHFACE_TAYCHRON 1
+#define WATCHFACE_TAYCHRON_12hr 1 // Show time in 12 hour format
+
 
 // Basics
 #define DEBUG_MENUS 1                 // Includes debug menus for various things

@@ -79,6 +79,15 @@ struct rtcMem
         uint16_t stepsSaved;
     } shades;
 #endif
+// taychron watchface
+#if WATCHFACE_TAYCHRON
+    struct
+    {
+        uint8_t dayBar;
+        uint16_t weatherMinutes;
+        uint8_t Hours;
+    } taychron;
+#endif
     // Watchface modules
     wfModule *wfModulesList[MODULE_COUNT];
     uint64_t latestModuleUpdate;

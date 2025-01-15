@@ -28,6 +28,13 @@ const watchfaceDef szybetAnalogConway = {
     .data = (genPointer)&analogConwayDef,
 };
 #endif
+#if WATCHFACE_TAYCHRON
+const watchfaceDef tayDef = {
+    .manager = wfmOne,
+    .name = "Taychron",
+    .data = (genPointer)&taychronDef,
+};
+#endif
 
 const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #if WATCHFACE_INKFIELD_SZYBET
@@ -42,6 +49,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_SHADES_SZYBET
     &szybetAnalogConway,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_TAYCHRON
+    &tayDef,
 #else
     &noWatchFace,
 #endif
