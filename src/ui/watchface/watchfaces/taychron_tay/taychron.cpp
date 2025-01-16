@@ -14,13 +14,13 @@
 #define TIME_CORD_X 18
 #define TIME_CORD_Y 119
 
-#if WATCHFACE_TAYCHRON_12hr
-    #define APorPM_X 150
-    #define APorPM_Y 143
-    #define AMPM_FONT getFont("taychron/Mono13")
+#if WATCHFACE_12H
+#define AMPPM_X 150
+#define AMPPM_Y 143
+#define AMPM_FONT getFont("taychron/Mono13")
 
-    String getAMPM(String time24)
-    {
+String getAMPM(String time24)
+{
     // Extract the hour from the 24-hour time string
     int colonIndex = time24.indexOf(':');
     int hour = time24.substring(0, colonIndex).toInt();
@@ -34,10 +34,10 @@
     {
         return "PM";
     }
-    }
+}
 
-    String convertTo12HourFormat(String time24)
-    {
+String convertTo12HourFormat(String time24)
+{
     // Split the input time (hh:mm) into hours and minutes
     int colonIndex = time24.indexOf(':');
     int hour = time24.substring(0, colonIndex).toInt();
@@ -62,7 +62,7 @@
 
     // Combine hour and minute for the final result
     return hourStr + ":" + minute;
-    }    
+}
 #endif
 
 static void drawTimeAfterApply(bool forceDraw)
@@ -72,7 +72,7 @@ static void drawTimeAfterApply(bool forceDraw)
         rM.taychron.dayBar = timeRTCLocal.Day;
         uint8_t percentOfMonth = uint8_t(((float)rM.taychron.dayBar / (float)31) * 100.0);
         drawProgressBar(MONTH_BAR_CORD, GENERAL_BAR_SIZE, percentOfMonth);
-        tay_DrawMoon();
+        tayDrawMoon();
     }
 
     uint16_t weatherMinutes = timeRTCLocal.Minute + (60 * timeRTCLocal.Hour);
@@ -80,7 +80,7 @@ static void drawTimeAfterApply(bool forceDraw)
     if (abs(rM.taychron.weatherMinutes - weatherMinutes) > 25 || forceDraw == true)
     {
         rM.taychron.weatherMinutes = weatherMinutes;
-        tay_DrawWeather();
+        tayDrawWeather();
     }
 }
 
@@ -90,20 +90,20 @@ static void showTimeFull()
     screenTimeChanged = true;
 #endif
     // Now UI
-    dis->fillRect(0,TIME_CORD_Y, 200, 30, GxEPD_BLACK); //Clear middle
+    dis->fillRect(0, TIME_CORD_Y, 200, 30, GxEPD_BLACK); // Clear middle
     String currTime = getHourMinute(timeRTCLocal);
 
-   #if WATCHFACE_TAYCHRON_12hr
-        setTextSize(1);
-        setFont(AMPM_FONT);
-        writeTextReplaceBack(getAMPM(currTime), APorPM_X, APorPM_Y, GxEPD_WHITE, GxEPD_BLACK ); 
+#if WATCHFACE_12H
+    setTextSize(1);
+    setFont(AMPM_FONT);
+    writeTextReplaceBack(getAMPM(currTime), AMPPM_X, AMPPM_Y, GxEPD_WHITE, GxEPD_BLACK);
 
-        currTime = convertTo12HourFormat(currTime);  
-    #endif
+    currTime = convertTo12HourFormat(currTime);
+#endif
 
     setTextSize(1);
-    setFont(TIME_FONT);    
-    writeTextReplaceBack(currTime, TIME_CORD_X, TIME_CORD_Y, GxEPD_WHITE, GxEPD_BLACK );
+    setFont(TIME_FONT);
+    writeTextReplaceBack(currTime, TIME_CORD_X, TIME_CORD_Y, GxEPD_WHITE, GxEPD_BLACK);
 }
 
 static void initWatchface()
@@ -111,8 +111,6 @@ static void initWatchface()
     writeImageN(0, 0, getImg("taychron/watchface"));
     readRTC();
 }
-
-
 
 static void drawBattery()
 {
@@ -122,8 +120,8 @@ static void drawBattery()
 const watchfaceDefOne taychronDef = {
     .drawTimeBeforeApply = showTimeFull,
     .drawTimeAfterApply = drawTimeAfterApply,
-    .drawDay =  []() {},
-    .drawMonth =  []() {},
+    .drawDay = []() {},
+    .drawMonth = []() {},
     .showTimeFull = showTimeFull,
     .initWatchface = initWatchface,
     .drawBattery = drawBattery,
@@ -136,14 +134,14 @@ const watchfaceDefOne taychronDef = {
         generalSwitch(mainMenu);
         break;
     }
-    #if LONG_BACK_FULL_REFRESH
+#if LONG_BACK_FULL_REFRESH
     case LongBack:
     {
         debugLog("Because of LONG_BACK_FULL_REFRESH in watchface, I shall now refresh the screen fully");
         updateDisplay(FULL_UPDATE);
         break;
     }
-    #endif
+#endif
     default: {
         break;
     }

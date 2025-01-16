@@ -1,12 +1,11 @@
 #include "taychron.h"
 #include <MoonPhase.h>
 
-
 #define WEATHER_ICON_CORD 38, 162
 
 #define TEMP_CORD 72, 185
 #define TEMP_RECT_CORD 72, 171
-#define TEMP_RECT_SIZE 42,15
+#define TEMP_RECT_SIZE 42, 15
 
 String tay_getWeatherIcon(uint8_t weatherCode)
 {
@@ -102,7 +101,7 @@ String tay_getWeatherIcon(uint8_t weatherCode)
     }
 }
 
-void tay_DrawWeather()
+void tayDrawWeather()
 {
     debugLog("Drawing weather in watchface");
     setTextSize(1);
@@ -115,7 +114,8 @@ void tay_DrawWeather()
         // Temp
         dis->fillRect(TEMP_RECT_CORD, TEMP_RECT_SIZE, GxEPD_WHITE);
         String temps = String(int16_t(roundf(wData.temp))) + "C";
-        if(temps.length() > 3) {
+        if (temps.length() > 3)
+        {
             temps = temps.substring(0, 3);
         }
         writeTextReplaceBack(temps, TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
@@ -134,7 +134,7 @@ void tay_DrawWeather()
 
 #define MOON_IMG_CORD 127, 160
 
-String tay_removeSpaces(String input)
+String tayRemoveSpaces(String input)
 {
     String output = "";
     for (int i = 0; i < input.length(); i++)
@@ -148,9 +148,9 @@ String tay_removeSpaces(String input)
     return output;
 }
 
-void tay_DrawMoon()
+void tayDrawMoon()
 {
     MoonPhase mp;
     mp.calculate(getUnixTime(timeRTCLocal));
-    writeImageN(MOON_IMG_CORD, getImg("taychron/" + tay_removeSpaces(String(mp.phaseName))));
+    writeImageN(MOON_IMG_CORD, getImg("taychron/" + tayRemoveSpaces(String(mp.phaseName))));
 }

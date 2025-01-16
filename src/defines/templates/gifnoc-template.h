@@ -2,11 +2,11 @@
 
 // Watchfaces!
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
+#define WATCHFACE_12H 1 // Show time in 12 hour format. Supported watchfaces: Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
 #define WATCHFACE_TAYCHRON 1
-#define WATCHFACE_TAYCHRON_12hr 1 // Show time in 12 hour format
 
 
 // Basics
