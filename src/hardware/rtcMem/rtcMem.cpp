@@ -80,6 +80,15 @@ RTC_DATA_ATTR rtcMem rM = {
         .stepsSaved = 0,
     },
 #endif
+// dark watchface
+#if WATCHFACE_TAYCHRON
+    .taychron = {
+        .dayBar = 0,
+        .weatherMinutes = 0,
+        .Hours = 0,
+    },
+#endif
+
     // Watchface modules
     // MAKE SURE HERE ARE ALL MODULES INSERTED
     .wfModulesList = {

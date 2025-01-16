@@ -185,7 +185,7 @@ OM_OneHourWeather weatherGetDataHourly(uint8_t hourOffset)
         return forecast;
     }
     OM_HourlyForecast *weatherDataWork = (OM_HourlyForecast *)weatherData.buf;
-    int64_t unixNow = getUnixTime(timeRTCLocal) + (60 * 60) * hourOffset;
+    int64_t unixNow = getUnixTime(timeRTCUTC0) + (60 * 60) * hourOffset; // Using utc0 as the stored data from open meteo uses utc0 unix timestamps for time
     int64_t smallestDiffUnix = 0;
     uint8_t smallestDiffIndex = 0;
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; i++)

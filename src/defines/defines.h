@@ -191,6 +191,9 @@ static const WiFiCred* wifiCredStatic[] = {
 #if WATCHFACE_ANALOG_SHARP_SZYBET
 #include "../ui/watchface/watchfaces/analogSharp_Szybet/analogSharp.h"
 #endif
+#if WATCHFACE_TAYCHRON
+#include "../ui/watchface/watchfaces/taychron_tay/taychron.h"
+#endif
 
 // Other
 #if DEBUG

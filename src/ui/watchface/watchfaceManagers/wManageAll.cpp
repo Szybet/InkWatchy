@@ -14,6 +14,13 @@ const watchfaceDef szybetStarfield = {
     .data = (genPointer)&inkFieldDef,
 };
 #endif
+#if WATCHFACE_TAYCHRON
+const watchfaceDef tayDef = {
+    .manager = wfmOne,
+    .name = "Taychron",
+    .data = (genPointer)&taychronDef,
+};
+#endif
 #if WATCHFACE_SHADES_SZYBET
 const watchfaceDef szybetShades = {
     .manager = wfmOne,
@@ -32,6 +39,11 @@ const watchfaceDef szybetAnalogConway = {
 const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #if WATCHFACE_INKFIELD_SZYBET
     &szybetStarfield,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_TAYCHRON
+    &tayDef,
 #else
     &noWatchFace,
 #endif
