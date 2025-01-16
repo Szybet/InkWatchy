@@ -60,7 +60,7 @@ void executeCombination()
         return;
     }
 #if RGB_DIODE
-    if (wasClicked(UP_PIN) == true && wasClicked(DOWN_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(DOWN_PIN) == false)
+    if (wasClicked(UP_PIN) == true && wasClicked(DOWN_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(MENU_PIN) == false)
     {
         if (currentColor != IwWhite)
         {
