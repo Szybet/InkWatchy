@@ -47,7 +47,7 @@
 : : 12
 */
 
-#define TIME_LETTERS_SPACING 32 // It differs, see below - so not it's static
+#define TIME_LETTERS_SPACING 34 // It differs, see above - so not it's static
 #define TIME_CORD_X 11
 #define TIME_CORD_Y 53
 #define TIME_CORD TIME_CORD_X, TIME_CORD_Y
