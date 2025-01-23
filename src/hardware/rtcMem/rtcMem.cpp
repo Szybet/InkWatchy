@@ -97,13 +97,13 @@ RTC_DATA_ATTR rtcMem rM = {
 #else
         &wfEmpty,
 #endif
-#if BITCOIN_MODULE
-        &rM.wfBit,
+#if IMAGE_MODULE
+        &rM.wfImage,
 #else
         &wfEmpty,
 #endif
-#if CONWAY_MODULE_ENABLED
-        &rM.wfImage,
+#if BITCOIN_MODULE
+        &rM.wfBit,
 #else
         &wfEmpty,
 #endif
@@ -112,7 +112,7 @@ RTC_DATA_ATTR rtcMem rM = {
 #else
         &wfEmpty,
 #endif
-#if IMAGE_MODULE
+#if CONWAY_MODULE_ENABLED
         &rM.wfConway,
 #else
         &wfEmpty,
