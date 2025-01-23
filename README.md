@@ -92,7 +92,7 @@ Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 ## Donations
 ~~This was the first thing I have written and asked myself if I should release it for free. Well here we are ;)~~
 
-This is a passion project at this point. To help an open source developer - who is still a student and motivate him to create this software feel free to donate
+This is a passion project at this point. To help an open source developer and motivate him to create this software feel free to donate
 
 For paypall you need to contact me
 

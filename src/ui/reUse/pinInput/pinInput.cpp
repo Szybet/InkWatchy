@@ -17,9 +17,9 @@ void showPin()
     dis->fillScreen(GxEPD_WHITE);
     setTextSize(1);
     uint16_t currentHeight = 20;
-    //debugLog("Current height before center text: " + String(currentHeight));
+    // debugLog("Current height before center text: " + String(currentHeight));
     centerText(newPin, &currentHeight);
-    //debugLog("Current heigh after center text: " + String(currentHeight));
+    // debugLog("Current heigh after center text: " + String(currentHeight));
     setTextSize(2);
 
     currentHeight = currentHeight + 5;
@@ -58,7 +58,7 @@ void showPin()
         drawButton(REMOVE_CORD, "r", &emptyImgPack, invert, TOLERANCE, 0);
     }
 
-    disUp(true);
+    dUChange = true;
 }
 
 void exitPinInput()
@@ -121,4 +121,5 @@ void loopPinInput()
         break;
     }
     }
+    disUp();
 }
