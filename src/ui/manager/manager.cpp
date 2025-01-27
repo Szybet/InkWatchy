@@ -265,6 +265,20 @@ void loopManager()
 #endif
         break;
     }
+    case videoPlayer:
+    {
+#if VIDEO_PLAYER
+        managerLaunchFunc(videoPlayer, initVideoPlayer, loopVideoPlayer, exitVideoPlayer);
+#endif
+        break;
+    }
+    case videoMenu:
+    {
+#if VIDEO_PLAYER
+        managerLaunchFunc(videoMenu, initVideoMenu, loopMenu);
+#endif
+        break;
+    }
     case pong:
     {
 #if PONG

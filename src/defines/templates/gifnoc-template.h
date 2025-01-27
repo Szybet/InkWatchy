@@ -103,6 +103,8 @@
 #define CALENDAR_SPLIT_DESCRIPTION_STRING "\\n"
 #define CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE 2
 
+#define VIDEO_PLAYER 0
+
 // Watchface modules
 #define MODULE_PERSISTENT 1       // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space
 #define MODULE_UPDATE_LIMIT_S 600 // Every x seconds, update the modules. Not every minute, like it was for now. Change it to 60 for every minute. Change it to 0 to completly disable modules updating automatically

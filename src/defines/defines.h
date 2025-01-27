@@ -135,6 +135,9 @@ static const WiFiCred* wifiCredStatic[] = {
 #if CALENDAR
 #include "../ui/places/calendar/calendar.h"
 #endif
+#if VIDEO_PLAYER
+#include "../ui/places/video/video.h"
+#endif
 #if VAULT
 #include "../ui/places/vault/vaultUi.h"
 #endif

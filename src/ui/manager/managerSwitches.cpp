@@ -23,7 +23,8 @@ void switchSettingsMenu()
     generalSwitch(settingsMenu);
 }
 
-void switchGamesMenu() {
+void switchGamesMenu()
+{
     generalSwitch(gamesMenu);
 }
 
@@ -37,7 +38,8 @@ void switchGeneralDebug()
     generalSwitch(generalDebug);
 }
 
-void switchClockDebug() {
+void switchClockDebug()
+{
     generalSwitch(clockDebug);
 }
 
@@ -81,6 +83,18 @@ void switchBack()
     setButton(Back);
 }
 
+#if VIDEO_PLAYER
+void switchVideoPlayer()
+{
+    generalSwitch(videoPlayer);
+}
+
+void switchVideoMenu()
+{
+    generalSwitch(videoMenu);
+}
+#endif
+
 void switchApple()
 {
     generalSwitch(apple);
@@ -104,7 +118,8 @@ void switchTetris()
 #endif
 
 #if CREDITS
-void switchCredits() {
+void switchCredits()
+{
     generalSwitch(credits);
 }
 #endif

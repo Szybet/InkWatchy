@@ -23,6 +23,7 @@ RUN apt-get install -y \
     fuse \
     libfuse2 \
     unzip \
+    ffmpeg \
     sudo
 
 # Esp idf

@@ -11,6 +11,11 @@ offset=$(<in/offset.txt tr -d '\n')
 rm -rf out/fs.bin
 ./in/mklittlefs --all-files -c littlefs -s $size out/fs.bin
 
+if [ $? -ne 0 ]; then
+    echo "Command failed. Exiting the script."
+    exit 1
+fi
+
 # rm -rf out/fs.bin
 # dd if=/dev/zero of=out/fs.bin bs=$size count=1
 # sudo losetup /dev/loop84 out/fs.bin

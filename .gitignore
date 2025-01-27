@@ -11,6 +11,7 @@ src/defines/confidential.h
 resources/personal/books/*.pdf
 resources/personal/books/*.epub
 resources/personal/vault/*.png
+resources/personal/videos/*.mp4
 
 **/out/
 **/in/

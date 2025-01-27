@@ -7,6 +7,45 @@ wfModule wfEmpty = {
     [](buttonState button, bool *showBool) {},
 };
 
+// MAKE SURE HERE ARE ALL MODULES INSERTED
+wfModule *wfModulesList[MODULE_COUNT] = {
+#if WIFI_MODULE
+    &rM.wfNet,
+#else
+    &wfEmpty,
+#endif
+#if IMAGE_MODULE
+    &rM.wfImage,
+#else
+    &wfEmpty,
+#endif
+#if BITCOIN_MODULE
+    &rM.wfBit,
+#else
+    &wfEmpty,
+#endif
+#if BOOK_MODULE_ENABLED
+    &rM.wfBook,
+#else
+    &wfEmpty,
+#endif
+#if CONWAY_MODULE_ENABLED
+    &rM.wfConway,
+#else
+    &wfEmpty,
+#endif
+#if API_MODULE
+    &rM.wfApi,
+#else
+    &wfEmpty,
+#endif
+#if EVENT_MODULE
+    &rM.wfEvent,
+#else
+    &wfEmpty,
+#endif
+};
+
 void clearModuleArea()
 {
     debugLog("clearModuleArea: extecuted...");
@@ -50,7 +89,7 @@ void drawModuleCount(bool force)
     int listIndexer = 0;
     for (int i = 0; i < MODULE_COUNT; i++)
     {
-        if (rM.wfModulesList[i]->show == true)
+        if (wfModulesList[i]->show == true)
         {
             listShows[listIndexer] = i;
             listIndexer = listIndexer + 1;
@@ -92,7 +131,8 @@ void drawModuleCount(bool force)
 
         dUChange = true;
 
-        if(counter == 0 && currentModuleTranslated == 0) {
+        if (counter == 0 && currentModuleTranslated == 0)
+        {
             debugLog("There are actually no modules, clearing the area.");
             clearModuleArea();
         }
@@ -104,12 +144,12 @@ void wfModuleSwitch(direction where)
 #if DEBUG && true == false
     for (int i = 0; i < MODULE_COUNT; i++)
     {
-        debugLog("Dump show values: " + String(i) + " " + BOOL_STR(rM.wfModulesList[i]->show));
+        debugLog("Dump show values: " + String(i) + " " + BOOL_STR(wfModulesList[i]->show));
     }
 #endif
     moveModule(where);
     int counter = 0;
-    while (rM.wfModulesList[rM.currentModule]->show != true && counter < MODULE_COUNT * 2)
+    while (wfModulesList[rM.currentModule]->show != true && counter < MODULE_COUNT * 2)
     {
         moveModule(where);
         counter = counter + 1;
@@ -130,12 +170,12 @@ void wfModuleSwitch(direction where)
 void wfModulesManage(buttonState button, bool forceRender)
 {
     rM.latestModuleUpdate = getUnixTime(timeRTCLocal);
-    
+
     debugLog("Running wfModulesManage, current module is: " + String(rM.currentModule));
     if (rM.currentModule != -1 && button != None)
     {
-        rM.wfModulesList[rM.currentModule]->requestShow(button, &rM.wfModulesList[rM.currentModule]->show);
-        if (rM.wfModulesList[rM.currentModule]->show == false)
+        wfModulesList[rM.currentModule]->requestShow(button, &wfModulesList[rM.currentModule]->show);
+        if (wfModulesList[rM.currentModule]->show == false)
         {
             rM.currentModule = -1;
         }
@@ -150,10 +190,10 @@ void wfModulesManage(buttonState button, bool forceRender)
     for (int i = 0; i < MODULE_COUNT; i++)
     {
         bool render = false;
-        //debugLog("Checking if show for index: " + String(i));
-        rM.wfModulesList[i]->checkShow(&rM.wfModulesList[i]->show, &render);
-        //debugLog("Render is: " + BOOL_STR(render));
-        if (rM.wfModulesList[i]->show == true)
+        // debugLog("Checking if show for index: " + String(i));
+        wfModulesList[i]->checkShow(&wfModulesList[i]->show, &render);
+        // debugLog("Render is: " + BOOL_STR(render));
+        if (wfModulesList[i]->show == true)
         {
             isThereAShow = true;
         }
@@ -174,7 +214,7 @@ void wfModulesManage(buttonState button, bool forceRender)
         {
             clearModuleArea();
             debugLog("Launching module show request: " + String(i));
-            rM.wfModulesList[i]->requestShow(button, &rM.wfModulesList[i]->show);
+            wfModulesList[i]->requestShow(button, &wfModulesList[i]->show);
             break;
         }
     }
@@ -186,14 +226,14 @@ void wfModulesManage(buttonState button, bool forceRender)
         for (int i = 0; i < MODULE_COUNT; i++)
         {
             bool render = false;
-            rM.wfModulesList[i]->checkShow(&rM.wfModulesList[i]->show, &render);
-            if (rM.wfModulesList[i]->show == true)
+            wfModulesList[i]->checkShow(&wfModulesList[i]->show, &render);
+            if (wfModulesList[i]->show == true)
             {
                 debugLog("Found fallback module to show");
                 rM.currentModule = i;
                 doIt = true;
                 clearModuleArea();
-                rM.wfModulesList[i]->requestShow(button, &rM.wfModulesList[i]->show);
+                wfModulesList[i]->requestShow(button, &wfModulesList[i]->show);
                 break;
             }
         }

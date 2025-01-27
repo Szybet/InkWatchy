@@ -153,7 +153,7 @@ void initSettingsMenu()
 void initGamesMenu()
 {
     int count = -1;
-    entryMenu buttons[4];
+    entryMenu buttons[5];
 #if TETRIS
     {
         debugLog("Adding Tetris");
@@ -166,6 +166,13 @@ void initGamesMenu()
         debugLog("Adding pong");
         count = count + 1;
         buttons[count] = {"Pong", getImg("pong"), switchPong};
+    }
+#endif
+#if VIDEO_PLAYER
+    {
+        debugLog("Adding video player");
+        count = count + 1;
+        buttons[count] = {"Video player", getImg("videoIcon"), switchVideoMenu};
     }
 #endif
 #if CONWAY

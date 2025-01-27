@@ -88,46 +88,7 @@ RTC_DATA_ATTR rtcMem rM = {
         .Hours = 0,
     },
 #endif
-
     // Watchface modules
-    // MAKE SURE HERE ARE ALL MODULES INSERTED
-    .wfModulesList = {
-#if WIFI_MODULE
-        &rM.wfNet,
-#else
-        &wfEmpty,
-#endif
-#if IMAGE_MODULE
-        &rM.wfImage,
-#else
-        &wfEmpty,
-#endif
-#if BITCOIN_MODULE
-        &rM.wfBit,
-#else
-        &wfEmpty,
-#endif
-#if BOOK_MODULE_ENABLED
-        &rM.wfBook,
-#else
-        &wfEmpty,
-#endif
-#if CONWAY_MODULE_ENABLED
-        &rM.wfConway,
-#else
-        &wfEmpty,
-#endif
-#if API_MODULE
-        &rM.wfApi,
-#else
-        &wfEmpty,
-#endif
-#if EVENT_MODULE
-        &rM.wfEvent,
-#else
-        &wfEmpty,
-#endif
-    },
     .latestModuleUpdate = 0,
     .currentModule = -1,
     .previousModuleCount = -1,

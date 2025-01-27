@@ -89,7 +89,6 @@ struct rtcMem
     } taychron;
 #endif
     // Watchface modules
-    wfModule *wfModulesList[MODULE_COUNT];
     uint64_t latestModuleUpdate;
     int currentModule; // Int because checkMinMax again
     int8_t previousModuleCount;

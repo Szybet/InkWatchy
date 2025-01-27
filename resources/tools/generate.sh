@@ -33,3 +33,9 @@ echo "Processing vault"
 cd vault/
 ./convertImagesVault.sh
 cd ../
+
+echo -e ''
+echo "Processing videos"
+cd other/videos/
+./convertVideos.sh
+cd ../../

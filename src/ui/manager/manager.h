@@ -28,6 +28,8 @@ typedef enum
     apple2,
     calendarDateMenu,
     calendarEventMenu,
+    videoPlayer,
+    videoMenu,
     pong,
     tetris,
     gamesMenu,
@@ -95,6 +97,10 @@ void switchBook();
 void switchBookSelector();
 void switchVault();
 void switchBack();
+#if VIDEO_PLAYER
+void switchVideoPlayer();
+void switchVideoMenu();
+#endif
 void switchApple();
 void switchApple2();
 void switchPong();
