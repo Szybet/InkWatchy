@@ -57,11 +57,14 @@ bool accConfig()
     // Setting BMA4_OUTPUT_DATA_RATE_0_78HZ gives good power consumption but probably sucks
     // rM.SBMA.shutDown() shuts down power consumption, duh
     Acfg cfg = {
-        .odr = BMA4_OUTPUT_DATA_RATE_100HZ,
+        .odr = BMA4_OUTPUT_DATA_RATE_50HZ,
         .bandwidth = BMA4_ACCEL_NORMAL_AVG4,
         .perf_mode = BMA4_CIC_AVG_MODE,
         .range = BMA4_ACCEL_RANGE_2G,
     };
+    // BMA4_OUTPUT_DATA_RATE_100HZ - 72 steps
+    // BMA4_OUTPUT_DATA_RATE_50HZ - 62 steps - best I ques, but other acc functions don't work well here, so if used, use 100HZ instead
+    // BMA4_OUTPUT_DATA_RATE_25HZ - 28 steps
 
     lookForFalse(rM.SBMA.setAccelConfig(cfg), &status);
     rM.SBMA.wakeUp();
