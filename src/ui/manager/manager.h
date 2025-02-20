@@ -20,6 +20,7 @@ typedef enum
     weatherConditionMenu,
     alarmSelectorMenu,
     alarmEditMenu,
+    alarmRing,
     setTimePlace,
     alarmEditDays,
     powerMenu,
@@ -98,6 +99,7 @@ void switchWeatherSelectorMenu();
 void switchAlarmSelectorMenu();
 void switchAlarmEditMenu();
 void switchAlarmEditDays();
+void switchAlarmRing();
 #endif
 void switchSetTime();
 void switchPowerMenu();

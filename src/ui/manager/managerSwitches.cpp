@@ -83,6 +83,11 @@ void switchAlarmEditDays()
 {
     generalSwitch(alarmEditDays);
 }
+
+void switchAlarmRing()
+{
+    generalSwitch(alarmRing);
+}
 #endif
 
 void switchSetTime()

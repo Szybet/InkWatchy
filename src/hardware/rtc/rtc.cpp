@@ -277,10 +277,42 @@ void readRTC()
   lastTimeRead = millisBetter();
 }
 
-// TODO: switch to timeRTCUTC0 here
+void wakeUpIn(int minutes)
+{
+  if (minutes != 1)
+  {
+    debugLog("Next wake up in " + String(minutes) + " minutes");
+    // isDebug(dumpRTCTime());
+    uint hour = timeRTCLocal.Hour;
+    int fullMinutes = int((hour * 60) + timeRTCLocal.Minute + minutes) + (timeZoneOffset / 60);
+    debugLog("fullMinutes: " + String(fullMinutes));
+    // Timezone triggered backwards, it's on minutes, add secconds
+    if (fullMinutes < 0)
+    {
+      fullMinutes = 1440 + fullMinutes;
+    }
+    // 60 * 24 = 1440 so a full day in minutes
+    if (fullMinutes >= (1440))
+    {
+      fullMinutes = fullMinutes - 1440;
+    }
+    uint finalHour = fullMinutes / 60; // Will always round up to the floor
+    uint finalMinute = fullMinutes - (finalHour * 60);
+    debugLog("The watch will wake up at exactly (in UTC0, taking in account your timezone) hour: " + String(finalHour) + " and minute: " + String(finalMinute));
+
+    rM.SRTC.atTimeWake(finalHour, finalMinute, true);
+  }
+  else
+  {
+    debugLog("Next minute wake up");
+    rM.SRTC.nextMinuteWake(true);
+  }
+}
+
 void wakeUpManageRTC()
 {
   rM.SRTC.clearAlarm();
+  int minutes = 0;
   if (rM.disableWakeUp == false)
   {
     // Not needed as we check if we go before next minute to sleep
@@ -290,36 +322,39 @@ void wakeUpManageRTC()
     // debugLog("timeRTCLocal.Hour: " + String(hour));
     if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
     {
-      debugLog("Next wake up in " + String(NIGHT_SLEEP_FOR_M) + " minutes");
-      // isDebug(dumpRTCTime());
-      int fullMinutes = int((hour * 60) + timeRTCLocal.Minute + NIGHT_SLEEP_FOR_M) + (timeZoneOffset / 60);
-      debugLog("fullMinutes: " + String(fullMinutes));
-      // Timezone triggered backwards, it's on minutes, add secconds
-      if (fullMinutes < 0)
-      {
-        fullMinutes = 1440 + fullMinutes;
-      }
-      // 60 * 24 = 1440 so a full day in minutes
-      if (fullMinutes >= (1440))
-      {
-        fullMinutes = fullMinutes - 1440;
-      }
-      uint finalHour = fullMinutes / 60; // Will always round up to the floor
-      uint finalMinute = fullMinutes - (finalHour * 60);
-      debugLog("The watch will wake up at exactly (in UTC0, taking in account your timezone) hour: " + String(finalHour) + " and minute: " + String(finalMinute));
-
-      rM.SRTC.atTimeWake(finalHour, finalMinute, true);
+      minutes = NIGHT_SLEEP_FOR_M;
     }
     else
     {
-      debugLog("Next minute wake up");
-      rM.SRTC.nextMinuteWake(true);
+      minutes = 1;
     }
   }
   else
   {
     debugLog("Not waking up, at all!");
   }
+
+#if INK_ALARMS
+  if (rM.nextAlarm == 0)
+  {
+    calculateNextAlarm();
+  }
+  if (rM.nextAlarm != 0)
+  {
+    uint64_t unixTimeNow = getUnixTime(timeRTCLocal);
+    uint32_t minutesTillAlarm = (rM.nextAlarm - unixTimeNow) / 60;
+    debugLog("unixTimeNow: " + String(unixTimeNow));
+    debugLog("rM.nextAlarm: " + String(rM.nextAlarm));
+    debugLog("minutesTillAlarm: " + String(minutesTillAlarm));
+    if (minutesTillAlarm < minutes)
+    {
+      debugLog("Minutes till alarm is lower, replacing!");
+      minutes = minutesTillAlarm;
+    }
+  }
+#endif
+
+  wakeUpIn(minutes);
 }
 
 void alarmManageRTC()

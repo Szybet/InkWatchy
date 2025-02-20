@@ -125,6 +125,10 @@ void calculateNextAlarm() {
             c = i;
         }
     }
+    if(smallestUnix == UINT64_MAX) {
+        smallestUnix = 0;
+        c = 0;
+    }
     debugLog("Next alarm is: " + String(smallestUnix) + " on index: " + String(c));
     rM.nextAlarm = smallestUnix;
     rM.nextAlarmIndex = c;
@@ -200,6 +204,14 @@ String alarmNameGet(inkAlarm *theAlarm)
         alarmName = alarmName + ", " + alarmGetDays(theAlarm);
     }
     return alarmName;
+}
+
+void checkAlarms() {
+    // 20 seconds tolerance
+    if(llabs(int64_t(getUnixTime(timeRTCLocal)) - int64_t(rM.nextAlarm)) < 20) {
+        debugLog("Alarm ringing!");
+        switchAlarmRing();
+    }
 }
 
 #endif
