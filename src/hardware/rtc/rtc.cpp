@@ -279,6 +279,10 @@ void readRTC()
 
 void wakeUpIn(int minutes)
 {
+  if(minutes < 1) {
+    debugLog("Fallback, this should NOT HAPPEN");
+    minutes = 1;
+  }
   if (minutes != 1)
   {
     debugLog("Next wake up in " + String(minutes) + " minutes");

@@ -83,4 +83,8 @@ void initAlarmEditDaysMenu()
     initMenu(buttons, c, "Edit days", 1);
 }
 
+void exitAlarmEditDaysMenu() {
+    calculateNextAlarm();
+}
+
 #endif

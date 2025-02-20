@@ -72,4 +72,8 @@ void initAlarmEditMenu()
     initMenu(buttons, count, "Edit alarm", 1);
 }
 
+void exitAlarmEditMenu() {
+    calculateNextAlarm();
+}
+
 #endif

@@ -54,23 +54,30 @@ uint64_t offsetToAddForDays(uint64_t unixTimeNow, inkAlarm *theAlarm, tmElements
     debugLog("Day is now: " + String(day));
     debugLog("The days we want to alarm: " + alarmGetDays(theAlarm));
 
-    if(getBit(theAlarm->days, day) == true) {
-        if (!(theAlarm->hour < timeAlarm.Hour || (theAlarm->hour == timeAlarm.Hour && theAlarm->minute < timeAlarm.Minute)))
-        {
-            debugLog("It's gonna trigger today, offset for days is zero then");
-            return 0;
-        }
-    } else {
+    if (getBit(theAlarm->days, day) == true && !(theAlarm->hour < timeAlarm.Hour || (theAlarm->hour == timeAlarm.Hour && theAlarm->minute < timeAlarm.Minute)))
+    {
+        debugLog("It's gonna trigger today, offset for days is zero then");
+        return 0;
+    }
+    else
+    {
+        // Overcomplicated that one I think
         // Find the nearest day
-        for(int i = 0; i < 7; i++) {
-            int ii = i + day;
-            if(ii > 6) {
+        // 1 so we don't start from the same day again
+        int c = 0;
+        for (int i = day + 1; i < day + 8; i++)
+        {
+            c = c + 1;
+            int ii = i;
+            if (ii > 6)
+            {
                 ii = ii - 7;
             }
             debugLog("ii is in iter: " + String(ii));
-            if(getBit(theAlarm->days, ii) == true) {
-                debugLog("So final ii is: " + String(ii) + " when days is: " + String(theAlarm->days) + " and i is: " + String(i));
-                return 86400 * i;
+            if (getBit(theAlarm->days, ii) == true)
+            {
+                debugLog("So final ii is: " + String(ii) + " when days is: " + String(theAlarm->days) + " and i is: " + String(i) + " and c is: " + String(c));
+                return 86400 * c;
             }
         }
     }
@@ -87,6 +94,7 @@ uint64_t getUnixTimeOfAlarm(inkAlarm *theAlarm)
     }
     uint64_t offsetToAdd = 0;
 
+    readRTC(); // To get the latest and greatest unix time...
     tmElements_t timeAlarm = timeRTCLocal;
     uint64_t unixTimeNow = getUnixTime(timeRTCLocal);
     if (theAlarm->onlyOnce == true)
@@ -96,7 +104,9 @@ uint64_t getUnixTimeOfAlarm(inkAlarm *theAlarm)
         {
             offsetToAdd = offsetToAdd + 86400; // One day
         }
-    } else {
+    }
+    else
+    {
         uint64_t daysOffset = offsetToAddForDays(unixTimeNow, theAlarm, timeAlarm);
         debugLog("offsetToAddForDays added: " + String(daysOffset));
         offsetToAdd = offsetToAdd + daysOffset;
@@ -104,7 +114,6 @@ uint64_t getUnixTimeOfAlarm(inkAlarm *theAlarm)
 
     timeAlarm.Hour = theAlarm->hour;
     timeAlarm.Minute = theAlarm->minute;
-
 
     uint64_t unixTimeCalc = getUnixTime(timeAlarm);
     unixTimeCalc = (unixTimeCalc / 60) * 60; // Remove seconds
@@ -115,17 +124,21 @@ uint64_t getUnixTimeOfAlarm(inkAlarm *theAlarm)
     return unixTimeCalc;
 }
 
-void calculateNextAlarm() {
+void calculateNextAlarm()
+{
     uint64_t smallestUnix = UINT64_MAX;
     uint8_t c = 0;
-    for(uint8_t i = 0; i < MAX_ALARMS; i++) {
+    for (uint8_t i = 0; i < MAX_ALARMS; i++)
+    {
         uint64_t alarmUnix = getUnixTimeOfAlarm(&rM.alarms[i]);
-        if(alarmUnix < smallestUnix) {
+        if (alarmUnix < smallestUnix)
+        {
             smallestUnix = alarmUnix;
             c = i;
         }
     }
-    if(smallestUnix == UINT64_MAX) {
+    if (smallestUnix == UINT64_MAX)
+    {
         smallestUnix = 0;
         c = 0;
     }
@@ -206,9 +219,11 @@ String alarmNameGet(inkAlarm *theAlarm)
     return alarmName;
 }
 
-void checkAlarms() {
+void checkAlarms()
+{
     // 20 seconds tolerance
-    if(llabs(int64_t(getUnixTime(timeRTCLocal)) - int64_t(rM.nextAlarm)) < 20) {
+    if (llabs(int64_t(getUnixTime(timeRTCLocal)) - int64_t(rM.nextAlarm)) < 20)
+    {
         debugLog("Alarm ringing!");
         switchAlarmRing();
     }

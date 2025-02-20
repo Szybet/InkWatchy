@@ -194,14 +194,14 @@ void loopManager()
     case alarmSelectorMenu:
     {
 #if INK_ALARMS
-        managerLaunchFunc(alarmSelectorMenu, initAlarmSelectorMenu, loopMenu);
+        managerLaunchFunc(alarmSelectorMenu, initAlarmSelectorMenu, loopMenu, exitAlarmSelectorMenu);
 #endif
         break;
     }
     case alarmEditMenu:
     {
 #if INK_ALARMS
-        managerLaunchFunc(alarmEditMenu, initAlarmEditMenu, loopMenu);
+        managerLaunchFunc(alarmEditMenu, initAlarmEditMenu, loopMenu, exitAlarmEditMenu);
 #endif
         break;
     }
@@ -213,7 +213,7 @@ void loopManager()
     case alarmEditDays:
     {
 #if INK_ALARMS
-        managerLaunchFunc(alarmEditDays, initAlarmEditDaysMenu, loopMenu);
+        managerLaunchFunc(alarmEditDays, initAlarmEditDaysMenu, loopMenu, exitAlarmEditDaysMenu);
 #endif
         break;
     }
