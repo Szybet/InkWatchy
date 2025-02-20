@@ -217,6 +217,13 @@ void loopManager()
 #endif
         break;
     }
+    case alarmRing:
+    {
+#if INK_ALARMS
+        managerLaunchFunc(alarmRing, initAlarmRing, loopAlarmRing, exitAlarmRing);
+#endif
+        break;
+    }
     case powerMenu:
     {
         managerLaunchFunc(powerMenu, initpowerMenu, loopMenu, saveAllStorage);

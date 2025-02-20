@@ -30,7 +30,7 @@ void initMainMenu()
 #if INK_ALARMS
     {
         count = count + 1;
-        buttons[count] = {"Alarms", getImg("alarm"), switchAlarmSelectorMenu};
+        buttons[count] = {"Alarms", getImg("alarms/alarmIcon"), switchAlarmSelectorMenu};
     }
 #endif
 #if WEATHER_INFO
@@ -208,16 +208,6 @@ void toggleDisableVibrationsEntry()
 void toggleWakeUpEntry()
 {
     toggleWakeUp();
-    /*
-    if (rM.disableWakeUp == false)
-    {
-        wakeUpManageRTC();
-    }
-    else
-    {
-        rM.SRTC.clearAlarm();
-    }
-    */
     initpowerMenu();
 }
 
@@ -225,7 +215,6 @@ void initpowerMenu()
 {
     int count = -1;
     entryMenu buttons[2];
-
     {
         count = count + 1;
         ImageDef *image;

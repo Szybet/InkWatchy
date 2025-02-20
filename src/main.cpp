@@ -49,7 +49,9 @@ void setup()
         &priorityLoopHandle);
   }
 
-  // resetSleepDelay();
+  if(bootStatus.reason == rtc || bootStatus.reason == ulp) {
+    checkAlarms();
+  }
 }
 
 void loop()
@@ -61,6 +63,7 @@ void loop()
   {
     watchdogPing();
     alarmManageRTC();
+    checkAlarms();
   }
   loopManager();
 
