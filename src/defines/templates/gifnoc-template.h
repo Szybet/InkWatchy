@@ -8,7 +8,6 @@
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
 #define WATCHFACE_TAYCHRON 1
 
-
 // Basics
 #define DEBUG_MENUS 1                 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
@@ -75,6 +74,13 @@
 // Moon
 #define MOON_MIN_RADIUS 57.0
 #define MOON_MAX_RADIUS 63.6
+
+// Alarms
+#define INK_ALARMS 1 // Enable alarms
+#define MAX_ALARMS 10 // More alarms, more RTC memory usage
+#define ALARM_DURATION_S 60 // Seconds of ringing
+#define ALARM_MOTOR_DELAY 1000 // Ms of delay for motor
+#define ALARM_MOTOR_TIME 200 // Time for motor to vibrate
 
 // Book things
 #define BOOK 0

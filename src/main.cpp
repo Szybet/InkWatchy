@@ -49,9 +49,12 @@ void setup()
         &priorityLoopHandle);
   }
 
-  if(bootStatus.reason == rtc || bootStatus.reason == ulp) {
+#if INK_ALARMS
+  if (bootStatus.reason == rtc || bootStatus.reason == ulp)
+  {
     checkAlarms();
   }
+#endif
 }
 
 void loop()
@@ -63,7 +66,9 @@ void loop()
   {
     watchdogPing();
     alarmManageRTC();
+#if INK_ALARMS
     checkAlarms();
+#endif
   }
   loopManager();
 
