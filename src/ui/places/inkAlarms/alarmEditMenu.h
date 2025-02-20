@@ -10,5 +10,6 @@ struct inkAlarm;
 extern inkAlarm *choosedAlarm;
 
 void initAlarmEditMenu();
+void exitAlarmEditMenu();
 
 #endif

@@ -49,4 +49,8 @@ void initAlarmSelectorMenu()
     initMenu(buttons, c, "Alarms", 1);
 }
 
+void exitAlarmSelectorMenu() {
+    calculateNextAlarm();
+}
+
 #endif

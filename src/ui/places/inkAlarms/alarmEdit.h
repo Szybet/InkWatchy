@@ -6,5 +6,6 @@
 
 void toggleDay();
 void initAlarmEditDaysMenu();
+void exitAlarmEditDaysMenu();
 
 #endif
