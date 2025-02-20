@@ -18,6 +18,10 @@ typedef enum
     gitDebug,
     weatherMenu,
     weatherConditionMenu,
+    alarmSelectorMenu,
+    alarmEditMenu,
+    setTimePlace,
+    alarmEditDays,
     powerMenu,
     book,
     bookSelector,
@@ -90,6 +94,12 @@ void switchWifiDebug();
 void switchGitDebug();
 void switchWeatherMenu();
 void switchWeatherSelectorMenu();
+#if INK_ALARMS
+void switchAlarmSelectorMenu();
+void switchAlarmEditMenu();
+void switchAlarmEditDays();
+#endif
+void switchSetTime();
 void switchPowerMenu();
 void switchWatchfaceSelectorMenu();
 

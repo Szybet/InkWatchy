@@ -110,10 +110,19 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../ui/places/weather/weatherSwitches.h"
 #endif
 
+// Alarms
+#if INK_ALARMS
+#include "../ui/places/inkAlarms/inkAlarm.h"
+#include "../ui/places/inkAlarms/alarmEdit.h"
+#include "../ui/places/inkAlarms/alarmEditMenu.h"
+#include "../ui/places/inkAlarms/alarmSelector.h"
+#endif
+
 // Ui
 #include "../ui/functionsUi.h"
 #include "../ui/reUse/menu/menu.h"
 #include "../ui/reUse/chart/chart.h"
+#include "../ui/reUse/setTime/setTime.h"
 #include "../ui/manager/manager.h"
 #include "../ui/watchface/watchFaceLogic.h"
 #include "../ui/watchface/watchfaceManagers/wManageOne.h"

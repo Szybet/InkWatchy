@@ -93,44 +93,50 @@ struct rtcMem
     int currentModule; // Int because checkMinMax again
     int8_t previousModuleCount;
     int8_t previousCurrentModule;
-    // wFApi
-    #if API_MODULE
+// wFApi
+#if API_MODULE
     wfModule wfApi;
-    #endif
+#endif
     // wFBit
     wfModule wfBit;
     bool isBtcDataAvail : 1;
     bool isBtcDataNew : 1;
     bool smallBtcData : 1;
     uint btcLastUpdate;
-    // wFBook
-    #if BOOK_MODULE_ENABLED
+// wFBook
+#if BOOK_MODULE_ENABLED
     wfModule wfBook;
-    #endif
-    // wFConway
-    #if CONWAY_MODULE_ENABLED
+#endif
+// wFConway
+#if CONWAY_MODULE_ENABLED
     wfModule wfConway;
     uint8_t timeChangeCheck;
     uint8_t conwayModuleGrid[CONWAY_MODULE_WIDTH / 8 * CONWAY_MODULE_HEIGHT];
-    #endif
-    // wFEvent
-    #if EVENT_MODULE
+#endif
+// wFEvent
+#if EVENT_MODULE
     wfModule wfEvent;
     int64_t currentEventTime;
     int8_t currentDay;
-    #endif
-    // wFImg
-    #if IMAGE_MODULE
+#endif
+// wFImg
+#if IMAGE_MODULE
     wfModule wfImage;
-    #if IMG_MODULE_CHANGE_EVERY_HOUR
+#if IMG_MODULE_CHANGE_EVERY_HOUR
     int8_t imageCurrentHour;
-    #endif
+#endif
     uint32_t imageNameCrc32;
-    #endif
-    // wFNet
-    #if WIFI_MODULE
+#endif
+// wFNet
+#if WIFI_MODULE
     wfModule wfNet;
-    #endif
+#endif
+// Alarms
+#if INK_ALARMS
+    inkAlarm alarms[MAX_ALARMS];
+    uint64_t nextAlarm;
+    uint8_t nextAlarmIndex;
+#endif
 };
 
 extern rtcMem rM;
