@@ -89,7 +89,7 @@
 #define BOOK_AXC_LINE_WIDTH 3
 #define BOOK_AXC_DIFFERENCE_CHANGE 15
 #define BOOK_CHARS_PER_PAGE 200 // This is dependent on the font. It must be Mono
-#define BOOK_FONT getFont("UbuntuMono-Regular10")
+#define BOOK_FONT getFont("UbuntuMono10")
 
 // Conway, It will drain your battery a lot
 #define CONWAY 1

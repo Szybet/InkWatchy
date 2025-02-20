@@ -68,6 +68,28 @@ void switchWeatherSelectorMenu()
     generalSwitch(weatherConditionMenu);
 }
 
+#if INK_ALARMS
+void switchAlarmSelectorMenu()
+{
+    generalSwitch(alarmSelectorMenu);
+}
+
+void switchAlarmEditMenu()
+{
+    generalSwitch(alarmEditMenu);
+}
+
+void switchAlarmEditDays()
+{
+    generalSwitch(alarmEditDays);
+}
+#endif
+
+void switchSetTime()
+{
+    generalSwitch(setTimePlace);
+}
+
 void switchPowerMenu()
 {
     generalSwitch(powerMenu);

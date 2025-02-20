@@ -165,4 +165,10 @@ RTC_DATA_ATTR rtcMem rM = {
         wfNetrequestShow,
     },
 #endif
+// Alarms
+#if INK_ALARMS
+    .alarms = {0},
+    .nextAlarm = 0,
+    .nextAlarmIndex = 0,
+#endif
 };

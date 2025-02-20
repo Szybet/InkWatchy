@@ -257,9 +257,11 @@ String strTime(time_t unixTime)
   return String(ctime(&unixTime));
 }
 
-String addZero(String str, uint8_t minimumLength) {
+String addZero(String str, uint8_t minimumLength)
+{
   String str_tmp = str;
-  while(str_tmp.length() < minimumLength) {
+  while (str_tmp.length() < minimumLength)
+  {
     str_tmp = "0" + str_tmp;
   }
   return str_tmp;
@@ -343,18 +345,53 @@ void setBoolMutex(std::mutex *theMutex, bool *theBool, bool boolValue)
   theMutex->unlock();
 }
 
-int betterRandom(int min, int max) {
-  if (min > max) {
+int betterRandom(int min, int max)
+{
+  if (min > max)
+  {
     int temp = min;
     min = max;
     max = temp;
   }
-  
+
   uint32_t range = max - min; // +1 to make max inclusive
-  
+
   return min + (esp_random() % range);
 }
 
-int betterRandom(int max) {
+int betterRandom(int max)
+{
   return betterRandom(0, max);
+}
+
+void setBit(uint8_t *num, uint8_t position, bool value)
+{
+  if (position < 8)
+  {
+    if (value)
+    {
+      *num |= (1 << position);
+    }
+    else
+    {
+      *num &= ~(1 << position);
+    }
+  }
+}
+
+bool getBit(uint8_t num, uint8_t position)
+{
+  if (position < 8)
+  {
+    return (num >> position) & 1;
+  }
+  return false;
+}
+
+void toggleBit(uint8_t *num, uint8_t position)
+{
+  if (position < 8)
+  {
+    *num ^= (1 << position);
+  }
 }
