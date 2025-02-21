@@ -4,7 +4,6 @@ RTC_DATA_ATTR rtcMem rM = {
     // Battery
     .bat = {
         .curV = 0.0,
-        .charV = 0.0,
         .isCharging = false,
         .isFullyCharged = false,
         .percentage = 0,

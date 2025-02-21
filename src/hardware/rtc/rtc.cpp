@@ -361,9 +361,9 @@ void wakeUpManageRTC()
   wakeUpIn(minutes);
 }
 
-void alarmManageRTC()
+void manageRTC()
 {
-  // debugLog("Executed alarmManageRTC");
+  // debugLog("Executed manageRTC");
   // #if RTC_TYPE == EXTERNAL_RTC
   //   if (digitalRead(RTC_INT_PIN) == LOW)
   // #elif RTC_TYPE == INTERNAL_RTC

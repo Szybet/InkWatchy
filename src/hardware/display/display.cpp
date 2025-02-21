@@ -3,6 +3,11 @@
 
 GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> *dis = &rM.display;
 
+void drawCorner(uint16_t color)
+{
+    dis->fillCircle(0, 0, 6, color);
+}
+
 void initDisplay()
 {
     debugLog("initDisplay called");
@@ -59,6 +64,15 @@ void initDisplay()
     // Default values
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
+}
+
+void deInitScreen()
+{
+#if SCREEN_CORNER_WAKEUP
+    drawCorner(GxEPD_WHITE);
+    dis->display(PARTIAL_UPDATE);
+#endif
+    dis->hibernate();
 }
 
 bool dUChange = false;
@@ -194,6 +208,9 @@ void resetHoldManage()
 
 void updateDisplay(bool mode)
 {
+#if SCREEN_CORNER_WAKEUP
+    drawCorner(GxEPD_BLACK);
+#endif
 #if SCREEN_FULL_WHITE_WORKAROUND == 0
     // Normal
     dis->display(mode);

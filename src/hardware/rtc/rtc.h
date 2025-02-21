@@ -17,7 +17,7 @@ void initRTC();
 void saveRTC(tmElements_t timeToSave);
 void readRTC();
 void wakeUpManageRTC();
-void alarmManageRTC();
+void manageRTC();
 
 void setupMillisComparators();
 

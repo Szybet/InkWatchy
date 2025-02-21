@@ -9,7 +9,7 @@
 #define WATCHFACE_TAYCHRON 1
 
 // Basics
-#define DEBUG_MENUS 1                 // Includes debug menus for various things
+#define DEBUG_MENUS 1 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
 #define VIBRATION_BUTTON_TIME_OVERWRITE 0 // This needs to be to 1 if you want the values below to be listened to. Otherwise it's device dependent in condition.h
 // Those are example values
@@ -42,16 +42,16 @@
 #define WATCHDOG_TASK 1              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
 
 // Drift & NTP & Syncing
-// For now, SYNC_WIFI is not advised to be used, thank you
-#define SYNC_WIFI 0                        // Autimatically sync wifi - only if it's being charger and after the delay below
-#define SYNC_WIFI_SINCE_SUCC 72000         // 20h
+// Sync wifi is disabled by default because Watchy v2, watchy v3 have bad charging detection and it will drain a lot of battery before detecting it and going to sleep & disabling the wifi - only on yatchy this feature works fully correct, on others it drains more battery. If your battery drained fully, this is the first thing to disable, if that worked report it to me
+#define SYNC_WIFI 0                        // Autimatically sync wifi - only if it's being charged and after the delay below
+#define SYNC_WIFI_SINCE_SUCC 1800          // 30m
 #define SYNC_WIFI_SINCE_FAIL 600           // 10m
 #define MANUAL_NTP_OFFSET 0                // In seconds, When your ntp server is wrong
 #define SYNC_NTP_ON_CHARGING_DELAY 90000   // Sync NTP when charging every, in Ms. Default 1.5 minute
 #define VALID_PREVIOUS_SYNC_DELAY 300      // Valid minimum delay to calculate drift, below that it will be ignored. Keep in mind to keep it higher then the delay between SYNC_WIFI_SINCE_FAIL and SYNC_NTP_ON_CHARGING_DELAY
 #define WIFI_CONNECTION_TRIES 3            // Regular sync, number of tries
 #define WIFI_CONNECTION_TRIES_PERSISTENT 1 // Persistent sync (SYNC_WIFI), number of tries
-#define WIFI_SYNC_TIME 10000                // Ms, time for waiting to connect to wifi
+#define WIFI_SYNC_TIME 10000               // Ms, time for waiting to connect to wifi
 #define WIFI_ERROR_TIME 3000               // Ms, time for waiting when wifi failed before next try
 #define TIME_DRIFT_CORRECTION 0            // The RTC may drift, this should repair it. It basically on first ntp sync starts the measurment and on the second it ends it. I suggest disabling SYNC_WIFI because if it's triggered, it will cancel the drift calculation because its a persistent sync, it happens every few minutes. If you have a watchy V2, you should first try FORCE_INTERNAL_RTC instead of this option.
 #define TIME_DRIFT_MINIMUM_TIME 24         // Minimum amount of hours a drift calculation can go on, because measuring drift between 5 minutes will help you experience the back to the future movie. It's suggested to be minimum 24 hours.
@@ -59,11 +59,11 @@
 #define FORCED_INTERNAL_RTC_QUARTZ 0       // If you forced the internal RTC and if you have an external quartz crystal, set this to 1
 #define AVOID_SLEEPING_ON_FULL_MINUTE 4    // This value shouldn't be really touched, it checks if in x seconds a full minute passess, if yes, it waits to x / 2 seconds
 #define CONNECT_TO_HIDDEN_NETWORKS 0       // This makes the wifi manager connect to hidden networks too. For some reason it takes more time and power to do so, that's why it's not on default, otherwise it should work
-#define NTP_SERVER_URL "ntp.ubuntu.com" // Change it to something else if it doesn't work as a first step to troubleshoot. pool.ntp.org has a rate limiter apparently
+#define NTP_SERVER_URL "ntp.ubuntu.com"    // Change it to something else if it doesn't work as a first step to troubleshoot. pool.ntp.org has a rate limiter apparently
 
 // Weather
-#define WEATHER_INFO 1                     // Enable weather
-#define WEATHER_TRIES 3                    // Ammount of times to try to sync weather
+#define WEATHER_INFO 1  // Enable weather
+#define WEATHER_TRIES 3 // Ammount of times to try to sync weather
 #define WEATHER_WATCHFACE_HOUR_OFFSET 1
 #define PRESSURE_HPA_MAX 1100 // 1013 is 50%
 #define PRESSURE_HPA_MIN 850
@@ -76,11 +76,11 @@
 #define MOON_MAX_RADIUS 63.6
 
 // Alarms
-#define INK_ALARMS 1 // Enable alarms
-#define MAX_ALARMS 10 // More alarms, more RTC memory usage
-#define ALARM_DURATION_S 60 // Seconds of ringing
+#define INK_ALARMS 1           // Enable alarms
+#define MAX_ALARMS 10          // More alarms, more RTC memory usage
+#define ALARM_DURATION_S 60    // Seconds of ringing
 #define ALARM_MOTOR_DELAY 1000 // Ms of delay for motor
-#define ALARM_MOTOR_TIME 200 // Time for motor to vibrate
+#define ALARM_MOTOR_TIME 200   // Time for motor to vibrate
 
 // Book things
 #define BOOK 0
@@ -239,6 +239,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define DISABLE_WAKEUP_INTERRUPTS 0            // As in buttons (or yatchy gpio expander)
 #define MCP_GPIO_EXPANDER_DISABLE 0            // Bad idea, may increase power consumption
 #define MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS 0 // Yatchy with no battery, huh
+#define SCREEN_CORNER_WAKEUP 0                 // writes a few pixels in the left top corner, works without DEBUG turned on
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
@@ -255,6 +256,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 
 // Other
 #define MAX_MENU_ITEMS 35
+#define FULL_MODE_AFTER_S 10 // Entering full mode after x seconds.
 
 // Other other, resources thing
 #define RESOURCES_NAME_LENGTH 50
@@ -298,4 +300,3 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define WEATHER_DIR "/weather"
 
 #define IMAGE_MODULE_PATH "watchfaceImages/"
-

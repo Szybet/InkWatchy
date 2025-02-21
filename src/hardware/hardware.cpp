@@ -55,7 +55,7 @@ void initHardware()
 #if DEBUG == 1
     setCpuSpeed(DEBUG_CPU_SPEED);
 #else
-    if (bootStatus.reason == button)
+    if (isFullMode() == true)
     {
         setCpuSpeed(BUTTON_CPU_SPEED);
     }
@@ -321,4 +321,29 @@ void firstWakeUpManage()
         }
     }
 #endif
+}
+
+bool isFullMode() {
+    // For things that aren't needed if it's just wakeup - update - sleep
+    if(bootStatus.reason == button) {
+        // debugLog("Full mode because of button");
+        return true;
+    }
+    if(millisBetter() > FULL_MODE_AFTER_S * 1000) {
+        // debugLog("Full mode because of time passed");
+        return true;
+    }
+    if(rM.bat.isCharging == true || rM.bat.isFullyCharged == true) {
+        // debugLog("Full mode because of battery charging or is fully charged");
+        return true;
+    }
+
+    // False now
+    if(bootStatus.reason == wakeUpReason::rtc || bootStatus.reason == wakeUpReason::ulp) {
+        // debugLog("Power mode because of rtc or ulp wakeup");
+        return false;
+    }
+
+    // debugLog("Power mode because everything else failed, this should NOT happen");
+    return false;
 }

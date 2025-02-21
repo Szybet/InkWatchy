@@ -187,7 +187,7 @@ Template for versioning
 #if ATCHY_VER == YATCHY
 #define USB_JTAG 1
 #else
-#define USB_JTAG 0 // I don't have this device
+#define USB_JTAG 0 // I don't have a watchy v3
 #endif
 
 // Temps
@@ -199,7 +199,7 @@ Template for versioning
 
 // Yatchy specific things
 #if ATCHY_VER == YATCHY
-#define LP_CORE 1
+#define LP_CORE 0
 
 #define MENU_PIN 0 // A0
 #define DOWN_PIN 1 // A1

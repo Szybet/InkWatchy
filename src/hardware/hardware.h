@@ -48,4 +48,4 @@ String wakeupSourceToString(esp_sleep_source_t source);
 
 int64_t millisBetter();
 void firstWakeUpManage();
-
+bool isFullMode();
