@@ -73,7 +73,8 @@ void regularSync()
 {
     // debugLog("Entering regular sync");
     // debugLog("rM.bat.isCharging:" + BOOL_STR(rM.bat.isCharging));
-    if (SYNC_WIFI == 1 && rM.bat.isCharging == true && isWifiTaskCheck() == false)
+    #if SYNC_WIFI
+    if (rM.bat.isCharging == true && isWifiTaskCheck() == false)
     {
         if (getUnixTime(timeRTCLocal) - rM.lastSyncUnix > SYNC_WIFI_SINCE_SUCC)
         {
@@ -100,7 +101,12 @@ void regularSync()
     else
     {
         // debugLog("Not doing regular sync: " + String(getUnixTime(timeRTCLocal) - rM.lastSyncUnix) + " " + BOOL_STR(rM.bat.isCharging));
+        if(isWifiTaskCheck() == false && wifiStatusWrap() != WifiOff) {
+            debugLog("Turning wifi off after regular sync");
+            turnOffWifi();
+        }
     }
+    #endif
 }
 
 #define MIN_RSSI -100

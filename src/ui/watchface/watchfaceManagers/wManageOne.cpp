@@ -56,12 +56,6 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
         if (rM.disableSomeDrawing == false)
         {
             // wdo->drawTimeAfterApply(); // TODO: lp core not sure
-
-            // If we are running for a long time, like wifi sync:
-            if ((bootStatus.reason == wakeUpReason::button) || millisBetter() > 10 * 1000)
-            {
-                loopBattery();
-            }
             if (rM.batteryPercantageWF != rM.bat.percentage)
             {
                 rM.batteryPercantageWF = rM.bat.percentage;
@@ -157,7 +151,7 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
 
     if (timeHappened == false && bt == None && wentToSleep == true)
     {
-        debugLog("Nothing happened, delay...");
+        // debugLog("Nothing happened, delay...");
         delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
     }
 }

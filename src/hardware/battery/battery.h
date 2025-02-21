@@ -5,7 +5,6 @@
 struct batteryInfo
 {
     float curV;
-    float charV;
     bool isCharging : 1;
     bool isFullyCharged : 1; // Only on the Yatchy really, v3 people are free to implement it
     uint8_t percentage;

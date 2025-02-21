@@ -49,13 +49,13 @@ float getBatteryVoltage()
 
 #endif
     float batVoltFinish = sum / readedTimes;
-    debugLog("So battery voltage: " + String(batVoltFinish));
+    // debugLog("So battery voltage: " + String(batVoltFinish));
     return batVoltFinish;
 }
 
 void initBattery()
 {
-    if (bootStatus.fromWakeup == false || bootStatus.reason == wakeUpReason::rtc || bootStatus.reason == wakeUpReason::ulp)
+    if (bootStatus.fromWakeup == false || isFullMode() == false)
     {
         rM.bat.oneCheck = true;
         loopBattery();
@@ -79,7 +79,7 @@ void isChargingCheck()
     return;
 #endif
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
-    if (rM.bat.curV >= rM.bat.charV)
+    if (rM.bat.curV >= BATTERY_CHARGE_VOLTAGE)
     {
         // debugLog("It's charging because of above voltage");
         rM.bat.isCharging = true;
@@ -273,7 +273,6 @@ void loopBattery()
         debugLog("prevOne: " + String(rM.bat.prevVOne) + " curV: " + String(rM.bat.curV));
         rM.bat.prevVOne = rM.bat.curV;
         // debugLog("rM.bat.curV: " + String(rM.bat.curV));
-        // debugLog("rM.bat.charV: " + String(rM.bat.charV));
         int batPercTemp = ((rM.bat.curV - BATTERY_MIN_VOLTAGE) / (BATTERY_MAX_VOLTAGE - BATTERY_MIN_VOLTAGE)) * 100.0;
         debugLog("Calculated battery percentage, raw: " + String(batPercTemp));
         if (batPercTemp > 100)

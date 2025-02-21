@@ -67,6 +67,7 @@ void ForceInputs()
 void goSleep()
 {
     debugLog("goSleep activated");
+    debugLog("Going to sleep after: " + String(millisBetter()));
 
 #if DEBUG && SCREEN_SLEEP_INFO
     dis->setCursor(50, 190);
@@ -97,7 +98,7 @@ void goSleep()
     //     delayTask(25);
     // }
 #if LP_CORE == true
-    dis->hibernate();
+    deInitScreen();
     delayTask(10);
     // This enables the subsystem, so it doesn't shut it down or something
     // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#ulp-coprocessor-wakeup
@@ -108,7 +109,7 @@ void goSleep()
     loadLpCore();
     runLpCore();
 #else
-    dis->hibernate();
+    deInitScreen();
     // Not needed
 #if true == false
     rM.gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
