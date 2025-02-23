@@ -111,7 +111,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
     int elapsedtime = 0;
     initCombinations();
     loopCombinations();
-    while (buttonRead(buttonPin) == BUT_CLICK_STATE && elapsedtime < BUTTON_LONG_PRESS_MS)
+    while (buttonRead(buttonPin) == BUT_CLICK_STATE && elapsedtime <= BUTTON_LONG_PRESS_MS)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
         elapsedtime = millisBetter() - startime;
@@ -135,7 +135,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
     }
 
     debugLog("elapsed time: " + String(elapsedtime) + " BUTTON_LONG_PRESS_MS:" + String(BUTTON_LONG_PRESS_MS));
-    if (elapsedtime > BUTTON_LONG_PRESS_MS)
+    if (elapsedtime >= BUTTON_LONG_PRESS_MS)
     {
         setButton(longButton);
         debugLog("Vibrating long button now");
