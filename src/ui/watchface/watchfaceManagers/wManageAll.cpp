@@ -91,7 +91,6 @@ const watchfaceDefOne *getwatchfaceDefOne()
 
 void watchfaceManageAll(bool init)
 {
-
     const watchfaceDef *watchfaceSel = getCurrentWatchface();
     switch (watchfaceSel->manager)
     {

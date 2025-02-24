@@ -23,9 +23,13 @@ void initAlarmRing()
 
 void loopAlarmRing()
 {
-    if(millisBetter() - timeSinceLastMotor > ALARM_MOTOR_DELAY) {
+    if (millisBetter() - timeSinceLastMotor > ALARM_MOTOR_DELAY)
+    {
         timeSinceLastMotor = millisBetter();
         vibrateMotor(ALARM_MOTOR_TIME);
+#if RGB_DIODE
+        setRandomColor();
+#endif
     }
     buttonState btn = useButton();
     int timeSpendAlarming = (millisBetter() - millisStart) / 1000;
@@ -41,13 +45,17 @@ void loopAlarmRing()
 
 void exitAlarmRing()
 {
-    if(rM.alarms[rM.nextAlarmIndex].onlyOnce == true) {
+    if (rM.alarms[rM.nextAlarmIndex].onlyOnce == true)
+    {
         rM.alarms[rM.nextAlarmIndex].onlyOnce = false;
     }
     rM.nextAlarm = 0;
     rM.nextAlarmIndex = 0;
     calculateNextAlarm();
-    useButtonBlank(); // Cancel any buttons
+#if RGB_DIODE
+    setRgb(IwNone);
+#endif
+    useButtonBlank();                             // Cancel any buttons
     sleepDelayMs = sleepDelayMs - SLEEP_EVERY_MS; // Requesting sleep
 }
 

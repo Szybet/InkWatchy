@@ -54,7 +54,9 @@ uint64_t offsetToAddForDays(uint64_t unixTimeNow, inkAlarm *theAlarm, tmElements
     debugLog("Day is now: " + String(day));
     debugLog("The days we want to alarm: " + alarmGetDays(theAlarm));
 
-    if (getBit(theAlarm->days, day) == true && !(theAlarm->hour < timeAlarm.Hour || (theAlarm->hour == timeAlarm.Hour && theAlarm->minute < timeAlarm.Minute)))
+    debugLog("timeAlarm.Hour: " + String(timeAlarm.Hour));
+    debugLog("timeAlarm.Minute: " + String(timeAlarm.Minute));
+    if (getBit(theAlarm->days, day) == true && (theAlarm->hour > timeAlarm.Hour || (theAlarm->hour == timeAlarm.Hour && theAlarm->minute > timeAlarm.Minute)))
     {
         debugLog("It's gonna trigger today, offset for days is zero then");
         return 0;
@@ -107,6 +109,10 @@ uint64_t getUnixTimeOfAlarm(inkAlarm *theAlarm)
     }
     else
     {
+        if(theAlarm->days == 0) {
+            debugLog("Alarm is set to days but no days selected, returning errored one");
+            return UINT64_MAX;
+        }
         uint64_t daysOffset = offsetToAddForDays(unixTimeNow, theAlarm, timeAlarm);
         debugLog("offsetToAddForDays added: " + String(daysOffset));
         offsetToAdd = offsetToAdd + daysOffset;
@@ -145,6 +151,9 @@ void calculateNextAlarm()
     debugLog("Next alarm is: " + String(smallestUnix) + " on index: " + String(c));
     rM.nextAlarm = smallestUnix;
     rM.nextAlarmIndex = c;
+#if LP_CORE
+    setAlarmForLpCore();
+#endif
 }
 
 String alarmGetTime(inkAlarm *theAlarm)
@@ -219,13 +228,29 @@ String alarmNameGet(inkAlarm *theAlarm)
     return alarmName;
 }
 
+bool willAlarmTrigger()
+{
+    uint64_t unixNow = getUnixTime(timeRTCLocal);
+    if(rM.nextAlarm != 0) {
+        if (rM.nextAlarm < unixNow || llabs(int64_t(unixNow) - int64_t(rM.nextAlarm)) < 20)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 void checkAlarms()
 {
     // 20 seconds tolerance
-    if (llabs(int64_t(getUnixTime(timeRTCLocal)) - int64_t(rM.nextAlarm)) < 20)
+    if (willAlarmTrigger() == true)
     {
         debugLog("Alarm ringing!");
-        switchAlarmRing();
+        if(rM.placeTree[currentPlaceIndex] != alarmRing) {
+            switchAlarmRing();
+        } else {
+            debugLog("Not switching alarm because it's already on!");
+        }
     }
 }
 

@@ -17,6 +17,7 @@ void calculateNextAlarm();
 String alarmGetTime(inkAlarm *theAlarm);
 String alarmGetDays(inkAlarm *theAlarm);
 String alarmNameGet(inkAlarm *theAlarm);
+bool willAlarmTrigger();
 void checkAlarms();
 
 #endif

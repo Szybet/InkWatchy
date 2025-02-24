@@ -33,6 +33,15 @@ void stopLpCore()
     delayTask(10);
 }
 
+void setAlarmForLpCore()
+{
+#if INK_ALARMS
+    rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
+    uint32_t nextAlarmToRtc = (uint32_t)rM.nextAlarm;
+    memcpy(&rtc_mem->custom[4], &nextAlarmToRtc, 4);
+#endif
+}
+
 void clearLpCoreRtcMem()
 {
     debugLog("Clearing lp core rtc mem");
@@ -40,6 +49,7 @@ void clearLpCoreRtcMem()
 #ifdef CONFIG_BOOTLOADER_CUSTOM_RESERVE_RTC
     memset(rtc_mem->custom, 0, CONFIG_BOOTLOADER_CUSTOM_RESERVE_RTC_SIZE);
 #endif
+    setAlarmForLpCore();
 }
 
 bool loadLpCore()
@@ -93,17 +103,19 @@ bool runLpCore()
 
 void initManageLpCore()
 {
-    if (bootStatus.fromWakeup == true)
+    if (bootStatus.fromWakeup == true && willAlarmTrigger() == false)
     {
         screenForceNextFullTimeWrite = true;
         // We want it to update on it's own
-        if(bootStatus.reason != wakeUpReason::ulp) {
+        if (bootStatus.reason != wakeUpReason::ulp)
+        {
             rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
             rM.wFTime.Hour = rtc_mem->custom[1];
             rM.wFTime.Minute = rtc_mem->custom[2];
             debugLog("Updated from lp core hour and minute: " + getHourMinute(rM.wFTime));
         }
-        if(bootStatus.reason == wakeUpReason::ulp) {
+        if (bootStatus.reason == wakeUpReason::ulp)
+        {
             // Force a rewrite, be sure about it, the read was done previously
             readRTC();
             rM.wFTime.Minute = 255;
@@ -177,7 +189,7 @@ const char *getLpLog(uint8_t id)
     case 7:
         return LPOG_SCREEN_POWEROFF_7_STR;
     case 8:
-        return LPOG_UNKNOWN_255_STR;
+        return LPOG_ERROR_8_STR;
     case 9:
         return LPOG_UNKNOWN_255_STR;
     case 10:

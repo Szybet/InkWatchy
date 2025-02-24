@@ -7,6 +7,7 @@
 extern bool screenForceNextFullTimeWrite;
 extern bool screenTimeChanged;
 
+void setAlarmForLpCore();
 void clearLpCoreRtcMem();
 void lpCoreScreenPrepare(bool now, bool setDuChange = true);
 void stopLpCore();

@@ -85,11 +85,14 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
     {
         dUChange = false;
 #if LP_CORE == true
-        if (bootStatus.reason == ulp || (screenForceNextFullTimeWrite == true && currentPlaceIndex == 0))
+        // Not sure about recent change
+        if (bootStatus.reason == ulp || screenForceNextFullTimeWrite == true)
         {
-            screenForceNextFullTimeWrite = false;
-            lpCoreScreenPrepare(false, false);
-            showTimeFullGlobal();
+            if(currentPlaceIndex == 0) {
+                screenForceNextFullTimeWrite = false;
+                lpCoreScreenPrepare(false, false);
+                showTimeFullGlobal();    
+            }
             clearLpCoreRtcMem();
         }
 #endif
