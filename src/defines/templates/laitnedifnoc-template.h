@@ -12,16 +12,32 @@ STATIC_WIFI_CRED wifi_credential8 = {.ssid = "", .password = ""};
 STATIC_WIFI_CRED wifi_credential9 = {.ssid = "", .password = ""};
 STATIC_WIFI_CRED wifi_credential10 = {.ssid = "hotspot", .password = "12345678"};
 
-// Wifi Quick settings
-#define WQ_SSID ""
-#define WQ_PASS ""
-#define WQ_BSSID "" // Mac, splitted by ":"
-// Yes, this is the format, without ""
-#define WQ_STAT_IP 0, 0, 0, 0
-#define WQ_GATEWAY 0, 0, 0, 0
-#define WQ_SUBNET 0, 0, 0, 0
-#define WQ_CONN_TO 0, 0, 0, 0 // Ip address to connect to
-#define WQ_PORT_TO 54321      // Port to connect to
+const wifiQuickCred generalWifiQuick = {
+    .ssid = "",                         // Replace with actual SSID
+    .pass = "",                         // Replace with actual password
+    .bssid = "",                        // Replace with actual BSSID, format like this: 00:00:00:00:00:00
+    .ip = IPAddress(0, 0, 0, 0),        // Static IP
+    .gateway = IPAddress(0, 0, 0, 0),   // Gateway IP
+    .subnet = IPAddress(0, 0, 0, 0),    // Subnet IP
+    .dns1 = IPAddress(1, 1, 1, 1),      // DNS1 IP
+    .dns2 = IPAddress(8, 8, 8, 8),      // DNS2 IP
+    .connectTo = IPAddress(0, 0, 0, 0), // IP address to connect to
+    .port = 54321                       // Port to connect to
+};
+
+// Connect to and port here doesn't matter for alarms
+const wifiQuickCred alarmWifiQuick = {
+    .ssid = "",                         // Replace with actual SSID
+    .pass = "",                         // Replace with actual password
+    .bssid = "",                        // Replace with actual BSSID, format like this: 00:00:00:00:00:00
+    .ip = IPAddress(0, 0, 0, 0),        // Static IP
+    .gateway = IPAddress(0, 0, 0, 0),   // Gateway IP
+    .subnet = IPAddress(0, 0, 0, 0),    // Subnet IP
+    .dns1 = IPAddress(1, 1, 1, 1),      // DNS1 IP
+    .dns2 = IPAddress(8, 8, 8, 8),      // DNS2 IP
+    .connectTo = IPAddress(0, 0, 0, 0), // IP address to connect to
+    .port = 54321                       // Port to connect to
+};
 
 // Get those values here: https://open-meteo.com/en/docs/geocoding-api
 // For hamburg, germany example values:

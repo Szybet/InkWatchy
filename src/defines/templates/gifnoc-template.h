@@ -11,12 +11,13 @@
 // Basics
 #define DEBUG_MENUS 1 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
-#define VIBRATION_BUTTON_TIME_OVERWRITE 0 // This needs to be to 1 if you want the values below to be listened to. Otherwise it's device dependent in condition.h
-// Those are example values
 #define VIBRATION_BUTTON_TIME 90      // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_BUTTON_LONG_TIME 60 // This is just an addition to VIBRATION_BUTTON_TIME
 #define VIBRATION_ACTION_TIME 200     // Time in ms to the motor to vibrate when the UI receives an action
 #define VIBRATION_POWER 170           // From 1 to 255, PWM duty cycle. Too low and it can not even vibrate a little
+// Motor power multiplier
+#define VIBRATION_MULTIPLIER_OVERWRITE 0
+#define VIBRATION_MULTIPLIER 1.0
 #define STEPS_GOAL 7000
 
 // Timezone! So:
@@ -81,6 +82,8 @@
 #define ALARM_DURATION_S 60    // Seconds of ringing
 #define ALARM_MOTOR_DELAY 1000 // Ms of delay for motor
 #define ALARM_MOTOR_TIME 200   // Time for motor to vibrate
+#define ALARM_WIFI_MIN_STRENGTH 60 // from 1-99, percents
+#define ALARM_WIFI_MULTIPLIER 7 // Multiplies the time if wifi connect is needed
 
 // Book things
 #define BOOK 0

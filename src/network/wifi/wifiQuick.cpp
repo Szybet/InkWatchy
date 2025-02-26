@@ -15,32 +15,29 @@ void parseBytes(const char *str, char sep, byte *bytes, int maxBytes, int base)
     }
 }
 
-IPAddress wqIp(WQ_STAT_IP);
-IPAddress wqGateway(WQ_GATEWAY);
-IPAddress wqSubnet(WQ_SUBNET);
-IPAddress wqDns1(1, 1, 1, 1);
-IPAddress wqDns2(8, 8, 4, 4);
-
 #if DEBUG
 int64_t startMill = 0;
 #endif
 cpuSpeed cs;
 
-bool connectWifiQuick()
+bool connectWifiQuick(wifiQuickCred creds, int maxTimeMs)
 {
 #if DEBUG
     debugLog("Turning on wifi quick");
     startMill = millisBetter();
 #endif
+    if(strlen(creds.ssid) == 0 || strlen(creds.pass) == 0) {
+        return false;
+    }
     uint8_t mac[6];
-    parseBytes(WQ_BSSID, ':', mac, 6, 16);
+    parseBytes(creds.bssid, ':', mac, 6, 16);
 
     // Doesn't change anything really, maybe tcp
     cs = getCpuSpeed();
     setCpuSpeed(maxSpeed);
     WiFi.setSleep(WIFI_PS_NONE);
 
-    if (!WiFi.config(wqIp, wqGateway, wqSubnet, wqDns1, wqDns2))
+    if (!WiFi.config(creds.ip, creds.gateway, creds.subnet, creds.dns1, creds.dns2))
     {
         debugLog("Failed to configure wq");
         return false;
@@ -48,14 +45,14 @@ bool connectWifiQuick()
 
     // Channel to 0 if unknown
     // Empty mac as (const uint8_t *)__null
-    WiFi.begin(WQ_SSID, WQ_PASS, 0, mac);
+    WiFi.begin(creds.ssid, creds.pass, 0, mac);
 
     int delay = 0;
     while (WiFi.status() != WL_CONNECTED)
     {
         debugLog("Waiting for connecting...");
         delay = delay + WIFI_QUICK_CHECK_MS;
-        if (delay > WIFI_QUICK_MAX_MS)
+        if (delay > maxTimeMs)
         {
             debugLog("Failed to connect to quick wifi");
             turnOffWifiMinimal();

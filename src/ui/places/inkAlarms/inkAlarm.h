@@ -10,6 +10,7 @@ struct inkAlarm {
     uint8_t minute : 6;
     uint8_t days; // Bit 1 means turned on for this day. Bit 0 is monday. No bitfield because pointers
     bool onlyOnce : 1; // Either days or this - it deletes the alarm
+    bool requireWifi : 1;
 };
 
 uint64_t getUnixTimeOfAlarm(inkAlarm *theAlarm);

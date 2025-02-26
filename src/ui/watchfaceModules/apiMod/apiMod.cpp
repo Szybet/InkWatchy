@@ -55,12 +55,12 @@ void wfApirequestShow(buttonState button, bool *showBool)
         writeLine("Api active", modSq.cord.x, &currLine);
         if(button > 1 && button != Menu) {
             writeLine("Received button: " + String(button), modSq.cord.x, &currLine);
-            bool conn1 = connectWifiQuick();
+            bool conn1 = connectWifiQuick(generalWifiQuick);
             writeLine("Wifi quick: " + BOOL_STR(conn1), modSq.cord.x, &currLine);
             if(conn1 == true) {
                 WiFiClient client;
-                IPAddress ip(WQ_CONN_TO);
-                bool conn2 = client.connect(ip, WQ_PORT_TO);
+                IPAddress ip(generalWifiQuick.connectTo);
+                bool conn2 = client.connect(ip, generalWifiQuick.connectTo);
                 writeLine("Connected: " + BOOL_STR(conn2), modSq.cord.x, &currLine);
                 if (conn2 == true) {
                     client.setTimeout(WIFI_QUICK_MAX_MS / 2);

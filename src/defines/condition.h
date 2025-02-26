@@ -135,6 +135,16 @@ Template for versioning
 #define CHRG_STATUS_PIN -1
 #endif
 
+// Motor power multiplier
+#if VIBRATION_MULTIPLIER_OVERWRITE == 0
+#undef VIBRATION_MULTIPLIER
+#if ATCHY_VER == YATCHY
+#define VIBRATION_MULTIPLIER 0.78
+#else
+#define VIBRATION_MULTIPLIER 1.0
+#endif
+#endif
+
 // RTC type
 #if FORCE_INTERNAL_RTC
 #define RTC_TYPE INTERNAL_RTC
@@ -241,25 +251,6 @@ Template for versioning
 #define LP_CORE_TEST_ENABLED 1
 #else
 #define LP_CORE_TEST_ENABLED 0
-#endif
-
-// Vibration time, device dependent
-#if VIBRATION_BUTTON_TIME_OVERWRITE == 0
-#undef VIBRATION_BUTTON_TIME
-#undef VIBRATION_BUTTON_LONG_TIME
-#undef VIBRATION_ACTION_TIME
-#undef VIBRATION_POWER
-#if ATCHY_VER != YATCHY
-#define VIBRATION_BUTTON_TIME 30
-#define VIBRATION_BUTTON_LONG_TIME 42
-#define VIBRATION_ACTION_TIME 50 
-#define VIBRATION_POWER 170  
-#else
-#define VIBRATION_BUTTON_TIME 90
-#define VIBRATION_BUTTON_LONG_TIME 60
-#define VIBRATION_ACTION_TIME 200 
-#define VIBRATION_POWER 170  
-#endif
 #endif
 
 #if FORCE_DISABLE_ACC == 1

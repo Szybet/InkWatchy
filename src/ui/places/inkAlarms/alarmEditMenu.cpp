@@ -16,6 +16,12 @@ void oneTimeAlarmChange()
     initAlarmEditMenu();
 }
 
+void wifiAlarmChange()
+{
+    choosedAlarm->requireWifi = !choosedAlarm->requireWifi;
+    initAlarmEditMenu();
+}
+
 bool waitingForTime = false;
 void switchSetTimeHandler() {
     waitingForTime = true;
@@ -33,7 +39,7 @@ void initAlarmEditMenu()
     }
 
     int count = -1;
-    entryMenu buttons[5];
+    entryMenu buttons[6];
     {
         count = count + 1;
         if (choosedAlarm->enabled == true)
@@ -66,6 +72,17 @@ void initAlarmEditMenu()
         {
             count = count + 1;
             buttons[count] = {"Days: " + alarmGetDays(choosedAlarm), &emptyImgPack, switchAlarmEditDays};
+        }
+    }
+    {
+        count = count + 1;
+        if (choosedAlarm->requireWifi == true)
+        {
+            buttons[count] = {"Require wifi", getImg("accept"), wifiAlarmChange};
+        }
+        else
+        {
+            buttons[count] = {"Require wifi", getImg("cross"), wifiAlarmChange};
         }
     }
     count = count + 1;

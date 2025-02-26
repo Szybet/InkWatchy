@@ -279,7 +279,7 @@ bool mcp23018::resetVerify()
   iodirReg = FULL_REG;
   gpintenReg = EMPTY_REG;
   gppuReg = EMPTY_REG;
-  olatReg = EMPTY_REG;
+  olatReg = FULL_REG;
 
   intconReg = EMPTY_REG;
   defvalReg = EMPTY_REG;

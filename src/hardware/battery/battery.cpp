@@ -27,7 +27,7 @@ float getBatteryVoltage()
     for (int i = 0; i < VOLTAGE_AVG_COUNT; i++)
     {
         float readed = BatteryRead();
-        if ((previousRead != 0.0 && abs(previousRead - readed) > 0.6) || readed == 0.0)
+        if ((previousRead != 0.0 && abs(previousRead - readed) > 0.4) || readed == 0.0)
         {
             if (previousRead > 3.3)
             {
@@ -305,25 +305,36 @@ void loopBattery()
 
 void loopPowerSavings()
 {
-    if (rM.isBatterySaving == false && rM.bat.percentage < POWER_SAVING_AFTER && reasonForVoltageSpikes() == false)
-    {
-        debugLog("Turning on power settings");
-        rM.isBatterySaving = true;
-        rM.disableAllVibration = true;
-        rM.disableWakeUp = true;
-    }
-    else if (rM.isBatterySaving == true && rM.bat.percentage + POWER_SAVING_OFF_AFTER > POWER_SAVING_AFTER && rM.bat.isCharging == false)
-    {
-        debugLog("Turning off power settings");
-        rM.isBatterySaving = false;
-        loadAllStorage();
+    if(reasonForVoltageSpikes() == false) {
+        if (rM.isBatterySaving == false && rM.bat.percentage < POWER_SAVING_AFTER)
+        {
+            debugLog("Turning on power settings");
+            rM.isBatterySaving = true;
+            rM.disableAllVibration = true;
+            rM.disableWakeUp = true;
+        }
+        else if (rM.isBatterySaving == true && rM.bat.percentage + POWER_SAVING_OFF_AFTER > POWER_SAVING_AFTER && rM.bat.isCharging == false)
+        {
+            debugLog("Turning off power settings");
+            rM.isBatterySaving = false;
+            loadAllStorage();
+        }    
     }
 }
 
 bool reasonForVoltageSpikes()
 {
-    // use OR here with other functions
-    return isWifiTaskCheck();
+    if(isWifiTaskCheck() == true) {
+        return true;
+    }
+    wifiStatusSimple wifi = wifiStatusWrap();
+    if(wifi != WifiOff) {
+        return true;
+    }
+    if(motorTaskRunning == true) {
+        return true;
+    }
+    return false;
 }
 
 #if DEBUG

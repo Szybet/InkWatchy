@@ -2,7 +2,8 @@
 
 #include "defines.h"
 
-struct ImageDef {
+struct ImageDef
+{
     int16_t bw;
     int16_t bh;
     uint8_t *bitmap;
@@ -11,7 +12,7 @@ struct ImageDef {
 extern ImageDef emptyImgPack;
 
 // It's converted to int by api mod
-typedef enum 
+typedef enum
 {
     Unknown = 0, // For the task to look for answers, used on the yatchy
     None = 1,
@@ -25,19 +26,23 @@ typedef enum
     LongDown = 9,
 } buttonState; // This needs to be here because watchface modules use it too and idk why it doesn't work if its in buttons.h :( send help
 
-typedef enum {
-    WifiOff,
-    WifiOn,
-    WifiConnected,
+typedef enum
+{
+    WifiOff = 0,
+    WifiOn = 1,
+    WifiConnected = 2,
+    WifiUndefined = 3,
 } wifiStatusSimple; // This too
 
-struct wfModule {
+struct wfModule
+{
     bool show;
-    void (*checkShow)(bool* showBool, bool* redrawBool);
-    void (*requestShow)(buttonState button, bool* showBool);
+    void (*checkShow)(bool *showBool, bool *redrawBool);
+    void (*requestShow)(buttonState button, bool *showBool);
 }; // Madness -,-
 
-struct bufSize {
+struct bufSize
+{
     uint8_t *buf;
     int size;
 };
@@ -46,9 +51,10 @@ extern bufSize emptyBuff;
 
 #define genPointer uint32_t // Generic pointer
 
-typedef struct {
-    const char* ssid;
-    const char* password;
+typedef struct
+{
+    const char *ssid;
+    const char *password;
 } WiFiCred;
 
 #define STATIC_WIFI_CRED static const WiFiCred
@@ -71,26 +77,43 @@ struct squareInfo
     cordInfo cord;
 };
 
-enum watchFaceManager {
+enum watchFaceManager
+{
     wfmNone = -1, // None, doesn't exist
-    wfmOne = 1, // InkWatchy default, Szybet certified
-    wfmTwo = 2, // Do what you want mode
+    wfmOne = 1,   // InkWatchy default, Szybet certified
+    wfmTwo = 2,   // Do what you want mode
 };
 
-enum wfmTwoArg {
+enum wfmTwoArg
+{
     wTloop,
     wTinit,
 };
 
-enum wfmTwoRet {
+enum wfmTwoRet
+{
     wTNone,
     wTYes,
     wTNo,
 };
 
-struct watchfaceDef {
+struct watchfaceDef
+{
     watchFaceManager manager;
-    const char* name;
+    const char *name;
     genPointer data;
 };
 
+struct wifiQuickCred
+{
+    const char* ssid;
+    const char* pass;
+    const char* bssid;
+    IPAddress ip;
+    IPAddress gateway;
+    IPAddress subnet;
+    IPAddress dns1;
+    IPAddress dns2;
+    IPAddress connectTo;
+    uint port;
+};
