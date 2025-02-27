@@ -30,7 +30,7 @@ void initMainMenu()
 #if INK_ALARMS
     {
         count = count + 1;
-        buttons[count] = {"Alarms", getImg("alarms/alarmIcon"), switchAlarmSelectorMenu};
+        buttons[count] = {"Alarms", getImg("alarms/alarmIcon"), switchAlarmSetChooser};
     }
 #endif
 #if WEATHER_INFO

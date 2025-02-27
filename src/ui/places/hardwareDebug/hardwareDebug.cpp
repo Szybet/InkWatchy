@@ -42,7 +42,8 @@ void initGeneralDebugDisplay()
     dis->setCursor(cursorX, 1);
     String menuName = "Debug Menu: Hardware";
     getTextBounds(menuName, NULL, NULL, NULL, &h);
-    if(containsBelowChar(menuName) == true) {
+    if (containsBelowChar(menuName) == true)
+    {
         h = h + 2;
     }
     maxHeight = h;
@@ -98,14 +99,15 @@ void loopGeneralDebugDisplay()
         writeTextReplaceBack(usedHeapStr, cursorX, memoryHeight);
         dUChange = true;
     }
-    #if TEMP_CHECKS_ENABLED
-        float currentTemp = getTemp();
-        if(currentTemp != previousTempUi) {
-            previousTempUi = currentTemp;
-            writeTextReplaceBack("CPU temp: " + String(currentTemp), cursorX, tempHeight);
-            dUChange = true;
-        }
-    #endif
+#if TEMP_CHECKS_ENABLED
+    float currentTemp = getTemp();
+    if (currentTemp != previousTempUi)
+    {
+        previousTempUi = currentTemp;
+        writeTextReplaceBack("CPU temp: " + String(currentTemp), cursorX, tempHeight);
+        dUChange = true;
+    }
+#endif
     useButtonBlank();
     disUp();
 }
@@ -121,9 +123,30 @@ void initGeneralDebug()
 
 void loopGeneralDebug()
 {
-    debugLog("Used Heap KB: " + String((ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024));
-    // debugLog("Heap caps free size: " + String(heap_caps_get_free_size(MALLOC_CAP_8BIT)));
+    debugLog("Used Heap kB: " + String((ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024));
+    // This gives the same result
+    // size_t totalHeap = heap_caps_get_total_size(MALLOC_CAP_DEFAULT);
+    // size_t freeHeap = heap_caps_get_free_size(MALLOC_CAP_DEFAULT);
+    // debugLog("Free Heap: " + String(freeHeap / 1024) + "/" + String(totalHeap / 1024) + " kB");
     debugLog("Current CPU frequency: " + String(getCpuFrequencyMhz()) + "Mhz");
+
+#if false
+    size_t freeSize = heap_caps_get_free_size(MALLOC_CAP_DEFAULT);
+    size_t largestFreeBlock = heap_caps_get_largest_free_block(MALLOC_CAP_DEFAULT);
+    size_t minimumFreeSize = heap_caps_get_minimum_free_size(MALLOC_CAP_DEFAULT);
+    multi_heap_info_t heapInfo;
+    heap_caps_get_info(&heapInfo, MALLOC_CAP_DEFAULT);
+
+    debugLog("Free Memory: " + String(freeSize) + " bytes");
+    debugLog("Largest Free Block: " + String(largestFreeBlock) + " bytes");
+    debugLog("Minimum Free Size Since Boot: " + String(minimumFreeSize) + " bytes");
+    debugLog("Total Allocated Bytes: " + String(heapInfo.total_allocated_bytes) + " bytes");
+    debugLog("Total Free Bytes: " + String(heapInfo.total_free_bytes) + " bytes");
+    debugLog("Largest Free Block in Heap Info: " + String(heapInfo.largest_free_block) + " bytes");
+    debugLog("Allocated Blocks: " + String(heapInfo.allocated_blocks));
+    debugLog("Free Blocks: " + String(heapInfo.free_blocks));
+    debugLog("Total Blocks: " + String(heapInfo.total_blocks));
+#endif
 }
 
 #endif

@@ -84,6 +84,7 @@
 #define ALARM_MOTOR_TIME 200   // Time for motor to vibrate
 #define ALARM_WIFI_MIN_STRENGTH 60 // from 1-99, percents
 #define ALARM_WIFI_MULTIPLIER 7 // Multiplies the time if wifi connect is needed
+#define ALARM_QUICK_ID MAX_ALARMS-1 // Which alarm to replace for quick alarms, the default is the last one. Can't be higher than MAX_ALARMS-1
 
 // Book things
 #define BOOK 0
@@ -263,7 +264,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 
 // Other other, resources thing
 #define RESOURCES_NAME_LENGTH 50
-#define IMG_COUNT 30
+#define IMG_COUNT 10
 #define FONT_COUNT 30
 // So it's 50*30 bytes
 

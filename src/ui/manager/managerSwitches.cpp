@@ -88,6 +88,16 @@ void switchAlarmRing()
 {
     generalSwitch(alarmRing);
 }
+
+void switchAlarmQuick()
+{
+    generalSwitch(alarmQuick);
+}
+
+void switchAlarmSetChooser()
+{
+    generalSwitch(alarmSetChooser);
+}
 #endif
 
 void switchSetTime()

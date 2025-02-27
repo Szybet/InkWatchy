@@ -21,6 +21,8 @@ typedef enum
     alarmSelectorMenu,
     alarmEditMenu,
     alarmRing,
+    alarmQuick,
+    alarmSetChooser,
     setTimePlace,
     alarmEditDays,
     powerMenu,
@@ -100,6 +102,8 @@ void switchAlarmSelectorMenu();
 void switchAlarmEditMenu();
 void switchAlarmEditDays();
 void switchAlarmRing();
+void switchAlarmSetChooser();
+void switchAlarmQuick();
 #endif
 void switchSetTime();
 void switchPowerMenu();

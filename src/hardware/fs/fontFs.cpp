@@ -2,6 +2,7 @@
 
 char loadedFontNames[FONT_COUNT][RESOURCES_NAME_LENGTH] = {0};
 GFXfont *loadedFont[FONT_COUNT];
+// Todo garbage collecting here too
 
 const GFXfont *getFont(String name)
 {
@@ -13,15 +14,13 @@ const GFXfont *getFont(String name)
     uint8_t emptyListIndex = 0;
     for (int i = 0; i < FONT_COUNT; i++)
     {
-        String loadedFontString = String(loadedFontNames[i]);
-        // debugLog("char test: \"" + loadedFontString + "\"");
-        if (name == loadedFontString)
+        if (strcmp(loadedFontNames[i], name.c_str()) == 0)
         {
             return loadedFont[i];
         }
         else
         {
-            if (loadedFontString == "")
+            if (strlen(loadedFontNames[i]) == 0)
             {
                 emptyListIndex = i;
                 break;
@@ -96,7 +95,8 @@ const GFXfont *getFont(String name)
         debugLog("Resource name: " + name + " is too big because RESOURCES_NAME_LENGTH. Buffer overflow.");
     }
 #endif
-    strncpy(loadedFontNames[emptyListIndex], name.c_str(), nameLength);
+    memset(loadedFontNames[emptyListIndex], '\0', RESOURCES_NAME_LENGTH); // To be sure comparison works
+    strncpy(loadedFontNames[emptyListIndex], name.c_str(), RESOURCES_NAME_LENGTH);
     loadedFont[emptyListIndex] = newFont;
     return loadedFont[emptyListIndex];
 }

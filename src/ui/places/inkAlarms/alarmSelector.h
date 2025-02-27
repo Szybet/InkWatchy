@@ -7,4 +7,6 @@
 void initAlarmSelectorMenu();
 void exitAlarmSelectorMenu();
 
+void initAlarmSetChooser();
+
 #endif

@@ -2,6 +2,8 @@
 
 char loadedImgNames[IMG_COUNT][RESOURCES_NAME_LENGTH] = {0};
 ImageDef loadedImg[IMG_COUNT];
+uint8_t* loadedImgPointers[IMG_COUNT];
+uint8_t loadedImgIndex = 0;
 
 ImageDef *getImg(String name)
 {
@@ -10,25 +12,36 @@ ImageDef *getImg(String name)
         debugLog("Failed to setup fs");
         return &emptyImgPack;
     }
-    uint8_t emptyListIndex = 0;
+    int8_t emptyListIndex = -1;
     for (int i = 0; i < IMG_COUNT; i++)
     {
-        String loadedImgString = String(loadedImgNames[i]);
-        //debugLog("char test: \"" + loadedImgString + "\"");
-        if (name == loadedImgString)
+        if (strcmp(loadedImgNames[i], name.c_str()) == 0)
         {
+            debugLog("Image " + name + " was cached");
             return &loadedImg[i];
         }
         else
         {
-            if (loadedImgString == "")
+            if (strlen(loadedImgNames[i]) == 0)
             {
                 emptyListIndex = i;
-                //debugLog("current img final index: " + String(i));
+                // debugLog("current img final index: " + String(i));
                 break;
             }
         }
     }
+
+    if(emptyListIndex == -1) {
+        debugLog("Image count exceeded, freeing memory");
+        loadedImgIndex = loadedImgIndex + 1;
+        if(loadedImgIndex >= IMG_COUNT) {
+            loadedImgIndex = 0;
+        }
+        debugLog("Freeing memory at index: " + String(loadedImgIndex));
+        free(loadedImgPointers[loadedImgIndex]);
+        emptyListIndex = loadedImgIndex;
+    }
+
     File file = LittleFS.open("/img/" + name);
     if (file == false)
     {
@@ -40,6 +53,7 @@ ImageDef *getImg(String name)
     if (fileSize <= 0)
     {
         debugLog("This file has size 0: " + name);
+        return &emptyImgPack;
     }
     uint8_t *imgBuf = (uint8_t *)malloc(fileSize * sizeof(uint8_t));
     if (file.read(imgBuf, fileSize) == 0)
@@ -61,6 +75,11 @@ ImageDef *getImg(String name)
         debugLog("Resource name: " + name + " is too big because RESOURCES_NAME_LENGTH. Buffer overflow.");
     }
 #endif
+
+    debugLog("Image loaded on index: " + String(emptyListIndex));
+    loadedImgIndex = emptyListIndex;
+    loadedImgPointers[emptyListIndex] = imgBuf;
+    memset(loadedImgNames[emptyListIndex], '\0', RESOURCES_NAME_LENGTH); // To be sure comparison works
     strncpy(loadedImgNames[emptyListIndex], name.c_str(), nameLength);
     loadedImg[emptyListIndex] = newImg;
     return &loadedImg[emptyListIndex];

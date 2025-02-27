@@ -224,6 +224,20 @@ void loopManager()
 #endif
         break;
     }
+    case alarmSetChooser:
+    {
+#if INK_ALARMS
+        managerLaunchFunc(alarmSetChooser, initAlarmSetChooser, loopMenu);
+#endif
+        break;
+    }
+    case alarmQuick:
+    {
+#if INK_ALARMS
+        managerLaunchFunc(alarmQuick, initAlarmQuickSet, loopMenu);
+#endif
+        break;
+    }
     case powerMenu:
     {
         managerLaunchFunc(powerMenu, initpowerMenu, loopMenu, saveAllStorage);

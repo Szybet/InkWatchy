@@ -25,8 +25,8 @@ void alarmAddHandler()
 
 void initAlarmSelectorMenu()
 {
-    int c = 0;
-    entryMenu buttons[MAX_ALARMS + 1];
+    int c = -1;
+    entryMenu buttons[MAX_ALARMS];
     for (int i = 0; i < MAX_ALARMS; i++)
     {
         ImageDef* image = NULL;
@@ -36,21 +36,32 @@ void initAlarmSelectorMenu()
         } else {
             image = getImg("cross");
         }
+        c = c + 1;
         buttons[c] = {.text = alarmNameGet(&rM.alarms[i]), .image = image, .function = alarmSelectedHandler};
-        c = c + 1;
     }
-
-    if (c < MAX_ALARMS - 1)
-    {
-        buttons[c] = {.text = "Add alarm", .image = getImg("plusIcon"), .function = alarmAddHandler};
-        c = c + 1;
-    }
-
+    c = c + 1;
     initMenu(buttons, c, "Alarms", 1);
 }
 
 void exitAlarmSelectorMenu() {
     calculateNextAlarm();
+}
+
+// AlarmSetChooser
+
+void initAlarmSetChooser() {
+    int c = -1;
+    entryMenu buttons[2];
+    {
+        c = c + 1;
+        buttons[c] = {.text = "Browse alarms", .image = &emptyImgPack, .function = switchAlarmSelectorMenu};
+    }
+    {
+        c = c + 1;
+        buttons[c] = {.text = "Quick alarms set", .image = &emptyImgPack, .function = switchAlarmQuick};
+    }
+    c = c + 1;
+    initMenu(buttons, c, "Alarms", 1);
 }
 
 #endif
