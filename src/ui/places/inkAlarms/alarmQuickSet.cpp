@@ -44,6 +44,11 @@ void setAlarmQuick(int minutes)
     calculateNextAlarm();
 }
 
+void sAQ5()
+{
+    setAlarmQuick(5);
+}
+
 void sAQ15()
 {
     setAlarmQuick(15);
@@ -84,6 +89,12 @@ void sAQ360()
     setAlarmQuick(360);
 }
 
+// 8h
+void sAQ480()
+{
+    setAlarmQuick(480);
+}
+
 // 24h
 void sAQ1440()
 {
@@ -93,7 +104,11 @@ void sAQ1440()
 void initAlarmQuickSet()
 {
     int c = -1;
-    entryMenu buttons[8];
+    entryMenu buttons[10];
+    {
+        c = c + 1;
+        buttons[c] = {.text = "5 minutes", .image = &emptyImgPack, .function = sAQ5};
+    }
     {
         c = c + 1;
         buttons[c] = {.text = "15 minutes", .image = &emptyImgPack, .function = sAQ15};
@@ -121,6 +136,10 @@ void initAlarmQuickSet()
     {
         c = c + 1;
         buttons[c] = {.text = "6 hours", .image = &emptyImgPack, .function = sAQ360};
+    }
+    {
+        c = c + 1;
+        buttons[c] = {.text = "8 hours", .image = &emptyImgPack, .function = sAQ480};
     }
     {
         c = c + 1;

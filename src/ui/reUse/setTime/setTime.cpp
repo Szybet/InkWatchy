@@ -46,11 +46,11 @@ void drawThings()
 void initSetTime()
 {
     String hour = String(setTimeHour);
-    if(hour.length() < 1) {
+    while(hour.length() < 2) {
         hour = "0" + hour;
     }
     String minute = String(setTimeMinute);
-    if(minute.length() < 1) {
+    while(minute.length() < 2) {
         minute = "0" + minute;
     }
     oneNumber = String(hour.charAt(0)).toInt();

@@ -39,6 +39,7 @@ ImageDef *getImg(String name)
         }
         debugLog("Freeing memory at index: " + String(loadedImgIndex));
         free(loadedImgPointers[loadedImgIndex]);
+        memset(loadedImgNames[loadedImgIndex], '\0', RESOURCES_NAME_LENGTH); // If something goes wrong along the lines, make sure we don't free it 2 times
         emptyListIndex = loadedImgIndex;
     }
 
