@@ -7,7 +7,7 @@ void setAlarmQuick(int minutes)
 {
     readRTC();
     int hourNow = timeRTCLocal.Hour;
-    int minutesNow = timeRTCLocal.Hour;
+    int minutesNow = timeRTCLocal.Minute;
 
     minutesNow += minutes;
     while (minutesNow >= 60)
