@@ -21,6 +21,9 @@ void initAlarmRing()
     checkIfButtonIsRunning();
     millisStart = millisBetter();
     timeSinceLastMotor = 0;
+#if ALARM_DISABLE_BACK
+    disabledBacking = true;
+#endif
 
     writeImageN(0, 0, getImg("alarms/ringingScreen"));
     setFont(getFont("UbuntuMono10"));
@@ -43,40 +46,52 @@ void loopAlarmRing()
     debugLog("timeSpendAlarming: " + String(timeSpendAlarming));
 
     int alarmDuration = ALARM_DURATION_S;
-    if(rM.alarms[rM.nextAlarmIndex].requireWifi == true) {
+    if (rM.alarms[rM.nextAlarmIndex].requireWifi == true)
+    {
         alarmDuration = alarmDuration * ALARM_WIFI_MULTIPLIER;
         if (millisBetter() - timeSinceLastWifiCheck > 5000)
         {
             timeSinceLastWifiCheck = millisBetter();
             wifiStatusSimple wifi = wifiStatusWrap();
-            if(wifi == WifiOff || wifi == WifiOn) {
+            if (wifi == WifiOff || wifi == WifiOn)
+            {
                 connectWifiQuick(alarmWifiQuick, 500);
             }
-            if(wifi == WifiConnected) {
+            if (wifi == WifiConnected)
+            {
                 int signalStrength = getSignalStrength();
-                if(signalStrength >= 100) {
+                if (signalStrength >= 100)
+                {
                     signalStrength = 99;
                 }
                 String signalStrengthStr = String(signalStrength);
-                if(signalStrengthStr.length() == 1) {
+                if (signalStrengthStr.length() == 1)
+                {
                     signalStrengthStr = " " + signalStrengthStr;
                 }
                 writeTextReplaceBack(String(signalStrength) + "%", ALARM_WIFI_SIGNAL_X, ALARM_WIFI_SIGNAL_Y);
                 dUChange = true;
-                if(signalStrength >= ALARM_WIFI_MIN_STRENGTH) {
+                if (signalStrength >= ALARM_WIFI_MIN_STRENGTH)
+                {
                     debugLog("Alarm canceled, because of signal strength");
                     switchBack();
                 }
             }
-            if(previousWifi != wifi) {
+            if (previousWifi != wifi)
+            {
                 previousWifi = wifi;
                 ImageDef *image = NULL;
-                if(wifi == WifiConnected) {
-                   image = getImg("wifiConnected");
-                } else if(wifi == WifiOff) {
+                if (wifi == WifiConnected)
+                {
+                    image = getImg("wifiConnected");
+                }
+                else if (wifi == WifiOff)
+                {
                     image = getImg("wifiOff");
                     writeTextReplaceBack(" 0%", ALARM_WIFI_SIGNAL_X, ALARM_WIFI_SIGNAL_Y);
-                } else if(wifi == WifiOn) {
+                }
+                else if (wifi == WifiOn)
+                {
                     image = getImg("wifiOn");
                     writeTextReplaceBack(" 0%", ALARM_WIFI_SIGNAL_X, ALARM_WIFI_SIGNAL_Y);
                 }
@@ -88,6 +103,9 @@ void loopAlarmRing()
     if (timeSpendAlarming > alarmDuration || (btn != None && rM.alarms[rM.nextAlarmIndex].requireWifi == false))
     {
         debugLog("Alarm canceled!");
+#if ALARM_DISABLE_BACK
+        disabledBacking = false;
+#endif
         switchBack();
     }
     disUp();
@@ -96,11 +114,16 @@ void loopAlarmRing()
 
 void exitAlarmRing()
 {
-    if(rM.alarms[rM.nextAlarmIndex].requireWifi == true) {
+#if ALARM_DISABLE_BACK
+    disabledBacking = false;
+#endif
+    if (rM.alarms[rM.nextAlarmIndex].requireWifi == true)
+    {
         disconnectWifiQuick();
     }
 
-    if(rM.alarms[rM.nextAlarmIndex].onlyOnce == true) {
+    if (rM.alarms[rM.nextAlarmIndex].onlyOnce == true)
+    {
         rM.alarms[rM.nextAlarmIndex].enabled = false;
     }
     rM.nextAlarm = 0;

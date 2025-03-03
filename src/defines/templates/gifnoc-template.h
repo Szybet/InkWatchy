@@ -85,6 +85,7 @@
 #define ALARM_WIFI_MIN_STRENGTH 60 // from 1-99, percents
 #define ALARM_WIFI_MULTIPLIER 7 // Multiplies the time if wifi connect is needed
 #define ALARM_QUICK_ID MAX_ALARMS-1 // Which alarm to replace for quick alarms, the default is the last one. Can't be higher than MAX_ALARMS-1
+#define ALARM_DISABLE_BACK 1 // No escaping if (wifi) alarm
 
 // Book things
 #define BOOK 0

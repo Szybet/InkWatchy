@@ -6,6 +6,8 @@ int menuSelectedTree[PLACE_TREE_MAX_DEPTH] = {0};
 bool wasBacked = false;
 void (*exitFuncGlob)() = nullptr; // Executed when a place is exiting and it was requested
 
+bool disabledBacking = false;
+
 void initManager()
 {
     rM.placeTree[0] = FIRST_PLACE;
@@ -87,6 +89,16 @@ void loopManager()
         if (backButton != None)
         {
             debugLog("Button is back, manager got it");
+
+            if(backButton == Back || backButton == LongBack) {
+                if (disabledBacking == true)
+                {
+                    debugLog("Ignoring back button");
+                    loopManager();
+                    return;
+                }    
+            }
+
             if (currentPlaceIndex > 0)
             {
                 if (backButton == Back)

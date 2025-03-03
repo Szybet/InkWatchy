@@ -61,6 +61,8 @@ extern UiPlace currentPlace;
 extern void (*exitFunc)();
 extern void (*exitFuncGlob)(); // Executed when a place is exiting and it was requested
 
+extern bool disabledBacking;
+
 void executeExitFunc();
 
 void initManager();

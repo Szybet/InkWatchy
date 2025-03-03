@@ -129,7 +129,8 @@ void initCalendarMenu()
     if (buf.length() <= 0)
     {
         debugLog("Failed to read index");
-        // TODO error
+        overwriteSwitch(textDialog);
+        showTextDialog("No calendar data");
         return;
     }
     int dates = buf.length() / DATE_BYTES;
