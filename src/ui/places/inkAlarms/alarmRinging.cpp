@@ -74,6 +74,9 @@ void loopAlarmRing()
                 if (signalStrength >= ALARM_WIFI_MIN_STRENGTH)
                 {
                     debugLog("Alarm canceled, because of signal strength");
+#if ALARM_DISABLE_BACK
+                    disabledBacking = false;
+#endif
                     switchBack();
                 }
             }
