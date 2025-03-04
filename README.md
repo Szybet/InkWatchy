@@ -111,7 +111,7 @@ Create a github issue or get in touch with me on Quill OS or <a href="https://di
 or via matrix: @szybet:matrix.org
 
 <details>
-<summary><h1>Outdated demos</h1></summary>
+<summary><h2>Outdated demos</h2></summary>
 
 [Outdated demo of version 0.1](https://www.youtube.com/watch?v=gFOCqalJidQ)
 
