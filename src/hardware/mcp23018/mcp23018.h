@@ -13,6 +13,10 @@
 #define MCP_STAT_OUT 7 // A7
 #define MCP_5V 15 // B7
 
+// Acc
+#define MCP_ACC_INT_1 5
+#define MCP_ACC_INT_2 4
+
 /*
 #define MCP23018_SDA_PIN 22
 #define MCP23018_SCL_PIN 23
