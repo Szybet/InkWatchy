@@ -11,10 +11,10 @@
 // Basics
 #define DEBUG_MENUS 1 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
-#define VIBRATION_BUTTON_TIME 90      // Time in ms to the motor to vibrate after clicking a button. 0 means none
+#define VIBRATION_BUTTON_TIME 50      // Time in ms to the motor to vibrate after clicking a button. 0 means none
 #define VIBRATION_BUTTON_LONG_TIME 60 // This is just an addition to VIBRATION_BUTTON_TIME
 #define VIBRATION_ACTION_TIME 200     // Time in ms to the motor to vibrate when the UI receives an action
-#define VIBRATION_POWER 170           // From 1 to 255, PWM duty cycle. Too low and it can not even vibrate a little
+#define VIBRATION_POWER 155           // From 1 to 255, PWM duty cycle. Too low and it can not even vibrate a little
 // Motor power multiplier
 #define VIBRATION_MULTIPLIER_OVERWRITE 0
 #define VIBRATION_MULTIPLIER 1.0
