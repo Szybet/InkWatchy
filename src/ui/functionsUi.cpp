@@ -358,15 +358,16 @@ void drawProgressBar(int x, int y, int width, int height, int progress)
   dis->fillRect(x, y, width, height, GxEPD_WHITE); // clean
   dis->fillRect(x, y, filledWidth, height, GxEPD_BLACK);
 
-  for (int16_t i = filledWidth; i < width; i += 2)
-  {
-    for (int16_t j = 0; j < height; j += 2)
-    {
-      // Draw dots diagonally
-      dis->drawPixel(x + i, y + j, GxEPD_BLACK);
-      dis->drawPixel(x + i + 1, y + j + 1, GxEPD_BLACK);
-    }
-  }
+  for (int16_t i = filledWidth; i < width; i++)  
+  {  
+    for (int16_t j = 0; j < height; j++)  
+    {  
+      if ((i + j) % 2 == 0)  
+      {  
+        dis->drawPixel(x + i, y + j, GxEPD_BLACK);  
+      }  
+    }  
+  }  
 }
 
 sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y)

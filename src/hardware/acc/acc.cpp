@@ -1,7 +1,7 @@
 #include "acc.h"
 #include "rtcMem.h"
 
-#if AXC_ENABLED
+#if ACC_ENABLED
 
 uint16_t readRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {

@@ -8,10 +8,10 @@ toolchain_dir=""
 addr_file=""
 
 if [[ "$pio_env" =~ 3 ]]; then
-    toolchain_dir="toolchain-xtensa-esp32s3"
+    toolchain_dir="xtensa-esp-elf"
     addr_file="xtensa-esp32s3-elf-addr2line"
 elif [[ "$pio_env" =~ 2 ]]; then
-    toolchain_dir="toolchain-xtensa-esp32"
+    toolchain_dir="xtensa-esp-elf"
     addr_file="xtensa-esp32-elf-addr2line"
 fi
 

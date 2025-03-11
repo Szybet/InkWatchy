@@ -186,11 +186,11 @@ Template for versioning
 
 // AXC
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
-#define AXC_ENABLED 1
+#define ACC_ENABLED 1
 #elif ATCHY_VER == WATCHY_3
-#define AXC_ENABLED 0 // I don't have this device
+#define ACC_ENABLED 0 // I don't have this device
 #elif ATCHY_VER == YATCHY
-#define AXC_ENABLED 1
+#define ACC_ENABLED 1
 #endif
 
 // USB JTAG
@@ -198,13 +198,6 @@ Template for versioning
 #define USB_JTAG 1
 #else
 #define USB_JTAG 0 // I don't have a watchy v3
-#endif
-
-// Temps
-#if TEMP_CHECKS != 0 && TEMP_HIGHER_LIMIT_RELATIVE != 0 && TEMP_LOWER_LIMIT_RELATIVE != 0 && TEMP_REBOOT_LIMIT_RELATIVE != 0
-#define TEMP_CHECKS_ENABLED 1
-#else
-#define TEMP_CHECKS_ENABLED 0
 #endif
 
 // Yatchy specific things
@@ -254,6 +247,6 @@ Template for versioning
 #endif
 
 #if FORCE_DISABLE_ACC == 1
-#undef AXC_ENABLED
-#define AXC_ENABLED 0
+#undef ACC_ENABLED
+#define ACC_ENABLED 0
 #endif

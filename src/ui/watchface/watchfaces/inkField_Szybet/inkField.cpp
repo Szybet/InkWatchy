@@ -21,6 +21,11 @@
 #define BATT_BAR_CORD 136, 64 + 15 + 15
 #define STEPS_BAR_CORD 136, 64 + 15 + 15 + 15
 
+#define TEMPS_TEXT_CORD 136, 117
+#define TEMPS_BAR_CORD_X 136 + 21
+#define TEMPS_BAR_CORD_Y 64 + 15 + 15 + 15
+#define TEMPS_BAR_SIZE 33, 10
+
 /*
 // Even with monospaced font, it differs a bit...
 {
@@ -115,6 +120,7 @@ static void drawTimeAfterApply(bool forceDraw)
         drawProgressBar(DAY_BAR_CORD, GENERAL_BAR_SIZE, rM.inkfield.percentOfDay);
     }
 
+#if ACC_ENABLED
     uint16_t percentStepsTmp = uint16_t(((float)getSteps() / (float)STEPS_GOAL) * 100.0);
     debugLog("percentStepsTmp: " + String(percentStepsTmp));
     if (rM.inkfield.percentSteps != percentStepsTmp || forceDraw == true)
@@ -122,6 +128,19 @@ static void drawTimeAfterApply(bool forceDraw)
         rM.inkfield.percentSteps = percentStepsTmp;
         drawProgressBar(STEPS_BAR_CORD, GENERAL_BAR_SIZE, rM.inkfield.percentSteps);
     }
+#else
+    uint16_t tempsPercents = ((rM.previousTemp - TEMP_MINIMUM) * 100) / (TEMP_MAXIMUM - TEMP_MINIMUM);
+    debugLog("tempsPercents: " + String(tempsPercents));
+    if (rM.inkfield.showedTemp != tempsPercents || forceDraw == true)
+    {
+        rM.inkfield.showedTemp = tempsPercents;
+        setTextSize(1);
+        setFont(getFont("dogicapixel4"));
+        writeTextReplaceBack("   ", TEMPS_TEXT_CORD);
+        writeTextReplaceBack(String(int(rM.previousTemp)), TEMPS_TEXT_CORD);
+        drawProgressBar(TEMPS_BAR_CORD_X, TEMPS_BAR_CORD_Y, TEMPS_BAR_SIZE, rM.inkfield.showedTemp);
+    }
+#endif
 
     uint16_t weatherMinutes = timeRTCLocal.Minute + (60 * timeRTCLocal.Hour);
     // debugLog("Weather force: " + String(forceDraw));
@@ -145,7 +164,11 @@ static void showTimeFull()
 
 static void initWatchface()
 {
+#if ACC_ENABLED
     writeImageN(0, 0, getImg("inkfield/watchface"));
+#else
+    writeImageN(0, 0, getImg("inkfield/watchfaceNoSteps"));
+#endif
     drawPosMarker();
 }
 

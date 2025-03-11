@@ -2,7 +2,7 @@
 
 #include "defines.h"
 
-#if AXC_ENABLED
+#if ACC_ENABLED
 
 void initAxc();
 

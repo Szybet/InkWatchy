@@ -1,4 +1,5 @@
 #include "temp.h"
+#include "rtcMem.h"
 
 #if TEMP_CHECKS_ENABLED
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
@@ -19,18 +20,24 @@ float getTemp()
 #else
 #include "driver/temperature_sensor.h"
 
+temperature_sensor_handle_t temp_handle = NULL;
+temperature_sensor_config_t temp_sensor_config;
+
 float getTemp()
 {
     // https://docs.espressif.com/projects/esp-idf/en/stable/esp32s3/api-reference/peripherals/temp_sensor.html
     // Performance of this is not great
-    temperature_sensor_handle_t temp_handle = NULL;
-    temperature_sensor_config_t temp_sensor_config = TEMPERATURE_SENSOR_CONFIG_DEFAULT(0, 80);
-    ESP_ERROR_CHECK(temperature_sensor_install(&temp_sensor_config, &temp_handle));
-    ESP_ERROR_CHECK(temperature_sensor_enable(temp_handle));
+
+    if (temp_handle == NULL)
+    {
+        temp_sensor_config = TEMPERATURE_SENSOR_CONFIG_DEFAULT(TEMP_MINIMUM, TEMP_MAXIMUM);
+        ESP_ERROR_CHECK(temperature_sensor_install(&temp_sensor_config, &temp_handle));
+        ESP_ERROR_CHECK(temperature_sensor_enable(temp_handle));
+    }
     float tsens_out;
     ESP_ERROR_CHECK(temperature_sensor_get_celsius(temp_handle, &tsens_out));
-    ESP_ERROR_CHECK(temperature_sensor_disable(temp_handle));
-    return tsens_out;
+    // ESP_ERROR_CHECK(temperature_sensor_disable(temp_handle));
+    return tsens_out + TEMP_REAL_OFFSET;
 }
 #endif
 
@@ -46,6 +53,7 @@ void screenTempFix()
 void tempChecker()
 {
     float newTemp = getTemp();
+    debugLog("Temp is now: " + String(newTemp));
     if (newTemp > rM.previousTemp + 1.5 || newTemp < rM.previousTemp - 1.5)
     {
         if (rM.initialTemp == 0.0)
@@ -55,15 +63,16 @@ void tempChecker()
         }
         debugLog("Temperature changed to: " + String(newTemp));
         rM.previousTemp = newTemp;
-        if (newTemp > rM.initialTemp + float(TEMP_REBOOT_LIMIT_RELATIVE))
+        if (newTemp > float(TEMP_REBOOT_LIMIT))
         {
             debugLog("Temperature too high, exiting");
             assert(true == false);
-        } else if (newTemp > rM.initialTemp + float(TEMP_HIGHER_LIMIT_RELATIVE))
+        }
+        else if (newTemp > float(TEMP_HIGHER_LIMIT))
         {
             screenTempFix();
         }
-        else if (newTemp < rM.initialTemp + float(TEMP_LOWER_LIMIT_RELATIVE))
+        else if (newTemp < float(TEMP_LOWER_LIMIT))
         {
             screenTempFix();
         }
@@ -75,3 +84,11 @@ void tempChecker()
 }
 
 #endif
+
+/*
+// For my yatchy for example
+room temp is: 25.6
+from recorded 7.0
+so the diff is
+18.6
+*/

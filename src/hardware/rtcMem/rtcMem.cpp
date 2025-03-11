@@ -16,7 +16,7 @@ RTC_DATA_ATTR rtcMem rM = {
     .previousFiveVolt = false,        // false because it will be true after flashing
 #endif
 // Acc
-#if AXC_ENABLED
+#if ACC_ENABLED
     .SBMA = StableBMA{}, // Class
     .initedAxc = false,
     .stepsInited = false,
@@ -67,7 +67,11 @@ RTC_DATA_ATTR rtcMem rM = {
     .inkfield = {
         .dayBar = 0,
         .percentOfDay = 0,
+#if ACC_ENABLED
         .percentSteps = 0,
+#else
+        .showedTemp = 0,
+#endif
         .weatherMinutes = 0,
         // inkput
         .watchfacePos = 0,

@@ -13,7 +13,7 @@ struct rtcMem
     bool previousFiveVolt : 1;
 #endif
     // Accelerometer
-#if AXC_ENABLED
+#if ACC_ENABLED
     StableBMA SBMA; // Class
     bool initedAxc : 1;
     bool stepsInited : 1;
@@ -65,7 +65,11 @@ struct rtcMem
     {
         uint8_t dayBar;
         uint8_t percentOfDay;
+#if ACC_ENABLED
         uint8_t percentSteps;
+#else
+        uint8_t showedTemp;
+#endif
         uint16_t weatherMinutes;
         // inkput
         int watchfacePos; // It needs to be int because it's used in checkMinMax

@@ -186,11 +186,14 @@
 // Those variables won't work for you, you need to edit them yourself after you see the temperature logs
 // Also everything in Celsius, americans need to metric (Or add support for burgers per inch for inkwatchy)
 // just joking :D
-#define TEMP_REAL_OFFSET 0 // On first boot a temperature will be taken, this will be added to it and that's the main temperature
-#define TEMP_HIGHER_LIMIT_RELATIVE 0
-#define TEMP_LOWER_LIMIT_RELATIVE 0
-#define TEMP_REBOOT_LIMIT_RELATIVE 0
+#define TEMP_REAL_OFFSET 0 // On first boot a temperature will be taken, this will be added to it and that's the main temperature. Can be float
+#define TEMP_HIGHER_LIMIT 45
+#define TEMP_LOWER_LIMIT 0
+#define TEMP_REBOOT_LIMIT 70
 #define TEMP_MAX_SCREEN_FIXES 5
+// Shouldn't be changed really
+#define TEMP_MINIMUM -10
+#define TEMP_MAXIMUM 80
 
 // Wifi country
 // If your wifi connects to ghost networks, freaks out in general, try setting the wifi country for your country
