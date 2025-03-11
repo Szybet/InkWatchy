@@ -137,7 +137,11 @@ static void drawTimeAfterApply(bool forceDraw)
         setTextSize(1);
         setFont(getFont("dogicapixel4"));
         writeTextReplaceBack("   ", TEMPS_TEXT_CORD);
-        writeTextReplaceBack(String(int(rM.previousTemp)), TEMPS_TEXT_CORD);
+        String tempStr = String(int(rM.previousTemp));
+        if(tempStr.length() < 3) {
+            tempStr = tempStr + "C";
+        }
+        writeTextReplaceBack(tempStr, TEMPS_TEXT_CORD);
         drawProgressBar(TEMPS_BAR_CORD_X, TEMPS_BAR_CORD_Y, TEMPS_BAR_SIZE, rM.inkfield.showedTemp);
     }
 #endif
