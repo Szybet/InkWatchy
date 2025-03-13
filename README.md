@@ -6,7 +6,7 @@
 <img src="https://github.com/user-attachments/assets/848177ae-2931-4a7a-bb6a-09255235c6c0" alt="02-demo-10mb" width=200px height=200px />
 </p>
 <p align="center">
-A new innovative <b>firmware</b> written from the ground up for the <a href="https://watchy.sqfmi.com">watchy</a>
+A new innovative <b>firmware</b> written from the ground up for the <a href="https://watchy.sqfmi.com">watchy</a> and now also <a href="https://github.com/Szybet/Yatchy">yatchy</a>
 </p>
   
 <details>
