@@ -87,6 +87,14 @@
 #define ALARM_QUICK_ID MAX_ALARMS-1 // Which alarm to replace for quick alarms, the default is the last one. Can't be higher than MAX_ALARMS-1
 #define ALARM_DISABLE_BACK 1 // No escaping if (wifi) alarm
 
+// Pomodoro (Using alarms, so needs them)
+#define POMODORO_ALARM 1
+#define ALARM_POMODORO_ID MAX_ALARMS-2
+#define POMODORO_WORK_M 25 // 25
+#define POMODORO_SHORT_PAUSE_M 5 // 5
+#define POMODORO_LONG_PAUSE_M 15 // 15
+#define POMODORO_LONG_PAUSE_AFTER 4 // 4
+
 // Book things
 #define BOOK 0
 #define BOOK_ADD_SLEEP_DELAY_MS 60000

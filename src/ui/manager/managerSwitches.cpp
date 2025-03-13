@@ -89,14 +89,18 @@ void switchAlarmRing()
     generalSwitch(alarmRing);
 }
 
+void switchAlarmSetChooser()
+{
+    generalSwitch(alarmSetChooser);
+}
+
 void switchAlarmQuick()
 {
     generalSwitch(alarmQuick);
 }
 
-void switchAlarmSetChooser()
-{
-    generalSwitch(alarmSetChooser);
+void switchPomodoroMenu() {
+    generalSwitch(pomodoroMenu);
 }
 #endif
 

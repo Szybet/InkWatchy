@@ -118,6 +118,9 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../ui/places/inkAlarms/alarmSelector.h"
 #include "../ui/places/inkAlarms/alarmRinging.h"
 #include "../ui/places/inkAlarms/alarmQuickSet.h"
+#if POMODORO_ALARM
+#include "../ui/places/inkAlarms/pomodoro.h"
+#endif
 #endif
 
 // Ui

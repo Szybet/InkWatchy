@@ -11,10 +11,19 @@
 #define ALARM_WIFI_SIGNAL_X 110
 #define ALARM_WIFI_SIGNAL_Y 145
 
+#define ALARM_POMODORO_X 180
+#define ALARM_POMODORO_Y 20
+
 uint32_t millisStart = 0;
 uint32_t timeSinceLastMotor = 0;
 uint32_t timeSinceLastWifiCheck = 0;
 wifiStatusSimple previousWifi = WifiUndefined; // Cause rewrite
+
+#if RGB_DIODE
+#if POMODORO_ALARM
+bool pomodoroColorIter = false;
+#endif
+#endif
 
 void initAlarmRing()
 {
@@ -28,6 +37,11 @@ void initAlarmRing()
     writeImageN(0, 0, getImg("alarms/ringingScreen"));
     setFont(getFont("UbuntuMono10"));
     writeTextReplaceBack(alarmGetTime(&rM.alarms[rM.nextAlarmIndex]), ALARM_TIME_X, ALARM_TIME_Y);
+
+#if POMODORO_ALARM
+    writeImageN(ALARM_POMODORO_X, ALARM_POMODORO_Y, getImg("pomodoro/tomato"));
+#endif
+
     dUChange = true;
 }
 
@@ -38,7 +52,19 @@ void loopAlarmRing()
         timeSinceLastMotor = millisBetter();
         vibrateMotor(ALARM_MOTOR_TIME);
 #if RGB_DIODE
+#if POMODORO_ALARM == false
         setRandomColor();
+#else
+        pomodoroColorIter = !pomodoroColorIter;
+        if (pomodoroColorIter == true)
+        {
+            setRgb(IwRed);
+        }
+        else
+        {
+            setRgb(IwNone);
+        }
+#endif
 #endif
     }
     buttonState btn = useButton();
@@ -129,12 +155,18 @@ void exitAlarmRing()
     {
         rM.alarms[rM.nextAlarmIndex].enabled = false;
     }
+
+#if POMODORO_ALARM
+    pomodoroManage();
+#endif
+
     rM.nextAlarm = 0;
     rM.nextAlarmIndex = 0;
     calculateNextAlarm();
 #if RGB_DIODE
     setRgb(IwNone);
 #endif
+
     useButtonBlank();                             // Cancel any buttons
     sleepDelayMs = sleepDelayMs - SLEEP_EVERY_MS; // Requesting sleep
 }

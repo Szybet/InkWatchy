@@ -17,7 +17,7 @@ uint64_t getUnixTimeOfAlarm(inkAlarm *theAlarm);
 void calculateNextAlarm();
 String alarmGetTime(inkAlarm *theAlarm);
 String alarmGetDays(inkAlarm *theAlarm);
-String alarmNameGet(inkAlarm *theAlarm);
+String alarmNameGet(inkAlarm *theAlarm, int id = -1);
 bool willAlarmTrigger();
 void checkAlarms();
 

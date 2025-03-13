@@ -140,6 +140,10 @@ struct rtcMem
     inkAlarm alarms[MAX_ALARMS];
     uint64_t nextAlarm;
     uint8_t nextAlarmIndex;
+#if POMODORO_ALARM
+    uint8_t pomodoroIter : 4;
+    bool pomodoroWorkNow : 1;
+#endif
 #endif
 };
 

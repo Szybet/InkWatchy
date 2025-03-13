@@ -173,5 +173,9 @@ RTC_DATA_ATTR rtcMem rM = {
     .alarms = {0},
     .nextAlarm = 0,
     .nextAlarmIndex = 0,
+#if POMODORO_ALARM
+    .pomodoroIter = 0,
+    .pomodoroWorkNow = false,
+#endif
 #endif
 };

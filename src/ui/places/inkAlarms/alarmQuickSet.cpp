@@ -3,7 +3,7 @@
 
 #if INK_ALARMS
 
-void setAlarmQuick(int minutes)
+void setAlarmQuick(int minutes, int id)
 {
     readRTC();
     int hourNow = timeRTCLocal.Hour;
@@ -35,70 +35,70 @@ void setAlarmQuick(int minutes)
     }
 
     debugLog("For quick alarm added " + String(minutes) + " and the final time is: " + String(hourNow) + ":" + String(minutesNow));
-    rM.alarms[ALARM_QUICK_ID].days = 0;
-    rM.alarms[ALARM_QUICK_ID].onlyOnce = true;
-    rM.alarms[ALARM_QUICK_ID].hour = hourNow;
-    rM.alarms[ALARM_QUICK_ID].minute = minutesNow;
-    rM.alarms[ALARM_QUICK_ID].enabled = true;
-    rM.alarms[ALARM_QUICK_ID].requireWifi = false;
+    rM.alarms[id].days = 0;
+    rM.alarms[id].onlyOnce = true;
+    rM.alarms[id].hour = hourNow;
+    rM.alarms[id].minute = minutesNow;
+    rM.alarms[id].enabled = true;
+    rM.alarms[id].requireWifi = false;
     calculateNextAlarm();
 }
 
 void sAQ5()
 {
-    setAlarmQuick(5);
+    setAlarmQuick(5, ALARM_QUICK_ID);
 }
 
 void sAQ15()
 {
-    setAlarmQuick(15);
+    setAlarmQuick(15, ALARM_QUICK_ID);
 }
 
 void sAQ30()
 {
-    setAlarmQuick(30);
+    setAlarmQuick(30, ALARM_QUICK_ID);
 }
 
 // 1h
 void sAQ60()
 {
-    setAlarmQuick(60);
+    setAlarmQuick(60, ALARM_QUICK_ID);
 }
 
 // 1.5h
 void sAQ90()
 {
-    setAlarmQuick(90);
+    setAlarmQuick(90, ALARM_QUICK_ID);
 }
 
 // 2h
 void sAQ120()
 {
-    setAlarmQuick(120);
+    setAlarmQuick(120, ALARM_QUICK_ID);
 }
 
 // 3h
 void sAQ180()
 {
-    setAlarmQuick(180);
+    setAlarmQuick(180, ALARM_QUICK_ID);
 }
 
 // 6h
 void sAQ360()
 {
-    setAlarmQuick(360);
+    setAlarmQuick(360, ALARM_QUICK_ID);
 }
 
 // 8h
 void sAQ480()
 {
-    setAlarmQuick(480);
+    setAlarmQuick(480, ALARM_QUICK_ID);
 }
 
 // 24h
 void sAQ1440()
 {
-    setAlarmQuick(1440);
+    setAlarmQuick(1440, ALARM_QUICK_ID);
 }
 
 void initAlarmQuickSet()

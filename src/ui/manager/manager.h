@@ -25,6 +25,7 @@ typedef enum
     alarmSetChooser,
     setTimePlace,
     alarmEditDays,
+    pomodoroMenu,
     powerMenu,
     book,
     bookSelector,
@@ -106,6 +107,7 @@ void switchAlarmEditDays();
 void switchAlarmRing();
 void switchAlarmSetChooser();
 void switchAlarmQuick();
+void switchPomodoroMenu();
 #endif
 void switchSetTime();
 void switchPowerMenu();

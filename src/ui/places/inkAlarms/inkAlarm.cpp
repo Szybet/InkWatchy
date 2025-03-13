@@ -213,7 +213,7 @@ String alarmGetDays(inkAlarm *theAlarm)
     return days;
 }
 
-String alarmNameGet(inkAlarm *theAlarm)
+String alarmNameGet(inkAlarm *theAlarm, int id)
 {
     String alarmName = "";
     alarmName = alarmGetTime(theAlarm);
@@ -225,6 +225,16 @@ String alarmNameGet(inkAlarm *theAlarm)
     {
         alarmName = alarmName + ", " + alarmGetDays(theAlarm);
     }
+
+    if(id != -1) {
+        if(id == ALARM_QUICK_ID) {
+            alarmName = alarmName + ", quick";
+        }
+        if(id == ALARM_POMODORO_ID) {
+            alarmName = alarmName + ", pomodoro";
+        }
+    }
+
     return alarmName;
 }
 

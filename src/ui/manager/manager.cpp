@@ -90,13 +90,14 @@ void loopManager()
         {
             debugLog("Button is back, manager got it");
 
-            if(backButton == Back || backButton == LongBack) {
+            if (backButton == Back || backButton == LongBack)
+            {
                 if (disabledBacking == true)
                 {
                     debugLog("Ignoring back button");
                     loopManager();
                     return;
-                }    
+                }
             }
 
             if (currentPlaceIndex > 0)
@@ -226,6 +227,13 @@ void loopManager()
     {
 #if INK_ALARMS
         managerLaunchFunc(alarmEditDays, initAlarmEditDaysMenu, loopMenu, exitAlarmEditDaysMenu);
+#endif
+        break;
+    }
+    case pomodoroMenu:
+    {
+#if INK_ALARMS && POMODORO_ALARM
+        managerLaunchFunc(pomodoroMenu, initPomodoroMenu, loopMenu);
 #endif
         break;
     }
