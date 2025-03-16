@@ -280,8 +280,8 @@ void readRTC()
 void wakeUpIn(int minutes)
 {
   if(minutes < 1) {
-    debugLog("Fallback, this should NOT HAPPEN");
-    minutes = 1;
+    debugLog("Wake up in minutes below 1, never waking up");
+    return;
   }
   if (minutes != 1)
   {
@@ -315,6 +315,7 @@ void wakeUpIn(int minutes)
 
 void wakeUpManageRTC()
 {
+  // debugLog("Launching wakeUpManageRTC");
   rM.SRTC.clearAlarm();
   int minutes = 0;
   if (rM.disableWakeUp == false)
@@ -350,7 +351,7 @@ void wakeUpManageRTC()
     debugLog("unixTimeNow: " + String(unixTimeNow));
     debugLog("rM.nextAlarm: " + String(rM.nextAlarm));
     debugLog("minutesTillAlarm: " + String(minutesTillAlarm));
-    if (minutesTillAlarm < minutes)
+    if (minutesTillAlarm < minutes || minutes == 0)
     {
       debugLog("Minutes till alarm is lower, replacing!");
       minutes = minutesTillAlarm;
