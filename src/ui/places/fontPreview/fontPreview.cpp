@@ -42,5 +42,8 @@ void initFontPreview()
 
 void loopFontPreview()
 {
+    useButtonBlank();
+    resetSleepDelay();
+    disUp();
 }
 #endif

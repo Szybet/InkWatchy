@@ -75,7 +75,7 @@ void showMenu()
   uint16_t textHeight;
   uint16_t currentHeight;
   int startingButton = 0;
-  setFont(getFont("FreeMonoBold9"));
+  setFont(&FreeSansBold9pt7b);
   setTextSize(1);
   dis->setCursor(1, 1);
   getTextBounds(data.menuName, NULL, NULL, NULL, &textHeight);
@@ -148,6 +148,8 @@ void showMenu()
     // debugLog("Menu entry text is: " + data.entryList[i].text);
     String textToShow = data.entryList[i].text;
     // To show the cut off text fully when it's selected :D the value of 18 should be calculated somehow
+    ImageDef* img = data.entryList[i].image;
+
     if (textToShow.length() > 18 && data.currentButton != i)
     {
       textToShow = textToShow.substring(0, 18);
@@ -155,8 +157,9 @@ void showMenu()
     else if (textToShow.length() > 18 && data.currentButton == i)
     {
       previousPageNumber = ""; // To reset the next iteration
+      img = &emptyImgPack;
     }
-    buttonSize = drawButton(1, currentHeight, textToShow, data.entryList[i].image, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
+    buttonSize = drawButton(1, currentHeight, textToShow, img, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
     // debugLog("Button h in menu: " + String(buttonSize.h));
     if (draw == true)
     {
