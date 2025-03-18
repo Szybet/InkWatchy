@@ -161,7 +161,7 @@ void exitAlarmRing()
 #endif
 
     rM.nextAlarm = 0;
-    rM.nextAlarmIndex = 0;
+    rM.nextAlarmIndex = -1;
     calculateNextAlarm();
 #if RGB_DIODE
     setRgb(IwNone);

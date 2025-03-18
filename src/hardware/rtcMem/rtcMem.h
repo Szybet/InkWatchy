@@ -135,11 +135,17 @@ struct rtcMem
 #if WIFI_MODULE
     wfModule wfNet;
 #endif
+// wFAlarm
+#if ALARM_MODULE && INK_ALARMS
+    wfModule wfAlarm;
+    int8_t wfAlarmMinutes;
+    int8_t wfAlarmHours;
+#endif
 // Alarms
 #if INK_ALARMS
     inkAlarm alarms[MAX_ALARMS];
     uint64_t nextAlarm;
-    uint8_t nextAlarmIndex;
+    int8_t nextAlarmIndex;
 #if POMODORO_ALARM
     uint8_t pomodoroIter : 4;
     bool pomodoroWorkNow : 1;

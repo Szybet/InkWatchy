@@ -174,6 +174,10 @@ String alarmGetTime(inkAlarm *theAlarm)
 String alarmGetDays(inkAlarm *theAlarm)
 {
     String days = "";
+    if(theAlarm->days == 127) {
+        days = "All days";
+        return days;
+    }
     if (getBit(theAlarm->days, 0) == true)
     {
         days = days + "Mo ";
@@ -224,6 +228,10 @@ String alarmNameGet(inkAlarm *theAlarm, int id)
     else
     {
         alarmName = alarmName + ", " + alarmGetDays(theAlarm);
+    }
+
+    if(theAlarm->requireWifi == true) {
+        alarmName = alarmName + ", wifi";
     }
 
     if(id != -1) {

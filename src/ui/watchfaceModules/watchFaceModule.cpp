@@ -44,6 +44,11 @@ wfModule *wfModulesList[MODULE_COUNT] = {
 #else
     &wfEmpty,
 #endif
+#if ALARM_MODULE && INK_ALARMS
+    &rM.wfAlarm,
+#else
+    &wfEmpty,
+#endif
 };
 
 void clearModuleArea()

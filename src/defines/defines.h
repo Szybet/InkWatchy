@@ -199,6 +199,9 @@ static const WiFiCred* wifiCredStatic[] = {
 #if EVENT_MODULE
 #include "../ui/watchfaceModules/eventMod/eventMod.h"
 #endif
+#if ALARM_MODULE && INK_ALARMS
+#include "../ui/watchfaceModules/alarmMod/alarmMod.h"
+#endif
 #if WATCHFACE_INKFIELD_SZYBET
 #include "../ui/watchface/watchfaces/inkField_Szybet/inkField.h"
 #endif

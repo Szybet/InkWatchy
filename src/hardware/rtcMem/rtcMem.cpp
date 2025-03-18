@@ -168,6 +168,16 @@ RTC_DATA_ATTR rtcMem rM = {
         wfNetrequestShow,
     },
 #endif
+// wFAlarm
+#if ALARM_MODULE && INK_ALARMS
+    .wfAlarm = {
+        true,
+        wfAlarmcheckShow,
+        wfAlarmrequestShow,
+    },
+    .wfAlarmMinutes = -1,
+    .wfAlarmHours = -1,
+#endif
 // Alarms
 #if INK_ALARMS
     .alarms = {0},
