@@ -75,7 +75,7 @@ void showMenu()
   uint16_t textHeight;
   uint16_t currentHeight;
   int startingButton = 0;
-  setFont(&FreeSansBold9pt7b);
+  setFont(getFont("FreeMonoBold9"));
   setTextSize(1);
   dis->setCursor(1, 1);
   getTextBounds(data.menuName, NULL, NULL, NULL, &textHeight);

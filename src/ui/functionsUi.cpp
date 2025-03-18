@@ -239,7 +239,16 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
     getTextBounds(str, NULL, NULL, NULL, &thTmp);
     dis->setTextWrap(true);
     // debugLog("thTmp: " + String(thTmp));
-    yCursorTmp = thTmp + tolerance;
+
+    // Center font if its a one line
+    // debugLog("size.h: " + String(size.h));
+    // debugLog("thTmp: " + String(thTmp));
+    if((int32_t(size.h) - int32_t(thTmp)) <= thTmp) {
+      yCursorTmp = ((size.h - thTmp) / 2) + thTmp;
+    } else {
+      yCursorTmp = thTmp + tolerance;
+    }
+
     if (containsBelowChar(str) == true)
     {
       // debugLog("We are below char for string: " + str);
