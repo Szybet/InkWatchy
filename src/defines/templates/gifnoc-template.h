@@ -74,7 +74,7 @@
 #define WIND_SPEED_MIN 0
 // Moon
 #define MOON_MIN_RADIUS 56.5
-#define MOON_MAX_RADIUS 63.6
+#define MOON_MAX_RADIUS 64.0
 
 // Alarms
 #define INK_ALARMS 1           // Enable alarms
@@ -192,7 +192,7 @@
 // - screen goes bad on bad temperatures
 // - you live in a volcano and need to turn the esp32 off if its above a certain temperature, or below
 // - you stream youtube and the cpu gets too hot
-#define TEMP_CHECKS 0
+#define TEMP_CHECKS_ENABLED 0
 // Those variables won't work for you, you need to edit them yourself after you see the temperature logs
 // Also everything in Celsius, americans need to metric (Or add support for burgers per inch for inkwatchy)
 // just joking :D
@@ -247,7 +247,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define SERIAL_BAUDRATE 115200
 #define MINIMAL_LOGS 1                 // Don't put full file paths in logs. Scom task requires this to be 0
 #define SCOM_TASK 0                    // Edit this to enable scom task. Requires DEBUG to be enabled too to be applied. It forces DEBUG_CPU_SPEED to maxSpeed
-#define FONT_PREVIEW_MENU 0            // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
+#define FONT_PREVIEW_MENU 1            // Edit this to enable font preview menu. Requires DEBUG and DEBUG_MENUS to be enabled too
 #define NO_CHARGING 0                  // Disable detection of charging, only in debug. Also locks in the voltage (for lp core to check if the time is changed bla bla)
 #define RESET_RTC_ON_BOOT 0            // Experimental.
 #define BATTERY_TIME_DROP 0            // If enabled, if battery drops below BATTERY_TIME_DROP_VOLTAGE. Doesn't need DEBUG
