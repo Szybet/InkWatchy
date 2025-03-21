@@ -7,7 +7,8 @@ bool fsSetup()
 {
   if (fsInitDone == false)
   {
-    if(fsSetupCount > 5) {
+    if (fsSetupCount > 5)
+    {
       return false;
     }
     debugLog("Trying to mount littleFS");
@@ -35,9 +36,14 @@ bool fsSetup()
       }
 
       */
-      isDebug(fsListDir("/", 0));
-      debugLog("Little fs total bytes: " + String(LittleFS.totalBytes()));
-      debugLog("Little fs used bytes: " + String(LittleFS.usedBytes()));
+#if DEBUG
+      if (bootStatus.fromWakeup == false)
+      {
+        isDebug(fsListDir("/", 0));
+        debugLog("Little fs total bytes: " + String(LittleFS.totalBytes()));
+        debugLog("Little fs used bytes: " + String(LittleFS.usedBytes()));
+      }
+#endif
     }
   }
   return true;
@@ -87,7 +93,9 @@ bool removeDir(String path)
       removeDir(filePath);
       file.close();
       LittleFS.rmdir(filePath);
-    } else {
+    }
+    else
+    {
       file.close();
       LittleFS.remove(filePath);
     }
@@ -98,7 +106,6 @@ bool removeDir(String path)
   debugLog("Removing final dir: " + BOOL_STR(status));
   return true;
 }
-
 
 /*
 File *fsOpenFile(String path)
