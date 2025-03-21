@@ -188,7 +188,7 @@ Template for versioning
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #define ACC_ENABLED 1
 #elif ATCHY_VER == WATCHY_3
-#define ACC_ENABLED 0 // I don't have this device
+#define ACC_ENABLED 1
 #elif ATCHY_VER == YATCHY
 #define ACC_ENABLED 1
 #endif
