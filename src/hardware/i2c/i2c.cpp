@@ -1,10 +1,16 @@
 #include "i2c.h"
 
-#if ATCHY_VER == YATCHY
+#if ATCHY_VER == YATCHY || ATCHY_VER == WATCHY_3 
 #if ATCHY_VER == YATCHY
 #define I2C_SDA_PIN 22
 #define I2C_SCL_PIN 23
 #define I2C_FREQ 50 // In Khz
+#endif
+
+#if ATCHY_VER == WATCHY_3
+#define I2C_SDA_PIN 12
+#define I2C_SCL_PIN 11
+#define I2C_FREQ 10 // In Khz
 #endif
 
 bool initedI2C = false;
