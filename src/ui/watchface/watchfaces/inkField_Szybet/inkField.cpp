@@ -129,6 +129,7 @@ static void drawTimeAfterApply(bool forceDraw)
         drawProgressBar(STEPS_BAR_CORD, GENERAL_BAR_SIZE, rM.inkfield.percentSteps);
     }
 #else
+#if TEMP_CHECKS_ENABLED
     uint16_t tempsPercents = ((rM.previousTemp - TEMP_MINIMUM) * 100) / (TEMP_MAXIMUM - TEMP_MINIMUM);
     debugLog("tempsPercents: " + String(tempsPercents));
     if (rM.inkfield.showedTemp != tempsPercents || forceDraw == true)
@@ -144,6 +145,7 @@ static void drawTimeAfterApply(bool forceDraw)
         writeTextReplaceBack(tempStr, TEMPS_TEXT_CORD);
         drawProgressBar(TEMPS_BAR_CORD_X, TEMPS_BAR_CORD_Y, TEMPS_BAR_SIZE, rM.inkfield.showedTemp);
     }
+#endif
 #endif
 
     uint16_t weatherMinutes = timeRTCLocal.Minute + (60 * timeRTCLocal.Hour);
