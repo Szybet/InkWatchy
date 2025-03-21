@@ -144,7 +144,7 @@
 
 #define API_MODULE 0 // With it, consider setting BUTTON_CPU_SPEED to something faster to make it faster
 
-#define EVENT_MODULE 1 // Needs the CALENDAR feature enabled, otherwise will error out
+#define EVENT_MODULE 0 // Needs the CALENDAR feature enabled, otherwise will error out
 
 #define ALARM_MODULE 1 // Needs alarm enabled
 
