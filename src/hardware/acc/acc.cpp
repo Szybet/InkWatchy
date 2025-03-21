@@ -5,7 +5,7 @@
 
 uint16_t readRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {
-#if (ATCHY_VER == YATCHY && 1 == 0) || ATCHY_VER == WATCHY_3
+#if ATCHY_VER == YATCHY || ATCHY_VER == WATCHY_3
     if (initI2C() == false)
     {
         return 0;
@@ -25,7 +25,7 @@ uint16_t readRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t l
 
 uint16_t writeRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {
-#if (ATCHY_VER == YATCHY && 1 == 0) || ATCHY_VER == WATCHY_3
+#if ATCHY_VER == YATCHY || ATCHY_VER == WATCHY_3
     if (initI2C() == false)
     {
         return 0;
@@ -55,7 +55,7 @@ bool accConfig()
 {
     bool status = true;
     //Enabling default BMA config
-    lookForFalse(rM.SBMA.defaultConfig(false), &status);
+    lookForFalse(rM.SBMA.defaultConfig(true), &status);
     lookForFalse(rM.SBMA.enableAccel(), &status);
 
     lookForFalse(rM.SBMA.enableFeature(BMA423_STEP_CNTR, true), &status);
@@ -74,7 +74,7 @@ void initAxc()
             debugLog("Type SRTC is invalid, fix this, defaulting to 2");
             Type = 2;
         }
-        if (rM.SBMA.begin(readRegisterBMA, writeRegisterBMA, vTaskDelay, Type, BMA4_I2C_ADDR_PRIMARY, (Type < 3), 14) == false) //Create a variable for the "(Type < 3), 14" part ?
+        if (rM.SBMA.begin(readRegisterBMA, writeRegisterBMA, vTaskDelay, Type, BMA4_I2C_ADDR_PRIMARY, -1) == false) //Create a variable for the "(Type < 3), 14" part ?
         {
             debugLog("Failed to init bma");
             return;
@@ -103,7 +103,6 @@ uint16_t getSteps()
         if (rM.stepsInited == false)
         {
             rM.stepsInited = true;
-            rM.SBMA.enableFeature(BMA423_STEP_CNTR, true);
             rM.SBMA.resetStepCounter();
         }
         else
