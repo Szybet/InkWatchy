@@ -179,9 +179,17 @@ void turnOffWifi()
             debugCounter = debugCounter + 1;
 #endif
         }
-        vTaskDelete(wifiTask);
+        wifiTaskMutex.lock();
+        if(isWifiTaskRunning == true) {
+            vTaskDelete(wifiTask);
+            isWifiTaskRunning = false;
+        } else {
+            debugLog("Wifi task stopped running like now, this is bad, but should be fine");
+        }
+        wifiTaskMutex.unlock();
+        
         // This is because task `arduino_events` has a queue and communicated with wifi task. Idk about this fix
-        setBoolMutex(&wifiTaskMutex, &isWifiTaskRunning, false);
+        // setBoolMutex(&wifiTaskMutex, &isWifiTaskRunning, false);
         // vTaskSuspend(wifiTask);
         // delayTask(1500);
     }
