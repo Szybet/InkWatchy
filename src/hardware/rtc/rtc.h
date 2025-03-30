@@ -4,6 +4,8 @@
 extern tmElements_t timeRTCLocal;
 extern tmElements_t timeRTCUTC0;
 
+extern int64_t timeZoneOffset;
+
 extern SmallRTC SRTC;
 // Chatgpt said 38 is max, I trust him :)
 #define POSIX_TIMEZONE_MAX_LENGTH 50

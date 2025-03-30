@@ -134,11 +134,13 @@ tmElements_t convertToTmElements(const struct tm &tmStruct)
 bool dontTouchTimeZone = false;
 void timeZoneApply()
 {
-  timeRTCLocal = timeRTCUTC0; // To have at least UTC0 there
   if (dontTouchTimeZone == true)
   {
+    debugLog("Don't touch timezone is on");
     return;
   }
+  timeRTCLocal = timeRTCUTC0; // To have at least UTC0 there
+
   // https://github.com/Michal-Szczepaniak/TinyWatchy/commit/cb9082fe0f8df6ac4dc3ff682a7ddc80ef07d78f
   // https://docs.espressif.com/projects/esp-idf/en/v5.1.4/esp32/api-reference/system/system_time.html
   if (strlen(rM.posixTimeZone) > 0)
@@ -158,6 +160,7 @@ void timeZoneApply()
     // https://man7.org/linux/man-pages/man3/setenv.3.html
     if (setenv("TZ", rM.posixTimeZone, 1) == 0)
     {
+      debugLog("rM.posixTimeZone: " + String(rM.posixTimeZone));
       tzset();
       time_t tempTime = initialUnixTime;
       struct tm tempTM = {};

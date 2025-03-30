@@ -136,9 +136,9 @@ void turnOnWifiTask(void *parameter)
     {
         debugLog("Failed to connect to wifi properly");
     }
-    turnOffWifiMinimal();
     debugLog("Setting isWifiTaskRunning to false NOW");
     setBoolMutex(&wifiTaskMutex, &isWifiTaskRunning, false);
+    turnOffWifiMinimal();
     vTaskDelete(NULL);
 }
 
@@ -180,16 +180,24 @@ void turnOffWifi()
 #endif
         }
         wifiTaskMutex.lock();
-        if(isWifiTaskRunning == true) {
-            vTaskDelete(wifiTask);
+        if (isWifiTaskRunning == true)
+        {
+            if (wifiTask != NULL && eTaskGetState(wifiTask) != eDeleted)
+            {
+                vTaskDelete(wifiTask);
+                wifiTask = NULL;
+            } else {
+                debugLog("Wifi task not running but bool running? Bad");
+            }
             isWifiTaskRunning = false;
-        } else {
+        }
+        else
+        {
             debugLog("Wifi task stopped running like now, this is bad, but should be fine");
         }
         wifiTaskMutex.unlock();
-        
+
         // This is because task `arduino_events` has a queue and communicated with wifi task. Idk about this fix
-        // setBoolMutex(&wifiTaskMutex, &isWifiTaskRunning, false);
         // vTaskSuspend(wifiTask);
         // delayTask(1500);
     }

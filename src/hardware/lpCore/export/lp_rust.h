@@ -22,8 +22,6 @@
 
 #define NUMBER_HEIGHT 48
 
-#define TIMEZONE_OFFSET (1 * 3600)
-
 #define WAKEUP_MODULO 29
 
 #define TIME_RECT_X_LO 8

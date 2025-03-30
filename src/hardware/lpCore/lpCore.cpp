@@ -50,6 +50,10 @@ void clearLpCoreRtcMem()
     memset(rtc_mem->custom, 0, CONFIG_BOOTLOADER_CUSTOM_RESERVE_RTC_SIZE);
 #endif
     setAlarmForLpCore();
+
+    // Set timezone offset
+    int16_t lpCoreTimeZoneOff = timeZoneOffset / 60;
+    memcpy(&rtc_mem->custom[8], &lpCoreTimeZoneOff, 2);
 }
 
 bool loadLpCore()

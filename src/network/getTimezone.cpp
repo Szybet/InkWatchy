@@ -32,7 +32,7 @@ void syncTimezone()
             if (posixLength < POSIX_TIMEZONE_MAX_LENGTH)
             {
                 strncpy(rM.posixTimeZone, posix.c_str(), posix.length());
-                rM.posixTimeZone[posix.length() - 1] = '\0';
+                rM.posixTimeZone[posix.length()] = '\0';
             }
             else
             {
@@ -48,5 +48,6 @@ void syncTimezone()
     {
         debugLog("Skipping timezone request, it's already set, somewhere");
     }
+    debugLog("Time zone done, applying it by reading rtc");
     readRTC();
 }
