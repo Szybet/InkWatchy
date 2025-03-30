@@ -238,6 +238,7 @@ void inkDrawMoon()
     writeTextReplaceBack(String(int(mp.fraction * 100.0)), MOON_LIGHT_CORD, GxEPD_BLACK, GxEPD_WHITE);
     debugLog("mp.distance: " + String(mp.distance));
     int distance = int((mp.distance - MOON_MIN_RADIUS) * 100 / (MOON_MAX_RADIUS - MOON_MIN_RADIUS));
+    checkMaxMin(&distance, 100, 0, false);
     writeTextReplaceBack(String(int(distance)), MOON_DISTANCE_CORD, GxEPD_BLACK, GxEPD_WHITE);
 
     writeImageN(MOON_IMG_CORD, getImg("inkfield/" + removeSpaces(String(mp.phaseName))));
