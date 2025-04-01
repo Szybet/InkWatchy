@@ -39,7 +39,10 @@ void initAlarmRing()
     writeTextReplaceBack(alarmGetTime(&rM.alarms[rM.nextAlarmIndex]), ALARM_TIME_X, ALARM_TIME_Y);
 
 #if POMODORO_ALARM
-    writeImageN(ALARM_POMODORO_X, ALARM_POMODORO_Y, getImg("pomodoro/tomato"));
+    if (rM.nextAlarmIndex == ALARM_POMODORO_ID)
+    {
+        writeImageN(ALARM_POMODORO_X, ALARM_POMODORO_Y, getImg("pomodoro/tomato"));
+    }
 #endif
 
     dUChange = true;
@@ -52,19 +55,22 @@ void loopAlarmRing()
         timeSinceLastMotor = millisBetter();
         vibrateMotor(ALARM_MOTOR_TIME);
 #if RGB_DIODE
-#if POMODORO_ALARM == false
-        setRandomColor();
-#else
-        pomodoroColorIter = !pomodoroColorIter;
-        if (pomodoroColorIter == true)
+        if (rM.nextAlarmIndex != ALARM_POMODORO_ID)
         {
-            setRgb(IwRed);
+            setRandomColor();
         }
         else
         {
-            setRgb(IwNone);
+            pomodoroColorIter = !pomodoroColorIter;
+            if (pomodoroColorIter == true)
+            {
+                setRgb(IwRed);
+            }
+            else
+            {
+                setRgb(IwNone);
+            }
         }
-#endif
 #endif
     }
     buttonState btn = useButton();
@@ -157,7 +163,10 @@ void exitAlarmRing()
     }
 
 #if POMODORO_ALARM
-    pomodoroManage();
+    if (rM.nextAlarmIndex == ALARM_POMODORO_ID)
+    {
+        pomodoroManage();
+    }
 #endif
 
     rM.nextAlarm = 0;
