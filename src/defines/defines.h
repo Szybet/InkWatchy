@@ -17,6 +17,13 @@
 #include "condition.h"
 
 #include <Arduino.h>
+
+// Here add BT things
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEScan.h>
+#include <BLEAdvertisedDevice.h>
+
 #include <Adafruit_GFX.h>
 #include <GxEPD2_BW.h>
 #include <SmallRTC.h>
