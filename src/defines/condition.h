@@ -250,3 +250,10 @@ Template for versioning
 #undef ACC_ENABLED
 #define ACC_ENABLED 0
 #endif
+
+// Bma version
+#if ATCHY_VER == WATCHY_3 || ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
+#define BMA_VERSION 423
+#elif ATCHY_VER == YATCHY
+#define BMA_VERSION 456
+#endif
