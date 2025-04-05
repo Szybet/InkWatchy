@@ -74,7 +74,7 @@ void initAxc()
             debugLog("Type SRTC is invalid, fix this, defaulting to 2");
             Type = 2;
         }
-        if (rM.SBMA.begin(readRegisterBMA, writeRegisterBMA, vTaskDelay, Type, BMA4_I2C_ADDR_PRIMARY, -1, BMA_VERSION) == false) //Create a variable for the "(Type < 3), 14" part ?
+        if (rM.SBMA.begin(readRegisterBMA, writeRegisterBMA, vTaskDelay, Type, BMA4_I2C_ADDR_PRIMARY, false, -1, -1, BMA_VERSION) == false)
         {
             debugLog("Failed to init bma");
             return;
