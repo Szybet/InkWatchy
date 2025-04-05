@@ -1,0 +1,244 @@
+#include "defines.h"
+#include "rtcMem.h"
+
+#include "ESP_I2S.h"
+
+#define PIN_SCK 19
+#define PIN_SM 18
+#define PIN_SD 22
+
+#define PIN_GND 20
+#define PIN_VDD 21
+
+#define uS_TO_S_FACTOR 1000000ULL // Conversion factor for microseconds to seconds
+#define TIME_TO_SLEEP 15          // Time ESP32 will sleep (in seconds)
+
+#define SAVE_TO_LITTLEFS 0
+
+void setupMicPins()
+{
+  debugLog("Setting up mic pins");
+  pinMode(PIN_GND, OUTPUT);
+  pinMode(PIN_VDD, OUTPUT);
+
+  pinMode(PIN_SCK, INPUT);
+  digitalWrite(PIN_SCK, LOW);
+  pinMode(PIN_SM, INPUT);
+  digitalWrite(PIN_SM, LOW);
+  pinMode(PIN_SD, INPUT);
+  digitalWrite(PIN_SD, LOW);
+}
+
+void turnOnMic()
+{
+  debugLog("Turning on mic");
+  digitalWrite(PIN_GND, LOW);
+  digitalWrite(PIN_VDD, HIGH);
+}
+
+void turnOffMic()
+{
+  debugLog("Turning mic off");
+  // Data pins
+  pinMode(PIN_SCK, INPUT);
+  digitalWrite(PIN_SCK, LOW);
+  pinMode(PIN_SM, INPUT);
+  digitalWrite(PIN_SM, LOW);
+  pinMode(PIN_SD, INPUT);
+  digitalWrite(PIN_SD, LOW);
+
+  // Disable VDD
+  digitalWrite(PIN_VDD, LOW);
+
+  // Fully disable things up
+  pinMode(PIN_GND, INPUT);
+  digitalWrite(PIN_GND, LOW);
+  pinMode(PIN_VDD, INPUT);
+  digitalWrite(PIN_VDD, LOW);
+}
+
+void simpleMicTestToFlash()
+{
+  debugLog("Running simpleMicTest");
+  I2SClass i2s;
+
+  uint8_t *wav_buffer;
+  size_t wav_size;
+
+  i2s.setPins(PIN_SCK, PIN_SM, -1, PIN_SD);
+
+  if (!i2s.begin(I2S_MODE_STD, 16000, I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_MONO, I2S_STD_SLOT_LEFT))
+  {
+    debugLog("Failed to initialize I2S bus");
+    return;
+  }
+
+  debugLog("I2S bus initialized.");
+  int seconds = 2;
+  debugLog("Recording " + String(seconds) + " seconds of audio data...");
+
+  wav_buffer = i2s.recordWAV(seconds, &wav_size);
+  debugLog("Recorded bytes: " + String(wav_size));
+
+#if SAVE_TO_LITTLEFS
+  debugLog("Writing to littlefs");
+  fsSetBlob("simpleMicTest.wav", wav_buffer, wav_size, "/");
+#endif
+
+  debugLog("simpleMicTest complete.");
+}
+
+void testFullMicToFlash()
+{
+  setupMicPins();
+  turnOnMic();
+  simpleMicTestToFlash();
+  turnOffMic();
+}
+
+#define BUFF_SIZE 64022
+
+TaskHandle_t streamTaskHandle;
+std::mutex streamMutex;
+uint8_t *bufferStream1;
+uint8_t *bufferStream2;
+
+WiFiClient client;
+#define SERVER_IP "192.168.12.1"
+#define SERVER_PORT 14678
+
+bool currentBufferRecord = false; // 0 is buf 1 etc
+bool currentBufferSend = false;
+
+bool startStream = false;
+void streamTask(void *parameter)
+{
+  while (startStream == false)
+  {
+    delayTask(30);
+  }
+  debugLog("Task started");
+
+  while (true)
+  {
+    debugLog("Stream task is entering wait loop")
+    while (currentBufferRecord == currentBufferSend)
+    {
+      // debugLog("Stream task is waiting...");
+      delayTask(10);
+    }
+    debugLog("Stream task is exiting wait loop")
+
+    uint8_t *selectedBuf;
+    if (currentBufferSend == 0)
+    {
+      selectedBuf = bufferStream1;
+    }
+    else
+    {
+      selectedBuf = bufferStream2;
+    }
+
+    client.write(selectedBuf, BUFF_SIZE);
+    currentBufferSend = !currentBufferSend;
+  }
+}
+
+void testStreamWav()
+{
+  bufferStream1 = (uint8_t *)malloc(BUFF_SIZE);
+  bufferStream2 = (uint8_t *)malloc(BUFF_SIZE);
+  if (bufferStream1 == NULL || bufferStream2 == NULL)
+  {
+    debugLog("Memory allocation failed!");
+    return;
+  }
+
+  xTaskCreate(
+      streamTask,
+      "streamTask",
+      6000,
+      NULL,
+      20,
+      &streamTaskHandle);
+
+  // Wifi
+  WiFi.begin("hotspot", "12345678");
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    debugLog(".");
+  }
+  debugLog("Connected to WiFi:" + String(WiFi.localIP()));
+  client.connect(SERVER_IP, SERVER_PORT);
+  if (client.connected() == false)
+  {
+    debugLog("Failed to connect");
+    return;
+  }
+  I2SClass i2s;
+  i2s.setPins(PIN_SCK, PIN_SM, -1, PIN_SD);
+
+  if (!i2s.begin(I2S_MODE_STD, 16000, I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_MONO, I2S_STD_SLOT_LEFT))
+  {
+    debugLog("Failed to initialize I2S bus");
+    return;
+  }
+
+  while (true)
+  {
+    uint8_t *selectedBuf;
+    if (currentBufferRecord == 0)
+    {
+      selectedBuf = bufferStream1;
+    }
+    else
+    {
+      selectedBuf = bufferStream2;
+    }
+
+    memset(selectedBuf, 0, BUFF_SIZE);
+    i2s.readBytes((char*)selectedBuf, BUFF_SIZE);
+    currentBufferRecord = !currentBufferRecord;
+    startStream = true;
+    debugLog("Record task is entering wait loop")
+    while (currentBufferRecord == currentBufferSend)
+    {
+      debugLog("Record task is waiting...");
+      delayTask(5);
+    }
+    debugLog("Record task is exiting wait loop")
+  }
+
+  free(bufferStream1);
+  free(bufferStream2);
+}
+
+void testFullStreamWav()
+{
+  setupMicPins();
+  turnOnMic();
+  testStreamWav();
+  turnOffMic();
+}
+
+void setup()
+{
+#if DEBUG
+  initLog();
+#endif
+  setCpuSpeed(cpuSpeed::maxSpeed);
+  testFullStreamWav();
+  return;
+  debugLog("Welp, waiting a few seconds");
+  delayTask(6000);
+  debugLog("Going to sleep");
+  esp_sleep_enable_timer_wakeup(TIME_TO_SLEEP * uS_TO_S_FACTOR);
+  esp_deep_sleep_start();
+}
+
+void loop()
+{
+  debugLog("Welp");
+  delayTask(1000);
+}
