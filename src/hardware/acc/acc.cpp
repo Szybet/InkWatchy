@@ -56,10 +56,37 @@ bool accConfig()
     bool status = true;
     // Enabling default BMA config
     lookForFalse(rM.SBMA.defaultConfig(true), &status);
+    if(status == false) {
+        debugLog("defaultConfig failed");
+        return status;
+    }
     lookForFalse(rM.SBMA.enableAccel(), &status);
+    if(status == false) {
+        debugLog("enableAccel failed");
+        return status;
+    }
 
-    lookForFalse(rM.SBMA.enableFeature(BMA423_STEP_CNTR, true), &status);
+    if(BMA_VERSION == 423) {
+        lookForFalse(rM.SBMA.enableFeature(BMA423_STEP_CNTR, true), &status);
+        if(status == false) {
+            debugLog("enableFeature(BMA423_STEP_CNTR failed");
+            return status;
+        }
+    } else if(BMA_VERSION == 456) {
+        if(bma456_step_detector_enable(true, &rM.SBMA.__devFptr) != 0) {
+            debugLog("enableFeature(BMA456_STEP_CNTR failed");
+            return status;
+        }
+    }
+
+    /*
+    // We should not need this, Watchy v3 users maybe
     lookForFalse(rM.SBMA.enableFeature(BMA423_STEP_CNTR_INT, true), &status);
+    if(status == false) {
+        debugLog("enableFeature(BMA423_STEP_CNTR_INT failed");
+        return status;
+    }
+    */
 
     return status;
 }
@@ -82,10 +109,13 @@ void initAxc()
         type = 4;
 #endif
 
-        if (rM.SBMA.begin(readRegisterBMA, writeRegisterBMA, vTaskDelay, type, BMA4_I2C_ADDR_PRIMARY, false, -1, -1, BMA_VERSION) == false)
-        {
-            debugLog("Failed to init bma");
-            return;
+        debugLog("Acc type is: " + String(type));
+        if(rM.SBMA.__init == false) {
+            if (rM.SBMA.begin(readRegisterBMA, writeRegisterBMA, vTaskDelay, type, BMA4_I2C_ADDR_PRIMARY, false, -1, -1, BMA_VERSION) == false)
+            {
+                debugLog("Failed to init bma");
+                return;
+            }    
         }
 
         if (!accConfig())
