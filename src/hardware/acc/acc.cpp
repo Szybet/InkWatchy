@@ -73,7 +73,8 @@ bool accConfig()
             return status;
         }
     } else if(BMA_VERSION == 456) {
-        if(bma456_step_detector_enable(true, &rM.SBMA.__devFptr) != 0) {
+        lookForFalse(rM.SBMA.enableFeature(BMA456_STEP_CNTR, true), &status);
+        if(status == false) {
             debugLog("enableFeature(BMA456_STEP_CNTR failed");
             return status;
         }
@@ -120,7 +121,7 @@ void initAxc()
 
         if (!accConfig())
         {
-            debugLog("Failed to init bma - default config");
+            debugLog("Failed to init bma - config");
             return;
         }
         rM.initedAxc = true;
