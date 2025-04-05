@@ -4,7 +4,7 @@
   #if ATCHY_VER == YATCHY
     #define I2C_SDA_PIN 22
     #define I2C_SCL_PIN 23
-    #define I2C_FREQ 50 // In Khz
+    #define I2C_FREQ 100 // In Khz, BMA456 requires 100 not 50
   #elif ATCHY_VER == WATCHY_3
     #define I2C_SDA_PIN 12
     #define I2C_SCL_PIN 11
