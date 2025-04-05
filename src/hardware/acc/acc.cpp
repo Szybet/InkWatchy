@@ -54,7 +54,7 @@ void lookForFalse(bool newBool, bool *oldValue)
 bool accConfig()
 {
     bool status = true;
-    //Enabling default BMA config
+    // Enabling default BMA config
     lookForFalse(rM.SBMA.defaultConfig(true), &status);
     lookForFalse(rM.SBMA.enableAccel(), &status);
 
@@ -69,12 +69,20 @@ void initAxc()
     debugLog("initAxc Launched");
     if (rM.initedAxc == false)
     {
-        uint8_t Type = rM.SRTC.getType(); // TODO: fix this
-        if(Type == 0) {
-            debugLog("Type SRTC is invalid, fix this, defaulting to 2");
-            Type = 2;
-        }
-        if (rM.SBMA.begin(readRegisterBMA, writeRegisterBMA, vTaskDelay, Type, BMA4_I2C_ADDR_PRIMARY, false, -1, -1, BMA_VERSION) == false)
+        uint8_t type;
+#if ATCHY_VER == WATCHY_1
+        type = 1;
+#elif ATCHY_VER == WATCHY_1_5
+        type = 2;
+#elif ATCHY_VER == WATCHY_2
+        type = 2;
+#elif ATCHY_VER == WATCHY_3
+        type = 3;
+#elif ATCHY_VER == YATCHY
+        type = 4;
+#endif
+
+        if (rM.SBMA.begin(readRegisterBMA, writeRegisterBMA, vTaskDelay, type, BMA4_I2C_ADDR_PRIMARY, false, -1, -1, BMA_VERSION) == false)
         {
             debugLog("Failed to init bma");
             return;
