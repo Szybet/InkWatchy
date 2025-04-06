@@ -189,3 +189,55 @@ RTC_DATA_ATTR rtcMem rM = {
 #endif
 #endif
 };
+
+#if RTC_MEMORY_BACKUP
+
+RTC_DATA_ATTR unsigned char rtcMd5[16];
+
+void rtcMemRetrieve(rtcMem* source, rtcMem* destination) {
+    debugLog("Retrieving data for rtc memory");
+    // Alarms
+    for (int i = 0; i < MAX_ALARMS; i++) {
+        destination->alarms[i] = source->alarms[i];
+    }
+    destination->nextAlarm = source->nextAlarm;
+    destination->nextAlarmIndex = source->nextAlarmIndex;
+    // posixTimeZone
+    for (int i = 0; i < 50; i++) {
+        destination->posixTimeZone[i] = source->posixTimeZone[i];
+    }    
+}
+
+void rtcMemBackupManage()
+{
+    debugLog("Entering rtcMemBackupManage");
+    if (bootStatus.fromWakeup == false && bootStatus.resetReason != ESP_RST_PANIC && fsSetup() == true)
+    {
+        String filePath = String("/conf/") + String(CONF_RTC_BACKUP);
+        if (fsFileExists(filePath) == true)
+        {
+            if (fsGetFileSize(filePath) == sizeof(rtcMem))
+            {
+                debugLog("Rtc backup exists and is correct size, recovering it");
+                bufSize buff = fsGetBlob(CONF_RTC_BACKUP);
+                rtcMem* rtcMemTmp = (rtcMem*)buff.buf;
+                rtcMemRetrieve(rtcMemTmp, &rM);
+                
+                // free(buff.buf);
+
+                fsRemoveFile(filePath);
+                esp_sleep_enable_timer_wakeup(1000);
+                esp_deep_sleep_start();
+            }
+            else
+            {
+                debugLog("Rtc backup size is wrong, we can't doo anything");
+            }
+        }
+        else
+        {
+            debugLog("Rtc backup doesn't exist, nevermind");
+        }
+    }
+}
+#endif

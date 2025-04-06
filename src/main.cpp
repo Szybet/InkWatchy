@@ -50,6 +50,10 @@ void setup()
         &priorityLoopHandle);
   }
 
+#if RTC_MEMORY_BACKUP
+  rtcMemBackupManage();
+#endif
+
 #if INK_ALARMS
   checkAlarms();
 #endif

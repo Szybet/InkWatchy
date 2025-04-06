@@ -154,3 +154,8 @@ struct rtcMem
 };
 
 extern rtcMem rM;
+
+#if RTC_MEMORY_BACKUP
+extern unsigned char rtcMd5[16];
+void rtcMemBackupManage();
+#endif

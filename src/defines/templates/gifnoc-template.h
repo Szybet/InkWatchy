@@ -19,6 +19,12 @@
 #define VIBRATION_MULTIPLIER_OVERWRITE 0
 #define VIBRATION_MULTIPLIER 1.0
 #define STEPS_GOAL 7000
+// Backups RTC memory to flash, so after updating the firmware (When resources weren't updated, or rtc memory wasn't changed) it will still keep data like alarms
+// Might introduce weird behaviour or crashes on a update, but it tries to avoid it. 
+// Might consume a bit of battery, but that's marginal. 
+// It may also increase flash usage and life, but hey, mine still works so yours will too
+// If it doesn't save something you want, add it yourself or request it
+#define RTC_MEMORY_BACKUP 0
 
 // Timezone! So:
 // - You don't set anything, it will try to ques based on IP, it can fail sometimes
@@ -313,6 +319,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define CONF_UNIX_PREVIOUS_SYNC "previous_sync_unix"
 #define CONF_SECONDS_DRIFT "drift_sync_seconds"
 #define CONF_UNIX_LAST_CHARGE "last_charge_unix"
+#define CONF_RTC_BACKUP "rtc_memory_backup"
 
 #define WEATHER_HOURLY_DIR "/weather/hourly"
 #define WEATHER_DIR "/weather"
