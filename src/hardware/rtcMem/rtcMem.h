@@ -157,5 +157,6 @@ extern rtcMem rM;
 
 #if RTC_MEMORY_BACKUP
 extern unsigned char rtcMd5[16];
+bool didRtcChange(rtcMem* source, rtcMem* destination);
 void rtcMemBackupManage();
 #endif

@@ -194,18 +194,59 @@ RTC_DATA_ATTR rtcMem rM = {
 
 RTC_DATA_ATTR unsigned char rtcMd5[16];
 
-void rtcMemRetrieve(rtcMem* source, rtcMem* destination) {
+bool didRtcChange(rtcMem *source, rtcMem *destination)
+{
+    debugLog("Comparing rtc data");
+
+    // Alarms
+    if (memcmp(source->alarms, destination->alarms, sizeof(source->alarms)) != 0)
+    {
+        debugLog("Alarms data differs");
+        return true;
+    }
+
+    if (source->nextAlarm != destination->nextAlarm ||
+        source->nextAlarmIndex != destination->nextAlarmIndex)
+    {
+        debugLog("Alarm metadata differs");
+        return true;
+    }
+
+    // posixTimeZone
+    if (memcmp(source->posixTimeZone, destination->posixTimeZone, sizeof(source->posixTimeZone)) != 0)
+    {
+        debugLog("Timezone data differs");
+        return true;
+    }
+
+    debugLog("No changes detected");
+    return false;
+}
+
+void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
+{
     debugLog("Retrieving data for rtc memory");
     // Alarms
+    /*
     for (int i = 0; i < MAX_ALARMS; i++) {
         destination->alarms[i] = source->alarms[i];
     }
+    */
+    memcpy(destination->alarms, source->alarms, sizeof(destination->alarms));
+
     destination->nextAlarm = source->nextAlarm;
     destination->nextAlarmIndex = source->nextAlarmIndex;
     // posixTimeZone
+    /*
     for (int i = 0; i < 50; i++) {
         destination->posixTimeZone[i] = source->posixTimeZone[i];
-    }    
+    }
+    */
+    memcpy(
+        destination->posixTimeZone,
+        source->posixTimeZone,
+        sizeof(destination->posixTimeZone) // Automatically calculates total bytes
+    );
 }
 
 void rtcMemBackupManage()
@@ -220,9 +261,9 @@ void rtcMemBackupManage()
             {
                 debugLog("Rtc backup exists and is correct size, recovering it");
                 bufSize buff = fsGetBlob(CONF_RTC_BACKUP);
-                rtcMem* rtcMemTmp = (rtcMem*)buff.buf;
+                rtcMem *rtcMemTmp = (rtcMem *)buff.buf;
                 rtcMemRetrieve(rtcMemTmp, &rM);
-                
+
                 // free(buff.buf);
 
                 fsRemoveFile(filePath);

@@ -135,13 +135,19 @@ void goSleep()
     unsigned char tmpHash[16];
     mbedtls_md5((unsigned char*)&rM, sizeof(rtcMem), tmpHash);
     if (memcmp(tmpHash, rtcMd5, 16) == 0) {
-        // hashes are equal
         debugLog("Hashes are equal, not updating backup");
     } else {
-        // hashes are different
+        debugLog("Hashes are diff");
         memcpy(rtcMd5, tmpHash, 16);
-        debugLog("Saving rtc memory");
-        fsSetBlob(CONF_RTC_BACKUP, (uint8_t*)&rM, sizeof(rtcMem));
+        bufSize buff = fsGetBlob(CONF_RTC_BACKUP);
+        if(buff.size != sizeof(rtcMem) || didRtcChange((rtcMem*)buff.buf, &rM) == true) {
+            debugLog("Saving rtc memory");
+            free(buff.buf);
+            fsSetBlob(CONF_RTC_BACKUP, (uint8_t*)&rM, sizeof(rtcMem));    
+        } else {
+            free(buff.buf);
+            debugLog("Not saving rtc memory because didRtcChange is false");
+        }
     }
 #endif
 
