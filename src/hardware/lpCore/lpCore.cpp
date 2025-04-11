@@ -83,10 +83,17 @@ bool loadLpCore()
 
 bool runLpCore()
 {
+#if LP_CORE_TEST_ENABLED
+    ulp_lp_core_cfg_t cfg = {
+        .wakeup_source = ULP_LP_CORE_WAKEUP_SOURCE_LP_TIMER,
+        .lp_timer_sleep_duration_us = uint32_t(2 * 1000000),
+    };
+#else
     ulp_lp_core_cfg_t cfg = {
         .wakeup_source = ULP_LP_CORE_WAKEUP_SOURCE_LP_TIMER,
         .lp_timer_sleep_duration_us = uint32_t((1 + (60 - getCurrentSeconds())) * 1000000),
     };
+#endif
 
     if (screenTimeChanged == true)
     {

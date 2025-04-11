@@ -26,7 +26,7 @@
 
 #define TIME_RECT_X_LO 8
 
-#define TIME_RECT_X_HI 192
+#define TIME_RECT_X_HI 184
 
 #define TIME_RECT_Y_LO 2
 
