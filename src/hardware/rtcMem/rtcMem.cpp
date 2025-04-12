@@ -252,7 +252,8 @@ void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
 void rtcMemBackupManage()
 {
     debugLog("Entering rtcMemBackupManage");
-    if (bootStatus.fromWakeup == false && bootStatus.resetReason != ESP_RST_PANIC && fsSetup() == true)
+    // bootStatus.fromWakeup == false is checked in initHardware
+    if (bootStatus.resetReason != ESP_RST_PANIC && fsSetup() == true)
     {
         String filePath = String("/conf/") + String(CONF_RTC_BACKUP);
         if (fsFileExists(filePath) == true)
@@ -267,8 +268,9 @@ void rtcMemBackupManage()
                 // free(buff.buf);
 
                 fsRemoveFile(filePath);
-                esp_sleep_enable_timer_wakeup(1000);
-                esp_deep_sleep_start();
+                // This confuses yatchy for some reason also not needed anymore because this part is early in the boot now
+                // esp_sleep_enable_timer_wakeup(1000);
+                // esp_deep_sleep_start();
             }
             else
             {
