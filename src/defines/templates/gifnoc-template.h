@@ -123,6 +123,10 @@
 
 // Calendar
 #define CALENDAR 0
+// allow insecure url for calendar
+#define ALLOW_INSECURE_CAL 0
+// import only events today onwards
+#define FUTURE_ONLY 0
 // Shorter names needed
 #define CALENDAR_SPLIT_DESCRIPTION 1
 #define CALENDAR_SPLIT_DESCRIPTION_STRING "\\n"
