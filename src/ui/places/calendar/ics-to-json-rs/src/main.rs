@@ -132,46 +132,46 @@ pub struct Event {
 
 pub fn parse_time(str: String, tzid: Option<&str>) -> DateTime<Utc> {
     debug!("Parsing time: {} with tzid: {:?}", str, tzid);
-    let fmt = if str.contains('T') {
-        if str.ends_with('Z') {
+    
+    if str.contains('T') {
+        let fmt = if str.ends_with('Z') {
             "%Y%m%dT%H%M%SZ"
         } else {
             "%Y%m%dT%H%M%S"
-        }
-    } else {
-        "%Y%m%d"
-    };
-
-    // Parse as naive datetime first
-    let naive = NaiveDateTime::parse_from_str(&str, fmt)
-        .or_else(|_| NaiveDate::parse_from_str(&str, "%Y%m%d").map(|d| d.and_hms_opt(0, 0, 0).unwrap()))
-        .expect("Failed to parse date");
-
-    // Convert to appropriate timezone
-    match tzid {
-        Some(tz) => {
-            let tz: ChronoTz = tz.parse().unwrap_or(ChronoTz::UTC);
-            tz.from_local_datetime(&naive)
-                .single()
-                .unwrap_or_else(|| tz.with_ymd_and_hms(1970, 1, 1, 0, 0, 0).unwrap())
-                .with_timezone(&Utc)
-        }
-        None => {
-            if str.ends_with('Z') {
-                Utc.from_utc_datetime(&naive)
-            } else {
-                // Treat floating times as local time
-                let local_tz = ChronoTz::Europe__Berlin; // Change this to your local timezone
-                local_tz
-                    .from_local_datetime(&naive)
+        };
+        // Parse as naive datetime first
+        let naive = NaiveDateTime::parse_from_str(&str, fmt)
+            .expect("Failed to parse datetime");
+    
+        match tzid {
+            Some(tz) => {
+                let tz: ChronoTz = tz.parse().unwrap_or(ChronoTz::UTC);
+                tz.from_local_datetime(&naive)
                     .single()
-//                    .unwrap_or_else(|| local_tz.ymd(1970, 1, 1).and_hms(0, 0, 0))
-                    .unwrap_or_else(|| local_tz.with_ymd_and_hms(1970, 1, 1, 0, 0, 0).unwrap())
+                    .unwrap_or_else(|| tz.with_ymd_and_hms(1970, 1, 1, 0, 0, 0).unwrap())
                     .with_timezone(&Utc)
             }
+            None => {
+                if str.ends_with('Z') {
+                    Utc.from_utc_datetime(&naive)
+                } else {
+                    let local_tz = ChronoTz::Europe__Bratislava; // TODO make this reconfigurable from config.h
+                    local_tz.from_local_datetime(&naive)
+                        .single()
+                        .unwrap_or_else(|| local_tz.with_ymd_and_hms(1970, 1, 1, 0, 0, 0).unwrap())
+                        .with_timezone(&Utc)
+                }
+            }
         }
+    } else {
+        let naive_date = NaiveDate::parse_from_str(&str, "%Y%m%d")
+            .expect("Failed to parse date");
+//        TimeZone::from_utc_datetime(naive_date.and_hms(0, 0, 0), Utc)
+        Utc.from_utc_datetime(&naive_date.and_hms_opt(0, 0, 0).unwrap())
+
     }
 }
+
 
 pub fn parse_ical(buf: &[u8], args: &Args) {
     let mut reader = ical::IcalParser::new(buf);
@@ -208,7 +208,7 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
                             params.iter()
                                 .find(|(k, _)| k == "TZID")
                                 .and_then(|(_, v)| v.first())
-                                .map(|s| s.as_str())  // Convert &String to &str here
+                                .map(|s| s.as_str())  
                         });
                         let dt = parse_time(value, tzid);
                         dtstart = Some(dt);
@@ -221,7 +221,7 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
                             params.iter()
                                 .find(|(k, _)| k == "TZID")
                                 .and_then(|(_, v)| v.first())
-                                .map(|s| s.as_str())  // Convert &String to &str here
+                                .map(|s| s.as_str())  
                         });
                         let dt = parse_time(value, tzid);
                         dtend = Some(dt);
