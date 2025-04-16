@@ -3,13 +3,14 @@
 
 #if INK_ALARMS
 
+// Central quick alarm function
 void setAlarmQuick(int minutes, int id)
 {
     readRTC();
     int hourNow = timeRTCLocal.Hour;
     int minutesNow = timeRTCLocal.Minute;
 
-    minutesNow += minutes;
+    minutesNow += minutes; //HUGE ERROR, if you set a time for 1 minute it rings upon next minute, not in 60 seconds !!! not sure how to fix but need swork
     while (minutesNow >= 60)
     {
         minutesNow -= 60;
@@ -44,109 +45,39 @@ void setAlarmQuick(int minutes, int id)
     calculateNextAlarm();
 }
 
-void sAQ5()
-{
-    setAlarmQuick(5, ALARM_QUICK_ID);
-}
+// Wrapper functions for menu callback compatibility
+#define DEFINE_SAQ_FUNC(MIN) \
+void sAQ##MIN() { setAlarmQuick(MIN, ALARM_QUICK_ID); }
 
-void sAQ15()
-{
-    setAlarmQuick(15, ALARM_QUICK_ID);
-}
+DEFINE_SAQ_FUNC(5)
+DEFINE_SAQ_FUNC(15)
+DEFINE_SAQ_FUNC(30)
+DEFINE_SAQ_FUNC(60)
+DEFINE_SAQ_FUNC(90)
+DEFINE_SAQ_FUNC(120)
+DEFINE_SAQ_FUNC(180)
+DEFINE_SAQ_FUNC(360)
+DEFINE_SAQ_FUNC(480)
+DEFINE_SAQ_FUNC(1440)
 
-void sAQ30()
-{
-    setAlarmQuick(30, ALARM_QUICK_ID);
-}
-
-// 1h
-void sAQ60()
-{
-    setAlarmQuick(60, ALARM_QUICK_ID);
-}
-
-// 1.5h
-void sAQ90()
-{
-    setAlarmQuick(90, ALARM_QUICK_ID);
-}
-
-// 2h
-void sAQ120()
-{
-    setAlarmQuick(120, ALARM_QUICK_ID);
-}
-
-// 3h
-void sAQ180()
-{
-    setAlarmQuick(180, ALARM_QUICK_ID);
-}
-
-// 6h
-void sAQ360()
-{
-    setAlarmQuick(360, ALARM_QUICK_ID);
-}
-
-// 8h
-void sAQ480()
-{
-    setAlarmQuick(480, ALARM_QUICK_ID);
-}
-
-// 24h
-void sAQ1440()
-{
-    setAlarmQuick(1440, ALARM_QUICK_ID);
-}
-
+// Menu init
 void initAlarmQuickSet()
 {
-    int c = -1;
-    entryMenu buttons[10];
-    {
-        c = c + 1;
-        buttons[c] = {.text = "5 minutes", .image = &emptyImgPack, .function = sAQ5};
-    }
-    {
-        c = c + 1;
-        buttons[c] = {.text = "15 minutes", .image = &emptyImgPack, .function = sAQ15};
-    }
-    {
-        c = c + 1;
-        buttons[c] = {.text = "30 minutes", .image = &emptyImgPack, .function = sAQ30};
-    }
-    {
-        c = c + 1;
-        buttons[c] = {.text = "1 hour", .image = &emptyImgPack, .function = sAQ60};
-    }
-    {
-        c = c + 1;
-        buttons[c] = {.text = "1.5 hours", .image = &emptyImgPack, .function = sAQ90};
-    }
-    {
-        c = c + 1;
-        buttons[c] = {.text = "2 hours", .image = &emptyImgPack, .function = sAQ120};
-    }
-    {
-        c = c + 1;
-        buttons[c] = {.text = "3 hours", .image = &emptyImgPack, .function = sAQ180};
-    }
-    {
-        c = c + 1;
-        buttons[c] = {.text = "6 hours", .image = &emptyImgPack, .function = sAQ360};
-    }
-    {
-        c = c + 1;
-        buttons[c] = {.text = "8 hours", .image = &emptyImgPack, .function = sAQ480};
-    }
-    {
-        c = c + 1;
-        buttons[c] = {.text = "24 hours", .image = &emptyImgPack, .function = sAQ1440};
-    }
-    c = c + 1;
-    initMenu(buttons, c, "Quick alarm", 1);
+    static entryMenu buttons[] = {
+        {"5 minutes", &emptyImgPack, sAQ5},
+        {"15 minutes", &emptyImgPack, sAQ15},
+        {"30 minutes", &emptyImgPack, sAQ30},
+        {"1 hour", &emptyImgPack, sAQ60},
+        {"1.5 hours", &emptyImgPack, sAQ90},
+        {"2 hours", &emptyImgPack, sAQ120},
+        {"3 hours", &emptyImgPack, sAQ180},
+        {"6 hours", &emptyImgPack, sAQ360},
+        {"8 hours", &emptyImgPack, sAQ480},
+        {"24 hours", &emptyImgPack, sAQ1440},
+    };
+
+    initMenu(buttons, sizeof(buttons) / sizeof(buttons[0]), "Quick alarm", 1);
 }
 
 #endif
+
