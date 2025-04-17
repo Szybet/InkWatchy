@@ -151,6 +151,13 @@ void switchPong()
     generalSwitch(pong);
 }
 
+#if GOTCHI
+void switchGotchi()
+{
+    generalSwitch(gotchi);
+}
+#endif
+
 #if TETRIS
 void switchTetris()
 {

@@ -39,6 +39,7 @@ typedef enum
     videoPlayer,
     videoMenu,
     pong,
+    gotchi,
     tetris,
     gamesMenu,
     credits,
@@ -126,6 +127,9 @@ void switchApple2();
 void switchPong();
 #if TETRIS
 void switchTetris();
+#endif
+#if GOTCHI
+void switchGotchi();
 #endif
 #if CREDITS
 void switchCredits();

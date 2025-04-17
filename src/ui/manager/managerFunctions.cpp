@@ -159,12 +159,19 @@ void initSettingsMenu()
 void initGamesMenu()
 {
     int count = -1;
-    entryMenu buttons[5];
+    entryMenu buttons[6];
 #if TETRIS
     {
         debugLog("Adding Tetris");
         count = count + 1;
         buttons[count] = {"Blockchy", getImg("tetris/tetrisIcon"), switchTetris};
+    }
+#endif
+#if GOTCHI
+    {
+        debugLog("Adding gotchi");
+        count = count + 1;
+        buttons[count] = {"Gotchi", getImg("gotchi/gotchiIcon"), switchGotchi};
     }
 #endif
 #if PONG
