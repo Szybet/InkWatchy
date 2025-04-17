@@ -25,7 +25,8 @@
 #include "cpu.h"
 #include "hw.h"
 #include "hal.h"
-#include "rom_12bit.h"
+
+uint8_t* romData;
 
 #define CPU_SPEED_RATIO      0
 #define TICK_FREQUENCY        32768 // Hz
@@ -1886,9 +1887,9 @@ void cpu_release(void)
 u12_t getProgramOpCode(u12_t pc) {
   u12_t i = pc >> 1;  // divided by 2
   if ((pc & 0x1)==0) {   // if pc is a even number
-    return (pgm_read_byte_near(g_program_b12+i+i+i) << 4) | ((pgm_read_byte_near(g_program_b12+i+i+i+1) >> 4) & 0xF);
+    return (pgm_read_byte_near(romData+i+i+i) << 4) | ((pgm_read_byte_near(romData+i+i+i+1) >> 4) & 0xF);
   } 
-  return (pgm_read_byte_near(g_program_b12+i+i+i+1) << 8) | pgm_read_byte_near(g_program_b12+i+i+i+2);
+  return (pgm_read_byte_near(romData+i+i+i+1) << 8) | pgm_read_byte_near(romData+i+i+i+2);
 }
 
 /*

@@ -44,6 +44,7 @@
 #define ARDUINOJSON_ENABLE_PROGMEM 0 // Needed
 #include <ArduinoJson.h>
 #include <mbedtls/md5.h>
+#include <esp_task_wdt.h>
 
 // Order important
 #include "macros.h"

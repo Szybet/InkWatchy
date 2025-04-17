@@ -40,11 +40,12 @@
 #define MEM_IO_ADDR_OFS   0xF00
 #define MEM_IO_SIZE       0x080
 
+extern uint8_t* romData;
+
 typedef struct breakpoint {
   u13_t addr;
   struct breakpoint *next;
 } breakpoint_t;
-
 
 typedef struct {
   u4_t factor_flag_reg;

@@ -161,8 +161,8 @@ void tamalib_mainloop_step_by_step(void)
 	/* Update the screen @ g_framerate fps */
 	ts = g_hal->get_timestamp();
 
-	// if (ts - screen_ts >= ts_freq/g_framerate) {
-	if (ts - screen_ts >= ts_freq/DEFAULT_FRAMERATE) {
+	if (ts - screen_ts >= ts_freq/g_framerate) {
+	// if (ts - screen_ts >= ts_freq/DEFAULT_FRAMERATE) {
 		screen_ts = ts;
 		g_hal->update_screen();
 	}

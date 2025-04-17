@@ -175,6 +175,9 @@
 // Pong
 #define PONG 1
 
+// Gotchi
+#define GOTCHI 0
+
 // Tetris
 #define TETRIS 1
 
