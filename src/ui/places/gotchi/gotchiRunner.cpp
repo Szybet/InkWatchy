@@ -11,16 +11,18 @@
 #define GOTCHI_OFFSET_X
 #define GOTCHI_OFFSET_Y
 
+bool killYourself = false;
+
 void displayTama();
 
 /**** TamaLib Specific Variables ****/
-static uint16_t current_freq = 0;
-static bool_t matrix_buffer[LCD_HEIGHT][LCD_WIDTH / 8] = {{0}};
-// static byte runOnceBool = 0;
-static bool_t icon_buffer[ICON_NUM] = {0};
-static cpu_state_t cpuState;
-static unsigned long lastSaveTimestamp = 0;
+uint16_t current_freq = 0;
+bool_t matrix_buffer[LCD_HEIGHT][LCD_WIDTH / 8] = {{0}};
+bool_t icon_buffer[ICON_NUM] = {0};
+cpu_state_t cpuState;
 /************************************/
+uint64_t gotchiUnix = 0;
+uint64_t initMillis = 0;
 
 static void hal_halt(void)
 {
@@ -36,16 +38,19 @@ static void hal_log(log_level_t level, char *buff, ...)
 static timestamp_t hal_get_timestamp(void)
 {
     yield();
-    return millis() * 1000;
+    // return gotchiUnix + millisBetter() - initMillis;
+    return millisBetter() * 1000;
 }
 
 static void hal_sleep_until(timestamp_t ts)
 {
-    // int32_t remaining = (int32_t) (ts - hal_get_timestamp());
-    // if (remaining > 0) {
-    // delayMicroseconds(1);
-    // delay(1);
-    //}
+    int32_t remaining = (int32_t)(ts - hal_get_timestamp());
+    if (remaining > 0)
+    {
+        debugLog("Sleeping: " + String(remaining));
+        delayMicroseconds(remaining);
+        // delay(1);
+    }
 }
 
 static void hal_update_screen(void)
@@ -82,9 +87,19 @@ static void hal_set_frequency(u32_t freq)
     current_freq = freq;
 }
 
+#if GOTCHI_MOTOR
+int64_t buzzerTimeout = 0;
+#endif
 static void hal_play_frequency(bool_t en)
 {
-    // debugLog("buzzer");
+#if GOTCHI_MOTOR
+    if (millisBetter() - GOTCHI_MOTOR_DELAY_MS > buzzerTimeout)
+    {
+        debugLog("buzzer");
+        buzzerTimeout = millisBetter();
+        vibrateMotor(GOTCHI_MOTOR_MS);
+    }
+#endif
     yield();
 }
 
@@ -202,7 +217,7 @@ void drawTamaSelection(uint8_t y)
 // bool displayTamaCalled = false;
 void displayTama()
 {
-    debugLog("Display tama called");
+    // debugLog("Display tama called");
     gotchiBuffMutex.lock();
     for (int j = 0; j < LCD_HEIGHT; j++)
     {
@@ -243,6 +258,11 @@ void gotchiRun(void *parameter)
             vTaskDelay(1);
             // displayTamaCalled = false;
             c = 0;
+            if (killYourself == true)
+            {
+                killYourself = false;
+                vTaskDelete(NULL);
+            }
         }
     }
 }
@@ -255,6 +275,24 @@ void startGotchiTask()
     gotchiBuff->fillScreen(GxEPD_WHITE);
     gotchiBuffMutex.unlock();
 
+    // Set up time
+    readRTC();
+    initMillis - millisBetter();
+
+    gotchiUnix = fsGetString(CONF_GOTCHI_UNIX, "0").toInt();
+    if(gotchiUnix == 0) {
+        gotchiUnix = getUnixTime(timeRTCUTC0);
+    }
+    fsSetString(CONF_GOTCHI_UNIX, String(gotchiUnix));
+
+    gotchiUnix = gotchiUnix - getUnixTime(timeRTCUTC0);
+
+    // Reset tamalib
+    current_freq = 0;
+    memset(matrix_buffer, 0, sizeof(matrix_buffer));
+    memset(icon_buffer, 0, sizeof(icon_buffer));
+    cpuState = {0};
+
     xTaskCreate(
         gotchiRun,
         "gotchiTask",
@@ -266,6 +304,13 @@ void startGotchiTask()
 
 void endGotchiTask()
 {
+    killYourself = true;
+    while (killYourself == true)
+    {
+        delayTask(5);
+    }
+    delayTask(30);
+    gotchiHandle = NULL;
     delete gotchiBuff;
 }
 

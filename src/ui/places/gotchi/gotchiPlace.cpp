@@ -7,6 +7,7 @@ GFXcanvas1 *gotchiBuffOutput;
 
 void initGotchi()
 {
+    gotchiButtonsEx = {0, 0, 0};
     gotchiBuffOutput = new GFXcanvas1(200, 200, true);
     gotchiBuffOutput->fillScreen(GxEPD_WHITE);
 
@@ -70,10 +71,13 @@ void loopGotchi()
     }
     }
     
+    resetSleepDelay();
     disUp();
 }
 
 void exitGotchi() {
+    endGotchiTask();
+    delete gotchiBuffOutput;
     free(romData);
 }
 

@@ -10,7 +10,7 @@ bool disabledBacking = false;
 
 void initManager()
 {
-    rM.placeTree[0] = gotchi;
+    rM.placeTree[0] = FIRST_PLACE;
 }
 
 // in managerLaunchFunc, sleep and in manager long back.
@@ -356,7 +356,7 @@ void loopManager()
     case gotchi:
     {
 #if GOTCHI
-        managerLaunchFunc(gotchi, initGotchi, loopGotchi);
+        managerLaunchFunc(gotchi, initGotchi, loopGotchi, exitGotchi);
 #endif
         break;
     }

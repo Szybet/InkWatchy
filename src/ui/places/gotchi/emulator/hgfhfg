@@ -29,9 +29,9 @@
 #endif
 
 /***** Set display orientation, U8G2_MIRROR_VERTICAL is not supported *****/
-//#define U8G2_LAYOUT_NORMAL
+// #define U8G2_LAYOUT_NORMAL
 #define U8G2_LAYOUT_ROTATE_180
-//#define U8G2_LAYOUT_MIRROR
+// #define U8G2_LAYOUT_MIRROR
 /**************************************************************************/
 
 #ifdef U8G2_LAYOUT_NORMAL
@@ -75,7 +75,7 @@ void displayTama();
 /**** TamaLib Specific Variables ****/
 static uint16_t current_freq = 0;
 static bool_t matrix_buffer[LCD_HEIGHT][LCD_WIDTH / 8] = {{0}};
-//static byte runOnceBool = 0;
+// static byte runOnceBool = 0;
 static bool_t icon_buffer[ICON_NUM] = {0};
 static cpu_state_t cpuState;
 static unsigned long lastSaveTimestamp = 0;
@@ -93,11 +93,13 @@ static void hal_log(log_level_t level, char *buff, ...)
 
 static void hal_sleep_until(timestamp_t ts)
 {
-  // int32_t remaining = (int32_t) (ts - hal_get_timestamp());
-  // if (remaining > 0) {
-  // delayMicroseconds(1);
-  // delay(1);
-  //}
+  int32_t remaining = (int32_t)(ts - hal_get_timestamp());
+  if (remaining > 0)
+  {
+    debugLog("Sleeping: " + String(remaining));
+    delayMicroseconds(remaining);
+    // delay(1);
+  }
 }
 
 static timestamp_t hal_get_timestamp(void)
@@ -149,9 +151,9 @@ static void hal_play_frequency(bool_t en)
   else
   {
     noTone(PIN_BUZZER);
-    #ifdef ENABLE_TAMA_SOUND_ACTIVE_LOW
+#ifdef ENABLE_TAMA_SOUND_ACTIVE_LOW
     digitalWrite(PIN_BUZZER, HIGH);
-    #endif
+#endif
   }
 #endif
 }
@@ -414,7 +416,9 @@ void setup()
   if (validEEPROM())
   {
     loadStateFromEEPROM(&cpuState);
-  } else {
+  }
+  else
+  {
     Serial.println(F("No magic number in state, skipping state restore"));
   }
 #elif ENABLE_LOAD_HARCODED_STATE_WHEN_START
@@ -438,15 +442,18 @@ void loop()
     saveStateToEEPROM(&cpuState);
   }
 
-  if (digitalRead(PIN_BTN_M) == HIGH) {
-    if (millis() - right_long_press_started > AUTO_SAVE_MINUTES * 1000) 
+  if (digitalRead(PIN_BTN_M) == HIGH)
+  {
+    if (millis() - right_long_press_started > AUTO_SAVE_MINUTES * 1000)
     {
       eraseStateFromEEPROM();
-      #if defined(ESP8266) || defined(ESP32)
+#if defined(ESP8266) || defined(ESP32)
       ESP.restart();
-      #endif
+#endif
     }
-  } else {
+  }
+  else
+  {
     right_long_press_started = millis();
   }
 #endif
