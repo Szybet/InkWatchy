@@ -24,6 +24,75 @@ cpu_state_t cpuState;
 uint64_t gotchiUnix = 0;
 uint64_t initMillis = 0;
 
+void saveState()
+{
+    cpu_get_state(&cpuState);
+
+    // Save the state
+    debugLog("Saving state");
+    /*
+    String path = String("/conf/") + String(CONF_GOTCHI_SAVE);
+    if (fsFileExists(path) == true)
+    {
+        fsRemoveFile(path);
+    }
+    */
+
+    if (cpuState.memory)
+    {
+        fsSetBlob(CONF_GOTCHI_SAVE, cpuState.memory, MEMORY_SIZE);
+    }
+    else
+    {
+        debugLog("cpuState.memory is invalid!");
+    }
+
+    // Saving also cpu state itself
+    fsSetBlob(CONF_GOTCHI_CPU_SAVE, (uint8_t *)&cpuState, sizeof(cpu_state_t));
+}
+
+#define FORCE_NO_RESTORE_SAVE false
+
+void restoreSave()
+{
+#if FORCE_NO_RESTORE_SAVE == false
+    debugLog("Restoring save");
+    bufSize buffCpu = fsGetBlob(CONF_GOTCHI_CPU_SAVE);
+    if (buffCpu.size == sizeof(cpu_state_t))
+    {
+        debugLog("Restoring cpu");
+        cpu_get_state(&cpuState);
+        uint8_t *sourceBuff = buffCpu.buf;
+        uint8_t *destinationBuff = (uint8_t *)&cpuState;
+        u4_t *tmp = cpuState.memory;
+        memcpy(destinationBuff, sourceBuff, sizeof(cpu_state_t));
+        cpuState.memory = tmp;
+        free(sourceBuff);
+        cpu_set_state(&cpuState);
+    }
+    else
+    {
+        debugLog("Saved cpu is bad");
+    }
+
+    bufSize buffMem = fsGetBlob(CONF_GOTCHI_SAVE);
+    if (buffMem.size == MEMORY_SIZE)
+    {
+        debugLog("Restoring memory");
+        cpu_get_state(&cpuState);
+        uint8_t *sourceBuff = buffMem.buf;
+        uint8_t *destinationBuff = (uint8_t *)cpuState.memory;
+        memcpy(destinationBuff, sourceBuff, MEMORY_SIZE);
+        free(sourceBuff);
+        cpu_set_state(&cpuState);
+    }
+    else
+    {
+        debugLog("Saved memory is bad");
+    }
+#endif
+}
+
 static void hal_halt(void)
 {
     // debugLog("Halt???");
@@ -35,11 +104,34 @@ static void hal_log(log_level_t level, char *buff, ...)
     // debugLog(buff);
 }
 
+#if DEBUG
+uint64_t secTime = 0;
+#endif
+
 static timestamp_t hal_get_timestamp(void)
 {
     yield();
-    // return gotchiUnix + millisBetter() - initMillis;
-    return millisBetter() * 1000;
+
+#if DEBUG && true
+    uint64_t seconds = (gotchiUnix) + ((millisBetter() - initMillis) / 1000);
+    if (secTime != seconds)
+    {
+        debugLog("Seconds is: " + String(seconds));
+        secTime = seconds;
+    }
+#endif
+
+    // Animations are fast but times speeds up
+    uint64_t us = (gotchiUnix * 1000000) + ((millisBetter() - initMillis) * 1000);
+    // debugLog("us is: " + String(us));
+    return us;
+
+    // This way the time is accurate, but animations are slower
+    // uint64_t seconds = (gotchiUnix) + ((millisBetter() - initMillis) / 1000);
+    // debugLog("Seconds is: " + String(seconds));
+    // return seconds * 1000000;
+
+    // return millisBetter() * 1000;
 }
 
 static void hal_sleep_until(timestamp_t ts)
@@ -107,7 +199,7 @@ static int hal_handler(void)
 {
     if (gotchiButtonsEx.middle > 0)
     {
-        debugLog("Button middle clicked");
+        // debugLog("Button middle clicked");
         gotchiButtonsEx.middle = gotchiButtonsEx.middle - 1;
         hw_set_button(BTN_MIDDLE, BTN_STATE_PRESSED);
     }
@@ -203,7 +295,7 @@ void drawTamaSelection(uint8_t y)
         gotchiBuff->drawBitmap(7 * 16 + 4, y + 6, gotchiBitmaps + 7 * 18, 16, 9, GxEPD_WHITE);
     }
 
-#if DEBUG
+#if DEBUG && false
     for (int i = 0; i < 8; i++)
     {
         if (icon_buffer[i])
@@ -239,14 +331,17 @@ GFXcanvas1 *gotchiBuff;
 
 TaskHandle_t gotchiHandle;
 
-#define EVERY_X_DELAY 250
+#define EVERY_X_DELAY 13
 
 void gotchiRun(void *parameter)
 {
     tamalib_register_hal(&hal);
     tamalib_set_framerate(TAMA_DISPLAY_FRAMERATE);
-    tamalib_init(12500);
+    tamalib_init(12500); // 12500
     esp_task_wdt_reset();
+
+    // Here because tamalib_init resets the memory
+    restoreSave();
 
     uint32_t c = 0;
     while (true)
@@ -267,6 +362,9 @@ void gotchiRun(void *parameter)
     }
 }
 
+#define RESET_GOTCHI_UNIX false
+// #define RESET_GOTCHI_UNIX true
+
 void startGotchiTask()
 {
     debugLog("Init gotchi");
@@ -276,16 +374,18 @@ void startGotchiTask()
     gotchiBuffMutex.unlock();
 
     // Set up time
-    readRTC();
-    initMillis - millisBetter();
+    initMillis = millisBetter();
 
     gotchiUnix = fsGetString(CONF_GOTCHI_UNIX, "0").toInt();
-    if(gotchiUnix == 0) {
+    if (gotchiUnix == 0 || RESET_GOTCHI_UNIX == true)
+    {
+        readRTC();
         gotchiUnix = getUnixTime(timeRTCUTC0);
+        fsSetString(CONF_GOTCHI_UNIX, String(gotchiUnix));
     }
-    fsSetString(CONF_GOTCHI_UNIX, String(gotchiUnix));
 
-    gotchiUnix = gotchiUnix - getUnixTime(timeRTCUTC0);
+    gotchiUnix = getUnixTime(timeRTCUTC0) - gotchiUnix;
+    debugLog("Gotchi unix on init is: " + String(gotchiUnix));
 
     // Reset tamalib
     current_freq = 0;
@@ -312,6 +412,8 @@ void endGotchiTask()
     delayTask(30);
     gotchiHandle = NULL;
     delete gotchiBuff;
+
+    saveState();
 }
 
 #endif
