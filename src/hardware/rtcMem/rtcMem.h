@@ -15,7 +15,8 @@ struct rtcMem
     // Accelerometer
 #if ACC_ENABLED
     StableBMA SBMA; // Class
-    bool initedAxc : 1;
+    bool initedAcc : 1;
+    uint8_t initAccTries : 4; // Max 15
     bool stepsInited : 1;
     uint8_t stepDay; // For steps to reset each days
 #endif

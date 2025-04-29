@@ -58,6 +58,10 @@ void switchGitDebug()
     generalSwitch(gitDebug);
 }
 
+void switchAccDebug() {
+    generalSwitch(accDebug);
+}
+
 void switchWeatherMenu()
 {
     generalSwitch(weatherMenu);

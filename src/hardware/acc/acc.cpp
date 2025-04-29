@@ -3,7 +3,10 @@
 
 #if ACC_ENABLED
 
-uint16_t readRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
+#define ACC_MAX_TRIES 8
+
+#if BMAM_4
+uint16_t readRegisterBMA4(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {
 #if ATCHY_VER == YATCHY || ATCHY_VER == WATCHY_3
     if (initI2C() == false)
@@ -23,7 +26,7 @@ uint16_t readRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t l
     return 0;
 }
 
-uint16_t writeRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
+uint16_t writeRegisterBMA4(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {
 #if ATCHY_VER == YATCHY || ATCHY_VER == WATCHY_3
     if (initI2C() == false)
@@ -37,51 +40,105 @@ uint16_t writeRegisterBMA(uint8_t address, uint8_t reg, uint8_t *data, uint16_t 
     return (0 != Wire.endTransmission());
 }
 
-void lookForFalse(bool newBool, bool *oldValue)
+#elif BMAM_5
+int8_t readRegisterBMA5(uint8_t reg_addr, uint8_t *reg_data, uint32_t length, void *intf_ptr)
 {
-    if (*oldValue == false)
+#if ATCHY_VER == YATCHY
+    if (initI2C() == false)
     {
-        return;
+        return -1; // Return non-zero on initialization failure
     }
-    if (newBool == false)
+#endif
+
+    if (intf_ptr == NULL)
     {
-        *oldValue = false;
-        return;
+        return -1; // Handle NULL pointer error
     }
+
+    uint8_t address = *(uint8_t *)intf_ptr; // Extract device address from intf_ptr
+
+    Wire.beginTransmission(address);
+    Wire.write(reg_addr);
+    int8_t endResult = Wire.endTransmission(); // Complete transmission
+
+    if (endResult != 0)
+    {
+        return endResult; // Return I2C transmission error code
+    }
+
+    // Request 'length' bytes from the device
+    uint8_t received = Wire.requestFrom(address, (uint8_t)length);
+    if (received != length)
+    {
+        return -2; // Not all bytes received
+    }
+
+    // Read received bytes into data buffer
+    for (uint32_t i = 0; i < length; i++)
+    {
+        if (!Wire.available())
+        {
+            return -3; // Data not available when expected
+        }
+        reg_data[i] = Wire.read();
+    }
+
+    return 0; // Success
 }
+
+int8_t writeRegisterBMA5(uint8_t reg_addr, const uint8_t *reg_data, uint32_t length,
+                         void *intf_ptr)
+{
+#if ATCHY_VER == YATCHY
+    if (initI2C() == false)
+    {
+        return -1; // Return non-zero on initialization failure
+    }
+#endif
+
+    if (intf_ptr == NULL)
+    {
+        return -1; // Handle NULL pointer error
+    }
+
+    uint8_t address = *(uint8_t *)intf_ptr; // Extract device address from intf_ptr
+
+    Wire.beginTransmission(address);
+    Wire.write(reg_addr);                   // Send register address
+    Wire.write(reg_data, length);           // Send data bytes
+    int8_t result = Wire.endTransmission(); // Complete transmission and get status
+
+    return result; // Return 0 on success, non-zero on failure
+}
+#endif
 
 // Credits to TinyWatchy
 bool accConfig()
 {
     bool status = true;
     // Enabling default BMA config
-    lookForFalse(rM.SBMA.defaultConfig(true), &status);
-    if(status == false) {
+    if (rM.SBMA.defaultConfig(true) == false)
+    {
         debugLog("defaultConfig failed");
-        return status;
-    }
-    lookForFalse(rM.SBMA.enableAccel(), &status);
-    if(status == false) {
-        debugLog("enableAccel failed");
-        return status;
+        return false;
     }
 
-    if(BMA_VERSION == 423) {
-        lookForFalse(rM.SBMA.enableFeature(BMA423_STEP_CNTR, true), &status);
-        if(status == false) {
-            debugLog("enableFeature(BMA423_STEP_CNTR failed");
-            return status;
-        }
-    } else if(BMA_VERSION == 456) {
-        lookForFalse(rM.SBMA.enableFeature(BMA456_STEP_CNTR, true), &status);
-        if(status == false) {
-            debugLog("enableFeature(BMA456_STEP_CNTR failed");
-            return status;
-        }
+    // This is not needed for steps, idk for else
+    // lookForFalse(rM.SBMA.enableAccel(), &status);
+
+    // if (status == false)
+    // {
+    //     debugLog("enableAccel failed");
+    //     return false;
+    // }
+
+    if (rM.SBMA.enableStepCount() == false) {
+        debugLog("enableStepCount failed");
+        return false;
     }
 
     /*
-    // We should not need this, Watchy v3 users maybe
+    // We should not need this for pure step counting, Watchy v3 users maybe
     lookForFalse(rM.SBMA.enableFeature(BMA423_STEP_CNTR_INT, true), &status);
     if(status == false) {
         debugLog("enableFeature(BMA423_STEP_CNTR_INT failed");
@@ -89,14 +146,20 @@ bool accConfig()
     }
     */
 
-    return status;
+    return true;
 }
 
-void initAxc()
+void initAcc()
 {
-    debugLog("initAxc Launched");
-    if (rM.initedAxc == false)
+    debugLog("initAcc Launched");
+    if (rM.initedAcc == false)
     {
+        rM.initAccTries = rM.initAccTries + 1;
+        if (rM.initAccTries > ACC_MAX_TRIES)
+        {
+            debugLog("Acc init try limit");
+            return;
+        }
         uint8_t type;
 #if ATCHY_VER == WATCHY_1
         type = 1;
@@ -110,21 +173,37 @@ void initAxc()
         type = 4;
 #endif
 
-        debugLog("Acc type is: " + String(type));
-        if(rM.SBMA.__init == false) {
-            if (rM.SBMA.begin(readRegisterBMA, writeRegisterBMA, vTaskDelay, type, BMA4_I2C_ADDR_PRIMARY, false, -1, -1, BMA_VERSION) == false)
-            {
-                debugLog("Failed to init bma");
-                return;
-            }    
+        debugLog("Acc watchy type is: " + String(type));
+        debugLog("BMA version: " + String(BMA_VERSION));
+#if BMAM_4
+        if (rM.SBMA.begin4(type, BMA4_I2C_ADDR_PRIMARY, BMA_VERSION, readRegisterBMA4, writeRegisterBMA4) == false)
+        {
+            debugLog("Failed to init bma");
+            return;
         }
+#elif BMAM_5
+        if (rM.SBMA.begin5(type, BMA4_I2C_ADDR_PRIMARY, BMA_VERSION, readRegisterBMA5, writeRegisterBMA5) == false)
+        {
+            debugLog("Failed to init bma");
+            return;
+        }
+#endif
 
-        if (!accConfig())
+        if (accConfig() == false)
         {
             debugLog("Failed to init bma - config");
             return;
         }
-        rM.initedAxc = true;
+
+// Frezes acc data somehow
+#if 0
+        if(rM.SBMA.selfTest() == false) {
+            debugLog("Self test failed");
+            return;
+        }
+#endif
+
+        rM.initedAcc = true;
     }
     else
     {
@@ -135,9 +214,9 @@ void initAxc()
 // All in one function to get steps, it managed everything
 // TODO: after changing watchface that doesn't use steps, the acc is still turned on with this feature while its not used
 uint16_t getSteps()
-{
+{    
     uint16_t steps = 0;
-    if (rM.initedAxc == true)
+    if (rM.initedAcc == true)
     {
         if (rM.stepsInited == false)
         {
@@ -159,7 +238,12 @@ uint16_t getSteps()
     }
     else
     {
-        initAxc();
+        if (rM.initAccTries > ACC_MAX_TRIES)
+        {
+            debugLog("Too many init tries");
+            return 8;
+        }
+        initAcc();
         return getSteps();
     }
     debugLog("Returning steps: " + String(steps));

@@ -4,7 +4,7 @@
 
 #if ACC_ENABLED
 
-void initAxc();
+void initAcc();
 
 #endif
 

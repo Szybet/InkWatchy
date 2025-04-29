@@ -173,6 +173,13 @@ void loopManager()
 #endif
         break;
     }
+    case accDebug:
+    {
+#if DEBUG_MENUS
+        managerLaunchFunc(accDebug, initAccDebug, loopAccDebug, exitAccDebug);
+#endif
+        break;
+    }
     case batteryDebug:
     {
 #if DEBUG_MENUS

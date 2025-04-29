@@ -96,7 +96,7 @@ void initMainMenu()
 void initDebugMenu()
 {
     int count = -1;
-    entryMenu buttons[5];
+    entryMenu buttons[6];
     {
         debugLog("Adding clock to menu");
         count = count + 1;
@@ -116,6 +116,11 @@ void initDebugMenu()
         debugLog("Adding git to menu");
         count = count + 1;
         buttons[count] = {"Git", &emptyImgPack, switchGitDebug};
+    }
+    {
+        debugLog("Adding acc to menu");
+        count = count + 1;
+        buttons[count] = {"Acc", &emptyImgPack, switchAccDebug};
     }
 #if FONT_MENU_ENABLED
     {
@@ -226,7 +231,7 @@ void initpowerMenu()
         {
             image = getImg("cross");
         }
-        buttons[count] = {"Vibrations disabled", image, toggleDisableVibrationsEntry};
+        buttons[count] = {"Vibrations dis", image, toggleDisableVibrationsEntry};
     }
     {
         count = count + 1;
@@ -239,7 +244,7 @@ void initpowerMenu()
         {
             image = getImg("cross");
         }
-        buttons[count] = {"Wake up disabled", image, toggleWakeUpEntry};
+        buttons[count] = {"Wake up dis", image, toggleWakeUpEntry};
     }
     count = count + 1;
     initMenu(buttons, count, "Power menu", 1);

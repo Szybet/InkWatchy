@@ -124,8 +124,8 @@ int axis_ZBott;
 
 void resetStartAxc()
 {
-    bma4_accel accel;
-    rM.SBMA.getAccel(accel);
+    Accel accel;
+    rM.SBMA.getAccel(&accel);
     staAx_X = accel.x;
     staAx_Y = accel.y;
     staAx_Z = accel.z;
@@ -221,7 +221,7 @@ void initBook()
     }
     resetSleepDelayBook();
 #if ACC_ENABLED
-    initAxc();
+    initAcc();
     rM.SBMA.enableAccel();
     resetStartAxc();
 #endif
@@ -311,8 +311,8 @@ void loopBook()
     }
 
 #if ACC_ENABLED
-    bma4_accel accel;
-    if (excOn == true && rM.SBMA.getAccel(accel))
+    Accel accel;
+    if (excOn == true && rM.SBMA.getAccel(&accel))
     {
         // for button change...
         if (changedPageAxis == 0)

@@ -7,5 +7,6 @@
 void initLog();
 void showInitLogs();
 void endLoopDebug();
+void startI2cScanner();
 
 #endif
