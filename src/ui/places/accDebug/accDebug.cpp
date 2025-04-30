@@ -29,7 +29,9 @@ uint16_t stepsHeight = 0;
 
 void initAccDebug()
 {
+#if ACC_ENABLED
     initAcc();
+#endif
     dis->setTextWrap(false);
 
     uint16_t h;
