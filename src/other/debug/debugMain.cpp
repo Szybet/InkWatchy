@@ -87,6 +87,9 @@ void showInitLogs()
     initScomTask();
 #endif
 #endif
+#if DUMP_LOOP_ACC
+    initAccLog();
+#endif
 }
 
 void endLoopDebug()
@@ -136,6 +139,9 @@ void endLoopDebug()
         loopGeneralDebug();
 #endif
     }
+#endif
+#if DUMP_LOOP_ACC
+    loopAccLog();
 #endif
 }
 

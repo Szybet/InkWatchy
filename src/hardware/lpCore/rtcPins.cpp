@@ -32,6 +32,7 @@ void initRtcInvidualGpio(int pin, rtc_gpio_mode_t direction)
 #endif
 }
 
+// This, without the screen, gives +150uA
 void initRtcGpio()
 {
     // De init the screen before this!
@@ -43,7 +44,7 @@ void initRtcGpio()
     rM.gpioExpander.setPinState(YATCHY_DISPLAY_CS, LOW);
 #endif
 
-    initRtcInvidualGpio(EPD_RESET, RTC_GPIO_MODE_OUTPUT_ONLY); // This funny guy increases power consumption up to 600 uA :(
+    initRtcInvidualGpio(EPD_RESET, RTC_GPIO_MODE_OUTPUT_ONLY);        // This funny guy increases power consumption up to 600 uA :(
     ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_RESET), true)); // Fixes high fucking power consumption
     initRtcInvidualGpio(EPD_DC, RTC_GPIO_MODE_OUTPUT_ONLY);
     ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_DC), true)); // Fixes high fucking power consumption
