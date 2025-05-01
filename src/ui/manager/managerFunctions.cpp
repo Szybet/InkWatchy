@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[12];
+    entryMenu buttons[13];
 #if CALENDAR
     {
         count = count + 1;
@@ -43,6 +43,12 @@ void initMainMenu()
         count = count + 1;
         buttons[count] = {"Settings", getImg("settings"), switchSettingsMenu};
     }
+    #if HEART_MONITOR
+    {
+        count = count + 1;
+        buttons[count] = {"Heart monitor", getImg("heartmonitor/heartIcon"), switchHeartMonitor};
+    }
+    #endif
 #if VAULT
     {
         count = count + 1;

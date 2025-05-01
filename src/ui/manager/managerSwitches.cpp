@@ -183,6 +183,12 @@ void switchParty()
 }
 #endif
 
+#if HEART_MONITOR
+void switchHeartMonitor() {
+    generalSwitch(heartMonitor);
+}
+#endif
+
 #if FONT_MENU_ENABLED
 void switchFontsPreview()
 {

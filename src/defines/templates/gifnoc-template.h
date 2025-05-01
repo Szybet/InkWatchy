@@ -167,7 +167,7 @@
 #define BUTTON_CPU_SPEED normalSpeed      // Cpu speed when it has woken up by a button
 #define SOFT_START_THINGS 1               // Slowly starts things, like wifi to prevent brownout reset.
 #define SOFT_START_DELAY_MS 4500
-#define FORCE_DISABLE_ACC 0 // 1 Means ACC is disabled
+#define FORCE_DISABLE_ACC 0 // 1 Means ACC is disabled, BMA530 doesn't like that, increases power consumption
 
 // Vault
 #define VAULT 1
@@ -180,6 +180,9 @@
 
 // Credits page
 #define CREDITS 1 // Feel free to disable it for your own usage :D
+
+// Heart monitor
+#define HEART_MONITOR 0 // Needs Acc
 
 // Advanced
 #define BUTTON_TASK_DELAY 60 // In ms, lower means faster button detection but more cpu usage
@@ -270,6 +273,8 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS 0 // Yatchy with no battery, huh
 #define SCREEN_CORNER_WAKEUP 0                 // writes a few pixels in the left top corner, works without DEBUG turned on
 #define I2C_SCANNER 0                          // For yatchy testing
+#define DUMP_LOOP_ACC 0 // Needs ACC
+#define DUMP_LOOP_ACC_DIFF 1 // Only shows diff from previous reading
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20

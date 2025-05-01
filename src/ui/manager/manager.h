@@ -45,6 +45,7 @@ typedef enum
     credits,
     conwayApp,
     partyApp,
+    heartMonitor,
     fontPreview,
     fontPreviewMenu,
     watchfaceSelector,
@@ -137,6 +138,9 @@ void switchConway();
 #endif
 #if RGB_DIODE
 void switchParty();
+#endif
+#if HEART_MONITOR
+void switchHeartMonitor();
 #endif
 #if FONT_MENU_ENABLED
 void switchFontsPreview();

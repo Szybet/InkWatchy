@@ -393,6 +393,13 @@ void loopManager()
 #endif
         break;
     }
+    case heartMonitor:
+    {
+#if HEART_MONITOR
+        managerLaunchFunc(heartMonitor, initHeartMonitor, loopHeartMonitor, exitHeartMonitor);
+#endif
+        break;
+    }
     case fontPreview:
     {
 #if FONT_MENU_ENABLED

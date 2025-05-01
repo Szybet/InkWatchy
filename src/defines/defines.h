@@ -180,6 +180,9 @@ static const WiFiCred* wifiCredStatic[] = {
 #if RGB_DIODE
 #include "../ui/places/party/party.h"
 #endif
+#if HEART_MONITOR
+#include "../ui/places/heartMonitor/heartMonitor.h"
+#endif
 #if FONT_MENU_ENABLED
 #include "../ui/places/fontPreview/fontPreview.h"
 #endif
