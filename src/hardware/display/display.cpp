@@ -45,6 +45,10 @@ void initDisplay()
     // dis->epd2._writeCommand(0x3C);
     // dis->epd2._writeCommand(0x00);
 
+#if SCREEN_ROTATION != 0
+    dis->setRotation(SCREEN_ROTATION);
+#endif
+
     dis->setTextColor(GxEPD_BLACK);
 
     // Only on first boot, only to be extra sure
@@ -88,10 +92,11 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
         // Not sure about recent change
         if (bootStatus.reason == ulp || screenForceNextFullTimeWrite == true)
         {
-            if(currentPlaceIndex == 0) {
+            if (currentPlaceIndex == 0)
+            {
                 screenForceNextFullTimeWrite = false;
                 lpCoreScreenPrepare(false, false);
-                showTimeFullGlobal();    
+                showTimeFullGlobal();
             }
             clearLpCoreRtcMem();
         }
