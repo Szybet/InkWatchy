@@ -107,6 +107,7 @@ void goSleep()
         // TODO: maybe this https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#power-down-of-rtc-peripherals-and-memories
         ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
 
+        // This, without the screen, gives +150uA
         initRtcGpio();
         loadLpCore();
         runLpCore();

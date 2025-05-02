@@ -16,6 +16,7 @@ typedef enum
     batteryDebug,
     wifiDebug,
     gitDebug,
+    accDebug,
     weatherMenu,
     weatherConditionMenu,
     alarmSelectorMenu,
@@ -44,6 +45,7 @@ typedef enum
     credits,
     conwayApp,
     partyApp,
+    heartMonitor,
     fontPreview,
     fontPreviewMenu,
     watchfaceSelector,
@@ -98,6 +100,7 @@ void switchClockDebug();
 void switchBatteryDebug();
 void switchWifiDebug();
 void switchGitDebug();
+void switchAccDebug();
 void switchWeatherMenu();
 void switchWeatherSelectorMenu();
 #if INK_ALARMS
@@ -135,6 +138,9 @@ void switchConway();
 #endif
 #if RGB_DIODE
 void switchParty();
+#endif
+#if HEART_MONITOR
+void switchHeartMonitor();
 #endif
 #if FONT_MENU_ENABLED
 void switchFontsPreview();

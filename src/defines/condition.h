@@ -219,7 +219,7 @@ Template for versioning
 // Always define YATCHY_BACK_BTN, maybe just as 255 otherwise compiler errors, done because it simplified code
 
 #if YATCHY_MODULE == YATCHY_DEFAULT_MODULE
-// Everything here is optional
+// Everything here is optional, or should be, if something doesn't work let me know
 #define BACK_PIN 3 // A3
 #define YATCHY_BACK_BTN
 #define RGB_DIODE 1
@@ -234,6 +234,17 @@ Template for versioning
 #define BATTERY_DISCHARGING_COLOR IwRed // What color to show for a second if its starting to discharge
 
 #endif
+#endif
+
+// Yatchy mic mod / module
+#define YATCHY_MIC 1
+#if YATCHY_MIC
+// Only GND can be a multiplexer pin
+#define MIC_PIN_SCK 20
+#define MIC_PIN_SM 18
+#define MIC_PIN_SD 15
+#define MIC_PIN_GND 14 // Multiplexer B6
+#define MIC_PIN_VDD 19
 #endif
 
 // Lp core
@@ -256,4 +267,14 @@ Template for versioning
 #define BMA_VERSION 423
 #elif ATCHY_VER == YATCHY
 #define BMA_VERSION 456 // Needs 100Khz I2C
+// Uncomment this, disable the previous line if you have the bma 530
+// #define BMA_VERSION 530
+#endif
+
+#if BMA_VERSION < 500
+#define BMAM_4 1 // BMA major
+#define BMAM_5 0
+#else
+#define BMAM_5 1
+#define BMAM_4 0
 #endif

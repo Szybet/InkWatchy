@@ -58,6 +58,10 @@ void switchGitDebug()
     generalSwitch(gitDebug);
 }
 
+void switchAccDebug() {
+    generalSwitch(accDebug);
+}
+
 void switchWeatherMenu()
 {
     generalSwitch(weatherMenu);
@@ -176,6 +180,12 @@ void switchConway()
 void switchParty()
 {
     generalSwitch(partyApp);
+}
+#endif
+
+#if HEART_MONITOR
+void switchHeartMonitor() {
+    generalSwitch(heartMonitor);
 }
 #endif
 

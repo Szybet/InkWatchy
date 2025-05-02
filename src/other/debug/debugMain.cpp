@@ -58,6 +58,9 @@ void initLog()
 #if LP_CORE_TEST_ENABLED
     startLpCoreTest();
 #endif
+#if I2C_SCANNER
+    startI2cScanner();
+#endif
 }
 
 void showInitLogs()
@@ -83,6 +86,9 @@ void showInitLogs()
 #if SCOM_TASK_ENABLED
     initScomTask();
 #endif
+#endif
+#if DUMP_LOOP_ACC
+    initAccLog();
 #endif
 }
 
@@ -133,6 +139,60 @@ void endLoopDebug()
         loopGeneralDebug();
 #endif
     }
+#endif
+#if DUMP_LOOP_ACC
+    loopAccLog();
+#endif
+}
+
+void startI2cScanner()
+{
+#if ATCHY_VER == YATCHY
+    // https://randomnerdtutorials.com/esp32-i2c-scanner-arduino/
+    initI2C();
+    debugLog("Entering I2C scanner loop");
+    while (true)
+    {
+        byte error, address;
+        int nDevices;
+        debugLog("Scanning...");
+        nDevices = 0;
+        for (address = 1; address < 127; address++)
+        {
+            Wire.beginTransmission(address);
+            error = Wire.endTransmission();
+            if (error == 0)
+            {
+                Serial.print("I2C device found at address 0x");
+                if (address < 16)
+                {
+                    Serial.print("0");
+                }
+                Serial.println(address, HEX);
+                nDevices++;
+            }
+            else if (error == 4)
+            {
+                Serial.print("Unknow error at address 0x");
+                if (address < 16)
+                {
+                    Serial.print("0");
+                }
+                Serial.println(address, HEX);
+            }
+        }
+        if (nDevices == 0)
+        {
+            debugLog("No I2C devices found");
+        }
+        else
+        {
+            debugLog("done");
+        }
+        delayTask(5000);
+    }
+#else
+    debugLog("I2C scanner not supported!");
 #endif
 }
 

@@ -18,7 +18,7 @@ RTC_DATA_ATTR rtcMem rM = {
 // Acc
 #if ACC_ENABLED
     .SBMA = StableBMA{}, // Class
-    .initedAxc = false,
+    .initedAcc = false,
     .stepsInited = false,
     .stepDay = 0,
 #endif

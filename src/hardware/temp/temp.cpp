@@ -43,6 +43,18 @@ float getTemp()
 
 void screenTempFix()
 {
+    #if !TEMP_ESP32 && (ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5)
+    return;
+    #endif
+
+    #if !TEMP_ESP32S3 && (ATCHY_VER == WATCHY_3)
+    return;
+    #endif
+
+    #if !TEMP_ESP32C6 && (ATCHY_VER == YATCHY)
+    return;
+    #endif
+    
     if (rM.fixCounts <= TEMP_MAX_SCREEN_FIXES && rM.updateCounter < FULL_DISPLAY_UPDATE_QUEUE)
     {
         rM.updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
