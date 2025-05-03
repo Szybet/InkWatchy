@@ -303,7 +303,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define TASK_STACK_DUMP_BATTERY 2000
 #define TASK_STACK_BUTTON 4700
 #define TASK_STACK_VIBRATION 3500
-#define TASK_STACK_WIFI 60000
+#define TASK_STACK_WIFI 70000
 #define TASK_STACK_SCOM 10000
 #define TASK_STACK_WATCHDOG 3500
 #define TASK_STACK_RGB 2000
