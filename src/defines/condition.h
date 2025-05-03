@@ -266,7 +266,7 @@ Template for versioning
 #if ATCHY_VER == WATCHY_3 || ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #define BMA_VERSION 423
 #elif ATCHY_VER == YATCHY
-//#define BMA_VERSION 456 // Needs 100Khz I2C
+#define BMA_VERSION 456 // Needs 100Khz I2C
 // Uncomment this, disable the previous line if you have the bma 530
 // #define BMA_VERSION 530
 #endif
