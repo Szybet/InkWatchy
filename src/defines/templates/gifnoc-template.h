@@ -25,6 +25,11 @@
 // It may also increase flash usage and life, but hey, mine still works so yours will too
 // If it doesn't save something you want, add it yourself or request it
 #define RTC_MEMORY_BACKUP 0
+// 0: No rotation (0 degrees) - default
+// 1: Rotate 90 degrees clockwise
+// 2: Rotate 180 degrees
+// 3: Rotate 270 degrees clockwise
+#define SCREEN_ROTATION 0
 
 // Timezone! So:
 // - You don't set anything, it will try to ques based on IP, it can fail sometimes
