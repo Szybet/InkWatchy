@@ -268,7 +268,7 @@ Template for versioning
 #elif ATCHY_VER == YATCHY
 //#define BMA_VERSION 456 // Needs 100Khz I2C
 // Uncomment this, disable the previous line if you have the bma 530
-#define BMA_VERSION 530
+// #define BMA_VERSION 530
 #endif
 
 #if BMA_VERSION < 500
