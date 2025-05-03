@@ -22,6 +22,18 @@
 
 #define NUMBER_WIDTH 32
 
+#define NUMBER_WIDTH 32
+
+#define NUMBER_WIDTH 32
+
+#define NUMBER_WIDTH 32
+
+#define NUMBER_HEIGHT 48
+
+#define NUMBER_HEIGHT 48
+
+#define NUMBER_HEIGHT 48
+
 #define NUMBER_HEIGHT 48
 
 #define NUMBER_HEIGHT 48
@@ -30,13 +42,37 @@
 
 #define TIME_RECT_X_LO 8
 
+#define TIME_RECT_X_LO 8
+
+#define TIME_RECT_X_LO 8
+
+#define TIME_RECT_X_LO 8
+
+#define TIME_RECT_Y_LO 0
+
+#define TIME_RECT_Y_LO 0
+
+#define TIME_RECT_Y_LO 0
+
+#define TIME_RECT_Y_LO 0
+
+#define TIME_RECT_Y_LO 0
+
+#define TIME_RECT_X_HI 184
+
 #define TIME_RECT_X_HI 184
 
 #define TIME_RECT_X_HI 184
 
-#define TIME_RECT_Y_LO 2
+#define TIME_RECT_X_HI 184
 
-#define TIME_RECT_Y_LO 2
+#define TIME_RECT_X_HI 184
+
+#define TIME_RECT_Y_HI 56
+
+#define TIME_RECT_Y_HI 56
+
+#define TIME_RECT_Y_HI 56
 
 #define TIME_RECT_Y_HI 56
 

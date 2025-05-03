@@ -27,10 +27,19 @@ void lpCoreScreenPrepare(bool now, bool setDuChange)
 
 void stopLpCore()
 {
+    if(bootStatus.reason == ulp) {
+        delayTask(100);
+    }
     ulp_lp_core_stop();
     delayTask(10);
+    if(bootStatus.reason == ulp) {
+        delayTask(100);
+    }
     deInitRtcGpio();
     delayTask(10);
+    if(bootStatus.reason == ulp) {
+        delayTask(100);
+    }
 }
 
 void setAlarmForLpCore()
