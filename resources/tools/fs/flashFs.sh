@@ -9,6 +9,7 @@ offset=$(<in/offset.txt tr -d '\n')
 # Fuck
 
 rm -rf out/fs.bin
+mv ./littlefs/other/yatchy-lp-program*.bin ./littlefs/other/yatchy-lp-program.bin
 ./in/mklittlefs --all-files -c littlefs -s $size out/fs.bin
 
 if [ $? -ne 0 ]; then
