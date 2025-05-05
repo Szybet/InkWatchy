@@ -8,12 +8,11 @@ void syncTimezone()
     if (strlen(TIMEZONE_OLSON) == 0 && strlen(TIMEZONE_POSIX) == 0)
     {
         Olson2POSIX timezoneMagic;
-        WiFiClient client;
 
         debugLog("Starting getting timezone");
         debugLog("So, wifi current status: " + wifiStatus());
 
-        timezoneMagic.beginOlsonFromWeb(&client);
+        timezoneMagic.beginOlsonFromWeb();
 
         while(timezoneMagic.gotOlsonFromWeb() == false && timezoneMagic.getOlsonWebError() == 0) {
             delayTask(700);
