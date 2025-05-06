@@ -12,7 +12,6 @@ void syncTimezone()
         debugLog("Starting getting timezone");
         debugLog("So, wifi current status: " + wifiStatus());
 
-        // This is a start of a 20K task, very large - could be smaller
         timezoneMagic.beginOlsonFromWeb();
 
         while(timezoneMagic.gotOlsonFromWeb() == false && timezoneMagic.getOlsonWebError() == 0) {

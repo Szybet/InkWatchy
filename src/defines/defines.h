@@ -41,6 +41,7 @@
 #include <nvs_flash.h> 
 #include "driver/rtc_io.h"
 #include <Olson2POSIX.h>
+#undef ARDUINOJSON_ENABLE_PROGMEM
 #define ARDUINOJSON_ENABLE_PROGMEM 0 // Needed
 #include <ArduinoJson.h>
 #include <mbedtls/md5.h>
