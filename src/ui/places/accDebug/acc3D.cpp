@@ -4,8 +4,8 @@
 #if DEBUG_MENUS && ACC_ENABLED
 
 // Real-world dimensions in mm
-const float LENGTH_MM = 46.0f;
-const float WIDTH_MM = 34.0f;
+const float LENGTH_MM = 34.0f;
+const float WIDTH_MM = 46.0f;
 const float THICKNESS_MM = 16.0f;
 
 // Normalized dimensions (longest side = 2 units)
@@ -13,7 +13,7 @@ const float BASE_SCALE = 2.0f / LENGTH_MM; // Normalize to longest dimension
 const float WIDTH_RATIO = WIDTH_MM * BASE_SCALE;
 const float THICKNESS_RATIO = THICKNESS_MM * BASE_SCALE;
 
-const int CUBE_SIZE = 70; // Visual scaling factor
+const int CUBE_SIZE = 60; // Visual scaling factor
 int16_t centerX = 200 / 2;
 int16_t centerY = 200 / 2;
 
@@ -124,14 +124,14 @@ void loopAcc3D()
     int16_t topMidY = (projY[6] + projY[7]) / 2;
 
     // Calculate direction vectors from center
-    int16_t hourDirX = rightMidX - frontCenterX;
-    int16_t hourDirY = rightMidY - frontCenterY;
-    int16_t minuteDirX = topMidX - frontCenterX;
-    int16_t minuteDirY = topMidY - frontCenterY;
+    int16_t minuteDirX = rightMidX - frontCenterX;
+    int16_t minuteDirY = rightMidY - frontCenterY;
+    int16_t hourDirX = topMidX - frontCenterX;
+    int16_t hourDirY = topMidY - frontCenterY;
 
     // Clock hands lengths
-    const float HOUR_HAND_LENGTH = 0.6f;   // 60% of max
-    const float MINUTE_HAND_LENGTH = 0.4f; // 40% of max
+    const float HOUR_HAND_LENGTH = 0.75f;   // 60% of max
+    const float MINUTE_HAND_LENGTH = 0.35f; // 40% of max
 
     // Calculate hand endpoints
     int16_t hourEndX = frontCenterX + HOUR_HAND_LENGTH * hourDirX;
