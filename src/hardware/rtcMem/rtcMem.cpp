@@ -265,8 +265,9 @@ void rtcMemBackupManage()
                 rtcMem *rtcMemTmp = (rtcMem *)buff.buf;
                 rtcMemRetrieve(rtcMemTmp, &rM);
                 free(buff.buf);
-                fsRemoveFile(filePath);
-
+                
+                // Yatchy doesn't go to sleep so often, so we don't remove it here
+                // fsRemoveFile(filePath);
                 // This confuses yatchy for some reason also not needed anymore because this part is early in the boot now
                 // esp_sleep_enable_timer_wakeup(1000);
                 // esp_deep_sleep_start();
