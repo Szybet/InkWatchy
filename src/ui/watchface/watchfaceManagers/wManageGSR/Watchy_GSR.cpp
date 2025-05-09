@@ -4,9 +4,9 @@
 #if GSR_WATCHFACES
 #include "Watchy_GSR.h"
 
-GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> WatchyGSR::display = *dis;
+GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT>& WatchyGSR::display = *dis;
 
-SmallRTC WatchyGSR::SRTC = rM.SRTC;
+SmallRTC& WatchyGSR::SRTC = rM.SRTC;
 
 uint16_t WatchyGSR::ForeColor() { return GxEPD_BLACK; }
 uint16_t WatchyGSR::BackColor() { return GxEPD_WHITE; }

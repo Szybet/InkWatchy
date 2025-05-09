@@ -6,14 +6,14 @@
 // change it to your location
 // latitude, longitude, timezone
 // Currently set to Wellington, NZ
-#define LOC String(WEATHER_LATIT).toFloat(), String(WEATHER_LONGTIT).toFloat(), 0
+#define LOC String(WEATHER_LATIT).toFloat(), String(WEATHER_LONGTIT).toFloat(), GSR_STARFIELD_TIMEZONE_THING
 
 WatchyGSR watchyGSR;
 moonPhaser moonP;
 
 bool IsTwentyFourHour()
 {
-    return !watchyGSR.IsAM() && !watchyGSR.IsPM();
+    return !WATCHFACE_12H;
 }
 
 void WatchyStarfield::handleButtonPress(uint8_t SwitchNumber)
@@ -29,6 +29,11 @@ void drawDigit(int x, int y, int digit)
 
 void drawSmallDigit(int x, int y, int digit) 
 {
+    // debugLog("Digit is: " + String(digit));
+    if(digit < 0) {
+        // This is broken sometimes.
+        return;
+    }
     const unsigned char* smallDigits[] = {num_0, num_1, num_2, num_3, num_4, num_5, num_6, num_7, num_8, num_9};
     WatchyGSR::display.drawBitmap(x, y, smallDigits[digit], 3, 5, watchyGSR.ForeColor());
 }
@@ -105,7 +110,7 @@ void WatchyStarfield::drawDate()
     int month = WatchTime.Local.Month;
     int year = WatchTime.Local.Year + WatchyGSR::SRTC.getLocalYearOffset();
 
-    String dayOfWeekName = dayStr(dayOfWeek + 1); // offset by 1 to correct for 0-indexing
+    String dayOfWeekName = dayStr(dayOfWeek); // DONT OFFSET BY ONE.
     dayOfWeekName = dayOfWeekName.substring(0, dayOfWeekName.length() - 3);
     WatchyGSR::display.getTextBounds(dayOfWeekName, 5, 85, &x1, &y1, &textWidth, &textHeight);
     if (WatchTime.Local.Wday == 4)

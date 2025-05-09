@@ -7,8 +7,8 @@
 class WatchyGSR
 {
 public:
-    static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;
-    static SmallRTC SRTC;
+    static GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT>& display;
+    static SmallRTC& SRTC;
     virtual uint16_t ForeColor() final;
     virtual uint16_t BackColor() final;
     virtual bool IsAM() final;

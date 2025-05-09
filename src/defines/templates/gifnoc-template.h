@@ -19,9 +19,11 @@
 /*
 https://github.com/retroisbest/Watchy-GSR-Faces/tree/main
 https://github.com/GuruSR/Watchy_GSR/tree/master
+https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 */
-#define GSR_WATCHFACES 1 // General turn on off every watchface
-#define GSR_STARFIELD 1
+#define GSR_WATCHFACES 0 // General turn on off every watchface
+#define GSR_STARFIELD 0
+#define GSR_STARFIELD_TIMEZONE_THING 0.0 // Hours.Minutes of your timezone (kind of UTC) - yes too lazy to automate that
 
 // Basics
 #define DEBUG_MENUS 1 // Includes debug menus for various things

@@ -80,9 +80,12 @@ const watchfaceDef *getCurrentWatchface()
 {
     const watchfaceDef *watchfaceSel = watchfacesList[rM.watchfaceSelected];
     // debugLog("Watchface selected: " + String(watchfaceSel->name));
-    if(watchfaceSel->manager == wfmNone) {
-        for(uint8_t i = 0; i < WATCHFACE_COUNT; i++) {
-            if(watchfacesList[i]->manager != wfmNone) {
+    if (watchfaceSel->manager == wfmNone)
+    {
+        for (uint8_t i = 0; i < WATCHFACE_COUNT; i++)
+        {
+            if (watchfacesList[i]->manager != wfmNone)
+            {
                 rM.watchfaceSelected = i;
                 return getCurrentWatchface();
             }
@@ -120,7 +123,7 @@ void watchfaceManageAll(bool init)
     case wfmTwo:
     {
         // debugLog("wfmTwo selected");
-        wfmTwoRet (*wfTwoFunc)(wfmTwoArg) = (wfmTwoRet(*)(wfmTwoArg))watchfaceSel->data;
+        wfmTwoRet (*wfTwoFunc)(wfmTwoArg) = (wfmTwoRet (*)(wfmTwoArg))watchfaceSel->data;
         wfmTwoArg arg = wfmTwoArg::wTloop;
         if (init == true)
         {
@@ -131,8 +134,12 @@ void watchfaceManageAll(bool init)
     }
     case wfmGSR:
     {
-        WatchyGSR* gsr = reinterpret_cast<WatchyGSR*>(watchfaceSel->data);
+#if GSR_WATCHFACES
+        WatchyGSR *gsr = reinterpret_cast<WatchyGSR *>(watchfaceSel->data);
         wManageGsrLaunch(gsr, init);
+#else
+        debugLog("How did it happen? GSR IS DISABLED ISIN't IT");
+#endif
         break;
     }
     case wfmNone:

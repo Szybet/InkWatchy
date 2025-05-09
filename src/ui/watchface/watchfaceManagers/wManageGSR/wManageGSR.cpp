@@ -4,6 +4,10 @@
 #if GSR_WATCHFACES
 
 void wManageGsrLaunch(WatchyGSR* gsr, bool init) {
+    rM.wFTime = timeRTCLocal;
+    WatchTime.Local = timeRTCLocal;
+    WatchTime.Local.Year = WatchTime.Local.Year + 70; // I hate EVERYONE
+    
     if (useButton() == Menu)
     {
         resetSleepDelay();
