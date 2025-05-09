@@ -8,6 +8,21 @@
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
 #define WATCHFACE_TAYCHRON 1
 
+// GSR watchfaces
+// Because of the ways they are written (even in native watchyGSR) they will provide worse battery life than native inkwatchy watchfaces -
+// Because they write everything every minute, unlike inkwatchy watchfaces which check what needs to be rewritten
+// If you plan to write a watchface specifically for inkwatchy, don't use this compability layer, please
+// Also lp core for yatchy for those is not supported
+// Also to note, they are all ported, the original authours can be found under those links (and github / google in general):
+// All credits go to them :)
+// Expect lower quality of those watchfaces functionalities (Watchy gsr still uses openweather map, we dont, so we remove that)
+/*
+https://github.com/retroisbest/Watchy-GSR-Faces/tree/main
+https://github.com/GuruSR/Watchy_GSR/tree/master
+*/
+#define GSR_WATCHFACES 1 // General turn on off every watchface
+#define GSR_STARFIELD 1
+
 // Basics
 #define DEBUG_MENUS 1 // Includes debug menus for various things
 // Those vibrations settings are dependent on motor task priority
@@ -279,7 +294,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define SCREEN_CORNER_WAKEUP 0                 // writes a few pixels in the left top corner, works without DEBUG turned on
 #define I2C_SCANNER 0                          // For yatchy testing
 #define DUMP_LOOP_ACC 0 // Needs ACC
-#define DUMP_LOOP_ACC_DIFF 1 // Only shows diff from previous reading
+#define DUMP_LOOP_ACC_DIFF 0 // Only shows diff from previous reading, experimental, look up the code
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20

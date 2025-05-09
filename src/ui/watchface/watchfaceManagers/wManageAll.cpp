@@ -1,6 +1,10 @@
 #include "wManageAll.h"
 #include "rtcMem.h"
 
+#if GSR_WATCHFACES
+#include "importGSR.h"
+#endif
+
 const watchfaceDef noWatchFace{
     .manager = wfmNone,
     .name = "No watchface",
@@ -35,6 +39,13 @@ const watchfaceDef szybetAnalogConway = {
     .data = (genPointer)&analogConwayDef,
 };
 #endif
+#if GSR_WATCHFACES && GSR_STARFIELD
+const watchfaceDef gsrStarfield = {
+    .manager = wfmGSR,
+    .name = "GSR Starfield",
+    .data = (genPointer)&MyGSRWatchFaceStarfield,
+};
+#endif
 
 const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #if WATCHFACE_INKFIELD_SZYBET
@@ -54,6 +65,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_SHADES_SZYBET
     &szybetAnalogConway,
+#else
+    &noWatchFace,
+#endif
+#if GSR_WATCHFACES && GSR_STARFIELD
+    &gsrStarfield,
 #else
     &noWatchFace,
 #endif
@@ -111,6 +127,12 @@ void watchfaceManageAll(bool init)
             arg = wfmTwoArg::wTinit;
         }
         wfTwoFunc(arg);
+        break;
+    }
+    case wfmGSR:
+    {
+        WatchyGSR* gsr = reinterpret_cast<WatchyGSR*>(watchfaceSel->data);
+        wManageGsrLaunch(gsr, init);
         break;
     }
     case wfmNone:

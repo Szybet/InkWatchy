@@ -24,7 +24,7 @@ int16_t accZPure = 0;
 uint16_t accZHeightPure = 0;
 #endif
 
-uint16_t steps = 0;
+uint16_t stepsAccDebug = 0;
 uint16_t stepsHeight = 0;
 
 bool is3DOn = false;
@@ -107,8 +107,8 @@ void initAccDebug()
     accZ = acc.z;
     accZHeight = currentHeight - maxHeight;
 
-    steps = getSteps();
-    writeLine("Steps: " + String(steps), CURSOR_X, &currentHeight);
+    stepsAccDebug = getSteps();
+    writeLine("Steps: " + String(stepsAccDebug), CURSOR_X, &currentHeight);
     stepsHeight = currentHeight - maxHeight;
 
 #if BMA_VERSION == 530 || BMA_VERSION == 456
@@ -164,10 +164,10 @@ void loopAccDebug()
       }
 
       uint16_t tmpSteps = getSteps();
-      if (tmpSteps != steps)
+      if (tmpSteps != stepsAccDebug)
       {
         writeTextReplaceBack("Steps: " + String(tmpSteps) + "    ", CURSOR_X, stepsHeight);
-        steps = tmpSteps;
+        stepsAccDebug = tmpSteps;
         dUChange = true;
         // debugLog("Steps changed");
       }
