@@ -1,6 +1,5 @@
 #include "slate.h"
 #include "rtcMem.h"
-#include <esp_sleep.h>
 
 #if WATCHFACE_SLATE
 
@@ -21,15 +20,6 @@
 
 // Safe zone width (200 - 2*border - 4*margin)
 #define SLATE_SAFE_WIDTH 186
-
-// RTC data for caching
-RTC_DATA_ATTR static struct {
-    bool weatherAvailable = false;
-    uint8_t lastHourWeatherCheck = 255;  // Force initial check
-    uint8_t lastBatteryLevel = 255;      // Force initial draw
-    uint8_t lastDay = 255;               // Force initial draw
-    uint8_t lastMonth = 255;             // Force initial draw
-} slateCache;
 
 // Smart text clearing that calculates exact width needed
 static void clearTextArea(const String& text, int y, int fontSize, int extraHeight = 5) {
@@ -56,12 +46,12 @@ static void clearTextArea(const String& text, int y, int fontSize, int extraHeig
 bool weatherIsAvailable() {
 #if WEATHER_INFO
     // Only check weather once per hour to save battery
-    if (slateCache.lastHourWeatherCheck != timeRTCLocal.Hour) {
-        slateCache.lastHourWeatherCheck = timeRTCLocal.Hour;
+    if (rM.slate.lastHourWeatherCheck != timeRTCLocal.Hour) {
+        rM.slate.lastHourWeatherCheck = timeRTCLocal.Hour;
         OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
-        slateCache.weatherAvailable = wData.fine;
+        rM.slate.weatherAvailable = wData.fine;
     }
-    return slateCache.weatherAvailable;
+    return rM.slate.weatherAvailable;
 #else
     return false;
 #endif
@@ -101,8 +91,8 @@ const watchfaceDefOne slateDef = {
             }
             
             // Date - only redraw if day changed or layout changed
-            if (slateCache.lastDay != timeRTCLocal.Day || forceDraw) {
-                slateCache.lastDay = timeRTCLocal.Day;
+            if (rM.slate.lastDay != timeRTCLocal.Day || forceDraw) {
+                rM.slate.lastDay = timeRTCLocal.Day;
                 
                 setFont(getFont(SLATE_FONT));
                 setTextSize(2);
@@ -128,8 +118,8 @@ const watchfaceDefOne slateDef = {
             }
             
             // Battery - only redraw if level changed or layout changed
-            if (slateCache.lastBatteryLevel != rM.batteryPercantageWF || forceDraw) {
-                slateCache.lastBatteryLevel = rM.batteryPercantageWF;
+            if (rM.slate.lastBatteryLevel != rM.batteryPercantageWF || forceDraw) {
+                rM.slate.lastBatteryLevel = rM.batteryPercantageWF;
                 
                 String battBar = "[";
                 int segments = (rM.batteryPercantageWF + 10) / 20;
@@ -217,7 +207,7 @@ const watchfaceDefOne slateDef = {
     .drawDay = []()
     {
         // Cache check prevents unnecessary redraws
-        if (slateCache.lastDay == timeRTCLocal.Day) return;
+        if (rM.slate.lastDay == timeRTCLocal.Day) return;
         
         bool hasWeather = weatherIsAvailable();
         
@@ -243,12 +233,12 @@ const watchfaceDefOne slateDef = {
         clearTextArea(dateStr, dateY, 2);
         writeTextCenterReplaceBack(dateStr, dateY);
         
-        slateCache.lastDay = timeRTCLocal.Day;
+        rM.slate.lastDay = timeRTCLocal.Day;
     },
     .drawMonth = []()
     {
         // Cache check prevents unnecessary redraws
-        if (slateCache.lastMonth == timeRTCLocal.Month) return;
+        if (rM.slate.lastMonth == timeRTCLocal.Month) return;
         
         bool hasWeather = weatherIsAvailable();
         
@@ -274,7 +264,7 @@ const watchfaceDefOne slateDef = {
         clearTextArea(dateStr, dateY, 2);
         writeTextCenterReplaceBack(dateStr, dateY);
         
-        slateCache.lastMonth = timeRTCLocal.Month;
+        rM.slate.lastMonth = timeRTCLocal.Month;
     },
     .showTimeFull = showTimeFull,
     .initWatchface = []()
@@ -282,11 +272,11 @@ const watchfaceDefOne slateDef = {
         dis->fillScreen(GxEPD_WHITE);
         readRTC();
         
-        // Reset cache on init
-        slateCache.lastHourWeatherCheck = 255;
-        slateCache.lastBatteryLevel = 255;
-        slateCache.lastDay = 255;
-        slateCache.lastMonth = 255;
+        // Reset cache on init - Force initial draws by setting invalid values
+        rM.slate.lastHourWeatherCheck = 255;
+        rM.slate.lastBatteryLevel = 255;
+        rM.slate.lastDay = 255;
+        rM.slate.lastMonth = 255;
         
         // Draw border
         dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
@@ -318,8 +308,8 @@ const watchfaceDefOne slateDef = {
         
         int dateY = hasWeather ? SLATE_DATE_Y : SLATE_DATE_NO_WEATHER_Y;
         writeTextCenterReplaceBack(dateStr, dateY);
-        slateCache.lastDay = timeRTCLocal.Day;
-        slateCache.lastMonth = timeRTCLocal.Month;
+        rM.slate.lastDay = timeRTCLocal.Day;
+        rM.slate.lastMonth = timeRTCLocal.Month;
         
         // Battery
         String battBar = "[";
@@ -332,7 +322,7 @@ const watchfaceDefOne slateDef = {
         
         int batteryY = hasWeather ? SLATE_BATTERY_Y : SLATE_BATTERY_NO_WEATHER_Y;
         writeTextCenterReplaceBack(battBar, batteryY);
-        slateCache.lastBatteryLevel = rM.batteryPercantageWF;
+        rM.slate.lastBatteryLevel = rM.batteryPercantageWF;
         
 #if WEATHER_INFO
         if (hasWeather) {
@@ -385,7 +375,7 @@ const watchfaceDefOne slateDef = {
     .drawBattery = []()
     {
         // Cache check prevents unnecessary redraws
-        if (slateCache.lastBatteryLevel == rM.batteryPercantageWF) return;
+        if (rM.slate.lastBatteryLevel == rM.batteryPercantageWF) return;
         
         bool hasWeather = weatherIsAvailable();
         
@@ -404,7 +394,7 @@ const watchfaceDefOne slateDef = {
         clearTextArea(battBar, batteryY, 2);
         writeTextCenterReplaceBack(battBar, batteryY);
         
-        slateCache.lastBatteryLevel = rM.batteryPercantageWF;
+        rM.slate.lastBatteryLevel = rM.batteryPercantageWF;
     },
     .manageInput = [](buttonState bt)
     {
