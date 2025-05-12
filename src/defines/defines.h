@@ -230,6 +230,9 @@ static const WiFiCred* wifiCredStatic[] = {
 #if GSR_WATCHFACES
 #include "../ui/watchface/watchfaceManagers/wManageGSR/wManageGSR.h"
 #endif
+#if WATCHFACE_SLATE
+#include "../ui/watchface/watchfaces/slate_Suddoku/slate.h"
+#endif
 
 // Other
 #if DEBUG
