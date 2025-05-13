@@ -25,6 +25,13 @@ const watchfaceDef tayDef = {
     .data = (genPointer)&taychronDef,
 };
 #endif
+#if WATCHFACE_SLATE
+const watchfaceDef slateWatchface = {
+    .manager = wfmOne,
+    .name = "Slate",
+    .data = (genPointer)&slateDef,
+};
+#endif
 #if WATCHFACE_SHADES_SZYBET
 const watchfaceDef szybetShades = {
     .manager = wfmOne,
@@ -55,6 +62,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_TAYCHRON
     &tayDef,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_SLATE
+    &slateWatchface,
 #else
     &noWatchFace,
 #endif

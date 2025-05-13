@@ -84,6 +84,17 @@ struct rtcMem
         uint16_t stepsSaved;
     } shades;
 #endif
+// slate watchface
+#if WATCHFACE_SLATE
+    struct
+    {
+        bool weatherAvailable : 1;
+        uint8_t lastHourWeatherCheck;
+        uint8_t lastBatteryLevel;
+        uint8_t lastDay;
+        uint8_t lastMonth;
+    } slate;
+#endif
 // taychron watchface
 #if WATCHFACE_TAYCHRON
     struct
