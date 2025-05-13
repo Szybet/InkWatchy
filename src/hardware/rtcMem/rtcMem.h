@@ -59,7 +59,7 @@ struct rtcMem
     bool disableSomeDrawing : 1;
     uint8_t batteryPercantageWF : 7;
     // wManageAll
-    uint8_t watchfaceSelected = 0;
+    uint8_t watchfaceSelected;
 // Inkfield watchface
 #if WATCHFACE_INKFIELD_SZYBET
     struct
