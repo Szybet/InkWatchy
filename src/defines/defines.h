@@ -227,6 +227,12 @@ static const WiFiCred* wifiCredStatic[] = {
 #if WATCHFACE_TAYCHRON
 #include "../ui/watchface/watchfaces/taychron_tay/taychron.h"
 #endif
+#if WATCHFACE_SLATE
+#include "../ui/watchface/watchfaces/slate_Suddoku/slate.h"
+#endif
+#if GSR_WATCHFACES
+#include "../ui/watchface/watchfaceManagers/wManageGSR/wManageGSR.h"
+#endif
 
 // Other
 #if DEBUG

@@ -264,17 +264,18 @@ void rtcMemBackupManage()
                 bufSize buff = fsGetBlob(CONF_RTC_BACKUP);
                 rtcMem *rtcMemTmp = (rtcMem *)buff.buf;
                 rtcMemRetrieve(rtcMemTmp, &rM);
-
-                // free(buff.buf);
-
-                fsRemoveFile(filePath);
+                free(buff.buf);
+                
+                // Yatchy doesn't go to sleep so often, so we don't remove it here
+                // fsRemoveFile(filePath);
                 // This confuses yatchy for some reason also not needed anymore because this part is early in the boot now
                 // esp_sleep_enable_timer_wakeup(1000);
                 // esp_deep_sleep_start();
             }
             else
             {
-                debugLog("Rtc backup size is wrong, we can't doo anything");
+                debugLog("Rtc backup size is wrong, removing that file...");
+                fsRemoveFile(filePath);
             }
         }
         else

@@ -1,6 +1,10 @@
 #include "wManageAll.h"
 #include "rtcMem.h"
 
+#if GSR_WATCHFACES
+#include "importGSR.h"
+#endif
+
 const watchfaceDef noWatchFace{
     .manager = wfmNone,
     .name = "No watchface",
@@ -21,6 +25,13 @@ const watchfaceDef tayDef = {
     .data = (genPointer)&taychronDef,
 };
 #endif
+#if WATCHFACE_SLATE
+const watchfaceDef slateWatchface = {
+    .manager = wfmOne,
+    .name = "Slate",
+    .data = (genPointer)&slateDef,
+};
+#endif
 #if WATCHFACE_SHADES_SZYBET
 const watchfaceDef szybetShades = {
     .manager = wfmOne,
@@ -35,6 +46,13 @@ const watchfaceDef szybetAnalogConway = {
     .data = (genPointer)&analogConwayDef,
 };
 #endif
+#if GSR_WATCHFACES && GSR_STARFIELD
+const watchfaceDef gsrStarfield = {
+    .manager = wfmGSR,
+    .name = "GSR Starfield",
+    .data = (genPointer)&MyGSRWatchFaceStarfield,
+};
+#endif
 
 const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #if WATCHFACE_INKFIELD_SZYBET
@@ -44,6 +62,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_TAYCHRON
     &tayDef,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_SLATE
+    &slateWatchface,
 #else
     &noWatchFace,
 #endif
@@ -57,6 +80,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #else
     &noWatchFace,
 #endif
+#if GSR_WATCHFACES && GSR_STARFIELD
+    &gsrStarfield,
+#else
+    &noWatchFace,
+#endif
 };
 
 // const watchfaceDef *watchfaceSel = getCurrentWatchface();
@@ -64,9 +92,12 @@ const watchfaceDef *getCurrentWatchface()
 {
     const watchfaceDef *watchfaceSel = watchfacesList[rM.watchfaceSelected];
     // debugLog("Watchface selected: " + String(watchfaceSel->name));
-    if(watchfaceSel->manager == wfmNone) {
-        for(uint8_t i = 0; i < WATCHFACE_COUNT; i++) {
-            if(watchfacesList[i]->manager != wfmNone) {
+    if (watchfaceSel->manager == wfmNone)
+    {
+        for (uint8_t i = 0; i < WATCHFACE_COUNT; i++)
+        {
+            if (watchfacesList[i]->manager != wfmNone)
+            {
                 rM.watchfaceSelected = i;
                 return getCurrentWatchface();
             }
@@ -104,13 +135,23 @@ void watchfaceManageAll(bool init)
     case wfmTwo:
     {
         // debugLog("wfmTwo selected");
-        wfmTwoRet (*wfTwoFunc)(wfmTwoArg) = (wfmTwoRet(*)(wfmTwoArg))watchfaceSel->data;
+        wfmTwoRet (*wfTwoFunc)(wfmTwoArg) = (wfmTwoRet (*)(wfmTwoArg))watchfaceSel->data;
         wfmTwoArg arg = wfmTwoArg::wTloop;
         if (init == true)
         {
             arg = wfmTwoArg::wTinit;
         }
         wfTwoFunc(arg);
+        break;
+    }
+    case wfmGSR:
+    {
+#if GSR_WATCHFACES
+        WatchyGSR *gsr = reinterpret_cast<WatchyGSR *>(watchfaceSel->data);
+        wManageGsrLaunch(gsr, init);
+#else
+        debugLog("How did it happen? GSR IS DISABLED ISIN't IT");
+#endif
         break;
     }
     case wfmNone:

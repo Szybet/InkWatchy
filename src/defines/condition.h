@@ -278,3 +278,7 @@ Template for versioning
 #define BMAM_5 1
 #define BMAM_4 0
 #endif
+
+#if GSR_WATCHFACES == 1 && ATCHY_VER == YATCHY && LP_CORE == 1
+#error I explained it in config.h yet here we are, GSR_WATCHFACES are not compatible with LP_CORE on yatchy. Disable LP_CORE if you really need Gsr watchfaces, but the battery life will suck, you have been warned
+#endif
