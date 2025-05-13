@@ -57,7 +57,7 @@ bool weatherIsAvailable() {
 #endif
 }
 
-void showTimeFull()
+static void showTimeFull()
 {
     String timeStr = getHourMinute(timeRTCLocal);
     

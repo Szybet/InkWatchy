@@ -4,9 +4,6 @@
 #if GSR_WATCHFACES
 #include "importGSR.h"
 #endif
-#if WATCHFACE_UNIX_RETRO
-#include "../watchfaces/unixRetro_Suddoku/unixRetro.h"
-#endif
 
 const watchfaceDef noWatchFace{
     .manager = wfmNone,
@@ -26,6 +23,13 @@ const watchfaceDef tayDef = {
     .manager = wfmOne,
     .name = "Taychron",
     .data = (genPointer)&taychronDef,
+};
+#endif
+#if WATCHFACE_SLATE
+const watchfaceDef slateWatchface = {
+    .manager = wfmOne,
+    .name = "Slate",
+    .data = (genPointer)&slateDef,
 };
 #endif
 #if WATCHFACE_SHADES_SZYBET
@@ -49,13 +53,6 @@ const watchfaceDef gsrStarfield = {
     .data = (genPointer)&MyGSRWatchFaceStarfield,
 };
 #endif
-#if WATCHFACE_SLATE
-const watchfaceDef slateWatchface = {
-    .manager = wfmOne,
-    .name = "Slate",
-    .data = (genPointer)&slateDef,
-};
-#endif
 
 const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #if WATCHFACE_INKFIELD_SZYBET
@@ -68,6 +65,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #else
     &noWatchFace,
 #endif
+#if WATCHFACE_SLATE
+    &slateWatchface,
+#else
+    &noWatchFace,
+#endif
 #if WATCHFACE_SHADES_SZYBET
     &szybetShades,
 #else
@@ -75,11 +77,6 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_SHADES_SZYBET
     &szybetAnalogConway,
-#else
-    &noWatchFace,
-#endif
-#if WATCHFACE_SLATE
-    &slateWatchface,
 #else
     &noWatchFace,
 #endif
