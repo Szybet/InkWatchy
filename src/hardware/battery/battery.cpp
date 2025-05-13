@@ -7,7 +7,7 @@ float BatteryRead() { return analogReadMilliVolts(BATT_ADC_PIN) / ADC_VOLTAGE_DI
 #define FALLBACK_BATTERY_VOLTAGE 4.12345
 float previousGoodRead = FALLBACK_BATTERY_VOLTAGE;
 #endif
-float getBatteryVoltage()
+float getBattVoltage()
 {
 #if NO_CHARGING == true && DEBUG == true
     return 4.0;
@@ -257,7 +257,7 @@ void isChargingCheck()
 
 void loopBattery()
 {
-    rM.bat.curV = getBatteryVoltage();
+    rM.bat.curV = getBattVoltage();
     if (abs(rM.bat.prevVOne - rM.bat.curV) > BAT_MINIMAL_DIFFERENCE || rM.bat.oneCheck == true)
     {
         debugLog("Voltage changed changed, doing things...");

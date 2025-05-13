@@ -49,7 +49,7 @@ struct bufSize
 
 extern bufSize emptyBuff;
 
-#define genPointer uint32_t // Generic pointer
+#define genPointer uintptr_t // Generic pointer
 
 typedef struct
 {
@@ -82,6 +82,7 @@ enum watchFaceManager
     wfmNone = -1, // None, doesn't exist
     wfmOne = 1,   // InkWatchy default, Szybet certified
     wfmTwo = 2,   // Do what you want mode
+    wfmGSR = 3,   // GSR compability layer
 };
 
 enum wfmTwoArg
@@ -106,9 +107,9 @@ struct watchfaceDef
 
 struct wifiQuickCred
 {
-    const char* ssid;
-    const char* pass;
-    const char* bssid;
+    const char *ssid;
+    const char *pass;
+    const char *bssid;
     IPAddress ip;
     IPAddress gateway;
     IPAddress subnet;
