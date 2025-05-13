@@ -41,39 +41,22 @@ void setAlarmQuick(int minutes, int id)
     rM.alarms[id].requireWifi = false;
     calculateNextAlarm();
 
-// this shit doesnt work
-//    // tell the display to do a full update next loop
-//    dUChange = true;
-//    // clear the whole screen now
-//    disUp(true);
-//
-//    // 1) Draw the header text
-//    setTextSize(1);
-//    setFont(FONT);   
-//    const int LABEL_X = 10;
-//    const int LABEL_Y = 30;
-//    writeTextReplaceBack("Alarm will ring at", LABEL_X, LABEL_Y, GxEPD_WHITE, GxEPD_BLACK);
-//
-//    char timeStr[6];
-//    snprintf(timeStr, sizeof(timeStr), "%02d:%02d", hourNow, minutesNow);
-//
-//    setTextSize(1);
-//    setFont(FONT);
-//    const int RING_X = 20;
-//    const int RING_Y = 20;  
-//    writeTextReplaceBack(timeStr, RING_X, RING_Y, GxEPD_WHITE, GxEPD_BLACK);
-//// no idea what i am doing
-//    while (!useButton()) {
-//      delay(10);
-//    }
-
-
 }
 
-#define X(min,label)                  \
-void sAQ##min(void) {                 \
-    setAlarmQuick(min, ALARM_QUICK_ID); \
-}
+//#define X(min,label)                  \
+//void sAQ##min(void) {                 \
+//    setAlarmQuick(min, ALARM_QUICK_ID); \
+//}
+//QUICK_ALARM_LIST(X)
+//#undef X
+
+#define X(min,label)                                                        \
+  void sAQ##min(void) {                                                      \
+    String _msg = String("Alarm set for ") + label + String(".");            \
+    textPage("Quick Alarm", &_msg, 1, FONT); /* show one-line dialog */      \
+    setAlarmQuick(min, ALARM_QUICK_ID);                                      \
+  }                                                                           \
+
 QUICK_ALARM_LIST(X)
 #undef X
 
