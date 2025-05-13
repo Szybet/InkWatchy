@@ -52,8 +52,22 @@ void setAlarmQuick(int minutes, int id)
 
 #define X(min,label)                                                        \
   void sAQ##min(void) {                                                      \
-    String _msg = String("Alarm set for ") + label + String(".");            \
-    textPage("Quick Alarm", &_msg, 1, FONT); /* show one-line dialog */      \
+    readRTC();                                                                   \
+    int hourNow    = timeRTCLocal.Hour;                                          \
+    int minutesNow = timeRTCLocal.Minute;                                        \
+    int secondsNow = timeRTCLocal.Second;                                        \
+                                                                                 \
+    if (secondsNow > 0) minutesNow += 1;                                         \
+    minutesNow += min;                                                           \
+    hourNow    += minutesNow / 60;                                               \
+    minutesNow  = minutesNow % 60;                                               \
+    hourNow     = hourNow % 24;                                                  \
+    char timeBuf[6];                                                             \
+    snprintf(timeBuf, sizeof(timeBuf), "%02d:%02d", hourNow, minutesNow);        \
+    String _msg1 = String("Alarm set for ") + label + String(".");              \
+    String _msg2 = String("Will ring at ") + timeBuf + String(".");              \
+    String msgArray[] = { _msg1, _msg2 };                                        \
+    textPage("Quick Alarm", msgArray, 2, FONT);                                  \
     setAlarmQuick(min, ALARM_QUICK_ID);                                      \
   }                                                                           \
 
