@@ -45,6 +45,9 @@
 #define ARDUINOJSON_ENABLE_PROGMEM 0 // Needed
 #include <ArduinoJson.h>
 #include <mbedtls/md5.h>
+#if (DEBUG && SCREENSHOT_ENDPOINT)
+#include <ESPAsyncWebServer.h>
+#endif
 
 // Order important
 #include "macros.h"
