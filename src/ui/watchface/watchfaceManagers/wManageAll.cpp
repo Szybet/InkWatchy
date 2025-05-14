@@ -53,6 +53,13 @@ const watchfaceDef gsrStarfield = {
     .data = (genPointer)&MyGSRWatchFaceStarfield,
 };
 #endif
+#if GSR_WATCHFACES && GSR_CLASSICS
+const watchfaceDef gsrClassics = {
+    .manager = wfmGSR,
+    .name = "GSR Classics",
+    .data = (genPointer)&WatchyClassicsAddOnClassLoader,
+};
+#endif
 
 const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #if WATCHFACE_INKFIELD_SZYBET
@@ -82,6 +89,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if GSR_WATCHFACES && GSR_STARFIELD
     &gsrStarfield,
+#else
+    &noWatchFace,
+#endif
+#if GSR_WATCHFACES && GSR_CLASSICS
+    &gsrClassics,
 #else
     &noWatchFace,
 #endif

@@ -4,34 +4,40 @@
 #if GSR_WATCHFACES
 #include "Watchy_GSR.h"
 
-GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT>& WatchyGSR::display = *dis;
+GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> &WatchyGSR::display = *dis;
 
-SmallRTC& WatchyGSR::SRTC = rM.SRTC;
+SmallRTC &WatchyGSR::SRTC = rM.SRTC;
 
 uint16_t WatchyGSR::ForeColor() { return GxEPD_BLACK; }
 uint16_t WatchyGSR::BackColor() { return GxEPD_WHITE; }
 
-bool WatchyGSR::IsAM() {
+bool WatchyGSR::IsAM()
+{
     return (timeRTCLocal.Hour < 12);
 }
 
-bool WatchyGSR::IsPM() {
+bool WatchyGSR::IsPM()
+{
     return (timeRTCLocal.Hour >= 12);
 }
 
-wl_status_t WatchyGSR::WiFiStatus() {
+wl_status_t WatchyGSR::WiFiStatus()
+{
     return WiFi.status();
 }
 
-uint32_t WatchyGSR::CurrentStepCount() {
+uint32_t WatchyGSR::CurrentStepCount()
+{
     return getSteps();
 }
 
-float WatchyGSR::getBatteryVoltage() {
+float WatchyGSR::getBatteryVoltage()
+{
     return rM.bat.curV;
 }
 
-int WatchyGSR::GetWeatherTemperature() {
+int WatchyGSR::GetWeatherTemperature()
+{
     OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
     if (wData.fine == true)
     {
@@ -40,29 +46,68 @@ int WatchyGSR::GetWeatherTemperature() {
     return 0;
 }
 
-bool WatchyGSR::IsMetric() {
+bool WatchyGSR::IsMetric()
+{
     // Burger people are not here :)
     return true;
 }
 
 TimeData WatchTime;
 
-bool SafeToDraw() {
+RTC_DATA_ATTR Designing Design;
+
+bool SafeToDraw()
+{
     return true;
 }
 
-void initAddOn(WatchyGSR* gsr) {
-    // Nothing lol
+void initAddOn(WatchyGSR *gsr)
+{
     return;
 }
 
-int AddWatchStyle(String name, WatchyGSR* gsr) {
-    // Nothing too
-    return 0;
+int AddWatchStyle(String name, WatchyGSR *gsr)
+{
+    return 1;
 }
 
-void WatchyGSR::InsertDrawWatchStyle(uint8_t StyleID) {
+void WatchyGSR::InsertDrawWatchStyle(uint8_t StyleID)
+{
     return;
 }
+
+bool WatchyGSR::BMAAvailable()
+{
+    return ACC_ENABLED;
+}
+
+void WatchyGSR::InsertDrawWeather(uint8_t StyleID, bool Status) {}
+
+void WatchyGSR::drawWeather(bool Status)
+{
+    InsertDrawWeather(1, Status);
+}
+
+bool WatchyGSR::IsBatteryHidden()
+{
+    return true;
+}
+
+void WatchyGSR::WantWeather(bool Wanting) {}
+
+String WatchyGSR::MakeMinutes(uint8_t Minutes)
+{
+    return (Minutes < 10 ? "0" : "") + String(Minutes);
+}
+
+bool WatchyGSR::IsWeatherAvailable() { return true; }
+
+int WatchyGSR::GetWeatherID() { return 0; }
+
+bool WatchyGSR::NoMenu() { return true; };
+
+int WatchyGSR::GetWeatherTemperatureFeelsLike() { return GetWeatherTemperature(); }
+
+void WatchyGSR::InsertInitWatchStyle(uint8_t StyleID) {}
 
 #endif
