@@ -17,6 +17,7 @@ void wManageGsrLaunch(WatchyGSR *gsr, bool init)
     if (init == true)
     {
         gsr->InsertInitWatchStyle(1);
+        gsr->RegisterWatchFaces();
     }
 
     bool draw = true;

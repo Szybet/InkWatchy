@@ -33,6 +33,7 @@ public:
     virtual bool NoMenu() final;
     virtual int GetWeatherTemperatureFeelsLike() final;
     virtual void InsertInitWatchStyle(uint8_t StyleID);
+    virtual void RegisterWatchFaces();
 };
 
 struct TimeData final {
