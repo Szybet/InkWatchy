@@ -54,12 +54,15 @@ void initLog()
 #endif
 #endif
     initLogs();
-#endif
 #if LP_CORE_TEST_ENABLED
     startLpCoreTest();
 #endif
 #if I2C_SCANNER
     startI2cScanner();
+#endif
+#if SCREENSHOT_ENDPOINT
+    screenshotEndpointInit();
+#endif
 #endif
 }
 

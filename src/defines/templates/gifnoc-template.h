@@ -1,6 +1,7 @@
 #pragma once
 
 // Watchfaces!
+// https://github.com/Szybet/InkWatchy/wiki/Watchfaces
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
 #define WATCHFACE_12H 0 // Show time in 12 hour format. Supported watchfaces: Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
@@ -36,6 +37,8 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define GSR_CLASSICS_TETRIS 0
 #define GSR_CLASSICS_MAC 0
 #define GSR_CLASSICS_MARIO 1
+// No more classics
+#define GSR_STATIONARY 0
 
 // Basics
 #define DEBUG_MENUS 1 // Includes debug menus for various things
@@ -330,6 +333,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define I2C_SCANNER 0                          // For yatchy testing
 #define DUMP_LOOP_ACC 0 // Needs ACC
 #define DUMP_LOOP_ACC_DIFF 0 // Only shows diff from previous reading, experimental, look up the code
+#define SCREENSHOT_ENDPOINT 1
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
