@@ -1,6 +1,7 @@
 #pragma once
 
 // Watchfaces!
+// https://github.com/Szybet/InkWatchy/wiki/Watchfaces
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
 #define WATCHFACE_12H 0 // Show time in 12 hour format. Supported watchfaces: Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
