@@ -331,14 +331,42 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
     }
     // debug!("Final hashmap: {:#?}", events);
 
-
+    // Sanitize days, remove duplicate days
+    debug!("Before sanit days: {:?}", days);
+    debug!("Days before sanit len: {}", days.len());
+    loop {
+        let c = days.len();
+        let mut removed = false;
+        for i1 in 0..c {
+            for i2 in 0..c {
+                if i1 == i2 {
+                    continue;
+                }
+                let day1_date = DateTime::from_timestamp(days[i1] as i64, 0).unwrap().format("%d.%m.%Y").to_string();
+                let day2_date = DateTime::from_timestamp(days[i2] as i64, 0).unwrap().format("%d.%m.%Y").to_string();
+                debug!("Day 1: {} and Day 2: {}", day1_date, day2_date);
+                if day1_date == day2_date {
+                    debug!("Removed those days!");
+                    days.remove(i1);
+                    removed = true;
+                    break;
+                }
+            }
+            if removed {
+                break;
+            }
+        }
+        if !removed {
+            break;
+        }
+    }
 
     debug!("Final days: {:?}", days);
 
     let json = serde_json::to_string_pretty(&events).unwrap();
     // debug!("Json: \n{}", json);
 
-    info!("There are {} days", events.len());
+    info!("There are {} events", events.len());
 
     let mut file_proxy: HashMap<String, Vec<u8>> = HashMap::new();
     for event in events {
@@ -363,6 +391,7 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
 
     let mut c = 0;
     for day in days {
+        debug!("Iterating day: {}", day);
         let time = DateTime::from_timestamp(day as i64, 0).unwrap();
         let time_str = &time.format("%d.%m.%Y").to_string();
         c += 1;
@@ -370,9 +399,11 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
             // let rm_path = format!("{}{}", args.output_dir, time_str);
             if file_proxy.contains_key(time_str) {
                 file_proxy.remove(time_str);
+                debug!("Removing time from index: {}", time_str);
             }
             continue;
         }
+        debug!("Adding day to index: {}", day.to_string());
         index.push_str(&day.to_string());
         index.push('\n');
     }
@@ -401,4 +432,3 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
 
     info!("Done, bye!");
 }
-
