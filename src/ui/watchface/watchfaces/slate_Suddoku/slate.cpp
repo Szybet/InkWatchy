@@ -1,6 +1,7 @@
 #include "slate.h"
 #include "rtcMem.h"
 #include "slate_localization.h"
+#include "localization.h"  // For formatTemperature
 
 #if WATCHFACE_SLATE
 
@@ -121,12 +122,11 @@ static void drawTimeAfterApply(bool forceDraw)
         // Only fetch weather data if we need to update
         OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
         
-        // Temperature
+        // Temperature - using global formatTemperature function
         dis->fillRect(SLATE_BORDER_WIDTH + 2, SLATE_TEMP_Y - 30, 196 - 2*SLATE_BORDER_WIDTH, 35, GxEPD_WHITE);
         setFont(getFont(SLATE_FONT));
         setTextSize(3);
-        int temp = (int)roundf(wData.temp);
-        String tempStr = String(temp) + "C";
+        String tempStr = formatTemperature(wData.temp);  // Use global function
         writeTextCenterReplaceBack(tempStr, SLATE_TEMP_Y);
         
         // Weather condition
@@ -237,10 +237,9 @@ static void initWatchface()
     if (hasWeather) {
         OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
         
-        // Temperature
+        // Temperature - using global formatTemperature function
         setTextSize(3);
-        int temp = (int)roundf(wData.temp);
-        String tempStr = String(temp) + "C";
+        String tempStr = formatTemperature(wData.temp);  // Use global function
         writeTextCenterReplaceBack(tempStr, SLATE_TEMP_Y);
         
         // Weather condition

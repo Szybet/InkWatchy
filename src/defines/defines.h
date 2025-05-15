@@ -51,7 +51,10 @@
 #include "definesVars.h"
 #include "confidential.h"
 
-// Needs to be after confidential.h and definesVars.h
+// Order important
+#include "macros.h"
+#include "definesVars.h"
+#include "confidential.h"
 static const WiFiCred* wifiCredStatic[] = {
     &wifi_credential1,
     &wifi_credential2,
@@ -246,3 +249,6 @@ static const WiFiCred* wifiCredStatic[] = {
 #if SCOM_TASK_ENABLED
 #include "../other/scomTask/scomTask.h"
 #endif
+
+// Include localization system after all other includes
+#include "localization.h"

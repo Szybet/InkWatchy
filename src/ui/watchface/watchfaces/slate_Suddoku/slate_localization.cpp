@@ -2,80 +2,43 @@
 #include "rtcMem.h"
 
 // Returns localized weather condition string based on WMO weather codes
-// Polish characters have been removed to avoid display/encoding issues
+// Now uses compile-time language macros instead of runtime checks
 String getLocalizedWeatherCondition(uint8_t weatherCode) {
-    // Check language setting from config.h
-    if (SLATE_LANG == PL) {
-        // Polish weather conditions (without diacritical marks)
-        switch(weatherCode) {
-            case 0: return "Bezchmurnie";          // Clear sky
-            case 1: return "Prawie czysto";        // Mostly clear
-            case 2: return "Lekkie chmury";        // Partly cloudy
-            case 3: return "Pochmurno";            // Overcast
-            case 45: return "Mgla";                // Fog
-            case 48: return "Gesta mgla";          // Dense fog
-            case 51: return "Lekka mzawka";        // Light drizzle
-            case 53: return "Mzawka";              // Moderate drizzle
-            case 55: return "Mzawka";              // Dense drizzle
-            case 56: return "Lekkie zamrz.";       // Light freezing drizzle
-            case 57: return "Lodowato";            // Dense freezing drizzle
-            case 61: return "Lekki deszcz";        // Slight rain
-            case 63: return "Deszcz";              // Moderate rain
-            case 65: return "Ulewny deszcz";       // Heavy rain
-            case 66: return "Marznacy";            // Light freezing rain
-            case 67: return "Zamiez";              // Heavy freezing rain
-            case 71: return "Lekki snieg";         // Slight snow fall
-            case 73: return "Snieg";               // Moderate snow fall
-            case 75: return "Snieznica";           // Heavy snow fall
-            case 77: return "Ziarna";              // Snow grains
-            case 80: return "Przelotnie";          // Slight rain showers
-            case 81: return "Deszczowo";           // Moderate rain showers
-            case 82: return "Opady";               // Violent rain showers
-            case 85: return "Sniezne";             // Slight snow showers
-            case 86: return "Silnie sniezny";      // Heavy snow showers
-            case 95: return "Burza";               // Thunderstorm
-            case 96: return "Lekki grad";          // Thunderstorm with slight hail
-            case 99: return "Gradowo";             // Thunderstorm with heavy hail
-            default: return "Nieznane";            // Unknown weather code
-        }
-    } else {
-        // English weather conditions (default for all non-Polish languages)
-        switch(weatherCode) {
-            case 0: return "Clear Sky";
-            case 1: return "Mostly Clear";
-            case 2: return "Partly Cloudy";
-            case 3: return "Overcast";
-            case 45: return "Foggy";
-            case 48: return "Heavy Fog";
-            case 51: return "Light Drizzle";
-            case 53: return "Drizzling";
-            case 55: return "Heavy Drizzle";
-            case 56: return "Light Freezing";
-            case 57: return "Heavy Freezing";
-            case 61: return "Light Rain";
-            case 63: return "Raining";
-            case 65: return "Heavy Rain";
-            case 66: return "Freezing Rain";
-            case 67: return "Freezing Hard";
-            case 71: return "Light Snow";
-            case 73: return "Snowing";
-            case 75: return "Heavy Snow";
-            case 77: return "Snow Grains";
-            case 80: return "Light Showers";
-            case 81: return "Showering";
-            case 82: return "Heavy Showers";
-            case 85: return "Snow Showers";
-            case 86: return "Heavy Snow";
-            case 95: return "Thunderstorm";
-            case 96: return "Light Hail";
-            case 99: return "Heavy Hail";
-            default: return "Unknown";
-        }
+    switch(weatherCode) {
+        case 0: return WF_S_WEATHER_CLEAR_SKY;
+        case 1: return WF_S_WEATHER_MOSTLY_CLEAR;
+        case 2: return WF_S_WEATHER_PARTLY_CLOUDY;
+        case 3: return WF_S_WEATHER_OVERCAST;
+        case 45: return WF_S_WEATHER_FOG;
+        case 48: return WF_S_WEATHER_HEAVY_FOG;
+        case 51: return WF_S_WEATHER_LIGHT_DRIZZLE;
+        case 53: return WF_S_WEATHER_DRIZZLE;
+        case 55: return WF_S_WEATHER_HEAVY_DRIZZLE;
+        case 56: return WF_S_WEATHER_LIGHT_FREEZING;
+        case 57: return WF_S_WEATHER_HEAVY_FREEZING;
+        case 61: return WF_S_WEATHER_LIGHT_RAIN;
+        case 63: return WF_S_WEATHER_RAIN;
+        case 65: return WF_S_WEATHER_HEAVY_RAIN;
+        case 66: return WF_S_WEATHER_FREEZING_RAIN;
+        case 67: return WF_S_WEATHER_FREEZING_HARD;
+        case 71: return WF_S_WEATHER_LIGHT_SNOW;
+        case 73: return WF_S_WEATHER_SNOW;
+        case 75: return WF_S_WEATHER_HEAVY_SNOW;
+        case 77: return WF_S_WEATHER_SNOW_GRAINS;
+        case 80: return WF_S_WEATHER_LIGHT_SHOWERS;
+        case 81: return WF_S_WEATHER_SHOWERS;
+        case 82: return WF_S_WEATHER_HEAVY_SHOWERS;
+        case 85: return WF_S_WEATHER_SNOW_SHOWERS;
+        case 86: return WF_S_WEATHER_HEAVY_SNOW;
+        case 95: return WF_S_WEATHER_THUNDERSTORM;
+        case 96: return WF_S_WEATHER_LIGHT_HAIL;
+        case 99: return WF_S_WEATHER_HEAVY_HAIL;
+        default: return WF_S_WEATHER_UNKNOWN;
     }
 }
 
 // Returns localized abbreviated day name (3 letters)
-// Polish characters removed to avoid encoding issues on e-ink display
+// Now uses compile-time language macros
 String getLocalizedDayName(int offset) {
     // Get current time in Unix format for day calculation
     long unixTime = rM.SRTC.doMakeTime(timeRTCLocal);
@@ -89,15 +52,9 @@ String getLocalizedDayName(int offset) {
     // Handle wraparound for offsets
     arrayIndex = (arrayIndex + 7) % 7;
     
-    if (SLATE_LANG == PL) {
-        // Polish day abbreviations starting from Monday (without diacritical marks)
-        const char* polishDays[] = {"PON", "WTO", "SRO", "CZW", "PIA", "SOB", "NIE"};
-        return String(polishDays[arrayIndex]);
-    } else {
-        // English day abbreviations starting from Monday  
-        const char* englishDays[] = {"MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"};
-        return String(englishDays[arrayIndex]);
-    }
+    // Use compile-time language macros
+    const char* dayNames[] = LANGUAGE_DAY_NAMES;
+    return String(dayNames[arrayIndex]);
 }
 
 // Formats time string according to 12H/24H setting from config.h
@@ -140,8 +97,8 @@ String getLocalizedAMPM(tmElements_t timeEl) {
     // Determine if it's afternoon/evening (PM) or morning (AM)
     bool isPM = (timeEl.Hour >= 12);
     
-    // AM/PM is standard across all languages
-    return isPM ? "PM" : "AM";
+    // Use compile-time language macros
+    return isPM ? WF_TIME_PM : WF_TIME_AM;
 #else
     // Return empty string for 24-hour format
     return "";
