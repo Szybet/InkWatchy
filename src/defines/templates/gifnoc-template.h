@@ -120,15 +120,28 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define MOON_MAX_RADIUS 64.0
 
 // Alarms
-#define INK_ALARMS 1                  // Enable alarms
-#define MAX_ALARMS 10                 // More alarms, more RTC memory usage
-#define ALARM_DURATION_S 60           // Seconds of ringing
-#define ALARM_MOTOR_DELAY 1000        // Ms of delay for motor
-#define ALARM_MOTOR_TIME 200          // Time for motor to vibrate
-#define ALARM_WIFI_MIN_STRENGTH 60    // from 1-99, percents
-#define ALARM_WIFI_MULTIPLIER 7       // Multiplies the time if wifi connect is needed
-#define ALARM_QUICK_ID MAX_ALARMS - 1 // Which alarm to replace for quick alarms, the default is the last one. Can't be higher than MAX_ALARMS-1
-#define ALARM_DISABLE_BACK 1          // No escaping if (wifi) alarm
+#define INK_ALARMS 1           // Enable alarms
+#define QUICK_ALARM_LIST(X)                      \
+    X(  5,  "5 minutes" )                        \
+    X( 10,  "10 minutes")                        \
+    X( 15,  "15 minutes")                        \
+    X( 20,  "20 minutes")                        \
+    X( 25,  "25 minutes")                        \
+    X( 60,  "1 hour"    )                        \
+    X( 90,  "1.5 hours" )                        \
+    X(120,  "2 hours"   )                        \
+    X(180,  "3 hours"   )                        \
+    X(360,  "6 hours"   )                        \
+    X(480,  "8 hours"   )                        \
+    X(1440, "24 hours"  )			 \
+
+#define ALARM_DURATION_S 60    // Seconds of ringing
+#define ALARM_MOTOR_DELAY 1000 // Ms of delay for motor
+#define ALARM_MOTOR_TIME 200   // Time for motor to vibrate
+#define ALARM_WIFI_MIN_STRENGTH 60 // from 1-99, percents
+#define ALARM_WIFI_MULTIPLIER 7 // Multiplies the time if wifi connect is needed
+#define ALARM_QUICK_ID MAX_ALARMS-1 // Which alarm to replace for quick alarms, the default is the last one. Can't be higher than MAX_ALARMS-1
+#define ALARM_DISABLE_BACK 1 // No escaping if (wifi) alarm
 
 // Pomodoro (Using alarms, so needs them)
 #define POMODORO_ALARM 1
@@ -160,6 +173,10 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 
 // Calendar
 #define CALENDAR 0
+// allow insecure url for calendar
+#define ALLOW_INSECURE_CAL 0
+// import only events today onwards
+#define FUTURE_ONLY 0
 // Shorter names needed
 #define CALENDAR_SPLIT_DESCRIPTION 1
 #define CALENDAR_SPLIT_DESCRIPTION_STRING "\\n"
