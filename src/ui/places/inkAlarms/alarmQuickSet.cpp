@@ -1,7 +1,6 @@
 // alarmQuickSet.cpp
 #include "alarmQuickSet.h"
 #include "rtcMem.h"
-#include "config.h"
 
 #if INK_ALARMS
 

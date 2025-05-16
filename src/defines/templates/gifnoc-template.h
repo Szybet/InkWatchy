@@ -133,12 +133,8 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
     X(180,  "3 hours"   )                        \
     X(360,  "6 hours"   )                        \
     X(480,  "8 hours"   )                        \
-    X(1440, "24 hours"  )
+    X(1440, "24 hours"  )			 \
 
-// Now compute MAX_ALARMS automatically from the same list:
-#define __COUNT(min,label) +1
-enum { MAX_ALARMS = 0 QUICK_ALARM_LIST(__COUNT) };
-#undef __COUNT
 #define ALARM_DURATION_S 60    // Seconds of ringing
 #define ALARM_MOTOR_DELAY 1000 // Ms of delay for motor
 #define ALARM_MOTOR_TIME 200   // Time for motor to vibrate
