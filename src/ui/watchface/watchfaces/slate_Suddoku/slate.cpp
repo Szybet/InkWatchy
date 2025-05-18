@@ -27,6 +27,32 @@
 #define SLATE_AMPM_FONT "dogicapixel4"
 #endif
 
+// Helper function to get safe clear bounds for text
+static void getSafeClearBounds(String text, int textSize, int fontHeight, uint16_t* width, uint16_t* height) {
+    setTextSize(textSize);
+    setFont(getFont(SLATE_FONT));
+    
+    uint16_t textWidth, textHeight;
+    getTextBounds(text, NULL, NULL, &textWidth, &textHeight);
+    
+    // Add safety margins - 4 pixels each side for width, 2 pixels top/bottom for height
+    *width = textWidth + 8;
+    *height = max(textHeight + 4, fontHeight * textSize + 4);
+}
+
+// Helper function to clear text area safely
+static void clearTextArea(int x, int y, String text, int textSize, int fontHeight) {
+    uint16_t clearWidth, clearHeight;
+    getSafeClearBounds(text, textSize, fontHeight, &clearWidth, &clearHeight);
+    
+    // Make sure we don't go outside screen bounds
+    int clearX = max(SLATE_BORDER_WIDTH + 2, x - 4);
+    int maxClearWidth = 196 - 2*SLATE_BORDER_WIDTH - (clearX - SLATE_BORDER_WIDTH - 2);
+    clearWidth = min((int)clearWidth, maxClearWidth);
+    
+    dis->fillRect(clearX, y - clearHeight + 2, clearWidth, clearHeight, GxEPD_WHITE);
+}
+
 // Check if weather is available (cached for battery optimization)
 static bool weatherIsAvailable() {
 #if WEATHER_INFO
@@ -45,38 +71,55 @@ static bool weatherIsAvailable() {
 static void drawTimeBeforeApply()
 {
     // Use new 12-hour aware function
-    String timeStr = getLocalizedTimeString(timeRTCLocal);
+    String oldTimeStr = getLocalizedTimeString(rM.wFTime);
+    String newTimeStr = getLocalizedTimeString(timeRTCLocal);
     
     bool hasWeather = weatherIsAvailable();
     int yPos = hasWeather ? SLATE_TIME_Y : SLATE_TIME_NO_WEATHER_Y;
+    bool needsBorderRedraw = false;
     
-    // Clear time area - size 4 font needs more space
-    dis->fillRect(SLATE_BORDER_WIDTH + 2, yPos - 45, 196 - 2*SLATE_BORDER_WIDTH, 50, GxEPD_WHITE);
-    
-    setFont(getFont(SLATE_FONT));
-    setTextSize(4);
-    writeTextCenterReplaceBack(timeStr, yPos);
+    // Only clear and redraw if time actually changed
+    if (oldTimeStr != newTimeStr) {
+        clearTextArea(100, yPos, oldTimeStr, 4, 6);  // Clear old time
+        needsBorderRedraw = true;
+        
+        setFont(getFont(SLATE_FONT));
+        setTextSize(4);
+        writeTextCenterReplaceBack(newTimeStr, yPos);
+    }
     
 #if WATCHFACE_12H
-    // Show AM/PM in 12-hour mode
-    String ampmStr = getLocalizedAMPM(timeRTCLocal);
-    setFont(getFont(SLATE_AMPM_FONT));
-    setTextSize(1);
-    dis->fillRect(SLATE_AMPM_X, SLATE_AMPM_Y - 10, 30, 20, GxEPD_WHITE);
-    writeTextReplaceBack(ampmStr, SLATE_AMPM_X, SLATE_AMPM_Y);
+    // Show AM/PM in 12-hour mode - only update if hour changed
+    if (rM.wFTime.Hour != timeRTCLocal.Hour) {
+        String oldAmPm = getLocalizedAMPM(rM.wFTime);
+        String newAmPm = getLocalizedAMPM(timeRTCLocal);
+        
+        if (oldAmPm != newAmPm) {
+            clearTextArea(SLATE_AMPM_X, SLATE_AMPM_Y, oldAmPm, 1, 6);  // Clear old AM/PM
+            needsBorderRedraw = true;
+            
+            setFont(getFont(SLATE_AMPM_FONT));
+            setTextSize(1);
+            writeTextReplaceBack(newAmPm, SLATE_AMPM_X, SLATE_AMPM_Y);
+        }
+    }
 #endif
+
+    // Redraw border if any clearing happened
+    if (needsBorderRedraw) {
+        dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
+        dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
+    }
 }
 
 static void drawTimeAfterApply(bool forceDraw)
 {
     bool hasWeather = weatherIsAvailable();
+    bool needsBorderRedraw = false;
     
     // Only redraw if day actually changed
     if (rM.slate.lastDay != timeRTCLocal.Day || forceDraw) {
         rM.slate.lastDay = timeRTCLocal.Day;
-        
-        setFont(getFont(SLATE_FONT));
-        setTextSize(2);
         
         String day = String(timeRTCLocal.Day);
         if (day.length() == 1) day = "0" + day;
@@ -93,27 +136,56 @@ static void drawTimeAfterApply(bool forceDraw)
         String dateStr = day + "." + month + "." + year + " | " + dayName;
         
         int dateY = hasWeather ? SLATE_DATE_Y : SLATE_DATE_NO_WEATHER_Y;
-        dis->fillRect(SLATE_BORDER_WIDTH + 2, dateY - 20, 196 - 2*SLATE_BORDER_WIDTH, 25, GxEPD_WHITE);
+        
+        // Clear previous date with exact bounds
+        if (!forceDraw) {
+            String oldDay = String(rM.slate.lastDay);
+            if (oldDay.length() == 1) oldDay = "0" + oldDay;
+            String oldMonth = String(rM.slate.lastMonth + 1);
+            if (oldMonth.length() == 1) oldMonth = "0" + oldMonth;
+            String oldYear = String((rM.slate.lastMonth + 70) % 100);
+            if (oldYear.length() == 1) oldYear = "0" + oldYear;
+            String oldDayName = getLocalizedDayName(-1);
+            oldDayName.toUpperCase();
+            String oldDateStr = oldDay + "." + oldMonth + "." + oldYear + " | " + oldDayName;
+            clearTextArea(100, dateY, oldDateStr, 2, 6);
+            needsBorderRedraw = true;
+        }
+        
+        setFont(getFont(SLATE_FONT));
+        setTextSize(2);
         writeTextCenterReplaceBack(dateStr, dateY);
     }
     
     // Battery - only redraw if level changed
     if (rM.slate.lastBatteryLevel != rM.batteryPercantageWF || forceDraw) {
-        rM.slate.lastBatteryLevel = rM.batteryPercantageWF;
-        
-        String battBar = "[";
-        int segments = (rM.batteryPercantageWF + 10) / 20;
-        
+        String oldBattBar = "[";
+        int oldSegments = (rM.slate.lastBatteryLevel + 10) / 20;
         for(int i = 0; i < 5; i++) {
-            battBar += (i < segments) ? "=" : " ";
+            oldBattBar += (i < oldSegments) ? "=" : " ";
         }
-        battBar += "]";
+        oldBattBar += "]";
+        
+        String newBattBar = "[";
+        int newSegments = (rM.batteryPercantageWF + 10) / 20;
+        for(int i = 0; i < 5; i++) {
+            newBattBar += (i < newSegments) ? "=" : " ";
+        }
+        newBattBar += "]";
         
         int batteryY = hasWeather ? SLATE_BATTERY_Y : SLATE_BATTERY_NO_WEATHER_Y;
-        dis->fillRect(SLATE_BORDER_WIDTH + 2, batteryY - 20, 196 - 2*SLATE_BORDER_WIDTH, 25, GxEPD_WHITE);
+        
+        // Clear old battery display
+        if (!forceDraw) {
+            clearTextArea(100, batteryY, oldBattBar, 2, 6);
+            needsBorderRedraw = true;
+        }
+        
         setFont(getFont(SLATE_FONT));
         setTextSize(2);
-        writeTextCenterReplaceBack(battBar, batteryY);
+        writeTextCenterReplaceBack(newBattBar, batteryY);
+        
+        rM.slate.lastBatteryLevel = rM.batteryPercantageWF;
     }
     
 #if WEATHER_INFO
@@ -123,33 +195,54 @@ static void drawTimeAfterApply(bool forceDraw)
         OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
         
         // Temperature - using global formatTemperature function
-        dis->fillRect(SLATE_BORDER_WIDTH + 2, SLATE_TEMP_Y - 30, 196 - 2*SLATE_BORDER_WIDTH, 35, GxEPD_WHITE);
-        setFont(getFont(SLATE_FONT));
-        setTextSize(3);
-        String tempStr = formatTemperature(wData.temp);  // Use global function
-        writeTextCenterReplaceBack(tempStr, SLATE_TEMP_Y);
+        String tempStr = formatTemperature(wData.temp);
+        if (strcmp(rM.slate.lastTemp, tempStr.c_str()) != 0 || forceDraw) {
+            if (!forceDraw && strlen(rM.slate.lastTemp) > 0) {
+                clearTextArea(100, SLATE_TEMP_Y, String(rM.slate.lastTemp), 3, 6);
+                needsBorderRedraw = true;
+            }
+            
+            setFont(getFont(SLATE_FONT));
+            setTextSize(3);
+            writeTextCenterReplaceBack(tempStr, SLATE_TEMP_Y);
+            strncpy(rM.slate.lastTemp, tempStr.c_str(), sizeof(rM.slate.lastTemp) - 1);
+            rM.slate.lastTemp[sizeof(rM.slate.lastTemp) - 1] = '\0';
+        }
         
         // Weather condition
-        dis->fillRect(SLATE_BORDER_WIDTH + 2, SLATE_WEATHER_Y - 20, 196 - 2*SLATE_BORDER_WIDTH, 25, GxEPD_WHITE);
-        setTextSize(2);
         String condition = getLocalizedWeatherCondition(wData.weather_code);
-        writeTextCenterReplaceBack(condition, SLATE_WEATHER_Y);
+        if (strcmp(rM.slate.lastCondition, condition.c_str()) != 0 || forceDraw) {
+            if (!forceDraw && strlen(rM.slate.lastCondition) > 0) {
+                clearTextArea(100, SLATE_WEATHER_Y, String(rM.slate.lastCondition), 2, 6);
+                needsBorderRedraw = true;
+            }
+            
+            setFont(getFont(SLATE_FONT));
+            setTextSize(2);
+            writeTextCenterReplaceBack(condition, SLATE_WEATHER_Y);
+            strncpy(rM.slate.lastCondition, condition.c_str(), sizeof(rM.slate.lastCondition) - 1);
+            rM.slate.lastCondition[sizeof(rM.slate.lastCondition) - 1] = '\0';
+        }
     } else if (forceDraw) {
         // Clear weather areas on force draw
-        dis->fillRect(SLATE_BORDER_WIDTH + 2, SLATE_TEMP_Y - 30, 196 - 2*SLATE_BORDER_WIDTH, 35, GxEPD_WHITE);
-        dis->fillRect(SLATE_BORDER_WIDTH + 2, SLATE_WEATHER_Y - 20, 196 - 2*SLATE_BORDER_WIDTH, 25, GxEPD_WHITE);
+        clearTextArea(100, SLATE_TEMP_Y, "000°C", 3, 6);
+        clearTextArea(100, SLATE_WEATHER_Y, "NO WEATHER", 2, 6);
+        needsBorderRedraw = true;
     }
 #else
     if (forceDraw) {
         // Clear weather areas since no weather support
-        dis->fillRect(SLATE_BORDER_WIDTH + 2, SLATE_TEMP_Y - 30, 196 - 2*SLATE_BORDER_WIDTH, 35, GxEPD_WHITE);
-        dis->fillRect(SLATE_BORDER_WIDTH + 2, SLATE_WEATHER_Y - 20, 196 - 2*SLATE_BORDER_WIDTH, 25, GxEPD_WHITE);
+        clearTextArea(100, SLATE_TEMP_Y, "000°C", 3, 6);
+        clearTextArea(100, SLATE_WEATHER_Y, "NO WEATHER", 2, 6);
+        needsBorderRedraw = true;
     }
 #endif
     
-    // Always redraw border to ensure it's intact
-    dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
-    dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
+    // Always redraw border if any clearing happened or if forced
+    if (needsBorderRedraw || forceDraw) {
+        dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
+        dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
+    }
 }
 
 static void showTimeFull()
@@ -160,8 +253,8 @@ static void showTimeFull()
     bool hasWeather = weatherIsAvailable();
     int yPos = hasWeather ? SLATE_TIME_Y : SLATE_TIME_NO_WEATHER_Y;
     
-    // Clear time area - size 4 font needs more space
-    dis->fillRect(SLATE_BORDER_WIDTH + 2, yPos - 45, 196 - 2*SLATE_BORDER_WIDTH, 50, GxEPD_WHITE);
+    // Clear time area with exact bounds
+    clearTextArea(100, yPos, timeStr, 4, 6);
     
     setFont(getFont(SLATE_FONT));
     setTextSize(4);
@@ -170,11 +263,15 @@ static void showTimeFull()
 #if WATCHFACE_12H
     // Show AM/PM in 12-hour mode
     String ampmStr = getLocalizedAMPM(timeRTCLocal);
+    clearTextArea(SLATE_AMPM_X, SLATE_AMPM_Y, ampmStr, 1, 6);
     setFont(getFont(SLATE_AMPM_FONT));
     setTextSize(1);
-    dis->fillRect(SLATE_AMPM_X, SLATE_AMPM_Y - 10, 30, 20, GxEPD_WHITE);
     writeTextReplaceBack(ampmStr, SLATE_AMPM_X, SLATE_AMPM_Y);
 #endif
+
+    // Redraw border after clearing
+    dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
+    dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
 }
 
 static void initWatchface()
@@ -187,6 +284,8 @@ static void initWatchface()
     rM.slate.lastBatteryLevel = 255;
     rM.slate.lastDay = 255;
     rM.slate.lastMonth = 255;
+    strcpy(rM.slate.lastTemp, "");     // Initialize empty
+    strcpy(rM.slate.lastCondition, ""); // Initialize empty
     
     // Draw border
     dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
@@ -239,13 +338,17 @@ static void initWatchface()
         
         // Temperature - using global formatTemperature function
         setTextSize(3);
-        String tempStr = formatTemperature(wData.temp);  // Use global function
+        String tempStr = formatTemperature(wData.temp);
         writeTextCenterReplaceBack(tempStr, SLATE_TEMP_Y);
+        strncpy(rM.slate.lastTemp, tempStr.c_str(), sizeof(rM.slate.lastTemp) - 1);
+        rM.slate.lastTemp[sizeof(rM.slate.lastTemp) - 1] = '\0';
         
         // Weather condition
         setTextSize(2);
         String condition = getLocalizedWeatherCondition(wData.weather_code);
         writeTextCenterReplaceBack(condition, SLATE_WEATHER_Y);
+        strncpy(rM.slate.lastCondition, condition.c_str(), sizeof(rM.slate.lastCondition) - 1);
+        rM.slate.lastCondition[sizeof(rM.slate.lastCondition) - 1] = '\0';
     }
 #endif
 }
@@ -275,10 +378,14 @@ static void drawDay()
     String dateStr = day + "." + month + "." + year + " | " + dayName;
     
     int dateY = hasWeather ? SLATE_DATE_Y : SLATE_DATE_NO_WEATHER_Y;
-    dis->fillRect(SLATE_BORDER_WIDTH + 2, dateY - 20, 196 - 2*SLATE_BORDER_WIDTH, 25, GxEPD_WHITE);
+    clearTextArea(100, dateY, dateStr, 2, 6);
     writeTextCenterReplaceBack(dateStr, dateY);
     
     rM.slate.lastDay = timeRTCLocal.Day;
+    
+    // Redraw border after clearing
+    dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
+    dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
 }
 
 static void drawMonth()
@@ -306,10 +413,14 @@ static void drawMonth()
     String dateStr = day + "." + month + "." + year + " | " + dayName;
     
     int dateY = hasWeather ? SLATE_DATE_Y : SLATE_DATE_NO_WEATHER_Y;
-    dis->fillRect(SLATE_BORDER_WIDTH + 2, dateY - 30, 196 - 2*SLATE_BORDER_WIDTH, 30, GxEPD_WHITE);
+    clearTextArea(100, dateY, dateStr, 2, 6);
     writeTextCenterReplaceBack(dateStr, dateY);
     
     rM.slate.lastMonth = timeRTCLocal.Month;
+    
+    // Redraw border after clearing
+    dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
+    dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
 }
 
 static void drawBattery()
@@ -331,10 +442,14 @@ static void drawBattery()
     battBar += "]";
     
     int batteryY = hasWeather ? SLATE_BATTERY_Y : SLATE_BATTERY_NO_WEATHER_Y;
-    dis->fillRect(SLATE_BORDER_WIDTH + 2, batteryY - 30, 196 - 2*SLATE_BORDER_WIDTH, 30, GxEPD_WHITE);
+    clearTextArea(100, batteryY, battBar, 2, 6);
     writeTextCenterReplaceBack(battBar, batteryY);
     
     rM.slate.lastBatteryLevel = rM.batteryPercantageWF;
+    
+    // Redraw border after clearing
+    dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
+    dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
 }
 
 const watchfaceDefOne slateDef = {

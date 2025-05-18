@@ -42,7 +42,7 @@ String getInkFieldTimeString(tmElements_t timeEl) {
     else if (hour > 12) hour -= 12;
     
     String hourStr = String(hour);
-    if (hourStr.length() == 1) hourStr = " " + hourStr;
+    if (hourStr.length() == 1) hourStr = "0" + hourStr;  // Fixed: use "0" instead of " "
     
     String minuteStr = String(timeEl.Minute);
     if (minuteStr.length() == 1) minuteStr = "0" + minuteStr;
