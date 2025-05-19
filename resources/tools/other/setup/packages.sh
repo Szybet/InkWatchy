@@ -77,8 +77,8 @@ current_path=$(pwd)
 # cd $current_path
 
 cd ../../
-rm -rf .esp-idf/esp-idf
-ln -s $PWD/.platformio/packages/framework-espidf $PWD/.esp-idf/esp-idf
+rm -rf .root/.esp-idf/esp-idf
+ln -s $PWD/.root/.platformio/packages/framework-espidf $PWD/.root/.esp-idf/esp-idf
 cd $current_path
 
 # if [ ! -d "../../components/arduino/docs" ]; then

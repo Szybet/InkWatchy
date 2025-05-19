@@ -45,6 +45,9 @@ void initHardware()
     {
         debugLog("Watchy is starting!");
         debugLog("RTC memory used: " + String(sizeof(rtcMem)) + " bytes");
+#if DEBUG
+        debugLog("Does rust work?: " + String(rust_lib_test()));
+#endif
         firstWakeUpManage();
 #if RTC_MEMORY_BACKUP
         rtcMemBackupManage();

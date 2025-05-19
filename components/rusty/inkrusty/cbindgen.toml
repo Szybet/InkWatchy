@@ -1,0 +1,4 @@
+no_includes = true
+
+header = """#pragma once"""
+cpp_compat = true
