@@ -1,7 +1,7 @@
 #include "slate.h"
 #include "rtcMem.h"
 #include "slate_localization.h"
-#include "localization.h"  // For formatTemperature
+#include "localization.h"  // For formatTemperature and getLocalizedDayByIndex
 
 #if WATCHFACE_SLATE
 
@@ -70,7 +70,7 @@ static bool weatherIsAvailable() {
 
 static void drawTimeBeforeApply()
 {
-    // Use new 12-hour aware function
+    // Use localization functions
     String oldTimeStr = getLocalizedTimeString(rM.wFTime);
     String newTimeStr = getLocalizedTimeString(timeRTCLocal);
     
@@ -130,7 +130,8 @@ static void drawTimeAfterApply(bool forceDraw)
         String year = String((timeRTCLocal.Year + 70) % 100);
         if (year.length() == 1) year = "0" + year;
         
-        String dayName = getLocalizedDayName(0);
+        // Use localization.h function for day names
+        String dayName = getLocalizedDayByIndex(timeRTCLocal.Wday, 0);
         dayName.toUpperCase();
         
         String dateStr = day + "." + month + "." + year + " | " + dayName;
@@ -145,7 +146,7 @@ static void drawTimeAfterApply(bool forceDraw)
             if (oldMonth.length() == 1) oldMonth = "0" + oldMonth;
             String oldYear = String((rM.slate.lastMonth + 70) % 100);
             if (oldYear.length() == 1) oldYear = "0" + oldYear;
-            String oldDayName = getLocalizedDayName(-1);
+            String oldDayName = getLocalizedDayByIndex(timeRTCLocal.Wday, -1);
             oldDayName.toUpperCase();
             String oldDateStr = oldDay + "." + oldMonth + "." + oldYear + " | " + oldDayName;
             clearTextArea(100, dateY, oldDateStr, 2, 6);
@@ -247,7 +248,7 @@ static void drawTimeAfterApply(bool forceDraw)
 
 static void showTimeFull()
 {
-    // Use new 12-hour aware function
+    // Use localization function
     String timeStr = getLocalizedTimeString(timeRTCLocal);
     
     bool hasWeather = weatherIsAvailable();
@@ -309,7 +310,8 @@ static void initWatchface()
     String year = String((timeRTCLocal.Year + 70) % 100);
     if (year.length() == 1) year = "0" + year;
     
-    String dayName = getLocalizedDayName(0);
+    // Use localization.h function for day names
+    String dayName = getLocalizedDayByIndex(timeRTCLocal.Wday, 0);
     dayName.toUpperCase();
     
     String dateStr = day + "." + month + "." + year + " | " + dayName;
@@ -372,7 +374,8 @@ static void drawDay()
     String year = String((timeRTCLocal.Year + 70) % 100);
     if (year.length() == 1) year = "0" + year;
     
-    String dayName = getLocalizedDayName(0);
+    // Use localization.h function for day names
+    String dayName = getLocalizedDayByIndex(timeRTCLocal.Wday, 0);
     dayName.toUpperCase();
     
     String dateStr = day + "." + month + "." + year + " | " + dayName;
@@ -407,7 +410,8 @@ static void drawMonth()
     String year = String((timeRTCLocal.Year + 70) % 100);
     if (year.length() == 1) year = "0" + year;
     
-    String dayName = getLocalizedDayName(0);
+    // Use localization.h function for day names
+    String dayName = getLocalizedDayByIndex(timeRTCLocal.Wday, 0);
     dayName.toUpperCase();
     
     String dateStr = day + "." + month + "." + year + " | " + dayName;

@@ -242,6 +242,129 @@
 #endif
 
 // ==============================================================================
+// WEATHER SUBMENU TRANSLATIONS
+// ==============================================================================
+
+#if INKWATCHY_LANG == EN
+    // Weather submenu items
+    #define WEATHER_MENU_TEMPERATURE "Temperature"
+    #define WEATHER_MENU_PRESSURE "Pressure"
+    #define WEATHER_MENU_HUMIDITY "Humidity"
+    #define WEATHER_MENU_CONDITIONS "Weather conditions"
+    #define WEATHER_MENU_CLOUDINESS "Cloudiness"
+    #define WEATHER_MENU_WIND_SPEED "Wind speed"
+    #define WEATHER_MENU_WIND_GUSTS "Wind gusts"
+    #define WEATHER_MENU_VISIBILITY "Visibility"
+    #define WEATHER_MENU_PRECIPITATION "% of precipitation"
+    
+    // Weather menu titles and messages
+    #define WEATHER_SELECT_DATE "Select date"
+    #define WEATHER_STAT_TITLE "Weather stat"
+    #define WEATHER_NOT_AVAILABLE "Weather not available"
+    #define WEATHER_DATE_WRONG "Date is wrong?"
+    #define WEATHER_CORRUPTED "Weather corrupted"
+    
+    // Chart titles with time notation
+    #define WEATHER_CHART_TEMP "Temp / C (24h)"
+    #define WEATHER_CHART_PRESSURE "Pressure / hPa (24h)"
+    #define WEATHER_CHART_HUMIDITY "Humidity / % (24h)"
+    #define WEATHER_CHART_CLOUDS "Clouds / % (24h)"
+    #define WEATHER_CHART_WIND_SPEED "Wind speed / km/h (24h)"
+    #define WEATHER_CHART_WIND_GUSTS "Wind gusts / km/h (24h)"
+    #define WEATHER_CHART_VISIBILITY "Visib. / m (24h)"
+    #define WEATHER_CHART_PRECIPITATION "Prep. / % (24h)"
+    #define WEATHER_CONDITIONS_TITLE "Weather conditions (24h)"
+
+#elif INKWATCHY_LANG == PL
+    // Weather submenu items
+    #define WEATHER_MENU_TEMPERATURE "Temperatura"
+    #define WEATHER_MENU_PRESSURE "Cisnienie"
+    #define WEATHER_MENU_HUMIDITY "Wilgotnosc"
+    #define WEATHER_MENU_CONDITIONS "Warunki pogodowe"
+    #define WEATHER_MENU_CLOUDINESS "Zachmurzenie"
+    #define WEATHER_MENU_WIND_SPEED "Predkosc wiatru"
+    #define WEATHER_MENU_WIND_GUSTS "Porywy wiatru"
+    #define WEATHER_MENU_VISIBILITY "Widocznosc"
+    #define WEATHER_MENU_PRECIPITATION "% opadow"
+    
+    // Weather menu titles and messages
+    #define WEATHER_SELECT_DATE "Wybierz date"
+    #define WEATHER_STAT_TITLE "Statystyki pogody"
+    #define WEATHER_NOT_AVAILABLE "Pogoda niedostepna"
+    #define WEATHER_DATE_WRONG "Nieprawid. data?"
+    #define WEATHER_CORRUPTED "Pogoda uszkodzona"
+    
+    // Chart titles with time notation
+    #define WEATHER_CHART_TEMP "Temp / C (24h)"
+    #define WEATHER_CHART_PRESSURE "Cisnienie / hPa (24h)"
+    #define WEATHER_CHART_HUMIDITY "Wilgotnosc / % (24h)"
+    #define WEATHER_CHART_CLOUDS "Chmury / % (24h)"
+    #define WEATHER_CHART_WIND_SPEED "Pred. wiatru / km/h (24h)"
+    #define WEATHER_CHART_WIND_GUSTS "Porywy / km/h (24h)"
+    #define WEATHER_CHART_VISIBILITY "Widoczn. / m (24h)"
+    #define WEATHER_CHART_PRECIPITATION "Opady / % (24h)"
+    #define WEATHER_CONDITIONS_TITLE "Warunki pogodowe (24h)"
+
+#elif INKWATCHY_LANG == DE
+    // Weather submenu items
+    #define WEATHER_MENU_TEMPERATURE "Temperatur"
+    #define WEATHER_MENU_PRESSURE "Luftdruck"
+    #define WEATHER_MENU_HUMIDITY "Luftfeuchtigkeit"
+    #define WEATHER_MENU_CONDITIONS "Wetterbedingungen"
+    #define WEATHER_MENU_CLOUDINESS "Bewolkung"
+    #define WEATHER_MENU_WIND_SPEED "Windgeschwindigkeit"
+    #define WEATHER_MENU_WIND_GUSTS "Windboeen"
+    #define WEATHER_MENU_VISIBILITY "Sichtweite"
+    #define WEATHER_MENU_PRECIPITATION "% Niederschlag"
+    
+    // Weather menu titles and messages
+    #define WEATHER_SELECT_DATE "Datum wahlen"
+    #define WEATHER_STAT_TITLE "Wetter-Statistik"
+    #define WEATHER_NOT_AVAILABLE "Wetter nicht verfugbar"
+    #define WEATHER_DATE_WRONG "Falsches Datum?"
+    #define WEATHER_CORRUPTED "Wetter beschadigt"
+    
+    // Chart titles with time notation
+    #define WEATHER_CHART_TEMP "Temp / C (24h)"
+    #define WEATHER_CHART_PRESSURE "Luftdruck / hPa (24h)"
+    #define WEATHER_CHART_HUMIDITY "Feuchtigkeit / % (24h)"
+    #define WEATHER_CHART_CLOUDS "Wolken / % (24h)"
+    #define WEATHER_CHART_WIND_SPEED "Windgeschw. / km/h (24h)"
+    #define WEATHER_CHART_WIND_GUSTS "Windboeen / km/h (24h)"
+    #define WEATHER_CHART_VISIBILITY "Sichtw. / m (24h)"
+    #define WEATHER_CHART_PRECIPITATION "Nieders. / % (24h)"
+    #define WEATHER_CONDITIONS_TITLE "Wetterbedingungen (24h)"
+
+#else
+    // Default to English
+    #define WEATHER_MENU_TEMPERATURE "Temperature"
+    #define WEATHER_MENU_PRESSURE "Pressure"
+    #define WEATHER_MENU_HUMIDITY "Humidity"
+    #define WEATHER_MENU_CONDITIONS "Weather conditions"
+    #define WEATHER_MENU_CLOUDINESS "Cloudiness"
+    #define WEATHER_MENU_WIND_SPEED "Wind speed"
+    #define WEATHER_MENU_WIND_GUSTS "Wind gusts"
+    #define WEATHER_MENU_VISIBILITY "Visibility"
+    #define WEATHER_MENU_PRECIPITATION "% of precipitation"
+    
+    #define WEATHER_SELECT_DATE "Select date"
+    #define WEATHER_STAT_TITLE "Weather stat"
+    #define WEATHER_NOT_AVAILABLE "Weather not available"
+    #define WEATHER_DATE_WRONG "Date is wrong?"
+    #define WEATHER_CORRUPTED "Weather corrupted"
+    
+    #define WEATHER_CHART_TEMP "Temp / C (24h)"
+    #define WEATHER_CHART_PRESSURE "Pressure / hPa (24h)"
+    #define WEATHER_CHART_HUMIDITY "Humidity / % (24h)"
+    #define WEATHER_CHART_CLOUDS "Clouds / % (24h)"
+    #define WEATHER_CHART_WIND_SPEED "Wind speed / km/h (24h)"
+    #define WEATHER_CHART_WIND_GUSTS "Wind gusts / km/h (24h)"
+    #define WEATHER_CHART_VISIBILITY "Visib. / m (24h)"
+    #define WEATHER_CHART_PRECIPITATION "Prep. / % (24h)"
+    #define WEATHER_CONDITIONS_TITLE "Weather conditions (24h)"
+#endif
+
+// ==============================================================================
 // ADDITIONAL TRANSLATIONS (from original localization.h)
 // ==============================================================================
 
@@ -344,9 +467,10 @@
 // ==============================================================================
 
 // Helper macro for building day name arrays at compile time
+// Array starts with Sunday (index 0) to match standard Wday convention
 #define LANGUAGE_DAY_NAMES { \
-    WF_S_DAY_MON, WF_S_DAY_TUE, WF_S_DAY_WED, WF_S_DAY_THU, \
-    WF_S_DAY_FRI, WF_S_DAY_SAT, WF_S_DAY_SUN \
+    WF_S_DAY_SUN, WF_S_DAY_MON, WF_S_DAY_TUE, WF_S_DAY_WED, \
+    WF_S_DAY_THU, WF_S_DAY_FRI, WF_S_DAY_SAT \
 }
 
 // Helper function to get localized month name
@@ -365,7 +489,7 @@ inline String getLocalizedDayByIndex(int dayOfWeek, int offset = 0) {
     static const String dayNames[] = LANGUAGE_DAY_NAMES;
     
     // Apply offset and wrap around
-    int dayIndex = (dayOfWeek + offset + 7) % 7;
+    int dayIndex = (dayOfWeek + offset + 6) % 7;
     
     if (dayIndex >= 0 && dayIndex < 7) {
         return dayNames[dayIndex];

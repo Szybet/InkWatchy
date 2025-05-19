@@ -2,7 +2,7 @@
 #include "inkput.h"
 #include "inkWeather.h"
 #include "inkField_localization.h"
-#include "localization.h"  // For getMonthName and formatTemperature
+#include "localization.h"  // For getMonthName, formatTemperature, and getLocalizedDayByIndex
 #include "rtcMem.h"
 
 #if WATCHFACE_INKFIELD_SZYBET
@@ -50,7 +50,13 @@ String getInkFieldTimeString(tmElements_t timeEl) {
     return hourStr + ":" + minuteStr;
 #else
     // 24-hour format
-    return getHourMinute(timeEl);
+    String hourStr = String(timeEl.Hour);
+    if (hourStr.length() == 1) hourStr = "0" + hourStr;
+    
+    String minuteStr = String(timeEl.Minute);
+    if (minuteStr.length() == 1) minuteStr = "0" + minuteStr;
+    
+    return hourStr + ":" + minuteStr;
 #endif
 }
 
@@ -175,10 +181,11 @@ static void drawDay()
     writeTextReplaceBack(dayDate, DATE_CORD);
 
     setFont(DAY_NAME_FONT);
-    String day = getCurrentLocalizedDayName(0); // Current day
+    // Use localization.h function for day names
+    String day = getLocalizedDayByIndex(timeRTCLocal.Wday, 0); // Current day
     day.toUpperCase();
 
-    String previousDay = getCurrentLocalizedDayName(-1); // Previous day
+    String previousDay = getLocalizedDayByIndex(timeRTCLocal.Wday, -1); // Previous day
     previousDay.toUpperCase();
     uint16_t wDay;
     uint16_t hDay;
