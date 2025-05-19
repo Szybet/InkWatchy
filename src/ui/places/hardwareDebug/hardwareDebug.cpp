@@ -1,5 +1,6 @@
 #include "hardwareDebug.h"
 #include "rtcMem.h"
+#include "localization.h"
 
 #if DEBUG == 1 || DEBUG_MENUS == 1
 #define cursorX 0
@@ -20,15 +21,15 @@ String getRtcType()
     switch (rtcType)
     {
     case 0:
-        return "Unknown";
+        return DEBUG_RTC_UNKNOWN;
     case 1:
-        return "DS3231";
+        return DEBUG_RTC_DS3231;
     case 2:
-        return "PCF8563";
+        return DEBUG_RTC_PCF8563;
     case 3:
-        return "INTERNAL";
+        return DEBUG_RTC_INTERNAL;
     default:
-        return "Invalid Type";
+        return DEBUG_RTC_INVALID;
     }
 }
 
@@ -40,7 +41,7 @@ void initGeneralDebugDisplay()
     setFont(&FreeSansBold9pt7b);
     setTextSize(GeneralTextSize);
     dis->setCursor(cursorX, 1);
-    String menuName = "Debug Menu: Hardware";
+    String menuName = DEBUG_MENU_HARDWARE;
     getTextBounds(menuName, NULL, NULL, NULL, &h);
     if (containsBelowChar(menuName) == true)
     {
@@ -55,20 +56,20 @@ void initGeneralDebugDisplay()
     currentHeight = currentHeight + maxHeight;
     String RtcType = getRtcType();
 
-    centerText("Chip Model:", &currentHeight);
+    centerText(DEBUG_HW_CHIP_MODEL, &currentHeight);
     centerText(String(ESP.getChipModel()), &currentHeight);
-    writeLine("RTC type: " + String(RtcType), cursorX, &currentHeight);
+    writeLine(DEBUG_HW_RTC_TYPE + String(RtcType), cursorX, &currentHeight);
 
     currentHeight = currentHeight + 2;
 
-    writeLine("Used Heap KB: " + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024), cursorX, &currentHeight);
+    writeLine(DEBUG_HW_USED_HEAP + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024), cursorX, &currentHeight);
     memoryHeight = currentHeight - maxHeight;
 
 #if TEMP_CHECKS_ENABLED
-    writeLine("CPU temp: " + String(getTemp()), cursorX, &currentHeight);
+    writeLine(DEBUG_HW_CPU_TEMP + String(getTemp()), cursorX, &currentHeight);
     tempHeight = currentHeight - maxHeight;
 
-    writeLine("Init temp: " + String(rM.initialTemp), cursorX, &currentHeight);
+    writeLine(DEBUG_HW_INIT_TEMP + String(rM.initialTemp), cursorX, &currentHeight);
 #endif
 
     // Double the time before sleeping
@@ -86,7 +87,7 @@ void loopGeneralDebugDisplay()
         setFont(&FreeSansBold9pt7b);
         setTextSize(GeneralTextSize);
 
-        String usedHeapStr = "Used Heap KB: " + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024); // Replace with actual function or variable
+        String usedHeapStr = DEBUG_HW_USED_HEAP + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024); // Replace with actual function or variable
 
         getTextBounds(usedHeapStr, NULL, NULL, &usedHeapWidth, NULL);
         while (usedHeapWidth < usedHeapLenght)
@@ -104,7 +105,7 @@ void loopGeneralDebugDisplay()
     if (currentTemp != previousTempUi)
     {
         previousTempUi = currentTemp;
-        writeTextReplaceBack("CPU temp: " + String(currentTemp), cursorX, tempHeight);
+        writeTextReplaceBack(DEBUG_HW_CPU_TEMP + String(currentTemp), cursorX, tempHeight);
         dUChange = true;
     }
 #endif

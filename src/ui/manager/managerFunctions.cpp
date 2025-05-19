@@ -107,33 +107,33 @@ void initDebugMenu()
     {
         debugLog("Adding clock to menu");
         count = count + 1;
-        buttons[count] = {"Clock", &emptyImgPack, switchClockDebug};
+        buttons[count] = {DEBUG_ITEM_CLOCK, &emptyImgPack, switchClockDebug};
     }
     {
         debugLog("Adding general to menu");
         count = count + 1;
-        buttons[count] = {"Hardware", &emptyImgPack, switchGeneralDebug};
+        buttons[count] = {DEBUG_ITEM_HARDWARE, &emptyImgPack, switchGeneralDebug};
     }
     {
         debugLog("Adding battery to menu");
         count = count + 1;
-        buttons[count] = {"Battery", &emptyImgPack, switchBatteryDebug};
+        buttons[count] = {DEBUG_ITEM_BATTERY, &emptyImgPack, switchBatteryDebug};
     }
     {
         debugLog("Adding git to menu");
         count = count + 1;
-        buttons[count] = {"Git", &emptyImgPack, switchGitDebug};
+        buttons[count] = {DEBUG_ITEM_GIT, &emptyImgPack, switchGitDebug};
     }
     {
         debugLog("Adding acc to menu");
         count = count + 1;
-        buttons[count] = {"Acc", &emptyImgPack, switchAccDebug};
+        buttons[count] = {DEBUG_ITEM_ACC, &emptyImgPack, switchAccDebug};
     }
 #if FONT_MENU_ENABLED
     {
         debugLog("Adding font preview to menu");
         count = count + 1;
-        buttons[count] = {"Font preview", &emptyImgPack, switchFontsPreviewMenu};
+        buttons[count] = {DEBUG_ITEM_FONT_PREVIEW, &emptyImgPack, switchFontsPreviewMenu};
     }
 #endif
     count = count + 1;
@@ -254,5 +254,5 @@ void initpowerMenu()
         buttons[count] = {MENU_WAKE_UP_DIS, image, toggleWakeUpEntry};
     }
     count = count + 1;
-    initMenu(buttons, count, "Power menu", 1);
+    initMenu(buttons, count, MENU_POWER, 1);
 }

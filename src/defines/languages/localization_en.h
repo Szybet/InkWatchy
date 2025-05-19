@@ -109,3 +109,150 @@
 #define MENU_PARTY "Party"
 #define MENU_VIBRATIONS_DIS "Vibrations disabled"
 #define MENU_WAKE_UP_DIS "Wake up disabled"
+#define MENU_POWER "Power menu"
+
+// ==============================================================================
+// APP AND BOOK TRANSLATIONS
+// ==============================================================================
+
+// Book reader messages
+#define BOOK_NO_SELECTED "No book selected"
+
+// Calendar messages  
+#define CALENDAR_NO_DATA "No calendar data"
+
+// ==============================================================================
+// HEART MONITOR TRANSLATIONS
+// ==============================================================================
+
+#define HEART_MONITOR_TITLE "Heart rate monitor"
+#define HEART_MONITOR_NOT_MEDICAL "Not for medical use"
+#define HEART_MONITOR_PLACE_DEVICE "Place device on heart"
+#define HEART_MONITOR_CLICK_MENU "Then click menu"
+#define HEART_MONITOR_START_3S "It will start in 3s"
+#define HEART_MONITOR_TAKES_15S "It takes 15s"
+#define HEART_MONITOR_BREATHE_SLOWLY "Try to breath slowly"
+#define HEART_MONITOR_TIME_LEFT "Time left: "
+#define HEART_MONITOR_BPM "bpm"
+
+// ==============================================================================
+// VIDEO PLAYER TRANSLATIONS
+// ==============================================================================
+
+#define VIDEO_PLAYER_CHOOSE "Choose video"
+
+// ==============================================================================
+// WATCHFACE SELECTION TRANSLATIONS
+// ==============================================================================
+
+#define WATCHFACE_SELECT_TITLE "Select watchface"
+
+// ==============================================================================
+// TETRIS GAME TRANSLATIONS
+// ==============================================================================
+
+// Tetris UI labels
+#define TETRIS_LINE_CLEARS "Line clears:"
+#define TETRIS_SCORE "Score:"
+#define TETRIS_LEVEL "Level:"
+#define TETRIS_CONTROLS_UP "Up:Right"
+#define TETRIS_CONTROLS_DOWN "Down:Left"
+#define TETRIS_GAME_OVER "GAMEOVER"
+
+// ==============================================================================
+// DEBUG MENU TRANSLATIONS
+// ==============================================================================
+
+// Debug menu titles
+#define DEBUG_MENU_ACC "Debug Menu: Acc"
+#define DEBUG_MENU_BATTERY "Debug Menu: Batt"
+#define DEBUG_MENU_CLOCK "Debug Menu: Clock"
+#define DEBUG_MENU_GIT "Debug Menu: Git"
+#define DEBUG_MENU_HARDWARE "Debug Menu: Hardware"
+#define DEBUG_MENU_WIFI "Debug Menu: Wifi"
+
+// Debug menu items (short names for main debug menu)
+#define DEBUG_ITEM_CLOCK "Clock"
+#define DEBUG_ITEM_HARDWARE "Hardware"
+#define DEBUG_ITEM_BATTERY "Battery"
+#define DEBUG_ITEM_GIT "Git"
+#define DEBUG_ITEM_ACC "Acc"
+#define DEBUG_ITEM_FONT_PREVIEW "Font preview"
+
+// Accelerometer debug
+#define DEBUG_ACC_DISABLED "disabled"
+#define DEBUG_ACC_FAILED_INIT "Failed to init Acc"
+#define DEBUG_ACC_DAMAGED "Acc is damaged"
+#define DEBUG_ACC_WORKING "Acc is working"
+#define DEBUG_ACC_CLICK_3D "Click menu for 3D"
+#define DEBUG_ACC_X "Accel X: "
+#define DEBUG_ACC_Y "Accel Y: "
+#define DEBUG_ACC_Z "Accel Z: "
+#define DEBUG_ACC_PURE_X "Accel pure X: "
+#define DEBUG_ACC_PURE_Y "Accel pure Y: "
+#define DEBUG_ACC_PURE_Z "Accel pure Z: "
+#define DEBUG_ACC_STEPS "Steps: "
+#define DEBUG_ACC_IC "IC: "
+
+// Battery debug
+#define DEBUG_BATTERY_CURRENT_V "Current V: "
+#define DEBUG_BATTERY_MINIMUM_V "Minimum V: "
+#define DEBUG_BATTERY_MAXIMUM_V "Maximum V: "
+#define DEBUG_BATTERY_CRITICAL_V "Critical V: "
+#define DEBUG_BATTERY_LEVEL "Level %: "
+#define DEBUG_BATTERY_CHARGING "Charging: "
+#define DEBUG_BATTERY_FULLY "Fully: "
+
+// Clock debug
+#define DEBUG_CLOCK_DRIFT_SYNCS "Drift between synces:"
+#define DEBUG_CLOCK_NOT_AVAILABLE "Not available"
+#define DEBUG_CLOCK_LAST_SYNC "Last sync:"
+#define DEBUG_CLOCK_PREVIOUS_SYNC "Previous sync:"
+#define DEBUG_CLOCK_LAST_CHARGE "Last charge:"
+
+// Git debug
+#define DEBUG_GIT_COMMIT_HASH "Commit hash:"
+#define DEBUG_GIT_BRANCH "Branch:"
+#define DEBUG_GIT_BUILD_TIME "Build time:"
+
+// Hardware debug
+#define DEBUG_HW_CHIP_MODEL "Chip Model:"
+#define DEBUG_HW_RTC_TYPE "RTC type: "
+#define DEBUG_HW_USED_HEAP "Used Heap KB: "
+#define DEBUG_HW_CPU_TEMP "CPU temp: "
+#define DEBUG_HW_INIT_TEMP "Init temp: "
+
+// RTC Types
+#define DEBUG_RTC_UNKNOWN "Unknown"
+#define DEBUG_RTC_DS3231 "DS3231"
+#define DEBUG_RTC_PCF8563 "PCF8563"
+#define DEBUG_RTC_INTERNAL "INTERNAL"
+#define DEBUG_RTC_INVALID "Invalid Type"
+
+// WiFi debug
+#define DEBUG_WIFI_MAC_ADDRESS "MAC address:"
+#define DEBUG_WIFI_STATUS "Wifi status: "
+#define DEBUG_WIFI_IP "IP: "
+#define DEBUG_WIFI_SSID "SSID: "
+#define DEBUG_WIFI_SIGNAL "Wifi signal: "
+#define DEBUG_WIFI_CONNECTING "Connecting: "
+#define DEBUG_WIFI_ON "ON"
+#define DEBUG_WIFI_OFF "OFF"
+
+// Common debug terms
+#define DEBUG_COMMON_PERCENT "%"
+#define DEBUG_COMMON_COLON ": "
+
+// ==============================================================================
+// GAME AND APP TRANSLATIONS
+// ==============================================================================
+
+// Pong game
+#define PONG_YOU_LOST "You lost!"
+
+// Party app
+#define PARTY_MESSAGE "Party party"
+
+// Vault app
+#define VAULT_KEY_INCORRECT "Key is incorrect"
+#define VAULT_EMPTY "Vault is empty?"

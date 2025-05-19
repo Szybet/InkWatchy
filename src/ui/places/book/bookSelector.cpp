@@ -1,4 +1,5 @@
 #include "bookSelector.h"
+#include "localization.h"
 
 #if BOOK
 
@@ -45,7 +46,7 @@ void initBookSelector()
         file = root.openNextFile();
     }
     root.close();
-    initMenu(buttons, counter, "Select book", 1);
+    initMenu(buttons, counter, MENU_SELECT_BOOK, 1);
 }
 
 void selectedBook()

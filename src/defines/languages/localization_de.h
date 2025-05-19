@@ -64,11 +64,11 @@
 #define WEATHER_MENU_PRECIPITATION "% Niederschlag"
 
 // Weather menu titles and messages
-#define WEATHER_SELECT_DATE "Datum wahlen"
+#define WEATHER_SELECT_DATE "Datum waehlen"
 #define WEATHER_STAT_TITLE "Wetter-Statistik"
-#define WEATHER_NOT_AVAILABLE "Wetter nicht verfugbar"
+#define WEATHER_NOT_AVAILABLE "Wetter nicht verfuegbar"
 #define WEATHER_DATE_WRONG "Falsches Datum?"
-#define WEATHER_CORRUPTED "Wetter beschadigt"
+#define WEATHER_CORRUPTED "Wetter beschaedigt"
 
 // Chart titles with time notation
 #define WEATHER_CHART_TEMP "Temp / C (24h)"
@@ -85,9 +85,9 @@
 #define LANGUAGE_MONTH_NAMES {"JAN", "FEB", "MAR", "APR", "MAI", "JUN", "JUL", "AUG", "SEP", "OKT", "NOV", "DEZ"}
 
 // Menu translations
-#define MENU_MAIN "Hauptmenu"
+#define MENU_MAIN "Hauptmenue"
 #define MENU_CALENDAR "Kalender"
-#define MENU_SELECT_BOOK "Buch wahlen"
+#define MENU_SELECT_BOOK "Buch waehlen"
 #define MENU_ALARMS "Alarme"
 #define MENU_WEATHER "Wetter"
 #define MENU_SETTINGS "Einstellungen"
@@ -109,3 +109,150 @@
 #define MENU_PARTY "Party"
 #define MENU_VIBRATIONS_DIS "Vibration aus"
 #define MENU_WAKE_UP_DIS "Aufwachen aus"
+#define MENU_POWER "Energie-Menu"
+
+// ==============================================================================
+// APP AND BOOK TRANSLATIONS
+// ==============================================================================
+
+// Book reader messages
+#define BOOK_NO_SELECTED "Kein Buch ausgewaehlt"
+
+// Calendar messages  
+#define CALENDAR_NO_DATA "Keine Kalenderdaten"
+
+// ==============================================================================
+// HEART MONITOR TRANSLATIONS
+// ==============================================================================
+
+#define HEART_MONITOR_TITLE "Herzmonitor"
+#define HEART_MONITOR_NOT_MEDICAL "Nicht medizinisch nutzbar"
+#define HEART_MONITOR_PLACE_DEVICE "Geraet ans Herz legen"
+#define HEART_MONITOR_CLICK_MENU "Dann Menu druecken"
+#define HEART_MONITOR_START_3S "Start in 3 Sekunden"
+#define HEART_MONITOR_TAKES_15S "Dauert 15 Sekunden"
+#define HEART_MONITOR_BREATHE_SLOWLY "Ruhig atmen"
+#define HEART_MONITOR_TIME_LEFT "Verbleibend: "
+#define HEART_MONITOR_BPM "bpm"
+
+// ==============================================================================
+// VIDEO PLAYER TRANSLATIONS
+// ==============================================================================
+
+#define VIDEO_PLAYER_CHOOSE "Video waehlen"
+
+// ==============================================================================
+// WATCHFACE SELECTION TRANSLATIONS
+// ==============================================================================
+
+#define WATCHFACE_SELECT_TITLE "Zifferblatt waehlen"
+
+// ==============================================================================
+// TETRIS GAME TRANSLATIONS
+// ==============================================================================
+
+// Tetris UI labels
+#define TETRIS_LINE_CLEARS "Zeilen geraeumt:"
+#define TETRIS_SCORE "Punkte:"
+#define TETRIS_LEVEL "Level:"
+#define TETRIS_CONTROLS_UP "Hoch:Rechts"
+#define TETRIS_CONTROLS_DOWN "Runter:Links"
+#define TETRIS_GAME_OVER "SPIELENDE"
+
+// ==============================================================================
+// DEBUG MENU TRANSLATIONS
+// ==============================================================================
+
+// Debug menu titles
+#define DEBUG_MENU_ACC "Debug Menu: Beschl."
+#define DEBUG_MENU_BATTERY "Debug Menu: Akku"
+#define DEBUG_MENU_CLOCK "Debug Menu: Uhr"
+#define DEBUG_MENU_GIT "Debug Menu: Git"
+#define DEBUG_MENU_HARDWARE "Debug Menu: Hardware"
+#define DEBUG_MENU_WIFI "Debug Menu: WiFi"
+
+// Debug menu items (short names for main debug menu)
+#define DEBUG_ITEM_CLOCK "Uhr"
+#define DEBUG_ITEM_HARDWARE "Hardware"
+#define DEBUG_ITEM_BATTERY "Akku"
+#define DEBUG_ITEM_GIT "Git"
+#define DEBUG_ITEM_ACC "Beschl"
+#define DEBUG_ITEM_FONT_PREVIEW "Font Vorschau"
+
+// Accelerometer debug
+#define DEBUG_ACC_DISABLED "deaktiviert"
+#define DEBUG_ACC_FAILED_INIT "Acc Init fehler"
+#define DEBUG_ACC_DAMAGED "Acc defekt"
+#define DEBUG_ACC_WORKING "Acc OK"
+#define DEBUG_ACC_CLICK_3D "Menu fur 3D"
+#define DEBUG_ACC_X "Acc X: "
+#define DEBUG_ACC_Y "Acc Y: "
+#define DEBUG_ACC_Z "Acc Z: "
+#define DEBUG_ACC_PURE_X "Acc rein X: "
+#define DEBUG_ACC_PURE_Y "Acc rein Y: "
+#define DEBUG_ACC_PURE_Z "Acc rein Z: "
+#define DEBUG_ACC_STEPS "Schritte: "
+#define DEBUG_ACC_IC "IC: "
+
+// Battery debug
+#define DEBUG_BATTERY_CURRENT_V "Aktuell V: "
+#define DEBUG_BATTERY_MINIMUM_V "Minimum V: "
+#define DEBUG_BATTERY_MAXIMUM_V "Maximum V: "
+#define DEBUG_BATTERY_CRITICAL_V "Kritisch V: "
+#define DEBUG_BATTERY_LEVEL "Level %: "
+#define DEBUG_BATTERY_CHARGING "Laden: "
+#define DEBUG_BATTERY_FULLY "Voll: "
+
+// Clock debug
+#define DEBUG_CLOCK_DRIFT_SYNCS "Drift Synch.:"
+#define DEBUG_CLOCK_NOT_AVAILABLE "Nicht verfuegbar"
+#define DEBUG_CLOCK_LAST_SYNC "Letzte Synch.:"
+#define DEBUG_CLOCK_PREVIOUS_SYNC "Vorige Synch.:"
+#define DEBUG_CLOCK_LAST_CHARGE "Letzte Ladung:"
+
+// Git debug
+#define DEBUG_GIT_COMMIT_HASH "Commit-Hash:"
+#define DEBUG_GIT_BRANCH "Branch:"
+#define DEBUG_GIT_BUILD_TIME "Build-Zeit:"
+
+// Hardware debug
+#define DEBUG_HW_CHIP_MODEL "Chip-Modell:"
+#define DEBUG_HW_RTC_TYPE "RTC-Typ: "
+#define DEBUG_HW_USED_HEAP "Heap KB: "
+#define DEBUG_HW_CPU_TEMP "CPU-Temp: "
+#define DEBUG_HW_INIT_TEMP "Init-Temp: "
+
+// RTC Types
+#define DEBUG_RTC_UNKNOWN "Unbekannt"
+#define DEBUG_RTC_DS3231 "DS3231"
+#define DEBUG_RTC_PCF8563 "PCF8563"
+#define DEBUG_RTC_INTERNAL "INTERN"
+#define DEBUG_RTC_INVALID "Ungueltiger Typ"
+
+// WiFi debug
+#define DEBUG_WIFI_MAC_ADDRESS "MAC-Adresse:"
+#define DEBUG_WIFI_STATUS "WiFi-Status: "
+#define DEBUG_WIFI_IP "IP: "
+#define DEBUG_WIFI_SSID "SSID: "
+#define DEBUG_WIFI_SIGNAL "WiFi-Signal: "
+#define DEBUG_WIFI_CONNECTING "Verbinden: "
+#define DEBUG_WIFI_ON "AN"
+#define DEBUG_WIFI_OFF "AUS"
+
+// Common debug terms
+#define DEBUG_COMMON_PERCENT "%"
+#define DEBUG_COMMON_COLON ": "
+
+// ==============================================================================
+// GAME AND APP TRANSLATIONS
+// ==============================================================================
+
+// Pong game
+#define PONG_YOU_LOST "Du hast verloren!"
+
+// Party app
+#define PARTY_MESSAGE "Party Party"
+
+// Vault app
+#define VAULT_KEY_INCORRECT "Schluessel ist falsch"
+#define VAULT_EMPTY "Tresor ist leer?"
