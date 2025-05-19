@@ -1,6 +1,5 @@
 #include "watchfaceSel.h"
 #include "rtcMem.h"
-#include "localization.h"
 
 void watchfaceClicked() {
     for(int i = 0; i < WATCHFACE_COUNT; i++) {
@@ -25,5 +24,5 @@ void watchfaceSelInit() {
             c = c + 1;
         }
     }
-    initMenu(buttons, c, WATCHFACE_SELECT_TITLE, 1);
+    initMenu(buttons, c, WATCHFACE_MENU_SELECT, 1);
 }

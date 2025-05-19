@@ -1,6 +1,5 @@
 #include "heartMonitor.h"
 #include "rtcMem.h"
-#include "localization.h"
 
 #if HEART_MONITOR
 TaskHandle_t heartRateHandle;
@@ -201,11 +200,11 @@ void initHeartMonitor()
 
     writeLine(HEART_MONITOR_CLICK_MENU, 1, &currentHeight);
 
-    writeLine(HEART_MONITOR_START_3S, 1, &currentHeight);
+    writeLine(HEART_MONITOR_START_TIME, 1, &currentHeight);
 
-    writeLine(HEART_MONITOR_TAKES_15S, 1, &currentHeight);
+    writeLine(HEART_MONITOR_DURATION, 1, &currentHeight);
 
-    writeLine(HEART_MONITOR_BREATHE_SLOWLY, 1, &currentHeight);
+    writeLine(HEART_MONITOR_BREATHE, 1, &currentHeight);
     lastHeight = currentHeight + 30;
     disUp(true);
 
@@ -243,7 +242,7 @@ void loopHeartMonitor()
                 time = 15;
             }
             if(time > 1) {
-                writeTextCenterReplaceBack(HEART_MONITOR_TIME_LEFT + String(time), lastHeight);
+                writeTextCenterReplaceBack(String(HEART_MONITOR_TIME_LEFT) + String(time), lastHeight);
                 pineapple();
                 dUChange = true;    
             }
@@ -253,7 +252,7 @@ void loopHeartMonitor()
     {
         if (heartBeats != 0)
         {
-            writeTextCenterReplaceBack(String("= ") + String(heartBeats) + HEART_MONITOR_BPM, lastHeight);
+            writeTextCenterReplaceBack(String("= ") + String(heartBeats) + String(HEART_MONITOR_BPM_SUFFIX), lastHeight);
             pineapple();
             heartBeats = 0;
             dUChange = true;
