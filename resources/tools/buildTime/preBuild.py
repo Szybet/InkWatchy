@@ -24,3 +24,6 @@ env.Append(CXXFLAGS=["-Wno-overloaded-virtual"])
 
 script_path = 'resources/tools/buildTime/preBuild.sh'
 subprocess.run(['bash', script_path])
+
+script_path = 'components/rusty/build_rust.sh'
+subprocess.run(['bash', script_path], check=True)

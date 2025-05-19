@@ -62,13 +62,10 @@ RUN apt-get install -y \
     libgl1-mesa-dri \
     libxkbcommon-dev
 
-# Clean up apt cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
 # https://linuxdecoded.com/fix-unsupported-locale-setting-in-python-or-cli-alternative-for-dpkg-reconfigure-locales/
 RUN echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen; sudo locale-gen en_US.utf8
 
-RUN echo 'export PATH="$PATH:$HOME/.platformio/penv/bin"' | tee -a /root/.bashrc /root/.zshrc
+RUN echo 'export PATH="$PATH:$HOME/.root/.platformio/penv/bin"' | tee -a /root/.bashrc /root/.zshrc
 RUN echo 'export PYTHONPATH="$PYTHONPATH:/root/.platformio/packages/tool-esptoolpy"' | tee -a /root/.bashrc /root/.zshrc
 RUN git config --global --add safe.directory '*'
 
@@ -81,5 +78,5 @@ RUN mkdir -p /root/.espressif/
 # Platformio folder prerequisite for compliling Watchy firmware via Terminal/Docker
 ENV PATH=$PATH:/root/.platformio/penv/bin
 
-# Install rust for watchy-scom
-RUN curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
+# For rusty stuff
+RUN apt-get install -y gcc build-essential curl pkg-config

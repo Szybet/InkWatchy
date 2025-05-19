@@ -1,0 +1,7 @@
+[build]
+rustflags = [
+  "-C", "link-arg=-nostartfiles",
+]
+
+[unstable]
+build-std = ["core"]

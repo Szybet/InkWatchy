@@ -110,4 +110,6 @@ int WatchyGSR::GetWeatherTemperatureFeelsLike() { return GetWeatherTemperature()
 
 void WatchyGSR::InsertInitWatchStyle(uint8_t StyleID) {}
 
+void WatchyGSR::RegisterWatchFaces(){};
+
 #endif
