@@ -40,7 +40,7 @@ void initAlarmSelectorMenu()
         buttons[c] = {.text = alarmNameGet(&rM.alarms[i], i), .image = image, .function = alarmSelectedHandler};
     }
     c = c + 1;
-    initMenu(buttons, c, ALARM_MENU_MAIN, 1);
+    initMenu(buttons, c, "Alarms", 1);
 }
 
 void exitAlarmSelectorMenu() {
@@ -54,20 +54,20 @@ void initAlarmSetChooser() {
     entryMenu buttons[3];
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_BROWSE_ALARMS, .image = &emptyImgPack, .function = switchAlarmSelectorMenu};
+        buttons[c] = {.text = "Browse alarms", .image = &emptyImgPack, .function = switchAlarmSelectorMenu};
     }
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_SET, .image = &emptyImgPack, .function = switchAlarmQuick};
+        buttons[c] = {.text = "Quick alarms set", .image = &emptyImgPack, .function = switchAlarmQuick};
     }
 #if POMODORO_ALARM
     {
         c = c + 1;
-        buttons[c] = {.text = POMODORO_MENU_TITLE, .image = getImg("pomodoro/tomato"), .function = switchPomodoroMenu};
+        buttons[c] = {.text = "Pomodoro", .image = getImg("pomodoro/tomato"), .function = switchPomodoroMenu};
     }
 #endif
     c = c + 1;
-    initMenu(buttons, c, ALARM_MENU_MAIN, 1);
+    initMenu(buttons, c, "Alarms", 1);
 }
 
 #endif

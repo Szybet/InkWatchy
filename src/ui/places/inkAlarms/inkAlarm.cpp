@@ -175,36 +175,36 @@ String alarmGetDays(inkAlarm *theAlarm)
 {
     String days = "";
     if(theAlarm->days == 127) {
-        days = ALARM_ALL_DAYS;
+        days = "All days";
         return days;
     }
     if (getBit(theAlarm->days, 0) == true)
     {
-        days = days + ALARM_DAY_MON_SHORT + " ";
+        days = days + "Mo ";
     }
     if (getBit(theAlarm->days, 1) == true)
     {
-        days = days + ALARM_DAY_TUE_SHORT + " ";
+        days = days + "Tu ";
     }
     if (getBit(theAlarm->days, 2) == true)
     {
-        days = days + ALARM_DAY_WED_SHORT + " ";
+        days = days + "We ";
     }
     if (getBit(theAlarm->days, 3) == true)
     {
-        days = days + ALARM_DAY_THU_SHORT + " ";
+        days = days + "Th ";
     }
     if (getBit(theAlarm->days, 4) == true)
     {
-        days = days + ALARM_DAY_FRI_SHORT + " ";
+        days = days + "Fr ";
     }
     if (getBit(theAlarm->days, 5) == true)
     {
-        days = days + ALARM_DAY_SAT_SHORT + " ";
+        days = days + "Sa ";
     }
     if (getBit(theAlarm->days, 6) == true)
     {
-        days = days + ALARM_DAY_SUN_SHORT + " ";
+        days = days + "Su ";
     }
     if (days.length() > 1)
     {
@@ -212,7 +212,7 @@ String alarmGetDays(inkAlarm *theAlarm)
     }
     else
     {
-        days = ALARM_NO_DAYS;
+        days = "No days";
     }
     return days;
 }
@@ -223,23 +223,23 @@ String alarmNameGet(inkAlarm *theAlarm, int id)
     alarmName = alarmGetTime(theAlarm);
     if (theAlarm->onlyOnce == true)
     {
-        alarmName = alarmName + ALARM_SUFFIX_ONCE;
+        alarmName = alarmName + ", once";
     }
     else
     {
-        alarmName = alarmName + ALARM_SEPARATOR + alarmGetDays(theAlarm);
+        alarmName = alarmName + ", " + alarmGetDays(theAlarm);
     }
 
     if(theAlarm->requireWifi == true) {
-        alarmName = alarmName + ALARM_SUFFIX_WIFI;
+        alarmName = alarmName + ", wifi";
     }
 
     if(id != -1) {
         if(id == ALARM_QUICK_ID) {
-            alarmName = alarmName + ALARM_SUFFIX_QUICK;
+            alarmName = alarmName + ", quick";
         }
         if(id == ALARM_POMODORO_ID) {
-            alarmName = alarmName + ALARM_SUFFIX_POMODORO;
+            alarmName = alarmName + ", pomodoro";
         }
     }
 

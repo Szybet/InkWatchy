@@ -107,46 +107,46 @@ void initAlarmQuickSet()
     entryMenu buttons[10];
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_5MIN, .image = &emptyImgPack, .function = sAQ5};
+        buttons[c] = {.text = "5 minutes", .image = &emptyImgPack, .function = sAQ5};
     }
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_15MIN, .image = &emptyImgPack, .function = sAQ15};
+        buttons[c] = {.text = "15 minutes", .image = &emptyImgPack, .function = sAQ15};
     }
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_30MIN, .image = &emptyImgPack, .function = sAQ30};
+        buttons[c] = {.text = "30 minutes", .image = &emptyImgPack, .function = sAQ30};
     }
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_1HOUR, .image = &emptyImgPack, .function = sAQ60};
+        buttons[c] = {.text = "1 hour", .image = &emptyImgPack, .function = sAQ60};
     }
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_1_5HOUR, .image = &emptyImgPack, .function = sAQ90};
+        buttons[c] = {.text = "1.5 hours", .image = &emptyImgPack, .function = sAQ90};
     }
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_2HOUR, .image = &emptyImgPack, .function = sAQ120};
+        buttons[c] = {.text = "2 hours", .image = &emptyImgPack, .function = sAQ120};
     }
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_3HOUR, .image = &emptyImgPack, .function = sAQ180};
+        buttons[c] = {.text = "3 hours", .image = &emptyImgPack, .function = sAQ180};
     }
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_6HOUR, .image = &emptyImgPack, .function = sAQ360};
+        buttons[c] = {.text = "6 hours", .image = &emptyImgPack, .function = sAQ360};
     }
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_8HOUR, .image = &emptyImgPack, .function = sAQ480};
+        buttons[c] = {.text = "8 hours", .image = &emptyImgPack, .function = sAQ480};
     }
     {
         c = c + 1;
-        buttons[c] = {.text = ALARM_QUICK_24HOUR, .image = &emptyImgPack, .function = sAQ1440};
+        buttons[c] = {.text = "24 hours", .image = &emptyImgPack, .function = sAQ1440};
     }
     c = c + 1;
-    initMenu(buttons, c, ALARM_MENU_QUICK_ALARM, 1);
+    initMenu(buttons, c, "Quick alarm", 1);
 }
 
 #endif

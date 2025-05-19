@@ -44,48 +44,49 @@ void initAlarmEditMenu()
         count = count + 1;
         if (choosedAlarm->enabled == true)
         {
-            buttons[count] = {ALARM_ENABLED, getImg("accept"), enabledAlarmChange};
+            buttons[count] = {"Enabled", getImg("accept"), enabledAlarmChange};
         }
         else
         {
-            buttons[count] = {ALARM_DISABLED, getImg("cross"), enabledAlarmChange};
+            buttons[count] = {"Disabled", getImg("cross"), enabledAlarmChange};
         }
     }
     {
         count = count + 1;
-        buttons[count] = {String(ALARM_TIME_PREFIX) + alarmGetTime(choosedAlarm), &emptyImgPack, switchSetTimeHandler};
+
+        buttons[count] = {"Time: " + alarmGetTime(choosedAlarm), &emptyImgPack, switchSetTimeHandler};
     }
     {
         count = count + 1;
         if (choosedAlarm->onlyOnce == true)
         {
-            buttons[count] = {ALARM_ONE_TIME, getImg("accept"), oneTimeAlarmChange};
+            buttons[count] = {"One time alarm", getImg("accept"), oneTimeAlarmChange};
         }
         else
         {
-            buttons[count] = {ALARM_ONE_TIME, getImg("cross"), oneTimeAlarmChange};
+            buttons[count] = {"One time alarm", getImg("cross"), oneTimeAlarmChange};
         }
     }
     {
         if (choosedAlarm->onlyOnce == false)
         {
             count = count + 1;
-            buttons[count] = {String(ALARM_DAYS_PREFIX) + alarmGetDays(choosedAlarm), &emptyImgPack, switchAlarmEditDays};
+            buttons[count] = {"Days: " + alarmGetDays(choosedAlarm), &emptyImgPack, switchAlarmEditDays};
         }
     }
     {
         count = count + 1;
         if (choosedAlarm->requireWifi == true)
         {
-            buttons[count] = {ALARM_REQUIRE_WIFI, getImg("accept"), wifiAlarmChange};
+            buttons[count] = {"Require wifi", getImg("accept"), wifiAlarmChange};
         }
         else
         {
-            buttons[count] = {ALARM_REQUIRE_WIFI, getImg("cross"), wifiAlarmChange};
+            buttons[count] = {"Require wifi", getImg("cross"), wifiAlarmChange};
         }
     }
     count = count + 1;
-    initMenu(buttons, count, ALARM_MENU_EDIT_ALARM, 1);
+    initMenu(buttons, count, "Edit alarm", 1);
 }
 
 void exitAlarmEditMenu() {

@@ -43,24 +43,6 @@
 #define WF_S_DAY_SAT "SA"
 #define WF_S_DAY_SUN "SO"
 
-// Day names (full) for alarm editing
-#define ALARM_DAY_MONDAY "Montag"
-#define ALARM_DAY_TUESDAY "Dienstag"
-#define ALARM_DAY_WEDNESDAY "Mittwoch"
-#define ALARM_DAY_THURSDAY "Donnerstag"
-#define ALARM_DAY_FRIDAY "Freitag"
-#define ALARM_DAY_SATURDAY "Samstag"
-#define ALARM_DAY_SUNDAY "Sonntag"
-
-// Day abbreviations for alarm display
-#define ALARM_DAY_MON_SHORT "Mo"
-#define ALARM_DAY_TUE_SHORT "Di"
-#define ALARM_DAY_WED_SHORT "Mi"
-#define ALARM_DAY_THU_SHORT "Do"
-#define ALARM_DAY_FRI_SHORT "Fr"
-#define ALARM_DAY_SAT_SHORT "Sa"
-#define ALARM_DAY_SUN_SHORT "So"
-
 // Error messages
 #define WF_T_ERROR "FEHLER"      // Taychron
 #define WF_I_ERROR "FEHLER"      // InkField
@@ -130,79 +112,6 @@
 #define MENU_POWER "Energie-Menu"
 
 // ==============================================================================
-// ALARM TRANSLATIONS
-// ==============================================================================
-
-// Alarm menu titles
-#define ALARM_MENU_MAIN "Alarme"
-#define ALARM_MENU_EDIT_DAYS "Tage bearbeiten"
-#define ALARM_MENU_EDIT_ALARM "Alarm bearbeiten"
-#define ALARM_MENU_QUICK_ALARM "Schnellalarm"
-
-// Alarm submenu items
-#define ALARM_BROWSE_ALARMS "Alarme durchsuchen"
-#define ALARM_QUICK_SET "Schnellalarme"
-
-// Alarm edit menu items
-#define ALARM_ENABLED "Aktiviert"
-#define ALARM_DISABLED "Deaktiviert"
-#define ALARM_TIME_PREFIX "Zeit: "
-#define ALARM_ONE_TIME "Einmalig"
-#define ALARM_DAYS_PREFIX "Tage: "
-#define ALARM_REQUIRE_WIFI "WiFi erforderlich"
-
-// Quick alarm time options
-#define ALARM_QUICK_5MIN "5 Minuten"
-#define ALARM_QUICK_15MIN "15 Minuten"
-#define ALARM_QUICK_30MIN "30 Minuten"
-#define ALARM_QUICK_1HOUR "1 Stunde"
-#define ALARM_QUICK_1_5HOUR "1,5 Stunden"
-#define ALARM_QUICK_2HOUR "2 Stunden"
-#define ALARM_QUICK_3HOUR "3 Stunden"
-#define ALARM_QUICK_6HOUR "6 Stunden"
-#define ALARM_QUICK_8HOUR "8 Stunden"
-#define ALARM_QUICK_24HOUR "24 Stunden"
-
-// Alarm display texts
-#define ALARM_ALL_DAYS "Alle Tage"
-#define ALARM_NO_DAYS "Keine Tage"
-#define ALARM_SUFFIX_ONCE ", einmalig"
-#define ALARM_SUFFIX_WIFI ", wifi"
-#define ALARM_SUFFIX_QUICK ", schnell"
-#define ALARM_SUFFIX_POMODORO ", pomodoro"
-#define ALARM_SEPARATOR ", "
-
-// ==============================================================================
-// POMODORO TRANSLATIONS
-// ==============================================================================
-
-// Pomodoro menu
-#define POMODORO_MENU_TITLE "Pomodoro"
-#define POMODORO_STATUS_PREFIX "Status: "
-#define POMODORO_STATUS_RUNNING "laeuft, "
-#define POMODORO_STATUS_WORKING "arbeitet, "
-#define POMODORO_STATUS_PAUSE "pause, "
-#define POMODORO_STATUS_ITER "iteration: "
-#define POMODORO_STATUS_DISABLED "deaktiviert"
-#define POMODORO_RESET_TURN_OFF "Reset & Ausschalten"
-#define POMODORO_START "Start"
-
-// ==============================================================================
-// HEART MONITOR TRANSLATIONS
-// ==============================================================================
-
-// Heart monitor menu
-#define HEART_MONITOR_TITLE "Herzmonitor"
-#define HEART_MONITOR_NOT_MEDICAL "Nicht medizinisch nutzbar"
-#define HEART_MONITOR_PLACE_DEVICE "Geraet ans Herz legen"
-#define HEART_MONITOR_CLICK_MENU "Dann Menu druecken"
-#define HEART_MONITOR_START_TIME "Start in 3 Sekunden"
-#define HEART_MONITOR_DURATION "Dauert 15 Sekunden"
-#define HEART_MONITOR_BREATHE "Ruhig atmen"
-#define HEART_MONITOR_TIME_LEFT "Verbleibend: "
-#define HEART_MONITOR_BPM_SUFFIX "bpm"
-
-// ==============================================================================
 // APP AND BOOK TRANSLATIONS
 // ==============================================================================
 
@@ -211,6 +120,32 @@
 
 // Calendar messages  
 #define CALENDAR_NO_DATA "Keine Kalenderdaten"
+
+// ==============================================================================
+// HEART MONITOR TRANSLATIONS
+// ==============================================================================
+
+#define HEART_MONITOR_TITLE "Herzmonitor"
+#define HEART_MONITOR_NOT_MEDICAL "Nicht medizinisch nutzbar"
+#define HEART_MONITOR_PLACE_DEVICE "Geraet ans Herz legen"
+#define HEART_MONITOR_CLICK_MENU "Dann Menu druecken"
+#define HEART_MONITOR_START_3S "Start in 3 Sekunden"
+#define HEART_MONITOR_TAKES_15S "Dauert 15 Sekunden"
+#define HEART_MONITOR_BREATHE_SLOWLY "Ruhig atmen"
+#define HEART_MONITOR_TIME_LEFT "Verbleibend: "
+#define HEART_MONITOR_BPM "bpm"
+
+// ==============================================================================
+// VIDEO PLAYER TRANSLATIONS
+// ==============================================================================
+
+#define VIDEO_PLAYER_CHOOSE "Video waehlen"
+
+// ==============================================================================
+// WATCHFACE SELECTION TRANSLATIONS
+// ==============================================================================
+
+#define WATCHFACE_SELECT_TITLE "Zifferblatt waehlen"
 
 // ==============================================================================
 // TETRIS GAME TRANSLATIONS
@@ -321,17 +256,3 @@
 // Vault app
 #define VAULT_KEY_INCORRECT "Schluessel ist falsch"
 #define VAULT_EMPTY "Tresor ist leer?"
-
-// ==============================================================================
-// VIDEO PLAYER TRANSLATIONS
-// ==============================================================================
-
-// Video menu
-#define VIDEO_MENU_CHOOSE "Video waehlen"
-
-// ==============================================================================
-// WATCHFACE SELECTION TRANSLATIONS
-// ==============================================================================
-
-// Watchface selection menu
-#define WATCHFACE_MENU_SELECT "Zifferblatt waehlen"
