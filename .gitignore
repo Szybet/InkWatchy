@@ -25,14 +25,18 @@ dependencies.lock
 managed_components
 components/arduino
 
-.platformio/*
-!.platformio/.gitkeep
+.root/.platformio/*
+!.root/.platformio/.gitkeep
 
-.esp-idf/esp-idf
-.esp-idf/espressif/*
+.root/.esp-idf/esp-idf
+.root/.esp-idf/espressif/*
+!.root/.esp-idf/.gitkeep
+!.root/.esp-idf/espressif/.gitkeep
 
-!.esp-idf/.gitkeep
-!.esp-idf/espressif/.gitkeep
+.root/.cargo/*
+!.root/.cargo/.gitkeep
+.root/.rustup/*
+!.root/.rustup/.gitkeep
 
 trash/
 build/
@@ -40,3 +44,7 @@ build/
 resources/personal/oldConfigs/*
 
 src/idf_component.yml*
+
+components/rusty/lib
+components/rusty/include
+target/

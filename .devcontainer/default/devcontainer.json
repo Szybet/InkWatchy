@@ -11,8 +11,10 @@
     },
 	"mounts": [
 		"source=/dev/,target=/dev/,type=bind,consistency=consistent",
-        "source=${localWorkspaceFolder}/.platformio/,target=/root/.platformio/,type=bind,consistency=consistent",
-        "source=${localWorkspaceFolder}/.esp-idf/espressif/,target=/root/.espressif/,type=bind,consistency=consistent"
+        "source=${localWorkspaceFolder}/.root/.platformio/,target=/root/.platformio/,type=bind,consistency=consistent",
+        "source=${localWorkspaceFolder}/.root/.esp-idf/espressif/,target=/root/.espressif/,type=bind,consistency=consistent",
+        "source=${localWorkspaceFolder}/.root/.cargo/,target=/root/.cargo/,type=bind,consistency=consistent",
+        "source=${localWorkspaceFolder}/.root/.rustup/,target=/root/.rustup/,type=bind,consistency=consistent"
 	],
 	"privileged": true
 }

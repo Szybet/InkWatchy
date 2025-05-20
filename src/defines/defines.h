@@ -48,6 +48,7 @@
 #if (DEBUG && SCREENSHOT_ENDPOINT)
 #include <ESPAsyncWebServer.h>
 #endif
+#include "rusty.h"
 
 // Order important
 #include "macros.h"
@@ -80,6 +81,7 @@ static const WiFiCred* wifiCredStatic[] = {
 #endif
 
 #include "../functions.h"
+#include "../other/rustExport/rEGeneric.h"
 
 // Hardware
 #include "../hardware/hardware.h"

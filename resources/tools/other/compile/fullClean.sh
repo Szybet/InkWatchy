@@ -1,11 +1,13 @@
 #!/bin/bash
 
+rm -rf /root/.cargo/bin/cargo # To restart rust installation
 rm -rf .pio/ dependencies.lock sdkconfig.* 
-rm -rf .platformio/.cache .platformio/platforms .platformio/packages/framework-e*
-rm -rf .esp-idf/esp-idf/*
-rm -rf .esp-idf/espressif/*
-touch .esp-idf/espressif/.gitkeep
-rm -rf managed_components components
+rm -rf .root/.platformio/.cache .root/.platformio/platforms .root/.platformio/packages/framework-e*
+# rm -rf .root/.platformio/packages/tl-install # Fixes softlock if bad install happens, or does it?
+rm -rf .root/.esp-idf/esp-idf/*
+rm -rf .root/.esp-idf/espressif/*
+touch .root/.esp-idf/espressif/.gitkeep
+rm -rf managed_components
 rm -rf resources/tools/other/in/*
 rm -rf resources/tools/other/out/*
 rm -rf resources/tools/fs/in/*

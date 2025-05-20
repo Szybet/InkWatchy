@@ -16,6 +16,12 @@ cd images/
 ./convertImages.sh
 cd ../
 
+# Need to make sure we have fontconvert installed
+cd ../../
+# TODO: Install only for the selected env (preserve disk space)
+pio pkg install
+cd resources/tools
+
 echo -e ''
 echo "Processing fonts"
 cd fonts/

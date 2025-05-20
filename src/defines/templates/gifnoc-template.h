@@ -329,7 +329,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define I2C_SCANNER 0                          // For yatchy testing
 #define DUMP_LOOP_ACC 0 // Needs ACC
 #define DUMP_LOOP_ACC_DIFF 0 // Only shows diff from previous reading, experimental, look up the code
-#define SCREENSHOT_ENDPOINT 1
+#define SCREENSHOT_ENDPOINT 0
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20
