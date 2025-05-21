@@ -14,9 +14,9 @@ void setAlarmQuick(int minutes, int id)
     int secondsNow = timeRTCLocal.Second;
 
 // one minute alarms should work betterly this way
-    if (secondsNow > 0) {
-        minutesNow += 1;
-    }
+//    if (secondsNow > 0) {
+//        minutesNow += 1;
+//    }
 
     minutesNow += minutes;
 
@@ -63,10 +63,13 @@ void setAlarmQuick(int minutes, int id)
     hourNow     = hourNow % 24;                                                  \
     char timeBuf[6];                                                             \
     snprintf(timeBuf, sizeof(timeBuf), "%02d:%02d", hourNow, minutesNow);        \
-    String _msg1 = String("Alarm set for ") + label + String(".");              \
-    String _msg2 = String("Will ring at ") + timeBuf + String(".");              \
-    String msgArray[] = { _msg1, _msg2 };                                        \
-    textPage("Quick Alarm", msgArray, 2, FONT);                                  \
+    String _msg1 = String("Alarm set for:");              \
+    String _msg2 = label + String(".");              \
+    String _msg3 = String(" ");              \
+    String _msg4 = String("Will ring at:") ;              \
+    String _msg5 = timeBuf + String(".");              \
+    String msgArray[] = { _msg1, _msg2, _msg3, _msg4, _msg5 };                                        \
+    textPage("Quick Alarm", msgArray, 5, FONT);                                  \
     setAlarmQuick(min, ALARM_QUICK_ID);                                      \
   }                                                                           \
 
