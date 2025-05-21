@@ -24,6 +24,14 @@ use serde::{Deserialize, Serialize};
 use regex::Regex;
 use rrule::{RRule, RRuleSet, Tz}; // trying this shit out
 
+// Helper function to get the local timezone from config.h
+fn get_local_timezone() -> ChronoTz {
+    let timezone_str = option_env!("TIMEZONE_OLSON").unwrap_or("Europe/Bratislava");
+    let local_tz: ChronoTz = timezone_str.parse().unwrap_or(ChronoTz::Europe__Bratislava);
+    debug!("Using timezone from config.h: {}", timezone_str);
+    local_tz
+}
+
 #[derive(Parser, Debug, Clone)]
 #[command(author, version, about)]
 pub struct Args {
@@ -159,7 +167,9 @@ pub fn parse_time(str: String, tzid: Option<&str>) -> DateTime<Utc> {
                 if str.ends_with('Z') {
                     Utc.from_utc_datetime(&naive)
                 } else {
-                    let local_tz = ChronoTz::Europe__Bratislava; // TODO make this reconfigurable from config.h
+                    // Get timezone from config.h via build.rs environment variable
+                    let local_tz = get_local_timezone();
+                    
                     local_tz
                         .from_local_datetime(&naive)
                         .single()
@@ -170,7 +180,6 @@ pub fn parse_time(str: String, tzid: Option<&str>) -> DateTime<Utc> {
         }
     } else {
         let naive_date = NaiveDate::parse_from_str(&str, "%Y%m%d").expect("Failed to parse date");
-        //        TimeZone::from_utc_datetime(naive_date.and_hms(0, 0, 0), Utc)
         Utc.from_utc_datetime(&naive_date.and_hms_opt(0, 0, 0).unwrap())
     }
 }
@@ -215,7 +224,11 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
                         });
                         let dt = parse_time(value, tzid);
                         dtstart = Some(dt);
-                        evt.start_time = dt.timestamp() as u64;
+                        
+                        // Convert UTC timestamp to local time for display
+                        let local_tz = get_local_timezone();
+                        let local_dt = dt.with_timezone(&local_tz);
+                        evt.start_time = local_dt.timestamp() as u64;
                     }
                 }
                 "DTEND" => {
@@ -229,7 +242,11 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
                         });
                         let dt = parse_time(value, tzid);
                         dtend = Some(dt);
-                        evt.end_time = dt.timestamp() as u64;
+                        
+                        // Convert UTC timestamp to local time for display
+                        let local_tz = get_local_timezone();
+                        let local_dt = dt.with_timezone(&local_tz);
+                        evt.end_time = local_dt.timestamp() as u64;
                     }
                 }
                 "RRULE" => {
@@ -300,13 +317,17 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
             for occurrence in &result.dates {
                 let occurrence_start = *occurrence;
                 let occurrence_end = occurrence_start + duration;
-                let day = occurrence_start.format("%d.%m.%Y").to_string();
+                
+                // Convert to local time for display and storage
+                let local_tz = get_local_timezone();
+                let local_start = occurrence_start.with_timezone(&local_tz); 
+                let day = local_start.format("%d.%m.%Y").to_string();
 
                 if occurrence_start.timestamp() as u64 >= cutoff {
                     let new_evt = Event {
                         name: evt.name.clone(),
-                        start_time: occurrence_start.timestamp() as u64,
-                        end_time: occurrence_end.timestamp() as u64,
+                        start_time: local_start.timestamp() as u64,  // Store local timestamp
+                        end_time: (local_start + duration).timestamp() as u64, // Store local timestamp
                         description: evt.description.clone(),
                         status: evt.status.clone(),
                     };
@@ -321,11 +342,36 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
         } else {
             // Handle non-recurring events
             let day = dtstart
-                .map(|dt| dt.format("%d.%m.%Y").to_string())
+                .map(|dt| {
+                    // Convert to local time for display
+                    let local_tz = get_local_timezone();
+                    dt.with_timezone(&local_tz).format("%d.%m.%Y").to_string()
+                })
                 .unwrap_or_default();
             if !day.is_empty() && evt.start_time >= cutoff {
-                events.entry(day).or_insert_with(Vec::new).push(evt.clone());
-                days.push(evt.start_time);
+                // Convert the UTC timestamp to local time
+                let local_tz = get_local_timezone();
+                
+                // Convert the event timestamps to local time
+                let start_dt = DateTime::from_timestamp(evt.start_time as i64, 0)
+                    .unwrap()
+                    .with_timezone(&local_tz);
+                
+                let end_dt = DateTime::from_timestamp(evt.end_time as i64, 0)
+                    .unwrap()
+                    .with_timezone(&local_tz);
+                
+                // Create a new event with local timestamps
+                let local_evt = Event {
+                    name: evt.name.clone(),
+                    start_time: start_dt.timestamp() as u64,
+                    end_time: end_dt.timestamp() as u64,
+                    description: evt.description.clone(),
+                    status: evt.status.clone(),
+                };
+                
+                events.entry(day).or_insert_with(Vec::new).push(local_evt.clone());
+                days.push(local_evt.start_time);
             }
         }
     }
@@ -342,8 +388,15 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
                 if i1 == i2 {
                     continue;
                 }
-                let day1_date = DateTime::from_timestamp(days[i1] as i64, 0).unwrap().format("%d.%m.%Y").to_string();
-                let day2_date = DateTime::from_timestamp(days[i2] as i64, 0).unwrap().format("%d.%m.%Y").to_string();
+                
+                // Create UTC DateTimes from local timestamps
+                let day1_time = DateTime::from_timestamp(days[i1] as i64, 0).unwrap();
+                let day2_time = DateTime::from_timestamp(days[i2] as i64, 0).unwrap();
+                
+                // Format directly since the timestamps are already in local time
+                let day1_date = day1_time.format("%d.%m.%Y").to_string();
+                let day2_date = day2_time.format("%d.%m.%Y").to_string();
+                
                 debug!("Day 1: {} and Day 2: {}", day1_date, day2_date);
                 if day1_date == day2_date {
                     debug!("Removed those days!");
@@ -392,11 +445,16 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
     let mut c = 0;
     for day in days {
         debug!("Iterating day: {}", day);
-        let time = DateTime::from_timestamp(day as i64, 0).unwrap();
-        let time_str = &time.format("%d.%m.%Y").to_string();
+        
+        // This creates a UTC time from the Unix timestamp
+        let utc_time = DateTime::from_timestamp(day as i64, 0).unwrap();
+        
+        // Format it directly since the timestamp already represents local time
+        // We just need to use UTC formatting since the Unix timestamp has local time baked in
+        let time_str = &utc_time.format("%d.%m.%Y").to_string();
+        
         c += 1;
         if c > args.limit_days {
-            // let rm_path = format!("{}{}", args.output_dir, time_str);
             if file_proxy.contains_key(time_str) {
                 file_proxy.remove(time_str);
                 debug!("Removing time from index: {}", time_str);
