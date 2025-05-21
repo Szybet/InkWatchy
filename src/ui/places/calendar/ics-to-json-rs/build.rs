@@ -1,6 +1,5 @@
 use std::fs;
 use std::path::Path;
-use std::env;
 use regex::Regex;
 
 fn main() {

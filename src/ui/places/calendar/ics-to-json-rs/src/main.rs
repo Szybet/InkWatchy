@@ -12,7 +12,7 @@ use std::str::FromStr;
 
 use log::*;
 
-use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc, Local, Offset};
+use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc, Offset};
 use chrono_tz::Tz as ChronoTz;
 use clap::Parser;
 use deunicode::deunicode;
@@ -413,7 +413,6 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
 
     debug!("Final days: {:?}", days);
 
-    let json = serde_json::to_string_pretty(&events).unwrap();
     // debug!("Json: \n{}", json);
 
     info!("There are {} events", events.len());
