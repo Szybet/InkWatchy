@@ -12,7 +12,7 @@ use std::str::FromStr;
 
 use log::*;
 
-use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc};
+use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc, Local, Offset};
 use chrono_tz::Tz as ChronoTz;
 use clap::Parser;
 use deunicode::deunicode;
@@ -30,6 +30,22 @@ fn get_local_timezone() -> ChronoTz {
     let local_tz: ChronoTz = timezone_str.parse().unwrap_or(ChronoTz::Europe__Bratislava);
     debug!("Using timezone from config.h: {}", timezone_str);
     local_tz
+}
+
+// Get the current timezone offset in seconds
+fn get_timezone_offset_seconds() -> i32 {
+    let local_tz = get_local_timezone();
+    let now = Utc::now();
+    let local_now = now.with_timezone(&local_tz);
+    let offset_seconds = local_now.offset().fix().local_minus_utc();
+    debug!("Timezone offset: {} seconds", offset_seconds);
+    offset_seconds
+}
+
+// Applies the timezone offset to a UTC timestamp to get a local time timestamp
+fn apply_timezone_offset(utc_timestamp: u64) -> u64 {
+    let offset_seconds = get_timezone_offset_seconds();
+    (utc_timestamp as i64 + offset_seconds as i64) as u64
 }
 
 #[derive(Parser, Debug, Clone)]
@@ -117,6 +133,11 @@ fn main() {
         env_logger::Env::default().filter_or(env_logger::DEFAULT_FILTER_ENV, "debug"),
     );
     debug!("Start");
+
+    // Log timezone info for debugging
+    let offset_seconds = get_timezone_offset_seconds();
+    let offset_hours = offset_seconds as f64 / 3600.0;
+    info!("Local timezone offset: {} seconds ({} hours)", offset_seconds, offset_hours);
 
     let args = Args::parse();
 
@@ -225,10 +246,8 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
                         let dt = parse_time(value, tzid);
                         dtstart = Some(dt);
                         
-                        // Convert UTC timestamp to local time for display
-                        let local_tz = get_local_timezone();
-                        let local_dt = dt.with_timezone(&local_tz);
-                        evt.start_time = local_dt.timestamp() as u64;
+                        // Apply timezone offset to the UTC timestamp
+                        evt.start_time = apply_timezone_offset(dt.timestamp() as u64);
                     }
                 }
                 "DTEND" => {
@@ -243,10 +262,8 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
                         let dt = parse_time(value, tzid);
                         dtend = Some(dt);
                         
-                        // Convert UTC timestamp to local time for display
-                        let local_tz = get_local_timezone();
-                        let local_dt = dt.with_timezone(&local_tz);
-                        evt.end_time = local_dt.timestamp() as u64;
+                        // Apply timezone offset to the UTC timestamp
+                        evt.end_time = apply_timezone_offset(dt.timestamp() as u64);
                     }
                 }
                 "RRULE" => {
@@ -326,8 +343,9 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
                 if occurrence_start.timestamp() as u64 >= cutoff {
                     let new_evt = Event {
                         name: evt.name.clone(),
-                        start_time: local_start.timestamp() as u64,  // Store local timestamp
-                        end_time: (local_start + duration).timestamp() as u64, // Store local timestamp
+                        // Apply timezone offset to the UTC timestamps
+                        start_time: apply_timezone_offset(occurrence_start.timestamp() as u64),
+                        end_time: apply_timezone_offset(occurrence_end.timestamp() as u64),
                         description: evt.description.clone(),
                         status: evt.status.clone(),
                     };
@@ -349,29 +367,9 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
                 })
                 .unwrap_or_default();
             if !day.is_empty() && evt.start_time >= cutoff {
-                // Convert the UTC timestamp to local time
-                let local_tz = get_local_timezone();
-                
-                // Convert the event timestamps to local time
-                let start_dt = DateTime::from_timestamp(evt.start_time as i64, 0)
-                    .unwrap()
-                    .with_timezone(&local_tz);
-                
-                let end_dt = DateTime::from_timestamp(evt.end_time as i64, 0)
-                    .unwrap()
-                    .with_timezone(&local_tz);
-                
-                // Create a new event with local timestamps
-                let local_evt = Event {
-                    name: evt.name.clone(),
-                    start_time: start_dt.timestamp() as u64,
-                    end_time: end_dt.timestamp() as u64,
-                    description: evt.description.clone(),
-                    status: evt.status.clone(),
-                };
-                
-                events.entry(day).or_insert_with(Vec::new).push(local_evt.clone());
-                days.push(local_evt.start_time);
+                // The timestamps in evt are already corrected with timezone offset
+                events.entry(day).or_insert_with(Vec::new).push(evt.clone());
+                days.push(evt.start_time);
             }
         }
     }
@@ -389,11 +387,10 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
                     continue;
                 }
                 
-                // Create UTC DateTimes from local timestamps
+                // Create DateTimes from timestamps (already including timezone offset)
                 let day1_time = DateTime::from_timestamp(days[i1] as i64, 0).unwrap();
                 let day2_time = DateTime::from_timestamp(days[i2] as i64, 0).unwrap();
                 
-                // Format directly since the timestamps are already in local time
                 let day1_date = day1_time.format("%d.%m.%Y").to_string();
                 let day2_date = day2_time.format("%d.%m.%Y").to_string();
                 
@@ -442,16 +439,14 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
 
     let mut index = String::new(); // << this line should stay here, not later
 
+    // Display the formatted day
     let mut c = 0;
     for day in days {
         debug!("Iterating day: {}", day);
         
-        // This creates a UTC time from the Unix timestamp
-        let utc_time = DateTime::from_timestamp(day as i64, 0).unwrap();
-        
-        // Format it directly since the timestamp already represents local time
-        // We just need to use UTC formatting since the Unix timestamp has local time baked in
-        let time_str = &utc_time.format("%d.%m.%Y").to_string();
+        // day already includes the timezone offset, so we create a UTC DateTime from it
+        let date_time = DateTime::from_timestamp(day as i64, 0).unwrap();
+        let time_str = &date_time.format("%d.%m.%Y").to_string();
         
         c += 1;
         if c > args.limit_days {
