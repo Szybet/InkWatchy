@@ -82,7 +82,7 @@ void setAlarmQuick(int minutes, int id)
         centerText(String(label) + ".", &currentHeight);                      \
         currentHeight += maxHeight + 10;                                      \
         centerText("Will ring at:", &currentHeight);                          \
-        currentHeight += maxHeight + 2;                                       \
+        currentHeight += maxHeight + 3;                                       \
         centerText(String(timeBuf) + ".", &currentHeight);                    \
                                                                               \
         dUChange = true;                                                      \
