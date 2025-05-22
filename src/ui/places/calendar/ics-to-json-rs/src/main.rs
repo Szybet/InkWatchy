@@ -9,9 +9,9 @@ use std::io::{BufReader, Read, Write};
 use std::path::Path;
 use std::process::exit;
 use std::str::FromStr;
-
+use chrono::Datelike;
 use log::*;
-
+use std::collections::HashSet;
 use chrono::{DateTime, NaiveDate, NaiveDateTime, TimeZone, Utc, Offset};
 use chrono_tz::Tz as ChronoTz;
 use clap::Parser;
@@ -417,24 +417,87 @@ pub fn parse_ical(buf: &[u8], args: &Args) {
 
     info!("There are {} events", events.len());
 
+    // Get today's timestamp and configurable days from now
+    let now = Utc::now();
+    let local_tz = get_local_timezone();
+    let local_now = now.with_timezone(&local_tz);
+    
+    // Get the number of days to look ahead from environment variable
+    let calendar_next_days = option_env!("CALENDAR_NEXT_DAYS")
+        .unwrap_or("30")
+        .parse::<i64>()
+        .unwrap_or(30);
+    
+    debug!("Looking ahead {} days for calendar events", calendar_next_days);
+    
+    // Today at midnight
+    let today_start = local_tz
+        .with_ymd_and_hms(local_now.year(), local_now.month(), local_now.day(), 0, 0, 0)
+        .unwrap()
+        .with_timezone(&Utc)
+        .timestamp() as u64;
+    
+    // X days from today at midnight
+    let thirty_days_later = local_now.checked_add_signed(chrono::Duration::days(calendar_next_days)).unwrap();
+    let cutoff_timestamp = local_tz
+        .with_ymd_and_hms(thirty_days_later.year(), thirty_days_later.month(), thirty_days_later.day(), 0, 0, 0)
+        .unwrap()
+        .with_timezone(&Utc)
+        .timestamp() as u64;
+    
+    debug!("Today timestamp: {}", today_start);
+    debug!("Cutoff timestamp ({} days later): {}", calendar_next_days, cutoff_timestamp);
+    
+    // Create a filtered file_proxy with only events in the next 30 days
     let mut file_proxy: HashMap<String, Vec<u8>> = HashMap::new();
-    for event in events {
-        // let path = format!("{}{}", args.output_dir, event.0);
-        // info!("Writing file: {}", path);
-        let small_json = serde_json::to_string_pretty(&event.1).unwrap();
-        //let mut file = File::create(path).unwrap();
-
-        let mut ascii_str = small_json;
-        ascii_str = deunicode(&ascii_str);
-        ascii_str = ascii_str.replace("    ", "\n");
-        ascii_str = jsonxf::pretty_print(&ascii_str).unwrap();
-
-        //file.write_all(ascii_str.as_bytes()).unwrap();
-        file_proxy.insert(event.0, ascii_str.as_bytes().to_vec());
+    
+    // First, determine which dates fall within our 30-day window
+    // This must be done using the event timestamps, not just the day names
+    let mut valid_dates = HashSet::new();
+    
+    for (date_str, events_vec) in &events {
+        // Only process events if we have at least one event
+        if events_vec.is_empty() {
+            continue;
+        }
+        
+        // Get the timestamp of the first event in this day
+        let event_timestamp = events_vec[0].start_time;
+        
+        // Check if it's within our 30-day window
+        if event_timestamp >= today_start && event_timestamp < cutoff_timestamp {
+            debug!("Including day in 30-day window: {} (timestamp: {})", date_str, event_timestamp);
+            valid_dates.insert(date_str.clone());
+        } else {
+            debug!("Skipping day outside 30-day window: {} (timestamp: {})", date_str, event_timestamp);
+        }
     }
-
+    
+    debug!("Found {} days with events in the next 30 days", valid_dates.len());
+    
+    // Now create a filtered days list for the index
     days.sort();
-    debug!("Days: {:#?}", days);
+    let filtered_days: Vec<u64> = days.into_iter()
+        .filter(|&day| day >= today_start && day < cutoff_timestamp)
+        .collect();
+    
+    debug!("Filtered days count (next 30 days): {}", filtered_days.len());
+    
+    // Only store events for the days that are in our 30-day window
+    for (date_str, events_vec) in &events {
+        if valid_dates.contains(date_str) {
+            debug!("Exporting events for day: {}", date_str);
+            let small_json = serde_json::to_string_pretty(events_vec).unwrap();
+            let mut ascii_str = small_json;
+            ascii_str = deunicode(&ascii_str);
+            ascii_str = ascii_str.replace("    ", "\n");
+            ascii_str = jsonxf::pretty_print(&ascii_str).unwrap();
+            file_proxy.insert(date_str.clone(), ascii_str.as_bytes().to_vec());
+        }
+    }
+    
+    // Update days to our filtered 30-day list
+    days = filtered_days;
 
     let mut index = String::new(); // << this line should stay here, not later
 
