@@ -19,7 +19,7 @@ touch fs/littlefs/conf/.keep
 # TODO: Only on Yatchy selector or something
 mkdir -p fs/littlefs/other/
 touch fs/littlefs/other/.keep
-mkdir -p fs/littlefs/callendar/
+mkdir -p fs/littlefs/calendar/
 
 mkdir -p other/out/
 mkdir -p other/in/
