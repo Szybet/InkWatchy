@@ -65,7 +65,7 @@ void setAlarmQuick(int minutes, int id)
         dis->setTextWrap(false);                                              \
         dis->setCursor(0, 1);                                                 \
                                                                               \
-        String menuName = "Quick Alarm Verification";                         \
+        String menuName = "Quick Alarm alert";                                \
         uint16_t maxHeight;                                                   \
         getTextBounds(menuName, NULL, NULL, NULL, &maxHeight);                \
         uint16_t currentHeight = maxHeight;                                   \
@@ -79,14 +79,15 @@ void setAlarmQuick(int minutes, int id)
                                                                               \
         centerText("Alarm set for:", &currentHeight);                         \
         currentHeight += maxHeight + 2;                                       \
-        centerText(String(label) + ".", &currentHeight);                      \
+        centerText(String(label), &currentHeight);                            \
         currentHeight += maxHeight + 10;                                      \
         centerText("Will ring at:", &currentHeight);                          \
         currentHeight += maxHeight + 3;                                       \
-        centerText(String(timeBuf) + ".", &currentHeight);                    \
+        centerText(String(timeBuf), &currentHeight);                          \
                                                                               \
         dUChange = true;                                                      \
         disUp(true);                                                          \
+        rM.updateCounter = FULL_DISPLAY_UPDATE_QUEUE;                         \
                                                                               \
         setAlarmQuick(min, ALARM_QUICK_ID);                                   \
     }
