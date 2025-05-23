@@ -438,7 +438,7 @@ static void drawBattery()
     setTextSize(2);
     
     String battBar = "[";
-    int segments = (rM.batteryPercantageWF + 10) / 20;
+    int segments = rM.batteryPercantageWF / 20;
     
     for(int i = 0; i < 5; i++) {
         battBar += (i < segments) ? "=" : " ";

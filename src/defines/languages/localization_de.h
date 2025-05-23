@@ -256,3 +256,70 @@
 // Vault app
 #define VAULT_KEY_INCORRECT "Schluessel ist falsch"
 #define VAULT_EMPTY "Tresor ist leer?"
+
+// ==============================================================================
+// ALARM TRANSLATIONS
+// ==============================================================================
+
+// Alarm menu titles
+#define ALARM_MENU_EDIT_DAYS "Tage bearbeiten"
+#define ALARM_MENU_EDIT_ALARM "Alarm bearbeiten"
+#define ALARM_MENU_ALARMS "Alarme"
+#define ALARM_MENU_BROWSE_ALARMS "Alarme durchsuchen"
+#define ALARM_MENU_QUICK_ALARMS_SET "Schnellalarme"
+#define ALARM_MENU_QUICK_ALARM "Schnellalarm"
+#define ALARM_MENU_POMODORO "Pomodoro"
+
+// Alarm status and settings
+#define ALARM_STATUS_ENABLED "Aktiviert"
+#define ALARM_STATUS_DISABLED "Deaktiviert"
+#define ALARM_LABEL_TIME "Zeit: "
+#define ALARM_LABEL_ONE_TIME_ALARM "Einmaliger Alarm"
+#define ALARM_LABEL_DAYS "Tage: "
+#define ALARM_LABEL_REQUIRE_WIFI "Benötigt WiFi"
+
+// Quick alarm messages
+#define ALARM_QUICK_ALERT_TITLE "Schnellalarm Hinweis"
+#define ALARM_QUICK_ALARM_SET_FOR "Alarm eingestellt für:"
+#define ALARM_QUICK_WILL_RING_AT "Klingelt um:"
+
+// Day names (full)
+#define ALARM_DAY_MONDAY "Montag"
+#define ALARM_DAY_TUESDAY "Dienstag"
+#define ALARM_DAY_WEDNESDAY "Mittwoch"
+#define ALARM_DAY_THURSDAY "Donnerstag"
+#define ALARM_DAY_FRIDAY "Freitag"
+#define ALARM_DAY_SATURDAY "Samstag"
+#define ALARM_DAY_SUNDAY "Sonntag"
+
+// Alarm info strings
+#define ALARM_INFO_ALL_DAYS "Alle Tage"
+#define ALARM_INFO_NO_DAYS "Keine Tage"
+#define ALARM_INFO_ONCE ", einmalig"
+#define ALARM_INFO_WIFI ", WiFi"
+#define ALARM_INFO_QUICK ", schnell"
+#define ALARM_INFO_POMODORO ", Pomodoro"
+
+// Pomodoro strings
+#define POMODORO_STATUS "Status: "
+#define POMODORO_RUNNING "läuft, "
+#define POMODORO_WORKING "arbeiten, "
+#define POMODORO_PAUSE "Pause, "
+#define POMODORO_ITER "Iteration: "
+#define POMODORO_DISABLED "deaktiviert"
+#define POMODORO_RESET_TURN_OFF "Zurücksetzen & Ausschalten"
+#define POMODORO_START "Start"
+
+// Time unit translations (for automatic formatting)
+#define TIME_UNIT_MINUTE "Minute"
+#define TIME_UNIT_MINUTES "Minuten"
+#define TIME_UNIT_HOUR "Stunde"
+#define TIME_UNIT_HOURS "Stunden"
+#define TIME_UNIT_DAY "Tag"
+#define TIME_UNIT_DAYS "Tage"
+#define TIME_UNIT_AND "und"
+
+// Polish-specific time units (not used in German, but defined for consistency)
+#define TIME_UNIT_MINUTES_2_4 "Minuten"  // Same as TIME_UNIT_MINUTES in German
+#define TIME_UNIT_HOURS_2_4 "Stunden"    // Same as TIME_UNIT_HOURS in German
+#define TIME_UNIT_DAYS_2_4 "Tage"        // Same as TIME_UNIT_DAYS in German

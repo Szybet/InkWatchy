@@ -248,7 +248,7 @@
 // ==============================================================================
 
 // Pong game
-#define PONG_YOU_LOST "Przegrales!"
+#define PONG_YOU_LOST "Gra przegrana!"
 
 // Party app
 #define PARTY_MESSAGE "Impreza impreza"
@@ -256,3 +256,68 @@
 // Vault app
 #define VAULT_KEY_INCORRECT "Klucz jest niepoprawny"
 #define VAULT_EMPTY "Sejf jest pusty?"
+
+// ==============================================================================
+// ALARM TRANSLATIONS
+// ==============================================================================
+
+// Alarm menu titles
+#define ALARM_MENU_EDIT_DAYS "Edytuj dni"
+#define ALARM_MENU_EDIT_ALARM "Edytuj alarm"
+#define ALARM_MENU_ALARMS "Alarmy"
+#define ALARM_MENU_BROWSE_ALARMS "Przegladaj alarmy"
+#define ALARM_MENU_QUICK_ALARMS_SET "Szybkie alarmy"
+#define ALARM_MENU_QUICK_ALARM "Szybki alarm"
+#define ALARM_MENU_POMODORO "Pomodoro"
+
+// Alarm status and settings
+#define ALARM_STATUS_ENABLED "Wlaczony"
+#define ALARM_STATUS_DISABLED "Wylaczony"
+#define ALARM_LABEL_TIME "Czas: "
+#define ALARM_LABEL_ONE_TIME_ALARM "Jednorazowy alarm"
+#define ALARM_LABEL_DAYS "Dni: "
+#define ALARM_LABEL_REQUIRE_WIFI "Wymaga wifi"
+
+// Quick alarm messages
+#define ALARM_QUICK_ALERT_TITLE "Szybki alarm"
+#define ALARM_QUICK_ALARM_SET_FOR "Alarm ustawiony na:"
+#define ALARM_QUICK_WILL_RING_AT "Zadzwoni o:"
+
+// Day names (full)
+#define ALARM_DAY_MONDAY "Poniedzialek"
+#define ALARM_DAY_TUESDAY "Wtorek"
+#define ALARM_DAY_WEDNESDAY "Sroda"
+#define ALARM_DAY_THURSDAY "Czwartek"
+#define ALARM_DAY_FRIDAY "Piatek"
+#define ALARM_DAY_SATURDAY "Sobota"
+#define ALARM_DAY_SUNDAY "Niedziela"
+
+// Alarm info strings
+#define ALARM_INFO_ALL_DAYS "Wszystkie dni"
+#define ALARM_INFO_NO_DAYS "Brak dni"
+#define ALARM_INFO_ONCE ", jednorazowy"
+#define ALARM_INFO_WIFI ", wifi"
+#define ALARM_INFO_QUICK ", szybki"
+#define ALARM_INFO_POMODORO ", pomodoro"
+
+// Pomodoro strings
+#define POMODORO_STATUS "Status: "
+#define POMODORO_RUNNING "wlaczony, "
+#define POMODORO_WORKING "praca, "
+#define POMODORO_PAUSE "przerwa, "
+#define POMODORO_ITER "iteracja: "
+#define POMODORO_DISABLED "wylaczony"
+#define POMODORO_RESET_TURN_OFF "Resetuj i wylacz"
+#define POMODORO_START "Start"
+
+// Time unit translations (for automatic formatting)
+#define TIME_UNIT_MINUTE "minuta"
+#define TIME_UNIT_MINUTES "minut"
+#define TIME_UNIT_MINUTES_2_4 "minuty"
+#define TIME_UNIT_HOUR "godzina"
+#define TIME_UNIT_HOURS "godzin"
+#define TIME_UNIT_HOURS_2_4 "godziny"
+#define TIME_UNIT_DAY "dzien"
+#define TIME_UNIT_DAYS "dni"
+#define TIME_UNIT_DAYS_2_4 "dni"  // Same as TIME_UNIT_DAYS in Polish
+#define TIME_UNIT_AND "i"

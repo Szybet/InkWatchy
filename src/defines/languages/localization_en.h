@@ -256,3 +256,70 @@
 // Vault app
 #define VAULT_KEY_INCORRECT "Key is incorrect"
 #define VAULT_EMPTY "Vault is empty?"
+
+/ ==============================================================================
+// ALARM TRANSLATIONS
+// ==============================================================================
+
+// Alarm menu titles
+#define ALARM_MENU_EDIT_DAYS "Edit days"
+#define ALARM_MENU_EDIT_ALARM "Edit alarm"
+#define ALARM_MENU_ALARMS "Alarms"
+#define ALARM_MENU_BROWSE_ALARMS "Browse alarms"
+#define ALARM_MENU_QUICK_ALARMS_SET "Quick alarms set"
+#define ALARM_MENU_QUICK_ALARM "Quick alarm"
+#define ALARM_MENU_POMODORO "Pomodoro"
+
+// Alarm status and settings
+#define ALARM_STATUS_ENABLED "Enabled"
+#define ALARM_STATUS_DISABLED "Disabled"
+#define ALARM_LABEL_TIME "Time: "
+#define ALARM_LABEL_ONE_TIME_ALARM "One time alarm"
+#define ALARM_LABEL_DAYS "Days: "
+#define ALARM_LABEL_REQUIRE_WIFI "Require wifi"
+
+// Quick alarm messages
+#define ALARM_QUICK_ALERT_TITLE "Quick Alarm alert"
+#define ALARM_QUICK_ALARM_SET_FOR "Alarm set for:"
+#define ALARM_QUICK_WILL_RING_AT "Will ring at:"
+
+// Day names (full)
+#define ALARM_DAY_MONDAY "Monday"
+#define ALARM_DAY_TUESDAY "Tuesday"
+#define ALARM_DAY_WEDNESDAY "Wednesday"
+#define ALARM_DAY_THURSDAY "Thursday"
+#define ALARM_DAY_FRIDAY "Friday"
+#define ALARM_DAY_SATURDAY "Saturday"
+#define ALARM_DAY_SUNDAY "Sunday"
+
+// Alarm info strings
+#define ALARM_INFO_ALL_DAYS "All days"
+#define ALARM_INFO_NO_DAYS "No days"
+#define ALARM_INFO_ONCE ", once"
+#define ALARM_INFO_WIFI ", wifi"
+#define ALARM_INFO_QUICK ", quick"
+#define ALARM_INFO_POMODORO ", pomodoro"
+
+// Pomodoro strings
+#define POMODORO_STATUS "Status: "
+#define POMODORO_RUNNING "running, "
+#define POMODORO_WORKING "working, "
+#define POMODORO_PAUSE "pause, "
+#define POMODORO_ITER "iter: "
+#define POMODORO_DISABLED "disabled"
+#define POMODORO_RESET_TURN_OFF "Reset & Turn off"
+#define POMODORO_START "Start"
+
+// Time unit translations (for automatic formatting)
+#define TIME_UNIT_MINUTE "minute"
+#define TIME_UNIT_MINUTES "minutes"
+#define TIME_UNIT_HOUR "hour"
+#define TIME_UNIT_HOURS "hours"
+#define TIME_UNIT_DAY "day"
+#define TIME_UNIT_DAYS "days"
+#define TIME_UNIT_AND "and"
+
+// Polish-specific time units (not used in English, but defined for consistency)
+#define TIME_UNIT_MINUTES_2_4 "minutes"  // Same as TIME_UNIT_MINUTES in English
+#define TIME_UNIT_HOURS_2_4 "hours"      // Same as TIME_UNIT_HOURS in English
+#define TIME_UNIT_DAYS_2_4 "days"        // Same as TIME_UNIT_DAYS in English
