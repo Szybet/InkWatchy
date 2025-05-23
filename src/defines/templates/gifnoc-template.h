@@ -6,6 +6,7 @@
 #define WATCHFACE_12H 0 // Show time in 12 hour format. Supported watchfaces: Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
 #define WATCHFACE_TAYCHRON 1
+#define WATCHFACE_TAYCHRON_DATE 0 // shows date below time
 #define WATCHFACE_SLATE 1
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
@@ -23,7 +24,7 @@ https://github.com/retroisbest/Watchy-GSR-Faces/tree/main
 https://github.com/GuruSR/Watchy_GSR/tree/master
 https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 */
-#define GSR_WATCHFACES 0 // General turn on off every watchface
+#define GSR_WATCHFACES 0          // General turn on off every watchface
 #define GSR_WATCHFACES_OPTIMISE 1 // Draws only every minute, not all the time, small optimisations, doesn't change much but could break things but hey
 #define GSR_STARFIELD 0
 #define GSR_STARFIELD_TIMEZONE_THING 0.0 // Hours.Minutes of your timezone (kind of UTC) - yes too lazy to automate that
@@ -52,8 +53,8 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define VIBRATION_MULTIPLIER 1.0
 #define STEPS_GOAL 7000
 // Backups RTC memory to flash, so after updating the firmware (When resources weren't updated, or rtc memory wasn't changed) it will still keep data like alarms
-// Might introduce weird behaviour or crashes on a update, but it tries to avoid it. 
-// Might consume a bit of battery, but that's marginal. 
+// Might introduce weird behaviour or crashes on a update, but it tries to avoid it.
+// Might consume a bit of battery, but that's marginal.
 // It may also increase flash usage and life, but hey, mine still works so yours will too
 // If it doesn't save something you want, add it yourself or request it
 #define RTC_MEMORY_BACKUP 0
@@ -120,8 +121,21 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define MOON_MAX_RADIUS 64.0
 
 // Alarms
-#define INK_ALARMS 1                  // Enable alarms
-#define MAX_ALARMS 10                 // More alarms, more RTC memory usage
+#define INK_ALARMS 1 // Enable alarms
+#define QUICK_ALARM_LIST(X) \
+    X(5, "5 minutes")       \
+    X(10, "10 minutes")     \
+    X(15, "15 minutes")     \
+    X(20, "20 minutes")     \
+    X(25, "25 minutes")     \
+    X(60, "1 hour")         \
+    X(90, "1.5 hours")      \
+    X(120, "2 hours")       \
+    X(180, "3 hours")       \
+    X(360, "6 hours")       \
+    X(480, "8 hours")       \
+    X(1440, "24 hours")
+
 #define ALARM_DURATION_S 60           // Seconds of ringing
 #define ALARM_MOTOR_DELAY 1000        // Ms of delay for motor
 #define ALARM_MOTOR_TIME 200          // Time for motor to vibrate
@@ -160,6 +174,12 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 
 // Calendar
 #define CALENDAR 0
+// allow insecure url for calendar
+#define ALLOW_INSECURE_CAL 0
+// import only events today onwards
+#define FUTURE_ONLY 0
+// Number of future days to include in calendar
+#define CALENDAR_NEXT_DAYS 50
 // Shorter names needed
 #define CALENDAR_SPLIT_DESCRIPTION 1
 #define CALENDAR_SPLIT_DESCRIPTION_STRING "\\n"
@@ -310,9 +330,9 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS 0 // Yatchy with no battery, huh
 #define SCREEN_CORNER_WAKEUP 0                 // writes a few pixels in the left top corner, works without DEBUG turned on
 #define I2C_SCANNER 0                          // For yatchy testing
-#define DUMP_LOOP_ACC 0 // Needs ACC
-#define DUMP_LOOP_ACC_DIFF 0 // Only shows diff from previous reading, experimental, look up the code
-#define SCREENSHOT_ENDPOINT 1
+#define DUMP_LOOP_ACC 0                        // Needs ACC
+#define DUMP_LOOP_ACC_DIFF 0                   // Only shows diff from previous reading, experimental, look up the code
+#define SCREENSHOT_ENDPOINT 0
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 20

@@ -15,7 +15,7 @@ elif [[ "$pio_env" =~ 2 ]]; then
     addr_file="xtensa-esp32-elf-addr2line"
 fi
 
-XTENSA_ADDR2LINE="$HOME/.platformio/packages/$toolchain_dir/bin/$addr_file"
+XTENSA_ADDR2LINE="$HOME/.root/.platformio/packages/$toolchain_dir/bin/$addr_file"
 ELF_FILE=".pio/build/$pio_env/firmware.elf"
 
 IFS=' ' read -r -a BACKTRACES <<< "$@" # <<< "$1" 

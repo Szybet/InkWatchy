@@ -1,0 +1,4 @@
+dependencies:
+  # Define local dependency with relative path
+  some_local_component:
+    path: components/rusty

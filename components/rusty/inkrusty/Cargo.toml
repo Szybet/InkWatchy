@@ -1,0 +1,35 @@
+[package]
+name = "inkrusty"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+mallocator = "0.1.0"
+
+[features]
+default = []
+none = [] # Placeholder for bash script
+debug = []
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+# This not
+# RUSTFLAGS="-Zlocation-detail=none" cargo +nightly build --release
+# because
+# rust-lld: error: undefined symbol: __stack_top
+# And
+# cargo +nightly build --release
+# Increases size by a few bytes
+
+# Those don't change anything
+debug = 0
+debug-assertions = false
+incremental = false
+overflow-checks = false
