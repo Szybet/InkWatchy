@@ -6,6 +6,7 @@
 #define WATCHFACE_12H 0 // Show time in 12 hour format. Supported watchfaces: Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
 #define WATCHFACE_TAYCHRON 1
+#define WATCHFACE_TAYCHRON_DATE 0 // shows date below time
 #define WATCHFACE_SLATE 1
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
@@ -170,13 +171,14 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define CONWAY 1
 #define CONWAY_CPU_SPEED 0    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
 #define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
-
 // Calendar
-#define CALENDAR 0
+#define CALENDAR 1
 // allow insecure url for calendar
 #define ALLOW_INSECURE_CAL 0
 // import only events today onwards
 #define FUTURE_ONLY 0
+// Number of future days to include in calendar
+#define CALENDAR_NEXT_DAYS 50
 // Shorter names needed
 #define CALENDAR_SPLIT_DESCRIPTION 1
 #define CALENDAR_SPLIT_DESCRIPTION_STRING "\\n"
