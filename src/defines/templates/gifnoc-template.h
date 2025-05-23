@@ -171,6 +171,7 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define CONWAY 1
 #define CONWAY_CPU_SPEED 0    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
 #define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
+
 // Calendar
 #define CALENDAR 0
 // allow insecure url for calendar
