@@ -80,6 +80,3 @@ ENV PATH=$PATH:/root/.platformio/penv/bin:/root/.cargo/bin
 
 # For rusty stuff
 RUN apt-get install -y gcc build-essential curl pkg-config
-
-# Install Rust and Cargo
-RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
