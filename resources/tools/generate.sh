@@ -31,7 +31,7 @@ cd ../
 echo -e ''
 echo "Processing vault"
 cd vault/
-./convertImagesVault.sh
+./convertVault.sh
 cd ../
 
 echo -e ''

@@ -123,6 +123,14 @@ void switchVault()
     generalSwitch(vault);
 }
 
+void switchTotpMenu() {
+    generalSwitch(vaultTotp);
+}
+
+void switchTotpValue() {
+    generalSwitch(vaultTotpValue);
+}
+
 void switchBack()
 {
     setButton(Back);

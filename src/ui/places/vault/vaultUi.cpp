@@ -149,7 +149,7 @@ void initVault()
             showTextDialog("Key is incorrect");
             return;
         }
-        int itemsInDir = fsItemsInDir("/vault/") - 1; // - conf
+        int itemsInDir = fsItemsInDir("/vault/") - 2; // - conf totp
         debugLog("items in vault: " + String(itemsInDir));
         if (itemsInDir <= 0)
         {
@@ -175,12 +175,20 @@ void initVault()
         root.close();
 
         if (foundMenuItemName == "")
-        {
+        {   
+            bool hasTotp = totpExists();
+            itemsInDir+=hasTotp;
             entryMenu buttons[itemsInDir];
 
+
+            int counter = 0;
+            if(hasTotp) {
+                buttons[counter] = {"TOTP", &emptyImgPack,switchTotpMenu};
+                counter++;
+            }
             File root = LittleFS.open("/vault/");
             File file = root.openNextFile();
-            int counter = 0;
+
             while (file)
             {
                 if (file.isDirectory() == false)
@@ -208,6 +216,13 @@ void initVault()
 void loopVault()
 {
     useButtonBlank();
+}
+
+bool totpExists() {
+    int itemsInDir = fsItemsInDir("/vault/totp/");
+    debugLog("items in vault/totp: " + String(itemsInDir));
+    bool totpExists = itemsInDir>0;
+    return totpExists;
 }
 
 void exitVault()
@@ -305,6 +320,91 @@ void showVaultImage(String file)
         debugLog("key is not available");
     }
 }
+String generateCode(String key) {
+    debugLog("key=\"" + key + "\"");
+    readRTC();
+    unsigned long t = getUnixTime(timeRTCUTC0);
+    debugLog("t=" + String(t));
+
+    // Decode base32 key parameter to bytes, dynamically allocate buffer
+    size_t decodedLen = (key.length() * 5) / 8 + 1;
+    unsigned char* hmacKey = new unsigned char[decodedLen];
+    size_t hmacKeyLen = 0;
+
+    auto base32_decode_local = [](const char* encoded, unsigned char* result, size_t bufSize) -> size_t {
+        const char* base32_chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        size_t buffer = 0, bitsLeft = 0, count = 0;
+        for (const char* ptr = encoded; *ptr && count < bufSize; ++ptr) {
+            char ch = *ptr;
+            if (ch == '=' || ch == ' ' || ch == '\t' || ch == '\n' || ch == '\r')
+                continue;
+            const char* p = strchr(base32_chars, toupper(ch));
+            if (!p)
+                continue;
+            buffer <<= 5;
+            buffer |= (p - base32_chars) & 0x1F;
+            bitsLeft += 5;
+            if (bitsLeft >= 8) {
+                result[count++] = (buffer >> (bitsLeft - 8)) & 0xFF;
+                bitsLeft -= 8;
+            }
+        }
+        return count;
+    };
+
+    hmacKeyLen = base32_decode_local(key.c_str(), hmacKey, decodedLen);
+    TOTP totp = TOTP(hmacKey, hmacKeyLen);
+    String code = totp.getCode(t);
+
+    return code;
+}
+String decryptTotpFile(String file) {
+    String encCheck = fsGetString(file, "", "/vault/totp/");
+    debugLog("encCheck="+encCheck);
+    if (encCheck == "")
+    {
+        debugLog("There is no enc check!");
+        return "";
+    }
+    int encCheckLen = encCheck.length();
+
+    unsigned char *realImage = new unsigned char[encCheckLen];
+    size_t written = 0;
+    debugLog("Before base64 encoding");
+    int baseResult = mbedtls_base64_decode(realImage, encCheckLen, &written, (const unsigned char *)encCheck.c_str(), encCheckLen);
+    debugLog("Written base64 bytes: " + String(written));
+    debugLog("base64 result: " + String(baseResult));
+
+    mbedtls_aes_context aes;
+    unsigned char keyChar[17] = {0};
+    String keyString = keyToString();
+    memcpy(keyChar, keyString.c_str(), keyString.length() + 1);
+    mbedtls_aes_init(&aes);
+    int resultKey = mbedtls_aes_setkey_dec(&aes, keyChar, 128);
+    debugLog("resultKey: " + String(resultKey));
+
+    // Decrypt in 16-byte blocks
+    size_t blockSize = 16;
+    size_t numBlocks = (written + blockSize - 1) / blockSize;
+    unsigned char *decrypted = new unsigned char[numBlocks * blockSize];
+    for (size_t i = 0; i < numBlocks; ++i) {
+        mbedtls_aes_crypt_ecb(&aes, MBEDTLS_AES_DECRYPT, realImage + i * blockSize, decrypted + i * blockSize);
+    }
+    mbedtls_aes_free(&aes);
+
+    // Build string from actual decoded length (written)
+    String decryptedAnswer = String((char*)decrypted, written);
+    delete[] realImage;
+    delete[] decrypted;
+    return decryptedAnswer;
+}
+void showTotpCode(String file) {
+    String decryptedAnswer = decryptTotpFile(file);
+    debugLog("Decrypted string is: " + decryptedAnswer);
+    String code = generateCode(decryptedAnswer);
+    debugLog("code is "+code);
+    showTextDialog("Code is: "+code);
+}
 
 void hexStringToByteArray(const char *hexString, unsigned char *byteArray, size_t byteArraySize)
 {
@@ -314,6 +414,107 @@ void hexStringToByteArray(const char *hexString, unsigned char *byteArray, size_
     }
 }
 
+void initVaultTotp() {
+    int itemsInDir = fsItemsInDir("/vault/totp/");
+    debugLog("items in vault/totp: " + String(itemsInDir));
+
+    String foundMenuItemName = "";
+    File root = LittleFS.open("/vault/totp/");
+    File file = root.openNextFile();
+    entryMenu buttons[itemsInDir+1];
+    int counter = 0;
+    while (file)
+    {
+        String fileName = String(file.name());
+        debugLog("The vault/totp filename: " + fileName);
+        debugLog("totp button counter = "+String(counter));
+        buttons[counter] = {fileName, &emptyImgPack,switchTotpValue};
+        file = root.openNextFile();
+        counter++;
+    }
+    file.close();
+    root.close();
+
+    initMenu(buttons,itemsInDir,"TOTP");
+    generalSwitch(vaultTotpMenu);
+}
+void loopVaultTotp() {
+    useButton();
+}
+void exitVaultTotp() {
+    exitVault();
+}
+
+void onTotpSelect() {
+    debugLog("lastMenuSelected="+String(lastMenuSelected));
+
+    String foundMenuItemName = "";
+    File root = LittleFS.open("/vault/totp/");
+    File file = root.openNextFile();
+    while (file)
+    {
+        String fileName = String(file.name());
+        debugLog("The totp filename: " + fileName);
+        if (lastMenuSelected == fileName)
+        {
+            foundMenuItemName = fileName;
+            break;
+        }
+        file = root.openNextFile();
+    }
+    file.close();
+    root.close();
+
+    if (foundMenuItemName!="")
+    {
+        showTotpCode(foundMenuItemName);
+    }
+    
+}
+
+void drawTotpValue() {
+    uint16_t h;
+    setFont(&FreeSansBold9pt7b);
+    setTextSize(1);
+    dis->setCursor(0, 1);
+    String menuName = "Totp: "+lastMenuSelected;
+    debugLog(menuName);
+    getTextBounds(menuName, NULL, NULL, NULL, &h);
+    if (containsBelowChar(menuName) == true)
+    {
+        h = h + 2;
+    }
+    maxHeight = h;
+    uint16_t currentHeight = maxHeight;
+    dis->setCursor(0, currentHeight - 3);
+    dis->print(menuName);
+
+    dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
+    currentHeight = currentHeight + maxHeight;
+
+    String decryptedKey = decryptTotpFile(lastMenuSelected);
+    setFont(getFont("JackInput17"));
+    setTextSize(1);
+    currentHeight+=15;
+    centerText(generateCode(decryptedKey), &currentHeight);
+    unsigned long t = getUnixTime(timeRTCUTC0);
+    float progress = (float)(t % 30) / 30 * 100;
+    debugLog("Progress "+String(progress));
+    drawProgressBar(5,175,190,10,progress);
+    disUp(true);
+}
+void initVaultTotpValue() {
+    
+}
+
+void loopVaultTotpValue() {
+    dis->fillScreen(GxEPD_WHITE);
+    drawTotpValue();
+    useButton();
+}
+void exitVaultTotpValue() {
+    
+}
 /*
 void printHex(const unsigned char *data, size_t len)
 {

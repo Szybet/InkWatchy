@@ -311,6 +311,27 @@ void loopManager()
 #endif
         break;
     }
+    case vaultTotpMenu:
+    {
+#if VAULT
+        managerLaunchFunc(generalMenuPlace, NULL, loopMenu, exitVaultTotp);
+#endif
+        break;
+    }
+    case vaultTotp:
+    {
+#if VAULT
+        managerLaunchFunc(vaultTotp,initVaultTotp,loopVaultTotp,exitVaultTotp);
+#endif
+        break;
+    }
+    case vaultTotpValue:
+    {
+#if VAULT
+        managerLaunchFunc(vaultTotpValue,initVaultTotpValue,loopVaultTotpValue);
+#endif
+        break;
+    }
     case apple:
     {
 #if APPLE_JOKE
