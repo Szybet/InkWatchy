@@ -49,8 +49,7 @@ const wifiQuickCred alarmWifiQuick = {
 // If you want just a path, implement it yourself, look up the script and the program arguments
 // Link to your ICS file to download it
 // you can also link multiple ICS for example
-//#define CALENDAR_URL "web.com/one.ics"  
-//#define CALENDAR_URL "web.com/second.ics"  
-//if your website doesnt have proper ssl certificate or self signed certificate dont forget to allow ALLOW_INSECURE_CAL 1 in config.h
+// #define CALENDAR_URL "web.com/one.ics"
+// #define CALENDAR_URL "web.com/second.ics"
+// if your website doesnt have proper ssl certificate or self signed certificate dont forget to allow ALLOW_INSECURE_CAL 1 in config.h
 #define CALENDAR_URL "" // https://MyIcsFileSomewhere.toDownload
-
