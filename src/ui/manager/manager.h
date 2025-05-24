@@ -33,6 +33,9 @@ typedef enum
     vault,
     vaultImage, // because of exit function
     vaultMenu, // because of exit function
+    vaultTotp,
+    vaultTotpMenu,
+    vaultTotpValue,
     apple,
     apple2,
     calendarDateMenu,
@@ -119,6 +122,8 @@ void switchWatchfaceSelectorMenu();
 void switchBook();
 void switchBookSelector();
 void switchVault();
+void switchTotpMenu();
+void switchTotpValue();
 void switchBack();
 #if VIDEO_PLAYER
 void switchVideoPlayer();
@@ -146,4 +151,3 @@ void switchHeartMonitor();
 void switchFontsPreview();
 #endif
 void showTextDialog(String str);
-
