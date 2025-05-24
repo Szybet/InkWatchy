@@ -48,6 +48,9 @@
 #if (DEBUG && SCREENSHOT_ENDPOINT)
 #include <ESPAsyncWebServer.h>
 #endif
+#if VAULT
+#include <TOTP.h>
+#endif
 #include "rusty.h"
 
 // Order important
@@ -169,7 +172,6 @@ static const WiFiCred* wifiCredStatic[] = {
 #endif
 #if VAULT
 #include "../ui/places/vault/vaultUi.h"
-#include <TOTP.h>
 #endif
 #if PONG
 #include "../ui/places/pong/pong.h"

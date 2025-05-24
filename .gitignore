@@ -11,6 +11,7 @@ src/defines/confidential.h
 resources/personal/books/*.pdf
 resources/personal/books/*.epub
 resources/personal/vault/*.png
+resources/personal/vault/totp/*.txt
 resources/personal/videos/*
 resources/personal/videos/*.mp4
 
@@ -28,6 +29,7 @@ components/arduino
 .root/.platformio/*
 !.root/.platformio/.gitkeep
 
+.esp-idf/esp-idf
 .root/.esp-idf/esp-idf
 .root/.esp-idf/espressif/*
 !.root/.esp-idf/.gitkeep
