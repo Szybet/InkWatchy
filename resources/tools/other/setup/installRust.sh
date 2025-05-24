@@ -4,7 +4,8 @@
 
 if ! command -v /root/.cargo/bin/cargo &> /dev/null || \
    ! command -v /root/.cargo/bin/rustup &> /dev/null || \
-   ! command -v /root/.cargo/bin/espup &> /dev/null; then
+   ! command -v /root/.cargo/bin/espup &> /dev/null || \
+   ! command -v /root/.cargo/bin/cbindgen &> /dev/null; then
        
     echo "Installing Rust..."
     curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y
