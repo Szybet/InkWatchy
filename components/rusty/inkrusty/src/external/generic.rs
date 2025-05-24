@@ -14,6 +14,9 @@ unsafe extern "C" {
 }
 
 unsafe extern "C" {
-    pub fn rust_panic();
+    pub fn rustPanic();
     pub fn delayRust(timeMs: c_int);
+    pub fn drawPixel(x: i16, y: i16, color: u16);
+    pub fn updateScreen(reallyUpdate: bool, ignoreCounter: bool, ignoreSleep: bool);
+    pub fn rustMicros() -> u32;
 }

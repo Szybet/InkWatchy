@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Add to .vscode/settings.json
+#    "rust-analyzer.linkedProjects": [
+#        "${workspaceFolder}/components/rusty/inkrusty/Cargo.toml",
+#    ],
+
 source resources/tools/globalFunctions.sh
 pio_env=$(get_pio_env .vscode/launch.json)
 

@@ -16,7 +16,7 @@ use {
     external::generic::{delayRust, log_function_c},
     alloc::ffi::CString,
 };
-use external::generic::rust_panic;
+use external::generic::rustPanic;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
@@ -43,13 +43,15 @@ fn panic(_info: &PanicInfo) -> ! {
         unsafe { delayRust(1500) };
     }
     // We want to panic
-    unsafe { rust_panic() };
+    unsafe { rustPanic() };
     loop {}
 }
 
 // Rest
 pub mod external;
 pub mod logs;
+pub mod graphics;
+pub mod do_snake;
 
 #[cfg(feature = "debug")]
 use crate::external::generic::rust_ink_test;
