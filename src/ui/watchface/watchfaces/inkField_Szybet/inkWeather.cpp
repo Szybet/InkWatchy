@@ -1,4 +1,6 @@
 #include "inkField.h"
+#include "inkField_localization.h"
+#include "localization.h"  // For formatTemperature
 #include <MoonPhase.h>
 
 #define TEMP_CORD 48, 120
@@ -34,97 +36,69 @@ void weatherDrawHelper(uint16_t value, int max, int min, uint16_t x, uint16_t y)
     writeTextReplaceBack(addZero(String(percent), 2), x, y, GxEPD_BLACK, GxEPD_WHITE, true, 1);
 }
 
+// Use the same weather icon mapping as Taychron for consistency
 String getWeatherIcon(uint8_t weatherCode)
 {
     switch (weatherCode)
     {
     case 0:
         return "clear_sky";
-        // return "Clear sky";
     case 1:
         return "mainly_clear";
-        // return "Mainly clear";
     case 2:
         return "partly_cloud";
-        // return "Partly cloudy";
     case 3:
         return "overcast";
-        // return "Overcast";
     case 45:
         return "fog";
-        // return "Fog";
     case 48:
         return "freezing";
-        // return "Depositing rime fog";
     case 51:
         return "drizzle_all";
-        // return "Drizzle: Light intensity";
     case 53:
         return "drizzle_all";
-        // return "Drizzle: Moderate intensity";
     case 55:
         return "drizzle_all";
-        // return "Drizzle: Dense intensity";
     case 56:
         return "freezing";
-        // return "Freezing Drizzle: Light intensity";
     case 57:
         return "freezing";
-        // return "Freezing Drizzle: Dense intensity";
     case 61:
         return "rain";
-        // return "Rain: Slight intensity";
     case 63:
         return "rain";
-        // return "Rain: Moderate intensity";
     case 65:
         return "rain";
-        // return "Rain: Heavy intensity";
     case 66:
         return "freezing";
-        // return "Freezing Rain: Light intensity";
     case 67:
         return "freezing";
-        // return "Freezing Rain: Heavy intensity";
     case 71:
         return "snow";
-        // return "Snow fall: Slight intensity";
     case 73:
         return "snow";
-        // return "Snow fall: Moderate intensity";
     case 75:
         return "snow";
-        // return "Snow fall: Heavy intensity";
     case 77:
         return "snow";
-        // return "Snow grains";
     case 80:
         return "rain";
-        // return "Rain showers: Slight intensity";
     case 81:
         return "rain";
-        // return "Rain showers: Moderate intensity";
     case 82:
         return "rain";
-        // return "Rain showers: Violent intensity";
     case 85:
         return "snow";
-        // return "Snow showers: Slight intensity";
     case 86:
         return "snow";
-        // return "Snow showers: Heavy intensity";
     case 95:
         return "thunderstorm";
-        // return "Thunderstorm: Slight or moderate";
     case 96:
         return "thunderstorm";
-        // return "Thunderstorm with slight hail";
     case 99:
         return "thunderstorm";
-        // return "Thunderstorm with heavy hail";
     default:
         return "no_weather_data";
-        // return "Unknown weather condition";
     }
 }
 
@@ -138,9 +112,9 @@ void inkDrawWeather()
     OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
     if (wData.fine == true)
     {
-        // Temp
+        // Use global temperature system with proper conversion
         dis->fillRect(TEMP_RECT_CORD, TEMP_RECT_SIZE, GxEPD_WHITE);
-        String temps = String(int16_t(roundf(wData.temp))) + "C";
+        String temps = formatTemperature(wData.temp);  // Use global function
         if(temps.length() > 3) {
             temps = temps.substring(0, 3);
         }
@@ -169,29 +143,31 @@ void inkDrawWeather()
     }
     else
     {
-        writeTextReplaceBack("ERR", TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack("ER", HUMIDITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack("ER", PRESSURE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack("ER", PREPICITATION_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack("ER", VISIBILITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack("ER", WIND_SPEED_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack("ER", WIND_GUTS_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack("ER", CLOUD_COVER_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack("ER", SUNRISE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack("ER", SUNSET_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        // Use global language system for error messages
+        writeTextReplaceBack(getInkFieldLocalizedError(), TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), HUMIDITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PRESSURE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PREPICITATION_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), VISIBILITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_SPEED_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_GUTS_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), CLOUD_COVER_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNRISE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNSET_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
         writeImageN(WEATHER_ICON_CORD, getImg("inkfield/" + getWeatherIcon(255)));
     }
 #else
-    writeTextReplaceBack("ERR", TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack("ER", HUMIDITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack("ER", PRESSURE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack("ER", PREPICITATION_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack("ER", VISIBILITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack("ER", WIND_SPEED_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack("ER", WIND_GUTS_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack("ER", CLOUD_COVER_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack("ER", SUNRISE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack("ER", SUNSET_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    // Use global language system for error messages
+    writeTextReplaceBack(getInkFieldLocalizedError(), TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), HUMIDITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PRESSURE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PREPICITATION_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), VISIBILITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_SPEED_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_GUTS_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), CLOUD_COVER_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNRISE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNSET_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
     writeImageN(WEATHER_ICON_CORD, getImg("inkfield/meteor"));
 #endif
 }

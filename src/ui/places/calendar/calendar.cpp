@@ -1,4 +1,5 @@
 #include "calendar.h"
+#include "localization.h"
 
 // It doesn't remember menu positions because before exit call is called this inits a new menu, this should be fully converted to use switchers instead, not switchBack
 // Fixed now
@@ -130,7 +131,7 @@ void initCalendarMenu()
     {
         debugLog("Failed to read index");
         overwriteSwitch(textDialog);
-        showTextDialog("No calendar data");
+        showTextDialog(CALENDAR_NO_DATA);
         return;
     }
     int dates = buf.length() / DATE_BYTES;
@@ -171,7 +172,7 @@ void initCalendarMenu()
 
         buttons[i] = {dateStr, &emptyImgPack, switchCalendarEventMenu};
     }
-    initMenu(buttons, dates, "Calendar", 1);
+    initMenu(buttons, dates, MENU_CALENDAR, 1);
     // generalSwitch(calendarDateMenu);
 }
 

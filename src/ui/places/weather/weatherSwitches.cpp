@@ -1,4 +1,5 @@
 #include "weatherSwitches.h"
+#include "localization.h"
 
 #if WEATHER_INFO
 
@@ -37,7 +38,7 @@ void initWeatherMenu()
     if (days == 0)
     {
         overwriteSwitch(textDialog);
-        showTextDialog("Weather not available");
+        showTextDialog(WEATHER_NOT_AVAILABLE);
         return;
     }
 
@@ -109,7 +110,7 @@ void initWeatherMenu()
         buttons[i] = {unixToDate(daysUnixList[i]), &emptyImgPack, switchWeatherSelectorMenu};
     }
 
-    initMenu(buttons, days, "Select date", 1);
+    initMenu(buttons, days, WEATHER_SELECT_DATE, 1);
 }
 
 char weatherDayChoosed[12];
@@ -128,7 +129,7 @@ void initWeatherConditionMenu()
     {
         debugLog("Error finding date for weather condition");
         overwriteSwitch(textDialog);
-        showTextDialog("Date is wrong?");
+        showTextDialog(WEATHER_DATE_WRONG);
         return;
     }
 
@@ -142,8 +143,18 @@ void initWeatherConditionMenu()
     // visibility
     // precipitation
 
-    entryMenu buttons[9] = {{"Temperature", &emptyImgPack, showTemp}, {"Pressure", &emptyImgPack, showPressure}, {"Humidity", &emptyImgPack, showHumidity}, {"Weather conditions", &emptyImgPack, showWeatherCond}, {"Cloudiness", &emptyImgPack, showClouds}, {"Wind speed", &emptyImgPack, showWindSpeed}, {"Wind gusts", &emptyImgPack, showWindGuts}, {"Visibility", &emptyImgPack, showVisibility}, {"% of precipitation", &emptyImgPack, showPop}};
-    initMenu(buttons, 9, "Weather stat", 1);
+    entryMenu buttons[9] = {
+        {WEATHER_MENU_TEMPERATURE, &emptyImgPack, showTemp}, 
+        {WEATHER_MENU_PRESSURE, &emptyImgPack, showPressure}, 
+        {WEATHER_MENU_HUMIDITY, &emptyImgPack, showHumidity}, 
+        {WEATHER_MENU_CONDITIONS, &emptyImgPack, showWeatherCond}, 
+        {WEATHER_MENU_CLOUDINESS, &emptyImgPack, showClouds}, 
+        {WEATHER_MENU_WIND_SPEED, &emptyImgPack, showWindSpeed}, 
+        {WEATHER_MENU_WIND_GUSTS, &emptyImgPack, showWindGuts}, 
+        {WEATHER_MENU_VISIBILITY, &emptyImgPack, showVisibility}, 
+        {WEATHER_MENU_PRECIPITATION, &emptyImgPack, showPop}
+    };
+    initMenu(buttons, 9, WEATHER_STAT_TITLE, 1);
 }
 
 OM_HourlyForecastReturn generalWeatherGetData()
@@ -159,7 +170,7 @@ OM_HourlyForecastReturn generalWeatherGetData()
         debugLog("Weather data is bad.");
         free(weatherData.buf);
         overwriteSwitch(textDialog);
-        showTextDialog("Weather corrupted");
+        showTextDialog(WEATHER_CORRUPTED);
         forecast.fine = false;
         return forecast;
     }
@@ -236,7 +247,7 @@ void showTemp()
         debugLog(String(i) + ": " + String(forecast.data.temp[i]));
     }
 #endif
-    showChart(forecast.data.temp, OM_WEATHER_MAX_HOURS, "Temp / C");
+    showChart(forecast.data.temp, OM_WEATHER_MAX_HOURS, WEATHER_CHART_TEMP);
     generalSwitch(ChartPlace);
 }
 
@@ -254,7 +265,7 @@ void showPressure()
         debugLog(String(i) + ": " + String(forecast.data.pressure[i]));
     }
 #endif
-    showChart(forecast.data.pressure, OM_WEATHER_MAX_HOURS, "Pressure / hPa");
+    showChart(forecast.data.pressure, OM_WEATHER_MAX_HOURS, WEATHER_CHART_PRESSURE);
     generalSwitch(ChartPlace);
 }
 
@@ -277,7 +288,7 @@ void showHumidity()
     {
         humidity[i] = u8_t(forecast.data.humidity[i]);
     }
-    showChart(humidity, OM_WEATHER_MAX_HOURS, "Humidity / %");
+    showChart(humidity, OM_WEATHER_MAX_HOURS, WEATHER_CHART_HUMIDITY);
     generalSwitch(ChartPlace);
 }
 
@@ -293,7 +304,7 @@ void showWeatherCond()
     {
         weatherCond[i] = weatherConditionIdToStr(forecast.data.weather_code[i]);
     }
-    textPage("Weather conditions", weatherCond, OM_WEATHER_MAX_HOURS, getFont("dogicapixel4"));
+    textPage(WEATHER_CONDITIONS_TITLE, weatherCond, OM_WEATHER_MAX_HOURS, getFont("dogicapixel4"));
     generalSwitch(ChartPlace);
 }
 
@@ -316,7 +327,7 @@ void showClouds()
     {
         clouds[i] = float(forecast.data.cloud_cover[i]);
     }
-    showChart(clouds, OM_WEATHER_MAX_HOURS, "Clouds / %");
+    showChart(clouds, OM_WEATHER_MAX_HOURS, WEATHER_CHART_CLOUDS);
     generalSwitch(ChartPlace);
 }
 
@@ -334,7 +345,7 @@ void showWindSpeed()
         debugLog(String(i) + ": " + String(forecast.data.wind_speed[i]));
     }
 #endif
-    showChart(forecast.data.wind_speed, OM_WEATHER_MAX_HOURS, "Wind speed / km/h");
+    showChart(forecast.data.wind_speed, OM_WEATHER_MAX_HOURS, WEATHER_CHART_WIND_SPEED);
     generalSwitch(ChartPlace);
 }
 
@@ -352,7 +363,7 @@ void showWindGuts()
         debugLog(String(i) + ": " + String(forecast.data.wind_gust[i]));
     }
 #endif
-    showChart(forecast.data.wind_gust, OM_WEATHER_MAX_HOURS, "Wind gusts / km/h");
+    showChart(forecast.data.wind_gust, OM_WEATHER_MAX_HOURS, WEATHER_CHART_WIND_GUSTS);
     generalSwitch(ChartPlace);
 }
 
@@ -375,7 +386,7 @@ void showVisibility()
     {
         vis[i] = float(forecast.data.visibility[i]);
     }
-    showChart(vis, OM_WEATHER_MAX_HOURS, "Visib. / m");
+    showChart(vis, OM_WEATHER_MAX_HOURS, WEATHER_CHART_VISIBILITY);
     generalSwitch(ChartPlace);
 }
 
@@ -398,7 +409,7 @@ void showPop()
     {
         pop[i] = float(forecast.data.precipitation[i]);
     }
-    showChart(pop, OM_WEATHER_MAX_HOURS, "Preper. / %");
+    showChart(pop, OM_WEATHER_MAX_HOURS, WEATHER_CHART_PRECIPITATION);
     generalSwitch(ChartPlace);
 }
 #endif

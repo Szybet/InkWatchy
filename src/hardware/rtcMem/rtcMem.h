@@ -93,6 +93,8 @@ struct rtcMem
         uint8_t lastBatteryLevel;
         uint8_t lastDay;
         uint8_t lastMonth;
+        char lastTemp[12];          // For temperature string like "-15°C" (max ~11 chars + null)
+        char lastCondition[32];     // For weather condition strings (max ~31 chars + null)
     } slate;
 #endif
 // taychron watchface

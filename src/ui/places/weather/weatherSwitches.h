@@ -43,6 +43,11 @@ struct OM_OneHourWeather
 
 OM_OneHourWeather weatherGetDataHourly(uint8_t hourOffset);
 
+// Weather menu functions
+void initWeatherMenu();
+void initWeatherConditionMenu();
+OM_HourlyForecastReturn generalWeatherGetData();
+
 // Switches for weather
 void showTemp();
 void showPressure();

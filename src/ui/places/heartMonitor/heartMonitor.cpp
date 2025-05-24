@@ -1,5 +1,6 @@
 #include "heartMonitor.h"
 #include "rtcMem.h"
+#include "localization.h"
 
 #if HEART_MONITOR
 TaskHandle_t heartRateHandle;
@@ -187,24 +188,24 @@ void initHeartMonitor()
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
     dis->setCursor(0, 1);
-    String menuName = "Heart rate monitor";
+    String menuName = HEART_MONITOR_TITLE;
     getTextBounds(menuName, NULL, NULL, NULL, &h);
     maxHeight = h + 3;
     uint16_t currentHeight = maxHeight;
 
     writeLine(menuName, 1, &currentHeight);
 
-    writeLine("Not for medical use", 1, &currentHeight);
+    writeLine(HEART_MONITOR_NOT_MEDICAL, 1, &currentHeight);
 
-    writeLine("Place device on heart", 1, &currentHeight);
+    writeLine(HEART_MONITOR_PLACE_DEVICE, 1, &currentHeight);
 
-    writeLine("Then click menu", 1, &currentHeight);
+    writeLine(HEART_MONITOR_CLICK_MENU, 1, &currentHeight);
 
-    writeLine("It will start in 3s", 1, &currentHeight);
+    writeLine(HEART_MONITOR_START_3S, 1, &currentHeight);
 
-    writeLine("It takes 15s", 1, &currentHeight);
+    writeLine(HEART_MONITOR_TAKES_15S, 1, &currentHeight);
 
-    writeLine("Try to breath slowly", 1, &currentHeight);
+    writeLine(HEART_MONITOR_BREATHE_SLOWLY, 1, &currentHeight);
     lastHeight = currentHeight + 30;
     disUp(true);
 
@@ -242,7 +243,7 @@ void loopHeartMonitor()
                 time = 15;
             }
             if(time > 1) {
-                writeTextCenterReplaceBack("Time left: " + String(time), lastHeight);
+                writeTextCenterReplaceBack(HEART_MONITOR_TIME_LEFT + String(time), lastHeight);
                 pineapple();
                 dUChange = true;    
             }
@@ -252,7 +253,7 @@ void loopHeartMonitor()
     {
         if (heartBeats != 0)
         {
-            writeTextCenterReplaceBack(String("= ") + String(heartBeats) + String("bpm"), lastHeight);
+            writeTextCenterReplaceBack(String("= ") + String(heartBeats) + HEART_MONITOR_BPM, lastHeight);
             pineapple();
             heartBeats = 0;
             dUChange = true;

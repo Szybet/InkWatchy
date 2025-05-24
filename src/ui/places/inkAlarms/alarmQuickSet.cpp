@@ -1,6 +1,6 @@
-// alarmQuickSet.cpp
 #include "alarmQuickSet.h"
 #include "rtcMem.h"
+#include "alarmTimeFormat.h"  // Include the new formatting header
 
 #if INK_ALARMS
 
@@ -37,14 +37,7 @@ void setAlarmQuick(int minutes, int id)
     calculateNextAlarm();
 }
 
-//#define X(min,label)                  \
-//void sAQ##min(void) {                 \
-//    setAlarmQuick(min, ALARM_QUICK_ID); \
-//}
-// QUICK_ALARM_LIST(X)
-// #undef X
-
-#define X(min, label)                                                         \
+#define X(min)                                                         \
     void sAQ##min(void)                                                       \
     {                                                                         \
         readRTC();                                                            \
@@ -65,7 +58,7 @@ void setAlarmQuick(int minutes, int id)
         dis->setTextWrap(false);                                              \
         dis->setCursor(0, 1);                                                 \
                                                                               \
-        String menuName = "Quick Alarm alert";                                \
+        String menuName = ALARM_QUICK_ALERT_TITLE;                            \
         uint16_t maxHeight;                                                   \
         getTextBounds(menuName, NULL, NULL, NULL, &maxHeight);                \
         uint16_t currentHeight = maxHeight;                                   \
@@ -77,11 +70,11 @@ void setAlarmQuick(int minutes, int id)
         dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);        \
         currentHeight = currentHeight + maxHeight;                            \
                                                                               \
-        centerText("Alarm set for:", &currentHeight);                         \
+        centerText(ALARM_QUICK_ALARM_SET_FOR, &currentHeight);                \
         currentHeight += maxHeight + 2;                                       \
-        centerText(String(label), &currentHeight);                            \
+        centerText(getFormattedAlarmDuration(min), &currentHeight);           \
         currentHeight += maxHeight + 10;                                      \
-        centerText("Will ring at:", &currentHeight);                          \
+        centerText(ALARM_QUICK_WILL_RING_AT, &currentHeight);                 \
         currentHeight += maxHeight + 3;                                       \
         centerText(String(timeBuf), &currentHeight);                          \
                                                                               \
@@ -95,9 +88,10 @@ void setAlarmQuick(int minutes, int id)
 QUICK_ALARM_LIST(X)
 #undef X
 
-#define X(min, label) {label, &emptyImgPack, sAQ##min},
+#define X(min) {getFormattedAlarmDuration(min), &emptyImgPack, sAQ##min},
 static entryMenu buttons[] = {
-    QUICK_ALARM_LIST(X)};
+    QUICK_ALARM_LIST(X)
+};
 #undef X
 
 void initAlarmQuickSet(void)
@@ -105,7 +99,7 @@ void initAlarmQuickSet(void)
     initMenu(
         buttons,
         sizeof(buttons) / sizeof(buttons[0]),
-        "Quick alarm",
+        ALARM_MENU_QUICK_ALARM,
         1);
 }
 

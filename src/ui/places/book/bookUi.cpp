@@ -1,5 +1,6 @@
 #include "defines.h"
 #include "rtcMem.h"
+#include "localization.h"
 
 #if BOOK
 #include "bookUi.h"
@@ -216,7 +217,7 @@ void initBook()
     {
         debugLog("No book selected, going back");
         overwriteSwitch(textDialog);
-        showTextDialog("No book selected");
+        showTextDialog(BOOK_NO_SELECTED);
         return;
     }
     resetSleepDelayBook();

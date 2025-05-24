@@ -1,6 +1,6 @@
 #pragma once
 
-#include "defines.h"
+#include "config.h"
 
 /*
 Template for versioning
@@ -24,8 +24,8 @@ Template for versioning
 #if SCOM_TASK_ENABLED
 #undef VIBRATION_BUTTON_TIME
 #undef VIBRATION_ACTION_TIME
-#define VIBRATION_BUTTON_TIME 150 // Time in ms to the motor to vibrate after clicking a button. 0 means none
-#define VIBRATION_ACTION_TIME 150 // Time in ms to the motor to vibrate when the UI receives an action
+#define VIBRATION_BUTTON_TIME 150 // Time in ms for the motor to vibrate after clicking a button. 0 means none
+#define VIBRATION_ACTION_TIME 150 // Time in ms for the motor to vibrate when the UI receives an action
 #undef DEBUG_CPU_SPEED
 #define DEBUG_CPU_SPEED maxSpeed
 #undef SERIAL_LOG_DELAY_MS
@@ -66,7 +66,7 @@ Template for versioning
 #define EPD_SPI_MOSI 23
 #define EPD_SPI_SS 5
 #elif ATCHY_VER == WATCHY_3
-// But those are used
+// But these are used
 #define EPD_SPI_SCK 47
 #define EPD_SPI_MISO 46
 #define EPD_SPI_MOSI 48
@@ -80,7 +80,7 @@ Template for versioning
 
 // Button pins
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
-// Maybe I could od a !not but whatever
+// Maybe I could do a !not but whatever
 #define BUT_STATE LOW
 #define BUT_CLICK_STATE HIGH
 #define BUTTON_INTER_COND RISING
@@ -101,9 +101,10 @@ Template for versioning
 #define DOWN_PIN 8
 #define UP_PIN 0
 #elif ATCHY_VER == YATCHY
-// Don't define it, to show errors
+// Button states defined here
 #define BUT_STATE LOW
 #define BUT_CLICK_STATE HIGH
+// Pins will be defined later in YATCHY specific section
 #endif
 
 // Other
@@ -125,7 +126,7 @@ Template for versioning
 #define EXT1_WAKEUP_STATE ESP_EXT1_WAKEUP_ANY_LOW
 #define BATT_ADC_PIN 9
 #define ADC_VOLTAGE_DIVIDER 739.750f // Voltage divider at battery ADC, original values were ((360.0f + 100.0f) / 360.0f), this math is done by GuruSR
-#define CHRG_STATUS_PIN 10 // If HIGH, usb is connected. Someone with a v3 is free to use interrupts for that and enable wakeups for this pin too
+#define CHRG_STATUS_PIN 10 // If HIGH, USB is connected. Someone with a v3 is free to use interrupts for that and enable wakeups for this pin too
 #elif ATCHY_VER == YATCHY
 #define VIB_MOTOR_PIN 14
 #define RTC_INT_PIN -1
@@ -166,7 +167,7 @@ Template for versioning
 // This won't work, needs to be in platformio.ini too
 #define SMALL_RTC_NO_DS3232 1
 #define SMALL_RTC_NO_PCF8563 1
-#define SMALL_RTC_NO_EXT0 1 // esp32c6 simply doesn't have it, as a defined function
+#define SMALL_RTC_NO_EXT0 1 // ESP32C6 simply doesn't have it, as a defined function
 #endif
 #endif
 #if RTC_32KHZ_CRYSTAL != 1
@@ -184,7 +185,7 @@ Template for versioning
 #define CPU_FAST_SPEED 160
 #endif
 
-// AXC
+// Accelerometer
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #define ACC_ENABLED 1
 #elif ATCHY_VER == WATCHY_3
@@ -197,16 +198,23 @@ Template for versioning
 #if ATCHY_VER == YATCHY
 #define USB_JTAG 1
 #else
-#define USB_JTAG 0 // I don't have a watchy v3
+#define USB_JTAG 0 // I don't have a Watchy v3
 #endif
 
 // Yatchy specific things
 #if ATCHY_VER == YATCHY
 #define LP_CORE 1
 
+// Pin definitions for YATCHY (avoiding redefinition warnings)
+#ifndef MENU_PIN
 #define MENU_PIN 0 // A0
+#endif
+#ifndef DOWN_PIN
 #define DOWN_PIN 1 // A1
+#endif
+#ifndef UP_PIN
 #define UP_PIN 2 // A2
+#endif
 
 #define YATCHY_DISPLAY_CS 8 // B0
 
@@ -220,18 +228,20 @@ Template for versioning
 
 #if YATCHY_MODULE == YATCHY_DEFAULT_MODULE
 // Everything here is optional, or should be, if something doesn't work let me know
+#ifndef BACK_PIN
 #define BACK_PIN 3 // A3
+#endif
 #define YATCHY_BACK_BTN
 #define RGB_DIODE 1
 #define RGB_DIODE_RED_PIN 12
 #define RGB_DIODE_GREEN_PIN 11
 #define RGB_DIODE_BLUE_PIN 10
-#define BATTERY_RGB_DIODE 1 // If to show battery charge / fully charge with rgb diode
+#define BATTERY_RGB_DIODE 1 // If to show battery charge / fully charged with RGB diode
 
 // For colors, look up to src/hardware/rgb/rgb.h
 #define BATTERY_CHARGING_COLOR IwYellow
 #define BATTERY_CHARGED_COLOR IwGreen
-#define BATTERY_DISCHARGING_COLOR IwRed // What color to show for a second if its starting to discharge
+#define BATTERY_DISCHARGING_COLOR IwRed // What color to show for a second if it's starting to discharge
 
 #endif
 #endif
@@ -247,7 +257,7 @@ Template for versioning
 #define MIC_PIN_VDD 19
 #endif
 
-// Lp core
+// LP core
 #ifndef LP_CORE
 #define LP_CORE 0
 #endif
@@ -262,12 +272,12 @@ Template for versioning
 #define ACC_ENABLED 0
 #endif
 
-// Bma version
+// BMA version
 #if ATCHY_VER == WATCHY_3 || ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
 #define BMA_VERSION 423
 #elif ATCHY_VER == YATCHY
-#define BMA_VERSION 456 // Needs 100Khz I2C
-// Uncomment this, disable the previous line if you have the bma 530
+#define BMA_VERSION 456 // Needs 100kHz I2C
+// Uncomment this, disable the previous line if you have the BMA 530
 // #define BMA_VERSION 530
 #endif
 
@@ -280,5 +290,5 @@ Template for versioning
 #endif
 
 #if GSR_WATCHFACES == 1 && ATCHY_VER == YATCHY && LP_CORE == 1
-#error I explained it in config.h yet here we are, GSR_WATCHFACES are not compatible with LP_CORE on yatchy. Disable LP_CORE if you really need Gsr watchfaces, but the battery life will suck, you have been warned
+#error I explained it in config.h yet here we are, GSR_WATCHFACES are not compatible with LP_CORE on Yatchy. Disable LP_CORE if you really need GSR watchfaces, but the battery life will suck, you have been warned
 #endif
