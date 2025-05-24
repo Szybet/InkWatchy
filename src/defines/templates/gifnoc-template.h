@@ -124,7 +124,8 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 
 // Alarms
 #define INK_ALARMS 1 // Enable alarms
-#define QUICK_ALARM_LIST(X) \ // Write the amount of minutes, 60 minutes - 1 hour
+// Write the amount of minutes and the label will be done automatically in selected language 
+#define QUICK_ALARM_LIST(X) \
     X(5)       \
     X(10)      \
     X(15)      \
@@ -137,6 +138,7 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
     X(360)     \
     X(480)     \
     X(1440)
+
 
 #define ALARM_DURATION_S 60           // Seconds of ringing
 #define ALARM_MOTOR_DELAY 1000        // Ms of delay for motor

@@ -427,31 +427,35 @@ static void drawMonth()
     dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
 }
 
-static void drawBattery()
-{
-    // Cache check prevents unnecessary redraws
+static void drawBattery() {
     if (rM.slate.lastBatteryLevel == rM.batteryPercantageWF) return;
-    
+
     bool hasWeather = weatherIsAvailable();
-    
     setFont(getFont(SLATE_FONT));
     setTextSize(2);
-    
+
+    // Build battery bar string
     String battBar = "[";
     int segments = rM.batteryPercantageWF / 20;
-    
-    for(int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5; i++) {
         battBar += (i < segments) ? "=" : " ";
     }
     battBar += "]";
-    
+
+    // Calculate center X position
+    uint16_t textWidth;
+    getTextBounds(battBar, NULL, NULL, &textWidth, NULL);
+    int centerX = (200 - textWidth) / 2;
+
     int batteryY = hasWeather ? SLATE_BATTERY_Y : SLATE_BATTERY_NO_WEATHER_Y;
-    clearTextArea(100, batteryY, battBar, 2, 6);
+
+    // Clear centered area
+    clearTextArea(centerX, batteryY, battBar, 2, 6);
     writeTextCenterReplaceBack(battBar, batteryY);
-    
+
     rM.slate.lastBatteryLevel = rM.batteryPercantageWF;
-    
-    // Redraw border after clearing
+
+    // Redraw border
     dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
     dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
 }
