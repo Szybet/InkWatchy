@@ -24,7 +24,7 @@ https://github.com/retroisbest/Watchy-GSR-Faces/tree/main
 https://github.com/GuruSR/Watchy_GSR/tree/master
 https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 */
-#define GSR_WATCHFACES 0 // General turn on off every watchface
+#define GSR_WATCHFACES 0          // General turn on off every watchface
 #define GSR_WATCHFACES_OPTIMISE 1 // Draws only every minute, not all the time, small optimisations, doesn't change much but could break things but hey
 #define GSR_STARFIELD 0
 #define GSR_STARFIELD_TIMEZONE_THING 0.0 // Hours.Minutes of your timezone (kind of UTC) - yes too lazy to automate that
@@ -53,8 +53,8 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define VIBRATION_MULTIPLIER 1.0
 #define STEPS_GOAL 7000
 // Backups RTC memory to flash, so after updating the firmware (When resources weren't updated, or rtc memory wasn't changed) it will still keep data like alarms
-// Might introduce weird behaviour or crashes on a update, but it tries to avoid it. 
-// Might consume a bit of battery, but that's marginal. 
+// Might introduce weird behaviour or crashes on a update, but it tries to avoid it.
+// Might consume a bit of battery, but that's marginal.
 // It may also increase flash usage and life, but hey, mine still works so yours will too
 // If it doesn't save something you want, add it yourself or request it
 #define RTC_MEMORY_BACKUP 0
@@ -121,28 +121,28 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define MOON_MAX_RADIUS 64.0
 
 // Alarms
-#define INK_ALARMS 1           // Enable alarms
-#define QUICK_ALARM_LIST(X)                      \
-    X(  5,  "5 minutes" )                        \
-    X( 10,  "10 minutes")                        \
-    X( 15,  "15 minutes")                        \
-    X( 20,  "20 minutes")                        \
-    X( 25,  "25 minutes")                        \
-    X( 60,  "1 hour"    )                        \
-    X( 90,  "1.5 hours" )                        \
-    X(120,  "2 hours"   )                        \
-    X(180,  "3 hours"   )                        \
-    X(360,  "6 hours"   )                        \
-    X(480,  "8 hours"   )                        \
-    X(1440, "24 hours"  )			 \
+#define INK_ALARMS 1 // Enable alarms
+#define QUICK_ALARM_LIST(X) \
+    X(5, "5 minutes")       \
+    X(10, "10 minutes")     \
+    X(15, "15 minutes")     \
+    X(20, "20 minutes")     \
+    X(25, "25 minutes")     \
+    X(60, "1 hour")         \
+    X(90, "1.5 hours")      \
+    X(120, "2 hours")       \
+    X(180, "3 hours")       \
+    X(360, "6 hours")       \
+    X(480, "8 hours")       \
+    X(1440, "24 hours")
 
-#define ALARM_DURATION_S 60    // Seconds of ringing
-#define ALARM_MOTOR_DELAY 1000 // Ms of delay for motor
-#define ALARM_MOTOR_TIME 200   // Time for motor to vibrate
-#define ALARM_WIFI_MIN_STRENGTH 60 // from 1-99, percents
-#define ALARM_WIFI_MULTIPLIER 7 // Multiplies the time if wifi connect is needed
-#define ALARM_QUICK_ID MAX_ALARMS-1 // Which alarm to replace for quick alarms, the default is the last one. Can't be higher than MAX_ALARMS-1
-#define ALARM_DISABLE_BACK 1 // No escaping if (wifi) alarm
+#define ALARM_DURATION_S 60           // Seconds of ringing
+#define ALARM_MOTOR_DELAY 1000        // Ms of delay for motor
+#define ALARM_MOTOR_TIME 200          // Time for motor to vibrate
+#define ALARM_WIFI_MIN_STRENGTH 60    // from 1-99, percents
+#define ALARM_WIFI_MULTIPLIER 7       // Multiplies the time if wifi connect is needed
+#define ALARM_QUICK_ID MAX_ALARMS - 1 // Which alarm to replace for quick alarms, the default is the last one. Can't be higher than MAX_ALARMS-1
+#define ALARM_DISABLE_BACK 1          // No escaping if (wifi) alarm
 
 // Pomodoro (Using alarms, so needs them)
 #define POMODORO_ALARM 1
@@ -171,6 +171,7 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define CONWAY 1
 #define CONWAY_CPU_SPEED 0    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
 #define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
+
 // Calendar
 #define CALENDAR 0
 // allow insecure url for calendar
@@ -329,8 +330,8 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS 0 // Yatchy with no battery, huh
 #define SCREEN_CORNER_WAKEUP 0                 // writes a few pixels in the left top corner, works without DEBUG turned on
 #define I2C_SCANNER 0                          // For yatchy testing
-#define DUMP_LOOP_ACC 0 // Needs ACC
-#define DUMP_LOOP_ACC_DIFF 0 // Only shows diff from previous reading, experimental, look up the code
+#define DUMP_LOOP_ACC 0                        // Needs ACC
+#define DUMP_LOOP_ACC_DIFF 0                   // Only shows diff from previous reading, experimental, look up the code
 #define SCREENSHOT_ENDPOINT 0
 
 // Voltage reading average
