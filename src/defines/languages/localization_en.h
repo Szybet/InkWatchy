@@ -257,7 +257,7 @@
 #define VAULT_KEY_INCORRECT "Key is incorrect"
 #define VAULT_EMPTY "Vault is empty?"
 
-/ ==============================================================================
+// ==============================================================================
 // ALARM TRANSLATIONS
 // ==============================================================================
 
@@ -318,8 +318,3 @@
 #define TIME_UNIT_DAY "day"
 #define TIME_UNIT_DAYS "days"
 #define TIME_UNIT_AND "and"
-
-// Polish-specific time units (not used in English, but defined for consistency)
-#define TIME_UNIT_MINUTES_2_4 "minutes"  // Same as TIME_UNIT_MINUTES in English
-#define TIME_UNIT_HOURS_2_4 "hours"      // Same as TIME_UNIT_HOURS in English
-#define TIME_UNIT_DAYS_2_4 "days"        // Same as TIME_UNIT_DAYS in English

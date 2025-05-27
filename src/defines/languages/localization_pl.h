@@ -44,9 +44,9 @@
 #define WF_S_DAY_SUN "NIE"
 
 // Error messages
-#define WF_T_ERROR "BLAD"        // Taychron
-#define WF_I_ERROR "BLAD"        // InkField
-#define WF_I_ERROR_SHORT "BL"    // InkField short
+#define WF_T_ERROR "BLAD"     // Taychron
+#define WF_I_ERROR "BLAD"     // InkField
+#define WF_I_ERROR_SHORT "BL" // InkField short
 
 // Time format
 #define WF_TIME_AM "AM"
@@ -118,7 +118,7 @@
 // Book reader messages
 #define BOOK_NO_SELECTED "Nie wybrano ksiazki"
 
-// Calendar messages  
+// Calendar messages
 #define CALENDAR_NO_DATA "Brak danych kalendarza"
 
 // ==============================================================================
@@ -319,5 +319,5 @@
 #define TIME_UNIT_HOURS_2_4 "godziny"
 #define TIME_UNIT_DAY "dzien"
 #define TIME_UNIT_DAYS "dni"
-#define TIME_UNIT_DAYS_2_4 "dni"  // Same as TIME_UNIT_DAYS in Polish
+#define TIME_UNIT_DAYS_2_4 "dni" // Same as TIME_UNIT_DAYS in Polish
 #define TIME_UNIT_AND "i"

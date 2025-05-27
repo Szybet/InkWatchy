@@ -3,7 +3,7 @@
 // Watchfaces!
 // https://github.com/Szybet/InkWatchy/wiki/Watchfaces
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
-#define INKWATCHY_LANG PL // PL, EN and DE | Supported watchfaces: InkField, Slate and Taychron
+#define INKWATCHY_LANG SK // PL, EN, DE and SK | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_12H 0 // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1

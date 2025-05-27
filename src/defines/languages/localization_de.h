@@ -318,8 +318,3 @@
 #define TIME_UNIT_DAY "Tag"
 #define TIME_UNIT_DAYS "Tage"
 #define TIME_UNIT_AND "und"
-
-// Polish-specific time units (not used in German, but defined for consistency)
-#define TIME_UNIT_MINUTES_2_4 "Minuten"  // Same as TIME_UNIT_MINUTES in German
-#define TIME_UNIT_HOURS_2_4 "Stunden"    // Same as TIME_UNIT_HOURS in German
-#define TIME_UNIT_DAYS_2_4 "Tage"        // Same as TIME_UNIT_DAYS in German

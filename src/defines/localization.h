@@ -11,6 +11,7 @@
 #define EN 1
 #define PL 2
 #define DE 3
+#define SK 4
 
 // Ensure INKWATCHY_LANG is defined
 #ifndef INKWATCHY_LANG
@@ -22,15 +23,17 @@
 // ==============================================================================
 
 #if INKWATCHY_LANG == EN
-    #include "languages/localization_en.h"
+#include "languages/localization_en.h"
 #elif INKWATCHY_LANG == PL
-    #include "languages/localization_pl.h"
+#include "languages/localization_pl.h"
 #elif INKWATCHY_LANG == DE
-    #include "languages/localization_de.h"
+#include "languages/localization_de.h"
+#elif INKWATCHY_LANG == SK
+#include "languages/localization_sk.h"
 #else
-    // Default fallback to English
-    #include "languages/localization_en.h"
-    #warning "Unsupported language! Defaulting to English. Please define INKWATCHY_LANG as EN, PL, or DE in config.h"
+// Default fallback to English
+#include "languages/localization_en.h"
+#warning "Unsupported language! Defaulting to English. Please define INKWATCHY_LANG as EN, PL, DE, or SK in config.h"
 #endif
 
 // ==============================================================================
@@ -39,15 +42,16 @@
 
 // Helper macro for building day name arrays at compile time
 // Array starts with Sunday (index 0) to match standard Wday convention
-#define LANGUAGE_DAY_NAMES { \
+#define LANGUAGE_DAY_NAMES {                                \
     WF_S_DAY_SUN, WF_S_DAY_MON, WF_S_DAY_TUE, WF_S_DAY_WED, \
-    WF_S_DAY_THU, WF_S_DAY_FRI, WF_S_DAY_SAT \
-}
+    WF_S_DAY_THU, WF_S_DAY_FRI, WF_S_DAY_SAT}
 
 // Helper function to get localized month name
-inline String getLocalizedMonthName(int month) {
+inline String getLocalizedMonthName(int month)
+{
     static const String monthNames[] = LANGUAGE_MONTH_NAMES;
-    if (month >= 0 && month < 12) {
+    if (month >= 0 && month < 12)
+    {
         return monthNames[month];
     }
     return "???";
@@ -56,13 +60,15 @@ inline String getLocalizedMonthName(int month) {
 // Helper function to get localized day name by day of week index
 // dayOfWeek: 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 // offset: days to add/subtract from current day
-inline String getLocalizedDayByIndex(int dayOfWeek, int offset = 0) {
+inline String getLocalizedDayByIndex(int dayOfWeek, int offset = 0)
+{
     static const String dayNames[] = LANGUAGE_DAY_NAMES;
-    
+
     // Apply offset and wrap around
     int dayIndex = (dayOfWeek + offset + 6) % 7;
-    
-    if (dayIndex >= 0 && dayIndex < 7) {
+
+    if (dayIndex >= 0 && dayIndex < 7)
+    {
         return dayNames[dayIndex];
     }
     return "???";
@@ -70,8 +76,9 @@ inline String getLocalizedDayByIndex(int dayOfWeek, int offset = 0) {
 
 // Convenience function for getting current day name with offset
 // This should be used where timeRTCLocal is available
-inline String getCurrentLocalizedDayName(int offset = 0) {
-    extern tmElements_t timeRTCLocal;  // Forward declaration
+inline String getCurrentLocalizedDayName(int offset = 0)
+{
+    extern tmElements_t timeRTCLocal; // Forward declaration
     return getLocalizedDayByIndex(timeRTCLocal.Wday, offset);
 }
 
@@ -79,91 +86,209 @@ inline String getCurrentLocalizedDayName(int offset = 0) {
 // COMPILE-TIME VALIDATION
 // ==============================================================================
 
-// Check basic watchface and menu translations
-#if !defined(WF_S_WEATHER_CLEAR_SKY) || !defined(WF_S_DAY_MON) || !defined(MENU_MAIN)
-    #error "Localization file is incomplete! Missing basic watchface or menu definitions."
+// Check basic watchface weather conditions
+#if !defined(WF_S_WEATHER_CLEAR_SKY) || !defined(WF_S_WEATHER_MOSTLY_CLEAR) || !defined(WF_S_WEATHER_PARTLY_CLOUDY) || \
+    !defined(WF_S_WEATHER_OVERCAST) || !defined(WF_S_WEATHER_FOG) || !defined(WF_S_WEATHER_HEAVY_FOG) || \
+    !defined(WF_S_WEATHER_LIGHT_DRIZZLE) || !defined(WF_S_WEATHER_DRIZZLE) || !defined(WF_S_WEATHER_HEAVY_DRIZZLE) || \
+    !defined(WF_S_WEATHER_LIGHT_FREEZING) || !defined(WF_S_WEATHER_HEAVY_FREEZING) || !defined(WF_S_WEATHER_LIGHT_RAIN) || \
+    !defined(WF_S_WEATHER_RAIN) || !defined(WF_S_WEATHER_HEAVY_RAIN) || !defined(WF_S_WEATHER_FREEZING_RAIN) || \
+    !defined(WF_S_WEATHER_FREEZING_HARD) || !defined(WF_S_WEATHER_LIGHT_SNOW) || !defined(WF_S_WEATHER_SNOW) || \
+    !defined(WF_S_WEATHER_HEAVY_SNOW) || !defined(WF_S_WEATHER_SNOW_GRAINS) || !defined(WF_S_WEATHER_LIGHT_SHOWERS) || \
+    !defined(WF_S_WEATHER_SHOWERS) || !defined(WF_S_WEATHER_HEAVY_SHOWERS) || !defined(WF_S_WEATHER_SNOW_SHOWERS) || \
+    !defined(WF_S_WEATHER_THUNDERSTORM) || !defined(WF_S_WEATHER_LIGHT_HAIL) || !defined(WF_S_WEATHER_HEAVY_HAIL) || \
+    !defined(WF_S_WEATHER_UNKNOWN)
+#error "Localization file is missing weather condition definitions."
 #endif
 
-// Check weather translations
-#if !defined(WEATHER_MENU_TEMPERATURE) || !defined(WEATHER_NOT_AVAILABLE) || !defined(WEATHER_CHART_TEMP)
-    #error "Localization file is missing weather-related definitions."
+// Check day names (abbreviated)
+#if !defined(WF_S_DAY_MON) || !defined(WF_S_DAY_TUE) || !defined(WF_S_DAY_WED) || !defined(WF_S_DAY_THU) || \
+    !defined(WF_S_DAY_FRI) || !defined(WF_S_DAY_SAT) || !defined(WF_S_DAY_SUN)
+#error "Localization file is missing day name definitions."
+#endif
+
+// Check error messages
+#if !defined(WF_T_ERROR) || !defined(WF_I_ERROR) || !defined(WF_I_ERROR_SHORT)
+#error "Localization file is missing error message definitions."
+#endif
+
+// Check time format
+#if !defined(WF_TIME_AM) || !defined(WF_TIME_PM)
+#error "Localization file is missing time format definitions."
+#endif
+
+// Check weather submenu items
+#if !defined(WEATHER_MENU_TEMPERATURE) || !defined(WEATHER_MENU_PRESSURE) || !defined(WEATHER_MENU_HUMIDITY) || \
+    !defined(WEATHER_MENU_CONDITIONS) || !defined(WEATHER_MENU_CLOUDINESS) || !defined(WEATHER_MENU_WIND_SPEED) || \
+    !defined(WEATHER_MENU_WIND_GUSTS) || !defined(WEATHER_MENU_VISIBILITY) || !defined(WEATHER_MENU_PRECIPITATION)
+#error "Localization file is missing weather submenu definitions."
+#endif
+
+// Check weather menu titles and messages
+#if !defined(WEATHER_SELECT_DATE) || !defined(WEATHER_STAT_TITLE) || !defined(WEATHER_NOT_AVAILABLE) || \
+    !defined(WEATHER_DATE_WRONG) || !defined(WEATHER_CORRUPTED)
+#error "Localization file is missing weather menu title definitions."
+#endif
+
+// Check weather chart titles
+#if !defined(WEATHER_CHART_TEMP) || !defined(WEATHER_CHART_PRESSURE) || !defined(WEATHER_CHART_HUMIDITY) || \
+    !defined(WEATHER_CHART_CLOUDS) || !defined(WEATHER_CHART_WIND_SPEED) || !defined(WEATHER_CHART_WIND_GUSTS) || \
+    !defined(WEATHER_CHART_VISIBILITY) || !defined(WEATHER_CHART_PRECIPITATION) || !defined(WEATHER_CONDITIONS_TITLE)
+#error "Localization file is missing weather chart definitions."
+#endif
+
+// Check month names
+#if !defined(LANGUAGE_MONTH_NAMES)
+#error "Localization file is missing month name definitions."
 #endif
 
 // Check main menu translations
-#if !defined(MENU_SETTINGS) || !defined(MENU_DEBUG) || !defined(MENU_GAMES) || !defined(MENU_POWER)
-    #error "Localization file is missing main menu definitions."
+#if !defined(MENU_MAIN) || !defined(MENU_CALENDAR) || !defined(MENU_SELECT_BOOK) || !defined(MENU_ALARMS) || \
+    !defined(MENU_WEATHER) || !defined(MENU_SETTINGS) || !defined(MENU_HEART_MONITOR) || !defined(MENU_VAULT) || \
+    !defined(MENU_WIFI_TOOL) || !defined(MENU_EATING_APPLES) || !defined(MENU_SMASHING_APPLES) || !defined(MENU_GAMES) || \
+    !defined(MENU_CREDITS) || !defined(MENU_WIFI) || !defined(MENU_DEBUG) || !defined(MENU_POWER_SETTINGS) || \
+    !defined(MENU_CHANGE_WATCHFACE) || !defined(MENU_TETRIS) || !defined(MENU_PONG) || !defined(MENU_VIDEO_PLAYER) || \
+    !defined(MENU_CONWAY) || !defined(MENU_PARTY) || !defined(MENU_VIBRATIONS_DIS) || !defined(MENU_WAKE_UP_DIS) || \
+    !defined(MENU_POWER)
+#error "Localization file is missing main menu definitions."
 #endif
 
-// Check debug menu titles
-#if !defined(DEBUG_MENU_ACC) || !defined(DEBUG_MENU_BATTERY) || !defined(DEBUG_MENU_CLOCK) || \
-    !defined(DEBUG_MENU_GIT) || !defined(DEBUG_MENU_HARDWARE) || !defined(DEBUG_MENU_WIFI)
-    #error "Localization file is missing debug menu title definitions."
-#endif
-
-// Check debug menu items
-#if !defined(DEBUG_ITEM_CLOCK) || !defined(DEBUG_ITEM_HARDWARE) || !defined(DEBUG_ITEM_BATTERY) || \
-    !defined(DEBUG_ITEM_GIT) || !defined(DEBUG_ITEM_ACC) || !defined(DEBUG_ITEM_FONT_PREVIEW)
-    #error "Localization file is missing debug menu item definitions."
-#endif
-
-// Check accelerometer debug translations
-#if !defined(DEBUG_ACC_DISABLED) || !defined(DEBUG_ACC_WORKING) || !defined(DEBUG_ACC_X) || \
-    !defined(DEBUG_ACC_STEPS) || !defined(DEBUG_ACC_IC)
-    #error "Localization file is missing accelerometer debug definitions."
-#endif
-
-// Check battery debug translations
-#if !defined(DEBUG_BATTERY_CURRENT_V) || !defined(DEBUG_BATTERY_CHARGING) || !defined(DEBUG_BATTERY_LEVEL)
-    #error "Localization file is missing battery debug definitions."
-#endif
-
-// Check clock debug translations
-#if !defined(DEBUG_CLOCK_DRIFT_SYNCS) || !defined(DEBUG_CLOCK_NOT_AVAILABLE) || !defined(DEBUG_CLOCK_LAST_SYNC)
-    #error "Localization file is missing clock debug definitions."
-#endif
-
-// Check git debug translations
-#if !defined(DEBUG_GIT_COMMIT_HASH) || !defined(DEBUG_GIT_BRANCH) || !defined(DEBUG_GIT_BUILD_TIME)
-    #error "Localization file is missing git debug definitions."
-#endif
-
-// Check hardware debug translations
-#if !defined(DEBUG_HW_CHIP_MODEL) || !defined(DEBUG_HW_RTC_TYPE) || !defined(DEBUG_HW_USED_HEAP) || \
-    !defined(DEBUG_RTC_UNKNOWN) || !defined(DEBUG_RTC_DS3231)
-    #error "Localization file is missing hardware debug definitions."
-#endif
-
-// Check WiFi debug translations
-#if !defined(DEBUG_WIFI_MAC_ADDRESS) || !defined(DEBUG_WIFI_STATUS) || !defined(DEBUG_WIFI_IP) || \
-    !defined(DEBUG_WIFI_ON) || !defined(DEBUG_WIFI_OFF)
-    #error "Localization file is missing WiFi debug definitions."
-#endif
-
-// Check game and app translations
-#if !defined(PONG_YOU_LOST) || !defined(PARTY_MESSAGE) || !defined(VAULT_KEY_INCORRECT) || !defined(VAULT_EMPTY)
-    #error "Localization file is missing game/app definitions."
-#endif
-
-// Check common debug terms
-#if !defined(DEBUG_COMMON_PERCENT) || !defined(DEBUG_COMMON_COLON)
-    #error "Localization file is missing common debug term definitions."
+// Check app and book translations
+#if !defined(BOOK_NO_SELECTED) || !defined(CALENDAR_NO_DATA)
+#error "Localization file is missing app/book definitions."
 #endif
 
 // Check heart monitor translations
 #if !defined(HEART_MONITOR_TITLE) || !defined(HEART_MONITOR_NOT_MEDICAL) || !defined(HEART_MONITOR_PLACE_DEVICE) || \
     !defined(HEART_MONITOR_CLICK_MENU) || !defined(HEART_MONITOR_START_3S) || !defined(HEART_MONITOR_TAKES_15S) || \
     !defined(HEART_MONITOR_BREATHE_SLOWLY) || !defined(HEART_MONITOR_TIME_LEFT) || !defined(HEART_MONITOR_BPM)
-    #error "Localization file is missing heart monitor definitions."
+#error "Localization file is missing heart monitor definitions."
 #endif
 
 // Check video player translations
 #if !defined(VIDEO_PLAYER_CHOOSE)
-    #error "Localization file is missing video player definitions."
+#error "Localization file is missing video player definitions."
 #endif
 
 // Check watchface selection translations
 #if !defined(WATCHFACE_SELECT_TITLE)
-    #error "Localization file is missing watchface selection definitions."
+#error "Localization file is missing watchface selection definitions."
+#endif
+
+// Check Tetris game translations
+#if !defined(TETRIS_LINE_CLEARS) || !defined(TETRIS_SCORE) || !defined(TETRIS_LEVEL) || \
+    !defined(TETRIS_CONTROLS_UP) || !defined(TETRIS_CONTROLS_DOWN) || !defined(TETRIS_GAME_OVER)
+#error "Localization file is missing Tetris game definitions."
+#endif
+
+// Check debug menu titles
+#if !defined(DEBUG_MENU_ACC) || !defined(DEBUG_MENU_BATTERY) || !defined(DEBUG_MENU_CLOCK) || \
+    !defined(DEBUG_MENU_GIT) || !defined(DEBUG_MENU_HARDWARE) || !defined(DEBUG_MENU_WIFI)
+#error "Localization file is missing debug menu title definitions."
+#endif
+
+// Check debug menu items
+#if !defined(DEBUG_ITEM_CLOCK) || !defined(DEBUG_ITEM_HARDWARE) || !defined(DEBUG_ITEM_BATTERY) || \
+    !defined(DEBUG_ITEM_GIT) || !defined(DEBUG_ITEM_ACC) || !defined(DEBUG_ITEM_FONT_PREVIEW)
+#error "Localization file is missing debug menu item definitions."
+#endif
+
+// Check accelerometer debug translations
+#if !defined(DEBUG_ACC_DISABLED) || !defined(DEBUG_ACC_FAILED_INIT) || !defined(DEBUG_ACC_DAMAGED) || \
+    !defined(DEBUG_ACC_WORKING) || !defined(DEBUG_ACC_CLICK_3D) || !defined(DEBUG_ACC_X) || !defined(DEBUG_ACC_Y) || \
+    !defined(DEBUG_ACC_Z) || !defined(DEBUG_ACC_PURE_X) || !defined(DEBUG_ACC_PURE_Y) || !defined(DEBUG_ACC_PURE_Z) || \
+    !defined(DEBUG_ACC_STEPS) || !defined(DEBUG_ACC_IC)
+#error "Localization file is missing accelerometer debug definitions."
+#endif
+
+// Check battery debug translations
+#if !defined(DEBUG_BATTERY_CURRENT_V) || !defined(DEBUG_BATTERY_MINIMUM_V) || !defined(DEBUG_BATTERY_MAXIMUM_V) || \
+    !defined(DEBUG_BATTERY_CRITICAL_V) || !defined(DEBUG_BATTERY_LEVEL) || !defined(DEBUG_BATTERY_CHARGING) || \
+    !defined(DEBUG_BATTERY_FULLY)
+#error "Localization file is missing battery debug definitions."
+#endif
+
+// Check clock debug translations
+#if !defined(DEBUG_CLOCK_DRIFT_SYNCS) || !defined(DEBUG_CLOCK_NOT_AVAILABLE) || !defined(DEBUG_CLOCK_LAST_SYNC) || \
+    !defined(DEBUG_CLOCK_PREVIOUS_SYNC) || !defined(DEBUG_CLOCK_LAST_CHARGE)
+#error "Localization file is missing clock debug definitions."
+#endif
+
+// Check git debug translations
+#if !defined(DEBUG_GIT_COMMIT_HASH) || !defined(DEBUG_GIT_BRANCH) || !defined(DEBUG_GIT_BUILD_TIME)
+#error "Localization file is missing git debug definitions."
+#endif
+
+// Check hardware debug translations
+#if !defined(DEBUG_HW_CHIP_MODEL) || !defined(DEBUG_HW_RTC_TYPE) || !defined(DEBUG_HW_USED_HEAP) || \
+    !defined(DEBUG_HW_CPU_TEMP) || !defined(DEBUG_HW_INIT_TEMP)
+#error "Localization file is missing hardware debug definitions."
+#endif
+
+// Check RTC type translations
+#if !defined(DEBUG_RTC_UNKNOWN) || !defined(DEBUG_RTC_DS3231) || !defined(DEBUG_RTC_PCF8563) || \
+    !defined(DEBUG_RTC_INTERNAL) || !defined(DEBUG_RTC_INVALID)
+#error "Localization file is missing RTC type definitions."
+#endif
+
+// Check WiFi debug translations
+#if !defined(DEBUG_WIFI_MAC_ADDRESS) || !defined(DEBUG_WIFI_STATUS) || !defined(DEBUG_WIFI_IP) || \
+    !defined(DEBUG_WIFI_SSID) || !defined(DEBUG_WIFI_SIGNAL) || !defined(DEBUG_WIFI_CONNECTING) || \
+    !defined(DEBUG_WIFI_ON) || !defined(DEBUG_WIFI_OFF)
+#error "Localization file is missing WiFi debug definitions."
+#endif
+
+// Check common debug terms
+#if !defined(DEBUG_COMMON_PERCENT) || !defined(DEBUG_COMMON_COLON)
+#error "Localization file is missing common debug term definitions."
+#endif
+
+// Check game and app translations
+#if !defined(PONG_YOU_LOST) || !defined(PARTY_MESSAGE) || !defined(VAULT_KEY_INCORRECT) || !defined(VAULT_EMPTY)
+#error "Localization file is missing game/app definitions."
+#endif
+
+// Check alarm menu titles
+#if !defined(ALARM_MENU_EDIT_DAYS) || !defined(ALARM_MENU_EDIT_ALARM) || !defined(ALARM_MENU_ALARMS) || \
+    !defined(ALARM_MENU_BROWSE_ALARMS) || !defined(ALARM_MENU_QUICK_ALARMS_SET) || !defined(ALARM_MENU_QUICK_ALARM) || \
+    !defined(ALARM_MENU_POMODORO)
+#error "Localization file is missing alarm menu definitions."
+#endif
+
+// Check alarm status and settings
+#if !defined(ALARM_STATUS_ENABLED) || !defined(ALARM_STATUS_DISABLED) || !defined(ALARM_LABEL_TIME) || \
+    !defined(ALARM_LABEL_ONE_TIME_ALARM) || !defined(ALARM_LABEL_DAYS) || !defined(ALARM_LABEL_REQUIRE_WIFI)
+#error "Localization file is missing alarm status/settings definitions."
+#endif
+
+// Check quick alarm messages
+#if !defined(ALARM_QUICK_ALERT_TITLE) || !defined(ALARM_QUICK_ALARM_SET_FOR) || !defined(ALARM_QUICK_WILL_RING_AT)
+#error "Localization file is missing quick alarm message definitions."
+#endif
+
+// Check day names (full)
+#if !defined(ALARM_DAY_MONDAY) || !defined(ALARM_DAY_TUESDAY) || !defined(ALARM_DAY_WEDNESDAY) || \
+    !defined(ALARM_DAY_THURSDAY) || !defined(ALARM_DAY_FRIDAY) || !defined(ALARM_DAY_SATURDAY) || \
+    !defined(ALARM_DAY_SUNDAY)
+#error "Localization file is missing full day name definitions."
+#endif
+
+// Check alarm info strings
+#if !defined(ALARM_INFO_ALL_DAYS) || !defined(ALARM_INFO_NO_DAYS) || !defined(ALARM_INFO_ONCE) || \
+    !defined(ALARM_INFO_WIFI) || !defined(ALARM_INFO_QUICK) || !defined(ALARM_INFO_POMODORO)
+#error "Localization file is missing alarm info string definitions."
+#endif
+
+// Check Pomodoro strings
+#if !defined(POMODORO_STATUS) || !defined(POMODORO_RUNNING) || !defined(POMODORO_WORKING) || \
+    !defined(POMODORO_PAUSE) || !defined(POMODORO_ITER) || !defined(POMODORO_DISABLED) || \
+    !defined(POMODORO_RESET_TURN_OFF) || !defined(POMODORO_START)
+#error "Localization file is missing Pomodoro definitions."
+#endif
+
+// Check time unit translations
+#if !defined(TIME_UNIT_MINUTE) || !defined(TIME_UNIT_MINUTES) || !defined(TIME_UNIT_HOUR) || \
+    !defined(TIME_UNIT_HOURS) || !defined(TIME_UNIT_DAY) || !defined(TIME_UNIT_DAYS) || !defined(TIME_UNIT_AND)
+#error "Localization file is missing time unit definitions."
 #endif
 
 // ==============================================================================
@@ -172,23 +297,75 @@ inline String getCurrentLocalizedDayName(int offset = 0) {
 
 /*
  * ADDING A NEW LANGUAGE:
- * 1. Create a new file: languages/localization_XX.h (where XX is the language code)
- * 2. Copy the structure from languages/localization_en.h
- * 3. Translate all the string definitions
- * 4. Add a new language constant: #define XX 4 (next available number)
- * 5. Add a new #elif case in the include section above: #include "languages/localization_XX.h"
- * 6. Test compilation and functionality
  * 
- * MODIFYING TRANSLATIONS:
- * - Only edit the individual language files (languages/localization_en.h, languages/localization_pl.h, etc.)
- * - Do NOT modify this main localization.h file unless adding support for new languages
+ * STEP 1: Use the Translation Template
+ * 1. Copy the file: src/templates/localization_template.h
+ * 2. Rename it to: languages/localization_XX.h (where XX is your language code, e.g., FR, ES, IT)
+ * 3. Fill in all empty strings "" using the English references in comments
+ * 4. Follow the guidelines in the template (character limits, special characters, etc.)
+ * 5. Use the checklist at the end of the template to verify completeness
  * 
- * TEMPERATURE FORMATTING:
- * - Temperature formatting functions are defined in temperature.h
- * - Use formatTemperature() function for consistent temperature display
+ * STEP 2: Register the Language in System
+ * 6. Add a new language constant above: #define XX 5 (next available number)
+ * 7. Add a new #elif case in the include section: #include "languages/localization_XX.h"
+ * 8. Update the warning message to include your new language code
+ * 9. Test compilation - the validation system will catch any missing translations
+ * 10. Test functionality on actual device to ensure text fits properly
+ *
+ * TRANSLATION GUIDELINES:
+ * - Keep abbreviations SHORT: Day names (2-4 chars), Month names (3-4 chars), Errors (2-3 chars)
+ * - Test on actual watch hardware - text must fit on small screen
+ * - Avoid diacritics/special characters if possible for better compatibility
+ * - Weather chart titles should maintain format: "Parameter / Unit (24h)"
+ * - Time units may need special handling for languages with complex plural rules
+ * - Technical terms (like RTC types) often stay in English
+ *
+ * CURRENTLY SUPPORTED LANGUAGES:
+ * - EN (English) - Reference implementation
+ * - PL (Polish) - Full support
+ * - DE (German) - Full support  
+ * - SK (Slovak) - Full support
+ * - Template available for new languages
+ *
+ * MODIFYING EXISTING TRANSLATIONS:
+ * - Only edit individual language files (localization_en.h, localization_pl.h, etc.)
+ * - Do NOT modify this main localization.h file unless adding new language support
+ * - Always test compilation after changes - validation will catch errors
+ * - Consider impact on screen space when changing text length
+ *
+ * ADDING NEW TRANSLATABLE STRINGS:
+ * 1. Add the new #define to ALL existing language files (EN, PL, DE, SK, template)
+ * 2. Add validation check in the appropriate category above
+ * 3. Document the new string in the template with English reference
+ * 4. Test compilation with all languages to ensure completeness
+ * 5. Update this documentation if creating new categories
+ *
+ * TECHNICAL DETAILS:
  * 
- * COMPILE-TIME VALIDATION:
- * - The system automatically checks if all required macros are defined during compilation
- * - If a translation is missing, compilation will fail with a descriptive error message
- * - When adding new translatable strings, add them to the validation checks above
+ * Temperature Formatting:
+ * - Temperature functions are in temperature.h
+ * - Use formatTemperature() for consistent display across languages
+ * 
+ * Compile-Time Validation System:
+ * - Automatically checks 120+ required macro definitions during compilation
+ * - Organized into logical categories (weather, menus, debug, alarms, etc.)
+ * - Fails compilation with descriptive error if any translation is missing
+ * - Ensures 100% translation completeness across all language files
+ * 
+ * Validation Categories:
+ * - Weather conditions: All WF_S_WEATHER_* definitions (28 variables)
+ * - Day/time format: WF_S_DAY_*, WF_TIME_*, error messages (12 variables)
+ * - Weather UI: WEATHER_MENU_*, WEATHER_CHART_*, WEATHER_* (18 variables)
+ * - Main menu: All MENU_* definitions (25 variables)
+ * - Applications: BOOK_*, CALENDAR_*, HEART_MONITOR_*, etc. (11 variables)
+ * - Games: TETRIS_*, PONG_*, PARTY_*, VAULT_* (10 variables)
+ * - Debug system: DEBUG_MENU_*, DEBUG_ITEM_*, DEBUG_*_* (45+ variables)
+ * - Alarms & Pomodoro: ALARM_*, POMODORO_* (30+ variables)
+ * - Time units: TIME_UNIT_* including plural forms (10 variables)
+ * 
+ * TROUBLESHOOTING:
+ * - "missing definitions" error → Use template, check variable names match exactly
+ * - Text doesn't fit on screen → Shorten translations, use abbreviations
+ * - Special characters display wrong → Avoid diacritics or test on device
+ * - Compilation fails → Check all validation categories, ensure no empty strings
  */
