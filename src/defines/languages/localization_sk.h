@@ -24,14 +24,14 @@
 #define WF_S_WEATHER_LIGHT_SNOW "Jemne snezenie"
 #define WF_S_WEATHER_SNOW "Snezenie"
 #define WF_S_WEATHER_HEAVY_SNOW "Silne snezenie"
-#define WF_S_WEATHER_SNOW_GRAINS "Krupobitie"
-#define WF_S_WEATHER_LIGHT_SHOWERS "Jemne Prehanky"
+#define WF_S_WEATHER_SNOW_GRAINS "Krupy"
+#define WF_S_WEATHER_LIGHT_SHOWERS "Jemne prehanky"
 #define WF_S_WEATHER_SHOWERS "Prehanky"
 #define WF_S_WEATHER_HEAVY_SHOWERS "Silne prehanky"
 #define WF_S_WEATHER_SNOW_SHOWERS "Snehove prehanky"
 #define WF_S_WEATHER_THUNDERSTORM "Burka"
 #define WF_S_WEATHER_LIGHT_HAIL "Jemne krupobitie"
-#define WF_S_WEATHER_HEAVY_HAIL "Silny krupobitie"
+#define WF_S_WEATHER_HEAVY_HAIL "Silne krupobitie"
 #define WF_S_WEATHER_UNKNOWN "Nezname"
 
 // Day names (abbreviated)
@@ -75,9 +75,9 @@
 #define WEATHER_CHART_PRESSURE "Tlak / hPa (24h)"
 #define WEATHER_CHART_HUMIDITY "Vlhkost / % (24h)"
 #define WEATHER_CHART_CLOUDS "Oblacnost / % (24h)"
-#define WEATHER_CHART_WIND_SPEED "Vietr / km/h (24h)"
+#define WEATHER_CHART_WIND_SPEED "Vietor / km/h (24h)"
 #define WEATHER_CHART_WIND_GUSTS "Narazy / km/h (24h)"
-#define WEATHER_CHART_VISIBILITY "Vidit. / m (24h)"
+#define WEATHER_CHART_VISIBILITY "Viditelnost / m (24h)"
 #define WEATHER_CHART_PRECIPITATION "Zrazky / % (24h)"
 #define WEATHER_CONDITIONS_TITLE "Podmienky (24h)"
 
@@ -88,7 +88,7 @@
 #define MENU_MAIN "Hlavne menu"
 #define MENU_CALENDAR "Kalendar"
 #define MENU_SELECT_BOOK "Vyber knihu"
-#define MENU_ALARMS "Budiky"
+#define MENU_ALARMS "Alarmy"
 #define MENU_WEATHER "Pocasie"
 #define MENU_SETTINGS "Nastavenia"
 #define MENU_HEART_MONITOR "Monitor srdca"
@@ -108,7 +108,7 @@
 #define MENU_CONWAY "Conway"
 #define MENU_PARTY "Party"
 #define MENU_VIBRATIONS_DIS "Vibracie vypnute"
-#define MENU_WAKE_UP_DIS "Budik vypnuty"
+#define MENU_WAKE_UP_DIS "Alarm vypnuty"
 #define MENU_POWER "Napajanie"
 
 // ==============================================================================
@@ -182,7 +182,7 @@
 
 // Accelerometer debug
 #define DEBUG_ACC_DISABLED "vypnute"
-#define DEBUG_ACC_FAILED_INIT "Chyba init Acc"
+#define DEBUG_ACC_FAILED_INIT "Chyba inicializacie"
 #define DEBUG_ACC_DAMAGED "Acc poskodeny"
 #define DEBUG_ACC_WORKING "Acc funguje"
 #define DEBUG_ACC_CLICK_3D "Stlac menu pre 3D"
@@ -265,7 +265,7 @@
 // Alarm menu titles
 #define ALARM_MENU_EDIT_DAYS "Uprav dni"
 #define ALARM_MENU_EDIT_ALARM "Uprav budik"
-#define ALARM_MENU_ALARMS "Budiky"
+#define ALARM_MENU_ALARMS "Alarmy"
 #define ALARM_MENU_BROWSE_ALARMS "Prezri budiky"
 #define ALARM_MENU_QUICK_ALARMS_SET "Rychle budiky ul."
 #define ALARM_MENU_QUICK_ALARM "Rychle budiky"
@@ -281,8 +281,8 @@
 
 // Quick alarm messages
 #define ALARM_QUICK_ALERT_TITLE "Rychle budiky oznam"
-#define ALARM_QUICK_ALARM_SET_FOR "Alarm set for:"
-#define ALARM_QUICK_WILL_RING_AT "Will ring at:"
+#define ALARM_QUICK_ALARM_SET_FOR "Alarm nastaveny na:"
+#define ALARM_QUICK_WILL_RING_AT "Alarm zazvony:"
 
 // Day names (full)
 #define ALARM_DAY_MONDAY "Pondelok"
