@@ -1,7 +1,6 @@
 #pragma once
 
-// Include String class - needed in Arduino environment
-#include <Arduino.h>
+#include <defines.h>
 
 // Temperature unit definitions
 #define CELSIUS 1

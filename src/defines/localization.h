@@ -1,7 +1,7 @@
 #pragma once
 
 #include "config.h"
-#include "temperature.h"
+#include "../hardware/temp/temperature.h"
 
 // ==============================================================================
 // LANGUAGE CONFIGURATION
