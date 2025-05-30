@@ -1,5 +1,6 @@
 #include "accDebug.h"
 #include "rtcMem.h"
+#include "localization.h"
 
 #if DEBUG_MENUS == 1
 
@@ -42,7 +43,7 @@ void initAccDebug()
   setFont(&FreeSansBold9pt7b);
   setTextSize(1);
   dis->setCursor(0, 1);
-  String menuName = "Debug Menu: Acc";
+  String menuName = DEBUG_MENU_ACC;
   getTextBounds(menuName, NULL, NULL, NULL, &h);
   maxHeight = h;
   uint16_t currentHeight = maxHeight;
@@ -54,19 +55,19 @@ void initAccDebug()
 
   String accDevice;
 #if !ACC_ENABLED
-  accDevice = "disabled";
+  accDevice = DEBUG_ACC_DISABLED;
 #else
   accDevice = "BMA" + String(BMA_VERSION);
 #endif
 
-  writeLine("IC: " + accDevice, CURSOR_X, &currentHeight);
+  writeLine(DEBUG_ACC_IC + accDevice, CURSOR_X, &currentHeight);
 
 #if ACC_ENABLED
   initAcc();
   if (rM.initedAcc == false)
   {
     workingAcc = false;
-    writeLine("Failed to init Acc", CURSOR_X, &currentHeight);
+    writeLine(DEBUG_ACC_FAILED_INIT, CURSOR_X, &currentHeight);
   }
 
   if (rM.initedAcc == true)
@@ -80,12 +81,12 @@ void initAccDebug()
     if (rM.SBMA.damagedAcc == true)
     {
       workingAcc = false;
-      writeLine("Acc is damaged", CURSOR_X, &currentHeight);
+      writeLine(DEBUG_ACC_DAMAGED, CURSOR_X, &currentHeight);
     }
     else
     {
       workingAcc = true;
-      writeLine("Acc is working", CURSOR_X, &currentHeight);
+      writeLine(DEBUG_ACC_WORKING, CURSOR_X, &currentHeight);
     }
   }
 
@@ -95,32 +96,32 @@ void initAccDebug()
     Accel acc;
     rM.SBMA.getAccel(&acc);
 
-    writeLine("Click menu for 3D", CURSOR_X, &currentHeight);
+    writeLine(DEBUG_ACC_CLICK_3D, CURSOR_X, &currentHeight);
 
-    writeLine("Accel X: " + String(acc.x), CURSOR_X, &currentHeight);
+    writeLine(DEBUG_ACC_X + String(acc.x), CURSOR_X, &currentHeight);
     accX = acc.x;
     accXHeight = currentHeight - maxHeight;
-    writeLine("Accel Y: " + String(acc.y), CURSOR_X, &currentHeight);
+    writeLine(DEBUG_ACC_Y + String(acc.y), CURSOR_X, &currentHeight);
     accY = acc.y;
     accYHeight = currentHeight - maxHeight;
-    writeLine("Accel Z: " + String(acc.z), CURSOR_X, &currentHeight);
+    writeLine(DEBUG_ACC_Z + String(acc.z), CURSOR_X, &currentHeight);
     accZ = acc.z;
     accZHeight = currentHeight - maxHeight;
 
     stepsAccDebug = getSteps();
-    writeLine("Steps: " + String(stepsAccDebug), CURSOR_X, &currentHeight);
+    writeLine(DEBUG_ACC_STEPS + String(stepsAccDebug), CURSOR_X, &currentHeight);
     stepsHeight = currentHeight - maxHeight;
 
 #if BMA_VERSION == 530 || BMA_VERSION == 456
     Accel accPure;
     rM.SBMA.getAccelPure(&accPure);
-    writeLine("Accel pure X: " + String(accPure.x), CURSOR_X, &currentHeight);
+    writeLine(DEBUG_ACC_PURE_X + String(accPure.x), CURSOR_X, &currentHeight);
     accXPure = accPure.x;
     accXHeightPure = currentHeight - maxHeight;
-    writeLine("Accel pure Y: " + String(accPure.y), CURSOR_X, &currentHeight);
+    writeLine(DEBUG_ACC_PURE_Y + String(accPure.y), CURSOR_X, &currentHeight);
     accYPure = accPure.y;
     accYHeightPure = currentHeight - maxHeight;
-    writeLine("Accel pure Z: " + String(accPure.z), CURSOR_X, &currentHeight);
+    writeLine(DEBUG_ACC_PURE_Z + String(accPure.z), CURSOR_X, &currentHeight);
     accZPure = accPure.z;
     accZHeightPure = currentHeight - maxHeight;
 #endif
@@ -143,21 +144,21 @@ void loopAccDebug()
       rM.SBMA.getAccel(&acc);
       if (acc.x != accX)
       {
-        writeTextReplaceBack("Accel X: " + String(acc.x) + ES, CURSOR_X, accXHeight);
+        writeTextReplaceBack(DEBUG_ACC_X + String(acc.x) + ES, CURSOR_X, accXHeight);
         accX = acc.x;
         dUChange = true;
         // debugLog("Acc x changed");
       }
       if (acc.y != accY)
       {
-        writeTextReplaceBack("Accel Y: " + String(acc.y) + ES, CURSOR_X, accYHeight);
+        writeTextReplaceBack(DEBUG_ACC_Y + String(acc.y) + ES, CURSOR_X, accYHeight);
         accY = acc.y;
         dUChange = true;
         // debugLog("Acc y changed");
       }
       if (acc.z != accZ)
       {
-        writeTextReplaceBack("Accel Z: " + String(acc.z) + ES, CURSOR_X, accZHeight);
+        writeTextReplaceBack(DEBUG_ACC_Z + String(acc.z) + ES, CURSOR_X, accZHeight);
         accZ = acc.z;
         dUChange = true;
         // debugLog("Acc z changed");
@@ -166,7 +167,7 @@ void loopAccDebug()
       uint16_t tmpSteps = getSteps();
       if (tmpSteps != stepsAccDebug)
       {
-        writeTextReplaceBack("Steps: " + String(tmpSteps) + "    ", CURSOR_X, stepsHeight);
+        writeTextReplaceBack(DEBUG_ACC_STEPS + String(tmpSteps) + "    ", CURSOR_X, stepsHeight);
         stepsAccDebug = tmpSteps;
         dUChange = true;
         // debugLog("Steps changed");
@@ -177,19 +178,19 @@ void loopAccDebug()
       rM.SBMA.getAccelPure(&accPure);
       if (accPure.x != accXPure)
       {
-        writeTextReplaceBack("Accel pure X: " + String(accPure.x) + ES, CURSOR_X, accXHeightPure);
+        writeTextReplaceBack(DEBUG_ACC_PURE_X + String(accPure.x) + ES, CURSOR_X, accXHeightPure);
         accXPure = accPure.x;
         dUChange = true;
       }
       if (accPure.y != accYPure)
       {
-        writeTextReplaceBack("Accel pure Y: " + String(accPure.y) + ES, CURSOR_X, accYHeightPure);
+        writeTextReplaceBack(DEBUG_ACC_PURE_Y + String(accPure.y) + ES, CURSOR_X, accYHeightPure);
         accYPure = accPure.y;
         dUChange = true;
       }
       if (accPure.z != accZPure)
       {
-        writeTextReplaceBack("Accel pure Z: " + String(accPure.z) + ES, CURSOR_X, accZHeightPure);
+        writeTextReplaceBack(DEBUG_ACC_PURE_Z + String(accPure.z) + ES, CURSOR_X, accZHeightPure);
         accZPure = accPure.z;
         dUChange = true;
       }

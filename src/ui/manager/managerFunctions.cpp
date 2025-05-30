@@ -1,4 +1,5 @@
 #include "manager.h"
+#include "localization.h"  // For menu translations
 #include "rtcMem.h"
 
 void initMainMenu()
@@ -8,7 +9,7 @@ void initMainMenu()
 #if CALENDAR
     {
         count = count + 1;
-        buttons[count] = {"Calendar", getImg("calendar"), switchCalendarDateMenu};
+        buttons[count] = {MENU_CALENDAR, getImg("calendar"), switchCalendarDateMenu};
     }
 #endif
 #if BOOK
@@ -24,35 +25,35 @@ void initMainMenu()
     }
     {
         count = count + 1;
-        buttons[count] = {"Select book", getImg("book"), switchBookSelector};
+        buttons[count] = {MENU_SELECT_BOOK, getImg("book"), switchBookSelector};
     }
 #endif
 #if INK_ALARMS
     {
         count = count + 1;
-        buttons[count] = {"Alarms", getImg("alarms/alarmIcon"), switchAlarmSetChooser};
+        buttons[count] = {MENU_ALARMS, getImg("alarms/alarmIcon"), switchAlarmSetChooser};
     }
 #endif
 #if WEATHER_INFO
     {
         count = count + 1;
-        buttons[count] = {"Weather", getImg("weather"), switchWeatherMenu};
+        buttons[count] = {MENU_WEATHER, getImg("weather"), switchWeatherMenu};
     }
 #endif
     {
         count = count + 1;
-        buttons[count] = {"Settings", getImg("settings"), switchSettingsMenu};
+        buttons[count] = {MENU_SETTINGS, getImg("settings"), switchSettingsMenu};
     }
     #if HEART_MONITOR
     {
         count = count + 1;
-        buttons[count] = {"Heart monitor", getImg("heartmonitor/heartIcon"), switchHeartMonitor};
+        buttons[count] = {MENU_HEART_MONITOR, getImg("heartmonitor/heartIcon"), switchHeartMonitor};
     }
     #endif
 #if VAULT
     {
         count = count + 1;
-        buttons[count] = {"Vault", getImg("vault"), switchVault};
+        buttons[count] = {MENU_VAULT, getImg("vault"), switchVault};
     }
 #endif
 #if WIFI_TOOL
@@ -67,35 +68,35 @@ void initMainMenu()
         {
             wifiToolFunc = initWifiTool;
         }
-        buttons[count] = {"Wifi tool: " + wifiToolStatus(), getImg("wifiTool"), wifiToolFunc};
+        buttons[count] = {MENU_WIFI_TOOL ": " + wifiToolStatus(), getImg("wifiTool"), wifiToolFunc};
     }
 #endif
 #if APPLE_JOKE
     {
         debugLog("Adding apple joke to menu");
         count = count + 1;
-        buttons[count] = {"Eating apples", getImg("apple"), switchApple};
+        buttons[count] = {MENU_EATING_APPLES, getImg("apple"), switchApple};
     }
     {
         debugLog("Adding apple joke to menu");
         count = count + 1;
-        buttons[count] = {"Smashing apples", getImg("apple"), switchApple2};
+        buttons[count] = {MENU_SMASHING_APPLES, getImg("apple"), switchApple2};
     }
 #endif
     {
         debugLog("Adding games");
         count = count + 1;
-        buttons[count] = {"Games", getImg("games"), switchGamesMenu};
+        buttons[count] = {MENU_GAMES, getImg("games"), switchGamesMenu};
     }
 #if CREDITS
     {
         debugLog("Adding Credits");
         count = count + 1;
-        buttons[count] = {"Credits", getImg("credits/qr"), switchCredits};
+        buttons[count] = {MENU_CREDITS, getImg("credits/qr"), switchCredits};
     }
 #endif
     count = count + 1;
-    initMenu(buttons, count, "Main menu", 1);
+    initMenu(buttons, count, MENU_MAIN, 1);
 }
 
 #if DEBUG_MENUS
@@ -106,37 +107,37 @@ void initDebugMenu()
     {
         debugLog("Adding clock to menu");
         count = count + 1;
-        buttons[count] = {"Clock", &emptyImgPack, switchClockDebug};
+        buttons[count] = {DEBUG_ITEM_CLOCK, &emptyImgPack, switchClockDebug};
     }
     {
         debugLog("Adding general to menu");
         count = count + 1;
-        buttons[count] = {"Hardware", &emptyImgPack, switchGeneralDebug};
+        buttons[count] = {DEBUG_ITEM_HARDWARE, &emptyImgPack, switchGeneralDebug};
     }
     {
         debugLog("Adding battery to menu");
         count = count + 1;
-        buttons[count] = {"Battery", &emptyImgPack, switchBatteryDebug};
+        buttons[count] = {DEBUG_ITEM_BATTERY, &emptyImgPack, switchBatteryDebug};
     }
     {
         debugLog("Adding git to menu");
         count = count + 1;
-        buttons[count] = {"Git", &emptyImgPack, switchGitDebug};
+        buttons[count] = {DEBUG_ITEM_GIT, &emptyImgPack, switchGitDebug};
     }
     {
         debugLog("Adding acc to menu");
         count = count + 1;
-        buttons[count] = {"Acc", &emptyImgPack, switchAccDebug};
+        buttons[count] = {DEBUG_ITEM_ACC, &emptyImgPack, switchAccDebug};
     }
 #if FONT_MENU_ENABLED
     {
         debugLog("Adding font preview to menu");
         count = count + 1;
-        buttons[count] = {"Font preview", &emptyImgPack, switchFontsPreviewMenu};
+        buttons[count] = {DEBUG_ITEM_FONT_PREVIEW, &emptyImgPack, switchFontsPreviewMenu};
     }
 #endif
     count = count + 1;
-    initMenu(buttons, count, "Debug menu", 1);
+    initMenu(buttons, count, MENU_DEBUG, 1);
 }
 #endif
 
@@ -147,24 +148,24 @@ void initSettingsMenu()
     {
         debugLog("Adding wifi to menu");
         count = count + 1;
-        buttons[count] = {"Wifi", getImg("wifiIcon"), switchWifiDebug};
+        buttons[count] = {MENU_WIFI, getImg("wifiIcon"), switchWifiDebug};
     }
 #if DEBUG_MENUS
     {
         count = count + 1;
-        buttons[count] = {"Debug", getImg("debug"), switchDebugMenu};
+        buttons[count] = {MENU_DEBUG, getImg("debug"), switchDebugMenu};
     }
 #endif
     {
         count = count + 1;
-        buttons[count] = {"Power settings", getImg("battery"), switchPowerMenu};
+        buttons[count] = {MENU_POWER_SETTINGS, getImg("battery"), switchPowerMenu};
     }
     {
         count = count + 1;
-        buttons[count] = {"Change watchface", getImg("watchfaceIcon"), switchWatchfaceSelectorMenu};
+        buttons[count] = {MENU_CHANGE_WATCHFACE, getImg("watchfaceIcon"), switchWatchfaceSelectorMenu};
     }
     count = count + 1;
-    initMenu(buttons, count, "Settings menu", 1);
+    initMenu(buttons, count, MENU_SETTINGS, 1);
 }
 
 void initGamesMenu()
@@ -175,39 +176,39 @@ void initGamesMenu()
     {
         debugLog("Adding Tetris");
         count = count + 1;
-        buttons[count] = {"Blockchy", getImg("tetris/tetrisIcon"), switchTetris};
+        buttons[count] = {MENU_TETRIS, getImg("tetris/tetrisIcon"), switchTetris};
     }
 #endif
 #if PONG
     {
         debugLog("Adding pong");
         count = count + 1;
-        buttons[count] = {"Pong", getImg("pong"), switchPong};
+        buttons[count] = {MENU_PONG, getImg("pong"), switchPong};
     }
 #endif
 #if VIDEO_PLAYER
     {
         debugLog("Adding video player");
         count = count + 1;
-        buttons[count] = {"Video player", getImg("videoIcon"), switchVideoMenu};
+        buttons[count] = {MENU_VIDEO_PLAYER, getImg("videoIcon"), switchVideoMenu};
     }
 #endif
 #if CONWAY
     {
         debugLog("Adding Conway");
         count = count + 1;
-        buttons[count] = {"Conway", getImg("conway"), switchConway};
+        buttons[count] = {MENU_CONWAY, getImg("conway"), switchConway};
     }
 #endif
 #if RGB_DIODE
     {
         debugLog("Adding party");
         count = count + 1;
-        buttons[count] = {"Party", getImg("rgb"), switchParty};
+        buttons[count] = {MENU_PARTY, getImg("rgb"), switchParty};
     }
 #endif
     count = count + 1;
-    initMenu(buttons, count, "Games menu", 1);
+    initMenu(buttons, count, MENU_GAMES, 1);
 }
 
 void toggleDisableVibrationsEntry()
@@ -237,7 +238,7 @@ void initpowerMenu()
         {
             image = getImg("cross");
         }
-        buttons[count] = {"Vibrations dis", image, toggleDisableVibrationsEntry};
+        buttons[count] = {MENU_VIBRATIONS_DIS, image, toggleDisableVibrationsEntry};
     }
     {
         count = count + 1;
@@ -250,8 +251,8 @@ void initpowerMenu()
         {
             image = getImg("cross");
         }
-        buttons[count] = {"Wake up dis", image, toggleWakeUpEntry};
+        buttons[count] = {MENU_WAKE_UP_DIS, image, toggleWakeUpEntry};
     }
     count = count + 1;
-    initMenu(buttons, count, "Power menu", 1);
+    initMenu(buttons, count, MENU_POWER, 1);
 }

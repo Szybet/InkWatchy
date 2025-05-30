@@ -1,4 +1,5 @@
 #include "party.h"
+#include "localization.h"
 
 #if RGB_DIODE
 
@@ -23,7 +24,7 @@ void initParty()
     dis->fillScreen(GxEPD_WHITE);
     setFont(font);
     setTextSize(1);
-    writeTextCenterReplaceBack("Party party", dis->height() / 2);
+    writeTextCenterReplaceBack(PARTY_MESSAGE, dis->height() / 2);
     disUp(true);
 }
 

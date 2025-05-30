@@ -1,5 +1,6 @@
 #include "defines.h"
 #include "rtcMem.h"
+#include "localization.h"
 
 #if VAULT
 #include "vaultUi.h"
@@ -146,7 +147,7 @@ void initVault()
             key = -1;
             key = 0;
             generalSwitch(textDialog);
-            showTextDialog("Key is incorrect");
+            showTextDialog(VAULT_KEY_INCORRECT);
             return;
         }
         int itemsInDir = fsItemsInDir("/vault/") - 1; // - conf
@@ -154,7 +155,7 @@ void initVault()
         if (itemsInDir <= 0)
         {
             generalSwitch(textDialog);
-            showTextDialog("Vault is empty?");
+            showTextDialog(VAULT_EMPTY);
             return;
         }
         String foundMenuItemName = "";

@@ -175,36 +175,36 @@ String alarmGetDays(inkAlarm *theAlarm)
 {
     String days = "";
     if(theAlarm->days == 127) {
-        days = "All days";
+        days = ALARM_INFO_ALL_DAYS;
         return days;
     }
     if (getBit(theAlarm->days, 0) == true)
     {
-        days = days + "Mo ";
+        days = days + WF_S_DAY_MON + " ";
     }
     if (getBit(theAlarm->days, 1) == true)
     {
-        days = days + "Tu ";
+        days = days + WF_S_DAY_TUE + " ";
     }
     if (getBit(theAlarm->days, 2) == true)
     {
-        days = days + "We ";
+        days = days + WF_S_DAY_WED + " ";
     }
     if (getBit(theAlarm->days, 3) == true)
     {
-        days = days + "Th ";
+        days = days + WF_S_DAY_THU + " ";
     }
     if (getBit(theAlarm->days, 4) == true)
     {
-        days = days + "Fr ";
+        days = days + WF_S_DAY_FRI + " ";
     }
     if (getBit(theAlarm->days, 5) == true)
     {
-        days = days + "Sa ";
+        days = days + WF_S_DAY_SAT + " ";
     }
     if (getBit(theAlarm->days, 6) == true)
     {
-        days = days + "Su ";
+        days = days + WF_S_DAY_SUN + " ";
     }
     if (days.length() > 1)
     {
@@ -212,7 +212,7 @@ String alarmGetDays(inkAlarm *theAlarm)
     }
     else
     {
-        days = "No days";
+        days = ALARM_INFO_NO_DAYS;
     }
     return days;
 }
@@ -223,7 +223,7 @@ String alarmNameGet(inkAlarm *theAlarm, int id)
     alarmName = alarmGetTime(theAlarm);
     if (theAlarm->onlyOnce == true)
     {
-        alarmName = alarmName + ", once";
+        alarmName = alarmName + ALARM_INFO_ONCE;
     }
     else
     {
@@ -231,15 +231,15 @@ String alarmNameGet(inkAlarm *theAlarm, int id)
     }
 
     if(theAlarm->requireWifi == true) {
-        alarmName = alarmName + ", wifi";
+        alarmName = alarmName + ALARM_INFO_WIFI;
     }
 
     if(id != -1) {
         if(id == ALARM_QUICK_ID) {
-            alarmName = alarmName + ", quick";
+            alarmName = alarmName + ALARM_INFO_QUICK;
         }
         if(id == ALARM_POMODORO_ID) {
-            alarmName = alarmName + ", pomodoro";
+            alarmName = alarmName + ALARM_INFO_POMODORO;
         }
     }
 

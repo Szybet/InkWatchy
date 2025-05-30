@@ -46,31 +46,31 @@ void initPomodoroMenu() {
     entryMenu buttons[2];
     {
         c = c + 1;
-        String sta = "Status: ";
+        String sta = POMODORO_STATUS;
         if(rM.alarms[ALARM_POMODORO_ID].enabled == true) {
-            sta = sta + "running, ";
+            sta = sta + POMODORO_RUNNING;
             if(rM.pomodoroWorkNow == true) {
-                sta = sta + "working, ";
+                sta = sta + POMODORO_WORKING;
             } else {
-                sta = sta + "pause, ";
+                sta = sta + POMODORO_PAUSE;
             }
-            sta = sta + "iter: " + String(rM.pomodoroIter) + ", ";
+            sta = sta + POMODORO_ITER + String(rM.pomodoroIter) + ", ";
             sta = sta + alarmGetTime(&rM.alarms[ALARM_POMODORO_ID]);
         } else {
-            sta = sta + "disabled";
+            sta = sta + POMODORO_DISABLED;
         }
         buttons[c] = {.text = sta, .image = getImg("pomodoro/tomato"), .function = NULL};
     }
     {
         c = c + 1;
         if(rM.alarms[ALARM_POMODORO_ID].enabled == true) {
-            buttons[c] = {.text = "Reset & Turn off", .image = &emptyImgPack, .function = pomodoroResetTurnOff};
+            buttons[c] = {.text = POMODORO_RESET_TURN_OFF, .image = &emptyImgPack, .function = pomodoroResetTurnOff};
         } else {
-            buttons[c] = {.text = "Start", .image = &emptyImgPack, .function = pomodoroManageForceWrap};
+            buttons[c] = {.text = POMODORO_START, .image = &emptyImgPack, .function = pomodoroManageForceWrap};
         }
     }
     c = c + 1;
-    initMenu(buttons, c, "Pomodoro", 1);
+    initMenu(buttons, c, ALARM_MENU_POMODORO, 1);
 }
 
 #endif

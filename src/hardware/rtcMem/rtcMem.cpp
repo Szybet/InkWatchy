@@ -78,12 +78,25 @@ RTC_DATA_ATTR rtcMem rM = {
         .positionEngaged = false,
     },
 #endif
+// Shades watchface
 #if WATCHFACE_SHADES_SZYBET
     .shades = {
         .stepsSaved = 0,
     },
 #endif
-// dark watchface
+// slate watchface
+#if WATCHFACE_SLATE
+    .slate = {
+        .weatherAvailable = false,
+        .lastHourWeatherCheck = 255,
+        .lastBatteryLevel = 255,
+        .lastDay = 255,
+        .lastMonth = 255,
+        .lastTemp = "",           // Initialize empty
+        .lastCondition = "",      // Initialize empty
+    },
+#endif
+// taychron watchface
 #if WATCHFACE_TAYCHRON
     .taychron = {
         .dayBar = 0,

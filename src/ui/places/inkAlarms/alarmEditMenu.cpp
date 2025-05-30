@@ -44,49 +44,49 @@ void initAlarmEditMenu()
         count = count + 1;
         if (choosedAlarm->enabled == true)
         {
-            buttons[count] = {"Enabled", getImg("accept"), enabledAlarmChange};
+            buttons[count] = {ALARM_STATUS_ENABLED, getImg("accept"), enabledAlarmChange};
         }
         else
         {
-            buttons[count] = {"Disabled", getImg("cross"), enabledAlarmChange};
+            buttons[count] = {ALARM_STATUS_DISABLED, getImg("cross"), enabledAlarmChange};
         }
     }
     {
         count = count + 1;
 
-        buttons[count] = {"Time: " + alarmGetTime(choosedAlarm), &emptyImgPack, switchSetTimeHandler};
+        buttons[count] = {String(ALARM_LABEL_TIME) + alarmGetTime(choosedAlarm), &emptyImgPack, switchSetTimeHandler};
     }
     {
         count = count + 1;
         if (choosedAlarm->onlyOnce == true)
         {
-            buttons[count] = {"One time alarm", getImg("accept"), oneTimeAlarmChange};
+            buttons[count] = {ALARM_LABEL_ONE_TIME_ALARM, getImg("accept"), oneTimeAlarmChange};
         }
         else
         {
-            buttons[count] = {"One time alarm", getImg("cross"), oneTimeAlarmChange};
+            buttons[count] = {ALARM_LABEL_ONE_TIME_ALARM, getImg("cross"), oneTimeAlarmChange};
         }
     }
     {
         if (choosedAlarm->onlyOnce == false)
         {
             count = count + 1;
-            buttons[count] = {"Days: " + alarmGetDays(choosedAlarm), &emptyImgPack, switchAlarmEditDays};
+            buttons[count] = {String(ALARM_LABEL_DAYS) + alarmGetDays(choosedAlarm), &emptyImgPack, switchAlarmEditDays};
         }
     }
     {
         count = count + 1;
         if (choosedAlarm->requireWifi == true)
         {
-            buttons[count] = {"Require wifi", getImg("accept"), wifiAlarmChange};
+            buttons[count] = {ALARM_LABEL_REQUIRE_WIFI, getImg("accept"), wifiAlarmChange};
         }
         else
         {
-            buttons[count] = {"Require wifi", getImg("cross"), wifiAlarmChange};
+            buttons[count] = {ALARM_LABEL_REQUIRE_WIFI, getImg("cross"), wifiAlarmChange};
         }
     }
     count = count + 1;
-    initMenu(buttons, count, "Edit alarm", 1);
+    initMenu(buttons, count, ALARM_MENU_EDIT_ALARM, 1);
 }
 
 void exitAlarmEditMenu() {

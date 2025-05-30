@@ -1,4 +1,5 @@
 #include "clockDebug.h"
+#include "localization.h"
 
 #if DEBUG_MENUS
 
@@ -40,7 +41,7 @@ void initClockDebug()
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
     dis->setCursor(0, 1);
-    String menuName = "Debug Menu: Clock";
+    String menuName = DEBUG_MENU_CLOCK;
     debugLog(menuName);
     getTextBounds(menuName, NULL, NULL, NULL, &h);
     if (containsBelowChar(menuName) == true)
@@ -59,10 +60,10 @@ void initClockDebug()
     readRTC();
     centerText(getClockPrecise(), &currentHeight);
 
-    writeLine("Drift between synces:", 0, &currentHeight);
-    writeLine(fsGetString(CONF_SECONDS_DRIFT, "Not available"), 0, &currentHeight);
+    writeLine(DEBUG_CLOCK_DRIFT_SYNCS, 0, &currentHeight);
+    writeLine(fsGetString(CONF_SECONDS_DRIFT, DEBUG_CLOCK_NOT_AVAILABLE), 0, &currentHeight);
     {
-        writeLine("Last sync:", 0, &currentHeight);
+        writeLine(DEBUG_CLOCK_LAST_SYNC, 0, &currentHeight);
         String lastSync = fsGetString(CONF_UNIX_LAST_SYNC, "");
         debugLog("Last sync time: " + lastSync);
         if (lastSync != "")
@@ -71,12 +72,12 @@ void initClockDebug()
         }
         else
         {
-            lastSync = "Not available";
+            lastSync = DEBUG_CLOCK_NOT_AVAILABLE;
         }
         writeLine(lastSync, 0, &currentHeight);
     }
     {
-        writeLine("Previous sync:", 0, &currentHeight);
+        writeLine(DEBUG_CLOCK_PREVIOUS_SYNC, 0, &currentHeight);
         String lastSync = fsGetString(CONF_UNIX_PREVIOUS_SYNC, "");
         debugLog("Previous sync time: " + lastSync);
         if (lastSync != "")
@@ -85,12 +86,12 @@ void initClockDebug()
         }
         else
         {
-            lastSync = "Not available";
+            lastSync = DEBUG_CLOCK_NOT_AVAILABLE;
         }
         writeLine(lastSync, 0, &currentHeight);
     }
     {
-        writeLine("Last charge:", 0, &currentHeight);
+        writeLine(DEBUG_CLOCK_LAST_CHARGE, 0, &currentHeight);
         String lastSync = fsGetString(CONF_UNIX_LAST_CHARGE, "");
         debugLog("Last charge time: " + lastSync);
         if (lastSync != "")
@@ -99,7 +100,7 @@ void initClockDebug()
         }
         else
         {
-            lastSync = "Not available";
+            lastSync = DEBUG_CLOCK_NOT_AVAILABLE;
         }
         writeLine(lastSync, 0, &currentHeight);
     }
