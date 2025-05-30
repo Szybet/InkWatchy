@@ -60,9 +60,9 @@
 #define WF_S_DAY_SAT ""                        // "SAT"
 #define WF_S_DAY_SUN ""                        // "SUN"
 
-// Error messages - Keep these VERY SHORT (2-3 characters)
+// Error messages - Keep these VERY SHORT (MAX 3 characters for InkField)
 #define WF_T_ERROR ""                          // "ERR" - Taychron error
-#define WF_I_ERROR ""                          // "ERR" - InkField error
+#define WF_I_ERROR ""                          // "ERR" - InkField error (MAX 3 CHARACTERS!)
 #define WF_I_ERROR_SHORT ""                    // "ER" - InkField short error
 
 // Time format - These might stay the same in many languages
@@ -168,8 +168,8 @@
 // TETRIS GAME TRANSLATIONS
 // ==============================================================================
 
-// Tetris UI labels
-#define TETRIS_LINE_CLEARS ""                  // "Line clears:"
+// Tetris UI labels - Keep TETRIS_LINE_CLEARS short to avoid text cutoff
+#define TETRIS_LINE_CLEARS ""                  // "Lines clr:" (Keep this short!)
 #define TETRIS_SCORE ""                        // "Score:"
 #define TETRIS_LEVEL ""                        // "Level:"
 #define TETRIS_CONTROLS_UP ""                  // "Up:Right"
@@ -239,11 +239,11 @@
 #define DEBUG_HW_CPU_TEMP ""                   // "CPU temp: "
 #define DEBUG_HW_INIT_TEMP ""                  // "Init temp: "
 
-// RTC Types - These might stay the same as they are technical terms
+// RTC Types - Keep DEBUG_RTC_INTERNAL short to avoid cutoff
 #define DEBUG_RTC_UNKNOWN ""                   // "Unknown"
 #define DEBUG_RTC_DS3231 ""                    // "DS3231"
 #define DEBUG_RTC_PCF8563 ""                   // "PCF8563"
-#define DEBUG_RTC_INTERNAL ""                  // "INTERNAL"
+#define DEBUG_RTC_INTERNAL ""                  // "INT" (Keep this short! e.g. "INT", "VN", "WEWN")
 #define DEBUG_RTC_INVALID ""                   // "Invalid Type"
 
 // WiFi debug
@@ -345,6 +345,9 @@
 // □ Day abbreviations are 2-4 characters max
 // □ Month abbreviations are 3-4 characters max  
 // □ Error messages are 2-3 characters max
+// □ WF_I_ERROR is MAX 3 characters (InkField limitation)
+// □ TETRIS_LINE_CLEARS is short enough to avoid cutoff
+// □ DEBUG_RTC_INTERNAL is abbreviated (e.g., "INT", "VN", "WEWN")
 // □ All translations fit on watch screen (test if possible)
 // □ No special characters that might cause display issues
 // □ LANGUAGE_MONTH_NAMES array has exactly 12 entries

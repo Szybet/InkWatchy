@@ -45,7 +45,7 @@
 
 // Error messages
 #define WF_T_ERROR "FEHLER"      // Taychron
-#define WF_I_ERROR "FEHLER"      // InkField
+#define WF_I_ERROR "ERR"         // InkField (max 3 characters)
 #define WF_I_ERROR_SHORT "FE"    // InkField short
 
 // Time format
@@ -152,7 +152,7 @@
 // ==============================================================================
 
 // Tetris UI labels
-#define TETRIS_LINE_CLEARS "Zeilen geraeumt:"
+#define TETRIS_LINE_CLEARS "Zeilen gel.:"
 #define TETRIS_SCORE "Punkte:"
 #define TETRIS_LEVEL "Level:"
 #define TETRIS_CONTROLS_UP "Hoch:Rechts"
@@ -226,7 +226,7 @@
 #define DEBUG_RTC_UNKNOWN "Unbekannt"
 #define DEBUG_RTC_DS3231 "DS3231"
 #define DEBUG_RTC_PCF8563 "PCF8563"
-#define DEBUG_RTC_INTERNAL "INTERN"
+#define DEBUG_RTC_INTERNAL "INT"
 #define DEBUG_RTC_INVALID "Ungueltiger Typ"
 
 // WiFi debug
