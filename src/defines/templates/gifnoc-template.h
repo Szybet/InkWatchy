@@ -3,7 +3,9 @@
 // Watchfaces!
 // https://github.com/Szybet/InkWatchy/wiki/Watchfaces
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
-#define WATCHFACE_12H 0 // Show time in 12 hour format. Supported watchfaces: Taychron
+#define INKWATCHY_LANG EN // EN, PL, DE and SK | Supported watchfaces: InkField, Slate and Taychron
+#define WATCHFACE_12H 0 // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
+#define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
 #define WATCHFACE_TAYCHRON 1
 #define WATCHFACE_TAYCHRON_DATE 0 // shows date below time
@@ -122,19 +124,21 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 
 // Alarms
 #define INK_ALARMS 1 // Enable alarms
+// Write the amount of minutes and the label will be done automatically in selected language 
 #define QUICK_ALARM_LIST(X) \
-    X(5, "5 minutes")       \
-    X(10, "10 minutes")     \
-    X(15, "15 minutes")     \
-    X(20, "20 minutes")     \
-    X(25, "25 minutes")     \
-    X(60, "1 hour")         \
-    X(90, "1.5 hours")      \
-    X(120, "2 hours")       \
-    X(180, "3 hours")       \
-    X(360, "6 hours")       \
-    X(480, "8 hours")       \
-    X(1440, "24 hours")
+    X(5)       \
+    X(10)      \
+    X(15)      \
+    X(20)      \
+    X(25)      \
+    X(60)      \
+    X(90)      \
+    X(120)     \
+    X(180)     \
+    X(360)     \
+    X(480)     \
+    X(1440)
+
 
 #define ALARM_DURATION_S 60           // Seconds of ringing
 #define ALARM_MOTOR_DELAY 1000        // Ms of delay for motor

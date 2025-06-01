@@ -1,4 +1,5 @@
 #include "tetrisPlace.h"
+#include "localization.h"
 
 #if TETRIS
 
@@ -48,37 +49,37 @@ void drawTetrisText()
     dis->setTextWrap(false);
 
     dis->setCursor(96, 17);
-    dis->print("Blockchy");
+    dis->print(MENU_TETRIS);
 
     dis->setCursor(96, 34);
-    dis->print("Line clears:");
+    dis->print(TETRIS_LINE_CLEARS);
 
     dis->setCursor(96, 49);
     dis->print(String(tg->lines_cleared_since_last_level));
 
     dis->setCursor(96, 65);
-    dis->print("Score:");
+    dis->print(TETRIS_SCORE);
 
     dis->setCursor(96, 81);
     dis->print(String(tg->score));
 
     dis->setCursor(96, 96);
-    dis->print("Level:");
+    dis->print(TETRIS_LEVEL);
 
     dis->setCursor(96, 114);
     dis->print(String(tg->level));
 
     dis->setCursor(96, 150);
-    dis->print("Up:Right");
+    dis->print(TETRIS_CONTROLS_UP);
 
     dis->setCursor(96, 168);
-    dis->print("Down:Left");
+    dis->print(TETRIS_CONTROLS_DOWN);
 
     if (tg->game_over == true)
     {
         setFont(getFont("smileandwave20"));
         dis->setCursor(0, 110);
-        dis->print("GAMEOVER");
+        dis->print(TETRIS_GAME_OVER);
         showedGameOver = true;
     }
 }

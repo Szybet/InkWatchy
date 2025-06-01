@@ -1,4 +1,5 @@
 #include "gitDebug.h"
+#include "localization.h"
 
 #if DEBUG_MENUS
 
@@ -8,7 +9,7 @@ void initGitDebug()
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
     dis->setCursor(0, 1);
-    String menuName = "Debug Menu: Git";
+    String menuName = DEBUG_MENU_GIT;
     debugLog(menuName);
     getTextBounds(menuName, NULL, NULL, NULL, &h);
     if (containsBelowChar(menuName) == true)
@@ -23,13 +24,13 @@ void initGitDebug()
     dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
     currentHeight = currentHeight + maxHeight;
 
-    centerText("Commit hash:", &currentHeight);
+    centerText(DEBUG_GIT_COMMIT_HASH, &currentHeight);
     centerText(String(GIT_COMMIT_HASH), &currentHeight);
 
-    centerText("Branch:", &currentHeight);
+    centerText(DEBUG_GIT_BRANCH, &currentHeight);
     centerText(String(GIT_BRANCH), &currentHeight);
 
-    centerText("Build time:", &currentHeight);
+    centerText(DEBUG_GIT_BUILD_TIME, &currentHeight);
     centerText(String(BUILD_TIME), &currentHeight);
 
     disUp(true);

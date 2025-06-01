@@ -28,6 +28,7 @@ https://github.com/user-attachments/assets/91d169da-298a-425a-859c-2c9bc7fb6cf7
 - Easy to install [demo](https://github.com/Szybet/InkWatchy/wiki/Trying-out-the-demo-firmware) (no compiling!)
 - [Modular and configurable](https://github.com/Szybet/InkWatchy/blob/master/src/defines/templates/gifnoc-template.h), a lot - if you disable a thing, it's not being compiled, it's like it was never there
 - A lot of [watchfaces](https://github.com/Szybet/InkWatchy/wiki/Watchfaces)
+- Language Support: No perf/binary compromise: fully-validated EN/PL + less-tested DE/SK
 - Full weather info via open meteo api in charts, 16 day forecast + On watchface
 - Calendar show of events, their time and description from an ICS file (So any calendar should sync)
 - Alarms

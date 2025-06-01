@@ -1,4 +1,5 @@
 #include "pong.h"
+#include "localization.h"
 
 #if PONG
 
@@ -97,7 +98,7 @@ void drawBall()
             else
             {
                 lostPong = true;
-                writeTextCenterReplaceBack("You lost!", dis->height() / 2);
+                writeTextCenterReplaceBack(PONG_YOU_LOST, dis->height() / 2);
             }
         }
         ballDirection.x = ballDirection.x * -1;
