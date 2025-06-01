@@ -1,9 +1,7 @@
 FROM --platform=linux/amd64 ubuntu:24.04
 
-RUN apt-get update
-
 # InkWatchy
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     mupdf-tools \
     xxd \
     jq \
@@ -63,9 +61,6 @@ RUN apt-get install -y \
     pkg-config \
     libgl1-mesa-dri \
     libxkbcommon-dev
-
-#RUN apt-get clean
-#RUN rm -rf /var/lib/apt/lists/*
 
 # https://linuxdecoded.com/fix-unsupported-locale-setting-in-python-or-cli-alternative-for-dpkg-reconfigure-locales/
 RUN echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen; sudo locale-gen en_US.utf8

@@ -1,6 +1,8 @@
 #include "inkField.h"
 #include "inkput.h"
 #include "inkWeather.h"
+#include "inkField_localization.h"
+#include "localization.h"  // For getMonthName, formatTemperature, and getLocalizedDayByIndex
 #include "rtcMem.h"
 
 #if WATCHFACE_INKFIELD_SZYBET
@@ -26,36 +28,37 @@
 #define TEMPS_BAR_CORD_Y 64 + 15 + 15 + 15
 #define TEMPS_BAR_SIZE 33, 10
 
-/*
-// Even with monospaced font, it differs a bit...
-{
-  String who = "1234567890:";
-  uint16_t ww;
-  for (int i = 0; i < who.length(); i++)
-  {
-    String hh = String(who[i]);
-    getTextBounds(hh, NULL, NULL, &ww, NULL);
-    debugLog(hh + " " + String(ww));
-  }
-}
-
-: 1 29
-: 2 32
-: 3 32
-: 4 32
-: 5 32
-: 6 31
-: 7 30
-: 8 31
-: 9 31
-: 0 31
-: : 12
-*/
-
 #define TIME_LETTERS_SPACING 36 // It differs, see above - so not it's static
 #define TIME_CORD_X 11
 #define TIME_CORD_Y 53
 #define TIME_CORD TIME_CORD_X, TIME_CORD_Y
+
+// Helper function to get time string based on WATCHFACE_12H setting
+String getInkFieldTimeString(tmElements_t timeEl) {
+#if WATCHFACE_12H
+    // 12-hour format without AM/PM
+    int hour = timeEl.Hour;
+    if (hour == 0) hour = 12;
+    else if (hour > 12) hour -= 12;
+    
+    String hourStr = String(hour);
+    if (hourStr.length() == 1) hourStr = "0" + hourStr;  // Fixed: use "0" instead of " "
+    
+    String minuteStr = String(timeEl.Minute);
+    if (minuteStr.length() == 1) minuteStr = "0" + minuteStr;
+    
+    return hourStr + ":" + minuteStr;
+#else
+    // 24-hour format
+    String hourStr = String(timeEl.Hour);
+    if (hourStr.length() == 1) hourStr = "0" + hourStr;
+    
+    String minuteStr = String(timeEl.Minute);
+    if (minuteStr.length() == 1) minuteStr = "0" + minuteStr;
+    
+    return hourStr + ":" + minuteStr;
+#endif
+}
 
 static void drawTimeBeforeApply()
 {
@@ -63,9 +66,9 @@ static void drawTimeBeforeApply()
     setTextSize(1);
     setFont(TIME_FONT);
     debugLog("Getting hour minute for rM.wFTime");
-    String oldTime = getHourMinute(rM.wFTime);
+    String oldTime = getInkFieldTimeString(rM.wFTime);
     debugLog("Getting hour minute for timeRTCLocal");
-    String newTime = getHourMinute(timeRTCLocal);
+    String newTime = getInkFieldTimeString(timeRTCLocal);
 
     for (int i = 0; i < 5; i++)
     {
@@ -75,27 +78,16 @@ static void drawTimeBeforeApply()
             String oldWrite = String(oldTime[i]);
             String beforeString = oldTime.substring(0, i);
             String afterString = oldTime.substring(0, i + 1);
-            // debugLog("beforeString: " + beforeString);
-            // debugLog("afterString: " + afterString);
-
-            // uint16_t wBefore;
-            // getTextBounds(beforeString, NULL, NULL, &wBefore, NULL);
-            // debugLog("wBefore: " + String(wBefore));
 
             uint16_t wAfter;
             getTextBounds(afterString, NULL, NULL, &wAfter, NULL);
-            // debugLog("wAfter: " + String(wAfter));
 
             uint16_t wToWrite;
             uint16_t hToWrite;
             getTextBounds(oldWrite, NULL, NULL, &wToWrite, &hToWrite);
-            // debugLog("wToWrite: " + String(wToWrite));
-            // debugLog("hToWrite: " + String(hToWrite));
 
             uint16_t finalWidthStart = wAfter - wToWrite;
-            // debugLog("finalWidthStart: " + String(finalWidthStart));
 
-            // debugLog("Writing to screen: " + toWrite);
             dis->fillRect(TIME_CORD_X + finalWidthStart, TIME_CORD_Y - hToWrite, TIME_LETTERS_SPACING, hToWrite, GxEPD_WHITE); // Clear things up
             writeTextReplaceBack(toWrite, TIME_CORD_X + finalWidthStart, TIME_CORD_Y);
         }
@@ -138,9 +130,10 @@ static void drawTimeAfterApply(bool forceDraw)
         setTextSize(1);
         setFont(getFont("dogicapixel4"));
         writeTextReplaceBack("   ", TEMPS_TEXT_CORD);
-        String tempStr = String(int(rM.previousTemp));
-        if(tempStr.length() < 3) {
-            tempStr = tempStr + "C";
+        // Use formatTemperature for device temperature (not weather)
+        String tempStr = formatTemperature(rM.previousTemp);
+        if(tempStr.length() > 3) {
+            tempStr = tempStr.substring(0, 3);
         }
         writeTextReplaceBack(tempStr, TEMPS_TEXT_CORD);
         drawProgressBar(TEMPS_BAR_CORD_X, TEMPS_BAR_CORD_Y, TEMPS_BAR_SIZE, rM.inkfield.showedTemp);
@@ -149,7 +142,6 @@ static void drawTimeAfterApply(bool forceDraw)
 #endif
 
     uint16_t weatherMinutes = timeRTCLocal.Minute + (60 * timeRTCLocal.Hour);
-    // debugLog("Weather force: " + String(forceDraw));
     if (abs(rM.inkfield.weatherMinutes - weatherMinutes) > 25 || forceDraw == true)
     {
         rM.inkfield.weatherMinutes = weatherMinutes;
@@ -162,10 +154,10 @@ static void showTimeFull()
 #if LP_CORE
     screenTimeChanged = true;
 #endif
-    // Now UI
+    // Show time in format based on WATCHFACE_12H setting (but no AM/PM)
     setTextSize(1);
     setFont(TIME_FONT);
-    writeTextReplaceBack(getHourMinute(timeRTCLocal), TIME_CORD);
+    writeTextReplaceBack(getInkFieldTimeString(timeRTCLocal), TIME_CORD);
 }
 
 static void initWatchface()
@@ -189,10 +181,11 @@ static void drawDay()
     writeTextReplaceBack(dayDate, DATE_CORD);
 
     setFont(DAY_NAME_FONT);
-    String day = getDayName();
+    // Use localization.h function for day names
+    String day = getLocalizedDayByIndex(timeRTCLocal.Wday, 0); // Current day
     day.toUpperCase();
 
-    String previousDay = getDayName(-1);
+    String previousDay = getLocalizedDayByIndex(timeRTCLocal.Wday, -1); // Previous day
     previousDay.toUpperCase();
     uint16_t wDay;
     uint16_t hDay;
@@ -204,7 +197,8 @@ static void drawDay()
 static void drawMonth()
 {
     setFont(MONTH_NAME_FONT);
-    String month = getMonthName(rM.wFTime.Month);
+    // Use localized month names
+    String month = getLocalizedMonthName(rM.wFTime.Month);
     month.toUpperCase();
     writeTextReplaceBack(month, MONTH_NAME_CORD);
 

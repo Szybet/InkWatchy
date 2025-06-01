@@ -1,4 +1,5 @@
 #include "wifiDebug.h"
+#include "localization.h"
 
 #define SEL_ON 0
 #define SEL_OFF 1
@@ -32,7 +33,7 @@ void initWifiDebugDisplay()
     setTextSize(TextSize);
     dis->setTextWrap(false);
     dis->setCursor(cursorXwifi, 1);
-    String menuName = "Debug Menu: Wifi";
+    String menuName = DEBUG_MENU_WIFI;
     getTextBounds(menuName, NULL, NULL, NULL, &maxHeight);
 
     uint16_t currentHeight = maxHeight;
@@ -43,30 +44,30 @@ void initWifiDebugDisplay()
 
     dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
     currentHeight = currentHeight + maxHeight;
-    centerText("MAC address:", &currentHeight);
+    centerText(DEBUG_WIFI_MAC_ADDRESS, &currentHeight);
 
     previousMac = WiFi.macAddress();
     macAddressHeight = currentHeight;
     centerText(previousMac, &currentHeight);
 
-    centerText("Wifi status: ", &currentHeight);
+    centerText(DEBUG_WIFI_STATUS, &currentHeight);
 
     wifiStatusLastStr = wifiStatus();
 
     centerText(wifiStatusLastStr, &currentHeight);
     StatusHeight = currentHeight - maxHeight;
-    writeLine("IP: " + WiFi.localIP().toString(), cursorXwifi, &currentHeight);
+    writeLine(DEBUG_WIFI_IP + WiFi.localIP().toString(), cursorXwifi, &currentHeight);
     IPHeight = currentHeight - maxHeight;
 
-    writeLine("SSID: " + WiFi.SSID(), cursorXwifi, &currentHeight);
+    writeLine(DEBUG_WIFI_SSID + WiFi.SSID(), cursorXwifi, &currentHeight);
     SSIDHeight = currentHeight - maxHeight;
 
-    writeLine("Wifi signal: " + String(getSignalStrength()) + "%", cursorXwifi, &currentHeight);
+    writeLine(DEBUG_WIFI_SIGNAL + String(getSignalStrength()) + DEBUG_COMMON_PERCENT, cursorXwifi, &currentHeight);
     SignalStrengthHeight = currentHeight - maxHeight;
 
     taskStatusLastStr = BOOL_STR(isWifiTaskCheck());
-    getTextBounds("Connecting: " + taskStatusLastStr, NULL, NULL, &taskStatusLenght, NULL);
-    writeLine("Connecting: " + taskStatusLastStr, cursorXwifi, &currentHeight);
+    getTextBounds(DEBUG_WIFI_CONNECTING + taskStatusLastStr, NULL, NULL, &taskStatusLenght, NULL);
+    writeLine(DEBUG_WIFI_CONNECTING + taskStatusLastStr, cursorXwifi, &currentHeight);
     TaskStatusHeight = currentHeight - maxHeight;
 
     currentHeight = currentHeight - maxHeight + 6;
@@ -77,8 +78,8 @@ void initWifiDebugDisplay()
     onButtonCord.y = currentHeight;
     offButtonCord.x = 70;
     offButtonCord.y = currentHeight;
-    drawButton(onButtonCord.x, onButtonCord.y, "ON", getImg("accept"), true);
-    drawButton(offButtonCord.x, offButtonCord.y, "OFF", getImg("cross"));
+    drawButton(onButtonCord.x, onButtonCord.y, DEBUG_WIFI_ON, getImg("accept"), true);
+    drawButton(offButtonCord.x, offButtonCord.y, DEBUG_WIFI_OFF, getImg("cross"));
 
     disUp(true);
 }
@@ -102,8 +103,8 @@ void drawSelUi()
         break;
     }
     }
-    drawButton(onButtonCord.x, onButtonCord.y, "ON", getImg("accept"), onBut);
-    drawButton(offButtonCord.x, offButtonCord.y, "OFF", getImg("cross"), offBut);
+    drawButton(onButtonCord.x, onButtonCord.y, DEBUG_WIFI_ON, getImg("accept"), onBut);
+    drawButton(offButtonCord.x, offButtonCord.y, DEBUG_WIFI_OFF, getImg("cross"), offBut);
     dUChange = true;
 }
 
@@ -127,7 +128,7 @@ void loopWifiDebugDisplay()
         setTextSize(TextSize);
         writeTextCenterReplaceBack(wifiStatusStr, StatusHeight);
 
-        String ipAddressStr = "IP: " + WiFi.localIP().toString();
+        String ipAddressStr = DEBUG_WIFI_IP + WiFi.localIP().toString();
         uint16_t ipWidth;
         getTextBounds(ipAddressStr, NULL, NULL, &ipWidth, NULL);
         debugLog("w: " + String(ipWidth) + " ipAddressLength: " + String(ipAddressLength));
@@ -140,7 +141,7 @@ void loopWifiDebugDisplay()
 
         writeTextReplaceBack(ipAddressStr, cursorXwifi, IPHeight);
 
-        String ssidStr = "SSID: " + WiFi.SSID();
+        String ssidStr = DEBUG_WIFI_SSID + WiFi.SSID();
         uint16_t ssidWidth;
         getTextBounds(ssidStr, NULL, NULL, &ssidWidth, NULL);
         debugLog("w: " + String(ssidWidth) + " ssidLength: " + String(ssidLength));
@@ -162,7 +163,7 @@ void loopWifiDebugDisplay()
         setFont(&FreeSansBold9pt7b);
         setTextSize(TextSize);
 
-        String signalStr = "Wifi signal: " + String(wifiSignal) + "%";
+        String signalStr = DEBUG_WIFI_SIGNAL + String(wifiSignal) + DEBUG_COMMON_PERCENT;
         uint16_t signalWidth;
         getTextBounds(signalStr, NULL, NULL, &signalWidth, NULL);
         debugLog("w: " + String(signalWidth) + " signalLength: " + String(signalLength));
@@ -185,7 +186,7 @@ void loopWifiDebugDisplay()
         setTextSize(TextSize);
 
         // Update the TaskStatus
-        String TaskStatusStr = "Connecting: " + wifiTaskStatus; // Replace with actual function or variable
+        String TaskStatusStr = DEBUG_WIFI_CONNECTING + wifiTaskStatus; // Replace with actual function or variable
         uint16_t taskStatusWidth;
         getTextBounds(TaskStatusStr, NULL, NULL, &taskStatusWidth, NULL);
         debugLog("w: " + String(taskStatusWidth) + " signalLength: " + String(taskStatusLenght));
