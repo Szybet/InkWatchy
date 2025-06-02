@@ -1,5 +1,6 @@
 #include "taychron.h"
 #include "tayWeather.h"
+#include "taychron_localization.h"
 #include <MoonPhase.h>
 #include "rtcMem.h"
 
@@ -18,51 +19,6 @@
 #define AMPPM_X 150
 #define AMPPM_Y 143
 #define AMPM_FONT getFont("taychron/Mono13")
-
-String getAMPM(String time24)
-{
-    // Extract the hour from the 24-hour time string
-    int colonIndex = time24.indexOf(':');
-    int hour = time24.substring(0, colonIndex).toInt();
-
-    // Determine AM or PM
-    if (hour < 12)
-    {
-        return "AM";
-    }
-    else
-    {
-        return "PM";
-    }
-}
-
-String convertTo12HourFormat(String time24)
-{
-    // Split the input time (hh:mm) into hours and minutes
-    int colonIndex = time24.indexOf(':');
-    int hour = time24.substring(0, colonIndex).toInt();
-    String minute = time24.substring(colonIndex + 1);
-
-    // Convert the hour to 12-hour format
-    if (hour == 0)
-    {
-        hour = 12; // Midnight case
-    }
-    else if (hour > 12)
-    {
-        hour -= 12; // Afternoon case
-    }
-
-    // Add leading zero to the hour if necessary
-    String hourStr = String(hour);
-    if (hourStr.length() == 1)
-    {
-        hourStr = "0" + hourStr;
-    }
-
-    // Combine hour and minute for the final result
-    return hourStr + ":" + minute;
-}
 #endif
 
 static void drawTimeAfterApply(bool forceDraw)
@@ -91,14 +47,13 @@ static void showTimeFull()
 #endif
     // Now UI
     dis->fillRect(0, TIME_CORD_Y, 200, 30, GxEPD_BLACK); // Clear middle
-    String currTime = getHourMinute(timeRTCLocal);
+    String currTime = getTaychronLocalizedTimeString(timeRTCLocal); // Use localized function
 
 #if WATCHFACE_12H
     setTextSize(1);
     setFont(AMPM_FONT);
-    writeTextReplaceBack(getAMPM(currTime), AMPPM_X, AMPPM_Y, GxEPD_WHITE, GxEPD_BLACK);
-
-    currTime = convertTo12HourFormat(currTime);
+    String ampmStr = getTaychronLocalizedAMPM(timeRTCLocal); // Use localized function
+    writeTextReplaceBack(ampmStr, AMPPM_X, AMPPM_Y, GxEPD_WHITE, GxEPD_BLACK);
 #endif
 
     setTextSize(1);

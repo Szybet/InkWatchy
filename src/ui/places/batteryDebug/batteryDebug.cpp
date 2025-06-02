@@ -1,5 +1,6 @@
 #include "batteryDebug.h"
 #include "rtcMem.h"
+#include "localization.h"
 
 #if DEBUG == 1 || DEBUG_MENUS == 1
 
@@ -20,7 +21,7 @@ void initBatteryDebugDisplay()
     setFont(&FreeSansBold9pt7b);
     setTextSize(batteryTextSize);
     dis->setCursor(cursorX, 1);
-    String menuName = "Debug Menu: Batt";
+    String menuName = DEBUG_MENU_BATTERY;
     getTextBounds(menuName, NULL, NULL, NULL, &h);
     maxHeight = h;
     uint16_t currentHeight = maxHeight;
@@ -30,23 +31,23 @@ void initBatteryDebugDisplay()
     dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
     currentHeight = currentHeight + maxHeight;
 
-    writeLine("Current V: " + String(bDdata.curV), cursorX, &currentHeight);
+    writeLine(DEBUG_BATTERY_CURRENT_V + String(bDdata.curV), cursorX, &currentHeight);
     currentVoltageHeight = currentHeight - maxHeight;
 
-    writeLine("Minimum V: " + String(BATTERY_MIN_VOLTAGE), cursorX, &currentHeight);
+    writeLine(DEBUG_BATTERY_MINIMUM_V + String(BATTERY_MIN_VOLTAGE), cursorX, &currentHeight);
 
-    writeLine("Maximum V: " + String(BATTERY_MAX_VOLTAGE), cursorX, &currentHeight);
+    writeLine(DEBUG_BATTERY_MAXIMUM_V + String(BATTERY_MAX_VOLTAGE), cursorX, &currentHeight);
 
-    writeLine("Critical V: " + String(BATTERY_CRIT_VOLTAGE), cursorX, &currentHeight);
+    writeLine(DEBUG_BATTERY_CRITICAL_V + String(BATTERY_CRIT_VOLTAGE), cursorX, &currentHeight);
 
-    writeLine("Level %: " + String(bDdata.percentage), cursorX, &currentHeight);
+    writeLine(DEBUG_BATTERY_LEVEL + String(bDdata.percentage), cursorX, &currentHeight);
     PercentageHeight = currentHeight - maxHeight;
 
-    writeLine("Charging: " + BOOL_STR(bDdata.isCharging), cursorX, &currentHeight);
+    writeLine(DEBUG_BATTERY_CHARGING + BOOL_STR(bDdata.isCharging), cursorX, &currentHeight);
     ChargingHeight = currentHeight - maxHeight;
 
 #if ATCHY_VER == YATCHY
-    writeLine("Fully: " + BOOL_STR(bDdata.isFullyCharged), cursorX, &currentHeight);
+    writeLine(DEBUG_BATTERY_FULLY + BOOL_STR(bDdata.isFullyCharged), cursorX, &currentHeight);
     fullyChargedHeight = currentHeight - maxHeight;
 #endif
 
@@ -70,7 +71,7 @@ void loopBatteryDebugDisplay()
             battVoltageStr = battVoltageStr + " ";
         }
 
-        writeTextReplaceBack("Current V: " + battVoltageStr, cursorX, currentVoltageHeight);
+        writeTextReplaceBack(DEBUG_BATTERY_CURRENT_V + battVoltageStr, cursorX, currentVoltageHeight);
         dUChange = true;
     }
     if (bDdata.isCharging != rM.bat.isCharging)
@@ -85,7 +86,7 @@ void loopBatteryDebugDisplay()
             chargingStr = chargingStr + " ";
         }
 
-        writeTextReplaceBack("Charging: " + chargingStr, cursorX, ChargingHeight);
+        writeTextReplaceBack(DEBUG_BATTERY_CHARGING + chargingStr, cursorX, ChargingHeight);
         dUChange = true;
     }
 #if ATCHY_VER == YATCHY
@@ -101,7 +102,7 @@ void loopBatteryDebugDisplay()
             chargingStr = chargingStr + " ";
         }
 
-        writeTextReplaceBack("Fully: " + chargingStr, cursorX, ChargingHeight);
+        writeTextReplaceBack(DEBUG_BATTERY_FULLY + chargingStr, cursorX, ChargingHeight);
         dUChange = true;
     }
 #endif
@@ -117,7 +118,7 @@ void loopBatteryDebugDisplay()
             percentageStr = percentageStr + " ";
         }
 
-        writeTextReplaceBack("Level %: " + percentageStr, cursorX, PercentageHeight);
+        writeTextReplaceBack(DEBUG_BATTERY_LEVEL + percentageStr, cursorX, PercentageHeight);
         dUChange = true;
     }
     useButtonBlank();
