@@ -1,1 +1,0 @@
-To use with https://github.com/Szybet/InkWatchy Calendar feature
