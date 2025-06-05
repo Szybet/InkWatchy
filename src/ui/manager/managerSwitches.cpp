@@ -162,6 +162,13 @@ void switchTetris()
 }
 #endif
 
+#if SNAKE
+void switchSnake()
+{
+    generalSwitch(snake);
+}
+#endif
+
 #if CREDITS
 void switchCredits()
 {

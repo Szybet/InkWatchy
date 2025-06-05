@@ -1,7 +1,7 @@
 [package]
 name = "inkrusty"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [lib]
 crate-type = ["staticlib"]
@@ -19,6 +19,7 @@ slint-build = "1.8.0"
 default = []
 none = [] # Placeholder for bash script
 debug = []
+snake = []
 
 [profile.release]
 strip = true

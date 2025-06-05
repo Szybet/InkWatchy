@@ -53,8 +53,6 @@ void setup()
 #if INK_ALARMS
   checkAlarms();
 #endif
-
-  init_snake();
 }
 
 void loop()
@@ -74,10 +72,7 @@ void loop()
     regularSync();
 #endif
   }
-  // loopManager();
-  // Looping snake
-  debugLog("Looping snake");
-  slint_loop();
+  loopManager();
 
 #if DEBUG
   endLoopDebug();

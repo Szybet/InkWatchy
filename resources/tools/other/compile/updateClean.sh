@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf .pio/build/ sdkconfig.* 
+rm -rf .pio/build/ sdkconfig.* components/rusty/inkrusty/target
 # dependencies.lock
 # managed_components
 # rm -rf resources/tools/other/in/*

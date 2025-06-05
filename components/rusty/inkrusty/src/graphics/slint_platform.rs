@@ -1,7 +1,8 @@
-use alloc::boxed::Box;
-use slint::Window;
 
-use crate::{external::generic::updateScreen, info};
+use alloc::boxed::Box;
+use slint::{platform::WindowEvent, run_event_loop, SharedString};
+
+use crate::{external::generic::{get_buttons, updateScreen, RustButton}, info};
 
 use super::embedded_graphics::Framebuffer;
 
@@ -16,17 +17,24 @@ impl slint::platform::Platform for InkPlatform {
         Ok(self.window.clone())
     }
     fn duration_since_start(&self) -> core::time::Duration {
-        core::time::Duration::from_micros(unsafe { crate::external::generic::rustMicros() as u64 })
+        let ret = core::time::Duration::from_micros(unsafe { crate::external::generic::rustMicros() as u64 });
+        // let fmt = format!("ret: {:?}", ret);
+        // info!(&fmt);
+        ret
     }
-}
+    fn run_event_loop(&self) -> Result<(), slint::PlatformError> {
+        slint::platform::update_timers_and_animations();
 
-impl InkPlatform {
-    pub fn set_platform() {
-        let window =
-            slint::platform::software_renderer::MinimalSoftwareWindow::new(Default::default());
-        window.set_size(slint::PhysicalSize::new(200, 200));
+        // if self.window.has_active_animations() {
+            // info!("has_active_animations");
+            // continue;
+            // return Ok(());
+        // }
 
-        window.draw_if_needed(|renderer| {
+        // info!("Fucking platform run");
+
+        self.window.draw_if_needed(|renderer| {
+            // info!("draw_if_needed");
             /*
             if window.has_active_animations() {
                 info!("Window has active animations!");
@@ -75,24 +83,84 @@ impl InkPlatform {
             unsafe {
                 updateScreen(true, false, true);
             }
+
+            // info!("draw_if_needed end");
         });
+        // info!("event loop end");
 
-        let platform = alloc::boxed::Box::new(InkPlatform { window });
-
-        slint::platform::set_platform(platform).unwrap();
+        let buttons = get_buttons();
+        let mut str: SharedString = SharedString::new();
+        match buttons {
+            RustButton::NoButton => {},
+            RustButton::Up => str.push_str("w"),
+            RustButton::Down => str.push_str("s"),
+            RustButton::Menu => str.push_str("a"),
+            RustButton::MenuLong => str.push_str("d"),
+        }
+        if buttons != RustButton::NoButton {
+            self.window.try_dispatch_event(WindowEvent::KeyPressed { text: str.clone() })?;
+            self.window.try_dispatch_event(WindowEvent::KeyReleased { text: str })?;    
+        }
+        
+        Ok(())
     }
 }
 
+impl InkPlatform {
+    pub fn set_platform() {
+        let window =
+            slint::platform::software_renderer::MinimalSoftwareWindow::new(Default::default());
+        window.set_size(slint::PhysicalSize::new(200, 200));
 
-use core::sync::atomic::{AtomicPtr, Ordering};
+        let platform = alloc::boxed::Box::new(InkPlatform { window });
+        let better_platform = Box::leak(platform);
+        let even_better_platform = unsafe { Box::from_raw(better_platform) };
 
-static APP_INSTANCE: AtomicPtr<snake_lib::AppWindow> = AtomicPtr::new(core::ptr::null_mut());
+        slint::platform::set_platform(even_better_platform).unwrap();
+    }
+}
 
-pub fn slint_init(ui: snake_lib::AppWindow) {
-    APP_INSTANCE.store(Box::into_raw(Box::new(ui)), Ordering::SeqCst);
+static mut SLINT_INITED: bool = false;
+
+pub fn slint_init() {
+    unsafe {
+        if !SLINT_INITED {
+            SLINT_INITED = true;
+            InkPlatform::set_platform();
+        }
+    }
 }
 
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn slint_loop() {
-    slint::platform::update_timers_and_animations();
+    // info!("Executed slint_loop");
+    crate::external::generic::rustResetDelay();
+    run_event_loop().unwrap();
+}
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn slint_exit() {
+    info!("Executed slint_exit");
+    #[allow(static_mut_refs)]
+    if let Some(app) = &SLINT_APP_STORE {
+        app.on_exit();
+    }
+    SLINT_APP_STORE = None;
+}
+
+pub trait SlintApp {
+    fn show(&self);
+    fn on_exit(&self);
+}
+
+static mut SLINT_APP_STORE: Option<Box<dyn SlintApp>> = None;
+
+pub fn preserve_app(app: Box<dyn SlintApp>) {
+    app.show();
+    unsafe {
+        //let platform = alloc::boxed::Box::new(ui);
+        //let better_platform = Box::leak(platform);
+        //let even_better_platform = Box::from_raw(better_platform);
+        SLINT_APP_STORE = Some(app);
+    }
 }

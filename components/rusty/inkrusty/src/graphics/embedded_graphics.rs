@@ -1,6 +1,5 @@
-use alloc::format;
 use embedded_graphics_core::{pixelcolor::Rgb565, prelude::{Dimensions, DrawTarget, PixelColor, RgbColor}};
-use crate::{external::generic::{drawPixel, updateScreen}, info};
+use crate::{external::generic::{drawPixel, updateScreen}};
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Color {
@@ -57,9 +56,17 @@ impl DrawTarget for Framebuffer {
             let color_bit1: u16 = match color {
                 Rgb565::WHITE => 0xFFFF,
                 Rgb565::BLACK => 0x0000,
-                _ => {
-                    // info!(&format!("Wrong color {:?}", color));
-                    0x0000
+                other => {
+                    // info!(&format!("Processing color {:?}", other));
+                    let r = other.r() as u16;
+                    let g = other.g() as u16;
+                    let b = other.b() as u16;
+                    
+                    const THRESHOLD: u16 = 5891;
+                    
+                    let value = 62 * (r + b) + 126 * g;
+                    
+                    if value >= THRESHOLD { 0xFFFF } else { 0x0000 }
                 }
             };
 

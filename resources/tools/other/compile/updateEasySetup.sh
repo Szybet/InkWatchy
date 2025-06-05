@@ -11,3 +11,8 @@ cd resources/tools/
 cd ../../
 
 pio run -e $pio_env
+
+# Rust
+cd components/rusty/inkrusty
+cargo update
+cd ../../../

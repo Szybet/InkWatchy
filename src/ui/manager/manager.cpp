@@ -367,6 +367,13 @@ void loopManager()
 #endif
         break;
     }
+    case snake:
+    {
+#if SNAKE
+        managerLaunchFunc(tetris, init_snake, slint_loop, slint_exit);
+#endif
+        break;
+    }
     case gamesMenu:
     {
         managerLaunchFunc(gamesMenu, initGamesMenu, loopMenu);

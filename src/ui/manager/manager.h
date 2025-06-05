@@ -41,6 +41,7 @@ typedef enum
     videoMenu,
     pong,
     tetris,
+    snake,
     gamesMenu,
     credits,
     conwayApp,
@@ -129,6 +130,9 @@ void switchApple2();
 void switchPong();
 #if TETRIS
 void switchTetris();
+#endif
+#if SNAKE
+void switchSnake();
 #endif
 #if CREDITS
 void switchCredits();

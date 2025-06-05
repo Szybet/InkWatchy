@@ -10,13 +10,30 @@ pio_env=$(get_pio_env .vscode/launch.json)
 
 resources/tools/other/setup/installRust.sh
 
-features="--features none"
-config_path="src/defines/config.h"
-debug_value=$(grep '#define DEBUG ' "$config_path" | awk '{print $3}' | tr -d '"')
-if [ "$debug_value" = "1" ]; then
-    features="$features,debug"
-fi
-echo "Features is: $features"
+check_features() {
+    local config_path=$1
+    shift
+    base_features="none"
+    
+    for feature in "$@"; do
+        # echo $feature
+        # Check both uppercase and lowercase versions
+        local upper_feature=$(echo "$feature" | tr '[:lower:]' '[:upper:]')
+        local lower_feature=$(echo "$feature" | tr '[:upper:]' '[:lower:]')
+        
+        # Search for uppercase define in config
+        local value=$(grep -E "^\s*#define\s+($upper_feature|$lower_feature)\s+" "$config_path" | 
+                      awk '{print $3}' | tr -d '"' | head -1)
+        
+        if [ "$value" = "1" ]; then
+            base_features="$base_features,$feature"
+        fi
+    done
+
+    echo "Features are: $base_features"
+}
+
+check_features "src/defines/config.h" debug snake
 
 cd components/rusty
 
@@ -38,7 +55,7 @@ else
 fi
 
 cd inkrusty/
-cargo build --target "$target" --release $features || {
+cargo build --target "$target" --release --features $base_features || {
     echo "Build failed for target: $target" >&2
     exit 1
 }

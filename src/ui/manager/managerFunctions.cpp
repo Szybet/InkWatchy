@@ -1,5 +1,5 @@
 #include "manager.h"
-#include "localization.h"  // For menu translations
+#include "localization.h" // For menu translations
 #include "rtcMem.h"
 
 void initMainMenu()
@@ -44,12 +44,12 @@ void initMainMenu()
         count = count + 1;
         buttons[count] = {MENU_SETTINGS, getImg("settings"), switchSettingsMenu};
     }
-    #if HEART_MONITOR
+#if HEART_MONITOR
     {
         count = count + 1;
         buttons[count] = {MENU_HEART_MONITOR, getImg("heartmonitor/heartIcon"), switchHeartMonitor};
     }
-    #endif
+#endif
 #if VAULT
     {
         count = count + 1;
@@ -171,12 +171,20 @@ void initSettingsMenu()
 void initGamesMenu()
 {
     int count = -1;
-    entryMenu buttons[5];
+    entryMenu buttons[6];
 #if TETRIS
     {
         debugLog("Adding Tetris");
         count = count + 1;
         buttons[count] = {MENU_TETRIS, getImg("tetris/tetrisIcon"), switchTetris};
+    }
+#endif
+#if SNAKE
+    {
+        debugLog("Adding Snake");
+        count = count + 1;
+        // Snake game, is everywhere in the world called "Snake", right? right? It's not WĄŻ
+        buttons[count] = {"Snake", getImg("snake/snakeIcon"), switchSnake};
     }
 #endif
 #if PONG

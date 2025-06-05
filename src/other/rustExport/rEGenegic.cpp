@@ -39,4 +39,54 @@ extern "C"
     extern uint32_t rustMicros() {
         return micros();
     }
+
+    extern uint32_t rustButtons() {
+        buttonState button = useButton();
+        if(button == buttonState::None) {
+            return RUST_BUTTON_NONE;
+        }
+        if(button == buttonState::Up) {
+            return RUST_BUTTON_UP;
+        }
+        if(button == buttonState::Down) {
+            return RUST_BUTTON_DOWN;
+        }
+        if(button == buttonState::Menu) {
+            return RUST_BUTTON_MENU;
+        }
+        if(button == buttonState::LongMenu) {
+            return RUST_BUTTON_MENU_LONG;
+        }
+        return RUST_BUTTON_NONE;
+    }
+
+    extern void rustResetDelay(){
+        resetSleepDelay();
+    }
+
+    extern void rustSetCpuSpeed(int speed) {
+        if(cpuSpeed::minimalSpeed == 0) {
+            setCpuSpeed(cpuSpeed::minimalSpeed);
+        }
+        if(cpuSpeed::normalSpeed == 1) {
+            setCpuSpeed(cpuSpeed::normalSpeed);
+        }
+        if(cpuSpeed::maxSpeed == 2) {
+            setCpuSpeed(cpuSpeed::maxSpeed);
+        }
+    }
+
+    extern int rustGetCpuSpeed() {
+        cpuSpeed speed = getCpuSpeed();
+        if(speed == minimalSpeed) {
+            return 0;
+        }
+        if(speed == normalSpeed) {
+            return 1;
+        }
+        if(speed == maxSpeed) {
+            return 2;
+        }
+        return -1;
+    }
 }

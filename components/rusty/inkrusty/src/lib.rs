@@ -11,12 +11,12 @@ static A: Mallocator = Mallocator;
 #[cfg(feature = "debug")]
 use core::ffi::*;
 use core::panic::PanicInfo;
+use external::generic::rustPanic;
 #[cfg(feature = "debug")]
 use {
-    external::generic::{delayRust, log_function_c},
     alloc::ffi::CString,
+    external::generic::{delayRust, log_function_c},
 };
-use external::generic::rustPanic;
 
 #[panic_handler]
 fn panic(_info: &PanicInfo) -> ! {
@@ -30,7 +30,7 @@ fn panic(_info: &PanicInfo) -> ! {
         let line: c_int = location.map(|loc| loc.line() as c_int).unwrap_or(0);
         let func: *const u8 = b"unknown\0".as_ptr();
 
-        // let message: *const u8 = _info.message().as_str().unwrap_or("unknown").as_ptr();
+        // let message: *const u8 = _info.message().as_str().unwrap_or("fuck").as_ptr();
         // Fixes null termination
         let message_str = _info.message().as_str().unwrap_or("unknown");
         let c_string = CString::new(message_str)
@@ -48,10 +48,10 @@ fn panic(_info: &PanicInfo) -> ! {
 }
 
 // Rest
+pub mod apps;
 pub mod external;
-pub mod logs;
 pub mod graphics;
-pub mod do_snake;
+pub mod logs;
 
 #[cfg(feature = "debug")]
 use crate::external::generic::rust_ink_test;

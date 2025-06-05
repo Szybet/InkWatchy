@@ -239,6 +239,9 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 // Tetris
 #define TETRIS 1
 
+// Snake
+#define SNAKE 1
+
 // Credits page
 #define CREDITS 1 // Feel free to disable it for your own usage :D
 
