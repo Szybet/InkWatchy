@@ -13,7 +13,16 @@
 #define BATT_BAR_CORD 60, 5 + 20
 
 #define TIME_CORD_X 18
+#if WATCHFACE_TAYCHRON_DATE
+// with date
+#define TIME_CORD_Y 110
+#define DATE_CORD_Y (TIME_CORD_Y + 25)
+#define DATE_CORD_X 75
+#define DATE_FONT getFont("taychron/Mono13")
+#else
+// without date
 #define TIME_CORD_Y 119
+#endif
 
 #if WATCHFACE_12H
 #define AMPPM_X 150
@@ -46,7 +55,7 @@ static void showTimeFull()
     screenTimeChanged = true;
 #endif
     // Now UI
-    dis->fillRect(0, TIME_CORD_Y, 200, 30, GxEPD_BLACK); // Clear middle
+    dis->fillRect(0, TIME_CORD_Y, 200, 30, GxEPD_BLACK);            // Clear middle
     String currTime = getTaychronLocalizedTimeString(timeRTCLocal); // Use localized function
 
 #if WATCHFACE_12H
@@ -59,6 +68,17 @@ static void showTimeFull()
     setTextSize(1);
     setFont(TIME_FONT);
     writeTextReplaceBack(currTime, TIME_CORD_X, TIME_CORD_Y, GxEPD_WHITE, GxEPD_BLACK);
+
+#if WATCHFACE_TAYCHRON_DATE
+    // lets try drawing date below it
+    String day = String(rM.wFTime.Day);
+    String month = getLocalizedMonthName(rM.wFTime.Month);
+    String finalStr = day + ". " + month;
+
+    setTextSize(1);
+    setFont(DATE_FONT);
+    writeTextReplaceBack(finalStr, DATE_CORD_X, DATE_CORD_Y, GxEPD_WHITE, GxEPD_BLACK);
+#endif
 }
 
 static void initWatchface()
