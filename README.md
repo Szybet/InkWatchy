@@ -56,6 +56,7 @@ https://github.com/user-attachments/assets/91d169da-298a-425a-859c-2c9bc7fb6cf7
 - A "vault" which allows to save encrypted images to the watchy and view them if provided the correct PIN. All generated dynamically via a script. Uses AES128 cbc/ecb. Example use is a backup phone book, bitcoin key backup in the form of a QR code
 - Games / Fun
    - Blockchy, a tetris like game
+   - Snake (Written in rust!)
    - Pong game
    - Conway game of life
    - Small video player
