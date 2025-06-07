@@ -48,6 +48,9 @@
 #if (DEBUG && SCREENSHOT_ENDPOINT)
 #include <ESPAsyncWebServer.h>
 #endif
+#if VAULT
+#include <TOTP.h>
+#endif
 #include "rusty.h"
 
 // Order important
