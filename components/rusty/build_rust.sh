@@ -3,7 +3,9 @@
 # Add to .vscode/settings.json
 #    "rust-analyzer.linkedProjects": [
 #        "${workspaceFolder}/components/rusty/inkrusty/Cargo.toml",
+#        "${workspaceFolder}/components/rusty/crates/general_page/Cargo.toml",
 #    ],
+#     "rust-analyzer.cargo.target": "riscv32imac-unknown-none-elf",
 
 source resources/tools/globalFunctions.sh
 pio_env=$(get_pio_env .vscode/launch.json)
@@ -61,3 +63,6 @@ cargo build --target "$target" --release --features $base_features || {
 }
 cp target/$target/release/libinkrusty.a ../lib/librusty.a
 cbindgen . --quiet --config cbindgen.toml --lang c -o ../include/rusty.h
+
+du -h ../lib/librusty.a
+du ../lib/librusty.a

@@ -15,6 +15,11 @@ int PercentageHeight;
 
 void initBatteryDebugDisplay()
 {
+    init_general_page();
+    general_page_set_title(DEBUG_MENU_BATTERY);
+    general_page_set_main("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis et dignissim tortor. Suspendisse non nibh vel ex dignissim ultrices. Nullam auctor velit vitae lacinia elementum. Nunc placerat faucibus dolor, at rhoncus sem elementum eget. Aenean ut vulputate diam. Fusce ante metus, interdum quis rutrum id, elementum nec turpis. Aenean dapibus vehicula congue. Etiam aliquam arcu a mi gravida scelerisque. Morbi mollis purus ut sem lacinia, eu porta lacus auctor. ");
+
+    return; 
     debugLog("initBatteryDebugDisplay called");
     uint16_t h;
     bDdata = rM.bat;
@@ -57,6 +62,8 @@ void initBatteryDebugDisplay()
 
 void loopBatteryDebugDisplay()
 {
+    slint_loop();
+    return;
     loopBattery();
     isChargingCheck();
     if (bDdata.curV > rM.bat.curV + 0.01 || bDdata.curV < rM.bat.curV - 0.01)

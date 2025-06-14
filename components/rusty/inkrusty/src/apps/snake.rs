@@ -29,6 +29,9 @@ impl SlintApp for SnakeApp {
         // Restore
         set_cpu_speed(&self.cpu_speed);
     }
+    fn as_any(&self) -> &dyn core::any::Any {
+        self
+    }
 }
 
 #[unsafe(no_mangle)]
@@ -74,6 +77,8 @@ pub unsafe extern "C" fn init_snake() {
             dir_timer.set(temp_dir);
 
             snake.draw(&ui);
+
+            crate::external::generic::rustResetDelay();
         },
     );
 

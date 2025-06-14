@@ -1,5 +1,5 @@
-# Name,	Type,	SubType,	Offset,	Size,	Flags
-factory,	app,	factory,	0x20000,	0x1cd000,	
-littlefs,	data,	littlefs,	0x1ed000,	0x200000,	
-nvs,	data,	nvs,	0x3ed000,	0x3000,	
-coredump,	data,	coredump,	0x3f0000,	0x10000,	
+# Name,      Type,     SubType,    Offset,      Size,        Flags
+factory,     app,      factory,    0x20000,     0x24d000,    
+littlefs,    data,     littlefs,   0x26d000,    0x180000,    
+nvs,         data,     nvs,        0x3ed000,    0x3000,      
+coredump,    data,     coredump,   0x3f0000,    0x10000,

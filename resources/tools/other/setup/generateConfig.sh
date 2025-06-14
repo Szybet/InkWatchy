@@ -24,8 +24,8 @@ mkdir -p fs/littlefs/calendar/
 mkdir -p other/out/
 mkdir -p other/in/
 
-echo "2019328" > fs/in/offset.txt
-echo "2097152" > fs/in/size.txt
+echo "2543616" > fs/in/offset.txt
+echo "1572864" > fs/in/size.txt
 
 if [ ! -f "fs/in/fsConfig.ini" ] || [ ! -f "fs/in/partitions.csv" ]; then
     echo -e ''

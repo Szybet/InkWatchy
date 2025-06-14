@@ -1,0 +1,66 @@
+import { ScrollView } from "std-widgets.slint";
+import "Quantico-Regular-linegap5.ttf";
+
+export global Adapter {
+    in property <bool> title_enabled: true;
+    in property <string> title_text;
+    in property <string> main_text;
+
+    in property <bool> buttons_shown: false;
+    in-out property <length> scroll;
+    in-out property <length> scroll_viewport_height;
+}
+
+export component GeneralPage inherits Window {
+    width: 200px;
+    height: 200px;
+
+    default-font-family: "Quantico";
+    
+    callback key_pressed(string);
+    forward-focus: my-key-handler;
+    my-key-handler := FocusScope {
+        key-pressed(event) => {
+            root.key_pressed(event.text);
+            accept
+        }
+    }
+
+    ScrollView {
+        horizontal-scrollbar-policy: always-off;
+        vertical-scrollbar-policy: always-off;
+        viewport-y: Adapter.scroll;
+        scrolled() => {
+            debug("viewport-y: " + self.viewport-y / 1px);
+            debug("viewport-height: " + self.viewport-height / 1px);
+        }
+        
+        VerticalLayout {
+            padding: 3px;
+            spacing: 1px;
+            alignment: start;
+
+            preferred-height: Adapter.scroll_viewport_height;
+
+            if Adapter.title_enabled: Text {
+                    text: Adapter.title_text;
+                    overflow: elide;
+                    vertical-alignment: top;
+                    wrap: word-wrap;
+                    font-size: 20px;
+                }
+                if Adapter.title_enabled: Rectangle {
+                    height: 3px;
+                    background: black;
+                }
+            
+            Text {
+                text: Adapter.main_text;
+                overflow: elide;
+                vertical-alignment: top;
+                wrap: word-wrap;
+                font-size: 20px;
+            }
+        }
+    }
+}

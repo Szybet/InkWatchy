@@ -1,4 +1,6 @@
 
+use core::any::Any;
+
 use alloc::boxed::Box;
 use slint::{platform::WindowEvent, run_event_loop, SharedString};
 
@@ -134,7 +136,6 @@ pub fn slint_init() {
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn slint_loop() {
     // info!("Executed slint_loop");
-    crate::external::generic::rustResetDelay();
     run_event_loop().unwrap();
 }
 
@@ -148,12 +149,13 @@ pub unsafe extern "C" fn slint_exit() {
     SLINT_APP_STORE = None;
 }
 
-pub trait SlintApp {
+pub trait SlintApp: Any {
     fn show(&self);
     fn on_exit(&self);
+    fn as_any(&self) -> &dyn Any;
 }
 
-static mut SLINT_APP_STORE: Option<Box<dyn SlintApp>> = None;
+pub static mut SLINT_APP_STORE: Option<Box<dyn SlintApp>> = None;
 
 pub fn preserve_app(app: Box<dyn SlintApp>) {
     app.show();

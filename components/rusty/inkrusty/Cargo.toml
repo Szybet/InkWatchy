@@ -11,6 +11,7 @@ mallocator = "0.1.0"
 embedded-graphics-core = "0.4.0"
 slint = { version = "1.8.0", default-features = false, features = ["compat-1-2", "renderer-software", "libm", "unsafe-single-threaded"] }
 snake_lib = { git = "https://github.com/Szybet/snake-slint.git", package = "snake_lib" }
+general_page = {path = "../crates/general_page" }
 
 [build-dependencies]
 slint-build = "1.8.0"

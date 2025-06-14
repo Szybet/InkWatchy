@@ -1,0 +1,36 @@
+[package]
+name = "general_page"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+slint = { version = "1.8.0", default-features = false }
+
+[build-dependencies]
+slint-build = { version = "1.8.0", features = [] }
+
+[dev-dependencies]
+slint = { version = "1.8.0", default-features = true}
+
+[patch.crates-io]
+i-slint-compiler = { git = "https://github.com/Szybet/i-slint-compiler-no-alpha.git" }
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+# This not
+# RUSTFLAGS="-Zlocation-detail=none" cargo +nightly build --release
+# because
+# rust-lld: error: undefined symbol: __stack_top
+# And
+# cargo +nightly build --release
+# Increases size by a few bytes
+
+# Those don't change anything
+debug = 0
+debug-assertions = false
+incremental = false
+overflow-checks = false
