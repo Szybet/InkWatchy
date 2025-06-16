@@ -1,0 +1,45 @@
+export component CustomScrollView {
+    in property <bool> enabled: true;
+    out property <length> visible-width <=> flickable.width;
+    out property <length> visible-height <=> flickable.height;
+    in-out property <length> viewport-width <=> flickable.viewport-width;
+    in-out property <length> viewport-height <=> flickable.viewport-height;
+    in-out property <length> viewport-x <=> flickable.viewport-x;
+    in-out property <length> viewport-y <=> flickable.viewport-y;
+    in property <bool> mouse-drag-pan-enabled <=> flickable.interactive;
+    in-out property <bool> has-focus;
+    callback scrolled <=> flickable.flicked;
+
+    min-height: 50px;
+    min-width: 50px;
+    horizontal-stretch: 1;
+    vertical-stretch: 1;
+    preferred-height: 100%;
+    preferred-width: 100%;
+
+    property <length> vvalue <=> flickable.viewport-y;
+    property <length> hvalue <=> flickable.viewport-x;
+    property <length> vmaximum: flickable.viewport-height - flickable.height;
+    property <length> hmaximum: flickable.viewport-width - flickable.width;
+
+    flickable := Flickable {
+        interactive: false;
+        width: parent.width;
+        height: parent.height;
+
+        @children
+    }
+
+    public function scroll(delta: length, horizontal: bool) {
+        if (horizontal) {
+            root.hvalue = max(-root.hmaximum, min(0px, root.hvalue + delta));
+        } else {
+            root.vvalue = max(-root.vmaximum, min(0px, root.vvalue + delta));
+        }
+    }
+}
+
+export component ListView inherits CustomScrollView {
+    @children
+    accessible-role: list;
+}
