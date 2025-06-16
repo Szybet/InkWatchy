@@ -1,5 +1,4 @@
 import { CustomScrollView, ListView } from "scroll-view.slint";
-//import { ListView } from "std-widgets.slint";
 import "Quantico-Regular-linegap5.ttf";
 
 export global Adapter {
@@ -27,7 +26,6 @@ export component GeneralPage inherits Window {
 
     default-font-family: "Quantico";
 
-
     public function scrollTheScroll(delta: length, horizontal: bool) {
         scrollView.scroll(delta,horizontal);
     }
@@ -38,8 +36,8 @@ export component GeneralPage inherits Window {
         } else {
             if selected_index != -1 {
                 selected_index = selected_index - 1;
-                                                if selected_index != 0 {
-                scroll_y += 20px;
+                if selected_index != 0 {
+                    scroll_y += 20px;
                 }
             }
         }
@@ -51,8 +49,8 @@ export component GeneralPage inherits Window {
         } else {
             if selected_index < button_items.length - 1 {
                 selected_index += 1;
-                                                if selected_index != 0 {
-                scroll_y -= 20px;
+                if selected_index != 0 {
+                    scroll_y -= 20px;
                 }
             }
         }
@@ -78,60 +76,60 @@ export component GeneralPage inherits Window {
             accept
         }
 
-    scrollView := CustomScrollView {
-        viewport-y: Adapter.scroll;
+        scrollView := CustomScrollView {
+            viewport-y: Adapter.scroll;
 
-        VerticalLayout {
-            padding: 3px;
-            spacing: 1px;
-            alignment: start;
-            preferred-height: Adapter.scroll_viewport_height;
+            VerticalLayout {
+                padding: 3px;
+                spacing: 1px;
+                alignment: start;
+                preferred-height: Adapter.scroll_viewport_height;
 
-            if Adapter.title_enabled: Text {
-                text: Adapter.title_text;
-                overflow: elide;
-                vertical-alignment: top;
-                wrap: word-wrap;
-                font-size: 20px;
-            }
+                if Adapter.title_enabled: Text {
+                    text: Adapter.title_text;
+                    overflow: elide;
+                    vertical-alignment: top;
+                    wrap: word-wrap;
+                    font-size: 20px;
+                }
 
-            if Adapter.title_enabled: Rectangle {
-                height: 3px;
-                background: black;
-            }
+                if Adapter.title_enabled: Rectangle {
+                    height: 3px;
+                    background: black;
+                }
 
-            Text {
-                text: Adapter.main_text;
-                overflow: elide;
-                vertical-alignment: top;
-                wrap: word-wrap;
-                font-size: 20px;
+                Text {
+                    text: Adapter.main_text;
+                    overflow: elide;
+                    vertical-alignment: top;
+                    wrap: word-wrap;
+                    font-size: 20px;
+                }
             }
         }
-    }
-    if Adapter.show_menu: Rectangle {
-        background: white;
-        border-width: 2px;
-        border-radius: 10px;
-        border-color: black;
-        clip: false;
-        width: root.width * 0.8;
-        height: root.height * 0.9;
-        x: (root.width - self.width) / 2;
-        y: (root.height - self.height) / 2;
-    }
 
+        if Adapter.show_menu: Rectangle {
+            background: white;
+            border-width: 2px;
+            border-radius: 10px;
+            border-color: black;
+            clip: false;
+            width: root.width * 0.8;
+            height: root.height * 0.9;
+            x: (root.width - self.width) / 2;
+            y: (root.height - self.height) / 2;
+        }
 
-        if Adapter.show_menu: list := ListView {
-        viewport-y <=> scroll_y;
-        width: root.width * 0.75;
-        height: root.height * 0.85;
-        x: (root.width - self.width) / 2;
-        y: (root.height - self.height) / 2;
+        if Adapter.show_menu: ListView {
+            viewport-y <=> scroll_y;
+            width: root.width * 0.75;
+            height: root.height * 0.85;
+            x: (root.width - self.width) / 2;
+            y: (root.height - self.height) / 2;
 
             for data[idx] in root.button_items: Rectangle {
                 width: parent.width;
-                background: idx == root.selected_index ? black : transparent;
+                background: idx == root.selected_index ? black : white;
                 text := Text {
                     text: data.button_name;
                     color: idx == root.selected_index ? white : black;
@@ -144,4 +142,3 @@ export component GeneralPage inherits Window {
         }
     }
 }
-
