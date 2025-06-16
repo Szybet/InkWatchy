@@ -4,16 +4,21 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-slint = { version = "1.8.0", default-features = false }
+slint = { version = "1.11.0", default-features = false }
 
 [build-dependencies]
-slint-build = { version = "1.8.0", features = [] }
+slint-build = { version = "1.11.0", features = [] }
 
 [dev-dependencies]
-slint = { version = "1.8.0", default-features = true}
+slint = { version = "1.11.0", default-features = true}
 
-[patch.crates-io]
-i-slint-compiler = { git = "https://github.com/Szybet/i-slint-compiler-no-alpha.git" }
+#[patch.crates-io]
+#i-slint-compiler = { git = "https://github.com/Szybet/i-slint-compiler-no-alpha.git" }
+
+[profile.dev]
+opt-level = 1
+[profile.dev.package."*"]
+opt-level = 3
 
 [profile.release]
 strip = true
