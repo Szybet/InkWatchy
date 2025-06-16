@@ -1,5 +1,6 @@
 // #![no_std]
 
+#[allow(unused_imports)]
 use slint::{ModelRc, SharedString, VecModel};
 
 slint::include_modules!();
@@ -62,8 +63,14 @@ pub fn get_general_page() -> GeneralPage {
         }
     });
 
-    ui.on_button_pressed(move |button: SharedString| {
-        println!("button pressed: {}", button);
+    let ui_weak = ui.as_weak();
+    let ui_clone = ui_weak.clone();
+    ui.on_button_pressed(move || {
+        let an_an_ui = ui_clone.upgrade().unwrap();
+        let an_ui = an_an_ui.global::<Adapter>();
+        let i = an_ui.get_current_item();
+
+        println!("button pressed on index: {}", i);
     });
 
     ui
@@ -71,6 +78,8 @@ pub fn get_general_page() -> GeneralPage {
 
 #[cfg(test)]
 mod tests {
+    use slint::StandardListViewItem;
+
     use super::*;
 
     #[test]
@@ -81,65 +90,15 @@ mod tests {
         // ui.global::<Adapter>().set_title_enabled(false);
         ui.global::<Adapter>().set_main_text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".into());
         let items = vec![
-            ButtonItem {
-                button_name: SharedString::from("Loremdsauiohdsauiod"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Ipsum"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Dolor"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Sit"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Amet"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Consectetur"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Adipiscing"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Elit"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Sed"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Do"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Eiusmod"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Tempor"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Incididunt"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Ut"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Labore"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Et"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Dolore"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Magna"),
-            },
-            ButtonItem {
-                button_name: SharedString::from("Aliqua"),
-            },
+            StandardListViewItem::from("Lorem"),
+            StandardListViewItem::from("Ipsum"),
+            StandardListViewItem::from("Dolor"),
+            StandardListViewItem::from("Sit"),
+            StandardListViewItem::from("Amet"),
+            StandardListViewItem::from("Consectetur"),
         ];
 
+        ui.global::<Adapter>().set_how_many_items(items.len() as i32);
         let model = ModelRc::new(VecModel::from(items));
         ui.set_button_items(model);
 

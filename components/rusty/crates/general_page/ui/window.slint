@@ -1,7 +1,11 @@
-import { CustomScrollView, ListView } from "scroll-view.slint";
+import { CustomScrollView } from "scroll-view.slint";
+import { StandardListView } from "std-widgets.slint";
+
 import "Quantico-Regular-linegap5.ttf";
 
 export global Adapter {
+    in property <length> default_text_scroll: 100px;
+
     in property <bool> title_enabled: true;
     in property <string> title_text;
     in property <string> main_text;
@@ -10,19 +14,16 @@ export global Adapter {
     in-out property <length> scroll;
     in-out property <length> scroll_viewport_height;
     in property <bool> show_menu: false;
-}
-
-export struct ButtonItem {
-    button_name: string,
+    
+    in-out property <int> current_item;
+    in property <int> how_many_items;
 }
 
 export component GeneralPage inherits Window {
     width: 200px;
     height: 200px;
 
-    in-out property <[ButtonItem]> button_items;
-    in-out property <int> selected_index: 0;
-    property <length> scroll_y: 20px;
+    in-out property <[StandardListViewItem]> button_items;
 
     default-font-family: "Quantico";
 
@@ -30,40 +31,43 @@ export component GeneralPage inherits Window {
         scrollView.scroll(delta,horizontal);
     }
 
+    public function scrollList(dir: int) {
+        if Adapter.current_item == 0 && dir == -1 {
+            return;
+        }
+        if Adapter.current_item == Adapter.how_many_items - 1 && dir == 1 {
+            return;
+        }
+        Adapter.current_item = Adapter.current_item + dir;
+    }
+
     public function handleUpButton() {
         if !Adapter.show_menu {
-            root.scrollTheScroll(10px, false);
+            root.scrollTheScroll(Adapter.default_text_scroll, false);
         } else {
-            if selected_index != -1 {
-                selected_index = selected_index - 1;
-                if selected_index != 0 {
-                    scroll_y += 20px;
-                }
-            }
+            scrollList(-1);
         }
     }
 
     public function handleDownButton() {
         if !Adapter.show_menu {
-            root.scrollTheScroll(-10px, false);
+            root.scrollTheScroll(Adapter.default_text_scroll * -1, false);
         } else {
-            if selected_index < button_items.length - 1 {
-                selected_index += 1;
-                if selected_index != 0 {
-                    scroll_y -= 20px;
-                }
-            }
+            scrollList(1);
         }
     }
 
-    callback button_pressed(string);
+    callback button_pressed();
 
     public function handleMenuButton() {
         if !Adapter.show_menu {
             Adapter.show_menu = true;
         } else {
-            root.button_pressed(button_items[selected_index].button_name);
-            Adapter.show_menu = false;
+            if Adapter.current_item == 0 {
+                Adapter.show_menu = false;
+            } else {
+                button_pressed();
+            }
         }
     }
 
@@ -120,25 +124,13 @@ export component GeneralPage inherits Window {
             y: (root.height - self.height) / 2;
         }
 
-        if Adapter.show_menu: ListView {
-            viewport-y <=> scroll_y;
+        if Adapter.show_menu: StandardListView {
             width: root.width * 0.75;
             height: root.height * 0.85;
             x: (root.width - self.width) / 2;
             y: (root.height - self.height) / 2;
-
-            for data[idx] in root.button_items: Rectangle {
-                width: parent.width;
-                background: idx == root.selected_index ? black : white;
-                text := Text {
-                    text: data.button_name;
-                    color: idx == root.selected_index ? white : black;
-                    wrap: word-wrap;
-                    font-size: 20px;
-                    width: parent.width * 0.95;
-                    padding: 10px;
-                }
-            }
+            current_item <=> Adapter.current_item;
+            model: button_items;
         }
     }
 }
