@@ -1,7 +1,7 @@
-import { CustomScrollView } from "scroll-view.slint";
-import { StandardListView } from "std-widgets.slint";
+import { CustomScrollView,StandardListViewBase } from "scroll-view.slint";
 
-import "Quantico-Regular-linegap5.ttf";
+
+import "./Quantico-Regular-linegap5.ttf";
 
 export global Adapter {
     in property <length> default_text_scroll: 100px;
@@ -39,6 +39,7 @@ export component GeneralPage inherits Window {
             return;
         }
         Adapter.current_item = Adapter.current_item + dir;
+        buttonMenu.set-current-item(Adapter.current_item);
     }
 
     public function handleUpButton() {
@@ -124,13 +125,12 @@ export component GeneralPage inherits Window {
             y: (root.height - self.height) / 2;
         }
 
-        if Adapter.show_menu: StandardListView {
+        buttonMenu := StandardListViewBase {
+            visible: Adapter.show_menu;
             width: root.width * 0.75;
             height: root.height * 0.85;
             x: (root.width - self.width) / 2;
             y: (root.height - self.height) / 2;
-            current_item <=> Adapter.current_item;
             model: button_items;
-        }
-    }
+    }}
 }
