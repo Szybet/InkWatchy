@@ -2218,8 +2218,7 @@ dependencies = [
 [[package]]
 name = "i-slint-compiler"
 version = "1.11.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "becea2773938b8299809cb1f1f0350295bc98e105fe175c53686ba063d7b2b9d"
+source = "git+https://github.com/Szybet/i-slint-compiler-no-alpha.git#3297da3e312c857fdace308218e5c62809fc0b44"
 dependencies = [
  "by_address",
  "codemap",

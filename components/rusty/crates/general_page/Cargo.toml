@@ -12,8 +12,8 @@ slint-build = { version = "=1.11.0", features = [] }
 [dev-dependencies]
 slint = { version = "=1.11.0", default-features = true}
 
-#[patch.crates-io]
-#i-slint-compiler = { git = "https://github.com/Szybet/i-slint-compiler-no-alpha.git" }
+[patch.crates-io]
+i-slint-compiler = { git = "https://github.com/Szybet/i-slint-compiler-no-alpha.git" }
 
 [profile.dev]
 opt-level = 1
