@@ -342,8 +342,8 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define SCREENSHOT_ENDPOINT 0
 
 // Voltage reading average
-#define VOLTAGE_AVG_COUNT 20
-#define VOLTAGE_AVG_DELAY 1
+#define VOLTAGE_AVG_COUNT 8
+#define VOLTAGE_AVG_DELAY 0
 
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3

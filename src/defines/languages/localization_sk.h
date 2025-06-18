@@ -185,7 +185,7 @@
 #define DEBUG_ACC_FAILED_INIT "Chyba inicializacie"
 #define DEBUG_ACC_DAMAGED "Acc poskodeny"
 #define DEBUG_ACC_WORKING "Acc funguje"
-#define DEBUG_ACC_CLICK_3D "Stlac menu pre 3D"
+#define DEBUG_ACC_CLICK_3D "3D nahlad"
 #define DEBUG_ACC_X "Accel X: "
 #define DEBUG_ACC_Y "Accel Y: "
 #define DEBUG_ACC_Z "Accel Z: "

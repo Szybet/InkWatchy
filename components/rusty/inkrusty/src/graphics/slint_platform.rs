@@ -27,11 +27,25 @@ impl slint::platform::Platform for InkPlatform {
     fn run_event_loop(&self) -> Result<(), slint::PlatformError> {
         slint::platform::update_timers_and_animations();
 
-        // if self.window.has_active_animations() {
+        let buttons = get_buttons();
+        let mut str: SharedString = SharedString::new();
+        match buttons {
+            RustButton::NoButton => {},
+            RustButton::Up => str.push_str("w"),
+            RustButton::Down => str.push_str("s"),
+            RustButton::Menu => str.push_str("a"),
+            RustButton::MenuLong => str.push_str("d"),
+        }
+        if buttons != RustButton::NoButton {
+            self.window.try_dispatch_event(WindowEvent::KeyPressed { text: str.clone() })?;
+            self.window.try_dispatch_event(WindowEvent::KeyReleased { text: str })?;    
+        }
+
+        if self.window.has_active_animations() {
             // info!("has_active_animations");
             // continue;
-            // return Ok(());
-        // }
+            return Ok(());
+        }
 
         // info!("Fucking platform run");
 
@@ -89,20 +103,6 @@ impl slint::platform::Platform for InkPlatform {
             // info!("draw_if_needed end");
         });
         // info!("event loop end");
-
-        let buttons = get_buttons();
-        let mut str: SharedString = SharedString::new();
-        match buttons {
-            RustButton::NoButton => {},
-            RustButton::Up => str.push_str("w"),
-            RustButton::Down => str.push_str("s"),
-            RustButton::Menu => str.push_str("a"),
-            RustButton::MenuLong => str.push_str("d"),
-        }
-        if buttons != RustButton::NoButton {
-            self.window.try_dispatch_event(WindowEvent::KeyPressed { text: str.clone() })?;
-            self.window.try_dispatch_event(WindowEvent::KeyReleased { text: str })?;    
-        }
         
         Ok(())
     }

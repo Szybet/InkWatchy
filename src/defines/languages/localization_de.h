@@ -184,7 +184,7 @@
 #define DEBUG_ACC_FAILED_INIT "Acc Init fehler"
 #define DEBUG_ACC_DAMAGED "Acc defekt"
 #define DEBUG_ACC_WORKING "Acc OK"
-#define DEBUG_ACC_CLICK_3D "Menu fur 3D"
+#define DEBUG_ACC_CLICK_3D "3D-Vorschau"
 #define DEBUG_ACC_X "Acc X: "
 #define DEBUG_ACC_Y "Acc Y: "
 #define DEBUG_ACC_Z "Acc Z: "

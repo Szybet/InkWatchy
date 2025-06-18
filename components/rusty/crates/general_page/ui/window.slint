@@ -13,8 +13,7 @@ export global Adapter {
     in-out property <length> scroll;
     in-out property <length> scroll_viewport_height;
     in property <bool> show_menu: false;
-    
-    in-out property <int> current_item;
+    in-out property <int> current_item: 0;
     in property <int> how_many_items;
 }
 
@@ -67,14 +66,16 @@ export component GeneralPage inherits Window {
     callback button_pressed();
 
     public function handleMenuButton() {
+        if Adapter.how_many_items == 0 {
+            return;
+        }
         if !Adapter.show_menu {
             Adapter.show_menu = true;
         } else {
-            if Adapter.current_item == 0 {
-                Adapter.show_menu = false;
-            } else {
+            if Adapter.current_item != 0 {
                 button_pressed();
             }
+            Adapter.show_menu = false;
         }
     }
 
@@ -138,5 +139,7 @@ export component GeneralPage inherits Window {
             x: (root.width - self.width) / 2;
             y: (root.height - self.height) / 2;
             model: button_items;
-    }}
+            current-item: 0;
+        }
+    }
 }

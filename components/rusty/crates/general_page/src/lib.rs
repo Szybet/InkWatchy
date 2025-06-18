@@ -91,7 +91,6 @@ mod tests {
             .set_title_text("Test title is here".into());
         // ui.global::<Adapter>().set_title_enabled(false);
         ui.global::<Adapter>().set_main_text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".into());
-        ui.global::<Adapter>().set_main_text(SharedString::from("IC: disabled\n"));
         let items: Vec<StandardListViewItem> = vec![
             StandardListViewItem::from("Lordsaifdsds aaafdsfds aaafdsfds"),
             StandardListViewItem::from("Ipsum"),
