@@ -102,11 +102,11 @@ void initAccDebug()
 #if BMA_VERSION == 530 || BMA_VERSION == 456
     Accel accPure;
     rM.SBMA.getAccelPure(&accPure);
-    lineAccXPure = genpage_add(String(DEBUG_ACC_PURE_X + String(accPure.x)));
+    lineAccXPure = genpage_add(String(DEBUG_ACC_PURE_X + String(accPure.x)).c_str());
     accXPure = accPure.x;
-    lineAccYPure = genpage_add(String(DEBUG_ACC_PURE_Y + String(accPure.y)));
+    lineAccYPure = genpage_add(String(DEBUG_ACC_PURE_Y + String(accPure.y)).c_str());
     accYPure = accPure.y;
-    lineAccZPure = genpage_add(String(DEBUG_ACC_PURE_Z + String(accPure.z)));
+    lineAccZPure = genpage_add(String(DEBUG_ACC_PURE_Z + String(accPure.z)).c_str());
     accZPure = accPure.z;
 #endif
   }
