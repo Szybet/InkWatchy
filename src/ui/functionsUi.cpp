@@ -391,3 +391,7 @@ sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y)
   dUChange = true;
   return {w, h}; // hm?
 }
+
+void wLineStr(String *dest, String *text) {
+  *dest = *dest + *text + "\n";
+}

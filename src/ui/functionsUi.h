@@ -19,4 +19,4 @@ void simpleCenterText(String text);
 void textPage(String title, String *strList, int listCount, const GFXfont * customFont);
 void drawProgressBar(int x, int y, int width, int height, int progress);
 sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y);
-
+void wLineStr(String *dest, String *text);

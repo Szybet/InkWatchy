@@ -153,6 +153,7 @@ pub trait SlintApp: Any {
     fn show(&self);
     fn on_exit(&self);
     fn as_any(&self) -> &dyn Any;
+    fn as_any_mut(&mut self) -> &mut dyn Any;
 }
 
 pub static mut SLINT_APP_STORE: Option<Box<dyn SlintApp>> = None;

@@ -29,13 +29,31 @@ uint16_t stepsAccDebug = 0;
 uint16_t stepsHeight = 0;
 
 bool is3DOn = false;
+String accDStr;
 
 void initAccDebug()
 {
 #if ACC_ENABLED
   initAcc();
 #endif
+
   is3DOn = false;
+  accDStr = "";
+  
+  init_general_page();
+  general_page_set_title(DEBUG_MENU_ACC);
+
+  String accDevice = DEBUG_ACC_IC;
+#if !ACC_ENABLED
+  accDevice += DEBUG_ACC_DISABLED;
+#else
+  accDevice += "BMA" + String(BMA_VERSION);
+#endif
+
+  wLineStr(&accDStr, &accDevice);
+  
+  general_page_set_main(accDStr.c_str());
+  return;
 
   dis->setTextWrap(false);
 
@@ -52,15 +70,6 @@ void initAccDebug()
 
   dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
   currentHeight = currentHeight + maxHeight;
-
-  String accDevice;
-#if !ACC_ENABLED
-  accDevice = DEBUG_ACC_DISABLED;
-#else
-  accDevice = "BMA" + String(BMA_VERSION);
-#endif
-
-  writeLine(DEBUG_ACC_IC + accDevice, CURSOR_X, &currentHeight);
 
 #if ACC_ENABLED
   initAcc();
@@ -134,6 +143,8 @@ void initAccDebug()
 
 void loopAccDebug()
 {
+  slint_loop();
+  return;
 #if ACC_ENABLED
   if (is3DOn == false)
   {
@@ -218,5 +229,6 @@ void exitAccDebug()
 #if ACC_ENABLED
   rM.SBMA.disableAccel();
 #endif
+  slint_exit();
 }
 #endif
