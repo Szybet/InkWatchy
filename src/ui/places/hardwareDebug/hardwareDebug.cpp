@@ -1,16 +1,14 @@
 #include "hardwareDebug.h"
 #include "rtcMem.h"
 
-#if DEBUG == 1 || DEBUG_MENUS == 1
-#define cursorX 0
-int memoryHeight;
-#define GeneralTextSize 1
-uint8_t usedHeapLast;
-uint16_t usedHeapWidth;
-uint16_t usedHeapLenght;
+#if DEBUG || DEBUG_MENUS
+
+uint32_t usedHeapLast;
+uint8_t lineHeap;
+uint8_t lineTemp;
 
 #if TEMP_CHECKS_ENABLED
-int tempHeight;
+uint8_t lineInitTemp;
 float previousTempUi;
 #endif
 
@@ -32,85 +30,62 @@ String getRtcType()
     }
 }
 
+String getHeapStr()
+{
+    String heapStr = String(DEBUG_HW_USED_HEAP) +
+                     String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) +
+                     "/" +
+                     String(ESP.getHeapSize() / 1024);
+    return heapStr;
+}
+
 void initGeneralDebugDisplay()
 {
-    dis->setTextWrap(false);
-    debugLog("initGeneralDebugDisplay called");
-    uint16_t h;
-    setFont(&FreeSansBold9pt7b);
-    setTextSize(GeneralTextSize);
-    dis->setCursor(cursorX, 1);
-    String menuName = DEBUG_MENU_HARDWARE;
-    getTextBounds(menuName, NULL, NULL, NULL, &h);
-    if (containsBelowChar(menuName) == true)
-    {
-        h = h + 2;
-    }
-    maxHeight = h;
-    uint16_t currentHeight = maxHeight;
-    dis->setCursor(cursorX, currentHeight - 3);
-    dis->print(menuName);
+    init_general_page(50);
+    general_page_set_title(DEBUG_MENU_HARDWARE);
+    genpage_set_center();
 
-    dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
-    currentHeight = currentHeight + maxHeight;
-    String RtcType = getRtcType();
+    genpage_add(DEBUG_HW_CHIP_MODEL);
+    genpage_add(String(ESP.getChipModel()).c_str());
 
-    centerText(DEBUG_HW_CHIP_MODEL, &currentHeight);
-    centerText(String(ESP.getChipModel()), &currentHeight);
-    writeLine(DEBUG_HW_RTC_TYPE + String(RtcType), cursorX, &currentHeight);
+    genpage_add(String(DEBUG_HW_RTC_TYPE + getRtcType()).c_str());
 
-    currentHeight = currentHeight + 2;
-
-    writeLine(DEBUG_HW_USED_HEAP + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024), cursorX, &currentHeight);
-    memoryHeight = currentHeight - maxHeight;
+    String heapStr = getHeapStr();
+    usedHeapLast = ESP.getFreeHeap();
+    lineHeap = genpage_add(heapStr.c_str());
 
 #if TEMP_CHECKS_ENABLED
-    writeLine(DEBUG_HW_CPU_TEMP + String(getTemp()), cursorX, &currentHeight);
-    tempHeight = currentHeight - maxHeight;
-
-    writeLine(DEBUG_HW_INIT_TEMP + String(rM.initialTemp), cursorX, &currentHeight);
+    previousTempUi = getTemp();
+    lineTemp = genpage_add(String(DEBUG_HW_CPU_TEMP + String(previousTempUi)).c_str());
+    lineInitTemp = genpage_add(String(DEBUG_HW_INIT_TEMP + String(rM.initialTemp)).c_str());
 #endif
 
-    // Double the time before sleeping
     resetSleepDelay(SLEEP_EVERY_MS);
-    disUp(true);
+    general_page_set_main();
 }
 
 void loopGeneralDebugDisplay()
 {
-    uint8_t usedHeap = ESP.getFreeHeap();
-    if (usedHeap != usedHeapLast)
+    uint32_t newHeap = ESP.getFreeHeap();
+    if (newHeap != usedHeapLast)
     {
-
-        usedHeapLast = usedHeap;
-        setFont(&FreeSansBold9pt7b);
-        setTextSize(GeneralTextSize);
-
-        String usedHeapStr = DEBUG_HW_USED_HEAP + String((ESP.getHeapSize() - ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024); // Replace with actual function or variable
-
-        getTextBounds(usedHeapStr, NULL, NULL, &usedHeapWidth, NULL);
-        while (usedHeapWidth < usedHeapLenght)
-        {
-            usedHeapStr = usedHeapStr + " ";
-            getTextBounds(usedHeapStr, NULL, NULL, &usedHeapWidth, NULL);
-        }
-        usedHeapLenght = usedHeapWidth;
-
-        writeTextReplaceBack(usedHeapStr, cursorX, memoryHeight);
-        dUChange = true;
+        usedHeapLast = newHeap;
+        String newHeapStr = getHeapStr();
+        genpage_change(newHeapStr.c_str(), lineHeap);
     }
 #if TEMP_CHECKS_ENABLED
-    float currentTemp = getTemp();
-    if (currentTemp != previousTempUi)
-    {
-        previousTempUi = currentTemp;
-        writeTextReplaceBack(DEBUG_HW_CPU_TEMP + String(currentTemp), cursorX, tempHeight);
-        dUChange = true;
+    float tempUi = getTemp();
+    if(previousTempUi != tempUi) {
+        previousTempUi = tempUi;
+        genpage_change(String(DEBUG_HW_CPU_TEMP + String(tempUi)).c_str(), lineTemp);
     }
 #endif
-    useButtonBlank();
-    disUp();
+
+    general_page_set_main();
+    slint_loop();
 }
+
+#endif
 
 #if DEBUG
 
@@ -148,7 +123,5 @@ void loopGeneralDebug()
     debugLog("Total Blocks: " + String(heapInfo.total_blocks));
 #endif
 }
-
-#endif
 
 #endif

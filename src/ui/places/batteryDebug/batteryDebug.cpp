@@ -30,7 +30,7 @@ void initBatteryDebugDisplay()
     lineFullyCharged = genpage_add(String(DEBUG_BATTERY_FULLY + BOOL_STR(bDdata.isFullyCharged)).c_str());
 #endif
 
-    resetSleepDelay();
+    resetSleepDelay(SLEEP_EVERY_MS);
     general_page_set_main();
 }
 
