@@ -1,4 +1,7 @@
 #include "slate_localization.h"
+
+#if WATCHFACE_SLATE
+
 #include "rtcMem.h"
 
 // Returns localized weather condition string based on WMO weather codes
@@ -143,3 +146,5 @@ String getLocalizedAMPM(tmElements_t timeEl)
     return "";
 #endif
 }
+
+#endif

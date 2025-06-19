@@ -1,4 +1,7 @@
 #include "taychron_localization.h"
+
+#if WATCHFACE_TAYCHRON
+
 #include "rtcMem.h"
 
 // Formats time string according to 12H/24H setting from config.h
@@ -62,3 +65,5 @@ String convertTo12HourFormat(String time24) {
     // Combine hour and minute for the final result
     return hourStr + ":" + minute;
 }
+
+#endif

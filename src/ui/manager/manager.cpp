@@ -169,7 +169,7 @@ void loopManager()
     case gitDebug:
     {
 #if DEBUG_MENUS
-        managerLaunchFunc(gitDebug, initGitDebug, useButtonBlank);
+        managerLaunchFunc(gitDebug, initGitDebug, slint_loop);
 #endif
         break;
     }
