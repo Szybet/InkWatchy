@@ -25,27 +25,25 @@ impl slint::platform::Platform for InkPlatform {
         ret
     }
     fn run_event_loop(&self) -> Result<(), slint::PlatformError> {
+        if let Some(text) = match get_buttons() {
+            RustButton::NoButton => None,
+            RustButton::Up => Some(SharedString::from("w")),
+            RustButton::Down => Some(SharedString::from("s")),
+            RustButton::Menu => Some(SharedString::from("a")),
+            RustButton::MenuLong => Some(SharedString::from("d")),
+        } {
+            self.window.try_dispatch_event(WindowEvent::KeyPressed { text: text.clone() })?;
+            self.window.try_dispatch_event(WindowEvent::KeyReleased { text })?;
+        }
+
         slint::platform::update_timers_and_animations();
 
-        let buttons = get_buttons();
-        let mut str: SharedString = SharedString::new();
-        match buttons {
-            RustButton::NoButton => {},
-            RustButton::Up => str.push_str("w"),
-            RustButton::Down => str.push_str("s"),
-            RustButton::Menu => str.push_str("a"),
-            RustButton::MenuLong => str.push_str("d"),
-        }
-        if buttons != RustButton::NoButton {
-            self.window.try_dispatch_event(WindowEvent::KeyPressed { text: str.clone() })?;
-            self.window.try_dispatch_event(WindowEvent::KeyReleased { text: str })?;    
-        }
-
-        if self.window.has_active_animations() {
+        // It's maybe faster without it?
+        // if self.window.has_active_animations() {
             // info!("has_active_animations");
             // continue;
-            return Ok(());
-        }
+            // return Ok(());
+        // }
 
         // info!("Fucking platform run");
 
@@ -63,7 +61,7 @@ impl slint::platform::Platform for InkPlatform {
                 &'a mut [slint::platform::software_renderer::Rgb565Pixel],
             );
 
-            let mut line = [slint::platform::software_renderer::Rgb565Pixel(0); 320];
+            let mut line = [slint::platform::software_renderer::Rgb565Pixel(0); 200];
             let mut display = Framebuffer::new();
 
             impl<T: DrawTarget<Color = embedded_graphics_core::pixelcolor::Rgb565>>
@@ -99,7 +97,6 @@ impl slint::platform::Platform for InkPlatform {
             unsafe {
                 updateScreen(true, false, true);
             }
-
             // info!("draw_if_needed end");
         });
         // info!("event loop end");

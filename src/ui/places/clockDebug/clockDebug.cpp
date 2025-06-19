@@ -2,7 +2,7 @@
 
 #if DEBUG_MENUS
 
-uint16_t timeClockHeight;
+uint16_t timeClockLine;
 
 String zB(String str)
 {
@@ -34,35 +34,31 @@ String timeSince(int64_t unixTime)
     return output;
 }
 
+void cleanClockFiles() {
+    fsRemoveFile("/conf/" + String(CONF_SECONDS_DRIFT));
+    fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_SYNC));
+    fsRemoveFile("/conf/" + String(CONF_UNIX_PREVIOUS_SYNC));
+    fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_CHARGE));
+    slint_exit();
+    initClockDebug();
+}
+
 void initClockDebug()
 {
-    uint16_t h;
-    setFont(&FreeSansBold9pt7b);
-    setTextSize(1);
-    dis->setCursor(0, 1);
-    String menuName = DEBUG_MENU_CLOCK;
-    debugLog(menuName);
-    getTextBounds(menuName, NULL, NULL, NULL, &h);
-    if (containsBelowChar(menuName) == true)
-    {
-        h = h + 2;
-    }
-    maxHeight = h;
-    uint16_t currentHeight = maxHeight;
-    dis->setCursor(0, currentHeight - 3);
-    dis->print(menuName);
+    init_general_page(50);
+    general_page_set_title(DEBUG_MENU_CLOCK);
+    genpage_set_center();
 
-    dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
-    currentHeight = currentHeight + maxHeight;
+    GeneralPageButton button = GeneralPageButton{DEBUG_CLOCK_REMOVE_FILES, cleanClockFiles};
+    general_page_set_buttons(&button, 1);
 
-    timeClockHeight = currentHeight;
     readRTC();
-    centerText(getClockPrecise(), &currentHeight);
+    timeClockLine = genpage_add(getClockPrecise().c_str());
 
-    writeLine(DEBUG_CLOCK_DRIFT_SYNCS, 0, &currentHeight);
-    writeLine(fsGetString(CONF_SECONDS_DRIFT, DEBUG_CLOCK_NOT_AVAILABLE), 0, &currentHeight);
+    genpage_add(DEBUG_CLOCK_DRIFT_SYNCS);
+    genpage_add(fsGetString(CONF_SECONDS_DRIFT, DEBUG_CLOCK_NOT_AVAILABLE).c_str());
     {
-        writeLine(DEBUG_CLOCK_LAST_SYNC, 0, &currentHeight);
+        genpage_add(DEBUG_CLOCK_LAST_SYNC);
         String lastSync = fsGetString(CONF_UNIX_LAST_SYNC, "");
         debugLog("Last sync time: " + lastSync);
         if (lastSync != "")
@@ -73,10 +69,10 @@ void initClockDebug()
         {
             lastSync = DEBUG_CLOCK_NOT_AVAILABLE;
         }
-        writeLine(lastSync, 0, &currentHeight);
+        genpage_add(lastSync.c_str());
     }
     {
-        writeLine(DEBUG_CLOCK_PREVIOUS_SYNC, 0, &currentHeight);
+        genpage_add(DEBUG_CLOCK_PREVIOUS_SYNC);
         String lastSync = fsGetString(CONF_UNIX_PREVIOUS_SYNC, "");
         debugLog("Previous sync time: " + lastSync);
         if (lastSync != "")
@@ -87,10 +83,10 @@ void initClockDebug()
         {
             lastSync = DEBUG_CLOCK_NOT_AVAILABLE;
         }
-        writeLine(lastSync, 0, &currentHeight);
+        genpage_add(lastSync.c_str());
     }
     {
-        writeLine(DEBUG_CLOCK_LAST_CHARGE, 0, &currentHeight);
+        genpage_add(DEBUG_CLOCK_LAST_CHARGE);
         String lastSync = fsGetString(CONF_UNIX_LAST_CHARGE, "");
         debugLog("Last charge time: " + lastSync);
         if (lastSync != "")
@@ -101,38 +97,28 @@ void initClockDebug()
         {
             lastSync = DEBUG_CLOCK_NOT_AVAILABLE;
         }
-        writeLine(lastSync, 0, &currentHeight);
+        genpage_add(lastSync.c_str());
     }
-
-    resetSleepDelay(SLEEP_EVERY_MS);
-    disUp(true);
+    general_page_set_main();
 }
 
 uint8_t savedSeconds = 0;
 void loopClockDebug()
 {
-    readRTC();
-    if (savedSeconds != timeRTCLocal.Second)
-    {
-        savedSeconds = timeRTCLocal.Second;
-        // debugLog("timeRTCLocal.Second: " + String(timeRTCLocal.Second));
-        writeTextCenterReplaceBack(getClockPrecise(), timeClockHeight);
-        dUChange = true;
-    }
-
-    buttonState btn = useButton();
-    if(btn == Up) {
-        fsRemoveFile("/conf/" + String(CONF_SECONDS_DRIFT));
-        fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_SYNC));
-        fsRemoveFile("/conf/" + String(CONF_UNIX_PREVIOUS_SYNC));
-        fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_CHARGE));
-        dis->fillScreen(GxEPD_WHITE);
-        initClockDebug();
-    }
-
     resetSleepDelay();
-    delayTask(100);
-    disUp();
+    
+    if(genpage_is_menu() == false) {
+        readRTC();
+        if (savedSeconds != timeRTCLocal.Second)
+        {
+            savedSeconds = timeRTCLocal.Second;
+            // debugLog("timeRTCLocal.Second: " + String(timeRTCLocal.Second));
+            genpage_change(getClockPrecise().c_str(), timeClockLine);
+        }
+    }
+
+    general_page_set_main();
+    slint_loop();
 }
 
 #endif

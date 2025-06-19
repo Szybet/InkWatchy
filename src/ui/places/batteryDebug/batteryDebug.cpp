@@ -39,7 +39,6 @@ void loopBatteryDebugDisplay()
     loopBattery();
     isChargingCheck();
         
-    // Check for changes and update display content
     if (bDdata.curV > rM.bat.curV + 0.01 || bDdata.curV < rM.bat.curV - 0.01)
     {
         bDdata.curV = rM.bat.curV;

@@ -210,6 +210,7 @@
 #define DEBUG_CLOCK_LAST_SYNC "Posledny sync:"
 #define DEBUG_CLOCK_PREVIOUS_SYNC "Predch. sync:"
 #define DEBUG_CLOCK_LAST_CHARGE "Posledne nabijanie:"
+#define DEBUG_CLOCK_REMOVE_FILES "Odstranit subory hodiniek"
 
 // Git debug
 #define DEBUG_GIT_COMMIT_HASH "Hash commitu:"

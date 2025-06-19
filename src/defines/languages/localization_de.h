@@ -209,6 +209,7 @@
 #define DEBUG_CLOCK_LAST_SYNC "Letzte Synch.:"
 #define DEBUG_CLOCK_PREVIOUS_SYNC "Vorige Synch.:"
 #define DEBUG_CLOCK_LAST_CHARGE "Letzte Ladung:"
+#define DEBUG_CLOCK_REMOVE_FILES "Uhrdateien entfernen"
 
 // Git debug
 #define DEBUG_GIT_COMMIT_HASH "Commit-Hash:"
