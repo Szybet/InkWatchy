@@ -1,127 +1,74 @@
 #include "batteryDebug.h"
 #include "rtcMem.h"
 
-#if DEBUG == 1 || DEBUG_MENUS == 1
+#if DEBUG || DEBUG_MENUS
 
 batteryInfo bDdata;
 
-#define cursorX 0
-int currentVoltageHeight;
-int ChargingHeight;
-int fullyChargedHeight;
-int PercentageHeight;
-#define batteryTextSize 1
+uint8_t lineCurrentVoltage;
+uint8_t linePercentage;
+uint8_t lineCharging;
+uint8_t lineFullyCharged;
 
 void initBatteryDebugDisplay()
 {
-    debugLog("initBatteryDebugDisplay called");
-    uint16_t h;
     bDdata = rM.bat;
-    setFont(&FreeSansBold9pt7b);
-    setTextSize(batteryTextSize);
-    dis->setCursor(cursorX, 1);
-    String menuName = DEBUG_MENU_BATTERY;
-    getTextBounds(menuName, NULL, NULL, NULL, &h);
-    maxHeight = h;
-    uint16_t currentHeight = maxHeight;
-    dis->setCursor(cursorX, currentHeight - 3);
-    dis->print(menuName);
+    
+    init_general_page(50);
+    general_page_set_title(DEBUG_MENU_BATTERY);
 
-    dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
-    currentHeight = currentHeight + maxHeight;
+    lineCurrentVoltage = genpage_add(String(DEBUG_BATTERY_CURRENT_V + String(bDdata.curV)).c_str());
 
-    writeLine(DEBUG_BATTERY_CURRENT_V + String(bDdata.curV), cursorX, &currentHeight);
-    currentVoltageHeight = currentHeight - maxHeight;
-
-    writeLine(DEBUG_BATTERY_MINIMUM_V + String(BATTERY_MIN_VOLTAGE), cursorX, &currentHeight);
-
-    writeLine(DEBUG_BATTERY_MAXIMUM_V + String(BATTERY_MAX_VOLTAGE), cursorX, &currentHeight);
-
-    writeLine(DEBUG_BATTERY_CRITICAL_V + String(BATTERY_CRIT_VOLTAGE), cursorX, &currentHeight);
-
-    writeLine(DEBUG_BATTERY_LEVEL + String(bDdata.percentage), cursorX, &currentHeight);
-    PercentageHeight = currentHeight - maxHeight;
-
-    writeLine(DEBUG_BATTERY_CHARGING + BOOL_STR(bDdata.isCharging), cursorX, &currentHeight);
-    ChargingHeight = currentHeight - maxHeight;
+    genpage_add(String(DEBUG_BATTERY_MINIMUM_V + String(BATTERY_MIN_VOLTAGE)).c_str());
+    genpage_add(String(DEBUG_BATTERY_MAXIMUM_V + String(BATTERY_MAX_VOLTAGE)).c_str());
+    genpage_add(String(DEBUG_BATTERY_CRITICAL_V + String(BATTERY_CRIT_VOLTAGE)).c_str());
+    
+    linePercentage = genpage_add(String(DEBUG_BATTERY_LEVEL + String(bDdata.percentage)).c_str());
+    lineCharging = genpage_add(String(DEBUG_BATTERY_CHARGING + BOOL_STR(bDdata.isCharging)).c_str());
 
 #if ATCHY_VER == YATCHY
-    writeLine(DEBUG_BATTERY_FULLY + BOOL_STR(bDdata.isFullyCharged), cursorX, &currentHeight);
-    fullyChargedHeight = currentHeight - maxHeight;
+    lineFullyCharged = genpage_add(String(DEBUG_BATTERY_FULLY + BOOL_STR(bDdata.isFullyCharged)).c_str());
 #endif
 
     resetSleepDelay();
-    disUp(true);
+    general_page_set_main();
 }
 
 void loopBatteryDebugDisplay()
 {
     loopBattery();
     isChargingCheck();
+        
+    // Check for changes and update display content
     if (bDdata.curV > rM.bat.curV + 0.01 || bDdata.curV < rM.bat.curV - 0.01)
     {
         bDdata.curV = rM.bat.curV;
-        dis->setCursor(cursorX, currentVoltageHeight);
-        setTextSize(batteryTextSize);
-
-        String battVoltageStr = String(rM.bat.curV);
-        while (battVoltageStr.length() < 5)
-        {
-            battVoltageStr = battVoltageStr + " ";
-        }
-
-        writeTextReplaceBack(DEBUG_BATTERY_CURRENT_V + battVoltageStr, cursorX, currentVoltageHeight);
-        dUChange = true;
+        genpage_change(String(DEBUG_BATTERY_CURRENT_V + String(rM.bat.curV)).c_str(), lineCurrentVoltage);
     }
+    
     if (bDdata.isCharging != rM.bat.isCharging)
     {
         bDdata.isCharging = rM.bat.isCharging;
-        dis->setCursor(cursorX, ChargingHeight);
-        setTextSize(batteryTextSize);
-
-        String chargingStr = BOOL_STR(rM.bat.isCharging);
-        while (chargingStr.length() < 6)
-        {
-            chargingStr = chargingStr + " ";
-        }
-
-        writeTextReplaceBack(DEBUG_BATTERY_CHARGING + chargingStr, cursorX, ChargingHeight);
-        dUChange = true;
+        genpage_change(String(DEBUG_BATTERY_CHARGING + BOOL_STR(rM.bat.isCharging)).c_str(), lineCharging);
     }
+    
 #if ATCHY_VER == YATCHY
     if (bDdata.isFullyCharged != rM.bat.isFullyCharged)
     {
         bDdata.isFullyCharged = rM.bat.isFullyCharged;
-        dis->setCursor(cursorX, fullyChargedHeight);
-        setTextSize(batteryTextSize);
-
-        String chargingStr = BOOL_STR(rM.bat.isCharging);
-        while (chargingStr.length() < 6)
-        {
-            chargingStr = chargingStr + " ";
-        }
-
-        writeTextReplaceBack(DEBUG_BATTERY_FULLY + chargingStr, cursorX, ChargingHeight);
-        dUChange = true;
+        genpage_change(String(DEBUG_BATTERY_FULLY + BOOL_STR(rM.bat.isFullyCharged)).c_str(), lineFullyCharged);
+        changed = true;
     }
 #endif
+    
     if (bDdata.percentage != rM.bat.percentage)
     {
         bDdata.percentage = rM.bat.percentage;
-        dis->setCursor(cursorX, PercentageHeight);
-        setTextSize(batteryTextSize);
-
-        String percentageStr = String(rM.bat.percentage);
-        while (percentageStr.length() < 6)
-        {
-            percentageStr = percentageStr + " ";
-        }
-
-        writeTextReplaceBack(DEBUG_BATTERY_LEVEL + percentageStr, cursorX, PercentageHeight);
-        dUChange = true;
+        genpage_change(String(DEBUG_BATTERY_LEVEL + String(rM.bat.percentage)).c_str(), linePercentage);
     }
-    useButtonBlank();
-    disUp();
+    
+    general_page_set_main();
+    slint_loop();
 }
 
 #endif
