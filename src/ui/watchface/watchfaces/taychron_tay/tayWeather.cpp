@@ -1,5 +1,4 @@
 #include "taychron.h"
-#include "localization.h"  // For formatTemperature
 #include <MoonPhase.h>
 
 #define WEATHER_ICON_CORD 38, 162

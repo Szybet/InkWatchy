@@ -1,6 +1,5 @@
 #include "accDebug.h"
 #include "rtcMem.h"
-#include "localization.h"
 
 #if DEBUG_MENUS == 1
 

@@ -1,6 +1,5 @@
 #include "defines.h"
 #include "rtcMem.h"
-#include "localization.h"
 
 #if BOOK
 #include "bookUi.h"

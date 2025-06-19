@@ -1,5 +1,4 @@
 #include "bookSelector.h"
-#include "localization.h"
 
 #if BOOK
 

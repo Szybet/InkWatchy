@@ -1,5 +1,4 @@
 #include "wifiDebug.h"
-#include "localization.h"
 
 #define SEL_ON 0
 #define SEL_OFF 1

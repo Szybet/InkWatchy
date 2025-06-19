@@ -2,7 +2,6 @@
 #include "inkput.h"
 #include "inkWeather.h"
 #include "inkField_localization.h"
-#include "localization.h"  // For getMonthName, formatTemperature, and getLocalizedDayByIndex
 #include "rtcMem.h"
 
 #if WATCHFACE_INKFIELD_SZYBET

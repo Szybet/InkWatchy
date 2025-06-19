@@ -1,5 +1,4 @@
 #include "manager.h"
-#include "localization.h" // For menu translations
 #include "rtcMem.h"
 
 void initMainMenu()

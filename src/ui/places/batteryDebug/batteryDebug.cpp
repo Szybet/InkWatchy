@@ -1,6 +1,5 @@
 #include "batteryDebug.h"
 #include "rtcMem.h"
-#include "localization.h"
 
 #if DEBUG == 1 || DEBUG_MENUS == 1
 

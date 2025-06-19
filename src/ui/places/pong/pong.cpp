@@ -1,5 +1,4 @@
 #include "pong.h"
-#include "localization.h"
 
 #if PONG
 

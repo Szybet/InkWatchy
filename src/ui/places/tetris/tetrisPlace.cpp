@@ -1,5 +1,4 @@
 #include "tetrisPlace.h"
-#include "localization.h"
 
 #if TETRIS
 
