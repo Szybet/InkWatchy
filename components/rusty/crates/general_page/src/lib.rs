@@ -117,6 +117,8 @@ mod tests {
         let model = ModelRc::new(VecModel::from(items));
         ui.set_button_items(model);
 
+        ui.global::<Adapter>().set_main_align_center(false);
+
         ui.run().unwrap();
     }
 }

@@ -204,3 +204,12 @@ pub fn button_clicked(i: u16) {
     let general_app: &mut GeneralApp = unsafe { get_general_app().unwrap() };
     general_app.button_func[(i - 1) as usize]();
 }
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn genpage_set_center() {
+    let general_app: &mut GeneralApp = get_general_app().unwrap();
+
+    general_app
+    .window
+    .global::<Adapter>().set_main_align_center(true);
+}

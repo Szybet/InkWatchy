@@ -8,13 +8,14 @@ export global Adapter {
     in property <bool> title_enabled: true;
     in property <string> title_text;
     in property <string> main_text;
+    in property <bool> main_align_center: false;
 
     in property <bool> buttons_shown: false;
     in-out property <length> scroll;
     in-out property <length> scroll_viewport_height;
     in property <bool> show_menu: false;
     in-out property <int> current_item: 0;
-    in property <int> how_many_items;
+    in property <int> how_many_items: 0;
 }
 
 export component GeneralPage inherits Window {
@@ -116,6 +117,7 @@ export component GeneralPage inherits Window {
                     vertical-alignment: top;
                     wrap: word-wrap;
                     font-size: 20px;
+                    horizontal-alignment: Adapter.main_align_center == true ? center: left;
                 }
             }
         }
