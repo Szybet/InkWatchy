@@ -159,10 +159,14 @@ void timeZoneApply()
 #endif
     int64_t initialUnixTime = getUnixTime(timeRTCUTC0);
     // https://man7.org/linux/man-pages/man3/setenv.3.html
-    if (setenv("TZ", rM.posixTimeZone, 1) == 0)
+    const char* currentTZ = getenv("TZ");
+    bool isItSet = (currentTZ != nullptr && strcmp(currentTZ, rM.posixTimeZone) != 0 );
+    if (isItSet || setenv("TZ", rM.posixTimeZone, 1) == 0)
     {
+      if(isItSet == false) {
+        tzset();
+      }
       debugLog("rM.posixTimeZone: " + String(rM.posixTimeZone));
-      tzset();
       time_t tempTime = initialUnixTime;
       struct tm tempTM = {};
       localtime_r(&tempTime, &tempTM);
@@ -201,7 +205,8 @@ void timeZoneApply()
     {
       debugLog("Failed to set posix timezone");
     }
-    removeTimeZoneVars();
+    // This causes a memory leak???????????
+    // removeTimeZoneVars();
   }
   else
   {
