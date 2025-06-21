@@ -56,7 +56,6 @@ void loopBatteryDebugDisplay()
     {
         bDdata.isFullyCharged = rM.bat.isFullyCharged;
         genpage_change(String(DEBUG_BATTERY_FULLY + BOOL_STR(rM.bat.isFullyCharged)).c_str(), lineFullyCharged);
-        changed = true;
     }
 #endif
     
