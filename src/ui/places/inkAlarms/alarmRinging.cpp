@@ -87,7 +87,7 @@ void loopAlarmRing()
             wifiStatusSimple wifi = wifiStatusWrap();
             if (wifi == WifiOff || wifi == WifiOn)
             {
-                connectWifiQuick(alarmWifiQuick, 500);
+                connectWifiQuick(alarmWifiQuick, ALARM_WIFI_WIFI_QUICK_MS);
             }
             if (wifi == WifiConnected)
             {

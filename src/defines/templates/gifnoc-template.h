@@ -3,8 +3,8 @@
 // Watchfaces!
 // https://github.com/Szybet/InkWatchy/wiki/Watchfaces
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
-#define INKWATCHY_LANG EN // EN, PL, DE and SK | Supported watchfaces: InkField, Slate and Taychron
-#define WATCHFACE_12H 0 // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
+#define INKWATCHY_LANG EN           // EN, PL, DE and SK | Supported watchfaces: InkField, Slate and Taychron
+#define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
 #define WATCHFACE_TAYCHRON 1
@@ -124,27 +124,28 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 
 // Alarms
 #define INK_ALARMS 1 // Enable alarms
-// Write the amount of minutes and the label will be done automatically in selected language 
+// Write the amount of minutes and the label will be done automatically in selected language
 #define QUICK_ALARM_LIST(X) \
-    X(5)       \
-    X(10)      \
-    X(15)      \
-    X(20)      \
-    X(25)      \
-    X(60)      \
-    X(90)      \
-    X(120)     \
-    X(180)     \
-    X(360)     \
-    X(480)     \
+    X(2)                    \
+    X(5)                    \
+    X(10)                   \
+    X(15)                   \
+    X(20)                   \
+    X(25)                   \
+    X(60)                   \
+    X(90)                   \
+    X(120)                  \
+    X(180)                  \
+    X(360)                  \
+    X(480)                  \
     X(1440)
 
-
-#define ALARM_DURATION_S 60           // Seconds of ringing
-#define ALARM_MOTOR_DELAY 1000        // Ms of delay for motor
-#define ALARM_MOTOR_TIME 200          // Time for motor to vibrate
-#define ALARM_WIFI_MIN_STRENGTH 60    // from 1-99, percents
-#define ALARM_WIFI_MULTIPLIER 7       // Multiplies the time if wifi connect is needed
+#define ALARM_DURATION_S 60        // Seconds of ringing
+#define ALARM_MOTOR_DELAY 1000     // Ms of delay for motor
+#define ALARM_MOTOR_TIME 200       // Time for motor to vibrate
+#define ALARM_WIFI_MIN_STRENGTH 60 // from 1-99, percents
+#define ALARM_WIFI_MULTIPLIER 7    // Multiplies the time if wifi connect is needed
+#define ALARM_WIFI_WIFI_QUICK_MS 1500
 #define ALARM_QUICK_ID MAX_ALARMS - 1 // Which alarm to replace for quick alarms, the default is the last one. Can't be higher than MAX_ALARMS-1
 #define ALARM_DISABLE_BACK 1          // No escaping if (wifi) alarm
 
