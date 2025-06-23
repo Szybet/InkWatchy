@@ -69,6 +69,15 @@ void turnOnWifiKindOfPersistent()
     createWifiTask(WIFI_CONNECTION_TRIES_PERSISTENT, wifiKindOfPersistent, WIFI_PRIORITY_PERSISTENT);
 }
 
+void wifiOnlyNtp() {
+    debugLog("Launching wifi only ntp");
+    syncNtp(false);
+}
+
+void turnOnWifiNtpOnly() {
+    createWifiTask(WIFI_CONNECTION_TRIES, wifiOnlyNtp, WIFI_PRIORITY_REGULAR);
+}
+
 void regularSync()
 {
     // debugLog("Entering regular sync");

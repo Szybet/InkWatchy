@@ -22,14 +22,19 @@ void wifiOffBtn() {
     vibrateMotor(VIBRATION_ACTION_TIME);
 }
 
+void wifiNtpBtn() {
+    turnOnWifiNtpOnly();
+    vibrateMotor(VIBRATION_ACTION_TIME);
+}
+
 void initWifiDebugDisplay()
 {
     init_general_page(50);
     general_page_set_title(DEBUG_MENU_WIFI);
     genpage_set_center();
 
-    GeneralPageButton button[] = {GeneralPageButton{DEBUG_WIFI_ON, wifiOnBtn}, GeneralPageButton{DEBUG_WIFI_OFF, wifiOffBtn}};
-    general_page_set_buttons(button, 2);
+    GeneralPageButton button[] = {GeneralPageButton{DEBUG_WIFI_ON, wifiOnBtn}, GeneralPageButton{DEBUG_WIFI_OFF, wifiOffBtn}, GeneralPageButton("NTP", wifiNtpBtn)};
+    general_page_set_buttons(button, 3);
 
     genpage_add(DEBUG_WIFI_MAC_ADDRESS);
     previousMac = WiFi.macAddress();

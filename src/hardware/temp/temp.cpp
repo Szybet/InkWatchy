@@ -65,7 +65,7 @@ void screenTempFix()
 void tempChecker()
 {
     float newTemp = getTemp();
-    debugLog("Temp is now: " + String(newTemp));
+    // debugLog("Temp is now: " + String(newTemp));
     if (newTemp > rM.previousTemp + 1.5 || newTemp < rM.previousTemp - 1.5)
     {
         if (rM.initialTemp == 0.0)
