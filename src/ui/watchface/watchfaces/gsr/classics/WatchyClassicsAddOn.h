@@ -1,4 +1,4 @@
-#include "minimalDefines.h"
+#include "defines.h"
 #if GSR_WATCHFACES && GSR_CLASSICS
 
 #include "WeatherIcons.h"

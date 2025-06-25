@@ -1,4 +1,4 @@
-#include "minimalDefines.h"
+#include "defines.h"
 #if GSR_WATCHFACES && GSR_STARFIELD
 #ifndef SEVEN_SEGMENT10PT7B
 #define SEVEN_SEGMENT10PT7B

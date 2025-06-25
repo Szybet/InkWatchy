@@ -1,6 +1,6 @@
 #pragma once
 
-#include "minimalDefines.h"
+#include "defines.h"
 
 struct ImageDef
 {

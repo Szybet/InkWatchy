@@ -1,4 +1,4 @@
-#include "minimalDefines.h"
+#include "defines.h"
 #if GSR_WATCHFACES && GSR_CLASSICS
 // 7_SEG Weather Icons in 2 flavors, original and half sized.
 

@@ -1,4 +1,4 @@
-#include "minimalDefines.h"
+#include "defines.h"
 #if GSR_WATCHFACES && GSR_STARFIELD
 /*
   MoonPhase.h - Library to get moon phase angle

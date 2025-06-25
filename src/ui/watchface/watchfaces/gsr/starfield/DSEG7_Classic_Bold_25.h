@@ -1,4 +1,4 @@
-#include "minimalDefines.h"
+#include "defines.h"
 #if GSR_WATCHFACES && GSR_STARFIELD
 
 #ifndef DSEG7_CLASSIC_BOLD_25
