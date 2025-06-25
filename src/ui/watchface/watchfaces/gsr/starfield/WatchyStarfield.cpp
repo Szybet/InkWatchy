@@ -2,6 +2,7 @@
 #if GSR_WATCHFACES && GSR_STARFIELD
 
 #include "WatchyStarfield.h"
+#include "confidential.h"
 
 // change it to your location
 // latitude, longitude, timezone
