@@ -41,20 +41,30 @@ float getTemp()
 }
 #endif
 
+bool isTempFixDisabled()
+{
+#if !TEMP_ESP32 && (ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5)
+    return true;
+#endif
+
+#if !TEMP_ESP32S3 && (ATCHY_VER == WATCHY_3)
+    return true;
+#endif
+
+#if !TEMP_ESP32C6 && (ATCHY_VER == YATCHY)
+    return true;
+#endif
+
+    return false;
+}
+
 void screenTempFix()
 {
-    #if !TEMP_ESP32 && (ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5)
-    return;
-    #endif
+    if (isTempFixDisabled() == true)
+    {
+        return;
+    }
 
-    #if !TEMP_ESP32S3 && (ATCHY_VER == WATCHY_3)
-    return;
-    #endif
-
-    #if !TEMP_ESP32C6 && (ATCHY_VER == YATCHY)
-    return;
-    #endif
-    
     if (rM.fixCounts <= TEMP_MAX_SCREEN_FIXES && rM.updateCounter < FULL_DISPLAY_UPDATE_QUEUE)
     {
         rM.updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
@@ -77,6 +87,11 @@ void tempChecker()
         rM.previousTemp = newTemp;
         if (newTemp > float(TEMP_REBOOT_LIMIT))
         {
+            debugLog("Temperature is high!");
+            if (isTempFixDisabled() == true)
+            {
+                return;
+            }
             debugLog("Temperature too high, exiting");
             assert(true == false);
         }

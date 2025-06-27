@@ -359,3 +359,8 @@ bool isFullMode()
     // debugLog("Power mode because everything else failed, this should NOT happen");
     return false;
 }
+
+void cleanAllMemory() {
+    cleanFontCache();
+    cleanImgCache();
+}

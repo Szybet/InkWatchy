@@ -1,10 +1,12 @@
-
 use core::any::Any;
 
 use alloc::boxed::Box;
 use slint::{platform::WindowEvent, run_event_loop, SharedString};
 
-use crate::{external::generic::{get_buttons, updateScreen, RustButton}, info};
+use crate::{
+    external::generic::{get_buttons, rustCleanMemory, updateScreen, RustButton},
+    info,
+};
 
 use super::embedded_graphics::Framebuffer;
 
@@ -19,7 +21,9 @@ impl slint::platform::Platform for InkPlatform {
         Ok(self.window.clone())
     }
     fn duration_since_start(&self) -> core::time::Duration {
-        let ret = core::time::Duration::from_micros(unsafe { crate::external::generic::rustMicros() as u64 });
+        let ret = core::time::Duration::from_micros(unsafe {
+            crate::external::generic::rustMicros() as u64
+        });
         // let fmt = format!("ret: {:?}", ret);
         // info!(&fmt);
         ret
@@ -32,22 +36,24 @@ impl slint::platform::Platform for InkPlatform {
             RustButton::Menu => Some(SharedString::from("a")),
             RustButton::MenuLong => Some(SharedString::from("d")),
         } {
-            self.window.try_dispatch_event(WindowEvent::KeyPressed { text: text.clone() })?;
-            self.window.try_dispatch_event(WindowEvent::KeyReleased { text })?;
+            self.window
+                .try_dispatch_event(WindowEvent::KeyPressed { text: text.clone() })?;
+            self.window
+                .try_dispatch_event(WindowEvent::KeyReleased { text })?;
         }
 
         slint::platform::update_timers_and_animations();
 
         // It's maybe faster without it?
         // if self.window.has_active_animations() {
-            // info!("has_active_animations");
-            // continue;
-            // return Ok(());
+        // info!("has_active_animations");
+        // continue;
+        // return Ok(());
         // }
 
         // info!("Fucking platform run");
 
-        self.window.draw_if_needed(|renderer| {
+        if !self.window.draw_if_needed(|renderer| {
             // info!("draw_if_needed");
             /*
             if window.has_active_animations() {
@@ -98,9 +104,13 @@ impl slint::platform::Platform for InkPlatform {
                 updateScreen(true, false, true);
             }
             // info!("draw_if_needed end");
-        });
+        }) {
+            unsafe {
+                crate::external::generic::delayRust(10);
+            }
+        }
         // info!("event loop end");
-        
+
         Ok(())
     }
 }
@@ -127,6 +137,7 @@ pub fn slint_init() {
             SLINT_INITED = true;
             InkPlatform::set_platform();
         }
+        rustCleanMemory();
     }
 }
 

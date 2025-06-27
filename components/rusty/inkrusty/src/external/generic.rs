@@ -28,6 +28,7 @@ unsafe extern "C" {
     pub fn rustResetDelay();
     pub fn rustSetCpuSpeed(speed: c_int);
     pub fn rustGetCpuSpeed() -> c_int;
+    pub fn rustCleanMemory();
 }
 
 pub const RUST_BUTTON_NONE: u32 = 0;

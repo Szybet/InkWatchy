@@ -100,3 +100,11 @@ const GFXfont *getFont(String name)
     loadedFont[emptyListIndex] = newFont;
     return loadedFont[emptyListIndex];
 }
+
+void cleanFontCache() {
+    memset(loadedFontNames, 0, sizeof(loadedFontNames));
+    for (int i = 0; i < FONT_COUNT; i++)
+    {
+        free(loadedFont[i]);
+    }
+}
