@@ -100,7 +100,7 @@ void cleanImgCache() {
     loadedImgIndex = 0;
     memset(loadedImgNames, 0, sizeof(loadedImgNames));
     memset(loadedImg, 0, sizeof(loadedImg));
-    for (int i = 0; i < FONT_COUNT; i++)
+    for (int i = 0; i < IMG_COUNT; i++)
     {
         free(loadedImgPointers[i]);
     }
