@@ -1,7 +1,8 @@
 #include "littlefs.h"
 
 char loadedFontNames[FONT_COUNT][RESOURCES_NAME_LENGTH] = {0};
-GFXfont *loadedFont[FONT_COUNT];
+uint8_t *loadedFontPointer[FONT_COUNT] = {NULL};
+GFXfont *loadedFont[FONT_COUNT] = {NULL};
 // Todo garbage collecting here too
 
 const GFXfont *getFont(String name)
@@ -35,7 +36,7 @@ const GFXfont *getFont(String name)
         return &FreeSansBold9pt7b;
     }
     int fileFontSize = fileFont.size();
-    //debugLog("file size: " + String(fileFontSize));
+    // debugLog("file size: " + String(fileFontSize));
     if (fileFontSize <= 0)
     {
         debugLog("This file has size 0: " + name);
@@ -48,9 +49,10 @@ const GFXfont *getFont(String name)
     }
     fileFont.close();
 
+    loadedFontPointer[emptyListIndex] = fileBuf;
     uint16_t fontBitmapSize = fileBuf[0] | (fileBuf[1] << 8);
-    //debugLog("Bitmap size: " + String(fontBitmapSize) + " for font: " + name);
-    //GFXfont *newFont = (GFXfont *)malloc(sizeof(GFXfont));
+    // debugLog("Bitmap size: " + String(fontBitmapSize) + " for font: " + name);
+    // GFXfont *newFont = (GFXfont *)malloc(sizeof(GFXfont));
     GFXfont *newFont = new GFXfont();
 
     newFont->bitmap = fileBuf + 2; // To skip the uint16_t
@@ -84,9 +86,9 @@ const GFXfont *getFont(String name)
     newFont->last = *reinterpret_cast<uint16_t *>(fileBuf + metaDataOffset + sizeof(uint16_t));
     newFont->yAdvance = *(fileBuf + metaDataOffset + 2 * sizeof(uint16_t));
 
-    //debugLog("Value first: " + String(newFont->first) + " for font: " + name);
-    //debugLog("Value last: " + String(newFont->last) + " for font: " + name);
-    //debugLog("Value yAdvance: " + String(newFont->yAdvance) + " for font: " + name);
+    // debugLog("Value first: " + String(newFont->first) + " for font: " + name);
+    // debugLog("Value last: " + String(newFont->last) + " for font: " + name);
+    // debugLog("Value yAdvance: " + String(newFont->yAdvance) + " for font: " + name);
 
     int nameLength = name.length();
 #if DEBUG
@@ -101,10 +103,16 @@ const GFXfont *getFont(String name)
     return loadedFont[emptyListIndex];
 }
 
-void cleanFontCache() {
+void cleanFontCache()
+{
     memset(loadedFontNames, 0, sizeof(loadedFontNames));
     for (int i = 0; i < FONT_COUNT; i++)
     {
-        free(loadedFont[i]);
+        if(loadedFontPointer[i] != NULL) {
+            free(loadedFontPointer[i]);
+            loadedFontPointer[i] = NULL;
+            GFXfont* font = loadedFont[i];
+            delete font;
+        }
     }
 }
