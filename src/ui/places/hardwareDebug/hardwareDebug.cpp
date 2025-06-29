@@ -98,7 +98,7 @@ void initGeneralDebug()
 
 void loopGeneralDebug()
 {
-    debugLog("Used Heap kB: " + String((ESP.getFreeHeap()) / 1024) + "/" + String(ESP.getHeapSize() / 1024));
+    debugLog(getHeapStr());
     // This gives the same result
     // size_t totalHeap = heap_caps_get_total_size(MALLOC_CAP_DEFAULT);
     // size_t freeHeap = heap_caps_get_free_size(MALLOC_CAP_DEFAULT);
