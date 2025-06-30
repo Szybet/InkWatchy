@@ -341,6 +341,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define DUMP_LOOP_ACC 0                        // Needs ACC
 #define DUMP_LOOP_ACC_DIFF 0                   // Only shows diff from previous reading, experimental, look up the code
 #define SCREENSHOT_ENDPOINT 0
+#define SIMPLE_DEEP_SLEEP_TEST 0 // Only if WAIT_FOR_INPUT or WAIT_FOR_MONITOR and DEBUG. No interrupts able to wake up it. Remember to disable Usb jtag communication if it's pure uar comms
 
 // Voltage reading average
 #define VOLTAGE_AVG_COUNT 8
