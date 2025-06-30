@@ -51,7 +51,8 @@ void initRtcGpio()
     initRtcInvidualGpio(EPD_RESET, RTC_GPIO_MODE_OUTPUT_ONLY);        // This funny guy increases power consumption up to 600 uA :(
     ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_RESET), true)); // Fixes high fucking power consumption
     initRtcInvidualGpio(EPD_DC, RTC_GPIO_MODE_OUTPUT_ONLY);
-    ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_DC), true)); // Fixes high fucking power consumption
+    rtc_gpio_set_drive_capability(gpio_num_t(EPD_DC), GPIO_DRIVE_CAP_3); // Fixes like 2 uA
+    ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_DC), false));      // Fixes high fucking power consumption - confirmed
     initRtcInvidualGpio(EPD_BUSY, RTC_GPIO_MODE_INPUT_ONLY);
     initRtcInvidualGpio(EPD_SPI_MOSI, RTC_GPIO_MODE_OUTPUT_ONLY);
     initRtcInvidualGpio(EPD_SPI_SCK, RTC_GPIO_MODE_OUTPUT_ONLY);

@@ -20,6 +20,13 @@ void rgbTaskRun(void *parameter)
     vTaskDelete(NULL);
 }
 
+void setRgbPullUp(bool state)
+{
+    rM.gpioExpander.setPinPullUp(RGB_DIODE_RED_PIN, state);
+    rM.gpioExpander.setPinPullUp(RGB_DIODE_GREEN_PIN, state);
+    rM.gpioExpander.setPinPullUp(RGB_DIODE_BLUE_PIN, state);
+}
+
 void setRgb(IWColors color, bool clearPrevious, uint timeMs)
 {
 #if RGB_DIODE
@@ -61,6 +68,10 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
         currentColor = color;
     }
 
+    if(color != IwNone) {
+        setRgbPullUp(false);
+    }
+
     switch (color)
     {
     case IwNone:
@@ -68,6 +79,8 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
         rM.gpioExpander.setPinState(RGB_DIODE_RED_PIN, true);
         rM.gpioExpander.setPinState(RGB_DIODE_GREEN_PIN, true);
         rM.gpioExpander.setPinState(RGB_DIODE_BLUE_PIN, true);
+        // Weird but it fixes high power consumption
+        setRgbPullUp(true);
         break;
     }
     case IwRed:
