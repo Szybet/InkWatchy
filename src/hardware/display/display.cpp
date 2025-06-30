@@ -61,7 +61,7 @@ void initDisplay()
         updateDisplay(FULL_UPDATE);
     }
 #endif
-#if LP_CORE_TEST_ENABLED == false
+#if LP_CORE_TEST_ENABLED == false && SIMPLE_DEEP_SLEEP_TEST == false
     resetHoldManage();
 #endif
 

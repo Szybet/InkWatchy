@@ -11,8 +11,8 @@ void setAlarmForLpCore();
 void clearLpCoreRtcMem();
 void lpCoreScreenPrepare(bool now, bool setDuChange = true);
 void stopLpCore();
-bool loadLpCore();
-bool runLpCore();
+void loadLpCore();
+void runLpCore();
 void initManageLpCore();
 
 #if DEBUG

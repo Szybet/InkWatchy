@@ -65,7 +65,7 @@ void clearLpCoreRtcMem()
     memcpy(&rtc_mem->custom[8], &lpCoreTimeZoneOff, 2);
 }
 
-bool loadLpCore()
+void loadLpCore()
 {
     debugLog("Loading lp core");
     // Load it from littlefs first
@@ -74,7 +74,7 @@ bool loadLpCore()
     if (bin.size <= 0)
     {
         debugLog("Failed to load lp core");
-        return false;
+        assert(false);
     }
     else
     {
@@ -85,12 +85,11 @@ bool loadLpCore()
     if (err != ESP_OK)
     {
         debugLog("Failed to load lp core: " + String(esp_err_to_name(err)));
-        return false;
+        assert(false);
     }
-    return true;
 }
 
-bool runLpCore()
+void runLpCore()
 {
 #if LP_CORE_TEST_ENABLED
     ulp_lp_core_cfg_t cfg = {
@@ -108,17 +107,16 @@ bool runLpCore()
     {
         clearLpCoreRtcMem();
     }
-    debugLog("shared_mem->sleep_duration_ticks" + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
+    debugLog("shared_mem->sleep_duration_ticks: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
     debugLog("Running lp core");
     // It will fail to run if there was lp core already running
     esp_err_t err = ulp_lp_core_run(&cfg);
     if (err != ESP_OK)
     {
         debugLog("Failed to run lp core: " + String(esp_err_to_name(err)));
-        return false;
+        assert(false);
     }
-    debugLog("shared_mem->sleep_duration_ticks" + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
-    return true;
+    // debugLog("shared_mem->sleep_duration_ticks: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
 }
 
 void initManageLpCore()

@@ -24,7 +24,7 @@ void manageGpioExpanderInt()
 
 mcp23018::mcp23018() {}
 
-bool mcp23018::simplerInit()
+bool mcp23018::simplerInit(bool withDefault)
 {
   if (inited == false && initOngoing == false)
   {
@@ -40,7 +40,7 @@ bool mcp23018::simplerInit()
       return false;
     }
     initOngoing = true;
-    if (resetVerify() == false)
+    if (resetVerify(withDefault) == false)
     {
       initOngoing = false;
       debugLog("Failed to reset-verify the expander");
@@ -180,7 +180,7 @@ bool mcp23018::manageInterruptsExit()
   return true;
 }
 
-bool mcp23018::resetVerify()
+bool mcp23018::resetVerify(bool withDefault)
 {
 #if MCP_GPIO_EXPANDER_DISABLE == true && DEBUG == true
   return false;
@@ -304,6 +304,16 @@ bool mcp23018::resetVerify()
     setPinMode(i, MCP_OUTPUT);
   }
 
+  isDebug(dumpAllRegisters());
+
+  if(withDefault == true) {
+    setDefaultPinStates();
+  }
+
+  return true;
+}
+
+void mcp23018::setDefaultPinStates() {
   // isDebug(dumpAllRegisters());
 
   // Set pins to inputs as they are outputs now
@@ -327,9 +337,8 @@ bool mcp23018::resetVerify()
   setPinMode(MCP_STAT_OUT, MCP_OUTPUT);
 
   setDefaultInterrupts();
-  isDebug(dumpAllRegisters());
 
-  return true;
+  isDebug(dumpAllRegisters());
 }
 
 void mcp23018::deInit()

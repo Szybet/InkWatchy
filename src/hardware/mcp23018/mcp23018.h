@@ -79,7 +79,7 @@ class mcp23018
 {
 public:
   mcp23018();
-  bool simplerInit();
+  bool simplerInit(bool withDefault = true);
   void deInit();
   buttonState manageInterrupts();
   bool manageInterruptsExit();
@@ -100,6 +100,8 @@ public:
   void writeSingleRegister(uint8_t reg, uint8_t val);
   uint16_t readRegister(uint8_t reg);
   uint8_t readSingleRegister(uint8_t reg);
+  void setDefaultPinStates();
+  bool resetVerify(bool withDefault);
 
 private:
   uint16_t iodirReg;
@@ -110,7 +112,6 @@ private:
   uint16_t intconReg;
   uint16_t defvalReg;
 
-  bool resetVerify();
 
   bool inited = false;
   bool initOngoing = false; // Makes all functions ignore the init. Required for resetVerify function

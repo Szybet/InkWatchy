@@ -26,10 +26,14 @@ void initRtcInvidualGpio(int pin, rtc_gpio_mode_t direction)
     // Or when it's not cleared up properly? - Nope, this is fine to call even without this, but this still messes things up, maybe its not needed at all
     // https://github.com/search?q=repo%3Aespressif%2Fesp-idf+rtc_gpio_hold_en&type=code
     // it's used only in risv and fsm, not lp core?
-#if LP_CORE_TEST_ENABLED == false && true == false
+#if 0
     debugLog("Setting rtc_gpio_hold_en for pin: " + String(pin));
+    // This increases power consumption a lot...
     ESP_ERROR_CHECK(rtc_gpio_hold_en(gpio_pin));
 #endif
+
+    // This increases power consumption too, wtf
+    // ESP_ERROR_CHECK(rtc_gpio_hold_dis(gpio_pin));
 }
 
 // This, without the screen, gives +150uA
