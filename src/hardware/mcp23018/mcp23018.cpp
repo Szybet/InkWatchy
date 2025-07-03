@@ -306,14 +306,16 @@ bool mcp23018::resetVerify(bool withDefault)
 
   isDebug(dumpAllRegisters());
 
-  if(withDefault == true) {
+  if (withDefault == true)
+  {
     setDefaultPinStates();
   }
 
   return true;
 }
 
-void mcp23018::setDefaultPinStates() {
+void mcp23018::setDefaultPinStates()
+{
   // isDebug(dumpAllRegisters());
 
   // Set pins to inputs as they are outputs now
@@ -371,7 +373,8 @@ void mcp23018::setDefaultInterrupts()
 #if !MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS
   if (bootStatus.fromWakeup == false)
   {
-    // Buttons
+// Buttons
+#if YATCHY_SHIPPING_MODE == 0
 #ifdef YATCHY_BACK_BTN
     setInterruptCause(BACK_PIN, true, false);
     setPinPullUp(BACK_PIN, true);
@@ -388,6 +391,7 @@ void mcp23018::setDefaultInterrupts()
     setInterruptCause(UP_PIN, true, false);
     setPinPullUp(UP_PIN, true);
     setInterrupt(UP_PIN, true);
+#endif
 
     setInterrupt(MCP_5V, true);
   }

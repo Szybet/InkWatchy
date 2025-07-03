@@ -97,7 +97,7 @@ void goSleep()
     //     debugLog("Waiting for motor task");
     //     delayTask(25);
     // }
-#if LP_CORE == true
+#if LP_CORE == true && YATCHY_SHIPPING_MODE == 0
     if (rM.disableWakeUp == false)
     {
         deInitScreen();
@@ -117,7 +117,7 @@ void goSleep()
 #else
     deInitScreen();
     // Not needed
-#if true == false
+#if 0
     rM.gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
     digitalWrite(EPD_RESET, true);
     digitalWrite(EPD_DC, true);
@@ -128,7 +128,7 @@ void goSleep()
     // turnOffWifi();
 
     // deInitWatchdogTask();
-#if LP_CORE == false
+#if LP_CORE == false && YATCHY_SHIPPING_MODE == 0
     wakeUpManageRTC();
 #endif
 

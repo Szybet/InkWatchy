@@ -10,6 +10,14 @@ Template for versioning
 
 #endif
 */
+
+#if YATCHY_SHIPPING_MODE
+#undef AVOID_SLEEP_USB_JTAG
+#define AVOID_SLEEP_USB_JTAG 0
+#undef FORCE_DISABLE_ACC
+#define FORCE_DISABLE_ACC 1
+#endif
+
 #if CONWAY && CONWAY_MODULE
 #define CONWAY_MODULE_ENABLED 1
 #endif
