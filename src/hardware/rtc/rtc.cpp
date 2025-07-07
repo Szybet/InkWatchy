@@ -76,6 +76,8 @@ void initRTC()
   // 16000593 is fine
   // 15999959 for a 20 ppm clock is good
   // 15999701 for 5 ppm clock, I gues the check above was pure luck, this result is still good
+  // 15999697 also 5 ppm clock
+  // 15999699 also 5 ppm clock - It's the most reliable one (The 20 ppm above must be pure luck)
   // 15997884 for watchy v3 lol
 
   // Some more logs I gathered:
@@ -99,6 +101,18 @@ void initRTC()
   */
   // Links:
   // https://github.com/espressif/esp-idf/issues/11755
+
+  /*
+  Further more, to check if the quartz works (but faster, when soldering)
+  /root/.platformio/packages/framework-espidf/components/esp_system/port/soc/esp32c6/clk.c
+  in line 180, replace this log: ESP_EARLY_LOGW(TAG, "32 kHz clock not found, switching to internal 150 kHz oscillator");
+  with:
+  while(true) {
+    ESP_EARLY_LOGE(TAG, "32 kHz clock not found, switching to internal 150 kHz oscillator");
+  }
+
+  Also change other logs to Errors, so they are visible
+  */
 #endif
 }
 
