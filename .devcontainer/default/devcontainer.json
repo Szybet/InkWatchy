@@ -5,7 +5,8 @@
             "extensions": [
                 "actboy168.tasks",
                 "ms-vscode.cpptools",
-                "platformio.platformio-ide"
+                "platformio.platformio-ide",
+                "slint.slint"
             ]
         }
     },
