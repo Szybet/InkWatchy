@@ -38,7 +38,7 @@ void stopLpCore()
     deInitRtcGpio();
     delayTask(10);
     if(bootStatus.reason == ulp) {
-        delayTask(100);
+        delayTask(300);
     }
 }
 

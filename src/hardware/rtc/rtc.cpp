@@ -173,11 +173,12 @@ void timeZoneApply()
 #endif
     int64_t initialUnixTime = getUnixTime(timeRTCUTC0);
     // https://man7.org/linux/man-pages/man3/setenv.3.html
-    const char* currentTZ = getenv("TZ");
-    bool isItSet = (currentTZ != nullptr && strcmp(currentTZ, rM.posixTimeZone) != 0 );
+    const char *currentTZ = getenv("TZ");
+    bool isItSet = (currentTZ != nullptr && strcmp(currentTZ, rM.posixTimeZone) != 0);
     if (isItSet || setenv("TZ", rM.posixTimeZone, 1) == 0)
     {
-      if(isItSet == false) {
+      if (isItSet == false)
+      {
         tzset();
       }
       debugLog("rM.posixTimeZone: " + String(rM.posixTimeZone));
@@ -260,6 +261,7 @@ void readRTC()
 {
   // debugLog("Reading RTC");
   rM.SRTC.read(timeRTCUTC0);
+  lastTimeRead = millisBetter();
   debugLog("Time retrieved from RTC: " + String(getUnixTime(timeRTCUTC0)));
 
 #if RTC_TYPE == INTERNAL_RTC
@@ -297,12 +299,12 @@ void readRTC()
 #endif
 
   timeZoneApply();
-  lastTimeRead = millisBetter();
 }
 
 void wakeUpIn(int minutes)
 {
-  if(minutes < 1) {
+  if (minutes < 1)
+  {
     debugLog("Wake up in minutes below 1, never waking up");
     return;
   }
@@ -385,6 +387,7 @@ void wakeUpManageRTC()
   wakeUpIn(minutes);
 }
 
+uint8_t manageRtcLastSec = 0;
 void manageRTC()
 {
   // debugLog("Executed manageRTC");
@@ -394,11 +397,17 @@ void manageRTC()
 
   // #endif
 
-  if (getLastTimeReadSec() >= 60)
+  uint8_t newSec = getCurrentSeconds();
+  if (newSec != manageRtcLastSec)
   {
-    debugLog("RTC new minute");
-    loopBattery();
-    readRTC();
+    manageRtcLastSec = newSec;
+    debugLog("getCurrentSeconds(): " + String(getCurrentSeconds()));
+    if (manageRtcLastSec <= 1 || getLastTimeReadSec() >= 60)
+    {
+      debugLog("RTC new minute");
+      loopBattery();
+      readRTC();
+    }
   }
 }
 
