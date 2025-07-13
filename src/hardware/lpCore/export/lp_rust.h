@@ -78,7 +78,7 @@
 
 #define TIME_RECT_Y_HI 56
 
-#define WAKEUP_MODULO 29
+#define WAKEUP_MODULO 30
 
 uint8_t do_rust_things(void);
 

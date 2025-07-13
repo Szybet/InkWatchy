@@ -1,6 +1,7 @@
 #pragma once
 
 #include "config.h"
+#include "bareDefines.h"
 
 /*
 Template for versioning
@@ -92,22 +93,22 @@ Template for versioning
 #define BUT_STATE LOW
 #define BUT_CLICK_STATE HIGH
 #define BUTTON_INTER_COND RISING
-#define MENU_PIN 26
-#define BACK_PIN 25
-#define DOWN_PIN 4
+#define MENU_PIN_BARE 26
+#define BACK_PIN_BARE 25
+#define DOWN_PIN_BARE 4
 #if ATCHY_VER == WATCHY_2
-#define UP_PIN 35
+#define UP_PIN_BARE 35
 #elif ATCHY_VER == WATCHY_1_5 || ATCHY_VER == WATCHY_1
-#define UP_PIN 32
+#define UP_PIN_BARE 32
 #endif
 #elif ATCHY_VER == WATCHY_3
 #define BUT_STATE HIGH
 #define BUT_CLICK_STATE LOW
 #define BUTTON_INTER_COND FALLING
-#define MENU_PIN 7
-#define BACK_PIN 6
-#define DOWN_PIN 8
-#define UP_PIN 0
+#define MENU_PIN_BARE 7
+#define BACK_PIN_BARE 6
+#define DOWN_PIN_BARE 8
+#define UP_PIN_BARE 0
 #elif ATCHY_VER == YATCHY
 // Button states defined here
 #define BUT_STATE LOW
@@ -213,16 +214,10 @@ Template for versioning
 #if ATCHY_VER == YATCHY
 #define LP_CORE 1
 
-// Pin definitions for YATCHY (avoiding redefinition warnings)
-#ifndef MENU_PIN
-#define MENU_PIN 0 // A0
-#endif
-#ifndef DOWN_PIN
-#define DOWN_PIN 1 // A1
-#endif
-#ifndef UP_PIN
-#define UP_PIN 2 // A2
-#endif
+// Pin definitions for YATCHY
+#define MENU_PIN_BARE 0 // A0
+#define DOWN_PIN_BARE 1 // A1
+#define UP_PIN_BARE 2 // A2
 
 #define YATCHY_DISPLAY_CS 8 // B0
 
@@ -236,9 +231,8 @@ Template for versioning
 
 #if YATCHY_MODULE == YATCHY_DEFAULT_MODULE
 // Everything here is optional, or should be, if something doesn't work let me know
-#ifndef BACK_PIN
-#define BACK_PIN 3 // A3
-#endif
+#define BACK_PIN_BARE 3 // A3
+
 #define YATCHY_BACK_BTN
 #define RGB_DIODE 1
 #define RGB_DIODE_RED_PIN 12
@@ -299,4 +293,59 @@ Template for versioning
 
 #if GSR_WATCHFACES == 1 && ATCHY_VER == YATCHY && LP_CORE == 1
 #error I explained it in config.h yet here we are, GSR_WATCHFACES are not compatible with LP_CORE on Yatchy. Disable LP_CORE if you really need GSR watchfaces, but the battery life will suck, you have been warned
+#endif
+
+// Button remap logic
+// This is ugly but it works I hope
+// And it must be at the end
+#if BTN_REMAP_MENU == BTN_REMAP_VAL_MENU
+#define MENU_PIN MENU_PIN_BARE
+#endif
+#if BTN_REMAP_MENU == BTN_REMAP_VAL_BACK
+#define MENU_PIN BACK_PIN_BARE
+#endif
+#if BTN_REMAP_MENU == BTN_REMAP_VAL_UP
+#define MENU_PIN UP_PIN_BARE
+#endif
+#if BTN_REMAP_MENU == BTN_REMAP_VAL_DOWN
+#define MENU_PIN DOWN_PIN_BARE
+#endif
+
+#if BTN_REMAP_BACK == BTN_REMAP_VAL_BACK
+#define BACK_PIN BACK_PIN_BARE
+#endif
+#if BTN_REMAP_BACK == BTN_REMAP_VAL_MENU
+#define BACK_PIN MENU_PIN_BARE
+#endif
+#if BTN_REMAP_BACK == BTN_REMAP_VAL_UP
+#define BACK_PIN UP_PIN_BARE
+#endif
+#if BTN_REMAP_BACK == BTN_REMAP_VAL_DOWN
+#define BACK_PIN DOWN_PIN_BARE
+#endif
+
+#if BTN_REMAP_UP == BTN_REMAP_VAL_UP
+#define UP_PIN UP_PIN_BARE
+#endif
+#if BTN_REMAP_UP == BTN_REMAP_VAL_MENU
+#define UP_PIN MENU_PIN_BARE
+#endif
+#if BTN_REMAP_UP == BTN_REMAP_VAL_BACK
+#define UP_PIN BACK_PIN_BARE
+#endif
+#if BTN_REMAP_UP == BTN_REMAP_VAL_DOWN
+#define UP_PIN DOWN_PIN_BARE
+#endif
+
+#if BTN_REMAP_DOWN == BTN_REMAP_VAL_DOWN
+#define DOWN_PIN DOWN_PIN_BARE
+#endif
+#if BTN_REMAP_DOWN == BTN_REMAP_VAL_MENU
+#define DOWN_PIN MENU_PIN_BARE
+#endif
+#if BTN_REMAP_DOWN == BTN_REMAP_VAL_BACK
+#define DOWN_PIN BACK_PIN_BARE
+#endif
+#if BTN_REMAP_DOWN == BTN_REMAP_VAL_UP
+#define DOWN_PIN UP_PIN_BARE
 #endif

@@ -66,6 +66,34 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 // 3: Rotate 270 degrees clockwise
 #define SCREEN_ROTATION 0
 
+// Remap buttons
+// This is not idiot proof, do not set 2 remaps to the same button
+// Possible values:
+/*
+BTN_REMAP_VAL_MENU
+BTN_REMAP_VAL_BACK
+BTN_REMAP_VAL_UP
+BTN_REMAP_VAL_DOWN
+*/
+/*
+For 270 degrees rotation (So for the yatchy rotated case)
+#define BTN_REMAP_MENU BTN_REMAP_VAL_DOWN
+#define BTN_REMAP_BACK BTN_REMAP_VAL_MENU
+#define BTN_REMAP_UP BTN_REMAP_VAL_BACK
+#define BTN_REMAP_DOWN BTN_REMAP_VAL_UP
+*/
+/*
+The default is this:
+#define BTN_REMAP_MENU BTN_REMAP_VAL_MENU
+#define BTN_REMAP_BACK BTN_REMAP_VAL_BACK
+#define BTN_REMAP_UP BTN_REMAP_VAL_UP
+#define BTN_REMAP_DOWN BTN_REMAP_VAL_DOWN
+*/
+#define BTN_REMAP_MENU BTN_REMAP_VAL_MENU
+#define BTN_REMAP_BACK BTN_REMAP_VAL_BACK
+#define BTN_REMAP_UP BTN_REMAP_VAL_UP
+#define BTN_REMAP_DOWN BTN_REMAP_VAL_DOWN
+
 // Timezone! So:
 // - You don't set anything, it will try to ques based on IP, it can fail sometimes
 // - You set olson, which still can be incorrect (probably won't). If this is set, there will be no quesing
@@ -341,7 +369,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define DUMP_LOOP_ACC 0                        // Needs ACC
 #define DUMP_LOOP_ACC_DIFF 0                   // Only shows diff from previous reading, experimental, look up the code
 #define SCREENSHOT_ENDPOINT 0
-#define SIMPLE_DEEP_SLEEP_TEST 0 // Only if WAIT_FOR_INPUT or WAIT_FOR_MONITOR and DEBUG. No interrupts able to wake up it. Remember to disable Usb jtag communication if it's pure uar comms
+#define SIMPLE_DEEP_SLEEP_TEST 0 // Only if WAIT_FOR_INPUT or WAIT_FOR_MONITOR and DEBUG. No interrupts able to wake up it. Remember to disable Usb jtag communication if it's pure uart comm, also only for yatchy
 #define YATCHY_SHIPPING_MODE 0
 
 // Voltage reading average
