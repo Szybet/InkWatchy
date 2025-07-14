@@ -20,12 +20,14 @@ void rgbTaskRun(void *parameter)
     vTaskDelete(NULL);
 }
 
+#if ATCHY_VER == YATCHY
 void setRgbPullUp(bool state)
 {
     rM.gpioExpander.setPinPullUp(RGB_DIODE_RED_PIN, state);
     rM.gpioExpander.setPinPullUp(RGB_DIODE_GREEN_PIN, state);
     rM.gpioExpander.setPinPullUp(RGB_DIODE_BLUE_PIN, state);
 }
+#endif
 
 void setRgb(IWColors color, bool clearPrevious, uint timeMs)
 {
