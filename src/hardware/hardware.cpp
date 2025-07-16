@@ -348,6 +348,10 @@ bool isFullMode()
         // debugLog("Full mode because of battery charging or is fully charged");
         return true;
     }
+    if(bootStatus.fromWakeup == false) {
+        // debugLog("Full mode because of first boot");
+        return true;
+    }
 
     // False now
     if (bootStatus.reason == wakeUpReason::rtc || bootStatus.reason == wakeUpReason::ulp)
@@ -356,7 +360,7 @@ bool isFullMode()
         return false;
     }
 
-    // debugLog("Power mode because everything else failed, this should NOT happen");
+    debugLog("Power mode because everything else failed, this should NOT happen");
     return false;
 }
 
