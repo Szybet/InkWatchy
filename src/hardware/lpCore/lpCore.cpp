@@ -44,6 +44,7 @@ void lpCoreScreenPrepare(bool now, bool setDuChange)
 
 void stopLpCore()
 {
+    debugLog("Stop lp core called");
     if (bootStatus.reason == ulp)
     {
         delayTask(100);
@@ -60,6 +61,8 @@ void stopLpCore()
     {
         delayTask(300);
     }
+    // Die
+    ulp_lp_core_stop();
 }
 
 void setAlarmForLpCore()
@@ -172,6 +175,8 @@ void runLpCore()
     customRtcData->stupid_unix = stupidUnix;
 
     debugLog("shared_mem->sleep_duration_ticks: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
+    debugLog("shared_mem->sleep_duration_us: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_us));
+
     debugLog("Running lp core");
     // It will fail to run if there was lp core already running
     esp_err_t err = ulp_lp_core_run(&cfg);
@@ -180,7 +185,13 @@ void runLpCore()
         debugLog("Failed to run lp core: " + String(esp_err_to_name(err)));
         assert(false);
     }
-    // debugLog("shared_mem->sleep_duration_ticks: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
+    
+    debugLog("shared_mem->sleep_duration_ticks: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
+    debugLog("shared_mem->sleep_duration_us: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_us));
+
+    // Debugging a case when lp core wakes up too fast?
+    // https://github.com/espressif/esp-idf/blob/bfe5caf58f742fd35c023335f475114a5b88761e/examples/system/ulp/lp_core/lp_timer_interrupt/main/lp_interrupts_main.c#L32
+    delayTask(100);
 }
 
 void runLpCoreNow()
