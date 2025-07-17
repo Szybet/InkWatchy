@@ -157,6 +157,8 @@ void goSleep()
     logCleanup();
     Serial.print("Sleeping now!");
     flushLogs();
+    // Ugh
+    delayTask(100);
 #endif
     ForceInputs();
 

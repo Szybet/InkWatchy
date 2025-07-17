@@ -11,6 +11,23 @@ bool screenTimeChanged = false;            // If the watchface has written time 
 #define LP_CORE_SCREEN_W 185
 #define LP_CORE_SCREEN_H 56
 
+struct customRtcData
+{
+    uint8_t debug_message;
+    uint8_t hour;
+    uint8_t minute;
+    bool dot;
+    uint32_t alarm_unix;
+    int16_t timezone_offset;
+    uint32_t stupid_unix;
+};
+
+customRtcData *customRtcDataGet()
+{
+    rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
+    return (customRtcData *)(rtc_mem->custom);
+}
+
 void lpCoreScreenPrepare(bool now, bool setDuChange)
 {
     debugLog("Clearing screen space for lp core");
@@ -27,17 +44,20 @@ void lpCoreScreenPrepare(bool now, bool setDuChange)
 
 void stopLpCore()
 {
-    if(bootStatus.reason == ulp) {
+    if (bootStatus.reason == ulp)
+    {
         delayTask(100);
     }
     ulp_lp_core_stop();
     delayTask(10);
-    if(bootStatus.reason == ulp) {
+    if (bootStatus.reason == ulp)
+    {
         delayTask(100);
     }
     deInitRtcGpio();
     delayTask(10);
-    if(bootStatus.reason == ulp) {
+    if (bootStatus.reason == ulp)
+    {
         delayTask(300);
     }
 }
@@ -45,9 +65,8 @@ void stopLpCore()
 void setAlarmForLpCore()
 {
 #if INK_ALARMS
-    rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
-    uint32_t nextAlarmToRtc = (uint32_t)rM.nextAlarm;
-    memcpy(&rtc_mem->custom[4], &nextAlarmToRtc, 4);
+    customRtcData *customRtcData = customRtcDataGet();
+    customRtcData->alarm_unix = (uint32_t)rM.nextAlarm;
 #endif
 }
 
@@ -61,15 +80,15 @@ void clearLpCoreRtcMem()
     setAlarmForLpCore();
 
     // Set timezone offset
-    int16_t lpCoreTimeZoneOff = timeZoneOffset / 60;
-    memcpy(&rtc_mem->custom[8], &lpCoreTimeZoneOff, 2);
+    customRtcData *customRtcData = customRtcDataGet();
+    customRtcData->timezone_offset = int16_t(timeZoneOffset / 60);
 }
 
-void loadLpCore()
+void loadLpCore(String lp_core_program)
 {
     debugLog("Loading lp core");
     // Load it from littlefs first
-    bufSize bin = fsGetBlob("yatchy-lp-program.bin", "/other/");
+    bufSize bin = fsGetBlob(lp_core_program, "/other/");
 
     if (bin.size <= 0)
     {
@@ -89,24 +108,69 @@ void loadLpCore()
     }
 }
 
+uint64_t microsTillNextMin()
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    uint64_t seconds = tv.tv_sec % 60;
+    uint64_t micros = tv.tv_usec;
+    return (59 - seconds) * 1000000 + (1000000 - micros);
+}
+
 void runLpCore()
 {
+    if (screenTimeChanged == true)
+    {
+        clearLpCoreRtcMem();
+    }
+
+    readRTC();
 #if LP_CORE_TEST_ENABLED
     ulp_lp_core_cfg_t cfg = {
         .wakeup_source = ULP_LP_CORE_WAKEUP_SOURCE_LP_TIMER,
         .lp_timer_sleep_duration_us = uint32_t(2 * 1000000),
     };
 #else
+    uint64_t micros = microsTillNextMin();
+    debugLog("Micros till next minute: " + String(micros) + " while seconds is: " + String(getCurrentSeconds()) + " so it will wake up in: " + String(micros / 1000000));
+#if DEBUG
+    if (micros > UINT32_MAX)
+    {
+        debugLog("BIG PROBLEM UINT32_MAX");
+        assert(0);
+    }
+#endif
     ulp_lp_core_cfg_t cfg = {
         .wakeup_source = ULP_LP_CORE_WAKEUP_SOURCE_LP_TIMER,
-        .lp_timer_sleep_duration_us = uint32_t((1 + (60 - getCurrentSeconds())) * 1000000),
+        .lp_timer_sleep_duration_us = uint32_t(micros),
     };
 #endif
 
-    if (screenTimeChanged == true)
+    uint32_t stupidUnix = getUnixTime(timeRTCUTC0) + ceil(float(micros) / 1000000.0);
+    /*
+    struct tm *tmInfo = gmtime((time_t *)&stupidUnix);
+    debugLog("tmInfo->tm_min: " + String(tmInfo->tm_min));
+    if (tmInfo->tm_min > 55)
     {
-        clearLpCoreRtcMem();
+        uint8_t c = 0;
+        while (tmInfo->tm_min > 57)
+        {
+            tmInfo->tm_min = tmInfo->tm_min + 1;
+            c = c + 1;
+            if (tmInfo->tm_min >= 60)
+            {
+                tmInfo->tm_min = tmInfo->tm_min - 60;
+            }
+        }
+        stupidUnix = stupidUnix + c;
+        debugLog("Stupid unix adjustment: " + String(c) + " THIS SHOULD NOT HAPPEN");
     }
+    */
+   
+    debugLog("Time given to lp core is: " + String(stupidUnix));
+    customRtcData *customRtcData = customRtcDataGet();
+    customRtcData->stupid_unix = stupidUnix;
+
     debugLog("shared_mem->sleep_duration_ticks: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
     debugLog("Running lp core");
     // It will fail to run if there was lp core already running
@@ -119,6 +183,66 @@ void runLpCore()
     // debugLog("shared_mem->sleep_duration_ticks: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
 }
 
+void runLpCoreNow()
+{
+    ulp_lp_core_cfg_t cfg = {
+        .wakeup_source = ULP_LP_CORE_WAKEUP_SOURCE_HP_CPU,
+    };
+    ulp_lp_core_run(&cfg);
+    debugLog("runLpCoreNow done");
+}
+
+/*
+#include <macros.h>
+#include <rtc.h>
+
+#define DR_REG_LP_AON_BASE                      0x600B1000
+#define LP_AON_STORE1_REG (DR_REG_LP_AON_BASE + 0x4)
+#define RTC_SLOW_CLK_CAL_REG                LP_AON_STORE1_REG
+
+#define UNIX_OFFSET_CALL_LOOP 0
+#define UNIX_OFFSET_SMALL_ENABLE 0
+void unix_offset_call()
+{
+    loadLpCore("yatchy-lp-unix-cal-program.bin");
+    rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
+    memset(&rtc_mem->custom[4], 0, 4);
+    runLpCoreNow();
+    int64_t diff = 0;
+#if UNIX_OFFSET_CALL_LOOP
+    while (true)
+    {
+#endif
+        uint32_t nextAlarmFromRtc = 0;
+        while (nextAlarmFromRtc == 0)
+        {
+            memcpy(&nextAlarmFromRtc, &rtc_mem->custom[4], 4);
+            readRTC();
+        }
+        struct timeval tv_now;
+        gettimeofday(&tv_now, NULL);
+        settimeofday(&tv_now, NULL);
+
+        diff = getUnixTime(timeRTCUTC0) - nextAlarmFromRtc;
+        int64_t diff2 = tv_now.tv_sec - nextAlarmFromRtc;
+        debugLog("Lp core diff is: " + String(diff));
+        debugLog("Lp core diff2222 is: " + String(diff2));
+        int64_t fuck = esp_rtc_get_time_us() / 1000000;
+        debugLog("Fuck: " + String(fuck));
+        debugLog("Fuck pure pure: " + String(nextAlarmFromRtc));
+        debugLog("Fuck diff is: " + String(fuck - int64_t(nextAlarmFromRtc)));
+        debugLog("esp_clk_slowclk_cal_get: " + String(uint32_t(REG_READ(RTC_SLOW_CLK_CAL_REG))));
+#if UNIX_OFFSET_CALL_LOOP
+        delayTask(500);
+    }
+#endif
+    stopLpCore();
+#if UNIX_OFFSET_SMALL_ENABLE
+    rtc_mem->custom[10] = diff;
+#endif
+}
+*/
+
 void initManageLpCore()
 {
     if (bootStatus.fromWakeup == true && willAlarmTrigger() == false)
@@ -127,9 +251,9 @@ void initManageLpCore()
         // We want it to update on it's own
         if (bootStatus.reason != wakeUpReason::ulp)
         {
-            rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
-            rM.wFTime.Hour = rtc_mem->custom[1];
-            rM.wFTime.Minute = rtc_mem->custom[2];
+            customRtcData *customRtcData = customRtcDataGet();
+            rM.wFTime.Hour = customRtcData->hour;
+            rM.wFTime.Minute = customRtcData->minute;
             debugLog("Updated from lp core hour and minute: " + getHourMinute(rM.wFTime));
         }
         if (bootStatus.reason == wakeUpReason::ulp)
@@ -140,6 +264,15 @@ void initManageLpCore()
             rM.wFTime.Hour = 255;
         }
     }
+    /*
+    else if (bootStatus.fromWakeup == false)
+    {
+        // if ulp wakeup + minutes
+        {
+            unix_offset_call();
+        }
+    }
+    */
     else
     {
         // First boot
