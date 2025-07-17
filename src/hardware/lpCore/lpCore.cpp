@@ -317,6 +317,17 @@ void monitorLpCore()
         }
         delayTask(100);
     }
+    /*
+    rtc_retain_mem_t *rtc_mem = bootloader_common_get_rtc_retain_mem();
+    uint32_t nextAlarmFromRtc;
+    memcpy(&nextAlarmFromRtc, &rtc_mem->custom[4], 4);
+    readRTC();
+    debugLog("Time from lp core is: " + String(nextAlarmFromRtc));
+    int64_t t = getUnixTime(timeRTCUTC0);
+    debugLog("Time in inkwatchy is: " + String(t));
+    debugLog("Diff is: " + String(t - nextAlarmFromRtc));
+    delayTask(100);
+    */
 }
 
 const char *getLpLog(uint8_t id)

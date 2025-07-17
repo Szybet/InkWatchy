@@ -80,6 +80,8 @@
 
 #define WAKEUP_MODULO 30
 
+#define UNIX_OFFSET -2
+
 uint8_t do_rust_things(void);
 
 void send_debug_message(uint8_t mess);
