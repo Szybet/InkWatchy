@@ -105,13 +105,17 @@ void goSleep()
         // This enables the subsystem, so it doesn't shut it down or something
         // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#ulp-coprocessor-wakeup
         // TODO: maybe this https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#power-down-of-rtc-peripherals-and-memories
-        ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
 
-        // This, without the screen, gives +150uA
+        // This, without the screen, gives +150uA - or not really
         initRtcGpio();
         loadLpCore();
         runLpCore();
-    } else {
+
+        // Can be before this scope, doesn't matter in my opinion
+        ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
+    }
+    else
+    {
         deInitScreen();
     }
 #else
@@ -134,18 +138,24 @@ void goSleep()
 
 #if RTC_MEMORY_BACKUP
     unsigned char tmpHash[16];
-    mbedtls_md5((unsigned char*)&rM, sizeof(rtcMem), tmpHash);
-    if (memcmp(tmpHash, rtcMd5, 16) == 0) {
+    mbedtls_md5((unsigned char *)&rM, sizeof(rtcMem), tmpHash);
+    if (memcmp(tmpHash, rtcMd5, 16) == 0)
+    {
         debugLog("Hashes are equal, not updating backup");
-    } else {
+    }
+    else
+    {
         debugLog("Hashes are diff");
         memcpy(rtcMd5, tmpHash, 16);
         bufSize buff = fsGetBlob(CONF_RTC_BACKUP);
-        if(buff.size != sizeof(rtcMem) || didRtcChange((rtcMem*)buff.buf, &rM) == true) {
+        if (buff.size != sizeof(rtcMem) || didRtcChange((rtcMem *)buff.buf, &rM) == true)
+        {
             debugLog("Saving rtc memory");
             free(buff.buf);
-            fsSetBlob(CONF_RTC_BACKUP, (uint8_t*)&rM, sizeof(rtcMem));    
-        } else {
+            fsSetBlob(CONF_RTC_BACKUP, (uint8_t *)&rM, sizeof(rtcMem));
+        }
+        else
+        {
             free(buff.buf);
             debugLog("Not saving rtc memory because didRtcChange is false");
         }

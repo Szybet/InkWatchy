@@ -169,7 +169,7 @@ void runLpCore()
         debugLog("Stupid unix adjustment: " + String(c) + " THIS SHOULD NOT HAPPEN");
     }
     */
-   
+
     debugLog("Time given to lp core is: " + String(stupidUnix));
     customRtcData *customRtcData = customRtcDataGet();
     customRtcData->stupid_unix = stupidUnix;
@@ -185,7 +185,7 @@ void runLpCore()
         debugLog("Failed to run lp core: " + String(esp_err_to_name(err)));
         assert(false);
     }
-    
+
     debugLog("shared_mem->sleep_duration_ticks: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_ticks));
     debugLog("shared_mem->sleep_duration_us: " + String(ulp_lp_core_memory_shared_cfg_get()->sleep_duration_us));
 
@@ -194,6 +194,7 @@ void runLpCore()
     delayTask(100);
 }
 
+/*
 void runLpCoreNow()
 {
     ulp_lp_core_cfg_t cfg = {
@@ -203,7 +204,6 @@ void runLpCoreNow()
     debugLog("runLpCoreNow done");
 }
 
-/*
 #include <macros.h>
 #include <rtc.h>
 

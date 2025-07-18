@@ -21,7 +21,7 @@ fi
 
 if [ ! -f "fs/in/mklittlefs" ]; then
     echo "Downloading mklittlefs"
-    wget -q -O mklittlefs.tar.gz https://github.com/earlephilhower/mklittlefs/releases/download/4.0.0/x86_64-linux-gnu-mklittlefs-2f7654f.tar.gz
+    wget -q -O mklittlefs.tar.gz https://github.com/earlephilhower/mklittlefs/releases/download/4.0.2/x86_64-linux-gnu-mklittlefs-db0513a.tar.gz
     tar -xf mklittlefs.tar.gz
     chmod +x mklittlefs/mklittlefs
     mv mklittlefs/mklittlefs fs/in/
