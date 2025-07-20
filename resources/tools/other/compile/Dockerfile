@@ -79,4 +79,4 @@ RUN mkdir -p /root/.espressif/
 ENV PATH=$PATH:/root/.platformio/penv/bin:/root/.cargo/bin
 
 # For rusty stuff
-RUN apt-get install -y gcc build-essential curl pkg-config
+RUN apt-get install -y gcc build-essential curl pkg-config libinput10
