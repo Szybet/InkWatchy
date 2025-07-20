@@ -123,4 +123,7 @@ void syncNtp(bool doDriftThings)
         }
     }
     dontTouchTimeZone = false;
+
+    // Lp core something idk...
+    readRTC();
 }
