@@ -1,5 +1,7 @@
 #include "taychron.h"
-#include "localization.h"  // For formatTemperature
+
+#if WATCHFACE_TAYCHRON
+
 #include <MoonPhase.h>
 
 #define WEATHER_ICON_CORD 38, 162
@@ -128,3 +130,5 @@ void tayDrawMoon()
     mp.calculate(getUnixTime(timeRTCLocal));
     writeImageN(MOON_IMG_CORD, getImg("taychron/" + tayRemoveSpaces(String(mp.phaseName))));
 }
+
+#endif

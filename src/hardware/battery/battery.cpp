@@ -19,7 +19,7 @@ float getBattVoltage()
     {
         sum += BatteryRead();
         readedTimes = readedTimes + 1;
-        delay(VOLTAGE_AVG_DELAY);
+        delayTask(VOLTAGE_AVG_DELAY);
     }
 #else
     float sum = 0.0;

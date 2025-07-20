@@ -1,4 +1,4 @@
-#include "minimalDefines.h"
+#include "defines.h"
 #if GSR_WATCHFACES && GSR_STARFIELD
 // 'battery', 37x21px
 //const unsigned char battery [] PROGMEM = {

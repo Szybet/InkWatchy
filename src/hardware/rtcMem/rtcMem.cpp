@@ -247,8 +247,11 @@ void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
     */
     memcpy(destination->alarms, source->alarms, sizeof(destination->alarms));
 
-    destination->nextAlarm = source->nextAlarm;
-    destination->nextAlarmIndex = source->nextAlarmIndex;
+    // Don't retrieve those, as it will trigger an old alarm, instead just calculate
+    // destination->nextAlarm = source->nextAlarm;
+    // destination->nextAlarmIndex = source->nextAlarmIndex;
+    calculateNextAlarm();
+
     // posixTimeZone
     /*
     for (int i = 0; i < 50; i++) {

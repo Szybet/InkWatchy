@@ -1,7 +1,6 @@
 #include "slate.h"
 #include "rtcMem.h"
 #include "slate_localization.h"
-#include "localization.h"
 
 #if WATCHFACE_SLATE
 

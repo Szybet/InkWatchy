@@ -184,7 +184,7 @@
 #define DEBUG_ACC_FAILED_INIT "Failed to init Acc"
 #define DEBUG_ACC_DAMAGED "Acc is damaged"
 #define DEBUG_ACC_WORKING "Acc is working"
-#define DEBUG_ACC_CLICK_3D "Click menu for 3D"
+#define DEBUG_ACC_CLICK_3D "3D preview"
 #define DEBUG_ACC_X "Accel X: "
 #define DEBUG_ACC_Y "Accel Y: "
 #define DEBUG_ACC_Z "Accel Z: "
@@ -209,6 +209,7 @@
 #define DEBUG_CLOCK_LAST_SYNC "Last sync:"
 #define DEBUG_CLOCK_PREVIOUS_SYNC "Previous sync:"
 #define DEBUG_CLOCK_LAST_CHARGE "Last charge:"
+#define DEBUG_CLOCK_REMOVE_FILES "Remove clock files"
 
 // Git debug
 #define DEBUG_GIT_COMMIT_HASH "Commit hash:"

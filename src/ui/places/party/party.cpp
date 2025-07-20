@@ -1,5 +1,4 @@
 #include "party.h"
-#include "localization.h"
 
 #if RGB_DIODE
 

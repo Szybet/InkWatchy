@@ -1,5 +1,4 @@
 #include "calendar.h"
-#include "localization.h"
 
 // It doesn't remember menu positions because before exit call is called this inits a new menu, this should be fully converted to use switchers instead, not switchBack
 // Fixed now

@@ -1,6 +1,5 @@
 #include "inkField.h"
 #include "inkField_localization.h"
-#include "localization.h"  // For formatTemperature
 #include <MoonPhase.h>
 
 #define TEMP_CORD 48, 120

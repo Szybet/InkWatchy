@@ -1,5 +1,4 @@
 #include "weatherSwitches.h"
-#include "localization.h"
 
 #if WEATHER_INFO
 

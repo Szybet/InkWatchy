@@ -155,21 +155,21 @@ void loopManager()
     case generalDebug:
     {
 #if DEBUG_MENUS
-        managerLaunchFunc(generalDebug, initGeneralDebugDisplay, loopGeneralDebugDisplay);
+        managerLaunchFunc(generalDebug, initGeneralDebugDisplay, loopGeneralDebugDisplay, slint_exit);
 #endif
         break;
     }
     case clockDebug:
     {
 #if DEBUG_MENUS
-        managerLaunchFunc(clockDebug, initClockDebug, loopClockDebug);
+        managerLaunchFunc(clockDebug, initClockDebug, loopClockDebug, slint_exit);
 #endif
         break;
     }
     case gitDebug:
     {
 #if DEBUG_MENUS
-        managerLaunchFunc(gitDebug, initGitDebug, useButtonBlank);
+        managerLaunchFunc(gitDebug, initGitDebug, slint_loop, slint_exit);
 #endif
         break;
     }
@@ -183,13 +183,13 @@ void loopManager()
     case batteryDebug:
     {
 #if DEBUG_MENUS
-        managerLaunchFunc(batteryDebug, initBatteryDebugDisplay, loopBatteryDebugDisplay);
+        managerLaunchFunc(batteryDebug, initBatteryDebugDisplay, loopBatteryDebugDisplay, slint_exit);
 #endif
         break;
     }
     case wifiDebug:
     {
-        managerLaunchFunc(wifiDebug, initWifiDebugDisplay, loopWifiDebugDisplay);
+        managerLaunchFunc(wifiDebug, initWifiDebugDisplay, loopWifiDebugDisplay, slint_exit);
         break;
     }
     case textDialog:

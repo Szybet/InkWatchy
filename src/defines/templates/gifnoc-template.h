@@ -3,8 +3,8 @@
 // Watchfaces!
 // https://github.com/Szybet/InkWatchy/wiki/Watchfaces
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
-#define INKWATCHY_LANG EN // EN, PL, DE and SK | Supported watchfaces: InkField, Slate and Taychron
-#define WATCHFACE_12H 0 // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
+#define INKWATCHY_LANG EN           // EN, PL, DE and SK | Supported watchfaces: InkField, Slate and Taychron
+#define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
 #define WATCHFACE_TAYCHRON 1
@@ -66,6 +66,34 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 // 3: Rotate 270 degrees clockwise
 #define SCREEN_ROTATION 0
 
+// Remap buttons
+// This is not idiot proof, do not set 2 remaps to the same button
+// Possible values:
+/*
+BTN_REMAP_VAL_MENU
+BTN_REMAP_VAL_BACK
+BTN_REMAP_VAL_UP
+BTN_REMAP_VAL_DOWN
+*/
+/*
+For 270 degrees rotation (So for the yatchy rotated case)
+#define BTN_REMAP_MENU BTN_REMAP_VAL_DOWN
+#define BTN_REMAP_BACK BTN_REMAP_VAL_MENU
+#define BTN_REMAP_UP BTN_REMAP_VAL_BACK
+#define BTN_REMAP_DOWN BTN_REMAP_VAL_UP
+*/
+/*
+The default is this:
+#define BTN_REMAP_MENU BTN_REMAP_VAL_MENU
+#define BTN_REMAP_BACK BTN_REMAP_VAL_BACK
+#define BTN_REMAP_UP BTN_REMAP_VAL_UP
+#define BTN_REMAP_DOWN BTN_REMAP_VAL_DOWN
+*/
+#define BTN_REMAP_MENU BTN_REMAP_VAL_MENU
+#define BTN_REMAP_BACK BTN_REMAP_VAL_BACK
+#define BTN_REMAP_UP BTN_REMAP_VAL_UP
+#define BTN_REMAP_DOWN BTN_REMAP_VAL_DOWN
+
 // Timezone! So:
 // - You don't set anything, it will try to ques based on IP, it can fail sometimes
 // - You set olson, which still can be incorrect (probably won't). If this is set, there will be no quesing
@@ -124,27 +152,28 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 
 // Alarms
 #define INK_ALARMS 1 // Enable alarms
-// Write the amount of minutes and the label will be done automatically in selected language 
+// Write the amount of minutes and the label will be done automatically in selected language
 #define QUICK_ALARM_LIST(X) \
-    X(5)       \
-    X(10)      \
-    X(15)      \
-    X(20)      \
-    X(25)      \
-    X(60)      \
-    X(90)      \
-    X(120)     \
-    X(180)     \
-    X(360)     \
-    X(480)     \
+    X(2)                    \
+    X(5)                    \
+    X(10)                   \
+    X(15)                   \
+    X(20)                   \
+    X(25)                   \
+    X(60)                   \
+    X(90)                   \
+    X(120)                  \
+    X(180)                  \
+    X(360)                  \
+    X(480)                  \
     X(1440)
 
-
-#define ALARM_DURATION_S 60           // Seconds of ringing
-#define ALARM_MOTOR_DELAY 1000        // Ms of delay for motor
-#define ALARM_MOTOR_TIME 200          // Time for motor to vibrate
-#define ALARM_WIFI_MIN_STRENGTH 60    // from 1-99, percents
-#define ALARM_WIFI_MULTIPLIER 7       // Multiplies the time if wifi connect is needed
+#define ALARM_DURATION_S 60        // Seconds of ringing
+#define ALARM_MOTOR_DELAY 1000     // Ms of delay for motor
+#define ALARM_MOTOR_TIME 200       // Time for motor to vibrate
+#define ALARM_WIFI_MIN_STRENGTH 60 // from 1-99, percents
+#define ALARM_WIFI_MULTIPLIER 7    // Multiplies the time if wifi connect is needed
+#define ALARM_WIFI_WIFI_QUICK_MS 1500
 #define ALARM_QUICK_ID MAX_ALARMS - 1 // Which alarm to replace for quick alarms, the default is the last one. Can't be higher than MAX_ALARMS-1
 #define ALARM_DISABLE_BACK 1          // No escaping if (wifi) alarm
 
@@ -340,10 +369,12 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define DUMP_LOOP_ACC 0                        // Needs ACC
 #define DUMP_LOOP_ACC_DIFF 0                   // Only shows diff from previous reading, experimental, look up the code
 #define SCREENSHOT_ENDPOINT 0
+#define SIMPLE_DEEP_SLEEP_TEST 0 // Only if WAIT_FOR_INPUT or WAIT_FOR_MONITOR and DEBUG. No interrupts able to wake up it. Remember to disable Usb jtag communication if it's pure uart comm, also only for yatchy
+#define YATCHY_SHIPPING_MODE 0
 
 // Voltage reading average
-#define VOLTAGE_AVG_COUNT 20
-#define VOLTAGE_AVG_DELAY 1
+#define VOLTAGE_AVG_COUNT 8
+#define VOLTAGE_AVG_DELAY 0
 
 // Battery
 #define BATTERY_MIN_VOLTAGE 3.3

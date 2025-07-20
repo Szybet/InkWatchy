@@ -4,6 +4,7 @@
 
 void turnOnWifiRegular();
 void turnOnWifiPersistent();
+void turnOnWifiNtpOnly();
 int getSignalStrength();
 void regularSync();
 

@@ -124,7 +124,8 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
         uint8_t counter = 0;
         while (counter <= 3)
         {
-            if(anyButtonCheck() == false) {
+            if (anyButtonCheck() == false)
+            {
                 counter = counter + 1;
                 delayTask((BUTTON_TASK_DELAY * 3));
             }
@@ -456,6 +457,7 @@ bool buttonRead(uint8_t pin)
 #if ATCHY_VER != YATCHY
     return digitalRead(pin);
 #else
+#if YATCHY_SHIPPING_MODE == 0
     // It will return false from digitalRead if this fails
     if (rM.gpioExpander.simplerInit() == false)
     {
@@ -463,5 +465,8 @@ bool buttonRead(uint8_t pin)
     }
     // NOT here
     return !rM.gpioExpander.digitalRead(pin);
+#else
+    return false;
+#endif
 #endif
 }

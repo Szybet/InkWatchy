@@ -1,73 +1,62 @@
 #include "accDebug.h"
 #include "rtcMem.h"
-#include "localization.h"
 
 #if DEBUG_MENUS == 1
-
-#define CURSOR_X 1
-#define ES "        "
 
 bool workingAcc = false;
 
 int16_t accX = 0;
-uint16_t accXHeight = 0;
+uint8_t lineAccX;
 int16_t accY = 0;
-uint16_t accYHeight = 0;
+uint8_t lineAccY;
 int16_t accZ = 0;
-uint16_t accZHeight = 0;
+uint8_t lineAccZ;
 
 #if BMA_VERSION == 530 || BMA_VERSION == 456
 int16_t accXPure = 0;
-uint16_t accXHeightPure = 0;
+uint8_t lineAccXPure;
 int16_t accYPure = 0;
-uint16_t accYHeightPure = 0;
+uint8_t lineAccYPure;
 int16_t accZPure = 0;
-uint16_t accZHeightPure = 0;
+uint8_t lineAccZPure;
 #endif
 
 uint16_t stepsAccDebug = 0;
-uint16_t stepsHeight = 0;
+uint8_t lineAccSteps;
 
 bool is3DOn = false;
+
+void turn3D()
+{
+  is3DOn = !is3DOn;
+}
 
 void initAccDebug()
 {
 #if ACC_ENABLED
   initAcc();
 #endif
+
   is3DOn = false;
 
-  dis->setTextWrap(false);
+  init_general_page(50);
+  general_page_set_title(DEBUG_MENU_ACC);
 
-  uint16_t h;
-  setFont(&FreeSansBold9pt7b);
-  setTextSize(1);
-  dis->setCursor(0, 1);
-  String menuName = DEBUG_MENU_ACC;
-  getTextBounds(menuName, NULL, NULL, NULL, &h);
-  maxHeight = h;
-  uint16_t currentHeight = maxHeight;
-  dis->setCursor(CURSOR_X, currentHeight - 3);
-  dis->print(menuName);
-
-  dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);
-  currentHeight = currentHeight + maxHeight;
-
-  String accDevice;
+  String accDevice = DEBUG_ACC_IC;
 #if !ACC_ENABLED
-  accDevice = DEBUG_ACC_DISABLED;
+  accDevice += DEBUG_ACC_DISABLED;
 #else
-  accDevice = "BMA" + String(BMA_VERSION);
+  accDevice += "BMA" + String(BMA_VERSION);
 #endif
 
-  writeLine(DEBUG_ACC_IC + accDevice, CURSOR_X, &currentHeight);
+  genpage_add(accDevice.c_str());
 
 #if ACC_ENABLED
   initAcc();
   if (rM.initedAcc == false)
   {
     workingAcc = false;
-    writeLine(DEBUG_ACC_FAILED_INIT, CURSOR_X, &currentHeight);
+    genpage_add(DEBUG_ACC_FAILED_INIT);
   }
 
   if (rM.initedAcc == true)
@@ -81,12 +70,12 @@ void initAccDebug()
     if (rM.SBMA.damagedAcc == true)
     {
       workingAcc = false;
-      writeLine(DEBUG_ACC_DAMAGED, CURSOR_X, &currentHeight);
+      genpage_add(DEBUG_ACC_DAMAGED);
     }
     else
     {
       workingAcc = true;
-      writeLine(DEBUG_ACC_WORKING, CURSOR_X, &currentHeight);
+      genpage_add(DEBUG_ACC_WORKING);
     }
   }
 
@@ -96,40 +85,34 @@ void initAccDebug()
     Accel acc;
     rM.SBMA.getAccel(&acc);
 
-    writeLine(DEBUG_ACC_CLICK_3D, CURSOR_X, &currentHeight);
+    GeneralPageButton button = GeneralPageButton{DEBUG_ACC_CLICK_3D, turn3D};
+    general_page_set_buttons(&button, 1);
 
-    writeLine(DEBUG_ACC_X + String(acc.x), CURSOR_X, &currentHeight);
+    lineAccX = genpage_add(String(DEBUG_ACC_X + String(acc.x)).c_str());
     accX = acc.x;
-    accXHeight = currentHeight - maxHeight;
-    writeLine(DEBUG_ACC_Y + String(acc.y), CURSOR_X, &currentHeight);
+    lineAccY = genpage_add(String(DEBUG_ACC_Y + String(acc.y)).c_str());
     accY = acc.y;
-    accYHeight = currentHeight - maxHeight;
-    writeLine(DEBUG_ACC_Z + String(acc.z), CURSOR_X, &currentHeight);
+    lineAccZ = genpage_add(String(DEBUG_ACC_Z + String(acc.z)).c_str());
     accZ = acc.z;
-    accZHeight = currentHeight - maxHeight;
 
     stepsAccDebug = getSteps();
-    writeLine(DEBUG_ACC_STEPS + String(stepsAccDebug), CURSOR_X, &currentHeight);
-    stepsHeight = currentHeight - maxHeight;
+    lineAccSteps = genpage_add(String(DEBUG_ACC_STEPS + String(stepsAccDebug)).c_str());
 
 #if BMA_VERSION == 530 || BMA_VERSION == 456
     Accel accPure;
     rM.SBMA.getAccelPure(&accPure);
-    writeLine(DEBUG_ACC_PURE_X + String(accPure.x), CURSOR_X, &currentHeight);
+    lineAccXPure = genpage_add(String(DEBUG_ACC_PURE_X + String(accPure.x)).c_str());
     accXPure = accPure.x;
-    accXHeightPure = currentHeight - maxHeight;
-    writeLine(DEBUG_ACC_PURE_Y + String(accPure.y), CURSOR_X, &currentHeight);
+    lineAccYPure = genpage_add(String(DEBUG_ACC_PURE_Y + String(accPure.y)).c_str());
     accYPure = accPure.y;
-    accYHeightPure = currentHeight - maxHeight;
-    writeLine(DEBUG_ACC_PURE_Z + String(accPure.z), CURSOR_X, &currentHeight);
+    lineAccZPure = genpage_add(String(DEBUG_ACC_PURE_Z + String(accPure.z)).c_str());
     accZPure = accPure.z;
-    accZHeightPure = currentHeight - maxHeight;
 #endif
   }
 
 #endif
-  resetSleepDelay();
-  disUp(true);
+
+  general_page_set_main();
 }
 
 void loopAccDebug()
@@ -140,77 +123,77 @@ void loopAccDebug()
     // debugLog("damagedAcc: " + BOOL_STR(rM.SBMA.damagedAcc));
     if (workingAcc == true)
     {
-      Accel acc;
-      rM.SBMA.getAccel(&acc);
-      if (acc.x != accX)
+      if (genpage_is_menu() == false)
       {
-        writeTextReplaceBack(DEBUG_ACC_X + String(acc.x) + ES, CURSOR_X, accXHeight);
-        accX = acc.x;
-        dUChange = true;
-        // debugLog("Acc x changed");
-      }
-      if (acc.y != accY)
-      {
-        writeTextReplaceBack(DEBUG_ACC_Y + String(acc.y) + ES, CURSOR_X, accYHeight);
-        accY = acc.y;
-        dUChange = true;
-        // debugLog("Acc y changed");
-      }
-      if (acc.z != accZ)
-      {
-        writeTextReplaceBack(DEBUG_ACC_Z + String(acc.z) + ES, CURSOR_X, accZHeight);
-        accZ = acc.z;
-        dUChange = true;
-        // debugLog("Acc z changed");
-      }
+        Accel acc;
+        rM.SBMA.getAccel(&acc);
+        if (acc.x != accX)
+        {
+          genpage_change(String(DEBUG_ACC_X + String(acc.x)).c_str(), lineAccX);
+          accX = acc.x;
+          // debugLog("Acc x changed");
+        }
+        if (acc.y != accY)
+        {
+          genpage_change(String(DEBUG_ACC_Y + String(acc.y)).c_str(), lineAccY);
+          accY = acc.y;
+          // debugLog("Acc y changed");
+        }
+        if (acc.z != accZ)
+        {
+          genpage_change(String(DEBUG_ACC_Z + String(acc.z)).c_str(), lineAccZ);
+          accZ = acc.z;
+          // debugLog("Acc z changed");
+        }
 
-      uint16_t tmpSteps = getSteps();
-      if (tmpSteps != stepsAccDebug)
-      {
-        writeTextReplaceBack(DEBUG_ACC_STEPS + String(tmpSteps) + "    ", CURSOR_X, stepsHeight);
-        stepsAccDebug = tmpSteps;
-        dUChange = true;
-        // debugLog("Steps changed");
-      }
+        uint16_t tmpSteps = getSteps();
+        if (tmpSteps != stepsAccDebug)
+        {
+          genpage_change(String(DEBUG_ACC_STEPS + String(tmpSteps)).c_str(), lineAccSteps);
+          stepsAccDebug = tmpSteps;
+          // debugLog("Steps changed");
+        }
 
 #if BMA_VERSION == 530 || BMA_VERSION == 456
-      Accel accPure;
-      rM.SBMA.getAccelPure(&accPure);
-      if (accPure.x != accXPure)
-      {
-        writeTextReplaceBack(DEBUG_ACC_PURE_X + String(accPure.x) + ES, CURSOR_X, accXHeightPure);
-        accXPure = accPure.x;
-        dUChange = true;
-      }
-      if (accPure.y != accYPure)
-      {
-        writeTextReplaceBack(DEBUG_ACC_PURE_Y + String(accPure.y) + ES, CURSOR_X, accYHeightPure);
-        accYPure = accPure.y;
-        dUChange = true;
-      }
-      if (accPure.z != accZPure)
-      {
-        writeTextReplaceBack(DEBUG_ACC_PURE_Z + String(accPure.z) + ES, CURSOR_X, accZHeightPure);
-        accZPure = accPure.z;
-        dUChange = true;
-      }
+        Accel accPure;
+        rM.SBMA.getAccelPure(&accPure);
+        if (accPure.x != accXPure)
+        {
+          genpage_change(String(DEBUG_ACC_PURE_X + String(accPure.x)).c_str(), lineAccXPure);
+          accXPure = accPure.x;
+        }
+        if (accPure.y != accYPure)
+        {
+          genpage_change(String(DEBUG_ACC_PURE_Y + String(accPure.y)).c_str(), lineAccYPure);
+          accYPure = accPure.y;
+        }
+        if (accPure.z != accZPure)
+        {
+          genpage_change(String(DEBUG_ACC_PURE_Z + String(accPure.z)).c_str(), lineAccZPure);
+          accZPure = accPure.z;
+        }
 #endif
+        general_page_set_main();
+      }
     }
   }
   else
   {
+    if(useButton() == Menu) {
+      turn3D();
+      return;
+    }
     loopAcc3D();
+    disUp();
   }
 
   resetSleepDelay();
 #endif
-
-  if (useButton() == Menu)
+  if (is3DOn == false)
   {
-    is3DOn = !is3DOn;
+    // Here because to show IC disabled too
+    slint_loop();
   }
-
-  disUp();
 }
 
 void exitAccDebug()
@@ -218,5 +201,6 @@ void exitAccDebug()
 #if ACC_ENABLED
   rM.SBMA.disableAccel();
 #endif
+  slint_exit();
 }
 #endif

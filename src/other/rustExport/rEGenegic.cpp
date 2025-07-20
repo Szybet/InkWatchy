@@ -89,4 +89,8 @@ extern "C"
         }
         return -1;
     }
+
+    extern void rustCleanMemory() {
+        cleanAllMemory();
+    }
 }

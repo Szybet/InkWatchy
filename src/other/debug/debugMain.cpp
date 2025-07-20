@@ -1,10 +1,93 @@
 #include "debugMain.h"
 
 #if DEBUG
+#include <rtcMem.h>
+
+#if SIMPLE_DEEP_SLEEP_TEST && (WAIT_FOR_INPUT || WAIT_FOR_MONITOR)
+#define IS_MCP 1
+#define IS_MCP_CONFIGURATION 1
+#define IS_SCREEN 1
+#define IS_MOTOR 1
+#define IS_RGB 1
+#define IS_ACC 1
+#define IS_LP_CORE 1
+void simpleSleepTest()
+{
+#if ATCHY_VER != YATCHY
+    debugLog("Only yatchy supported!");
+    return;
+#endif
+    debugLog("simpleSleepTest start");
+    delayTask(750);
+    // Setup section
+// Mcp23018 is present
+#if IS_MCP
+    rM.gpioExpander.simplerInit(false);
+#if IS_MCP_CONFIGURATION
+    // Note: config.h can impact what gets configured
+    rM.gpioExpander.setDefaultPinStates();
+#endif
+#endif
+#if IS_RGB
+    // ALso needs MCP but hey
+    // This works a fucking lot for power consumption
+    setRgb(IwWhite);
+    delayTask(500);
+    setRgb(IwNone);
+    rM.gpioExpander.setPinPullUp(RGB_DIODE_RED_PIN, true);
+    rM.gpioExpander.setPinPullUp(RGB_DIODE_GREEN_PIN, true);
+    rM.gpioExpander.setPinPullUp(RGB_DIODE_BLUE_PIN, true);
+#endif
+#if IS_SCREEN
+    initDisplay();
+#endif
+#if IS_MOTOR
+    pinMode(VIB_MOTOR_PIN, OUTPUT);
+    digitalWrite(VIB_MOTOR_PIN, false);
+    vibrateMotor(100);
+    delayTask(200);
+#endif
+#if IS_ACC
+    initAcc();
+#endif
+    // Deinit section
+    debugLog("Going to sleep!");
+#if IS_SCREEN
+    deInitScreen();
+
+    // Not needed, as it's done before and nothing is changing
+    // rM.gpioExpander.setPinState(YATCHY_DISPLAY_CS, LOW);
+
+    initRtcInvidualGpio(EPD_RESET, RTC_GPIO_MODE_OUTPUT_ONLY);
+    ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_RESET), true)); // Fixes high fucking power consumption - confirmed
+    initRtcInvidualGpio(EPD_DC, RTC_GPIO_MODE_OUTPUT_ONLY);
+    rtc_gpio_set_drive_capability(gpio_num_t(EPD_DC), GPIO_DRIVE_CAP_3); // Fixes like 2 uA
+    ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_DC), false));      // Fixes high fucking power consumption - confirmed
+    initRtcInvidualGpio(EPD_BUSY, RTC_GPIO_MODE_INPUT_ONLY);
+    initRtcInvidualGpio(EPD_SPI_MOSI, RTC_GPIO_MODE_OUTPUT_ONLY);
+    
+    // Set level for MOSI and SCK break lp core, so just skip it, it was not worth anything anyway. 
+    // rtc_gpio_set_level with mosi to false doesn't change anything
+    // ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_SPI_MOSI), true)); // Fixes like 1 uA or nothing
+
+    initRtcInvidualGpio(EPD_SPI_SCK, RTC_GPIO_MODE_OUTPUT_ONLY);
+    // rtc_gpio_set_level to true with SCK makes it maybe a bit better 1 uA things
+    // ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_SPI_SCK), true));
+#endif
+#if IS_MCP
+    deInitI2C();
+#endif
+#if IS_LP_CORE
+    ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
+    loadLpCore();
+    runLpCore();
+#endif
+    esp_deep_sleep_start();
+}
+#endif
 
 void initLog()
 {
-#if DEBUG
 #if PUT_LOGS_TO_SERIAL // This is here first because of watchy 3
     Serial.begin(SERIAL_BAUDRATE);
 #if ATCHY_VER == WATCHY_3 || ATCHY_VER == YATCHY
@@ -63,6 +146,8 @@ void initLog()
 #if SCREENSHOT_ENDPOINT
     screenshotEndpointInit();
 #endif
+#if SIMPLE_DEEP_SLEEP_TEST && (WAIT_FOR_INPUT || WAIT_FOR_MONITOR)
+    simpleSleepTest();
 #endif
 }
 

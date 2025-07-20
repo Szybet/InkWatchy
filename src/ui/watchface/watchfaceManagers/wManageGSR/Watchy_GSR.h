@@ -1,10 +1,15 @@
 #pragma once
 
-#include "minimalDefines.h"
+#include "defines.h"
 
 #if GSR_WATCHFACES
 
 #define GSR_AutoFore 0xC0C0
+
+#include <Adafruit_GFX.h>
+#include <GxEPD2_BW.h>
+#include <SmallRTC.h>
+#include <WiFi.h>
 
 class WatchyGSR
 {

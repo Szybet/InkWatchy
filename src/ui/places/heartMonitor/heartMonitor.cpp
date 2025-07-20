@@ -1,6 +1,5 @@
 #include "heartMonitor.h"
 #include "rtcMem.h"
-#include "localization.h"
 
 #if HEART_MONITOR
 TaskHandle_t heartRateHandle;

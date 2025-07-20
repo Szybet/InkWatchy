@@ -41,9 +41,12 @@ void writeTextReplaceBack(String str, int16_t x, int16_t y, uint16_t frColor, ui
   uint16_t w, h;
   getTextBounds(str, NULL, NULL, &w, &h);
   // debugLog("w: " + String(w) + " h: " + String(h));
-  if (manualWidth == false) {
+  if (manualWidth == false)
+  {
     w = w + 5;
-  } else {
+  }
+  else
+  {
     w = w + manualWidthAdd;
   }
   if (containsBelowChar(str) == true)
@@ -243,9 +246,12 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
     // Center font if its a one line
     // debugLog("size.h: " + String(size.h));
     // debugLog("thTmp: " + String(thTmp));
-    if((int32_t(size.h) - int32_t(thTmp)) <= thTmp) {
+    if ((int32_t(size.h) - int32_t(thTmp)) <= thTmp)
+    {
       yCursorTmp = ((size.h - thTmp) / 2) + thTmp;
-    } else {
+    }
+    else
+    {
       yCursorTmp = thTmp + tolerance;
     }
 
@@ -367,16 +373,16 @@ void drawProgressBar(int x, int y, int width, int height, int progress)
   dis->fillRect(x, y, width, height, GxEPD_WHITE); // clean
   dis->fillRect(x, y, filledWidth, height, GxEPD_BLACK);
 
-  for (int16_t i = filledWidth; i < width; i++)  
-  {  
-    for (int16_t j = 0; j < height; j++)  
-    {  
-      if ((i + j) % 2 == 0)  
-      {  
-        dis->drawPixel(x + i, y + j, GxEPD_BLACK);  
-      }  
-    }  
-  }  
+  for (int16_t i = filledWidth; i < width; i++)
+  {
+    for (int16_t j = 0; j < height; j++)
+    {
+      if ((i + j) % 2 == 0)
+      {
+        dis->drawPixel(x + i, y + j, GxEPD_BLACK);
+      }
+    }
+  }
 }
 
 sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y)

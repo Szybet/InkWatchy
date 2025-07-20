@@ -185,7 +185,7 @@
 #define DEBUG_ACC_FAILED_INIT "Chyba inicializacie"
 #define DEBUG_ACC_DAMAGED "Acc poskodeny"
 #define DEBUG_ACC_WORKING "Acc funguje"
-#define DEBUG_ACC_CLICK_3D "Stlac menu pre 3D"
+#define DEBUG_ACC_CLICK_3D "3D nahlad"
 #define DEBUG_ACC_X "Accel X: "
 #define DEBUG_ACC_Y "Accel Y: "
 #define DEBUG_ACC_Z "Accel Z: "
@@ -210,6 +210,7 @@
 #define DEBUG_CLOCK_LAST_SYNC "Posledny sync:"
 #define DEBUG_CLOCK_PREVIOUS_SYNC "Predch. sync:"
 #define DEBUG_CLOCK_LAST_CHARGE "Posledne nabijanie:"
+#define DEBUG_CLOCK_REMOVE_FILES "Odstranit subory hodiniek"
 
 // Git debug
 #define DEBUG_GIT_COMMIT_HASH "Hash commitu:"

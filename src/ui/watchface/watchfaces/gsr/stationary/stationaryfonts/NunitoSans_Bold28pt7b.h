@@ -1,4 +1,4 @@
-#include "minimalDefines.h"
+#include "defines.h"
 #if GSR_WATCHFACES && GSR_STATIONARY
 const uint8_t NunitoSans_Bold28pt7bBitmaps[] PROGMEM = {
     0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFE, 0xFE, 0xFE, 0xFE,

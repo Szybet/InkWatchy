@@ -2,7 +2,7 @@
 
 char loadedImgNames[IMG_COUNT][RESOURCES_NAME_LENGTH] = {0};
 ImageDef loadedImg[IMG_COUNT];
-uint8_t* loadedImgPointers[IMG_COUNT];
+uint8_t *loadedImgPointers[IMG_COUNT] = {NULL};
 uint8_t loadedImgIndex = 0;
 
 ImageDef *getImg(String name)
@@ -31,14 +31,17 @@ ImageDef *getImg(String name)
         }
     }
 
-    if(emptyListIndex == -1) {
+    if (emptyListIndex == -1)
+    {
         debugLog("Image count exceeded, freeing memory");
         loadedImgIndex = loadedImgIndex + 1;
-        if(loadedImgIndex >= IMG_COUNT) {
+        if (loadedImgIndex >= IMG_COUNT)
+        {
             loadedImgIndex = 0;
         }
         debugLog("Freeing memory at index: " + String(loadedImgIndex));
         free(loadedImgPointers[loadedImgIndex]);
+        loadedImgPointers[loadedImgIndex] = NULL;
         memset(loadedImgNames[loadedImgIndex], '\0', RESOURCES_NAME_LENGTH); // If something goes wrong along the lines, make sure we don't free it 2 times
         emptyListIndex = loadedImgIndex;
     }
@@ -50,7 +53,7 @@ ImageDef *getImg(String name)
         return &emptyImgPack;
     }
     int fileSize = file.size();
-    //debugLog("file size: " + String(fileSize));
+    // debugLog("file size: " + String(fileSize));
     if (fileSize <= 0)
     {
         debugLog("This file has size 0: " + name);
@@ -64,15 +67,16 @@ ImageDef *getImg(String name)
     }
     file.close();
 
-    ImageDef newImg = *(ImageDef*)imgBuf;
+    ImageDef newImg = *(ImageDef *)imgBuf;
     newImg.bitmap = imgBuf + sizeof(newImg.bh) + sizeof(newImg.bw);
-    //debugLog("newImg name: " + name);
-    //debugLog("newImg bw: " + String(newImg.bw));
-    //debugLog("newImg bh: " + String(newImg.bh));
+    // debugLog("newImg name: " + name);
+    // debugLog("newImg bw: " + String(newImg.bw));
+    // debugLog("newImg bh: " + String(newImg.bh));
 
     int nameLength = name.length();
 #if DEBUG
-    if(nameLength > RESOURCES_NAME_LENGTH) {
+    if (nameLength > RESOURCES_NAME_LENGTH)
+    {
         debugLog("Resource name: " + name + " is too big because RESOURCES_NAME_LENGTH. Buffer overflow.");
     }
 #endif
@@ -94,4 +98,18 @@ int16_t getImgWidth(String name)
 int16_t getImgHeight(String name)
 {
     return getImg(name)->bh;
+}
+
+void cleanImgCache()
+{
+    loadedImgIndex = 0;
+    memset(loadedImgNames, 0, sizeof(loadedImgNames));
+    memset(loadedImg, 0, sizeof(loadedImg));
+    for (int i = 0; i < IMG_COUNT; i++)
+    {   
+        if(loadedImgPointers[i] != NULL) {
+            free(loadedImgPointers[i]);
+            loadedImgPointers[i] = NULL;
+        }
+    }
 }

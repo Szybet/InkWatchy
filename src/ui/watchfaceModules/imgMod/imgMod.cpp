@@ -3,7 +3,7 @@
 
 #if IMAGE_MODULE
 
-#include <esp32/rom/crc.h>
+#include "rom/crc.h"
 
 void wfImagecheckShow(bool *showBool, bool *redrawBool)
 {

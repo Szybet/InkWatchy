@@ -1,6 +1,5 @@
 #include "watchfaceSel.h"
 #include "rtcMem.h"
-#include "localization.h"
 
 void watchfaceClicked() {
     for(int i = 0; i < WATCHFACE_COUNT; i++) {

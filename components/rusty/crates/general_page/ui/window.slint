@@ -1,0 +1,147 @@
+import { CustomScrollView,StandardListViewBase } from "scroll-view.slint";
+
+import "./Quantico-Regular-linegap5.ttf";
+
+export global Adapter {
+    in property <length> default_text_scroll: 100px;
+
+    in property <bool> title_enabled: true;
+    in property <string> title_text;
+    in property <string> main_text;
+    in property <bool> main_align_center: false;
+
+    in property <bool> buttons_shown: false;
+    in-out property <length> scroll;
+    in-out property <length> scroll_viewport_height;
+    in property <bool> show_menu: false;
+    in-out property <int> current_item: 0;
+    in property <int> how_many_items: 0;
+}
+
+export component GeneralPage inherits Window {
+    width: 200px;
+    height: 200px;
+
+    in-out property <[StandardListViewItem]> button_items;
+
+    default-font-family: "Quantico";
+
+    public function scrollTheScroll(delta: length, horizontal: bool) {
+        scrollView.scroll(delta,horizontal);
+    }
+
+    public function scrollList(dir: int) {
+        if Adapter.current_item == 0 && dir == -1 {
+            return;
+        }
+        if Adapter.current_item == Adapter.how_many_items - 1 && dir == 1 {
+            return;
+        }
+        Adapter.current_item = Adapter.current_item + dir;
+        buttonMenu.set-current-item(Adapter.current_item);
+        if dir == -1 {
+            buttonMenu.set-current-item(Adapter.current_item - 1);
+        }
+        if dir == +1 {
+            buttonMenu.set-current-item(Adapter.current_item + 1);
+        }
+        buttonMenu.set-current-item(Adapter.current_item);
+    }
+
+    public function handleUpButton() {
+        if !Adapter.show_menu {
+            root.scrollTheScroll(Adapter.default_text_scroll, false);
+        } else {
+            scrollList(-1);
+        }
+    }
+
+    public function handleDownButton() {
+        if !Adapter.show_menu {
+            root.scrollTheScroll(Adapter.default_text_scroll * -1, false);
+        } else {
+            scrollList(1);
+        }
+    }
+
+    callback button_pressed();
+
+    public function handleMenuButton() {
+        if Adapter.how_many_items == 0 {
+            return;
+        }
+        if !Adapter.show_menu {
+            Adapter.show_menu = true;
+        } else {
+            if Adapter.current_item != 0 {
+                button_pressed();
+            }
+            Adapter.show_menu = false;
+        }
+    }
+
+    callback key_pressed(string);
+    forward-focus: my-key-handler;
+
+    my-key-handler := FocusScope {
+        key-pressed(event) => {
+            root.key_pressed(event.text);
+            accept
+        }
+
+        scrollView := CustomScrollView {
+            viewport-y: Adapter.scroll;
+
+            VerticalLayout {
+                padding: 3px;
+                spacing: 1px;
+                alignment: start;
+                preferred-height: Adapter.scroll_viewport_height;
+
+                if Adapter.title_enabled: Text {
+                    text: Adapter.title_text;
+                    overflow: elide;
+                    vertical-alignment: top;
+                    wrap: word-wrap;
+                    font-size: 20px;
+                }
+
+                if Adapter.title_enabled: Rectangle {
+                    height: 3px;
+                    background: black;
+                }
+
+                Text {
+                    text: Adapter.main_text;
+                    overflow: elide;
+                    vertical-alignment: top;
+                    wrap: word-wrap;
+                    font-size: 20px;
+                    horizontal-alignment: Adapter.main_align_center == true ? center: left;
+                }
+            }
+        }
+
+        if Adapter.show_menu: Rectangle {
+            background: white;
+            border-width: 2px;
+            border-radius: 10px;
+            border-color: black;
+            clip: false;
+            width: root.width * 0.8;
+            height: root.height * 0.9;
+            x: (root.width - self.width) / 2;
+            y: (root.height - self.height) / 2;
+        }
+
+        buttonMenu := StandardListViewBase {
+            visible: Adapter.show_menu;
+            width: root.width * 0.75;
+            height: root.height * 0.85;
+            x: (root.width - self.width) / 2;
+            y: (root.height - self.height) / 2;
+            model: button_items;
+            current-item: 0;
+        }
+    }
+}

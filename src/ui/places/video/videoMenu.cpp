@@ -1,5 +1,4 @@
 #include "video.h"
-#include "localization.h"
 
 #if VIDEO_PLAYER
 
