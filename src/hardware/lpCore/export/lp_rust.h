@@ -1,3 +1,63 @@
+#define NUMBER_WIDTH 32
+
+#define NUMBER_WIDTH 32
+
+#define NUMBER_WIDTH 32
+
+#define NUMBER_WIDTH 32
+
+#define NUMBER_WIDTH 32
+
+#define NUMBER_HEIGHT 48
+
+#define NUMBER_HEIGHT 48
+
+#define NUMBER_HEIGHT 48
+
+#define NUMBER_HEIGHT 48
+
+#define NUMBER_HEIGHT 48
+
+#define TIME_RECT_X_LO 8
+
+#define TIME_RECT_X_LO 8
+
+#define TIME_RECT_X_LO 8
+
+#define TIME_RECT_X_LO 8
+
+#define TIME_RECT_X_LO 8
+
+#define TIME_RECT_Y_LO 0
+
+#define TIME_RECT_Y_LO 0
+
+#define TIME_RECT_Y_LO 0
+
+#define TIME_RECT_Y_LO 0
+
+#define TIME_RECT_Y_LO 0
+
+#define TIME_RECT_X_HI 184
+
+#define TIME_RECT_X_HI 184
+
+#define TIME_RECT_X_HI 184
+
+#define TIME_RECT_X_HI 184
+
+#define TIME_RECT_X_HI 184
+
+#define TIME_RECT_Y_HI 56
+
+#define TIME_RECT_Y_HI 56
+
+#define TIME_RECT_Y_HI 56
+
+#define TIME_RECT_Y_HI 56
+
+#define TIME_RECT_Y_HI 56
+
 #define LPOG_UNKNOWN_255 255
 
 #define LPOG_NOTHING_0 0
@@ -18,71 +78,14 @@
 
 #define LPOG_ERROR_8 8
 
-#define NUMBER_WIDTH 32
-
-#define NUMBER_WIDTH 32
-
-#define NUMBER_WIDTH 32
-
-#define NUMBER_WIDTH 32
-
-#define NUMBER_WIDTH 32
-
-#define NUMBER_HEIGHT 48
-
-#define NUMBER_HEIGHT 48
-
-#define NUMBER_HEIGHT 48
-
-#define NUMBER_HEIGHT 48
-
-#define NUMBER_HEIGHT 48
-
-#define TIME_RECT_X_LO 8
-
-#define TIME_RECT_X_LO 8
-
-#define TIME_RECT_X_LO 8
-
-#define TIME_RECT_X_LO 8
-
-#define TIME_RECT_X_LO 8
-
-#define TIME_RECT_Y_LO 0
-
-#define TIME_RECT_Y_LO 0
-
-#define TIME_RECT_Y_LO 0
-
-#define TIME_RECT_Y_LO 0
-
-#define TIME_RECT_Y_LO 0
-
-#define TIME_RECT_X_HI 184
-
-#define TIME_RECT_X_HI 184
-
-#define TIME_RECT_X_HI 184
-
-#define TIME_RECT_X_HI 184
-
-#define TIME_RECT_X_HI 184
-
-#define TIME_RECT_Y_HI 56
-
-#define TIME_RECT_Y_HI 56
-
-#define TIME_RECT_Y_HI 56
-
-#define TIME_RECT_Y_HI 56
-
-#define TIME_RECT_Y_HI 56
-
 #define WAKEUP_MODULO 30
 
-#define UNIX_OFFSET -2
+typedef struct rust_return {
+  uint8_t secs;
+  bool apply;
+} rust_return;
 
-uint8_t do_rust_things(void);
+struct rust_return do_rust_things(void);
 
 void send_debug_message(uint8_t mess);
 
