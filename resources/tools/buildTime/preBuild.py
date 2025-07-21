@@ -22,7 +22,7 @@ if str(pio_env) == "Yatchy":
                          if "1" in line:
                               print("LP_CORE is defined as 1 but the binary is missing")
                               sys.exit(1)
-                         break     
+                         break
 
 file_path = '/tmp/inkwatchy_env'
 if os.path.exists(file_path):
