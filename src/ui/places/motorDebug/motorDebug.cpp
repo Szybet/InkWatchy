@@ -80,64 +80,68 @@ void initMotorDebug()
 
 void loopMotorDebug()
 {
-    loopBattery();
+    if (genpage_is_menu() == false)
+    {
 
-    if (rM.disableAllVibration != oldDisableAllVibration)
-    {
-        genpage_change(vibrationDisabledStr().c_str(), lineVibrationsDisabled);
-    }
+        loopBattery();
 
-    if (rM.bat.curV != oldBatteryVoltage)
-    {
-        genpage_change(batteryVoltage().c_str(), lineBatteryVoltage);
-    }
-
-    if (vibrationPowerToSet != oldVibrationPower)
-    {
-        genpage_change(vibrationPowerStr().c_str(), lineVibrationPower);
-    }
-
-    if (vibrationTimeToSet != oldVibratiomTime)
-    {
-        genpage_change(vibrationTimeStr().c_str(), lineVibrationTime);
-    }
-
-    buttonState btn = getButtonsRust();
-    switch (btn)
-    {
-    case Menu:
-    {
-        vibrateMotor(vibrationTimeToSet, vibrationPowerToSet);
-        break;
-    }
-    case Up:
-    {
-        if (motorSetChanger == SET_POWER)
+        if (rM.disableAllVibration != oldDisableAllVibration)
         {
-            vibrationPowerToSet = vibrationPowerToSet + VIBRATION_POWER_STEP;
-            checkMaxMin(&vibrationPowerToSet, 255, 0);
+            genpage_change(vibrationDisabledStr().c_str(), lineVibrationsDisabled);
         }
-        else if (motorSetChanger == SET_TIME)
+
+        if (rM.bat.curV != oldBatteryVoltage)
         {
-            vibrationTimeToSet = vibrationTimeToSet + VIBRATION_TIME_STEP;
-            checkMaxMin(&vibrationTimeToSet, 1000, 0);
+            genpage_change(batteryVoltage().c_str(), lineBatteryVoltage);
         }
-        break;
-    }
-    case Down:
-    {
-        if (motorSetChanger == SET_POWER)
+
+        if (vibrationPowerToSet != oldVibrationPower)
         {
-            vibrationPowerToSet = vibrationPowerToSet - VIBRATION_POWER_STEP;
-            checkMaxMin(&vibrationPowerToSet, 255, 0);
+            genpage_change(vibrationPowerStr().c_str(), lineVibrationPower);
         }
-        else if (motorSetChanger == SET_TIME)
+
+        if (vibrationTimeToSet != oldVibratiomTime)
         {
-            vibrationTimeToSet = vibrationTimeToSet - VIBRATION_TIME_STEP;
-            checkMaxMin(&vibrationTimeToSet, 1000, 0);
+            genpage_change(vibrationTimeStr().c_str(), lineVibrationTime);
         }
-        break;
-    }
+
+        buttonState btn = getButtonsRust();
+        switch (btn)
+        {
+        case Menu:
+        {
+            vibrateMotor(vibrationTimeToSet, vibrationPowerToSet);
+            break;
+        }
+        case Up:
+        {
+            if (motorSetChanger == SET_POWER)
+            {
+                vibrationPowerToSet = vibrationPowerToSet + VIBRATION_POWER_STEP;
+                checkMaxMin(&vibrationPowerToSet, 255, 0);
+            }
+            else if (motorSetChanger == SET_TIME)
+            {
+                vibrationTimeToSet = vibrationTimeToSet + VIBRATION_TIME_STEP;
+                checkMaxMin(&vibrationTimeToSet, 1000, 0);
+            }
+            break;
+        }
+        case Down:
+        {
+            if (motorSetChanger == SET_POWER)
+            {
+                vibrationPowerToSet = vibrationPowerToSet - VIBRATION_POWER_STEP;
+                checkMaxMin(&vibrationPowerToSet, 255, 0);
+            }
+            else if (motorSetChanger == SET_TIME)
+            {
+                vibrationTimeToSet = vibrationTimeToSet - VIBRATION_TIME_STEP;
+                checkMaxMin(&vibrationTimeToSet, 1000, 0);
+            }
+            break;
+        }
+        }
     }
 
     general_page_set_main();

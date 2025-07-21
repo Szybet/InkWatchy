@@ -37,7 +37,7 @@ void initWeatherMenu()
     if (days == 0)
     {
         overwriteSwitch(textDialog);
-        showTextDialog(WEATHER_NOT_AVAILABLE);
+        showTextDialog(WEATHER_NOT_AVAILABLE, true);
         return;
     }
 
@@ -128,7 +128,7 @@ void initWeatherConditionMenu()
     {
         debugLog("Error finding date for weather condition");
         overwriteSwitch(textDialog);
-        showTextDialog(WEATHER_DATE_WRONG);
+        showTextDialog(WEATHER_DATE_WRONG, true);
         return;
     }
 
@@ -169,7 +169,7 @@ OM_HourlyForecastReturn generalWeatherGetData()
         debugLog("Weather data is bad.");
         free(weatherData.buf);
         overwriteSwitch(textDialog);
-        showTextDialog(WEATHER_CORRUPTED);
+        showTextDialog(WEATHER_CORRUPTED, true);
         forecast.fine = false;
         return forecast;
     }
@@ -298,13 +298,14 @@ void showWeatherCond()
     {
         return;
     }
-    String weatherCond[OM_WEATHER_MAX_HOURS];
-    for (u8_t i = 0; i < OM_WEATHER_MAX_HOURS; i++)
+    String weatherCond;
+    for (uint8_t i = 0; i < OM_WEATHER_MAX_HOURS; i++)
     {
-        weatherCond[i] = weatherConditionIdToStr(forecast.data.weather_code[i]);
+        weatherCond = weatherCond + weatherConditionIdToStr(forecast.data.weather_code[i]) + "\n";
     }
-    textPage(WEATHER_CONDITIONS_TITLE, weatherCond, OM_WEATHER_MAX_HOURS, getFont("dogicapixel4"));
-    generalSwitch(ChartPlace);
+    weatherCond.remove(weatherCond.length() - 1);
+    generalSwitch(textDialog);
+    showTextDialog(weatherCond, false, String(WEATHER_CONDITIONS_TITLE));
 }
 
 void showClouds()

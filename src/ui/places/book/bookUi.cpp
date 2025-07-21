@@ -216,7 +216,7 @@ void initBook()
     {
         debugLog("No book selected, going back");
         overwriteSwitch(textDialog);
-        showTextDialog(BOOK_NO_SELECTED);
+        showTextDialog(BOOK_NO_SELECTED, true);
         return;
     }
     resetSleepDelayBook();

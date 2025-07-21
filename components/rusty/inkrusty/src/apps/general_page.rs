@@ -86,6 +86,16 @@ pub unsafe extern "C" fn general_page_set_title(s: *const c_char) {
         .set_title_text(string.into());
 }
 
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn general_page_disable_title() {
+    let general_app = get_general_app().unwrap();
+
+    general_app
+        .window
+        .global::<Adapter>()
+        .set_title_enabled(false);
+}
+
 /*
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn general_page_set_main(s: *const c_char) {

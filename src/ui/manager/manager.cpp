@@ -201,7 +201,7 @@ void loopManager()
     }
     case textDialog:
     {
-        managerLaunchFunc(textDialog, NULL, useButtonBlank);
+        managerLaunchFunc(textDialog, NULL, slint_loop, slintExit);
         break;
     }
     case weatherMenu:

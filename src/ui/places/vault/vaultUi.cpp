@@ -146,7 +146,7 @@ void initVault()
             key = -1;
             key = 0;
             generalSwitch(textDialog);
-            showTextDialog(VAULT_KEY_INCORRECT);
+            showTextDialog(VAULT_KEY_INCORRECT, true);
             return;
         }
         int itemsInDir = fsItemsInDir("/vault/") - 1; // - conf
@@ -154,7 +154,7 @@ void initVault()
         if (itemsInDir <= 0)
         {
             generalSwitch(textDialog);
-            showTextDialog(VAULT_EMPTY);
+            showTextDialog(VAULT_EMPTY, true);
             return;
         }
         String foundMenuItemName = "";

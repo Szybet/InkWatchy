@@ -151,5 +151,5 @@ void switchHeartMonitor();
 #if FONT_MENU_ENABLED
 void switchFontsPreview();
 #endif
-void showTextDialog(String str);
+void showTextDialog(String str, bool center, String title = "");
 

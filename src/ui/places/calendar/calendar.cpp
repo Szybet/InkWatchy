@@ -96,22 +96,22 @@ void initCalendar()
         JsonDocument doc = getCalendarJson(retrPath);
         JsonArray array = doc.as<JsonArray>();
 #if CALENDAR_SPLIT_DESCRIPTION
-        String str[CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE];
+        String str;
         String des = array[id]["description"].as<String>();
         debugLog("Got dec: " + des);
         for (int i = 0; i < CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE; i++)
         {
             int firstSplit = des.indexOf(CALENDAR_SPLIT_DESCRIPTION_STRING);
             debugLog("firstSplit: " + String(firstSplit));
-            str[i] = des.substring(0, firstSplit);
-            debugLog("Got string: " + str[i]);
+            str = str + des.substring(0, firstSplit);
+            debugLog("Got string: " + str);
             des = des.substring(firstSplit + String(CALENDAR_SPLIT_DESCRIPTION_STRING).length(), des.length() - 1);
             debugLog("Des after substring: " + des);
         }
-        textPage("", str, CALENDAR_SPLIT_DESCRIPTION_ARRAY_SIZE, &FreeSansBold9pt7b);
+        showTextDialog(str, false);
 #else
-        String str[1] = {array[id]["description"].as<String>()};
-        textPage("", str, 1);
+        String str = {array[id]["description"].as<String>()};
+        showTextDialog(str, false);
 #endif
         generalSwitch(textDialog);
         resetSleepDelay(1000 * 10);
@@ -130,7 +130,7 @@ void initCalendarMenu()
     {
         debugLog("Failed to read index");
         overwriteSwitch(textDialog);
-        showTextDialog(CALENDAR_NO_DATA);
+        showTextDialog(CALENDAR_NO_DATA, true);
         return;
     }
     int dates = buf.length() / DATE_BYTES;

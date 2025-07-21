@@ -310,6 +310,7 @@ void simpleCenterText(String text)
   disUp(true);
 }
 
+/*
 void textPage(String title, String *strList, int listCount, const GFXfont *customFont)
 {
   dis->fillScreen(GxEPD_WHITE);
@@ -359,10 +360,11 @@ void textPage(String title, String *strList, int listCount, const GFXfont *custo
     }
   }
   */
-
+/*
   disUp(true);
   setFont(font);
 }
+*/
 
 void drawProgressBar(int x, int y, int width, int height, int progress)
 {

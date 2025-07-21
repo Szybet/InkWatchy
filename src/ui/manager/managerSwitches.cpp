@@ -223,11 +223,28 @@ void switchBookSelector()
 }
 
 // call generalSwitch(textDialog); or overwriteSwitch(textDialog); before this
-void showTextDialog(String str)
+void showTextDialog(String str, bool center, String title)
 {
+    /*
     dis->fillScreen(GxEPD_WHITE);
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
     simpleCenterText(str);
     disUp(true);
+    */
+    init_general_page(10);
+
+    if(title != "") {
+        general_page_set_title(title.c_str());
+    } else {
+        general_page_disable_title();
+    }
+
+    if(center == true) {
+        genpage_set_center();
+    }
+
+    genpage_add(str.c_str());
+
+    general_page_set_main();
 }
