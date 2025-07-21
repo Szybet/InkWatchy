@@ -6,7 +6,7 @@ buttonState getButtonsRust()
 {
     buttMut.lock();
     // debugLog("useButtonBack state: " + getButtonString(buttonPressed));
-    if (buttonPressed != LongUp && buttonPressed != LongDown)
+    if (buttonPressed != LongUp && buttonPressed != LongDown && buttonPressed != LongMenu)
     {
         buttonState buttonPressedTmp = buttonPressed;
         buttonPressed = None;
@@ -19,6 +19,6 @@ buttonState getButtonsRust()
 
 void slintExit()
 {
-    slintExit();
+    slint_exit();
     rustLimitButtons = false;
 }

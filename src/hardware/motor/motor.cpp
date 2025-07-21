@@ -20,7 +20,7 @@ void vibrateMotorTaskFun(void *parameter)
 {
     while (true)
     {
-        debugLog("Motor on for: " + String(vibrateTime));
+        // debugLog("Motor on for: " + String(vibrateTime));
         motorMutex.lock();
         int vibrateTimeTmp = int(vibrateTime * VIBRATION_MULTIPLIER);
         int vibratePowerTmp = vibrationPower;
@@ -30,7 +30,7 @@ void vibrateMotorTaskFun(void *parameter)
         analogWrite(VIB_MOTOR_PIN, int(vibratePowerTmp * VIBRATION_MULTIPLIER));
         delayTask(vibrateTimeTmp);
         analogWrite(VIB_MOTOR_PIN, 0);
-        debugLog("Motor off");
+        // debugLog("Motor off");
         // Nah, no mutex
         if (vibrateTime == 0)
         {

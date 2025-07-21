@@ -45,52 +45,42 @@ extern "C"
 
     extern uint32_t rustButtons()
     {
+        buttonState button;
         if (rustLimitButtons == false)
         {
-            buttonState button = useButton();
-            if (button == buttonState::None)
-            {
-                return RUST_BUTTON_NONE;
-            }
-            if (button == buttonState::Up)
-            {
-                return RUST_BUTTON_UP;
-            }
-            if (button == buttonState::Down)
-            {
-                return RUST_BUTTON_DOWN;
-            }
-            if (button == buttonState::Menu)
-            {
-                return RUST_BUTTON_MENU;
-            }
-            if (button == buttonState::LongMenu)
-            {
-                return RUST_BUTTON_MENU_LONG;
-            }
-            if (button == buttonState::LongUp)
-            {
-                return RUST_BUTTON_UP_LONG;
-            }
-            if (button == buttonState::LongDown)
-            {
-                return RUST_BUTTON_DOWN_LONG;
-            }
+            button = useButton();
         }
         else
         {
             buttMut.lock();
             // debugLog("useButtonBack state: " + getButtonString(buttonPressed));
-            if (buttonPressed == LongUp || buttonPressed == LongDown)
+            if (buttonPressed == LongUp || buttonPressed == LongDown || buttonPressed == LongMenu)
             {
-                buttonState buttonPressedTmp = buttonPressed;
+                button = buttonPressed;
                 buttonPressed = None;
-                buttMut.unlock();
-                return buttonPressedTmp;
             }
             buttMut.unlock();
         }
-        return RUST_BUTTON_NONE;
+
+        switch (button)
+        {
+        case buttonState::None:
+            return RUST_BUTTON_NONE;
+        case buttonState::Up:
+            return RUST_BUTTON_UP;
+        case buttonState::Down:
+            return RUST_BUTTON_DOWN;
+        case buttonState::Menu:
+            return RUST_BUTTON_MENU;
+        case buttonState::LongUp:
+            return RUST_BUTTON_UP_LONG;
+        case buttonState::LongDown:
+            return RUST_BUTTON_DOWN_LONG;
+        case buttonState::LongMenu:
+            return RUST_BUTTON_MENU_LONG;
+        default:
+            return RUST_BUTTON_NONE;
+        }
     }
 
     extern void rustResetDelay()

@@ -21,7 +21,7 @@ impl Button {
         if str == "s" || str == "z" {
             return Button::Down;
         }
-        if str == "a" {
+        if str == "a" || str == "d" {
             return Button::Menu;
         }
         Button::None

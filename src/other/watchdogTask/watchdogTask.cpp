@@ -21,44 +21,51 @@ bool anyButtonCheck()
 
 #if WATCHDOG_TASK
 
-std::mutex watchdogFine;
+// std::mutex watchdogFine;
 TaskHandle_t watchdogTask = NULL;
 
 #define WATCHDOG_DELAY 15000
+#define WATCHDOG_SMALL_DELAY 3000
+int64_t watchdogMillis = 0;
 
 void loopWatchdogTask(void *parameter)
 {
-    debugLog("Watchdog starting, slowly");
-    delayTask(WATCHDOG_DELAY);
-    debugLog("Watchdog finally started!");
+    // debugLog("Watchdog starting, slowly");
+    // delayTask(WATCHDOG_DELAY);
+    // debugLog("Watchdog finally started!");
+    watchdogMillis = millisBetter();
+    delayTask(WATCHDOG_SMALL_DELAY);
     while (true)
     {
         // debugLog("Watchdog cycle");
         if (allButtonCheck() == true)
         {
-            debugLog("Detected all buttons high, resetting...");
-            assert(true == false);
+            // debugLog("Detected all buttons high, resetting...");
+            assert(0);
         }
-        watchdogFine.lock();
-        if (rM.everythingIsFine == false)
+        if (watchdogMillis + WATCHDOG_DELAY > millisBetter())
         {
-            debugLog("rM.everythingIsFine is false, resetting...");
-            assert(true == false);
+            watchdogMillis = millisBetter();
+            // watchdogFine.lock();
+            if (rM.everythingIsFine == false)
+            {
+                // debugLog("rM.everythingIsFine is false, resetting...");
+                assert(0);
+            }
+            else
+            {
+                rM.everythingIsFine = false;
+                // watchdogFine.unlock();
+                delayTask(WATCHDOG_DELAY);
+            }
         }
-        else
-        {
-            rM.everythingIsFine = false;
-            watchdogFine.unlock();
-            delayTask(WATCHDOG_DELAY);
-        }
-        // It's at the end to run the button check at the start (of the watch)
-        delayTask(WATCHDOG_DELAY);
+        delayTask(WATCHDOG_SMALL_DELAY);
     }
 }
 
 void initWatchdogTask()
 {
-    debugLog("- done");
+    debugLog("Init watchdog");
     xTaskCreate(
         loopWatchdogTask,
         "watchdogTask",
@@ -81,9 +88,10 @@ void deInitWatchdogTask()
 void watchdogPing()
 {
     // debugLog("watchdogPing called");
-    watchdogFine.lock();
+    // Nah
+    // watchdogFine.lock();
     rM.everythingIsFine = true;
-    watchdogFine.unlock();
+    // watchdogFine.unlock();
 }
 
 #else

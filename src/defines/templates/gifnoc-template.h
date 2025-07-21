@@ -396,13 +396,13 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 // So it's 50*30 bytes
 
 // Task memory size
-#define TASK_STACK_DUMP_BATTERY 2000
 #define TASK_STACK_BUTTON 4700
-#define TASK_STACK_VIBRATION 3500
+#define TASK_STACK_VIBRATION 1000 // Was 3500 for debugging it
 #define TASK_STACK_WIFI 60000
 #define TASK_STACK_SCOM 10000
-#define TASK_STACK_WATCHDOG 3500
-#define TASK_STACK_RGB 2000
+#define TASK_STACK_WATCHDOG 1000 // Was 3500 for debugging it
+#define TASK_STACK_RGB 1000
+#define TASK_STACK_DUMP_BATTERY 2000
 
 // Priorities - max is 24
 #define MAIN_LOOP_PRIORITY 20
