@@ -51,7 +51,6 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
                 rgbTaskRunning = true;
                 rgbTimer = timeMs + 50; // 50 because we are turning the diode soon
                 debugLog("Launching RGB task");
-                rgbTaskMutex.unlock();
                 xTaskCreate(
                     rgbTaskRun,
                     "rgbTask",
@@ -60,6 +59,7 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
                     RGB_PRIORITY,
                     &rgbTask);
             }
+            rgbTaskMutex.unlock();
         }
     }
 
@@ -70,7 +70,8 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
         currentColor = color;
     }
 
-    if(color != IwNone) {
+    if (color != IwNone)
+    {
         setRgbPullUp(false);
     }
 
