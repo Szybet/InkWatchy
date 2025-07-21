@@ -170,6 +170,7 @@
 #define DEBUG_MENU_GIT "Debug Menu: Git"
 #define DEBUG_MENU_HARDWARE "Debug Menu: Hardware"
 #define DEBUG_MENU_WIFI "Debug Menu: Wifi"
+#define DEBUG_MENU_MOTOR "Debug Menu: Motor"
 
 // Debug menu items (short names for main debug menu)
 #define DEBUG_ITEM_CLOCK "Clock"
@@ -177,6 +178,7 @@
 #define DEBUG_ITEM_BATTERY "Battery"
 #define DEBUG_ITEM_GIT "Git"
 #define DEBUG_ITEM_ACC "Acc"
+#define DEBUG_ITEM_MOTOR "Motor"
 #define DEBUG_ITEM_FONT_PREVIEW "Font preview"
 
 // Accelerometer debug
@@ -222,6 +224,14 @@
 #define DEBUG_HW_USED_HEAP "Used Heap KB: "
 #define DEBUG_HW_CPU_TEMP "CPU temp: "
 #define DEBUG_HW_INIT_TEMP "Init temp: "
+
+// Motor debug
+#define DEBUG_MOTOR_VIB_DIS "Vibrations disabled: "
+#define DEBUG_MOTOR_VIB_POWER "Selected vibration power: "
+#define DEBUG_MOTOR_VIB_TIME "Selected vibration time: "
+#define DEBUG_MOTOR_BATT_V "Battery voltage: "
+#define DEBUG_MOTOR_SET_POWER "Change power"
+#define DEBUG_MOTOR_SET_TIME "Change time"
 
 // RTC Types
 #define DEBUG_RTC_UNKNOWN "Unknown"

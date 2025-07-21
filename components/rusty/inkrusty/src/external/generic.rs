@@ -36,6 +36,8 @@ pub const RUST_BUTTON_UP: u32 = 1;
 pub const RUST_BUTTON_DOWN: u32 = 2;
 pub const RUST_BUTTON_MENU: u32 = 3;
 pub const RUST_BUTTON_MENU_LONG: u32 = 4;
+pub const RUST_BUTTON_UP_LONG: u32 = 5;
+pub const RUST_BUTTON_DOWN_LONG: u32 = 6;
 
 #[derive(PartialEq)]
 pub enum RustButton {
@@ -44,16 +46,20 @@ pub enum RustButton {
     Down,
     Menu,
     MenuLong,
+    UpLong,
+    DownLong,
 }
 
 pub fn get_buttons() -> RustButton {
-    let the_button = unsafe {rustButtons()};
+    let the_button = unsafe { rustButtons() };
     match the_button {
         RUST_BUTTON_NONE => RustButton::NoButton,
         RUST_BUTTON_UP => RustButton::Up,
         RUST_BUTTON_DOWN => RustButton::Down,
         RUST_BUTTON_MENU => RustButton::Menu,
         RUST_BUTTON_MENU_LONG => RustButton::MenuLong,
+        RUST_BUTTON_UP_LONG => RustButton::UpLong,
+        RUST_BUTTON_DOWN_LONG => RustButton::DownLong,
         _ => RustButton::NoButton, // Fallback for unexpected values
     }
 }
@@ -76,11 +82,13 @@ impl CpuSpeed {
 }
 
 pub fn set_cpu_speed(speed: &CpuSpeed) {
-    unsafe {rustSetCpuSpeed(speed.speed_to_int());}
+    unsafe {
+        rustSetCpuSpeed(speed.speed_to_int());
+    }
 }
 
 pub fn get_cpu_speed() -> CpuSpeed {
-    let speed = unsafe {rustGetCpuSpeed()};
+    let speed = unsafe { rustGetCpuSpeed() };
     match speed {
         0 => CpuSpeed::Min,
         1 => CpuSpeed::Normal,

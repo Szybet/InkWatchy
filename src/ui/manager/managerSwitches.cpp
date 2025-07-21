@@ -62,6 +62,10 @@ void switchAccDebug() {
     generalSwitch(accDebug);
 }
 
+void switchMotorDebug() {
+    generalSwitch(motorDebug);
+}
+
 void switchWeatherMenu()
 {
     generalSwitch(weatherMenu);

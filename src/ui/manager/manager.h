@@ -14,6 +14,7 @@ typedef enum
     generalDebug,
     clockDebug,
     batteryDebug,
+    motorDebug,
     wifiDebug,
     gitDebug,
     accDebug,
@@ -102,6 +103,7 @@ void switchBatteryDebug();
 void switchWifiDebug();
 void switchGitDebug();
 void switchAccDebug();
+void switchMotorDebug();
 void switchWeatherMenu();
 void switchWeatherSelectorMenu();
 #if INK_ALARMS

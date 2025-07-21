@@ -187,6 +187,7 @@
 #define DEBUG_MENU_GIT ""                      // "Debug Menu: Git"
 #define DEBUG_MENU_HARDWARE ""                 // "Debug Menu: Hardware"
 #define DEBUG_MENU_WIFI ""                     // "Debug Menu: Wifi"
+#define DEBUG_MENU_MOTOR ""
 
 // Debug menu items (short names for main debug menu)
 #define DEBUG_ITEM_CLOCK ""                    // "Clock"

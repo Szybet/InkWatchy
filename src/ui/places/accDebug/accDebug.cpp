@@ -201,6 +201,6 @@ void exitAccDebug()
 #if ACC_ENABLED
   rM.SBMA.disableAccel();
 #endif
-  slint_exit();
+  slintExit();
 }
 #endif

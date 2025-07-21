@@ -171,6 +171,7 @@
 #define DEBUG_MENU_GIT "Ladenie: Git"
 #define DEBUG_MENU_HARDWARE "Ladenie: Hardware"
 #define DEBUG_MENU_WIFI "Ladenie: Wifi"
+#define DEBUG_MENU_MOTOR "Ladenie: Motor"
 
 // Debug menu items
 #define DEBUG_ITEM_CLOCK "Clock"
@@ -223,6 +224,14 @@
 #define DEBUG_HW_USED_HEAP "Pouzita pam KB: "
 #define DEBUG_HW_CPU_TEMP "CPU teplota: "
 #define DEBUG_HW_INIT_TEMP "Init teplota: "
+
+// Motor debug
+#define DEBUG_MOTOR_VIB_DIS "Vibracie vypnute: "
+#define DEBUG_MOTOR_VIB_POWER "Zvolena sila vibracii: "
+#define DEBUG_MOTOR_VIB_TIME "Zvoleny cas vibracii: "
+#define DEBUG_MOTOR_BATT_V "Napatia baterie: "
+#define DEBUG_MOTOR_SET_POWER "Zmenit vykon"
+#define DEBUG_MOTOR_SET_TIME "Zmenit cas"
 
 // RTC Types
 #define DEBUG_RTC_UNKNOWN "Neznamy"

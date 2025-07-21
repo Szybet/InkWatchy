@@ -5,9 +5,12 @@ TaskHandle_t motorTask = NULL;
 std::mutex motorMutex;
 bool motorTaskRunning = false;
 int vibrateTime;
+int vibrationPower;
 
-void initMotor() {
-    if(bootStatus.fromWakeup == false) {
+void initMotor()
+{
+    if (bootStatus.fromWakeup == false)
+    {
         pinMode(VIB_MOTOR_PIN, OUTPUT);
         digitalWrite(VIB_MOTOR_PIN, false); // To reset the motor button if esp crashed when it was vibrating
     }
@@ -20,20 +23,23 @@ void vibrateMotorTaskFun(void *parameter)
         debugLog("Motor on for: " + String(vibrateTime));
         motorMutex.lock();
         int vibrateTimeTmp = int(vibrateTime * VIBRATION_MULTIPLIER);
+        int vibratePowerTmp = vibrationPower;
         vibrateTime = 0;
+        vibrationPower = 0;
         motorMutex.unlock();
-        analogWrite(VIB_MOTOR_PIN, int(VIBRATION_POWER * VIBRATION_MULTIPLIER));
+        analogWrite(VIB_MOTOR_PIN, int(vibratePowerTmp * VIBRATION_MULTIPLIER));
         delayTask(vibrateTimeTmp);
         analogWrite(VIB_MOTOR_PIN, 0);
         debugLog("Motor off");
-        // Nah, no mutex 
-        if(vibrateTime == 0) {
+        // Nah, no mutex
+        if (vibrateTime == 0)
+        {
             vTaskSuspend(NULL);
         }
     }
 }
 
-void vibrateMotor(int vTime)
+void vibrateMotor(int vTime, int power)
 {
     if (rM.disableAllVibration == true)
     {
@@ -50,7 +56,10 @@ void vibrateMotor(int vTime)
     if (motorTaskRunning == false)
     {
         debugLog("Creating motor task");
+        motorMutex.lock();
         vibrateTime = vTime;
+        vibrationPower = power;
+        motorMutex.unlock();
         motorTaskRunning = true;
         xTaskCreate(
             vibrateMotorTaskFun,
@@ -64,6 +73,7 @@ void vibrateMotor(int vTime)
     {
         motorMutex.lock();
         vibrateTime = vTime;
+        vibrationPower = power;
         motorMutex.unlock();
         eTaskState taskState = eTaskGetState(motorTask);
         if (taskState == eSuspended)

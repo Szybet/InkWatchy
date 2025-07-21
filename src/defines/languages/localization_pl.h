@@ -170,6 +170,7 @@
 #define DEBUG_MENU_GIT "Debug Menu: Git"
 #define DEBUG_MENU_HARDWARE "Debug Menu: Sprzet"
 #define DEBUG_MENU_WIFI "Debug Menu: WiFi"
+#define DEBUG_MENU_MOTOR "Debug Menu: Wibracje"
 
 // Debug menu items (short names for main debug menu)
 #define DEBUG_ITEM_CLOCK "Zegar"
@@ -222,6 +223,14 @@
 #define DEBUG_HW_USED_HEAP "Pamiec KB: "
 #define DEBUG_HW_CPU_TEMP "Temp CPU: "
 #define DEBUG_HW_INIT_TEMP "Temp init: "
+
+// Motor debug
+#define DEBUG_MOTOR_VIB_DIS "Wibracje wyłączone: "
+#define DEBUG_MOTOR_VIB_POWER "Wybrana moc wibracji: "
+#define DEBUG_MOTOR_VIB_TIME "Wybrany czas wibracji: "
+#define DEBUG_MOTOR_BATT_V "Napięcie baterii: "
+#define DEBUG_MOTOR_SET_POWER "Zmień moc"
+#define DEBUG_MOTOR_SET_TIME "Zmień czas"
 
 // RTC Types
 #define DEBUG_RTC_UNKNOWN "Nieznany"

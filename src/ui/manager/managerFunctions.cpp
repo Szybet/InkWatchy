@@ -102,7 +102,7 @@ void initMainMenu()
 void initDebugMenu()
 {
     int count = -1;
-    entryMenu buttons[6];
+    entryMenu buttons[7];
     {
         debugLog("Adding clock to menu");
         count = count + 1;
@@ -127,6 +127,11 @@ void initDebugMenu()
         debugLog("Adding acc to menu");
         count = count + 1;
         buttons[count] = {DEBUG_ITEM_ACC, &emptyImgPack, switchAccDebug};
+    }
+    {
+        debugLog("Adding motor to menu");
+        count = count + 1;
+        buttons[count] = {DEBUG_ITEM_MOTOR, &emptyImgPack, switchMotorDebug};
     }
 #if FONT_MENU_ENABLED
     {

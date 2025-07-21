@@ -39,7 +39,7 @@ void cleanClockFiles() {
     fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_SYNC));
     fsRemoveFile("/conf/" + String(CONF_UNIX_PREVIOUS_SYNC));
     fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_CHARGE));
-    slint_exit();
+    slintExit();
     initClockDebug();
 }
 

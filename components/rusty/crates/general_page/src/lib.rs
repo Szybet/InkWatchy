@@ -15,10 +15,10 @@ enum Button {
 
 impl Button {
     pub fn new(str: SharedString) -> Self {
-        if str == "w" {
+        if str == "w" || str == "q" {
             return Button::Up;
         }
-        if str == "s" {
+        if str == "s" || str == "z" {
             return Button::Down;
         }
         if str == "a" {

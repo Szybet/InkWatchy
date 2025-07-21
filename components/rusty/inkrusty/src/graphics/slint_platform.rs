@@ -35,6 +35,8 @@ impl slint::platform::Platform for InkPlatform {
             RustButton::Down => Some(SharedString::from("s")),
             RustButton::Menu => Some(SharedString::from("a")),
             RustButton::MenuLong => Some(SharedString::from("d")),
+            RustButton::UpLong => Some(SharedString::from("q")),
+            RustButton::DownLong => Some(SharedString::from("z")),
         } {
             self.window
                 .try_dispatch_event(WindowEvent::KeyPressed { text: text.clone() })?;

@@ -28,69 +28,112 @@ extern "C"
         delayTask(timeMs);
     }
 
-    extern void drawPixel(int16_t x, int16_t y, uint16_t color) {
+    extern void drawPixel(int16_t x, int16_t y, uint16_t color)
+    {
         dis->drawPixel(x, y, color);
     }
 
-    extern void updateScreen(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep) {
+    extern void updateScreen(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
+    {
         disUp(reallyUpdate, ignoreCounter, ignoreSleep);
     }
 
-    extern uint32_t rustMicros() {
+    extern uint32_t rustMicros()
+    {
         return micros();
     }
 
-    extern uint32_t rustButtons() {
-        buttonState button = useButton();
-        if(button == buttonState::None) {
-            return RUST_BUTTON_NONE;
+    extern uint32_t rustButtons()
+    {
+        if (rustLimitButtons == false)
+        {
+            buttonState button = useButton();
+            if (button == buttonState::None)
+            {
+                return RUST_BUTTON_NONE;
+            }
+            if (button == buttonState::Up)
+            {
+                return RUST_BUTTON_UP;
+            }
+            if (button == buttonState::Down)
+            {
+                return RUST_BUTTON_DOWN;
+            }
+            if (button == buttonState::Menu)
+            {
+                return RUST_BUTTON_MENU;
+            }
+            if (button == buttonState::LongMenu)
+            {
+                return RUST_BUTTON_MENU_LONG;
+            }
+            if (button == buttonState::LongUp)
+            {
+                return RUST_BUTTON_UP_LONG;
+            }
+            if (button == buttonState::LongDown)
+            {
+                return RUST_BUTTON_DOWN_LONG;
+            }
         }
-        if(button == buttonState::Up) {
-            return RUST_BUTTON_UP;
-        }
-        if(button == buttonState::Down) {
-            return RUST_BUTTON_DOWN;
-        }
-        if(button == buttonState::Menu) {
-            return RUST_BUTTON_MENU;
-        }
-        if(button == buttonState::LongMenu) {
-            return RUST_BUTTON_MENU_LONG;
+        else
+        {
+            buttMut.lock();
+            // debugLog("useButtonBack state: " + getButtonString(buttonPressed));
+            if (buttonPressed == LongUp || buttonPressed == LongDown)
+            {
+                buttonState buttonPressedTmp = buttonPressed;
+                buttonPressed = None;
+                buttMut.unlock();
+                return buttonPressedTmp;
+            }
+            buttMut.unlock();
         }
         return RUST_BUTTON_NONE;
     }
 
-    extern void rustResetDelay(){
+    extern void rustResetDelay()
+    {
         resetSleepDelay();
     }
 
-    extern void rustSetCpuSpeed(int speed) {
-        if(cpuSpeed::minimalSpeed == 0) {
+    extern void rustSetCpuSpeed(int speed)
+    {
+        if (cpuSpeed::minimalSpeed == 0)
+        {
             setCpuSpeed(cpuSpeed::minimalSpeed);
         }
-        if(cpuSpeed::normalSpeed == 1) {
+        if (cpuSpeed::normalSpeed == 1)
+        {
             setCpuSpeed(cpuSpeed::normalSpeed);
         }
-        if(cpuSpeed::maxSpeed == 2) {
+        if (cpuSpeed::maxSpeed == 2)
+        {
             setCpuSpeed(cpuSpeed::maxSpeed);
         }
     }
 
-    extern int rustGetCpuSpeed() {
+    extern int rustGetCpuSpeed()
+    {
         cpuSpeed speed = getCpuSpeed();
-        if(speed == minimalSpeed) {
+        if (speed == minimalSpeed)
+        {
             return 0;
         }
-        if(speed == normalSpeed) {
+        if (speed == normalSpeed)
+        {
             return 1;
         }
-        if(speed == maxSpeed) {
+        if (speed == maxSpeed)
+        {
             return 2;
         }
         return -1;
     }
 
-    extern void rustCleanMemory() {
+    extern void rustCleanMemory()
+    {
         cleanAllMemory();
     }
 }

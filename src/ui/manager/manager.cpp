@@ -155,21 +155,21 @@ void loopManager()
     case generalDebug:
     {
 #if DEBUG_MENUS
-        managerLaunchFunc(generalDebug, initGeneralDebugDisplay, loopGeneralDebugDisplay, slint_exit);
+        managerLaunchFunc(generalDebug, initGeneralDebugDisplay, loopGeneralDebugDisplay, slintExit);
 #endif
         break;
     }
     case clockDebug:
     {
 #if DEBUG_MENUS
-        managerLaunchFunc(clockDebug, initClockDebug, loopClockDebug, slint_exit);
+        managerLaunchFunc(clockDebug, initClockDebug, loopClockDebug, slintExit);
 #endif
         break;
     }
     case gitDebug:
     {
 #if DEBUG_MENUS
-        managerLaunchFunc(gitDebug, initGitDebug, slint_loop, slint_exit);
+        managerLaunchFunc(gitDebug, initGitDebug, slint_loop, slintExit);
 #endif
         break;
     }
@@ -183,13 +183,20 @@ void loopManager()
     case batteryDebug:
     {
 #if DEBUG_MENUS
-        managerLaunchFunc(batteryDebug, initBatteryDebugDisplay, loopBatteryDebugDisplay, slint_exit);
+        managerLaunchFunc(batteryDebug, initBatteryDebugDisplay, loopBatteryDebugDisplay, slintExit);
+#endif
+        break;
+    }
+    case motorDebug:
+    {
+#if DEBUG_MENUS
+        managerLaunchFunc(motorDebug, initMotorDebug, loopMotorDebug, slintExit);
 #endif
         break;
     }
     case wifiDebug:
     {
-        managerLaunchFunc(wifiDebug, initWifiDebugDisplay, loopWifiDebugDisplay, slint_exit);
+        managerLaunchFunc(wifiDebug, initWifiDebugDisplay, loopWifiDebugDisplay, slintExit);
         break;
     }
     case textDialog:
@@ -370,7 +377,7 @@ void loopManager()
     case snake:
     {
 #if SNAKE
-        managerLaunchFunc(tetris, init_snake, slint_loop, slint_exit);
+        managerLaunchFunc(tetris, init_snake, slint_loop, slintExit);
 #endif
         break;
     }

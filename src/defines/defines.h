@@ -147,6 +147,7 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../ui/places/clockDebug/clockDebug.h"
 #include "../ui/places/gitDebug/gitDebug.h"
 #include "../ui/places/accDebug/accDebug.h"
+#include "../ui/places/motorDebug/motorDebug.h"
 #endif
 #include "../ui/places/watchfaceSelector/watchfaceSel.h"
 #if BOOK
