@@ -178,7 +178,8 @@
 #define DEBUG_ITEM_BATTERY "Bateria"
 #define DEBUG_ITEM_GIT "Git"
 #define DEBUG_ITEM_ACC "Acc"
-#define DEBUG_ITEM_FONT_PREVIEW "Podglad czcionki"
+#define DEBUG_ITEM_MOTOR "Wibracje"
+#define DEBUG_ITEM_FONT_PREVIEW "Podglad czcionek"
 
 // Accelerometer debug
 #define DEBUG_ACC_DISABLED "wylaczony"

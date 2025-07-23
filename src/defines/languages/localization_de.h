@@ -178,6 +178,7 @@
 #define DEBUG_ITEM_BATTERY "Akku"
 #define DEBUG_ITEM_GIT "Git"
 #define DEBUG_ITEM_ACC "Beschl"
+#define DEBUG_ITEM_MOTOR "Motor"
 #define DEBUG_ITEM_FONT_PREVIEW "Font Vorschau"
 
 // Accelerometer debug
