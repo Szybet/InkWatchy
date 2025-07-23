@@ -24,7 +24,7 @@ impl slint::platform::Platform for InkPlatform {
         let ret = core::time::Duration::from_micros(unsafe {
             crate::external::generic::rustMicros() as u64
         });
-        // let fmt = format!("ret: {:?}", ret);
+        // let fmt = alloc::format!("ret: {:?}", ret);
         // info!(&fmt);
         ret
     }

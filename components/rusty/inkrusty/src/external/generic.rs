@@ -5,9 +5,6 @@ use core::ffi::c_int;
 use crate::info;
 
 #[cfg(feature = "debug")]
-use alloc::format;
-
-#[cfg(feature = "debug")]
 unsafe extern "C" {
     pub fn rust_ink_test() -> *const c_char;
     pub fn log_function_c(
@@ -94,7 +91,7 @@ pub fn get_cpu_speed() -> CpuSpeed {
         1 => CpuSpeed::Normal,
         2 => CpuSpeed::Max,
         _ => {
-            info!(&format!("Unknown cpu speed: {}", speed));
+            info!(&alloc::format!("Unknown cpu speed: {}", speed));
             panic!("Unknown cpu speed");
         }
     }

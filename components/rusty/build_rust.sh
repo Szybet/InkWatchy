@@ -12,6 +12,8 @@ pio_env=$(get_pio_env .vscode/launch.json)
 
 resources/tools/other/setup/installRust.sh
 
+base_features=""
+
 check_features() {
     local config_path=$1
     shift

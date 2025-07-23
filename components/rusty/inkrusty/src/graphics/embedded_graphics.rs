@@ -57,7 +57,7 @@ impl DrawTarget for Framebuffer {
                 Rgb565::WHITE => 0xFFFF,
                 Rgb565::BLACK => 0x0000,
                 other => {
-                    // info!(&format!("Processing color {:?}", other));
+                    // info!(&alloc::format!("Processing color {:?}", other));
                     let r = other.r() as u16;
                     let g = other.g() as u16;
                     let b = other.b() as u16;
