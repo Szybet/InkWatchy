@@ -51,9 +51,9 @@ if ! command -v pio &> /dev/null; then
 fi
 
 current_path=$(pwd)
-# if [ ! -f "/root/esp-idf/package.json" ]; then
+# if [ ! -f "~/esp-idf/package.json" ]; then
 #     echo "Getting esp idf"
-#     cd /root/
+#     cd ~/
 #     rm -rf esp-idf-git/
 #     mkdir esp-idf-git
 #     cd esp-idf-git/

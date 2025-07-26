@@ -1,6 +1,6 @@
 #!/bin/bash
 
-rm -rf /root/.cargo/bin/cargo # To restart rust installation
+rm -rf .root/.cargo/bin/cargo # To restart rust installation
 rm -rf .pio/ dependencies.lock sdkconfig.* 
 rm -rf .root/.platformio/.cache .root/.platformio/platforms .root/.platformio/packages/framework-e*
 # rm -rf .root/.platformio/packages/tl-install # Fixes softlock if bad install happens, or does it?
