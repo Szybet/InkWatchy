@@ -61,6 +61,18 @@ https://github.com/user-attachments/assets/91d169da-298a-425a-859c-2c9bc7fb6cf7
    - Conway game of life
    - Small video player
 - Experimental heart rate monitor (Just a proof of concept, works best on Yatchy)
+<details> <summary>Baiky app - Navigation & speed via BLE from your phone (Click for details)</summary>
+
+https://github.com/user-attachments/assets/3d48897d-3a77-451f-aa51-28c9be33d1fc
+
+A weekend project and a weekend feature, so it looks like it looks, but works well and does the job, further notes:
+- the app is not open source & available to the public (The InkWatchy side of code is) for the simple reason that BLE sucks and I don't feel like supporting every device out there, works for me. If you really want it, well:
+  - **I won't help anyone with issues with the app, even if you get it by the ways below, you can report the issue, I may fix it, but I don't promise anything**
+  - Yatchy owners can request it and I will share it, no questions asked
+  - Discord server regulars, InkWatchy contributors too
+  - Some donations (Not only to me, but to some nonprofit organisations too, specified when the topic appears)
+
+</details>
 - Reset cause shower. If your battery will be the cause of a reset, you will be informed about it on boot.
 - ~~I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.~~
 - ~~https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.~~ <sub>Those 2 options were removed because I updated the build system and didn't bother to make it work with it, with some cmake you should be able to easily re-add those features, I you can't use cmake, then you shouldn't probably use either of those features anyway</sub>
