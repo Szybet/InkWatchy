@@ -225,13 +225,15 @@ void initGamesMenu()
 
 void toggleDisableVibrationsEntry()
 {
-    toggleAllVibration();
+    rM.userDisableAllVibration = !rM.userDisableAllVibration;
+    rM.disableAllVibration = rM.userDisableAllVibration;
     initpowerMenu();
 }
 
 void toggleWakeUpEntry()
 {
-    toggleWakeUp();
+    rM.userDisableWakeUp = !rM.userDisableWakeUp;
+    rM.disableWakeUp = rM.userDisableWakeUp;
     initpowerMenu();
 }
 

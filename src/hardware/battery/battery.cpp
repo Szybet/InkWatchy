@@ -317,7 +317,8 @@ void loopPowerSavings()
         {
             debugLog("Turning off power settings");
             rM.isBatterySaving = false;
-            loadAllStorage();
+            rM.disableAllVibration = rM.userDisableAllVibration;
+            rM.disableWakeUp = rM.userDisableWakeUp;
         }    
     }
 }

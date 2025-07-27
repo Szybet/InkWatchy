@@ -53,6 +53,8 @@ RTC_DATA_ATTR rtcMem rM = {
     // Power settings
     .disableAllVibration = false,
     .disableWakeUp = false,
+    .userDisableAllVibration = false,
+    .userDisableWakeUp = false,
     // Manager
     .placeTree = {NoPlace},
     .currentPlace = NoPlace, // For loop manager for launching init or loop of a function

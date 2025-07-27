@@ -189,7 +189,6 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../ui/places/conway/conway.h"
 #endif
 #include "../ui/reUse/pinInput/pinInput.h"
-#include "../ui/places/settings/powerSettings.h"
 #include "../ui/watchfaceModules/netMod/netMod.h"
 #include "../ui/watchfaceModules/watchFaceModule.h"
 #if BITCOIN_MODULE
