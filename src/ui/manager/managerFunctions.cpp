@@ -227,6 +227,7 @@ void toggleDisableVibrationsEntry()
 {
     rM.userDisableAllVibration = !rM.userDisableAllVibration;
     rM.disableAllVibration = rM.userDisableAllVibration;
+    rM.isBatterySaving = false;
     initpowerMenu();
 }
 
@@ -234,6 +235,7 @@ void toggleWakeUpEntry()
 {
     rM.userDisableWakeUp = !rM.userDisableWakeUp;
     rM.disableWakeUp = rM.userDisableWakeUp;
+    rM.isBatterySaving = false;
     initpowerMenu();
 }
 
