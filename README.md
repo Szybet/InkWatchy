@@ -73,6 +73,7 @@ A weekend project and a weekend feature, so it looks like it looks, but works we
   - Some donations (Not only to me, but to some nonprofit organisations too, specified when the topic appears)
 
 </details>
+
 - Reset cause shower. If your battery will be the cause of a reset, you will be informed about it on boot.
 - ~~I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.~~
 - ~~https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.~~ <sub>Those 2 options were removed because I updated the build system and didn't bother to make it work with it, with some cmake you should be able to easily re-add those features, I you can't use cmake, then you shouldn't probably use either of those features anyway</sub>
