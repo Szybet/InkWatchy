@@ -102,6 +102,9 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../hardware/lpCore/export/lp_logs.h"
 #include "../hardware/lpCore/export/lp_rust.h" // Maybe don't call those functions from there
 #endif
+#if BLE_ENABLED
+#include "../hardware/ble/bleMain.h"
+#endif
 
 // Network
 #include "../network/wifi/wifiLogic.h"
@@ -230,6 +233,9 @@ static const WiFiCred* wifiCredStatic[] = {
 #endif
 #if GSR_WATCHFACES
 #include "../ui/watchface/watchfaceManagers/wManageGSR/wManageGSR.h"
+#endif
+#if BAIKY
+#include "../ui/places/baiky/baiky.h"
 #endif
 
 // Other

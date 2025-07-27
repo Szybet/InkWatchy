@@ -255,8 +255,21 @@ void isChargingCheck()
 #endif
 }
 
-void loopBattery()
+uint64_t batteryReadMillis = 0;
+void loopBattery(bool forceRead)
 {
+    // debugLog("aaa: " + String(batteryReadMillis - millisBetter()));
+    if (forceRead == false && millisBetter() - batteryReadMillis < 2000)
+    {
+        return;
+    }
+    batteryReadMillis = millisBetter();
+    /*
+    else if(forceRead == false) {
+        debugLog("Time passed, force read false, reading battery");
+    }
+    */
+
     rM.bat.curV = getBattVoltage();
     if (abs(rM.bat.prevVOne - rM.bat.curV) > BAT_MINIMAL_DIFFERENCE || rM.bat.oneCheck == true)
     {
@@ -305,7 +318,8 @@ void loopBattery()
 
 void loopPowerSavings()
 {
-    if(reasonForVoltageSpikes() == false) {
+    if (reasonForVoltageSpikes() == false)
+    {
         if (rM.isBatterySaving == false && rM.bat.percentage < POWER_SAVING_AFTER)
         {
             debugLog("Turning on power settings");
@@ -318,20 +332,23 @@ void loopPowerSavings()
             debugLog("Turning off power settings");
             rM.isBatterySaving = false;
             loadAllStorage();
-        }    
+        }
     }
 }
 
 bool reasonForVoltageSpikes()
 {
-    if(isWifiTaskCheck() == true) {
+    if (isWifiTaskCheck() == true)
+    {
         return true;
     }
     wifiStatusSimple wifi = wifiStatusWrap();
-    if(wifi != WifiOff) {
+    if (wifi != WifiOff)
+    {
         return true;
     }
-    if(motorTaskRunning == true) {
+    if (motorTaskRunning == true)
+    {
         return true;
     }
     return false;

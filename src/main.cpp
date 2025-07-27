@@ -67,7 +67,7 @@ void loop()
 #if INK_ALARMS
     checkAlarms();
 #endif
-    loopBattery();
+    loopBattery(false);
 #if !DEBUG || !NO_SYNC
     regularSync();
 #endif

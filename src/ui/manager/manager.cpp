@@ -414,6 +414,13 @@ void loopManager()
 #endif
         break;
     }
+    case baikyApp:
+    {
+#if BAIKY
+        managerLaunchFunc(baikyApp, initBaiky, loopBaiky, exitBaiky);
+#endif
+        break;
+    }
     case fontPreview:
     {
 #if FONT_MENU_ENABLED

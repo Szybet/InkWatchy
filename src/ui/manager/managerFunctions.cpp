@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[13];
+    entryMenu buttons[14];
 #if CALENDAR
     {
         count = count + 1;
@@ -37,6 +37,12 @@ void initMainMenu()
     {
         count = count + 1;
         buttons[count] = {MENU_WEATHER, getImg("weather"), switchWeatherMenu};
+    }
+#endif
+#if BAIKY
+    {
+        count = count + 1;
+        buttons[count] = {"Baiky", getImg("baiky/bikeIcon"), switchBaiky};
     }
 #endif
     {

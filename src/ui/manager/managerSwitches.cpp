@@ -200,6 +200,12 @@ void switchHeartMonitor() {
 }
 #endif
 
+#if BAIKY
+void switchBaiky() {
+    generalSwitch(baikyApp);
+}
+#endif
+
 #if FONT_MENU_ENABLED
 void switchFontsPreview()
 {

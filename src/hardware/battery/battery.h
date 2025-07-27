@@ -15,7 +15,7 @@ struct batteryInfo
 float BatteryRead();
 float getBatteryVoltage();
 
-void loopBattery();
+void loopBattery(bool forceRead = true);
 void isChargingCheck();
 void initBattery();
 void loopPowerSavings();
