@@ -6,7 +6,7 @@
 
 extern BLEServer *pServer;
 extern BLEService *bleService;
-extern BLECharacteristic *pCharacteristic;
+extern bool bleClientConnected;
 
 void initBle();
 void startBle();

@@ -49,25 +49,52 @@ class doneCallBack : public BLECharacteristicCallbacks
     }
 };
 
-float speed = 0.0;
+float speed = 0;
+float speedOld = 0;
 class speedCallBack : public BLECharacteristicCallbacks
 {
     void onWrite(BLECharacteristic *pCharacteristic)
     {
         uint8_t *data = pCharacteristic->getData();
-        speed = float(data[0] * 10.0 + data[1]) + float(data[2]) / 10.0;
+        speed = ((data[0] << 8) | data[1]) / 10.0f;
+        // speed = ((data[0] << 8) | data[1]);
+        if(speed < 0.8) {
+            speed = 0.0;
+        }
         debugLog("Speed is: " + String(speed));
     }
 };
 
+bool baikyBleClient = false;
+void drawBleStatus() {
+    if(baikyBleClient == true) {
+        writeImageN(175, 0, getImg("baiky/bleConnected"));
+    } else {
+        writeImageN(175, 0, getImg("baiky/bleDisconnected"));
+    }
+}
+
+void drawSpeed() {
+    setFont(getFont("baiky/UbuntuMono31"));
+    String speedStr = String(speed);
+    while(speedStr.length() < 4) {
+        speedStr = "0" + speedStr;
+    }
+    while(speedStr.length() > 4) {
+        speedStr.remove(speedStr.length() - 1);
+    }
+    writeTextReplaceBack(speedStr, 0, 38);
+
+    writeImageN(130, 15, getImg("baiky/kms"));
+}
+
 cpuSpeed bleCpuSpeed;
 void initBaiky()
 {
+    debugLog("Init baiky called");
     bleCpuSpeed = getCpuSpeed();
     setCpuSpeed(maxSpeed);
     initBle();
-
-    BLEDevice::setMTU(512);
 
     bleService = pServer->createService(GPS_SERVICE_UUID);
 
@@ -88,21 +115,32 @@ void initBaiky()
     {
         BLECharacteristic *pCharacteristic = bleService->createCharacteristic(
             SPEED_UUID,
-            BLECharacteristic::PROPERTY_WRITE);
+            BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_WRITE_NR);
         pCharacteristic->setCallbacks(new speedCallBack());
     }
 
     startBle();
-
+    drawSpeed();
     
-
+    drawBleStatus();
     disUp(true);
 }
 
 void loopBaiky()
 {
     useButton();
-    resetSleepDelay();
+
+    if(baikyBleClient != bleClientConnected) {
+        baikyBleClient = bleClientConnected;
+        drawBleStatus();
+        dUChange = true;
+    }
+
+    if(speed != speedOld) {
+        speedOld = speed;
+        drawSpeed();
+        dUChange = true;
+    }
 
     if (isDone == true)
     {
@@ -110,12 +148,16 @@ void loopBaiky()
         ImageDef image = ImageDef{200, 160, mapMemory};
         writeImageN(0, 40, &image, GxEPD_BLACK, GxEPD_WHITE);
         disUp(true);
+        dUChange = false;
 
         isDone = false;
         uint8_t data[1] = {0};
         pCharacteristicDone->setValue(data, sizeof(data));
         mapMemoryIndex = 0;
     }
+
+    disUp();
+    resetSleepDelay();
 }
 
 void exitBaiky()

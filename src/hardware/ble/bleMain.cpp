@@ -4,24 +4,28 @@
 
 BLEServer *pServer = NULL;
 BLEService *bleService = NULL;
-BLECharacteristic *pCharacteristic = NULL;
 BLEAdvertising *pAdvertising = NULL;
+bool bleClientConnected = false;
 
 class bleServerCallbacks : public BLEServerCallbacks
 {
     void onConnect(BLEServer *pServer)
     {
         debugLog("BLE client connected");
+        bleClientConnected = true;
     }
     void onDisconnect(BLEServer *pServer)
     {
         debugLog("BLE client disconnected");
         pAdvertising->start();
+        bleClientConnected = false;
     }
 };
 
 void initBle()
 {
+    debugLog("Init ble called");
+    bleClientConnected = false;
     BLEDevice::init("InkWatchy");
     pServer = BLEDevice::createServer();
     pServer->setCallbacks(new bleServerCallbacks());
@@ -29,6 +33,7 @@ void initBle()
 
 void startBle()
 {
+    debugLog("Start ble called");
     bleService->start();
     pAdvertising = BLEDevice::getAdvertising();
     pAdvertising->start();
@@ -37,7 +42,10 @@ void startBle()
 void exitBle()
 {
     pAdvertising->stop();
-    BLEDevice::deinit(true);
+    pServer->disconnect(0);
+    bleService->stop();
+    BLEDevice::deinit(false);
+    bleClientConnected = false;
 }
 
 #endif

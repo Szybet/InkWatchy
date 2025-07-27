@@ -42,7 +42,7 @@ void initMainMenu()
 #if BAIKY
     {
         count = count + 1;
-        buttons[count] = {"Baiky", getImg("baiky/bikeIcon"), switchBaiky};
+        buttons[count] = {"Baiky", getImg("baiky/baikyIcon"), switchBaiky};
     }
 #endif
     {
