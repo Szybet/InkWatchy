@@ -98,7 +98,7 @@ buttonState mcp23018::manageInterrupts()
   debugLog("BatteryRead2: " + String(BatteryRead()));
   // I want a break call here
   bool statPin = checkBit(gpio_cause, MCP_STAT_IN);
-  bool fiveVPin = checkBit(gpio_cause, MCP_5V) == true;
+  bool fiveVPin = checkBit(gpio_cause, MCP_5V);
   if (statPin == true || fiveVPin == true)
   {
 #if DEBUG

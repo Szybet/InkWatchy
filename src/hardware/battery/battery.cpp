@@ -148,6 +148,16 @@ void isChargingCheck()
 
     Basically now we can't detect if its between Hi-Z and L
     */
+
+    if (xTaskGetCurrentTaskHandle() == buttonTask)
+    {
+        // It was caused by an interrupt, so we wait for 5V to go down
+        if(rM.previousFiveVolt == true) {
+            debugLog("Delaying because of button task interrupt call in charging check");
+            delayTask(400);
+        }
+    }
+
     rM.gpioExpander.setInterrupt(MCP_STAT_IN, false); // Turn off interrupt
     bool fiveVolt = rM.gpioExpander.digitalRead(MCP_5V);
     rM.gpioExpander.setPinState(MCP_STAT_OUT, false);
@@ -156,7 +166,7 @@ void isChargingCheck()
     rM.gpioExpander.setPinState(MCP_STAT_OUT, true);
     delayTask(5);
     bool statInStateAfter = rM.gpioExpander.digitalRead(MCP_STAT_IN);
-#if DEBUG && true == false
+#if DEBUG && true == true
     debugLog("Executed isCharging");
     debugLog("fiveVolt: " + String(fiveVolt));
     debugLog("statInStateBefore: " + String(statInStateBefore));
@@ -175,12 +185,24 @@ void isChargingCheck()
         else if (statInStateBefore == 1 && statInStateAfter == 1 && fiveVolt == true)
         {
             rM.bat.isCharging = true;
-            rM.bat.isFullyCharged = true;
+            if (rM.bat.curV > 4.10)
+            {
+                debugLog("Its charged but voltage doesn't sum up");
+                rM.bat.isFullyCharged = true;
+                statInStateBefore = 0;
+                statInStateAfter = 0;
+            }
         } // Not charging
-        else if (statInStateBefore == 0 && statInStateAfter == 0 && fiveVolt == false)
+        else if (fiveVolt == false)
         {
             rM.bat.isCharging = false;
             rM.bat.isFullyCharged = false;
+#if DEBUG
+            if (!(statInStateBefore == 0 && statInStateAfter == 0))
+            {
+                debugLog("ERROR: Something is wrong with your charging IC, maybe, probably");
+            }
+#endif
         }
         else
         {
@@ -223,14 +245,18 @@ void isChargingCheck()
         }
         else
         {
+            debugLog("It's still not fine. Something is wrong. Let's say it's not charging at all then");
+            rM.bat.isCharging = false;
+            rM.bat.isFullyCharged = false;
 #if BATTERY_RGB_DIODE
-            setRgb(IwNone);
+            setRgb(BATTERY_DISCHARGING_COLOR, true, 500);
 #endif
         }
         rM.previousFiveVolt = fiveVolt;
         rM.previousStatInStateBefore = statInStateBefore;
         rM.previousStatInStateAfter = statInStateAfter;
     }
+
     // debugLog("Turning on interrupt back on");
     delayTask(10);
     rM.gpioExpander.setInterrupt(MCP_STAT_IN, true); // Turn on interrupt
