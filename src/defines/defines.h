@@ -150,6 +150,7 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../ui/places/motorDebug/motorDebug.h"
 #endif
 #include "../ui/places/watchfaceSelector/watchfaceSel.h"
+#include "../ui/places/powerSettings/powerSettings.h"
 #if BOOK
 #include "../ui/places/book/bookUi.h"
 #include "../ui/places/book/bookSelector.h"
