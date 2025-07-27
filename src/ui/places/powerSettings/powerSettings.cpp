@@ -20,6 +20,9 @@ void toggleWakeUpEntry()
 void initpowerMenu()
 {
     int count = -1;
+    rM.disableWakeUp = rM.userDisableWakeUp;
+    rM.disableAllVibration = rM.userDisableAllVibration;
+    rM.isBatterySaving = false;
     entryMenu buttons[2];
     {
         count = count + 1;
