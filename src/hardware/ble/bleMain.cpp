@@ -11,11 +11,11 @@ class bleServerCallbacks : public BLEServerCallbacks
 {
     void onConnect(BLEServer *pServer)
     {
-        debugLog("Client connected");
+        debugLog("BLE client connected");
     }
     void onDisconnect(BLEServer *pServer)
     {
-        debugLog("Client disconnected");
+        debugLog("BLE client disconnected");
         pAdvertising->start();
     }
 };
