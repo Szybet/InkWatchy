@@ -277,6 +277,13 @@ The default is this:
 // Heart monitor
 #define HEART_MONITOR 0 // Needs Acc
 
+// BLE things
+// BLE is heavy, if you enable it and the watch doesn't boot up, it means you exceeded the flash size. Disable other features to reduce flash usage
+#define BLE_ENABLED 0 // Ble in general
+
+// Baiky, requires BLE enabled + Baiky app
+#define BAIKY 0
+
 // Advanced
 #define BUTTON_TASK_DELAY 60 // In ms, lower means faster button detection but more cpu usage
 #define TIME_FOR_WATCHFACE_TO_SHOW_MS 2000

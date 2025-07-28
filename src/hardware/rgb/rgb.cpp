@@ -43,24 +43,24 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
     }
     if (color != IwNone && timeMs != 0)
     {
-        // This has a small possibility of ignoring the call, because it is already running
-        if (rgbTaskMutex.try_lock() == true)
+        rgbTaskMutex.lock();
+        if (rgbTaskRunning == false)
         {
-            if (rgbTaskRunning == false)
-            {
-                rgbTaskRunning = true;
-                rgbTimer = timeMs + 50; // 50 because we are turning the diode soon
-                debugLog("Launching RGB task");
-                xTaskCreate(
-                    rgbTaskRun,
-                    "rgbTask",
-                    TASK_STACK_RGB, // Too much but handling fs logging takes a bit more
-                    NULL,
-                    RGB_PRIORITY,
-                    &rgbTask);
-            }
-            rgbTaskMutex.unlock();
+            rgbTaskRunning = true;
+            rgbTimer = timeMs + 50; // 50 because we are turning the diode soon
+            debugLog("Launching RGB task");
+            xTaskCreate(
+                rgbTaskRun,
+                "rgbTask",
+                TASK_STACK_RGB, // Too much but handling fs logging takes a bit more
+                NULL,
+                RGB_PRIORITY,
+                &rgbTask);
+        } else {
+            debugLog("Rgb fallback");
+            setRgb(IwNone, false);
         }
+        rgbTaskMutex.unlock();
     }
 
     bool lockedColor = false;

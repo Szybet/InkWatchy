@@ -18,8 +18,9 @@ cd ../
 
 # Need to make sure we have fontconvert installed
 cd ../../
-# TODO: Install only for the selected env (preserve disk space)
-pio pkg install
+source globalFunctions.sh
+pio_env=$(get_pio_env ../../.vscode/launch.json)
+pio pkg install -e $pio_env
 cd resources/tools
 
 echo -e ''

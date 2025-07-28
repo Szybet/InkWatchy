@@ -48,6 +48,7 @@ typedef enum
     conwayApp,
     partyApp,
     heartMonitor,
+    baikyApp,
     fontPreview,
     fontPreviewMenu,
     watchfaceSelector,
@@ -147,6 +148,9 @@ void switchParty();
 #endif
 #if HEART_MONITOR
 void switchHeartMonitor();
+#endif
+#if BAIKY
+void switchBaiky();
 #endif
 #if FONT_MENU_ENABLED
 void switchFontsPreview();

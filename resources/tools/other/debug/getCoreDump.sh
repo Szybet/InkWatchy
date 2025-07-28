@@ -25,4 +25,4 @@ source ~/.platformio/packages/framework-espidf/export.sh
 
 pio_env=$(get_pio_env ../../../../.vscode/launch.json)
 
-PYTHONPATH=.root/.espressif/python_env/idf5.4_py3.12_env/lib/python3.12/site-packages:$PYTHONPATH .root/.espressif/python_env/idf5.4_py3.12_env/bin/esp-coredump info_corefile ../../../../.pio/build/$pio_env/firmware.elf
+PYTHONPATH=~/.espressif/python_env/idf5.4_py3.12_env/lib/python3.12/site-packages:$PYTHONPATH ~/.espressif/python_env/idf5.4_py3.12_env/bin/esp-coredump info_corefile ../../../../.pio/build/$pio_env/firmware.elf
