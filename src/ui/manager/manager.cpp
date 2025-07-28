@@ -274,7 +274,7 @@ void loopManager()
     }
     case powerMenu:
     {
-        managerLaunchFunc(powerMenu, initpowerMenu, loopMenu, saveAllStorage);
+        managerLaunchFunc(powerMenu, initpowerMenu, loopMenu);
         break;
     }
     case ChartPlace:

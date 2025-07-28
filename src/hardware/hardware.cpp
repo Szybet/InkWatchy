@@ -88,12 +88,6 @@ void initHardware()
 #if ATCHY_VER == WATCHY_3
     pinMode(CHRG_STATUS_PIN, INPUT);
 #endif
-
-    if (bootStatus.fromWakeup == false)
-    {
-        loadAllStorage();
-    }
-
     initBattery();
 
     /*

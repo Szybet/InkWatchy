@@ -153,6 +153,7 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../ui/places/motorDebug/motorDebug.h"
 #endif
 #include "../ui/places/watchfaceSelector/watchfaceSel.h"
+#include "../ui/places/powerSettings/powerSettings.h"
 #if BOOK
 #include "../ui/places/book/bookUi.h"
 #include "../ui/places/book/bookSelector.h"
@@ -192,7 +193,6 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../ui/places/conway/conway.h"
 #endif
 #include "../ui/reUse/pinInput/pinInput.h"
-#include "../ui/places/settings/powerSettings.h"
 #include "../ui/watchfaceModules/netMod/netMod.h"
 #include "../ui/watchfaceModules/watchFaceModule.h"
 #if BITCOIN_MODULE
