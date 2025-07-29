@@ -8,6 +8,20 @@ void drawCorner(uint16_t color)
     dis->fillCircle(0, 0, 6, color);
 }
 
+void initDisplayDriver(bool initial) {
+#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
+    dis->epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
+    dis->init(0, initial, 10, true);
+#elif ATCHY_VER == WATCHY_3
+    SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
+    dis->init(0, initial, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
+#elif ATCHY_VER == YATCHY
+    SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
+    dis->init(0, initial, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
+#endif
+}
+
+// Note: There are screen options in platformio.ini as defines
 void initDisplay()
 {
     debugLog("initDisplay called");
@@ -23,27 +37,8 @@ void initDisplay()
     pinMode(EPD_RESET, OUTPUT);
     pinMode(EPD_DC, OUTPUT);
     pinMode(EPD_BUSY, INPUT);
-#if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
-    dis->epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
-    dis->init(0, !bootStatus.fromWakeup, 10, true);
-#elif ATCHY_VER == WATCHY_3
-    SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
-    dis->init(0, !bootStatus.fromWakeup, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
-#elif ATCHY_VER == YATCHY
-    SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
-    dis->init(0, !bootStatus.fromWakeup, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
-#endif
-    /*
-    Here, to remove border you need to go to GxEPD2_154_D67::_InitDisplay()
-    .pio/libdeps/watchy/GxEPD2/src/epd/GxEPD2_154_D67.cpp
-    and change the line under this:
-    _writeCommand(0x3C); // BorderWavefrom
-    to this:
-    _writeData(0x00);
-    */
-    // And we can do this from here! ( by using the magic script )
-    // dis->epd2._writeCommand(0x3C);
-    // dis->epd2._writeCommand(0x00);
+
+    initDisplayDriver(!bootStatus.fromWakeup);
 
 #if SCREEN_ROTATION != 0
     dis->setRotation(SCREEN_ROTATION);
@@ -76,7 +71,10 @@ void deInitScreen()
     drawCorner(GxEPD_WHITE);
     dis->display(PARTIAL_UPDATE);
 #endif
+// We don't want to hibernate it 2 times
+#if SCREEN_FADING_AWAY_2_WORKAROUND == false
     dis->hibernate();
+#endif
 }
 
 bool dUChange = false;
@@ -216,6 +214,9 @@ void resetHoldManage()
 
 void updateDisplay(bool mode)
 {
+#if SCREEN_FADING_AWAY_2_WORKAROUND
+    initDisplayDriver(false);
+#endif
 #if SCREEN_CORNER_WAKEUP
     drawCorner(GxEPD_BLACK);
 #endif
@@ -230,5 +231,8 @@ void updateDisplay(bool mode)
         delayTask(50);
         dis->display(PARTIAL_UPDATE);
     }
+#endif
+#if SCREEN_FADING_AWAY_2_WORKAROUND
+    dis->hibernate();
 #endif
 }
