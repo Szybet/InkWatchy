@@ -3,10 +3,10 @@
 source resources/tools/globalFunctions.sh
 
 OPTIONS=("1" "Patch wifi" 
-        "2" "Create demo image"
-        "3" "Launch watchy-scom"
-        "4" "Compile, Upload, Scom"
-        "5" "Get calendar events and upload them")
+         "2" "Create demo image"
+         "3" "Launch watchy-scom"
+         "4" "Compile, Upload, Scom"
+         "5" "Get calendar events and upload them")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 HEIGHT=$((NUM_OPTIONS + 7))
@@ -30,11 +30,9 @@ case $CHOICE in
         cd resources/tools/other/wifiTool/ && ./patch.sh
         ;;
     2)
-        # Ask if user wants to clean config
         dialog --yesno "Do you want to clean and regenerate config?" 7 50
         cleanConfig=$?
 
-        # Select env
         envList=("Watchy_1" "Watchy_1_5" "Watchy_2" "Watchy_3" "Yatchy" "All")
         envChoice=$(dialog --clear \
                     --title "Select environment" \
@@ -48,27 +46,27 @@ case $CHOICE in
         if [[ "$selectedEnv" == "All" ]]; then
             resources/tools/other/compile/demoMaker.sh "" "$cleanConfig"
         else
-if [[ "$cleanConfig" == 0 ]]; then
-    if [[ "$selectedEnv" == "Yatchy" ]]; then
-        accChoice=$(dialog --clear \
-                    --title "Accelerometer" \
-                    --menu "Select accelerometer option:" 15 50 4 \
-                    1 "Use BMA456" \
-                    2 "Use BMA530" \
-                    3 "Disable accelerometer" \
-                    2>&1 >/dev/tty)
-        clear
-    else
-        dialog --yesno "Do you want to disable the accelerometer?" 7 50
-        if [[ $? == 0 ]]; then
-            accChoice=3  # Disable
-        else
-            accChoice=0  # Default
-        fi
-    fi
-else
-    accChoice=""
-fi
+            if [[ "$cleanConfig" == 0 ]]; then
+                if [[ "$selectedEnv" == "Yatchy" ]]; then
+                    accChoice=$(dialog --clear \
+                                --title "Accelerometer" \
+                                --menu "Select accelerometer option:" 15 50 4 \
+                                1 "Use BMA456" \
+                                2 "Use BMA530" \
+                                3 "Disable accelerometer" \
+                                2>&1 >/dev/tty)
+                    clear
+                else
+                    dialog --yesno "Do you want to disable the accelerometer?" 7 50
+                    if [[ $? == 0 ]]; then
+                        accChoice=3
+                    else
+                        accChoice=0
+                    fi
+                fi
+            else
+                accChoice=""
+            fi
             resources/tools/other/compile/demoMaker.sh "$selectedEnv" "$cleanConfig" "$accChoice"
         fi
         ;;
