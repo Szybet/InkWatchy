@@ -7,6 +7,8 @@ if [[ -n "$1" ]]; then
     envList=("$1")
 fi
 
+checkForAll="$1"
+
 cleanFlag="$2"
 
 accChoice="$3"
@@ -14,6 +16,7 @@ accChoice="$3"
 function generalThings {
     cleanFlag="$1"
     accChoice="$2"
+    checkForAll="$3"
     echo "clean flag" $cleanFlag
     if [[ $cleanFlag == 0 ]]; then
         mkdir trash/
@@ -102,6 +105,14 @@ function generalThings {
             
             sed -i -E "s|^[[:space:]]*#define[[:space:]]+FORCE_DISABLE_ACC[[:space:]]+${old_val}|#define FORCE_DISABLE_ACC ${new_val}|" "$filename"
         fi
+        
+        if [[ -z "$checkForAll" ]]; then
+            old_string="#define LP_CORE 1"
+            new_string="#define LP_CORE 0"
+            filename="src/defines/condition.h"
+            
+            sed -i "s/$old_string/$new_string/g" "$filename"
+        fi
     fi
     
     # To regenerate vault
@@ -114,7 +125,7 @@ function generalThings {
     cd ../../../
 }
 
-generalThings "$cleanFlag" "$accChoice"
+generalThings "$cleanFlag" "$accChoice" "$checkForAll"
 
 function compileEnv {
     pio run -e $1

@@ -44,6 +44,10 @@ case $CHOICE in
         selectedEnv="${envList[$envChoice]}"
 
         if [[ "$selectedEnv" == "All" ]]; then
+            if [[ "$cleanConfig" == 1 ]]; then
+                echo "you have to clean config if you want all"
+                exit
+            fi
             resources/tools/other/compile/demoMaker.sh "" "$cleanConfig"
         else
             if [[ "$cleanConfig" == 0 ]]; then
