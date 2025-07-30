@@ -3,46 +3,48 @@ source resources/tools/globalFunctions.sh
 
 envList=("Watchy_1" "Watchy_1_5" "Watchy_2" "Watchy_3" "Yatchy")
 
-# Also don't forget removing generating the binary when removing things from this list
-#envList=("Watchy_2")
+if [[ -n "$1" ]]; then
+    envList=("$1")
+fi
 
-for env in "${envList[@]}"; do
-    pio run --target clean -e $env
-    pio pkg install -e $env
-    pio pkg update -e $env
-done
+cleanFlag="$2"
+
+accChoice="$3"
 
 function generalThings {
+    cleanFlag="$1"
+    accChoice="$2"
+    echo "clean flag" $cleanFlag
+    if [[ $cleanFlag == 0 ]]; then
     mkdir trash/
     mv resources/personal/books trash/
     cp resources/personal/moduleImages trash/
     cp -r resources/demo/* resources/personal/
 
-    rm -rf src/defines/confidential.h
-    rm -rf src/defines/config.h
+        echo "cleaning stuff"
+        rm -rf src/defines/confidential.h
+        rm -rf src/defines/config.h
+        cd resources/tools/
+        ./generate.sh
+        cd ../../
 
-    # To generate config files
-    cd resources/tools/
-    ./generate.sh
-    cd ../../
+        old_string="#define VAULT_PASSWORD \"\""
+        new_string="#define VAULT_PASSWORD \"5\""
+        filename="src/defines/confidential.h"
 
-    old_string="#define VAULT_PASSWORD \"\""
-    new_string="#define VAULT_PASSWORD \"5\""
-    filename="src/defines/confidential.h"
+        sed -i "s/$old_string/$new_string/g" "$filename"
 
-    sed -i "s/$old_string/$new_string/g" "$filename"
+        old_string="#define VAULT 0"
+        new_string="#define VAULT 1"
+        filename="src/defines/config.h"
 
-    old_string="#define VAULT 0"
-    new_string="#define VAULT 1"
-    filename="src/defines/config.h"
+        sed -i "s/$old_string/$new_string/g" "$filename"
 
-    sed -i "s/$old_string/$new_string/g" "$filename"
+        old_string="#define BOOK 0"
+        new_string="#define BOOK 1"
+        filename="src/defines/config.h"
 
-    old_string="#define BOOK 0"
-    new_string="#define BOOK 1"
-    filename="src/defines/config.h"
-
-    sed -i "s/$old_string/$new_string/g" "$filename"
+     \sed -i "s/$old_string/$new_string/g" "$filename"
 
     # old_string="#define WIFI_SSID1 \"\""
     # new_string="#define WIFI_SSID1 \"hotspot\""
@@ -68,6 +70,40 @@ function generalThings {
 
     sed -i "s/$old_string/$new_string/g" "$filename"
 
+    echo "[DEBUG] Setting accelerometer config"
+        if [[ "$accChoice" == "0" ]]; then
+            filename="src/defines/config.h"
+            old_val="1"
+            new_val="0"
+
+            sed -i -E "s|^[[:space:]]*#define[[:space:]]+FORCE_DISABLE_ACC[[:space:]]+${old_val}|#define FORCE_DISABLE_ACC ${new_val}|" "$filename"
+        elif [[ "$accChoice" == "1" ]]; then
+            bmaFile="src/defines/condition.h"
+            sed -i -E 's|^[[:space:]]*//[[:space:]]*#define[[:space:]]+BMA_VERSION[[:space:]]+456|#define BMA_VERSION 456|' "$bmaFile"
+            sed -i -E 's|^[[:space:]]*#define[[:space:]]+BMA_VERSION[[:space:]]+530|// #define BMA_VERSION 530|' "$bmaFile"
+            filename="src/defines/config.h"
+            old_val="1"
+            new_val="0"
+
+            sed -i -E "s|^[[:space:]]*#define[[:space:]]+FORCE_DISABLE_ACC[[:space:]]+${old_val}|#define FORCE_DISABLE_ACC ${new_val}|" "$filename"
+        elif [[ "$accChoice" == "2" ]]; then
+            bmaFile="src/defines/condition.h"
+            sed -i -E 's|^[[:space:]]*#define[[:space:]]+BMA_VERSION[[:space:]]+456|// #define BMA_VERSION 456|' "$bmaFile"
+            sed -i -E 's|^[[:space:]]*//[[:space:]]*#define[[:space:]]+BMA_VERSION[[:space:]]+530|#define BMA_VERSION 530|' "$bmaFile"
+            filename="src/defines/config.h"
+            old_val="1"
+            new_val="0"
+
+            sed -i -E "s|^[[:space:]]*#define[[:space:]]+FORCE_DISABLE_ACC[[:space:]]+${old_val}|#define FORCE_DISABLE_ACC ${new_val}|" "$filename"
+        elif [[ "$accChoice" == "3" ]]; then
+            filename="src/defines/config.h"
+            old_val="0"
+            new_val="1"
+
+            sed -i -E "s|^[[:space:]]*#define[[:space:]]+FORCE_DISABLE_ACC[[:space:]]+${old_val}|#define FORCE_DISABLE_ACC ${new_val}|" "$filename"
+        fi
+    fi
+
     # To regenerate vault
     cd resources/tools/
     ./generate.sh
@@ -78,14 +114,14 @@ function generalThings {
     cd ../../../
 }
 
-generalThings
+generalThings "$cleanFlag" "$accChoice"
 
 function compileEnv {
     pio run -e $1
 }
 
 for env in "${envList[@]}"; do
-    compileEnv $env
+    compileEnv "$env"
 done
 
 function createEmptyBinary {
@@ -132,11 +168,19 @@ function assembleBinary {
 rm -rf resources/tools/other/out/demo/
 mkdir -p resources/tools/other/out/demo/
 
-assembleBinary 4 Watchy_1 0x1000
-assembleBinary 4 Watchy_1_5 0x1000
-assembleBinary 4 Watchy_2 0x1000
-assembleBinary 8 Watchy_3 0x0
-assembleBinary 4 Yatchy 0x0
+for env in "${envList[@]}"; do
+    if [[ "$env" == "Watchy_1" ]]; then
+        assembleBinary 4 Watchy_1 0x1000
+    elif [[ "$env" == "Watchy_1_5" ]]; then
+        assembleBinary 4 Watchy_1_5 0x1000
+    elif [[ "$env" == "Watchy_2" ]]; then
+        assembleBinary 4 Watchy_2 0x1000
+    elif [[ "$env" == "Watchy_3" ]]; then
+        assembleBinary 8 Watchy_3 0x0
+    elif [[ "$env" == "Yatchy" ]]; then
+        assembleBinary 4 Yatchy 0x0
+    fi
+done
 
 touch resources/personal/books/.gitkeep
 touch resources/personal/vault/.gitkeep
