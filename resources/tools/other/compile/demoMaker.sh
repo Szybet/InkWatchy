@@ -21,7 +21,7 @@ function generalThings {
     if [[ $cleanFlag == 0 ]]; then
         mkdir trash/
         mv resources/personal/books trash/
-        cp resources/personal/moduleImages trash/
+        cp -r resources/personal/moduleImages trash/
         cp -r resources/demo/* resources/personal/
         
         echo "cleaning stuff"
@@ -164,8 +164,8 @@ function assembleBinary {
     createEmptyBinary $binSize
     
     bootloaderAddress=$(hexToDec $3)
-    partitionTableAddress=$(hexToDec 0x19000)
-    firmwareAddress=$(hexToDec 0x20000)
+    partitionTableAddress=$(hexToDec 0x8000)
+    firmwareAddress=$(hexToDec 0x10000)
     resourceAddress=$(<resources/tools/fs/in/offset.txt tr -d '\n')
     
     writeAtOffset demo.bin $bootloaderPath $bootloaderAddress
