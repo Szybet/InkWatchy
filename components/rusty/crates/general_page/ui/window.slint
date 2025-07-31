@@ -95,13 +95,14 @@ export component GeneralPage inherits Window {
             VerticalLayout {
                 padding: 3px;
                 spacing: 1px;
-                alignment: Adapter.main_align_center == true ? center: start; 
+                alignment: Adapter.main_align_center == true && !Adapter.title_enabled ? center: start; 
                 preferred-height: Adapter.scroll_viewport_height;
 
                 if Adapter.title_enabled: Text {
                     text: Adapter.title_text;
                     overflow: elide;
                     vertical-alignment: top;
+                    horizontal-alignment: center;
                     wrap: word-wrap;
                     font-size: 20px;
                 }
@@ -114,7 +115,7 @@ export component GeneralPage inherits Window {
                 Text {
                     text: Adapter.main_text;
                     overflow: elide;
-                    vertical-alignment: Adapter.main_align_center == true ? center: top;
+                    vertical-alignment: Adapter.main_align_center == true && !Adapter.title_enabled ? center: top;
                     wrap: word-wrap;
                     font-size: 20px;
                     horizontal-alignment: Adapter.main_align_center == true ? center: left;
