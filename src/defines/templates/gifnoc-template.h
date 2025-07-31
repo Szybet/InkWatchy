@@ -405,7 +405,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 // Task memory size
 #define TASK_STACK_BUTTON 4700
 #define TASK_STACK_VIBRATION 1000 // Was 3500 for debugging it
-#define TASK_STACK_WIFI 60000
+#define TASK_STACK_WIFI 8192
 #define TASK_STACK_SCOM 10000
 #define TASK_STACK_WATCHDOG 1000 // Was 3500 for debugging it
 #define TASK_STACK_RGB 1000
