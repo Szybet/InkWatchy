@@ -42,6 +42,11 @@ const GFXfont *getFont(String name)
         debugLog("This file has size 0: " + name);
     }
     uint8_t *fileBuf = (uint8_t *)malloc(fileFontSize * sizeof(uint8_t));
+    if (fileBuf == NULL) {
+        debugLog("Failed to mallocate memory for font: " + name);
+        fileFont.close();
+        return &FreeSansBold9pt7b;
+    }
     if (fileFont.read(fileBuf, fileFontSize) == 0)
     {
         debugLog("Failed to read the file: " + name);
