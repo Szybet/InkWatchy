@@ -12,17 +12,7 @@ A <b>firmware</b> written from the ground up for the <a href="https://watchy.sqf
 Now getting a bit <a href="https://github.com/Szybet/InkWatchy/tree/master/components/rusty/inkrusty">rusty</a>🦀
 </p>
   
-<details>
-<summary>Demo</summary>
-  
-<sub>This demo was heavily compressed, so it looks like it looks. The speed is also messed up because of missing frames</sub>
-<p align="center">
- 
-https://github.com/user-attachments/assets/91d169da-298a-425a-859c-2c9bc7fb6cf7
-  
-</p>
-
-</details>
+### [Demo video previews here](https://github.com/Szybet/InkWatchy/wiki/Demo-videos)
   
 ## User features
 - Easy to install [demo](https://github.com/Szybet/InkWatchy/wiki/Trying-out-the-demo-firmware) (no compiling!)
@@ -136,18 +126,16 @@ or via matrix: @szybet:matrix.org
 
 <details>
 <summary><h2>Outdated demos</h2></summary>
+Speed is messed up because of recording.
 
-[Outdated demo of version 0.1](https://www.youtube.com/watch?v=gFOCqalJidQ)
+### Demo of 1.0
+https://github.com/user-attachments/assets/91d169da-298a-425a-859c-2c9bc7fb6cf7
 
-<details>
-<summary>Demo of version 0.4</summary>
-  
-<sub>This 3> minute demo was heavily compressed, so it looks like it looks. The speed is also messed up because of missing frames</sub>
-<p align="center">
-  <img src="https://github.com/Szybet/InkWatchy/assets/53944559/0c85d516-ff50-4440-9351-32780107e998" alt="02-demo-10mb""/>
-</p>
+### Demo of version 0.4
+https://github.com/Szybet/InkWatchy/assets/53944559/0c85d516-ff50-4440-9351-32780107e998
 
-</details>
+### demo of version 0.1
+https://www.youtube.com/watch?v=gFOCqalJidQ
 
 </details>
 
