@@ -305,7 +305,7 @@
 
 // Alarm info strings
 #define ALARM_INFO_ALL_DAYS "Alle Tage"
-#define ALARM_INFO_NO_DAYS "Keine Tage"
+#define ALARM_INFO_NEVER "Niemals"
 #define ALARM_INFO_ONCE ", einmalig"
 #define ALARM_INFO_WIFI ", WiFi"
 #define ALARM_INFO_QUICK ", schnell"

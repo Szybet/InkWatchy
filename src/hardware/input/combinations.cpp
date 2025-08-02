@@ -52,8 +52,9 @@ void executeCombination()
 {
     resetSleepDelay(); // Faster so it won't escape...
     if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true && wasClicked(MENU_PIN) == false && wasClicked(DOWN_PIN) == false)
-    {   
-        if(rM.currentPlace != wifiDebug) {
+    {
+        if (rM.currentPlace != wifiDebug)
+        {
             debugLog("Executed switch wifi combination");
             switchWifiDebug();
         }
@@ -102,7 +103,13 @@ bool endCombinations(uint8_t currentPin)
     }
     executeCombination();
 
-    debugLog("So there was a combination");
+#if DEBUG
+    debugLog("So there was a combination: ");
+    for (uint8_t i = 0; i < 4; i++)
+    {
+        debugLog("Dump combination button: " + String(combinationsChecks[i]))
+    }
+#endif
 
     return true;
 }

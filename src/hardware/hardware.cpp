@@ -84,6 +84,18 @@ void initHardware()
     initRTC();
     initButtons();
 
+    // Here because we need time
+#if INK_ALARMS
+    if (bootStatus.reason == ulp || bootStatus.reason == rtc)
+    {
+        if (rM.nextAlarm <= getUnixTime(timeRTCLocal))
+        {
+            debugLog("alarmTriggeredWakeup is now true");
+            bootStatus.alarmTriggeredWakeup = true;
+        }
+    }
+#endif
+
     // Before initBattery, but executed always
 #if ATCHY_VER == WATCHY_3
     pinMode(CHRG_STATUS_PIN, INPUT);
@@ -342,8 +354,12 @@ bool isFullMode()
         // debugLog("Full mode because of battery charging or is fully charged");
         return true;
     }
-    if(bootStatus.fromWakeup == false) {
+    if (bootStatus.fromWakeup == false)
+    {
         // debugLog("Full mode because of first boot");
+        return true;
+    }
+    if(bootStatus.alarmTriggeredWakeup == true) {
         return true;
     }
 
@@ -358,7 +374,8 @@ bool isFullMode()
     return false;
 }
 
-void cleanAllMemory() {
+void cleanAllMemory()
+{
     cleanFontCache();
     cleanImgCache();
 }

@@ -212,7 +212,7 @@ String alarmGetDays(inkAlarm *theAlarm)
     }
     else
     {
-        days = ALARM_INFO_NO_DAYS;
+        days = ALARM_INFO_NEVER;
     }
     return days;
 }

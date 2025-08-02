@@ -17,6 +17,7 @@ struct wakeUpInfo {
     wakeUpReason reason = unknown;
     esp_sleep_wakeup_cause_t bareEspCause;
     esp_reset_reason_t resetReason;
+    bool alarmTriggeredWakeup = false;
 };
 
 extern wakeUpInfo bootStatus;

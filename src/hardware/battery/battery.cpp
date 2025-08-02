@@ -152,7 +152,8 @@ void isChargingCheck()
     if (xTaskGetCurrentTaskHandle() == buttonTask)
     {
         // It was caused by an interrupt, so we wait for 5V to go down
-        if(rM.previousFiveVolt == true) {
+        if (rM.previousFiveVolt == true)
+        {
             debugLog("Delaying because of button task interrupt call in charging check");
             delayTask(400);
         }
@@ -185,12 +186,15 @@ void isChargingCheck()
         else if (statInStateBefore == 1 && statInStateAfter == 1 && fiveVolt == true)
         {
             rM.bat.isCharging = true;
-            if (rM.bat.curV > 4.10)
+            if (rM.bat.curV < 4.10)
             {
-                debugLog("Its charged but voltage doesn't sum up");
-                rM.bat.isFullyCharged = true;
+                debugLog("Its charged but voltage doesn't sum up: " + String(rM.bat.curV));
                 statInStateBefore = 0;
                 statInStateAfter = 0;
+            }
+            else
+            {
+                rM.bat.isFullyCharged = true;
             }
         } // Not charging
         else if (fiveVolt == false)
@@ -359,7 +363,7 @@ void loopPowerSavings()
             rM.isBatterySaving = false;
             rM.disableAllVibration = rM.userDisableAllVibration;
             rM.disableWakeUp = rM.userDisableWakeUp;
-        }    
+        }
     }
 }
 

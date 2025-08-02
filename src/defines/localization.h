@@ -273,7 +273,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #endif
 
 // Check alarm info strings
-#if !defined(ALARM_INFO_ALL_DAYS) || !defined(ALARM_INFO_NO_DAYS) || !defined(ALARM_INFO_ONCE) || \
+#if !defined(ALARM_INFO_ALL_DAYS) || !defined(ALARM_INFO_NEVER) || !defined(ALARM_INFO_ONCE) || \
     !defined(ALARM_INFO_WIFI) || !defined(ALARM_INFO_QUICK) || !defined(ALARM_INFO_POMODORO)
 #error "Localization file is missing alarm info string definitions."
 #endif

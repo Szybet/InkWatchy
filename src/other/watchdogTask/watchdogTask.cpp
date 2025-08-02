@@ -56,7 +56,7 @@ void loopWatchdogTask(void *parameter)
             {
                 rM.everythingIsFine = false;
                 // watchdogFine.unlock();
-                delayTask(WATCHDOG_DELAY);
+                // delayTask(WATCHDOG_DELAY);
             }
         }
         delayTask(WATCHDOG_SMALL_DELAY);
