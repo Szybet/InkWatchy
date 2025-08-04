@@ -59,6 +59,19 @@ void initHardware()
         debugLog("Sleep wakeup reason: " + wakeupSourceToString(bootStatus.bareEspCause));
     }
 
+    initRTC();
+    // Here because we need time
+#if INK_ALARMS
+    if (bootStatus.reason == ulp || bootStatus.reason == rtc)
+    {
+        if (rM.nextAlarm <= getUnixTime(timeRTCLocal))
+        {
+            debugLog("alarmTriggeredWakeup is now true");
+            bootStatus.alarmTriggeredWakeup = true;
+        }
+    }
+#endif
+
 #if DEBUG == 1
     setCpuSpeed(DEBUG_CPU_SPEED);
 #else
@@ -81,20 +94,7 @@ void initHardware()
 #endif
 #endif
 
-    initRTC();
     initButtons();
-
-    // Here because we need time
-#if INK_ALARMS
-    if (bootStatus.reason == ulp || bootStatus.reason == rtc)
-    {
-        if (rM.nextAlarm <= getUnixTime(timeRTCLocal))
-        {
-            debugLog("alarmTriggeredWakeup is now true");
-            bootStatus.alarmTriggeredWakeup = true;
-        }
-    }
-#endif
 
     // Before initBattery, but executed always
 #if ATCHY_VER == WATCHY_3
@@ -359,7 +359,8 @@ bool isFullMode()
         // debugLog("Full mode because of first boot");
         return true;
     }
-    if(bootStatus.alarmTriggeredWakeup == true) {
+    if (bootStatus.alarmTriggeredWakeup == true)
+    {
         return true;
     }
 

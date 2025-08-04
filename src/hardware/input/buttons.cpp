@@ -87,10 +87,6 @@ void initButtons()
     pinMode(UP_PIN, INPUT);
     pinMode(DOWN_PIN, INPUT);
 #endif
-#if ATCHY_VER == WATCHY_3
-    rtc_gpio_set_direction((gpio_num_t)UP_PIN, RTC_GPIO_MODE_INPUT_ONLY);
-    rtc_gpio_pullup_en((gpio_num_t)UP_PIN);
-#endif
 }
 
 void setButton(buttonState button)
@@ -157,10 +153,13 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
 void loopButtonsTask(void *parameter)
 {
     buttonsActivated = true;
-    // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
-    while (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
+    if (isFullMode() == false)
     {
-        delayTask(SMALL_BUTTON_DELAY_MS);
+        // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
+        while (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
+        {
+            delayTask(SMALL_BUTTON_DELAY_MS * 3);
+        }
     }
     interruptedButton = None;
     while (true)
