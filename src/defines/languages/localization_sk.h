@@ -35,16 +35,16 @@
 #define WF_S_WEATHER_UNKNOWN "Nezname"
 
 // Day names (abbreviated)
-#define WF_S_DAY_MON "PO"
-#define WF_S_DAY_TUE "UT"
-#define WF_S_DAY_WED "ST"
+#define WF_S_DAY_MON "PON"
+#define WF_S_DAY_TUE "UTO"   
+#define WF_S_DAY_WED "STR"
 #define WF_S_DAY_THU "STV"
-#define WF_S_DAY_FRI "PI"
-#define WF_S_DAY_SAT "SO"
-#define WF_S_DAY_SUN "NE"
+#define WF_S_DAY_FRI "PIA"
+#define WF_S_DAY_SAT "SOB"
+#define WF_S_DAY_SUN "NED"
 
 // Error messages
-#define WF_T_ERROR "ERR"
+#define WF_T_ERROR "CHYBA"
 #define WF_I_ERROR "ERR"         // InkField (max 3 characters)
 #define WF_I_ERROR_SHORT "ER"
 
@@ -93,7 +93,7 @@
 #define MENU_SETTINGS "Nastavenia"
 #define MENU_HEART_MONITOR "Monitor srdca"
 #define MENU_VAULT "Trezor"
-#define MENU_WIFI_TOOL "Wifi nastavenia"
+#define MENU_WIFI_TOOL "Wifi nastroj"
 #define MENU_EATING_APPLES "Jedenie jablk"
 #define MENU_SMASHING_APPLES "Drtenie jablk"
 #define MENU_GAMES "Hry"
@@ -165,35 +165,35 @@
 // ==============================================================================
 
 // Debug menu titles
-#define DEBUG_MENU_ACC "Ladenie: Acc"
-#define DEBUG_MENU_BATTERY "Ladenie: Batt"
-#define DEBUG_MENU_CLOCK "Ladenie: Clock"
+#define DEBUG_MENU_ACC "Ladenie: Akcelerometer"
+#define DEBUG_MENU_BATTERY "Ladenie: Bateria"
+#define DEBUG_MENU_CLOCK "Ladenie: Cas"
 #define DEBUG_MENU_GIT "Ladenie: Git"
-#define DEBUG_MENU_HARDWARE "Ladenie: Hardware"
+#define DEBUG_MENU_HARDWARE "Ladenie: Hardver"
 #define DEBUG_MENU_WIFI "Ladenie: Wifi"
-#define DEBUG_MENU_MOTOR "Ladenie: Motor"
+#define DEBUG_MENU_MOTOR "Ladenie: Vibracie"
 
 // Debug menu items
-#define DEBUG_ITEM_CLOCK "Clock"
-#define DEBUG_ITEM_HARDWARE "Hardware"
-#define DEBUG_ITEM_BATTERY "Battery"
+#define DEBUG_ITEM_CLOCK "Cas"
+#define DEBUG_ITEM_HARDWARE "Hardver"
+#define DEBUG_ITEM_BATTERY "Bateria"
 #define DEBUG_ITEM_GIT "Git"
-#define DEBUG_ITEM_ACC "Acc"
-#define DEBUG_ITEM_MOTOR "Motor"
-#define DEBUG_ITEM_FONT_PREVIEW "Font preview"
+#define DEBUG_ITEM_ACC "Akcelerometer"
+#define DEBUG_ITEM_MOTOR "Vibracie"
+#define DEBUG_ITEM_FONT_PREVIEW "Nahlad fontu"
 
 // Accelerometer debug
-#define DEBUG_ACC_DISABLED "vypnute"
-#define DEBUG_ACC_FAILED_INIT "Chyba inicializacie"
-#define DEBUG_ACC_DAMAGED "Acc poskodeny"
-#define DEBUG_ACC_WORKING "Acc funguje"
+#define DEBUG_ACC_DISABLED "Deaktivovany"
+#define DEBUG_ACC_FAILED_INIT "Chyba inicializacie akcelerometra"
+#define DEBUG_ACC_DAMAGED "Akcelerometer poskodeny"
+#define DEBUG_ACC_WORKING "Akcelerometer funguje"
 #define DEBUG_ACC_CLICK_3D "3D nahlad"
-#define DEBUG_ACC_X "Accel X: "
-#define DEBUG_ACC_Y "Accel Y: "
-#define DEBUG_ACC_Z "Accel Z: "
-#define DEBUG_ACC_PURE_X "Accel ciste X: "
-#define DEBUG_ACC_PURE_Y "Accel ciste Y: "
-#define DEBUG_ACC_PURE_Z "Accel ciste Z: "
+#define DEBUG_ACC_X "Akcelerometer X: "
+#define DEBUG_ACC_Y "Akcelerometer Y: "
+#define DEBUG_ACC_Z "Akcelerometer Z: "
+#define DEBUG_ACC_PURE_X "Akcelerometer ciste X: "
+#define DEBUG_ACC_PURE_Y "Akcelerometer ciste Y: "
+#define DEBUG_ACC_PURE_Z "Akcelerometer ciste Z: "
 #define DEBUG_ACC_STEPS "Kroky: "
 #define DEBUG_ACC_IC "IC: "
 
@@ -216,7 +216,7 @@
 
 // Git debug
 #define DEBUG_GIT_COMMIT_HASH "Hash commitu:"
-#define DEBUG_GIT_BRANCH "Vetev:"
+#define DEBUG_GIT_BRANCH "Vetva:"
 #define DEBUG_GIT_BUILD_TIME "Cas build:"
 
 // Hardware debug
@@ -247,7 +247,7 @@
 #define DEBUG_WIFI_IP "IP: "
 #define DEBUG_WIFI_SSID "SSID: "
 #define DEBUG_WIFI_SIGNAL "Signal: "
-#define DEBUG_WIFI_CONNECTING "Pripaja: "
+#define DEBUG_WIFI_CONNECTING "Pripajanie: "
 #define DEBUG_WIFI_ON "ON"
 #define DEBUG_WIFI_OFF "OFF"
 
@@ -275,11 +275,11 @@
 
 // Alarm menu titles
 #define ALARM_MENU_EDIT_DAYS "Uprav dni"
-#define ALARM_MENU_EDIT_ALARM "Uprav budik"
+#define ALARM_MENU_EDIT_ALARM "Uprav alarm"
 #define ALARM_MENU_ALARMS "Alarmy"
-#define ALARM_MENU_BROWSE_ALARMS "Prezri budiky"
-#define ALARM_MENU_QUICK_ALARMS_SET "Rychle budiky ul."
-#define ALARM_MENU_QUICK_ALARM "Rychle budiky"
+#define ALARM_MENU_BROWSE_ALARMS "Prezri alarmy"
+#define ALARM_MENU_QUICK_ALARMS_SET "Alarmy nastavit"
+#define ALARM_MENU_QUICK_ALARM "Alarmy"
 #define ALARM_MENU_POMODORO "Pomodoro"
 
 // Alarm edit menu items
@@ -291,9 +291,9 @@
 #define ALARM_LABEL_REQUIRE_WIFI "Vyzaduje Wifi"
 
 // Quick alarm messages
-#define ALARM_QUICK_ALERT_TITLE "Rychle budiky oznam"
+#define ALARM_QUICK_ALERT_TITLE "Alarmy upozornenie"
 #define ALARM_QUICK_ALARM_SET_FOR "Alarm nastaveny na:"
-#define ALARM_QUICK_WILL_RING_AT "Alarm zazvony:"
+#define ALARM_QUICK_WILL_RING_AT "Alarm zazvoni:"
 
 // Day names (full)
 #define ALARM_DAY_MONDAY "Pondelok"
