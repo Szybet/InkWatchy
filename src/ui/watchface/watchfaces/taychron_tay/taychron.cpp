@@ -16,8 +16,8 @@
 #if WATCHFACE_TAYCHRON_DATE
 // with date
 #define TIME_CORD_Y 110
-#define DATE_CORD_Y (TIME_CORD_Y + 25)
-#define DATE_CORD_X 75
+#define DATE_CORD_Y (TIME_CORD_Y + 30)
+#define DATE_CORD_X 70
 #define DATE_FONT getFont("taychron/Mono13")
 #else
 // without date
@@ -25,9 +25,12 @@
 #endif
 
 #if WATCHFACE_12H
-#define AMPPM_X 150
-#define AMPPM_Y 143
+#define AMPPM_X 155
+#define AMPPM_Y (TIME_CORD_Y + 30)
 #define AMPM_FONT getFont("taychron/Mono13")
+#if WATCHFACE_TAYCHRON_DATE
+#define DATE_CORD_X 55
+#endif
 #endif
 
 static void drawTimeAfterApply(bool forceDraw)
