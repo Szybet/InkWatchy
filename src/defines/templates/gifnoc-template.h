@@ -283,6 +283,9 @@ The default is this:
 
 // BLE things
 // BLE is heavy, if you enable it and the watch doesn't boot up, it means you exceeded the flash size. Disable other features to reduce flash usage
+// It's really heavy on memory too. DO NOT ENABLE BLE until you know what you want.
+// If PANIC happens with this enabled, turn it off, check again
+// If it works without it, disable other things (snake, bitcoin etc.)
 #define BLE_ENABLED 0 // Ble in general
 
 // Baiky, requires BLE enabled + Baiky app
