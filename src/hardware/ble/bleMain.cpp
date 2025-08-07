@@ -24,9 +24,14 @@ class bleServerCallbacks : public BLEServerCallbacks
 
 void initBle()
 {
+    initBle("InkWatchy");
+}
+
+void initBle(String name)
+{
     debugLog("Init ble called");
     bleClientConnected = false;
-    BLEDevice::init("InkWatchy");
+    BLEDevice::init(name);
     pServer = BLEDevice::createServer();
     pServer->setCallbacks(new bleServerCallbacks());
 }
