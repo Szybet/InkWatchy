@@ -92,6 +92,13 @@ void wManageOneLoop(const watchfaceDefOne *wdo)
         timeHappened = false;
     }
 
+#if MODULES_FAST
+    if (isFullMode() == true)
+    {
+        wfModulesManage(None);
+    }
+#endif
+
     buttonState bt = useAllButtons();
     wdo->manageInput(bt);
 
