@@ -15,6 +15,7 @@
 
 source ../../globalFunctions.sh
 
+cd ../../../../
 .root/.platformio/packages/framework-espidf/install.sh
 .root/.platformio/penv/bin/python .root/.platformio/packages/framework-espidf/tools/idf_tools.py install
 ln -s /usr/bin/python3 /usr/bin/python
