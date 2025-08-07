@@ -28,15 +28,6 @@ opt-level = "z"
 lto = true
 codegen-units = 1
 panic = "abort"
-# This not
-# RUSTFLAGS="-Zlocation-detail=none" cargo +nightly build --release
-# because
-# rust-lld: error: undefined symbol: __stack_top
-# And
-# cargo +nightly build --release
-# Increases size by a few bytes
-
-# Those don't change anything
 debug = 0
 debug-assertions = false
 incremental = false
