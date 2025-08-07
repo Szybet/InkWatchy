@@ -223,6 +223,10 @@ The default is this:
 // Watchface modules
 #define MODULE_PERSISTENT 1       // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space
 #define MODULE_UPDATE_LIMIT_S 600 // Every x seconds, update the modules. Not every minute, like it was for now. Change it to 60 for every minute. Change it to 0 to completly disable modules updating automatically
+// Makes the module update many times and faster in full mode (charging, button wakeup etc.)
+// this consumes more BATTERY but makes the wifi module more accurate (As in, update the wifi status faster/more accurate - on yatchy really needed)
+// It's important to note that even with this, modules are optimised no to redraw so often. They will simply check more often if to redraw
+#define MODULES_FAST 0
 #define WIFI_MODULE 1
 #define BITCOIN_MODULE 1   // Remember to define the api key for it in confidential.h
 #define SMALL_BTC_MODULE 1 // At default, show the small btc module mode, if 0 show the bigger one
