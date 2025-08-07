@@ -24,7 +24,7 @@ bool anyButtonCheck()
 // std::mutex watchdogFine;
 TaskHandle_t watchdogTask = NULL;
 
-#define WATCHDOG_DELAY 15000
+#define WATCHDOG_DELAY 22500
 #define WATCHDOG_SMALL_DELAY 3000
 int64_t watchdogMillis = 0;
 
