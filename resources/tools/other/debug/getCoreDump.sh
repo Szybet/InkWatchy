@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Nevermind!
 # In .esp-idf/espressif/python_env/idf5.1_py3.12_env/lib64/python3.12/site-packages/esp_coredump/corefile/loader.py
@@ -20,10 +20,10 @@ cd ../../../../
 .root/.platformio/penv/bin/python .root/.platformio/packages/framework-espidf/tools/idf_tools.py install
 ln -s /usr/bin/python3 /usr/bin/python
 #env -i .root/.platformio/packages/framework-espidf/tools/idf_tools.py install-python-env
-source ~/.platformio/packages/framework-espidf/export.sh
+source .root/.platformio/packages/framework-espidf/export.sh
 idf_tools.py install-python-env
-source ~/.platformio/packages/framework-espidf/export.sh
+source .root/.platformio/packages/framework-espidf/export.sh
 
 pio_env=$(get_pio_env ../../../../.vscode/launch.json)
 
-PYTHONPATH=~/.espressif/python_env/idf5.4_py3.12_env/lib/python3.12/site-packages:$PYTHONPATH ~/.espressif/python_env/idf5.4_py3.12_env/bin/esp-coredump info_corefile ../../../../.pio/build/$pio_env/firmware.elf
+PYTHONPATH=~/.espressif/python_env/idf5.4_py3.12_env/lib/python3.12/site-packages:$PYTHONPATH ~/.espressif/python_env/idf5.4_py3.12_env/bin/esp-coredump info_corefile .pio/build/$pio_env/firmware.elf
