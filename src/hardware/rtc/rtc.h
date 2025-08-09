@@ -17,6 +17,9 @@ extern uint64_t lastTimeRead;
 
 void initRTC();
 void saveRTC(tmElements_t timeToSave);
+void setRTCTime(time_t epoch);
+void setRTCTimeZoneByUtcOffset(int offset);
+
 void readRTC();
 void wakeUpManageRTC();
 void manageRTC();
@@ -44,4 +47,3 @@ void loopRTCDebug();
 void dumpRTCTime(tmElements_t timeEl);
 void dumpRTCTimeSmall(tmElements_t timeEl);
 #endif
-

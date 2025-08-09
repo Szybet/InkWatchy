@@ -55,7 +55,9 @@ void setup()
   checkAlarms();
 #endif
 
+#if GADGETBRIDGE_ENABLED
   initGadgetbridge();
+#endif
 }
 
 void loop()

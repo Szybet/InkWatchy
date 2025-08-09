@@ -13,4 +13,7 @@ void initBle(String name);
 void startBle();
 void exitBle();
 
+void enableBonding();
+void removeBondedDevices();
+
 #endif
