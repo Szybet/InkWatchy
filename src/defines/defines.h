@@ -104,6 +104,11 @@ static const WiFiCred *wifiCredStatic[] = {
 #endif
 #if BLE_ENABLED
 #include "../hardware/ble/bleMain.h"
+
+#if GADGETBRIDGE_ENABLED
+#include "../network/gadgetbridge/gadgetbridge.h"
+#endif
+
 #endif
 
 // Network

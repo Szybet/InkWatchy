@@ -328,6 +328,11 @@ void manageSleep()
             debugLog("Gpio expander stat in pin state: " + BOOL_STR(rM.gpioExpander.digitalRead(MCP_STAT_IN)));
 #endif
 
+            if (!bleClientConnected)
+            {
+                rM.ble_connection_attempts++;
+            }
+
 #if DEBUG && DISABLE_SLEEP_PARTIAL
             debugLog("DISABLE_SLEEP_PARTIAL enabled, avoiding sleep");
             resetSleepDelay();

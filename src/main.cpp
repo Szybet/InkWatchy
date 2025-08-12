@@ -1,6 +1,5 @@
 #include "defines.h"
 #include "rtcMem.h"
-#include "network/gadgetbridge/gadgetbridge.h"
 
 // https://github.com/espressif/arduino-esp32/blob/337058ac94e7e3df11d273a93e88d1ea605e6f5f/cores/esp32/main.cpp#L105
 // Why is that? well anyway this task set's it and exits

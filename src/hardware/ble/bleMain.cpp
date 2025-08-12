@@ -1,4 +1,5 @@
 #include "bleMain.h"
+#include "rtcMem.h"
 
 #if BLE_ENABLED
 
@@ -15,6 +16,7 @@ class bleServerCallbacks : public BLEServerCallbacks
         bleClientConnected = true;
 
         BLEDevice::getAdvertising()->stop();
+        rM.ble_connection_attempts = 0;
         resetSleepDelay();
     }
     void onDisconnect(BLEServer *pServer)

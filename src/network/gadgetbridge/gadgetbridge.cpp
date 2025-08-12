@@ -1,6 +1,6 @@
 #include "gadgetbridge.h"
-#include "rtcMem.h"
 
+#if GADGETBRIDGE_ENABLED
 class rxCallback : public BLECharacteristicCallbacks
 {
 
@@ -162,3 +162,5 @@ void initGadgetbridge()
 
   startBle();
 }
+
+#endif

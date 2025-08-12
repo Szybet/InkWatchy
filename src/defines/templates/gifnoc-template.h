@@ -265,7 +265,7 @@ The default is this:
 #define NIGHT_SLEEP_AFTER_HOUR 23
 #define NIGHT_SLEEP_BEFORE_HOUR 5
 
-#if GADGETBRIDGE_ENABLED == 1
+#if GADGETBRIDGE_ENABLED
 #define SLEEP_EVERY_MS 3000 // Goes to sleep timer, is resetted by button presses and other things
 #else
 #define SLEEP_EVERY_MS 10000 // Goes to sleep timer, is resetted by button presses and other things
