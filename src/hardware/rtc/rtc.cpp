@@ -436,7 +436,7 @@ void manageRTC()
   if (newSec != manageRtcLastSec)
   {
     manageRtcLastSec = newSec;
-    // debugLog("getCurrentSeconds(): " + String(getCurrentSeconds()));
+    debugLog("getCurrentSeconds(): " + String(getCurrentSeconds()));
     if (manageRtcLastSec <= 1 || getLastTimeReadSec() >= 60)
     {
       debugLog("RTC new minute");
