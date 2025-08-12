@@ -1,3 +1,5 @@
+[![](https://dcbadge.limes.pink/api/server/6PUmRXZRGD)](https://discord.gg/6PUmRXZRGD)
+
 <h1 align="center">
   InkWatchy
 </h1>
