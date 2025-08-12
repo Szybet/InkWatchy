@@ -55,7 +55,7 @@ void setup()
 #endif
 
 #if GADGETBRIDGE_ENABLED
-  initGadgetbridge();
+  gadgetbridgeInit();
 #endif
 }
 

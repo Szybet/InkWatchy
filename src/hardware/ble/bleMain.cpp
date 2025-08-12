@@ -14,10 +14,6 @@ class bleServerCallbacks : public BLEServerCallbacks
     {
         debugLog("BLE client connected");
         bleClientConnected = true;
-
-        BLEDevice::getAdvertising()->stop();
-        rM.ble_connection_attempts = 0;
-        resetSleepDelay();
     }
     void onDisconnect(BLEServer *pServer)
     {
@@ -49,7 +45,7 @@ void startBle()
     pAdvertising = BLEDevice::getAdvertising();
     pAdvertising->setAppearance(ESP_BLE_APPEARANCE_GENERIC_WATCH);
     pAdvertising->start();
-    resetSleepDelay(BLE_ADVERTISE_TIME);
+    resetSleepDelay(BLE_ADVERTISE_TIME * 1000);
 }
 
 void exitBle()
@@ -76,7 +72,7 @@ class bleSecurityCallbacks : public BLESecurityCallbacks
     uint32_t onPassKeyRequest()
     {
         debugLog("PassKey Request");
-        return 0;
+        return 123456;
     }
 
     void onPassKeyNotify(uint32_t pass_key)
@@ -91,7 +87,7 @@ class bleSecurityCallbacks : public BLESecurityCallbacks
     bool onSecurityRequest()
     {
         debugLog("Security Request");
-        return false; // Auto-accept security request
+        return true; // Auto-accept security request
     }
 
     void onAuthenticationComplete(esp_ble_auth_cmpl_t auth_cmpl)
@@ -113,19 +109,19 @@ void enableBonding()
 {
     debugLog("Enabling BLE bonding");
 
-    BLESecurity sec;
+    BLESecurity *sec = new BLESecurity();
     // Set the security callbacks
     BLEDevice::setSecurityCallbacks(new bleSecurityCallbacks());
     BLEDevice::setEncryptionLevel(ESP_BLE_SEC_ENCRYPT_MITM);
-    sec.setCapability(ESP_IO_CAP_OUT);
-    sec.setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
+    sec->setCapability(ESP_IO_CAP_OUT);
+    sec->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
 
     // Set key size
-    sec.setKeySize(16);
+    sec->setKeySize(16);
 
     // Set init key and response key
-    sec.setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
-    sec.setRespEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
+    sec->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
+    sec->setRespEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
 }
 
 void removeBondedDevices()

@@ -1,6 +1,39 @@
 #include "gadgetbridge.h"
+#include "rtcMem.h"
 
 #if GADGETBRIDGE_ENABLED
+
+BLECharacteristic *txHandle = NULL;
+
+void notify(JsonDocument doc)
+{
+  String jsonBuffer;
+  serializeJson(doc, jsonBuffer);
+  jsonBuffer = "\r\n" + jsonBuffer + "\r\n";
+  debugLog("Sending notification: " + jsonBuffer);
+  txHandle->setValue(jsonBuffer);
+  txHandle->notify();
+}
+
+class gadgetbridgeServerCallbacks : public BLEServerCallbacks
+{
+  void onConnect(BLEServer *pServer)
+  {
+    debugLog("BLE client connected");
+    bleClientConnected = true;
+
+    BLEDevice::getAdvertising()->stop();
+    rM.ble_connection_attempts = 0;
+    resetSleepDelay();
+  }
+  void onDisconnect(BLEServer *pServer)
+  {
+    debugLog("BLE client disconnected");
+    pServer->getAdvertising()->start();
+    bleClientConnected = false;
+  }
+};
+
 class rxCallback : public BLECharacteristicCallbacks
 {
 
@@ -108,9 +141,7 @@ class rxCallback : public BLECharacteristicCallbacks
   }
 };
 
-BLECharacteristic *txHandle = NULL;
-
-void initialize_nvs(void)
+void nvsInit(void)
 {
   // Initialize NVS
   esp_err_t ret = nvs_flash_init();
@@ -130,7 +161,7 @@ void initialize_nvs(void)
   debugLog("NVS initialized successfully.");
 }
 
-void initGadgetbridge()
+void gadgetbridgeInit()
 {
   const char *NUS_UUID = "6E400001-B5A3-F393-E0A9-E50E24DCCA9E";
   const char *NUS_RX_UUID = "6E400002-B5A3-F393-E0A9-E50E24DCCA9E";
@@ -138,9 +169,10 @@ void initGadgetbridge()
 
   debugLog("Init Gadgetbridge called");
 
-  initialize_nvs();
+  nvsInit();
 
   initBle("Bangle.js InkWatchy"); // Bangle.js prefix is important for the Gadgetbridge app
+  pServer->setCallbacks(new gadgetbridgeServerCallbacks());
 
   // Enable bonding with PIN display (true) or without (false)
   enableBonding();
@@ -151,12 +183,15 @@ void initGadgetbridge()
         NUS_RX_UUID,
         BLECharacteristic::PROPERTY_WRITE);
     pCharacteristic->setCallbacks(new rxCallback());
+    pCharacteristic->setAccessPermissions(ESP_GATT_PERM_WRITE_ENC_MITM);
   }
 
   {
     BLECharacteristic *pCharacteristic = bleService->createCharacteristic(
         NUS_TX_UUID,
         BLECharacteristic::PROPERTY_NOTIFY);
+    pCharacteristic->setAccessPermissions(ESP_GATT_PERM_READ_ENC_MITM);
+
     txHandle = pCharacteristic;
   }
 

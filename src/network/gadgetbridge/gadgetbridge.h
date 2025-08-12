@@ -2,4 +2,5 @@
 
 #include "defines.h"
 
-void initGadgetbridge();
+void gadgetbridgeInit();
+void notify(JsonDocument doc);
