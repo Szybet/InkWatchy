@@ -79,4 +79,5 @@ RUN mkdir -p /root/.espressif/
 ENV PATH=$PATH:/root/.platformio/penv/bin:/root/.cargo/bin
 
 # For rusty stuff
-RUN apt-get install -y gcc build-essential curl pkg-config libinput10
+# Idk weird fix with update
+RUN apt-get update && apt-get install -y gcc build-essential curl pkg-config libinput10
