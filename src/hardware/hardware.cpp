@@ -123,12 +123,13 @@ void initHardware()
 void resetSleepDelay(int addMs)
 {
     sleepDelayMs = millisBetter() + addMs;
+    debugLog("resetSleepDelay addMs: " + String(addMs));
 }
 
 void setSleepDelay(int addMs)
 {
     sleepDelayMs = millisBetter() - (SLEEP_EVERY_MS - addMs);
-    // debugLog("setSleepDelay sleepDelayMs: " + String(sleepDelayMs));
+    debugLog("setSleepDelay addMs: " + String(addMs));
 }
 
 #if DEBUG

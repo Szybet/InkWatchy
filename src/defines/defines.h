@@ -27,7 +27,7 @@
 #include <esp_core_dump.h>
 #include "esp_wifi.h"
 #include "hal/gpio_types.h"
-#include <nvs_flash.h> 
+#include <nvs_flash.h>
 #include "driver/rtc_io.h"
 #include <Olson2POSIX.h>
 #undef ARDUINOJSON_ENABLE_PROGMEM
@@ -48,7 +48,7 @@
 #include "macros.h"
 #include "definesVars.h"
 #include "confidential.h"
-static const WiFiCred* wifiCredStatic[] = {
+static const WiFiCred *wifiCredStatic[] = {
     &wifi_credential1,
     &wifi_credential2,
     &wifi_credential3,
@@ -58,7 +58,7 @@ static const WiFiCred* wifiCredStatic[] = {
     &wifi_credential7,
     &wifi_credential8,
     &wifi_credential9,
-    &wifi_credential10
+    &wifi_credential10,
 };
 #define SIZE_WIFI_CRED_STAT sizeof(wifiCredStatic) / sizeof(wifiCredStatic[0])
 

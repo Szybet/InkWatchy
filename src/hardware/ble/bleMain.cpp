@@ -13,6 +13,9 @@ class bleServerCallbacks : public BLEServerCallbacks
     {
         debugLog("BLE client connected");
         bleClientConnected = true;
+
+        BLEDevice::getAdvertising()->stop();
+        resetSleepDelay();
     }
     void onDisconnect(BLEServer *pServer)
     {
@@ -40,9 +43,11 @@ void startBle()
 {
     debugLog("Start ble called");
     bleService->start();
+
     pAdvertising = BLEDevice::getAdvertising();
     pAdvertising->setAppearance(ESP_BLE_APPEARANCE_GENERIC_WATCH);
     pAdvertising->start();
+    resetSleepDelay(10000);
 }
 
 void exitBle()
@@ -75,6 +80,8 @@ class bleSecurityCallbacks : public BLESecurityCallbacks
     void onPassKeyNotify(uint32_t pass_key)
     {
         debugLog("PassKey Notify: " + String(pass_key));
+        resetSleepDelay(60000);
+
         // You can display the passkey on the e-paper display here
     }
 
@@ -96,6 +103,7 @@ class bleSecurityCallbacks : public BLESecurityCallbacks
         {
             debugLog("Authentication failed. Reason: " + String(auth_cmpl.fail_reason));
         }
+        resetSleepDelay();
     }
 };
 
