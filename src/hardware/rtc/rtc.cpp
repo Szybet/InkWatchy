@@ -404,7 +404,18 @@ void wakeUpManageRTC()
   }
 #endif
 
+#ifdef GADGETBRIDGE_ENABLED
+  if (minutes == 1)
+  {
+    esp_sleep_enable_timer_wakeup(GADGETBRIDGE_SYNC_SLEEP_TIME * 1000 * 1000); // convert to microseconds
+  }
+  else
+  {
+    wakeUpIn(minutes);
+  }
+#else
   wakeUpIn(minutes);
+#endif
 }
 
 uint8_t manageRtcLastSec = 0;

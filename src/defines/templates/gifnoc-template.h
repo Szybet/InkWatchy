@@ -248,11 +248,29 @@ The default is this:
 
 #define ALARM_MODULE 1 // Needs alarm enabled
 
+// Gadgetbridge
+// Requires BLE_ENABLED
+// This will significantly impact batter life.
+// Allows the user to pair their phone with the watchy to
+// sync time and timezone with their phone.
+#define GADGETBRIDGE_ENABLED 1
+// If 1, the *atchy will sync time and timezone with your phone using BLE.
+#define GADGETBRIDGE_SYNC_TIME 1
+// Amount of seconds the *atchy will sleep before attempting BLE sync.
+// This will override the usual 1 minute sleep time.
+#define GADGETBRIDGE_SYNC_SLEEP_TIME 17
+
 // Power savings
 #define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
 #define NIGHT_SLEEP_AFTER_HOUR 23
 #define NIGHT_SLEEP_BEFORE_HOUR 5
-#define SLEEP_EVERY_MS 10000              // Goes to sleep timer, is resetted by button presses and other things
+
+#if GADGETBRIDGE_ENABLED == 1
+#define SLEEP_EVERY_MS 3000 // Goes to sleep timer, is resetted by button presses and other things
+#else
+#define SLEEP_EVERY_MS 10000 // Goes to sleep timer, is resetted by button presses and other things
+#endif
+
 #define POWER_SAVING_AFTER 40             // Turn on power saving features after a certain battery percantage.
 #define POWER_SAVING_OFF_AFTER 20         // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
 #define LOOP_NO_SCREEN_WRITE_DELAY_MS 112 // Go to "sleep" for x ms if the device is woken up (in a menu for example) and the screen didn't update. This value is fine tuned, but if you want a faster menu, feel free to make it smaller. 225 is good for me, but a very small percent of people say it's too much, let's do 112 and be happy. Power saving with this option will do really nothing, barely anything
@@ -286,7 +304,8 @@ The default is this:
 // It's really heavy on memory too. DO NOT ENABLE BLE until you know what you want.
 // If PANIC happens with this enabled, turn it off, check again
 // If it works without it, disable other things (snake, bitcoin etc.)
-#define BLE_ENABLED 0 // Ble in general
+#define BLE_ENABLED 0         // Ble in general
+#define BLE_ADVERTISE_TIME 10 // Seconds to block sleep after advertising
 
 // Baiky, requires BLE enabled + Baiky app
 #define BAIKY 0

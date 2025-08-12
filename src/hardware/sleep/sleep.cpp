@@ -133,11 +133,7 @@ void goSleep()
 
     // deInitWatchdogTask();
 #if LP_CORE == false && YATCHY_SHIPPING_MODE == 0
-#if GADGETBRIDGE_ENABLED == true
-    esp_sleep_enable_timer_wakeup(17 * 1000 * 1000);
-#else
     wakeUpManageRTC();
-#endif
 #endif
 
 #if RTC_MEMORY_BACKUP
@@ -195,11 +191,8 @@ void goSleep()
         assert("Failed to make gpio interrupts");
     }
 #endif
-#if GADGETBRIDGE_ENABLED == false
-    esp_light_sleep_start();
-#else
+
     esp_deep_sleep_start();
-#endif
 }
 
 // Should be executed in every sleep cancelation which can happen without user interaction (no buttons clicked and the watchy is woken up by RTC, then the button task is not turned on because why would it)
