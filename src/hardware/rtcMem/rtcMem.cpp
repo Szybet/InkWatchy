@@ -89,13 +89,9 @@ RTC_DATA_ATTR rtcMem rM = {
 // slate watchface
 #if WATCHFACE_SLATE
     .slate = {
-        .weatherAvailable = false,
-        .lastHourWeatherCheck = 255,
-        .lastBatteryLevel = 255,
-        .lastDay = 255,
-        .lastMonth = 255,
-        .lastTemp = "",           // Initialize empty
-        .lastCondition = "",      // Initialize empty
+        .weatherAvailable = false, .lastHourWeatherCheck = 255, .lastBatteryLevel = 255, .lastDay = 255, .lastMonth = 255,
+        .lastTemp = "",      // Initialize empty
+        .lastCondition = "", // Initialize empty
     },
 #endif
 // taychron watchface
@@ -228,10 +224,13 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
     }
 
     // posixTimeZone
-    if (memcmp(source->posixTimeZone, destination->posixTimeZone, sizeof(source->posixTimeZone)) != 0)
+    if (strlen(TIMEZONE_POSIX) == 0 && strlen(TIMEZONE_OLSON) == 0)
     {
-        debugLog("Timezone data differs");
-        return true;
+        if (memcmp(source->posixTimeZone, destination->posixTimeZone, sizeof(source->posixTimeZone)) != 0)
+        {
+            debugLog("Timezone data differs");
+            return true;
+        }
     }
 
     debugLog("No changes detected");
@@ -260,11 +259,13 @@ void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
         destination->posixTimeZone[i] = source->posixTimeZone[i];
     }
     */
-    memcpy(
-        destination->posixTimeZone,
-        source->posixTimeZone,
-        sizeof(destination->posixTimeZone) // Automatically calculates total bytes
-    );
+    if (strlen(TIMEZONE_POSIX) == 0 && strlen(TIMEZONE_OLSON) == 0)
+    {
+        memcpy(
+            destination->posixTimeZone,
+            source->posixTimeZone,
+            sizeof(destination->posixTimeZone));
+    }
 }
 
 void rtcMemBackupManage()
@@ -283,7 +284,7 @@ void rtcMemBackupManage()
                 rtcMem *rtcMemTmp = (rtcMem *)buff.buf;
                 rtcMemRetrieve(rtcMemTmp, &rM);
                 free(buff.buf);
-                
+
                 // Yatchy doesn't go to sleep so often, so we don't remove it here
                 // fsRemoveFile(filePath);
                 // This confuses yatchy for some reason also not needed anymore because this part is early in the boot now
