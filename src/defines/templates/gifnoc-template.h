@@ -262,8 +262,10 @@ The default is this:
 #define GADGET_BRIDGE_ALLOW_TIMEZONE 1
 // Amount of seconds the *atchy will sleep before attempting BLE sync.
 // This will override the usual 1 minute sleep time.
+#define GADGETBRIDGE_SYNC_SLEEP_TIME_ENABLED 1
 #define GADGETBRIDGE_SYNC_SLEEP_TIME 17
 // Max amount of times we should attempt to re-connect to gadgetbridge before falling back to long sleep. (max 7)
+// 0 Means infinite
 #define GADGETBRIDGE_MAX_RECONNECTS 5
 
 // Power savings

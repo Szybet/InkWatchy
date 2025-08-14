@@ -404,22 +404,7 @@ void wakeUpManageRTC()
   }
 #endif
 
-#if GADGETBRIDGE_ENABLED
-  if (minutes == 1 && (GADGETBRIDGE_MAX_RECONNECTS == 0 || rM.ble_connection_attempts <= GADGETBRIDGE_MAX_RECONNECTS))
-  {
-    esp_sleep_enable_timer_wakeup(GADGETBRIDGE_SYNC_SLEEP_TIME * 1000 * 1000); // convert to microseconds
-  }
-  else
-  {
-    if (rM.ble_connection_attempts > 5)
-    {
-      debugLog("Too many connection attempts, disabling fast gadgetbridge wakeup");
-    }
-    wakeUpIn(minutes);
-  }
-#else
   wakeUpIn(minutes);
-#endif
 }
 
 uint8_t manageRtcLastSec = 0;

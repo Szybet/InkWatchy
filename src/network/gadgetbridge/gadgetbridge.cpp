@@ -203,4 +203,23 @@ void gadgetbridgeInit()
   startBle();
 }
 
+// False if we want regular sleep
+bool gadgetBridgeHijackSleep()
+{
+  // Note: I yeeted minutes == 1 && from here, because the user should decide if he wants gadgetbridge to run or not (from gui later), we can't just randomly turn it off
+  if ((GADGETBRIDGE_MAX_RECONNECTS == 0 || rM.ble_connection_attempts <= GADGETBRIDGE_MAX_RECONNECTS))
+  {
+    esp_sleep_enable_timer_wakeup(GADGETBRIDGE_SYNC_SLEEP_TIME * 1000 * 1000); // convert to microseconds
+    return true;
+  }
+  else
+  {
+    if (rM.ble_connection_attempts > 5)
+    {
+      debugLog("Too many connection attempts, disabling fast gadgetbridge wakeup");
+    }
+    return false;
+  }
+}
+
 #endif
