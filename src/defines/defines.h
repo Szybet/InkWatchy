@@ -102,21 +102,21 @@ static const WiFiCred *wifiCredStatic[] = {
 #include "../hardware/lpCore/export/lp_logs.h"
 #include "../hardware/lpCore/export/lp_rust.h" // Maybe don't call those functions from there
 #endif
-#if BLE_ENABLED
-#include "../hardware/ble/bleMain.h"
-
-#if GADGETBRIDGE_ENABLED
-#include "../network/gadgetbridge/gadgetbridge.h"
-#endif
-
-#endif
 
 // Network
-#include "../network/wifi/wifiLogic.h"
-#include "../network/wifi/wifiTask.h"
-#include "../network/wifi/wifiQuick.h"
-#include "../network/ntp.h"
-#include "../network/getTimezone.h"
+#include "../network/wifi/wifiThings/wifiLogic.h"
+#include "../network/wifi/wifiThings/wifiTask.h"
+#include "../network/wifi/wifiThings/wifiQuick.h"
+#include "../network/wifi/ntp.h"
+#include "../network/wifi/getTimezone.h"
+
+// Ble
+#if BLE_ENABLED
+#include "../network/ble/bleMain.h"
+#endif
+#if GADGETBRIDGE_ENABLED
+#include "../network/ble/gadgetbridge/gadgetbridge.h"
+#endif
 
 // Weather
 #if WEATHER_INFO
