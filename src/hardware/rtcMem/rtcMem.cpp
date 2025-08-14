@@ -229,10 +229,13 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
     }
 
     // posixTimeZone
-    if (memcmp(source->posixTimeZone, destination->posixTimeZone, sizeof(source->posixTimeZone)) != 0)
+    if (strlen(TIMEZONE_POSIX) == 0 && strlen(TIMEZONE_OLSON) == 0)
     {
-        debugLog("Timezone data differs");
-        return true;
+        if (memcmp(source->posixTimeZone, destination->posixTimeZone, sizeof(source->posixTimeZone)) != 0)
+        {
+            debugLog("Timezone data differs");
+            return true;
+        }
     }
 
     debugLog("No changes detected");
@@ -261,11 +264,13 @@ void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
         destination->posixTimeZone[i] = source->posixTimeZone[i];
     }
     */
-    memcpy(
-        destination->posixTimeZone,
-        source->posixTimeZone,
-        sizeof(destination->posixTimeZone) // Automatically calculates total bytes
-    );
+    if (strlen(TIMEZONE_POSIX) == 0 && strlen(TIMEZONE_OLSON) == 0)
+    {
+        memcpy(
+            destination->posixTimeZone,
+            source->posixTimeZone,
+            sizeof(destination->posixTimeZone));
+    }
 }
 
 void rtcMemBackupManage()
