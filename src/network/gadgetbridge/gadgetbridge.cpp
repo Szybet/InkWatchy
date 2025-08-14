@@ -99,14 +99,19 @@ class rxCallback : public BLECharacteristicCallbacks
       return;
     }
 
-    // Check for setTimeZone command
-    float timezoneOffset;
-    if (sscanf(command.substring(timezonePos).c_str(), "setTimeZone(%f)", &timezoneOffset) == 1)
+#if GADGET_BRIDGE_ALLOW_TIMEZONE
+    if (strlen(TIMEZONE_POSIX) == 0 && strlen(TIMEZONE_OLSON) == 0)
     {
-      debugLog("setTimeZone command received with offset:" + String(timezoneOffset));
-      int tzInt = static_cast<int>(timezoneOffset);
-      setRTCTimeZoneByUtcOffset(tzInt);
+      // Check for setTimeZone command
+      float timezoneOffset;
+      if (sscanf(command.substring(timezonePos).c_str(), "setTimeZone(%f)", &timezoneOffset) == 1)
+      {
+        debugLog("setTimeZone command received with offset:" + String(timezoneOffset));
+        int tzInt = static_cast<int>(timezoneOffset);
+        setRTCTimeZoneByUtcOffset(tzInt);
+      }
     }
+#endif
 #endif
 
     resetSleepDelay();

@@ -257,6 +257,9 @@ The default is this:
 #define GADGETBRIDGE_ENABLED 0
 // If 1, the *atchy will sync time and timezone with your phone using BLE.
 #define GADGETBRIDGE_SYNC_TIME 1
+// Allows gadget bridge to set the timezone. This does not account for winter / summer time switches
+// It's overwritten by TIMEZONE_POSIX and TIMEZONE_OLSON, so if those are enabled, this doesn't take effect
+#define GADGET_BRIDGE_ALLOW_TIMEZONE 1
 // Amount of seconds the *atchy will sleep before attempting BLE sync.
 // This will override the usual 1 minute sleep time.
 #define GADGETBRIDGE_SYNC_SLEEP_TIME 17
