@@ -253,7 +253,7 @@ The default is this:
 // This will significantly impact batter life.
 // Allows the user to pair their phone with the watchy to
 // sync time and timezone with their phone.
-#define GADGETBRIDGE_ENABLED 1
+#define GADGETBRIDGE_ENABLED 0
 // If 1, the *atchy will sync time and timezone with your phone using BLE.
 #define GADGETBRIDGE_SYNC_TIME 1
 // Amount of seconds the *atchy will sleep before attempting BLE sync.
