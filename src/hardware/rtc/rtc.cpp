@@ -129,7 +129,7 @@ void saveRTC(tmElements_t timeToSave)
 #endif
 }
 
-void setRTCTime(time_t epoch)
+void setRTCTimeUnix(time_t epoch)
 {
   dontTouchTimeZone = true;
   rM.SRTC.doBreakTime(epoch, timeRTCUTC0);

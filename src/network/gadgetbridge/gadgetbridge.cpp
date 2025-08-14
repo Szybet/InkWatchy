@@ -89,7 +89,7 @@ class rxCallback : public BLECharacteristicCallbacks
     if (sscanf(command.c_str(), "setTime(%lld)", &timestamp) == 1)
     {
       debugLog("setTime command received with timestamp:" + String(timestamp));
-      setRTCTime(timestamp);
+      setRTCTimeUnix(timestamp);
     }
     int timezonePos = command.indexOf("setTimeZone(");
 
