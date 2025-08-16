@@ -9,7 +9,11 @@ extern BLEService *bleService;
 extern bool bleClientConnected;
 
 void initBle();
+void initBle(String name);
 void startBle();
 void exitBle();
+
+void enableBonding();
+void removeBondedDevices();
 
 #endif

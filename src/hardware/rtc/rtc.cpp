@@ -129,6 +129,26 @@ void saveRTC(tmElements_t timeToSave)
 #endif
 }
 
+void setRTCTimeUnix(time_t epoch)
+{
+  dontTouchTimeZone = true;
+  rM.SRTC.doBreakTime(epoch, timeRTCUTC0);
+  saveRTC(timeRTCUTC0);
+  dontTouchTimeZone = false;
+}
+
+void setRTCTimeZoneByUtcOffset(int offset)
+{
+  // Flip the sign because that's how posix timezones are defined.
+  // Use GMT for now, which will create a static timezone,
+  // meaning we won't account for daylight saving time.
+  String tz = "GMT" + String(offset * -1);
+  debugLog("Setting timezone to: " + tz);
+  strncpy(rM.posixTimeZone, tz.c_str(), tz.length());
+  rM.posixTimeZone[tz.length()] = '\0';
+  readRTC();
+}
+
 tmElements_t convertToTmElements(const struct tm &tmStruct)
 {
   tmElements_t elements;

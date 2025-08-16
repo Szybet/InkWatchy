@@ -49,7 +49,7 @@
 #include "macros.h"
 #include "definesVars.h"
 #include "confidential.h"
-static const WiFiCred* wifiCredStatic[] = {
+static const WiFiCred *wifiCredStatic[] = {
     &wifi_credential1,
     &wifi_credential2,
     &wifi_credential3,
@@ -59,7 +59,7 @@ static const WiFiCred* wifiCredStatic[] = {
     &wifi_credential7,
     &wifi_credential8,
     &wifi_credential9,
-    &wifi_credential10
+    &wifi_credential10,
 };
 #define SIZE_WIFI_CRED_STAT sizeof(wifiCredStatic) / sizeof(wifiCredStatic[0])
 
@@ -103,16 +103,21 @@ static const WiFiCred* wifiCredStatic[] = {
 #include "../hardware/lpCore/export/lp_logs.h"
 #include "../hardware/lpCore/export/lp_rust.h" // Maybe don't call those functions from there
 #endif
-#if BLE_ENABLED
-#include "../hardware/ble/bleMain.h"
-#endif
 
 // Network
-#include "../network/wifi/wifiLogic.h"
-#include "../network/wifi/wifiTask.h"
-#include "../network/wifi/wifiQuick.h"
-#include "../network/ntp.h"
-#include "../network/getTimezone.h"
+#include "../network/wifi/wifiThings/wifiLogic.h"
+#include "../network/wifi/wifiThings/wifiTask.h"
+#include "../network/wifi/wifiThings/wifiQuick.h"
+#include "../network/wifi/ntp.h"
+#include "../network/wifi/getTimezone.h"
+
+// Ble
+#if BLE_ENABLED
+#include "../network/ble/bleMain.h"
+#endif
+#if GADGETBRIDGE_ENABLED
+#include "../network/ble/gadgetbridge/gadgetbridge.h"
+#endif
 
 // Weather
 #if WEATHER_INFO

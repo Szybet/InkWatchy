@@ -91,36 +91,35 @@ void goSleep()
 #endif
     }
 
-    // Shouldn't ever happen, as no interactions are going on
-    // while (motorTaskRunning == true)
-    // {
-    //     debugLog("Waiting for motor task");
-    //     delayTask(25);
-    // }
+    // This chaos enables it to also work on yatchy lp core
+#if GADGETBRIDGE_ENABLED
+    if (gadgetBridgeHijackSleep() == false)
+#endif
+    {
 #if LP_CORE == true && YATCHY_SHIPPING_MODE == 0
-    if (rM.disableWakeUp == false)
-    {
-        deInitScreen();
-        delayTask(10);
-        // This enables the subsystem, so it doesn't shut it down or something
-        // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#ulp-coprocessor-wakeup
-        // TODO: maybe this https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#power-down-of-rtc-peripherals-and-memories
+        if (rM.disableWakeUp == false)
+        {
+            deInitScreen();
+            delayTask(10);
+            // This enables the subsystem, so it doesn't shut it down or something
+            // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#ulp-coprocessor-wakeup
+            // TODO: maybe this https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-reference/system/sleep_modes.html#power-down-of-rtc-peripherals-and-memories
 
-        // This, without the screen, gives +150uA - or not really
-        initRtcGpio();
-        loadLpCore();
-        runLpCore();
+            // This, without the screen, gives +150uA - or not really
+            initRtcGpio();
+            loadLpCore();
+            runLpCore();
 
-        // Can be before this scope, doesn't matter in my opinion
-        ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
-    }
-    else
-    {
-        deInitScreen();
-    }
+            // Can be before this scope, doesn't matter in my opinion
+            ESP_ERROR_CHECK(esp_sleep_enable_ulp_wakeup());
+        }
+        else
+        {
+            deInitScreen();
+        }
 #else
-    deInitScreen();
-    // Not needed
+        deInitScreen();
+        // Not needed
 #if 0
     rM.gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
     digitalWrite(EPD_RESET, true);
@@ -128,13 +127,14 @@ void goSleep()
 #endif
 #endif
 
-    // https://esp32.com/viewtopic.php?t=34166
-    // turnOffWifi();
+        // https://esp32.com/viewtopic.php?t=34166
+        // turnOffWifi();
 
-    // deInitWatchdogTask();
+        // deInitWatchdogTask();
 #if LP_CORE == false && YATCHY_SHIPPING_MODE == 0
-    wakeUpManageRTC();
+        wakeUpManageRTC();
 #endif
+    }
 
 #if RTC_MEMORY_BACKUP
     unsigned char tmpHash[16];
@@ -191,6 +191,7 @@ void goSleep()
         assert("Failed to make gpio interrupts");
     }
 #endif
+
     esp_deep_sleep_start();
 }
 
@@ -325,6 +326,13 @@ void manageSleep()
 #if ATCHY_VER == YATCHY
             debugLog("Battery voltage before sleep: " + String(BatteryRead()));
             debugLog("Gpio expander stat in pin state: " + BOOL_STR(rM.gpioExpander.digitalRead(MCP_STAT_IN)));
+#endif
+
+#if GADGETBRIDGE_ENABLED
+            if (!bleClientConnected)
+            {
+                rM.ble_connection_attempts++;
+            }
 #endif
 
 #if DEBUG && DISABLE_SLEEP_PARTIAL

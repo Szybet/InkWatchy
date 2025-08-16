@@ -91,8 +91,8 @@ struct rtcMem
         uint8_t lastBatteryLevel;
         uint8_t lastDay;
         uint8_t lastMonth;
-        char lastTemp[12];          // For temperature string like "-15°C" (max ~11 chars + null)
-        char lastCondition[32];     // For weather condition strings (max ~31 chars + null)
+        char lastTemp[12];      // For temperature string like "-15°C" (max ~11 chars + null)
+        char lastCondition[32]; // For weather condition strings (max ~31 chars + null)
     } slate;
 #endif
 // taychron watchface
@@ -163,12 +163,14 @@ struct rtcMem
     bool pomodoroWorkNow : 1;
 #endif
 #endif
+
+    uint8_t ble_connection_attempts : 3;
 };
 
 extern rtcMem rM;
 
 #if RTC_MEMORY_BACKUP
 extern unsigned char rtcMd5[16];
-bool didRtcChange(rtcMem* source, rtcMem* destination);
+bool didRtcChange(rtcMem *source, rtcMem *destination);
 void rtcMemBackupManage();
 #endif

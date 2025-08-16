@@ -53,6 +53,10 @@ void setup()
 #if INK_ALARMS
   checkAlarms();
 #endif
+
+#if GADGETBRIDGE_ENABLED
+  gadgetbridgeInit();
+#endif
 }
 
 void loop()
