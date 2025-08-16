@@ -27,7 +27,8 @@
 #include <esp_core_dump.h>
 #include "esp_wifi.h"
 #include "hal/gpio_types.h"
-#include <nvs_flash.h> 
+#include <nvs_flash.h>
+#include <atomic>
 #include "driver/rtc_io.h"
 #include <Olson2POSIX.h>
 #undef ARDUINOJSON_ENABLE_PROGMEM

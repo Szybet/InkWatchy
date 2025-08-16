@@ -211,7 +211,7 @@ void initAcc()
     }
 }
 
-// All in one function to get steps, it managed everything
+// All in one function to get steps, it manages everything
 // TODO: after changing watchface that doesn't use steps, the acc is still turned on with this feature while its not used
 uint16_t getSteps()
 {    
