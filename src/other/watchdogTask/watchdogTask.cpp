@@ -20,13 +20,12 @@ bool anyButtonCheck()
 }
 
 #if WATCHDOG_TASK
-
-// std::mutex watchdogFine;
 TaskHandle_t watchdogTask = NULL;
 
 #define WATCHDOG_DELAY 22500
 #define WATCHDOG_SMALL_DELAY 3000
 int64_t watchdogMillis = 0;
+std::atomic<bool> watchdogFlag{false};
 
 void loopWatchdogTask(void *parameter)
 {
@@ -46,17 +45,14 @@ void loopWatchdogTask(void *parameter)
         if (watchdogMillis + WATCHDOG_DELAY > millisBetter())
         {
             watchdogMillis = millisBetter();
-            // watchdogFine.lock();
-            if (rM.everythingIsFine == false)
+            if (watchdogFlag.load(std::memory_order_relaxed) == false)
             {
                 // debugLog("rM.everythingIsFine is false, resetting...");
                 assert(0);
             }
             else
             {
-                rM.everythingIsFine = false;
-                // watchdogFine.unlock();
-                // delayTask(WATCHDOG_DELAY);
+                watchdogFlag.store(false, std::memory_order_relaxed);
             }
         }
         delayTask(WATCHDOG_SMALL_DELAY);
@@ -66,6 +62,7 @@ void loopWatchdogTask(void *parameter)
 void initWatchdogTask()
 {
     debugLog("Init watchdog");
+    watchdogPing();
     xTaskCreate(
         loopWatchdogTask,
         "watchdogTask",
@@ -88,10 +85,7 @@ void deInitWatchdogTask()
 void watchdogPing()
 {
     // debugLog("watchdogPing called");
-    // Nah
-    // watchdogFine.lock();
-    rM.everythingIsFine = true;
-    // watchdogFine.unlock();
+    watchdogFlag.store(true, std::memory_order_relaxed);
 }
 
 #else

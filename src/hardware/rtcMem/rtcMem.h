@@ -44,10 +44,6 @@ struct rtcMem
 #if TIME_DRIFT_CORRECTION
     uint64_t driftStartUnix;
 #endif
-// Watchdog
-#if WATCHDOG_TASK
-    bool everythingIsFine : 1;
-#endif
     // Power settings
     bool disableAllVibration : 1;
     bool disableWakeUp : 1;

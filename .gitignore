@@ -37,6 +37,8 @@ components/arduino
 !.root/.cargo/.gitkeep
 .root/.rustup/*
 !.root/.rustup/.gitkeep
+.root/.espup/*
+!.root/.espup/.gitkeep
 
 trash/
 build/

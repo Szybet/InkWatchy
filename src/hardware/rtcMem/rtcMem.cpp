@@ -41,14 +41,10 @@ RTC_DATA_ATTR rtcMem rM = {
     // Wifi logic
     .lastSyncUnix = 0,
     .lastTryUnix = 0,
-// Ntp
-// Time drift correction
+    // Ntp
+    // Time drift correction
 #if TIME_DRIFT_CORRECTION
     .driftStartUnix = 0,
-#endif
-// Watchdog
-#if WATCHDOG_TASK
-    .everythingIsFine = true,
 #endif
     // Power settings
     .disableAllVibration = false,

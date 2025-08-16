@@ -15,6 +15,7 @@
         "source=${localWorkspaceFolder}/.root/.esp-idf/espressif/,target=/root/.espressif/,type=bind,consistency=consistent",
         "source=${localWorkspaceFolder}/.root/.cargo/,target=/root/.cargo/,type=bind,consistency=consistent",
         "source=${localWorkspaceFolder}/.root/.rustup/,target=/root/.rustup/,type=bind,consistency=consistent",
+        "source=${localWorkspaceFolder}/.root/.espup/,target=/root/.espup/,type=bind,consistency=consistent",
         "source=/tmp/.X11-unix,target=/tmp/.X11-unix,type=bind,consistency=cached"
 	],
 	"runArgs": [
