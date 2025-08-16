@@ -65,6 +65,7 @@ RUN apt-get install -y \
 # https://linuxdecoded.com/fix-unsupported-locale-setting-in-python-or-cli-alternative-for-dpkg-reconfigure-locales/
 RUN echo "en_US.UTF-8 UTF-8" | sudo tee -a /etc/locale.gen; sudo locale-gen en_US.utf8
 
+# Adds things to bashrc, to be sure
 RUN echo 'export PATH="$PATH:$HOME/.root/.platformio/penv/bin"' | tee -a /root/.bashrc /root/.zshrc
 RUN echo 'export PYTHONPATH="$PYTHONPATH:/root/.platformio/packages/tool-esptoolpy"' | tee -a /root/.bashrc /root/.zshrc
 RUN git config --global --add safe.directory '*'
@@ -76,7 +77,11 @@ RUN mkdir -p /root/.espressif/
 #RUN python3 /tmp/get-platformio.py
 
 # Platformio folder prerequisite for compliling Watchy firmware via Terminal/Docker
-ENV PATH=$PATH:/root/.platformio/penv/bin:/root/.cargo/bin
+ENV PATH=$PATH:/root/.platformio/penv/bin
+
+# Adding rust to path
+ENV PATH=$PATH:/root/.cargo/bin
+ENV PATH=$PATH:$HOME/.cargo/bin
 
 # For rusty stuff
 # Idk weird fix with update

@@ -1,6 +1,8 @@
 #!/bin/bash
 
-rm -rf .root/.cargo/bin/cargo # To restart rust installation
+# To restart rust installation
+rm -rf $HOME/.cargo/bin/cargo "$HOME/.rustup/toolchains/esp" "$HOME/.espup" "$HOME/.cargo/bin/espup" $HOME/.cargo/bin/cbindgen $HOME/.cargo/bin/rustup
+
 rm -rf .pio/ dependencies.lock sdkconfig.* 
 rm -rf .root/.platformio/.cache .root/.platformio/platforms .root/.platformio/packages/framework-e*
 # rm -rf .root/.platformio/packages/tl-install # Fixes softlock if bad install happens, or does it?
