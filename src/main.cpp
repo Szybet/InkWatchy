@@ -57,9 +57,6 @@ void setup()
 
 void loop()
 {
-#if TEMP_CHECKS_ENABLED
-  tempChecker();
-#endif
   if (isFullMode() == true)
   {
     watchdogPing();
@@ -72,6 +69,10 @@ void loop()
     regularSync();
 #endif
   }
+#if TEMP_CHECKS_ENABLED
+  tempChecker();
+#endif
+
   loopManager();
 
 #if DEBUG

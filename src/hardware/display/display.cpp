@@ -214,6 +214,7 @@ void resetHoldManage()
 
 void updateDisplay(bool mode)
 {
+    watchdogPing();
 #if SCREEN_FADING_AWAY_2_WORKAROUND
     initDisplayDriver(false);
 #endif
