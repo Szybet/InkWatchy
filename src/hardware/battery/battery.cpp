@@ -398,7 +398,7 @@ void dumpBatteryScreen(void *parameter)
     {
         dis->setFont(getFont("dogicalpixel4"));
         dis->setTextSize(1);
-        dis->fillRect(80, 80, 40, 40, GxEPD_WHITE);
+        dis->fillRect(80, 80, 40, 40, SCWhite);
         dis->setCursor(85, 100);
         dis->print(String(getBatteryVoltage()));
         resetSleepDelay();

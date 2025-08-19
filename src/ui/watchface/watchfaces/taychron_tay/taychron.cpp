@@ -58,19 +58,19 @@ static void showTimeFull()
     screenTimeChanged = true;
 #endif
     // Now UI
-    dis->fillRect(0, TIME_CORD_Y, 200, 30, GxEPD_BLACK);            // Clear middle
+    dis->fillRect(0, TIME_CORD_Y, 200, 30, SCBlack);            // Clear middle
     String currTime = getTaychronLocalizedTimeString(timeRTCLocal); // Use localized function
 
 #if WATCHFACE_12H
     setTextSize(1);
     setFont(AMPM_FONT);
     String ampmStr = getTaychronLocalizedAMPM(timeRTCLocal); // Use localized function
-    writeTextReplaceBack(ampmStr, AMPPM_X, AMPPM_Y, GxEPD_WHITE, GxEPD_BLACK);
+    writeTextReplaceBack(ampmStr, AMPPM_X, AMPPM_Y, SCWhite, SCBlack);
 #endif
 
     setTextSize(1);
     setFont(TIME_FONT);
-    writeTextReplaceBack(currTime, TIME_CORD_X, TIME_CORD_Y, GxEPD_WHITE, GxEPD_BLACK);
+    writeTextReplaceBack(currTime, TIME_CORD_X, TIME_CORD_Y, SCWhite, SCBlack);
 
 #if WATCHFACE_TAYCHRON_DATE
     // lets try drawing date below it
@@ -80,7 +80,7 @@ static void showTimeFull()
 
     setTextSize(1);
     setFont(DATE_FONT);
-    writeTextReplaceBack(finalStr, DATE_CORD_X, DATE_CORD_Y, GxEPD_WHITE, GxEPD_BLACK);
+    writeTextReplaceBack(finalStr, DATE_CORD_X, DATE_CORD_Y, SCWhite, SCBlack);
 #endif
 }
 

@@ -174,7 +174,7 @@ void watchfaceManageAll(bool init)
         WatchyGSR *gsr = reinterpret_cast<WatchyGSR *>(watchfaceSel->data);
         wManageGsrLaunch(gsr, init);
 #else
-        debugLog("How did it happen? GSR IS DISABLED ISIN't IT");
+        debugLog("How did it happen? GSR IS DISABLED ISIN'T IT");
 #endif
         break;
     }
@@ -193,10 +193,22 @@ void watchfaceManageAll(bool init)
 
 void loopWatchfaceManage()
 {
+#if WATCHDOG_INVERT_COLORS
+    invertScreenColors();
+#endif
     watchfaceManageAll(false);
+#if WATCHDOG_INVERT_COLORS
+    resetScreenColors();
+#endif
 }
 
 void initWatchfaceManage()
 {
+#if WATCHDOG_INVERT_COLORS
+    invertScreenColors();
+#endif
     watchfaceManageAll(true);
+#if WATCHDOG_INVERT_COLORS
+    resetScreenColors();
+#endif
 }

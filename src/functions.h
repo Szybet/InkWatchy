@@ -28,3 +28,6 @@ int betterRandom(int max);
 void setBit(uint8_t *num, uint8_t position, bool value);
 bool getBit(uint8_t num, uint8_t position);
 void toggleBit(uint8_t *num, uint8_t position);
+
+void invertScreenColors();
+void resetScreenColors();

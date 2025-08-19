@@ -162,7 +162,7 @@ String showPage(int page, bool actuallyShowIt, int charsPerPage)
         setTextSize(1);
 
         dis->setCursor(1, startHeightBook);
-        dis->fillScreen(GxEPD_WHITE);
+        dis->fillScreen(SCWhite);
     }
     if (openedBook == false)
     {
@@ -292,7 +292,7 @@ void loopBook()
     case LongMenu:
     {
         excOn = !excOn;
-        dis->fillRect(0, 0, 200, BOOK_AXC_LINE_WIDTH, GxEPD_WHITE);
+        dis->fillRect(0, 0, 200, BOOK_AXC_LINE_WIDTH, SCWhite);
         dUChange = true;
         break;
     }
@@ -451,12 +451,12 @@ void loopBook()
         if (abs(newFilledWidth - filledAxcLine) > BOOK_AXC_DIFFERENCE_CHANGE)
         {
             filledAxcLine = newFilledWidth;
-            // dis->drawFastHLine(0, 1, 200, GxEPD_WHITE);
-            // dis->drawFastHLine(0, 1, filledAxcLine, GxEPD_BLACK);
-            dis->fillRect(0, 0, 200, BOOK_AXC_LINE_WIDTH, GxEPD_WHITE);
+            // dis->drawFastHLine(0, 1, 200, SCWhite);
+            // dis->drawFastHLine(0, 1, filledAxcLine, SCBlack);
+            dis->fillRect(0, 0, 200, BOOK_AXC_LINE_WIDTH, SCWhite);
             if (waitForReturn == false)
             {
-                dis->fillRect(0, 0, newFilledWidth, BOOK_AXC_LINE_WIDTH, GxEPD_BLACK);
+                dis->fillRect(0, 0, newFilledWidth, BOOK_AXC_LINE_WIDTH, SCBlack);
             }
             else
             {

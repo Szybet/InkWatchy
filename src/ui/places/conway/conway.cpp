@@ -48,7 +48,7 @@ void drawGrid(uint8_t *conwayGrid, uint8_t conwayHeight, uint8_t conwayWidth, ui
             uint8_t color = getPixel(conwayGrid, x, y, conwayWidth);
             if (color == 1)
             {
-                dis->drawPixel(x + xOffset, y + yOffset, GxEPD_BLACK);
+                dis->drawPixel(x + xOffset, y + yOffset, SCBlack);
             }
         }
     }
@@ -118,14 +118,14 @@ void computeNewGeneration(uint8_t *currentGrid, uint8_t *newGrid, uint8_t conway
 // disUp(true) is needed here i quess
 void initConway()
 {
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     initConwayGrid(conwayAppGrid, 42, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH);
     drawGrid(conwayAppGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH, 0 , 0);
 }
 
 void loopConway()
 {
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     computeNewGeneration(conwayAppGrid, conwayAppNewGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH);
     drawGrid(conwayAppGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH, 0 , 0);
     disUp(true);

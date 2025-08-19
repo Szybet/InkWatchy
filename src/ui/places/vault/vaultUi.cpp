@@ -276,7 +276,7 @@ void showVaultImage(String file)
             On PC every checksum, before, after decrypting looks fine
             so the issue is here, in decrypting. Maybe in the base64 part, maybe in the decrypting itself, idk
         */
-        dis->drawFastHLine(0, 0, 200, GxEPD_WHITE);
+        dis->drawFastHLine(0, 0, 200, SCWhite);
         disUp(true);
 
         delete[] realImage;

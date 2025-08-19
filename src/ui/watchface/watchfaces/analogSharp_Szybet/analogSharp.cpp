@@ -9,7 +9,7 @@ void drawHand(int centerX, int centerY, uint16_t angle, int length)
     float rad = adjustedAngle * (PI / 180);
     int x = centerX + cos(rad) * length;
     int y = centerY - sin(rad) * length;
-    dis->drawLine(centerX, centerY, x, y, GxEPD_BLACK);
+    dis->drawLine(centerX, centerY, x, y, SCBlack);
 }
 
 #define LINE_WIDTH 6
@@ -18,7 +18,7 @@ wfmTwoRet analogConwayDef(wfmTwoArg arg)
 {
     rM.wFTime = timeRTCLocal;
     debugLog("Launched analog conway");
-    dis->fillRect(0, 0, 200, 200, GxEPD_WHITE);
+    dis->fillRect(0, 0, 200, 200, SCWhite);
 
     uint8_t hour = timeRTCLocal.Hour;
     hour = hour % 12;

@@ -13,7 +13,7 @@ int credPage = 0;
 
 void changePageCredits()
 {
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     switch (credPage)
     {
     case ICON_PAGE:

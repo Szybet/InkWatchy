@@ -232,7 +232,7 @@ void switchBookSelector()
 void showTextDialog(String str, bool center, String title)
 {
     /*
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     setFont(&FreeSansBold9pt7b);
     setTextSize(1);
     simpleCenterText(str);

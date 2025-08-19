@@ -42,7 +42,7 @@ void wManageGsrLaunch(WatchyGSR *gsr, bool init)
     {
         setSleepDelay(0);
         if(draw == true) {
-            dis->fillScreen(GxEPD_WHITE);
+            dis->fillScreen(SCWhite);
             gsr->InsertDrawWeather(1, true);
             gsr->InsertDrawWatchStyle(1);
             dUChange = true;    

@@ -41,9 +41,9 @@ void drawMarker3(uint16_t c, bool active)
 
 void cleanMarkers()
 {
-    drawMarker1(GxEPD_WHITE, true);
-    drawMarker2(GxEPD_WHITE, true);
-    drawMarker3(GxEPD_WHITE, true);
+    drawMarker1(SCWhite, true);
+    drawMarker2(SCWhite, true);
+    drawMarker3(SCWhite, true);
 }
 
 void drawPosMarker()
@@ -54,14 +54,14 @@ void drawPosMarker()
     // Then draw the one
     if (rM.inkfield.watchfacePos == EMPTY_POS)
     {
-        drawMarker1(GxEPD_BLACK, rM.inkfield.positionEngaged);
+        drawMarker1(SCBlack, rM.inkfield.positionEngaged);
     }
     else if (rM.inkfield.watchfacePos == MODULE_POS)
     {
-        drawMarker2(GxEPD_BLACK, rM.inkfield.positionEngaged);
+        drawMarker2(SCBlack, rM.inkfield.positionEngaged);
     } if (rM.inkfield.watchfacePos == MODULE_ENG_POS)
     {
-        drawMarker3(GxEPD_BLACK, rM.inkfield.positionEngaged);
+        drawMarker3(SCBlack, rM.inkfield.positionEngaged);
     }
     dUChange = true; 
 }

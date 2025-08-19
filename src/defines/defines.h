@@ -73,6 +73,18 @@ static const WiFiCred* wifiCredStatic[] = {
 #include <ulp_lp_core_memory_shared.h>
 #endif
 
+#if !INITIAL_SCREEN_INVERT
+#define SC_BLACK_INIT GxEPD_BLACK;
+#define SC_WHITE_INIT GxEPD_WHITE;
+#else
+#define SC_BLACK_INIT GxEPD_WHITE;
+#define SC_WHITE_INIT GxEPD_BLACK;
+#endif
+
+// Screen Colors
+extern uint16_t SCBlack;
+extern uint16_t SCWhite;
+
 #include "../functions.h"
 #include "../other/rustExport/rEGeneric.h"
 

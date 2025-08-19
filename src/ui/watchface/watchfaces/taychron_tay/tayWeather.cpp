@@ -86,24 +86,24 @@ void tayDrawWeather()
     if (wData.fine == true)
     {
         // Use global temperature system with proper conversion
-        dis->fillRect(TEMP_RECT_CORD, TEMP_RECT_SIZE, GxEPD_WHITE);
+        dis->fillRect(TEMP_RECT_CORD, TEMP_RECT_SIZE, SCWhite);
         String temps = formatTemperature(wData.temp);  // Use global function
         if (temps.length() > 3)
         {
             temps = temps.substring(0, 3);
         }
-        writeTextReplaceBack(temps, TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(temps, TEMP_CORD, SCBlack, SCWhite, true, 1);
         writeImageN(WEATHER_ICON_CORD, getImg("taychron/" + tay_getWeatherIcon(wData.weather_code)));
     }
     else
     {
         // Use global language system for error message
-        writeTextReplaceBack(WF_T_ERROR, TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(WF_T_ERROR, TEMP_CORD, SCBlack, SCWhite, true, 1);
         writeImageN(WEATHER_ICON_CORD, getImg("taychron/" + tay_getWeatherIcon(255)));
     }
 #else
     // Use global language system for error message
-    writeTextReplaceBack(WF_T_ERROR, TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(WF_T_ERROR, TEMP_CORD, SCBlack, SCWhite, true, 1);
     writeImageN(WEATHER_ICON_CORD, getImg("taychron/meteor"));
 #endif
 }

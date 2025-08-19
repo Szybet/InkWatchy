@@ -130,7 +130,7 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     rM.currentDay = -1;
 
     // No.
-    //drawButton(MODULE_RECT_X + img->bw + 2, MODULE_RECT_Y + 10, btnStr, &emptyImgPack, false, 2, 0, GxEPD_BLACK, GxEPD_WHITE, true, getFont("dogicapixel4"));
+    //drawButton(MODULE_RECT_X + img->bw + 2, MODULE_RECT_Y + 10, btnStr, &emptyImgPack, false, 2, 0, SCBlack, SCWhite, true, getFont("dogicapixel4"));
 }
 
 #endif

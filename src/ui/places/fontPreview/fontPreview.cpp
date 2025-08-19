@@ -27,7 +27,7 @@ void initFontMenu()
 
 void initFontPreview()
 {
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     setFont(getFont(lastMenuSelected));
     setTextSize(1);
     dis->setTextWrap(true);

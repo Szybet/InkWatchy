@@ -20,7 +20,7 @@ void setRandomColor()
 
 void initParty()
 {
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     setFont(font);
     setTextSize(1);
     writeTextCenterReplaceBack(PARTY_MESSAGE, dis->height() / 2);

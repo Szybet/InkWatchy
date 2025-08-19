@@ -31,7 +31,7 @@ customRtcData *customRtcDataGet()
 void lpCoreScreenPrepare(bool now, bool setDuChange)
 {
     debugLog("Clearing screen space for lp core");
-    dis->fillRect(LP_CORE_SCREEN_X, LP_CORE_SCREEN_Y, LP_CORE_SCREEN_W, LP_CORE_SCREEN_H, GxEPD_WHITE);
+    dis->fillRect(LP_CORE_SCREEN_X, LP_CORE_SCREEN_Y, LP_CORE_SCREEN_W, LP_CORE_SCREEN_H, SCWhite);
     if (now == true)
     {
         updateDisplay(PARTIAL_UPDATE);
@@ -296,7 +296,7 @@ void startLpCoreTest()
 {
     bootStatus.fromWakeup = false; // To be sure
     initDisplay();
-    dis->fillRect(0, 0, 200, 200, GxEPD_BLACK);
+    dis->fillRect(0, 0, 200, 200, SCBlack);
     disUp(true);
     initRTC();
     debugLog("Current unix time: " + String(getUnixTime(timeRTCUTC0)));

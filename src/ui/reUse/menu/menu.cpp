@@ -62,7 +62,7 @@ void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSiz
 
   resetPreviousItems();
 
-  dis->fillScreen(GxEPD_WHITE);
+  dis->fillScreen(SCWhite);
   showMenu();
 }
 
@@ -95,9 +95,9 @@ void showMenu()
     // uint16_t hTmp;
     // uint16_t wTmp;
     // getTextBounds(previousPageNumber, NULL, NULL, &wTmp, &hTmp);
-    // dis->fillRect(dis->width() - pageStringWidth - 10, currentHeight - hTmp, wTmp, hTmp, GxEPD_WHITE);
+    // dis->fillRect(dis->width() - pageStringWidth - 10, currentHeight - hTmp, wTmp, hTmp, SCWhite);
 
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     resetPreviousItems();
 
     dis->print(pageString);
@@ -115,7 +115,7 @@ void showMenu()
 
   currentHeight = currentHeight + 4; // +2 to offset between line and menu name
 
-  dis->fillRect(0, currentHeight, dis->width(), 1, GxEPD_BLACK);
+  dis->fillRect(0, currentHeight, dis->width(), 1, SCBlack);
   currentHeight = currentHeight + 4; // +2 to offset line and button
 
   while (startingButton + data.itemsOnPage <= data.currentButton)
@@ -159,21 +159,21 @@ void showMenu()
       previousPageNumber = ""; // To reset the next iteration
       img = &emptyImgPack;
     }
-    buttonSize = drawButton(1, currentHeight, textToShow, img, invert, 2, 0, GxEPD_BLACK, GxEPD_WHITE, draw);
+    buttonSize = drawButton(1, currentHeight, textToShow, img, invert, 2, 0, SCBlack, SCWhite, draw);
     // debugLog("Button h in menu: " + String(buttonSize.h));
     if (draw == true)
     {
       if (invert == true)
       {
-        dis->fillRect(1 + buttonSize.w, currentHeight, dis->width() - buttonSize.w - 1, buttonSize.h, GxEPD_BLACK);
+        dis->fillRect(1 + buttonSize.w, currentHeight, dis->width() - buttonSize.w - 1, buttonSize.h, SCBlack);
       }
       else
       {
-        dis->fillRect(1 + buttonSize.w, currentHeight, dis->width() - buttonSize.w - 1, buttonSize.h, GxEPD_WHITE);
+        dis->fillRect(1 + buttonSize.w, currentHeight, dis->width() - buttonSize.w - 1, buttonSize.h, SCWhite);
       }
       if (i != startingButton && MENU_LINES == true)
       {
-        dis->fillRect(0, currentHeight - 2, dis->width(), 2, GxEPD_BLACK);
+        dis->fillRect(0, currentHeight - 2, dis->width(), 2, SCBlack);
       }
     }
     currentHeight = currentHeight + buttonSize.h + buttonsOffset;

@@ -52,7 +52,7 @@ void setAlarmQuick(int minutes, int id)
         char timeBuf[6];                                                      \
         snprintf(timeBuf, sizeof(timeBuf), "%02d:%02d", hourNow, minutesNow); \
                                                                               \
-        dis->fillScreen(GxEPD_WHITE);                                         \
+        dis->fillScreen(SCWhite);                                         \
         setFont(&FreeSansBold9pt7b);                                          \
         setTextSize(1);                                                       \
         dis->setTextWrap(false);                                              \
@@ -67,7 +67,7 @@ void setAlarmQuick(int minutes, int id)
         dis->setCursor(0, currentHeight - 3);                                 \
         dis->print(menuName);                                                 \
                                                                               \
-        dis->fillRect(0, currentHeight, dis->width(), 3, GxEPD_BLACK);        \
+        dis->fillRect(0, currentHeight, dis->width(), 3, SCBlack);        \
         currentHeight = currentHeight + maxHeight;                            \
                                                                               \
         centerText(ALARM_QUICK_ALARM_SET_FOR, &currentHeight);                \

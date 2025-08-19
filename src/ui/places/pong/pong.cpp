@@ -69,7 +69,7 @@ void zeroBalls()
 
 void drawBall()
 {
-    dis->fillCircle(ball.x, ball.y, BALL_RADIUS, GxEPD_WHITE);
+    dis->fillCircle(ball.x, ball.y, BALL_RADIUS, SCWhite);
     if (ball.x > BALL_CENTER_FASTER_X)
     {
         ball.x = ball.x + ballDirection.x * (BALL_SPEED * BALL_CENTER_FASTER);
@@ -122,7 +122,7 @@ void drawBall()
         ballDirection.y = ballDirection.y * -1;
     }
 
-    dis->fillCircle(ball.x, ball.y, BALL_RADIUS, GxEPD_BLACK);
+    dis->fillCircle(ball.x, ball.y, BALL_RADIUS, SCBlack);
 }
 
 void movePaddle(int h)
@@ -177,13 +177,13 @@ void drawPaddle(buttonState btn, bool force)
         break;
     }
     }
-    dis->fillRect(PADDLE_X, oldPaddle, PADDLE_W, PADDLE_H, GxEPD_WHITE);
-    dis->fillRect(PADDLE_X, paddle, PADDLE_W, PADDLE_H, GxEPD_BLACK);
+    dis->fillRect(PADDLE_X, oldPaddle, PADDLE_W, PADDLE_H, SCWhite);
+    dis->fillRect(PADDLE_X, paddle, PADDLE_W, PADDLE_H, SCBlack);
 }
 
 void initPong()
 {
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     disUp(true);
 
     ball.x = dis->width() / 2;

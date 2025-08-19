@@ -87,7 +87,7 @@ static void drawTimeBeforeApply()
 
             uint16_t finalWidthStart = wAfter - wToWrite;
 
-            dis->fillRect(TIME_CORD_X + finalWidthStart, TIME_CORD_Y - hToWrite, TIME_LETTERS_SPACING, hToWrite, GxEPD_WHITE); // Clear things up
+            dis->fillRect(TIME_CORD_X + finalWidthStart, TIME_CORD_Y - hToWrite, TIME_LETTERS_SPACING, hToWrite, SCWhite); // Clear things up
             writeTextReplaceBack(toWrite, TIME_CORD_X + finalWidthStart, TIME_CORD_Y);
         }
     }
@@ -189,7 +189,7 @@ static void drawDay()
     uint16_t wDay;
     uint16_t hDay;
     getTextBounds(previousDay, NULL, NULL, &wDay, &hDay);
-    dis->fillRect(DAY_NAME_CORD - hDay, wDay + 1, hDay + 1, GxEPD_WHITE); // Clear things up
+    dis->fillRect(DAY_NAME_CORD - hDay, wDay + 1, hDay + 1, SCWhite); // Clear things up
     writeTextReplaceBack(day, DAY_NAME_CORD);
 }
 
@@ -211,8 +211,8 @@ static void drawMonth()
     String f = String(realMonthNumber.substring(0, 1));
     String e = String(realMonthNumber.substring(1, 2));
     debugLog("f e: \"" + f + "\" and \"" + e + "\" Where full is: " + realMonthNumber);
-    writeTextReplaceBack(f, MONTH_NUMBER_1_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1, 1);
-    writeTextReplaceBack(e, MONTH_NUMBER_2_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1, 1);
+    writeTextReplaceBack(f, MONTH_NUMBER_1_CORD, SCBlack, SCWhite, true, 1, 1);
+    writeTextReplaceBack(e, MONTH_NUMBER_2_CORD, SCBlack, SCWhite, true, 1, 1);
 }
 
 static void drawBattery()

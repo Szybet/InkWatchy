@@ -146,7 +146,7 @@ void loopBaiky()
     {
         debugLog("Updating");
         ImageDef image = ImageDef{200, 160, mapMemory};
-        writeImageN(0, 40, &image, GxEPD_BLACK, GxEPD_WHITE);
+        writeImageN(0, 40, &image, SCBlack, SCWhite);
         disUp(true);
         dUChange = false;
 

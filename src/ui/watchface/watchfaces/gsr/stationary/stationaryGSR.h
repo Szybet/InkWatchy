@@ -31,8 +31,8 @@ class TextualTimeGSR : public WatchyGSR {
       if (StyleID == TextualTimeStyle){
         if (!SafeToDraw()) return;
 
-        display.fillScreen(GxEPD_BLACK);
-        display.setTextColor(GxEPD_WHITE);
+        display.fillScreen(SCBlack);
+        display.setTextColor(SCWhite);
         display.setTextWrap(false);
 
         

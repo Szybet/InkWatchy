@@ -41,8 +41,8 @@ static void scheduleBorderRedraw() {
 // Helper to redraw border if needed
 static void redrawBorderIfNeeded() {
     if (needsBorderRedraw) {
-        dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
-        dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
+        dis->drawRect(0, 0, 200, 200, SCBlack);
+        dis->drawRect(1, 1, 198, 198, SCBlack);
         needsBorderRedraw = false;
     }
 }
@@ -118,7 +118,7 @@ static void clearCenteredText(int y, int textSize, int estimatedWidth, int heigh
         clearWidth = maxX - clearX;
     }
     
-    dis->fillRect(clearX, y - height + 2, clearWidth, height, GxEPD_WHITE);
+    dis->fillRect(clearX, y - height + 2, clearWidth, height, SCWhite);
     scheduleBorderRedraw();
 }
 
@@ -144,7 +144,7 @@ static void drawTimeBeforeApply() {
         if (oldAmPm != newAmPm) {
             uint16_t w, h;
             getTextDimensions(oldAmPm, 1, &w, &h);
-            dis->fillRect(SLATE_AMPM_X - 2, SLATE_AMPM_Y - h, w + 4, h + 2, GxEPD_WHITE);
+            dis->fillRect(SLATE_AMPM_X - 2, SLATE_AMPM_Y - h, w + 4, h + 2, SCWhite);
             scheduleBorderRedraw();
             
             setFont(getFont(SLATE_AMPM_FONT));
@@ -255,7 +255,7 @@ static void showTimeFull() {
 #if WATCHFACE_12H
     String ampmStr = getLocalizedAMPM(timeRTCLocal);
     getTextDimensions(ampmStr, 1, &w, &h);
-    dis->fillRect(SLATE_AMPM_X - 2, SLATE_AMPM_Y - h, w + 4, h + 2, GxEPD_WHITE);
+    dis->fillRect(SLATE_AMPM_X - 2, SLATE_AMPM_Y - h, w + 4, h + 2, SCWhite);
     scheduleBorderRedraw();
     
     setFont(getFont(SLATE_AMPM_FONT));
@@ -267,7 +267,7 @@ static void showTimeFull() {
 }
 
 static void initWatchface() {
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     readRTC();
     
     // Reset all cache
@@ -280,8 +280,8 @@ static void initWatchface() {
     needsBorderRedraw = false;
     
     // Draw border first
-    dis->drawRect(0, 0, 200, 200, GxEPD_BLACK);
-    dis->drawRect(1, 1, 198, 198, GxEPD_BLACK);
+    dis->drawRect(0, 0, 200, 200, SCBlack);
+    dis->drawRect(1, 1, 198, 198, SCBlack);
     
     // Draw time
     setFont(getFont(SLATE_FONT));

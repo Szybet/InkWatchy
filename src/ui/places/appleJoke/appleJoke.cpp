@@ -22,7 +22,7 @@ void initAppleJoke()
     appleJokeRunning = true;
     debugLog("Executing initAppleJoke");
     // Show text
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     simpleCenterText("Eating apples");
     disUp(true);
 

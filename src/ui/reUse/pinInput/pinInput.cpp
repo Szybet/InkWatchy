@@ -14,7 +14,7 @@ int currentPinButton;
 void showPin()
 {
     dis->setTextWrap(false);
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     setTextSize(1);
     uint16_t currentHeight = 20;
     // debugLog("Current height before center text: " + String(currentHeight));

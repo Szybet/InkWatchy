@@ -75,7 +75,7 @@ void loopAcc3D()
     }
 
     // Drawing section
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
 
     // Draw thick edges with consistent 3-pixel width
     for (int i = 0; i < 12; i++)
@@ -105,7 +105,7 @@ void loopAcc3D()
                 int16_t offsetX = round(t * perpX);
                 int16_t offsetY = round(t * perpY);
                 dis->drawLine(x1 + offsetX, y1 + offsetY,
-                              x2 + offsetX, y2 + offsetY, GxEPD_BLACK);
+                              x2 + offsetX, y2 + offsetY, SCBlack);
             }
         }
     }
@@ -141,8 +141,8 @@ void loopAcc3D()
     int16_t minuteEndY = frontCenterY + MINUTE_HAND_LENGTH * minuteDirY;
 
     // Draw clock hands
-    dis->drawLine(frontCenterX, frontCenterY, hourEndX, hourEndY, GxEPD_BLACK);
-    dis->drawLine(frontCenterX, frontCenterY, minuteEndX, minuteEndY, GxEPD_BLACK);
+    dis->drawLine(frontCenterX, frontCenterY, hourEndX, hourEndY, SCBlack);
+    dis->drawLine(frontCenterX, frontCenterY, minuteEndX, minuteEndY, SCBlack);
 
     dUChange = true;
 }

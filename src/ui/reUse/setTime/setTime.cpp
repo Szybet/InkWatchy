@@ -20,16 +20,16 @@ int fourNumber = 0;
 
 void drawIndex(int x, int y)
 {
-    // dis->drawPixel(x, y, GxEPD_BLACK);
-    // dis->drawCircle(x, y, 10, GxEPD_BLACK);
-    dis->fillTriangle(x, y, x + INDEX_LINE_WIDTH, y + INDEX_LINE_WIDTH, x - INDEX_LINE_WIDTH, y + INDEX_LINE_WIDTH, GxEPD_BLACK);
+    // dis->drawPixel(x, y, SCBlack);
+    // dis->drawCircle(x, y, 10, SCBlack);
+    dis->fillTriangle(x, y, x + INDEX_LINE_WIDTH, y + INDEX_LINE_WIDTH, x - INDEX_LINE_WIDTH, y + INDEX_LINE_WIDTH, SCBlack);
 }
 
 void drawThings()
 {
-    dis->fillScreen(GxEPD_WHITE);
+    dis->fillScreen(SCWhite);
     uint16_t h = CLOCK_HEIGHT;
-    writeTextCenterReplaceBack(String(oneNumber) + String(twoNumber) + ":" + String(threeNumber) + String(fourNumber), h, GxEPD_BLACK);
+    writeTextCenterReplaceBack(String(oneNumber) + String(twoNumber) + ":" + String(threeNumber) + String(fourNumber), h, SCBlack);
 
     int x = INDEX_INIT_X;
     int y = INDEX_INIT_Y;

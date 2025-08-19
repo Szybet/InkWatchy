@@ -32,7 +32,7 @@ void weatherDrawHelper(uint16_t value, int max, int min, uint16_t x, uint16_t y)
         percent = 99;
     }
 
-    writeTextReplaceBack(addZero(String(percent), 2), x, y, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(addZero(String(percent), 2), x, y, SCBlack, SCWhite, true, 1);
 }
 
 // Use the same weather icon mapping as Taychron for consistency
@@ -112,12 +112,12 @@ void inkDrawWeather()
     if (wData.fine == true)
     {
         // Use global temperature system with proper conversion
-        dis->fillRect(TEMP_RECT_CORD, TEMP_RECT_SIZE, GxEPD_WHITE);
+        dis->fillRect(TEMP_RECT_CORD, TEMP_RECT_SIZE, SCWhite);
         String temps = formatTemperature(wData.temp);  // Use global function
         if(temps.length() > 3) {
             temps = temps.substring(0, 3);
         }
-        writeTextReplaceBack(temps, TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(temps, TEMP_CORD, SCBlack, SCWhite, true, 1);
         // Humidity, already %
         weatherDrawHelper(wData.humidity, 99, 0, HUMIDITY_CORD);
         // Pressure, it's in hPa
@@ -143,30 +143,30 @@ void inkDrawWeather()
     else
     {
         // Use global language system for error messages
-        writeTextReplaceBack(getInkFieldLocalizedError(), TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), HUMIDITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PRESSURE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PREPICITATION_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), VISIBILITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_SPEED_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_GUTS_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), CLOUD_COVER_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNRISE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNSET_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedError(), TEMP_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), HUMIDITY_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PRESSURE_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PREPICITATION_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), VISIBILITY_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_SPEED_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_GUTS_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), CLOUD_COVER_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNRISE_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNSET_CORD, SCBlack, SCWhite, true, 1);
         writeImageN(WEATHER_ICON_CORD, getImg("inkfield/" + getWeatherIcon(255)));
     }
 #else
     // Use global language system for error messages
-    writeTextReplaceBack(getInkFieldLocalizedError(), TEMP_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), HUMIDITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PRESSURE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PREPICITATION_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), VISIBILITY_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_SPEED_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_GUTS_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), CLOUD_COVER_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNRISE_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNSET_CORD, GxEPD_BLACK, GxEPD_WHITE, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedError(), TEMP_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), HUMIDITY_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PRESSURE_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PREPICITATION_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), VISIBILITY_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_SPEED_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_GUTS_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), CLOUD_COVER_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNRISE_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNSET_CORD, SCBlack, SCWhite, true, 1);
     writeImageN(WEATHER_ICON_CORD, getImg("inkfield/meteor"));
 #endif
 }
@@ -208,13 +208,13 @@ void inkDrawMoon()
     */
     setTextSize(1);
     setFont(getFont("inkfield/Speculum9"));
-    writeTextReplaceBack(String(int(mp.age)), MOON_AGE_CORD, GxEPD_BLACK, GxEPD_WHITE);
+    writeTextReplaceBack(String(int(mp.age)), MOON_AGE_CORD, SCBlack, SCWhite);
     debugLog("mp.fraction: " + String(mp.fraction));
-    writeTextReplaceBack(String(int(mp.fraction * 100.0)), MOON_LIGHT_CORD, GxEPD_BLACK, GxEPD_WHITE);
+    writeTextReplaceBack(String(int(mp.fraction * 100.0)), MOON_LIGHT_CORD, SCBlack, SCWhite);
     debugLog("mp.distance: " + String(mp.distance));
     int distance = int((mp.distance - MOON_MIN_RADIUS) * 100 / (MOON_MAX_RADIUS - MOON_MIN_RADIUS));
     checkMaxMin(&distance, 100, 0, false);
-    writeTextReplaceBack(String(int(distance)), MOON_DISTANCE_CORD, GxEPD_BLACK, GxEPD_WHITE);
+    writeTextReplaceBack(String(int(distance)), MOON_DISTANCE_CORD, SCBlack, SCWhite);
 
     writeImageN(MOON_IMG_CORD, getImg("inkfield/" + removeSpaces(String(mp.phaseName))));
 }

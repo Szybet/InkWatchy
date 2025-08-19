@@ -8,8 +8,8 @@ GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> &WatchyGSR::display = *dis;
 
 SmallRTC &WatchyGSR::SRTC = rM.SRTC;
 
-uint16_t WatchyGSR::ForeColor() { return GxEPD_BLACK; }
-uint16_t WatchyGSR::BackColor() { return GxEPD_WHITE; }
+uint16_t WatchyGSR::ForeColor() { return SCBlack; }
+uint16_t WatchyGSR::BackColor() { return SCWhite; }
 
 bool WatchyGSR::IsAM()
 {

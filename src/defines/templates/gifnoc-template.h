@@ -65,6 +65,10 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 // 2: Rotate 180 degrees
 // 3: Rotate 270 degrees clockwise
 #define SCREEN_ROTATION 0
+// Inverts the color, initially
+// Yatchy lp core will not work correctly with inverted watchface, please request this feature to work if you are an yatchy owner
+#define INITIAL_SCREEN_INVERT 0
+#define WATCHDOG_INVERT_COLORS 0 // Inverts the colors once again, but only in watchface
 
 // Remap buttons
 // This is not idiot proof, do not set 2 remaps to the same button

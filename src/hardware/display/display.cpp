@@ -44,7 +44,7 @@ void initDisplay()
     dis->setRotation(SCREEN_ROTATION);
 #endif
 
-    dis->setTextColor(GxEPD_BLACK);
+    dis->setTextColor(SCBlack);
 
     // Only on first boot, only to be extra sure
 #if SCREEN_PARTIAL_GREY_WORKAROUND || LP_CORE_TEST_ENABLED
@@ -52,7 +52,7 @@ void initDisplay()
     {
         dis->setPartialWindow(0, 0, 200, 200);
         dis->clearScreen();
-        dis->fillScreen(GxEPD_WHITE);
+        dis->fillScreen(SCWhite);
         updateDisplay(FULL_UPDATE);
     }
 #endif
@@ -68,7 +68,7 @@ void initDisplay()
 void deInitScreen()
 {
 #if SCREEN_CORNER_WAKEUP
-    drawCorner(GxEPD_WHITE);
+    drawCorner(SCWhite);
     dis->display(PARTIAL_UPDATE);
 #endif
 // We don't want to hibernate it 2 times
@@ -171,7 +171,7 @@ void resetHoldManage()
 {
     if (bootStatus.fromWakeup == false && bootStatus.resetReason != ESP_RST_DEEPSLEEP)
     {
-        dis->fillScreen(GxEPD_WHITE);
+        dis->fillScreen(SCWhite);
         setFont(&FreeSansBold9pt7b);
         setTextSize(1);
         uint16_t h = 100;
@@ -219,7 +219,7 @@ void updateDisplay(bool mode)
     initDisplayDriver(false);
 #endif
 #if SCREEN_CORNER_WAKEUP
-    drawCorner(GxEPD_BLACK);
+    drawCorner(SCBlack);
 #endif
 #if SCREEN_FULL_WHITE_WORKAROUND == 0
     // Normal

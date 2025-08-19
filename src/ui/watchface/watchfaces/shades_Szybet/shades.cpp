@@ -7,7 +7,7 @@ void showTimeFull()
 {
     setTextSize(1);
     setFont(getFont("shades/RampartOne30"));
-    dis->fillRect(0, 0, 200, 55, GxEPD_WHITE);
+    dis->fillRect(0, 0, 200, 55, SCWhite);
     writeTextReplaceBack(getHourMinute(timeRTCLocal), 16, 53);
 }
 
@@ -25,7 +25,7 @@ const watchfaceDefOne shadesDef = {
             setTextSize(1);
             setFont(getFont(SHADE_NORMAL_FONT));
             int y = 125;
-            dis->fillRect(0, y - SHADE_HEIGHT_PIXELS, 200, SHADE_HEIGHT_PIXELS + BOTTOM_ADD, GxEPD_WHITE);
+            dis->fillRect(0, y - SHADE_HEIGHT_PIXELS, 200, SHADE_HEIGHT_PIXELS + BOTTOM_ADD, SCWhite);
             writeTextCenterReplaceBack(String(steps) + " steps", y);
         } },
     .drawDay = []()
@@ -36,7 +36,7 @@ const watchfaceDefOne shadesDef = {
         setTextSize(1);
         setFont(getFont(SHADE_NORMAL_FONT));
         int y = 90;
-        dis->fillRect(0, y - SHADE_HEIGHT_PIXELS, 200, SHADE_HEIGHT_PIXELS + BOTTOM_ADD, GxEPD_WHITE);
+        dis->fillRect(0, y - SHADE_HEIGHT_PIXELS, 200, SHADE_HEIGHT_PIXELS + BOTTOM_ADD, SCWhite);
         writeTextCenterReplaceBack(finalStr, 85); },
     .drawMonth = []() {},
     .showTimeFull = showTimeFull,
@@ -46,7 +46,7 @@ const watchfaceDefOne shadesDef = {
         setTextSize(1);
         setFont(getFont(SHADE_NORMAL_FONT));
         int y = 170;
-        dis->fillRect(0, y - SHADE_HEIGHT_PIXELS, 200, SHADE_HEIGHT_PIXELS + BOTTOM_ADD, GxEPD_WHITE);
+        dis->fillRect(0, y - SHADE_HEIGHT_PIXELS, 200, SHADE_HEIGHT_PIXELS + BOTTOM_ADD, SCWhite);
         writeTextCenterReplaceBack(String(rM.batteryPercantageWF) + "%", y); },
     .manageInput = [](buttonState bt)
     {

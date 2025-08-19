@@ -7684,7 +7684,7 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
       int16_t  x1, y1;
       uint16_t w, h;
       String T;
-      bool LM = (GxEPD_BLACK == ForeColor());
+      bool LM = (SCBlack == ForeColor());
       uint16_t FC, BC;
       FC = (LM ? BackColor() : ForeColor());
       BC = (LM ? ForeColor() : BackColor());
@@ -7753,21 +7753,21 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           display.println(" ");
           display.print("<C:\\>esptool");
       } else if (StyleID == WatchyClassicsAddOnPokeStyle){
-          display.drawBitmap(0, 0, WatchyClassic_Pokemon, 200, 200, GxEPD_BLACK, GxEPD_WHITE);
+          display.drawBitmap(0, 0, WatchyClassic_Pokemon, 200, 200, SCBlack, SCWhite);
           T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
-          display.setTextColor(GxEPD_BLACK);
+          display.setTextColor(SCBlack);
           display.setFont(&FreeMonoBold9pt7b);
           display.setCursor(16, 165);
           display.print(T);
       } else if (StyleID == WatchyClassicsAddOnStarryStyle) {
-          display.fillScreen(GxEPD_BLACK);
+          display.fillScreen(SCBlack);
           if (SafeToDraw() && NoMenu()){
-              display.fillCircle(100, horizonY + planetR, planetR, GxEPD_WHITE);
+              display.fillCircle(100, horizonY + planetR, planetR, SCWhite);
               Starry_drawGrid();
               Starry_drawStars(STARS);
           }
           display.setFont(&MADE_Sunflower_PERSONAL_USE39pt7b);
-          display.setTextColor(GxEPD_WHITE);
+          display.setTextColor(SCWhite);
           T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
           Starry_drawCenteredString(T, 100, 115, false);
           String monthStr = monthShortStr(WatchTime.Local.Month + 1);
@@ -7778,13 +7778,13 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           Starry_drawCenteredString(dateStr, 100, 140, true);
           free(dateStr);
       } else if (StyleID == WatchyClassicsAddOnTetrisStyle) {
-          display.drawBitmap(0, 0, tetrisbg, 200, 200, GxEPD_BLACK, GxEPD_WHITE);
+          display.drawBitmap(0, 0, tetrisbg, 200, 200, SCBlack, SCWhite);
           //Hour
-          display.drawBitmap(25, 20, tetris_nums[WatchTime.Local.Hour/10], 40, 60, GxEPD_BLACK, GxEPD_WHITE); //first digit
-          display.drawBitmap(75, 20, tetris_nums[WatchTime.Local.Hour%10], 40, 60, GxEPD_BLACK, GxEPD_WHITE); //second digit
+          display.drawBitmap(25, 20, tetris_nums[WatchTime.Local.Hour/10], 40, 60, SCBlack, SCWhite); //first digit
+          display.drawBitmap(75, 20, tetris_nums[WatchTime.Local.Hour%10], 40, 60, SCBlack, SCWhite); //second digit
           //Minute
-          display.drawBitmap(25, 110, tetris_nums[WatchTime.Local.Minute/10], 40, 60, GxEPD_BLACK, GxEPD_WHITE); //first digit
-          display.drawBitmap(75, 110, tetris_nums[WatchTime.Local.Minute%10], 40, 60, GxEPD_BLACK, GxEPD_WHITE); //second digit
+          display.drawBitmap(25, 110, tetris_nums[WatchTime.Local.Minute/10], 40, 60, SCBlack, SCWhite); //first digit
+          display.drawBitmap(75, 110, tetris_nums[WatchTime.Local.Minute%10], 40, 60, SCBlack, SCWhite); //second digit
       } else if (StyleID == WatchyClassicsAddOnMacStyle) {
           display.drawBitmap(0, 0, Mac_window, 200, 200, ForeColor());
           //Hour
@@ -7867,13 +7867,13 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
       for(int i = 0; i < 40; i+= 1) {
         int y = prevY + int(abs(sin(double(i) / 10) * 10));
         if(y <= 200) {
-          display.drawFastHLine(0, y, 200, GxEPD_BLACK);
+          display.drawFastHLine(0, y, 200, SCBlack);
         }
         prevY = y;
       }
       int vanishY = horizonY - 25;
       for (int x = -230; x < 430; x += 20) {
-        display.drawLine(x, 200, 100, vanishY, GxEPD_BLACK);
+        display.drawLine(x, 200, 100, vanishY, SCBlack);
       }
     }
     void Starry_drawStars(const StarryStar stars[]) {
@@ -7893,9 +7893,9 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           continue;
         }
         if(starR == 0) {
-          display.drawPixel(rotated.x, rotated.y, GxEPD_WHITE);
+          display.drawPixel(rotated.x, rotated.y, SCWhite);
         } else {
-          display.fillCircle(rotated.x, rotated.y, starR, GxEPD_WHITE);
+          display.fillCircle(rotated.x, rotated.y, starR, SCWhite);
         }
       }
     }
@@ -7912,7 +7912,7 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
         display.fillRect(x - (w / 2 + padX), y - (h + padY), w + padX*2, h + padY*2, ForeColor());
       }
       // uncomment to draw bounding box
-  //          display.drawRect(x - w / 2, y - h, w, h, GxEPD_WHITE);
+  //          display.drawRect(x - w / 2, y - h, w, h, SCWhite);
       display.print(str);
     }
 

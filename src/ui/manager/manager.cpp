@@ -65,7 +65,7 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
         if (initFunc != nullptr)
         {
             debugLog("Executing init function");
-            dis->fillScreen(GxEPD_WHITE);
+            dis->fillScreen(SCWhite);
             initFunc();
             if (exitFunc != nullptr)
             {

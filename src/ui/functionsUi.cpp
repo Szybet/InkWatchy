@@ -99,7 +99,7 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
     canvasTmp.setTextSize(textSize);
     canvasTmp.setCursor(0, h - 3);
     canvasTmp.print(str);
-    dis->fillRect(0, y - h, 200, h + 3, GxEPD_WHITE);
+    dis->fillRect(0, y - h, 200, h + 3, SCWhite);
     dis->drawBitmap(x, y - h + 3, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
     dis->drawRect(x, y - h + 3, w, h + 3, frColor);
@@ -112,7 +112,7 @@ void writeTextCenterReplaceBack(String str, uint16_t y, uint16_t frColor, uint16
     canvasTmp.setTextSize(textSize);
     canvasTmp.setCursor(0, h);
     canvasTmp.print(str);
-    dis->fillRect(0, y - h, 200, h + 3, GxEPD_WHITE);
+    dis->fillRect(0, y - h, 200, h + 3, SCWhite);
     dis->drawBitmap(x, y - h, canvasTmp.getBuffer(), w, h + 3, frColor, bgColor); // this is relative to the cursor.
 #if DRAW_DEBUG_RECT
     dis->drawRect(x, y - h, w, h + 3, frColor);
@@ -305,7 +305,7 @@ sizeInfo drawButton(int16_t x, int16_t y, String str, ImageDef *image, bool inve
 
 void simpleCenterText(String text)
 {
-  dis->fillScreen(GxEPD_WHITE);
+  dis->fillScreen(SCWhite);
   writeTextCenterReplaceBack(text, dis->height() / 2);
   disUp(true);
 }
@@ -313,7 +313,7 @@ void simpleCenterText(String text)
 /*
 void textPage(String title, String *strList, int listCount, const GFXfont *customFont)
 {
-  dis->fillScreen(GxEPD_WHITE);
+  dis->fillScreen(SCWhite);
 
   uint16_t h;
   setFont(&FreeSansBold9pt7b);
@@ -325,7 +325,7 @@ void textPage(String title, String *strList, int listCount, const GFXfont *custo
   }
   writeTextCenterReplaceBack(title, h);
   h = h + 1;
-  dis->fillRect(0, h, dis->width(), 1, GxEPD_BLACK);
+  dis->fillRect(0, h, dis->width(), 1, SCBlack);
   h = h + 3;
 
   dis->setFont(customFont);
@@ -347,7 +347,7 @@ void textPage(String title, String *strList, int listCount, const GFXfont *custo
   /*
   if (h > 200 && listCount > 1)
   {
-    dis->fillRect(0, firstHeight, 200, 200, GxEPD_WHITE);
+    dis->fillRect(0, firstHeight, 200, 200, SCWhite);
     dis->setTextWrap(true);
     dis->setCursor(0, firstHeight);
     for (int i = 0; i < listCount; i++)
@@ -372,8 +372,8 @@ void drawProgressBar(int x, int y, int width, int height, int progress)
 
   int filledWidth = map(progress, 0, 100, 0, width);
 
-  dis->fillRect(x, y, width, height, GxEPD_WHITE); // clean
-  dis->fillRect(x, y, filledWidth, height, GxEPD_BLACK);
+  dis->fillRect(x, y, width, height, SCWhite); // clean
+  dis->fillRect(x, y, filledWidth, height, SCBlack);
 
   for (int16_t i = filledWidth; i < width; i++)
   {
@@ -381,7 +381,7 @@ void drawProgressBar(int x, int y, int width, int height, int progress)
     {
       if ((i + j) % 2 == 0)
       {
-        dis->drawPixel(x + i, y + j, GxEPD_BLACK);
+        dis->drawPixel(x + i, y + j, SCBlack);
       }
     }
   }

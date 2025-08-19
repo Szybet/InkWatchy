@@ -55,7 +55,7 @@ void clearModuleArea()
 {
     debugLog("clearModuleArea: extecuted...");
     squareInfo modSq = getWatchModuleSquare();
-    dis->fillRect(modSq.cord.x, modSq.cord.y, modSq.size.w, modSq.size.h, GxEPD_WHITE);
+    dis->fillRect(modSq.cord.x, modSq.cord.y, modSq.size.w, modSq.size.h, SCWhite);
     dUChange = true;
 }
 
@@ -121,7 +121,7 @@ void drawModuleCount(bool force)
         setTextSize(1);
 
         debugLog("Printing the current module");
-        dis->fillRect(MODULE_NUM_POS_X, MODULE_NUM_POS_Y - MC_H + 1, MC_W, MC_H + 1, GxEPD_WHITE);
+        dis->fillRect(MODULE_NUM_POS_X, MODULE_NUM_POS_Y - MC_H + 1, MC_W, MC_H + 1, SCWhite);
         dis->setCursor(MODULE_NUM_POS_X, MODULE_NUM_POS_Y);
         if (counter != 0)
         {
@@ -130,7 +130,7 @@ void drawModuleCount(bool force)
         dis->print(String(currentModuleTranslated));
 
         debugLog("Printing the counter");
-        dis->fillRect(MODULE_COUNT_POS_X, MODULE_COUNT_POS_Y - MC_H + 1, MC_W, MC_H + 1, GxEPD_WHITE);
+        dis->fillRect(MODULE_COUNT_POS_X, MODULE_COUNT_POS_Y - MC_H + 1, MC_W, MC_H + 1, SCWhite);
         dis->setCursor(MODULE_COUNT_POS_X, MODULE_COUNT_POS_Y);
         dis->print(String(counter));
 
