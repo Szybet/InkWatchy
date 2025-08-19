@@ -193,22 +193,22 @@ void watchfaceManageAll(bool init)
 
 void loopWatchfaceManage()
 {
-#if WATCHDOG_INVERT_COLORS
+#if WATCHFACE_INVERT_COLORS
     invertScreenColors();
 #endif
     watchfaceManageAll(false);
-#if WATCHDOG_INVERT_COLORS
+#if WATCHFACE_INVERT_COLORS
     resetScreenColors();
 #endif
 }
 
 void initWatchfaceManage()
 {
-#if WATCHDOG_INVERT_COLORS
+#if WATCHFACE_INVERT_COLORS
     invertScreenColors();
 #endif
     watchfaceManageAll(true);
-#if WATCHDOG_INVERT_COLORS
+#if WATCHFACE_INVERT_COLORS
     resetScreenColors();
 #endif
 }
