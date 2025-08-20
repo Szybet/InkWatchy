@@ -172,14 +172,14 @@ void domainDrawWeather()
         // Cloud cover, in %
         domainWeatherDrawHelper(wData.cloud_cover, 99, 0, CLOUD_COVER_CORD);
         debugLog("Sunrise: " + String(wData.sunrise));
-        // Alright so, I forgot about this, but the daily sunrise/sunset info persistently was off despite
-        // weather_watchface_hour_offset being defined. perhaps i'm missing something.
-        // hopefully including it directly into the code helps.
-        // my personal fix was just "- 7" instead of + "(WEATHER_WATCHFACE_HOUR_OFFSET)" lmao
+        // Alright so, this is annoying. all your weather data could be correct,
+        // but you may find that your sunrise/sunset is off (as if you're at GMT 0)
+        // in config.h, modify SUNRISE_SUNSET_HOUR_OFFSET to fix this
+
         // Sunrise
-        writeTextReplaceBack(addZero(String((hour(wData.sunrise) + (WEATHER_WATCHFACE_HOUR_OFFSET) + 24) % 24), 2), SUNRISE_CORD);
+        writeTextReplaceBack(addZero(String((hour(wData.sunrise) + (SUNRISE_SUNSET_HOUR_OFFSET) + 24) % 24), 2), SUNRISE_CORD);
         // Sunset
-        writeTextReplaceBack(addZero(String((hour(wData.sunset) + (WEATHER_WATCHFACE_HOUR_OFFSET) + 24) % 24), 2), SUNSET_CORD);
+        writeTextReplaceBack(addZero(String((hour(wData.sunset) + (SUNRISE_SUNSET_HOUR_OFFSET) + 24) % 24), 2), SUNSET_CORD);
 
         writeImageN(WEATHER_ICON_CORD, getImg("domain/" + getDomainWeatherIcon(wData.weather_code)));
         writeImageN(DAYNIGHT_ICON_CORD, getImg("domain/" + getDayNightIcon(wData.is_day)));

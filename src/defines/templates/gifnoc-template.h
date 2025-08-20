@@ -145,6 +145,7 @@ The default is this:
 #define WEATHER_INFO 1  // Enable weather
 #define WEATHER_TRIES 3 // Ammount of times to try to sync weather
 #define WEATHER_WATCHFACE_HOUR_OFFSET 1
+#define SUNRISE_SUNSET_HOUR_OFFSET 0 // (Domain watchface) Sunrise/Sunset is wrong, but everything else is fine? edit this instead.
 #define PRESSURE_HPA_MAX 1100 // 1013 is 50%
 #define PRESSURE_HPA_MIN 850
 #define VISIBILITY_M_MAX 150
