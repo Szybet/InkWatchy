@@ -75,6 +75,23 @@ struct rtcMem
         bool positionEngaged : 1;
     } inkfield;
 #endif
+// Domain watchface
+#if WATCHFACE_DOMAIN_DOTP
+    struct
+    {
+        uint8_t dayBar;
+        uint8_t percentOfDay;
+#if ACC_ENABLED
+        uint8_t percentSteps;
+#else
+        uint8_t showedTemp;
+#endif
+        uint16_t weatherMinutes;
+        // inkput
+        int watchfacePos; // It needs to be int because it's used in checkMinMax
+        bool positionEngaged : 1;
+    } domain;
+#endif
 // Shades watchface
 #if WATCHFACE_SHADES_SZYBET
     struct

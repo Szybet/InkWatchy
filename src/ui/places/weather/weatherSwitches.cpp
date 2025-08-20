@@ -221,15 +221,64 @@ OM_OneHourWeather weatherGetDataHourly(uint8_t hourOffset)
     forecast.wind_deg = weatherDataWork->wind_deg[smallestDiffIndex];
     forecast.wind_gust = weatherDataWork->wind_gust[smallestDiffIndex];
     forecast.weather_code = weatherDataWork->weather_code[smallestDiffIndex];
+    forecast.wet_bulb = weatherDataWork->wet_bulb_temperature_2m[smallestDiffIndex];
+    forecast.cape = weatherDataWork->cape[smallestDiffIndex];
     forecast.is_day = weatherDataWork->is_day[smallestDiffIndex];
+    forecast.uv_index = weatherDataWork->uv_index[smallestDiffIndex];               // Add this
+    forecast.uv_index_clear_sky = weatherDataWork->uv_index_clear_sky[smallestDiffIndex]; // Add this
+
     // Daily things!
     forecast.daily_time = weatherDataWork->daily_time[0];
+    forecast.sunshine = weatherDataWork->sunshine_duration[0];   // Only the first day
     forecast.sunrise = weatherDataWork->sunrise[0];
     forecast.sunset = weatherDataWork->sunset[0];
 
     free(weatherData.buf);
     forecast.fine = true;
     return forecast;
+}
+
+OM_OneHourAirQuality airQualityGetDataHourly(uint8_t hourOffset) {
+    String unixTimeAirQuality = String(simplifyUnix(getUnixTime(timeRTCLocal)));
+        debugLog("Getting air quality for unix: " + unixTimeAirQuality);
+    bufSize airData = fsGetBlob(unixTimeAirQuality, String(AIR_QUALITY_HOURLY_DIR) + "/");
+       debugLog("Air quality size is: " + String(airData.size) + " While is should be: " + String(sizeof(OM_AirQualityForecast)));
+OM_OneHourAirQuality airForecast = {0};
+
+    if (airData.size != sizeof(OM_AirQualityForecast))
+    {
+        debugLog("Air quality data is bad.");
+        free(airData.buf);
+        airForecast.fine = false;
+        return airForecast;
+    }
+    OM_AirQualityForecast *airDataWork = (OM_AirQualityForecast *)airData.buf;
+    int64_t unixNow = getUnixTime(timeRTCUTC0) + (60 * 60) * hourOffset; // Using utc0 as the stored data from open meteo uses utc0 unix timestamps for time
+    int64_t smallestDiffUnix = 0;
+    uint8_t smallestDiffIndex = 0;
+    for (int i = 0; i < OM_AIR_QUALITY_MAX_HOURS; i++)
+    {
+        if (llabs(unixNow - (int64_t)airDataWork->hourly_time[i]) < llabs(unixNow - smallestDiffUnix))
+        {
+            smallestDiffUnix = airDataWork->hourly_time[i];
+            smallestDiffIndex = i;
+        }
+        // debugLog("Current time: " + String(unixNow) + " choosed time: " + String(airDataWork->hourly_time[i]) + " diff: " + String(llabs(unixNow - weatherDataWork->hourly_time[i])));
+    }
+    debugLog("FINAL time: " + String(unixNow) + " choosed time: " + String(airDataWork->time[smallestDiffIndex]) + " diff: " + String(llabs(unixNow - airDataWork->time[smallestDiffIndex])) + " so it's index is: " + String(smallestDiffIndex));
+
+    airForecast.european_aqi = airDataWork->european_aqi[smallestDiffIndex];
+    airForecast.us_aqi = airDataWork->us_aqi[smallestDiffIndex];
+    airForecast.european_aqi_pm2_5 = airDataWork->european_aqi_pm2_5[smallestDiffIndex];
+    airForecast.european_aqi_pm10 = airDataWork->european_aqi_pm10[smallestDiffIndex];
+    airForecast.european_aqi_nitrogen_dioxide = airDataWork->european_aqi_nitrogen_dioxide[smallestDiffIndex];
+    airForecast.european_aqi_ozone = airDataWork->european_aqi_ozone[smallestDiffIndex];
+    airForecast.european_aqi_sulphur_dioxide = airDataWork->european_aqi_sulphur_dioxide[smallestDiffIndex];
+
+
+    free(airData.buf);
+    airForecast.fine = true;
+    return airForecast;
 }
 
 void showTemp()

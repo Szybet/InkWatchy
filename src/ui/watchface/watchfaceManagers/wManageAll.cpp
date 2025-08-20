@@ -18,6 +18,15 @@ const watchfaceDef szybetStarfield = {
     .data = (genPointer)&inkFieldDef,
 };
 #endif
+
+#if WATCHFACE_DOMAIN_DOTP
+const watchfaceDef dotpDomain = {
+    .manager = wfmOne,
+    .name = "DotP's Domain",
+    .data = (genPointer)&domainDef,
+};
+
+#endif
 #if WATCHFACE_TAYCHRON
 const watchfaceDef tayDef = {
     .manager = wfmOne,
@@ -71,6 +80,11 @@ const watchfaceDef gsrStationary = {
 const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #if WATCHFACE_INKFIELD_SZYBET
     &szybetStarfield,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_DOMAIN_DOTP
+    &dotpDomain,
 #else
     &noWatchFace,
 #endif

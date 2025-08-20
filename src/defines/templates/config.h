@@ -4,15 +4,15 @@
 // https://github.com/Szybet/InkWatchy/wiki/Watchfaces
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
 #define INKWATCHY_LANG EN           // EN, PL, DE and SK | Supported watchfaces: InkField, Slate and Taychron
-#define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
+#define WATCHFACE_12H 1             // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
-#define WATCHFACE_DOMAIN_DOTP 1     // Blatant ripoff of InkField
-#define WATCHFACE_TAYCHRON 1
+#define WATCHFACE_DOMAIN_DOTP 1
+#define WATCHFACE_TAYCHRON 0
 #define WATCHFACE_TAYCHRON_DATE 0 // shows date below time
-#define WATCHFACE_SLATE 1
-#define WATCHFACE_SHADES_SZYBET 1
-#define WATCHFACE_ANALOG_SHARP_SZYBET 1
+#define WATCHFACE_SLATE 0
+#define WATCHFACE_SHADES_SZYBET 0
+#define WATCHFACE_ANALOG_SHARP_SZYBET 0
 
 // GSR watchfaces
 // Because of the ways they are written (even in native watchyGSR) they will provide worse battery life than native inkwatchy watchfaces -
@@ -54,7 +54,7 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 // Motor power multiplier
 #define VIBRATION_MULTIPLIER_OVERWRITE 0
 #define VIBRATION_MULTIPLIER 1.0
-#define STEPS_GOAL 7000
+#define STEPS_GOAL 10800
 // Backups RTC memory to flash, so after updating the firmware (When resources weren't updated, or rtc memory wasn't changed) it will still keep data like alarms
 // Might introduce weird behaviour or crashes on a update, but it tries to avoid it.
 // Might consume a bit of battery, but that's marginal.
@@ -66,11 +66,11 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 // 2: Rotate 180 degrees
 // 3: Rotate 270 degrees clockwise
 #define SCREEN_ROTATION 0
+
 // Inverts the color, initially
 // Yatchy lp core will not work correctly with inverted watchface, please request this feature to work if you are an yatchy owner
 #define INITIAL_SCREEN_INVERT 0
 #define WATCHFACE_INVERT_COLORS 0 // Inverts the colors once again, but only in watchface
-
 // Remap buttons
 // This is not idiot proof, do not set 2 remaps to the same button
 // Possible values:
@@ -113,7 +113,7 @@ The default is this:
 // Better one probably: https://github.com/yuan910715/Esp8266_Wifi_Matrix_Clock/blob/master/posix.md
 // From the Posix timezone string table column
 // This function overwrites the TIMEZONE_OLSON variable if it's set
-#define TIMEZONE_POSIX "" // Example value for poland: "CET-1CEST,M3.5.0,M10.5.0/3"
+#define TIMEZONE_POSIX "PST8PDT,M3.2.0/2:00:00,M11.1.0/2:00:00" // Example value for poland: "CET-1CEST,M3.5.0,M10.5.0/3"
 
 #define MENU_LINES false             // Option to show lines between buttons in menus
 #define BUTTON_LONG_PRESS_MS 500     // Duration until long press registers in miliseconds
@@ -144,12 +144,12 @@ The default is this:
 // Weather
 #define WEATHER_INFO 1  // Enable weather
 #define WEATHER_TRIES 3 // Ammount of times to try to sync weather
-#define WEATHER_WATCHFACE_HOUR_OFFSET 1
+#define WEATHER_WATCHFACE_HOUR_OFFSET 0
 #define PRESSURE_HPA_MAX 1100 // 1013 is 50%
 #define PRESSURE_HPA_MIN 850
 #define VISIBILITY_M_MAX 150
 #define VISIBILITY_M_MIN 0
-#define WIND_SPEED_MAX 30 // Km/h
+#define WIND_SPEED_MAX 99 // Km/h
 #define WIND_SPEED_MIN 0
 // Moon
 #define MOON_MIN_RADIUS 56.5
@@ -206,7 +206,7 @@ The default is this:
 #define BOOK_FONT getFont("UbuntuMono10")
 
 // Conway, It will drain your battery a lot
-#define CONWAY 1
+#define CONWAY 0
 #define CONWAY_CPU_SPEED 0    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
 #define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
 
@@ -215,7 +215,7 @@ The default is this:
 // allow insecure url for calendar
 #define ALLOW_INSECURE_CAL 0
 // import only events today onwards
-#define FUTURE_ONLY 0
+#define FUTURE_ONLY 1
 // Number of future days to include in calendar
 #define CALENDAR_NEXT_DAYS 50
 // Shorter names needed
@@ -227,16 +227,16 @@ The default is this:
 
 // Watchface modules
 #define MODULE_PERSISTENT 1       // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space
-#define MODULE_UPDATE_LIMIT_S 600 // Every x seconds, update the modules. Not every minute, like it was for now. Change it to 60 for every minute. Change it to 0 to completly disable modules updating automatically
+#define MODULE_UPDATE_LIMIT_S 200 // Every x seconds, update the modules. Not every minute, like it was for now. Change it to 60 for every minute. Change it to 0 to completly disable modules updating automatically
 // Makes the module update many times and faster in full mode (charging, button wakeup etc.)
 // this consumes more BATTERY but makes the wifi module more accurate (As in, update the wifi status faster/more accurate - on yatchy really needed)
 // It's important to note that even with this, modules are optimised no to redraw so often. They will simply check more often if to redraw
 #define MODULES_FAST 0
 #define WIFI_MODULE 1
-#define BITCOIN_MODULE 1   // Remember to define the api key for it in confidential.h
+#define BITCOIN_MODULE 0   // Remember to define the api key for it in confidential.h
 #define SMALL_BTC_MODULE 1 // At default, show the small btc module mode, if 0 show the bigger one
 #define BITCOIN_SYNC_TRIES 3
-#define CONWAY_MODULE 1                  // Conway module. to make it enabled CONWAY itself needs to be enabled
+#define CONWAY_MODULE 0                  // Conway module. to make it enabled CONWAY itself needs to be enabled
 #define CONWAY_MODULE_GRID_PERCANTAGE 50 // Percentage of initial grid filling
 
 #define BOOK_MODULE 1
@@ -254,9 +254,9 @@ The default is this:
 #define ALARM_MODULE 1 // Needs alarm enabled
 
 // Power savings
-#define NIGHT_SLEEP_FOR_M 45 // If it's 1 it doesn't apply, In minutes
+#define NIGHT_SLEEP_FOR_M 30 // If it's 1 it doesn't apply, In minutes
 #define NIGHT_SLEEP_AFTER_HOUR 23
-#define NIGHT_SLEEP_BEFORE_HOUR 5
+#define NIGHT_SLEEP_BEFORE_HOUR 4
 #define SLEEP_EVERY_MS 10000              // Goes to sleep timer, is resetted by button presses and other things
 #define POWER_SAVING_AFTER 40             // Turn on power saving features after a certain battery percantage.
 #define POWER_SAVING_OFF_AFTER 20         // Difference in POWER_SAVING_AFTER after which it will be turned off. Make sure POWER_SAVING_AFTER + POWER_SAVING_OFF_AFTER is not above 100
@@ -265,26 +265,23 @@ The default is this:
 #define CPU_SPEED minimalSpeed            // Possible values: minimalSpeed, normalSpeed, maxSpeed. Obviously higher speeds decrease battery life - but it's only when you interact with the watch. This is mostly for the people who "ugh this watch is slow!". Well first, it's a watch, it should show time, any other features are battery wasters in some way and secondly you should first remove some features you don't use, most noticibly unused watchface moduls. In debug mode, this feature is overritten by DEBUG_CPU_SPEED when DEBUG
 #define BUTTON_CPU_SPEED normalSpeed      // Cpu speed when it has woken up by a button
 #define SOFT_START_THINGS 1               // Slowly starts things, like wifi to prevent brownout reset.
-#define SOFT_START_DELAY_MS 4500
+#define SOFT_START_DELAY_MS 3000
 #define FORCE_DISABLE_ACC 0 // 1 Means ACC is disabled, BMA530 doesn't like that, increases power consumption
 
 // Vault
-#define VAULT 1
+#define VAULT 0
 
 // Pong
-#define PONG 1
+#define PONG 0
 
 // Tetris
-#define TETRIS 1
-
-// Jumper
-#define JUMPER 1
+#define TETRIS 0
 
 // Snake
-#define SNAKE 1
+#define SNAKE 0
 
 // Credits page
-#define CREDITS 1 // Feel free to disable it for your own usage :D
+#define CREDITS 0 // Feel free to disable it for your own usage :D
 
 // Heart monitor
 #define HEART_MONITOR 0 // Needs Acc

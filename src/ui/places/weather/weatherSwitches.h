@@ -32,16 +32,38 @@ struct OM_OneHourWeather
 
     uint8_t weather_code = {0};
 
+    float wet_bulb = {0};    // New field
+    float cape = {0};         // New field
+
+        float uv_index = {0};           // Add this
+    float uv_index_clear_sky = {0}; // Add this
+
     bool is_day = {0};
 
     // Daily things
     time_t daily_time = {0};
 
+    float sunshine = {0};     // New field
     uint32_t sunrise = {0};
     uint32_t sunset = {0};
 };
 
 OM_OneHourWeather weatherGetDataHourly(uint8_t hourOffset);
+
+struct OM_OneHourAirQuality {
+    bool fine;
+    uint16_t european_aqi = {0};
+    uint16_t us_aqi = {0};
+    uint16_t european_aqi_pm2_5 = {0};
+    uint16_t european_aqi_pm10 = {0};
+    uint16_t european_aqi_nitrogen_dioxide = {0};
+    uint16_t european_aqi_ozone = {0};
+    uint16_t european_aqi_sulphur_dioxide = {0};
+
+};
+
+
+OM_OneHourAirQuality airQualityGetDataHourly(uint8_t hourOffset);
 
 // Weather menu functions
 void initWeatherMenu();

@@ -1,7 +1,8 @@
 #include "weather.h"
 
 #if WEATHER_INFO
-#define MAX_WEATHER_DAYS 16
+#define MAX_WEATHER_DAYS 7
+#define MAX_AIR_DAYS 7
 #define ADD_DAY_UNIX 86400
 
 // http://api.open-meteo.com/v1/forecast?latitude=53.543082&longitude=9.994695&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto&forecast_days=16
@@ -49,6 +50,7 @@ void syncWeather()
       return;
     }
 
+
 #if DEBUG && true == false
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; ++i)
     {
@@ -73,10 +75,52 @@ void syncWeather()
     {
       debugLog("Failed to set weather: currentDayDate");
     }
+
   }
 
-  debugLog("Finished syncing weather");
+OM_AirQualityForecast *airForecast = new OM_AirQualityForecast;
+    removeDir(AIR_QUALITY_DIR);
+    fsCreateDir(AIR_QUALITY_DIR);
+fsCreateDir(AIR_QUALITY_HOURLY_DIR);
+
+for (u8_t iw = 0; iw < MAX_AIR_DAYS; iw++)
+  {
+    uint64_t unixTimeAir = simplifyUnix(getUnixTime(timeRTCLocal) + (ADD_DAY_UNIX * iw));
+    String currentDayDate = unixToDate(unixTimeAir);
+    bool status = false;
+    for (u8_t i = 0; i < WEATHER_TRIES; i++)
+    {
+      debugLog("Trying to get air quality for day: " + String(currentDayDate));
+      status = getAirQualityForecast(airForecast, String(WEATHER_LATIT).toFloat(), String(WEATHER_LONGTIT).toFloat(), unixTimeAir);
+      if (status == true)
+      {
+        break;
+      }
+      else
+      {
+        debugLog("Failed to get air quality, retrying...");
+        delayTask(2000);
+      }
+      softStartDelay();
+    }
+    softStartDelay();
+
+    if (status == false)
+    {
+      debugLog("Failed to get air quality... bye");
+      delete airForecast;
+      return;
+    }
+
+ if (fsSetBlob(String(unixTimeAir), (uint8_t *)airForecast, sizeof(OM_AirQualityForecast), String(AIR_QUALITY_HOURLY_DIR) + "/") == false) {
+        debugLog("Failed to set air quality: " + String(currentDayDate));
+    }
+
+  }
+
+  debugLog("Finished syncing weather/airquality");
   delete forecast;
+  delete airForecast;
 }
 
 #if DEBUG
@@ -149,4 +193,5 @@ String weatherConditionIdToStr(u8_t weatherCode)
     return "Unknown weather condition";
   }
 }
+
 #endif
