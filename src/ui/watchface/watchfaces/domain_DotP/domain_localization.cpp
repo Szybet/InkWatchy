@@ -2,10 +2,12 @@
 #include "domain_localization.h"
 
 // domain specific localization functions
-String getDomainLocalizedError() {
+String getDomainLocalizedError()
+{
     return WF_I_ERROR;
 }
 
-String getDomainLocalizedErrorShort() {
+String getDomainLocalizedErrorShort()
+{
     return WF_I_ERROR_SHORT;
 }

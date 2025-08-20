@@ -11,7 +11,8 @@ void showFullWatchface()
     return wManageOneDrawAll(wFO);
 }
 
-void showTimeFullGlobal() {
+void showTimeFullGlobal()
+{
     const watchfaceDefOne *wFO = getwatchfaceDefOne();
     if (wFO == NULL)
     {

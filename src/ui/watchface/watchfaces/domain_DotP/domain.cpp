@@ -8,8 +8,8 @@
 
 /*
 
-Note, this is a full rip-off of Szybet's inkField, 
-with a few other things added in for maximalist fun. 
+Note, this is a full rip-off of Szybet's inkField,
+with a few other things added in for maximalist fun.
 Almost all functionality is the same as with inkField.
 
 Subject to haptic and frenetic updates
@@ -17,7 +17,7 @@ Subject to haptic and frenetic updates
 
 Might be better if SCREEN_FADING_AWAY_2_WORKAROUND=1
 
-modifications:
+modifications:UbuntuMono10
 + most images redone (weather, moon, watchface)
 + dogicafont modified
   -> dot removed from 0
@@ -27,8 +27,8 @@ modifications:
   -> first value (EU) is represented by the AQI bar
 + aqi bar displaying EU AQI out of 120, with tiny indicators
 + uv index bar (out of 12) with line indicator for clear sky uv
-+ thermometre using real temp, ranging from -43.5 to +43.5. 
-  -> this is just how it looked best for pixel markers, 
++ thermometre using real temp, ranging from -43.5 to +43.5.
+  -> this is just how it looked best for pixel markers,
      also covers the actual range of the hell i live in (Canada).
 + changed inkField temp indicator to apparent temp
 + day/night indicator, designed to cutely fit with weather
@@ -42,10 +42,10 @@ modifications:
 
 */
 
-#define TIME_FONT getFont("inkfield/JackInput40")
+#define TIME_FONT getFont("domain/JackInput40")
 #define DATE_FONT getFont("JackInput17")
-#define DAY_NAME_FONT getFont("inkfield/Speculum13")
-#define MONTH_NAME_FONT getFont("inkfield/Speculum9")
+#define DAY_NAME_FONT getFont("domain/Speculum13")
+#define MONTH_NAME_FONT getFont("domain/Speculum9")
 
 #define DAY_NAME_CORD 7, 88
 #define DATE_CORD 7, 113
@@ -72,28 +72,35 @@ modifications:
 #define TIME_CORD TIME_CORD_X, TIME_CORD_Y
 
 // Helper function to get time string based on WATCHFACE_12H setting
-String getDomainTimeString(tmElements_t timeEl) {
+String getDomainTimeString(tmElements_t timeEl)
+{
 #if WATCHFACE_12H
     // 12-hour format without AM/PM
     int hour = timeEl.Hour;
-    if (hour == 0) hour = 12;
-    else if (hour > 12) hour -= 12;
-    
+    if (hour == 0)
+        hour = 12;
+    else if (hour > 12)
+        hour -= 12;
+
     String hourStr = String(hour);
-    if (hourStr.length() == 1) hourStr = "0" + hourStr;  // Fixed: use "0" instead of " "
-    
+    if (hourStr.length() == 1)
+        hourStr = "0" + hourStr; // Fixed: use "0" instead of " "
+
     String minuteStr = String(timeEl.Minute);
-    if (minuteStr.length() == 1) minuteStr = "0" + minuteStr;
-    
+    UbuntuMono10 if (minuteStr.length() == 1)
+        minuteStr = "0" + minuteStr;
+
     return hourStr + ":" + minuteStr;
 #else
     // 24-hour format
     String hourStr = String(timeEl.Hour);
-    if (hourStr.length() == 1) hourStr = "0" + hourStr;
-    
+    if (hourStr.length() == 1)
+        hourStr = "0" + hourStr;
+
     String minuteStr = String(timeEl.Minute);
-    if (minuteStr.length() == 1) minuteStr = "0" + minuteStr;
-    
+    if (minuteStr.length() == 1)
+        minuteStr = "0" + minuteStr;
+
     return hourStr + ":" + minuteStr;
 #endif
 }
@@ -144,31 +151,33 @@ static void drawTimeAfterApply(bool forceDraw)
 
     // UV INDEX + UV INDEX CLEAR SKY
     OM_OneHourWeather wData = weatherGetDataHourly(0);
-    if (wData.fine) {
+    if (wData.fine)
+    {
         // Cap UV values at 12
         float uv_index = min(wData.uv_index, 12.0f);
         float uv_clear = min(wData.uv_index_clear_sky, 12.0f);
-        
+
         // Calculate percentages
         uint8_t uv_percent = static_cast<uint8_t>((uv_index / 12.0f) * 100);
         uint8_t uv_clear_percent = static_cast<uint8_t>((uv_clear / 12.0f) * 100);
-        
+
         // Draw main UV bar
         drawProgressBar(UV_BAR_CORD, GENERAL_BAR_SIZE, uv_percent);
-        
+
         // Draw clear sky indicator if different value from UV Index
         // idk how to avoid needing to hardpoint x and y here
-        if (uv_index != uv_clear) {
+        if (uv_index != uv_clear)
+        {
             int barWidth = 54; // Width from GENERAL_BAR_SIZE
-            int x = 136; // X from UV_BAR_CORD
-            int y = 79;  // Y from UV_BAR_CORD
+            int x = 136;       // X from UV_BAR_CORD
+            int y = 79;        // Y from UV_BAR_CORD
             int lineX = x + (uv_clear_percent * barWidth) / 100;
             dis->drawFastVLine(lineX, y, 10, SCBlack);
         }
 
-                float currentTemp = wData.temp;
+        float currentTemp = wData.temp;
         // Calculate the percentage fill for the thermometer bar
-        float tempRange = 87.0; // from -43.5 to 43.5
+        float tempRange = 87.0;  // from -43.5 to 43.5
         float tempOffset = 43.5; // offset to make the range start from 0
         float tempValue = currentTemp + tempOffset;
         float tempPercent = (tempValue / tempRange) * 100.0;
@@ -177,20 +186,23 @@ static void drawTimeAfterApply(bool forceDraw)
         tempPercent = constrain(tempPercent, 0, 100);
 
         drawTempBar(THERMO_BAR_CORD, THERMO_BAR_SIZE, tempPercent);
-    } else {
+    }
+    else
+    {
         // Fallback: Show empty bar if no data
         drawProgressBar(UV_BAR_CORD, GENERAL_BAR_SIZE, 0);
-         // Fallback, set at 1% due to possible rounding error, shouldn't be visible
-        drawTempBar(THERMO_BAR_CORD, THERMO_BAR_SIZE, 1);
+        // Fallback, set at 4% due to possible rounding error. shows as a single pixel line
+        drawTempBar(THERMO_BAR_CORD, THERMO_BAR_SIZE, 4);
     }
 
-// AIR QUALITY INDEX, EU STANDARDS
-OM_OneHourAirQuality aq = airQualityGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
-uint8_t aqiPercent = 0;
-if (aq.fine) {
-    aqiPercent = (uint8_t)constrain((aq.european_aqi * 100) / 120, 0, 100);
-}
-drawProgressBar(AQI_BAR_CORD, GENERAL_BAR_SIZE, aqiPercent);
+    // AIR QUALITY INDEX, EU STANDARDS
+    OM_OneHourAirQuality aq = airQualityGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
+    uint8_t aqiPercent = 0;
+    if (aq.fine)
+    {
+        aqiPercent = (uint8_t)constrain((aq.european_aqi * 100) / 120, 0, 100);
+    }
+    drawProgressBar(AQI_BAR_CORD, GENERAL_BAR_SIZE, aqiPercent);
 
     // STEPS
 #if ACC_ENABLED
@@ -209,11 +221,12 @@ drawProgressBar(AQI_BAR_CORD, GENERAL_BAR_SIZE, aqiPercent);
     {
         rM.domain.showedTemp = tempsPercents;
         setTextSize(1);
-        setFont(getFont("dogicapixel_dotp4"));
+        setFont(getFont("domain/dogicapixel_dotp4"));
         writeTextReplaceBack("   ", TEMPS_TEXT_CORD);
         // Use formatTemperature for device temperature (not weather)
         String tempStr = formatTemperature(rM.previousTemp);
-        if(tempStr.length() > 3) {
+        if (tempStr.length() > 3)
+        {
             tempStr = tempStr.substring(0, 3);
         }
         writeTextReplaceBack(tempStr, TEMPS_TEXT_CORD);
@@ -222,14 +235,14 @@ drawProgressBar(AQI_BAR_CORD, GENERAL_BAR_SIZE, aqiPercent);
 #endif
 #endif
 
-// 
+    //
     uint16_t weatherMinutes = timeRTCLocal.Minute + (60 * timeRTCLocal.Hour);
-    if (abs(rM.domain.weatherMinutes - weatherMinutes) > 25|| forceDraw == true)
+    if (abs(rM.domain.weatherMinutes - weatherMinutes) > 25 || forceDraw == true)
     {
         rM.domain.weatherMinutes = weatherMinutes;
         domainDrawWeather();
         drawProgressBar(AQI_BAR_CORD, GENERAL_BAR_SIZE, aqiPercent);
-domainDrawMoon();
+        domainDrawMoon();
     }
 }
 
@@ -253,17 +266,17 @@ to disable the slogan 美帝必败
 static void initWatchface()
 {
 #if defined(PROPAGANDA) && (PROPAGANDA == 1)
-    #if ACC_ENABLED
-        writeImageN(0, 0, getImg("domain/watchfaceLib"));
-    #else
-        writeImageN(0, 0, getImg("domain/watchfaceLibNoSteps"));
-    #endif
+#if ACC_ENABLED
+    writeImageN(0, 0, getImg("domain/watchfaceLib"));
 #else
-    #if ACC_ENABLED
-        writeImageN(0, 0, getImg("domain/watchface"));
-    #else
-        writeImageN(0, 0, getImg("domain/watchfaceNoSteps"));
-    #endif
+    writeImageN(0, 0, getImg("domain/watchfaceLibNoSteps"));
+#endif
+#else
+#if ACC_ENABLED
+    writeImageN(0, 0, getImg("domain/watchface"));
+#else
+    writeImageN(0, 0, getImg("domain/watchfaceNoSteps"));
+#endif
 #endif
     domainDrawPosMarker();
 }
@@ -306,9 +319,9 @@ static void drawMonth()
         realMonthNumber = "0" + realMonthNumber;
     }
 
-    setFont(getFont("dogicapixel_dotp4"));
-   String monthWithBrackets = "(" + realMonthNumber + ")";
-   writeTextReplaceBack(monthWithBrackets, MONTH_NUMBER_CORD, SCBlack, SCWhite, true, 1, 1);
+    setFont(getFont("domain/dogicapixel_dotp4"));
+    String monthWithBrackets = "(" + realMonthNumber + ")";
+    writeTextReplaceBack(monthWithBrackets, MONTH_NUMBER_CORD, SCBlack, SCWhite, true, 1, 1);
 }
 
 static void drawBattery()

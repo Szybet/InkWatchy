@@ -34,12 +34,14 @@
 #define AQI_EU_OZONE_CORD 103, 111
 #define AQI_EU_SO2_CORD 103, 119
 
-int clampValue(int value, int min, int max) {
-    if (value < min) return min;
-    if (value > max) return max;
+int clampValue(int value, int min, int max)
+{
+    if (value < min)
+        return min;
+    if (value > max)
+        return max;
     return value;
 }
-
 
 void domainWeatherDrawHelper(uint16_t value, int max, int min, uint16_t x, uint16_t y)
 {
@@ -61,7 +63,7 @@ void domainWeatherDrawHelper(uint16_t value, int max, int min, uint16_t x, uint1
 String getDomainWeatherIcon(uint8_t weatherCode)
 {
 
-        switch (weatherCode)
+    switch (weatherCode)
     {
     case 0:
         return "clear_sky";
@@ -124,14 +126,16 @@ String getDomainWeatherIcon(uint8_t weatherCode)
     }
 }
 
-String getDayNightIcon(uint8_t is_day) {
-    switch (is_day) {
-        case 0:
-            return "nighttime";
-        case 1:
-            return "daytime";
-        default:
-            return "huhtime";  // Default for unexpected values
+String getDayNightIcon(uint8_t is_day)
+{
+    switch (is_day)
+    {
+    case 0:
+        return "nighttime";
+    case 1:
+        return "daytime";
+    default:
+        return "huhtime"; // Default for unexpected values
     }
 }
 
@@ -139,7 +143,7 @@ void domainDrawWeather()
 {
     debugLog("Drawing weather in watchface");
     setTextSize(1);
-    setFont(getFont("dogicapixel_dotp4"));
+    setFont(getFont("domain/dogicapixel_dotp4"));
 
 #if WEATHER_INFO
     OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
@@ -147,8 +151,9 @@ void domainDrawWeather()
     {
         // Use global apparent temperature system with proper conversion
         dis->fillRect(TEMP_RECT_CORD, TEMP_RECT_SIZE, SCWhite);
-        String temps = formatTemperature(wData.apparent_temp);  // Use global function
-        if(temps.length() > 3) {
+        String temps = formatTemperature(wData.apparent_temp); // Use global function
+        if (temps.length() > 3)
+        {
             temps = temps.substring(0, 3);
         }
         writeTextReplaceBack(temps, TEMP_CORD, SCBlack, SCWhite, true, 1);
@@ -167,27 +172,31 @@ void domainDrawWeather()
         // Cloud cover, in %
         domainWeatherDrawHelper(wData.cloud_cover, 99, 0, CLOUD_COVER_CORD);
         debugLog("Sunrise: " + String(wData.sunrise));
+        // Alright so, I forgot about this, but the daily sunrise/sunset info persistently was off despite
+        // weather_watchface_hour_offset being defined. perhaps i'm missing something.
+        // hopefully including it directly into the code helps.
+        // my personal fix was just "- 7" instead of + "(WEATHER_WATCHFACE_HOUR_OFFSET)" lmao
         // Sunrise
-        writeTextReplaceBack(addZero(String((hour(wData.sunrise) - 7 + 24) % 24), 2), SUNRISE_CORD);
+        writeTextReplaceBack(addZero(String((hour(wData.sunrise) + (WEATHER_WATCHFACE_HOUR_OFFSET) + 24) % 24), 2), SUNRISE_CORD);
         // Sunset
-        writeTextReplaceBack(addZero(String((hour(wData.sunset) - 7 + 24) % 24), 2), SUNSET_CORD);
+        writeTextReplaceBack(addZero(String((hour(wData.sunset) + (WEATHER_WATCHFACE_HOUR_OFFSET) + 24) % 24), 2), SUNSET_CORD);
 
         writeImageN(WEATHER_ICON_CORD, getImg("domain/" + getDomainWeatherIcon(wData.weather_code)));
         writeImageN(DAYNIGHT_ICON_CORD, getImg("domain/" + getDayNightIcon(wData.is_day)));
 
-        // NEW: Draw additional weather metrics using Speculum9 font
-        setFont(getFont("inkfield/Speculum9"));
-        
+        // additional weather metrics
+        setFont(getFont("domain/Speculum9"));
+
         // Wet Bulb Temperature (celsius)
         int wetbulb = round(wData.wet_bulb);
         wetbulb = (wetbulb <= -99) ? -99 : wetbulb;
         writeTextReplaceBack(addZero(String(wetbulb), 3), WETBULB_CORD, SCBlack, SCWhite);
-        
+
         // CAPE (Convective Available Potential Energy)
         int cape = round(wData.cape / 10.0);
         cape = (cape >= 1000) ? 999 : cape;
         writeTextReplaceBack(addZero(String(cape), 3), CAPE_CORD, SCBlack, SCWhite);
-        
+
         // Sunshine Duration (minutes)
         int sunshine = round(wData.sunshine / 60.0);
         sunshine = (sunshine >= 1000) ? 999 : sunshine;
@@ -231,99 +240,101 @@ void domainDrawWeather()
     writeImageN(DAYNIGHT_ICON_CORD, getImg("domain/meteortime"));
 #endif
 
-OM_OneHourAirQuality aqData = airQualityGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
-setFont(getFont("dogicapixel_dotp4"));
+    OM_OneHourAirQuality aqData = airQualityGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
+    setFont(getFont("domain/dogicapixel_dotp4"));
 
-if (aqData.fine == true) {
-    // Display raw values on screen for debugging
-    setFont(getFont("dogicapixel_dotp4"));
-if (aqData.fine == true) {
-     String euStr = (aqData.european_aqi <= 20) ? "+ " : 
-                    (aqData.european_aqi <= 40) ? "= " : 
-                    (aqData.european_aqi <= 60) ? "~ " : 
-                    (aqData.european_aqi <= 80) ? "- " : 
-                    (aqData.european_aqi <= 100) ? "x " : 
-                    (aqData.european_aqi <= 125) ? "* " : "! ";
-     String usStr = (aqData.us_aqi <= 50) ? "+ " : 
-                    (aqData.us_aqi <= 100) ? "= " : 
-                    (aqData.us_aqi <= 150) ? "~ " : 
-                    (aqData.us_aqi <= 200) ? "- " : 
-                    (aqData.us_aqi <= 300) ? "x " : 
-                    (aqData.us_aqi <= 400) ? "* " : "! ";
-    String pm25Str = (aqData.european_aqi_pm2_5 <= 10) ? "+ " : 
-                    (aqData.european_aqi_pm2_5 <= 20) ? "= " : 
-                    (aqData.european_aqi_pm2_5 <= 25) ? "~ " : 
-                    (aqData.european_aqi_pm2_5 <= 50) ? "- " : 
-                    (aqData.european_aqi_pm2_5 <= 75) ? "x " : 
-                   (aqData.european_aqi_pm2_5 <= 100) ? "* " : "! ";
-    String pm10Str = (aqData.european_aqi_pm10 <= 20) ? "+ " : 
-                    (aqData.european_aqi_pm10 <= 40) ? "= " : 
-                    (aqData.european_aqi_pm10 <= 50) ? "~ " : 
-                    (aqData.european_aqi_pm10 <= 100) ? "- " : 
-                    (aqData.european_aqi_pm10 <= 150) ? "x " : 
-                   (aqData.european_aqi_pm10 <= 200) ? "* " : "! ";
-     String no2Str = (aqData.european_aqi_nitrogen_dioxide <= 40) ? "+ " : 
-                    (aqData.european_aqi_nitrogen_dioxide <= 90) ? "= " : 
-                    (aqData.european_aqi_nitrogen_dioxide <= 120) ? "~ " : 
-                    (aqData.european_aqi_nitrogen_dioxide <= 230) ? "- " : 
-                    (aqData.european_aqi_nitrogen_dioxide <= 340) ? "x " : 
-                   (aqData.european_aqi_nitrogen_dioxide <= 500) ? "* " : "! ";
-    String ocy3Str = (aqData.european_aqi_ozone <= 50) ? "+ " : 
-                    (aqData.european_aqi_ozone <= 100) ? "= " : 
-                    (aqData.european_aqi_ozone <= 130) ? "~ " : 
-                    (aqData.european_aqi_ozone <= 240) ? "- " : 
-                    (aqData.european_aqi_ozone <= 380) ? "x " : 
-                   (aqData.european_aqi_ozone <= 500) ? "* " : "! ";
-    String so2Str = (aqData.european_aqi_sulphur_dioxide <= 100) ? "+ " : 
-                    (aqData.european_aqi_sulphur_dioxide <= 200) ? "= " : 
-                    (aqData.european_aqi_sulphur_dioxide <= 350) ? "~ " : 
-                    (aqData.european_aqi_sulphur_dioxide <= 500) ? "- " : 
-                    (aqData.european_aqi_sulphur_dioxide <= 750) ? "x " : 
-                   (aqData.european_aqi_sulphur_dioxide <= 999) ? "* " : "! ";
-                    
+    if (aqData.fine == true)
+    {
+        // Display raw values on screen for debugging
+        setFont(getFont("domain/dogicapixel_dotp4"));
+        if (aqData.fine == true)
+        {
+            String euStr = (aqData.european_aqi <= 20) ? "+ " : (aqData.european_aqi <= 40) ? "= "
+                                                            : (aqData.european_aqi <= 60)   ? "~ "
+                                                            : (aqData.european_aqi <= 80)   ? "- "
+                                                            : (aqData.european_aqi <= 100)  ? "x "
+                                                            : (aqData.european_aqi <= 125)  ? "* "
+                                                                                            : "! ";
+            String usStr = (aqData.us_aqi <= 50) ? "+ " : (aqData.us_aqi <= 100) ? "= "
+                                                      : (aqData.us_aqi <= 150)   ? "~ "
+                                                      : (aqData.us_aqi <= 200)   ? "- "
+                                                      : (aqData.us_aqi <= 300)   ? "x "
+                                                      : (aqData.us_aqi <= 400)   ? "* "
+                                                                                 : "! ";
+            String pm25Str = (aqData.european_aqi_pm2_5 <= 10) ? "+ " : (aqData.european_aqi_pm2_5 <= 20) ? "= "
+                                                                    : (aqData.european_aqi_pm2_5 <= 25)   ? "~ "
+                                                                    : (aqData.european_aqi_pm2_5 <= 50)   ? "- "
+                                                                    : (aqData.european_aqi_pm2_5 <= 75)   ? "x "
+                                                                    : (aqData.european_aqi_pm2_5 <= 100)  ? "* "
+                                                                                                          : "! ";
+            String pm10Str = (aqData.european_aqi_pm10 <= 20) ? "+ " : (aqData.european_aqi_pm10 <= 40) ? "= "
+                                                                   : (aqData.european_aqi_pm10 <= 50)   ? "~ "
+                                                                   : (aqData.european_aqi_pm10 <= 100)  ? "- "
+                                                                   : (aqData.european_aqi_pm10 <= 150)  ? "x "
+                                                                   : (aqData.european_aqi_pm10 <= 200)  ? "* "
+                                                                                                        : "! ";
+            String no2Str = (aqData.european_aqi_nitrogen_dioxide <= 40) ? "+ " : (aqData.european_aqi_nitrogen_dioxide <= 90) ? "= "
+                                                                              : (aqData.european_aqi_nitrogen_dioxide <= 120)  ? "~ "
+                                                                              : (aqData.european_aqi_nitrogen_dioxide <= 230)  ? "- "
+                                                                              : (aqData.european_aqi_nitrogen_dioxide <= 340)  ? "x "
+                                                                              : (aqData.european_aqi_nitrogen_dioxide <= 500)  ? "* "
+                                                                                                                               : "! ";
+            String ocy3Str = (aqData.european_aqi_ozone <= 50) ? "+ " : (aqData.european_aqi_ozone <= 100) ? "= "
+                                                                    : (aqData.european_aqi_ozone <= 130)   ? "~ "
+                                                                    : (aqData.european_aqi_ozone <= 240)   ? "- "
+                                                                    : (aqData.european_aqi_ozone <= 380)   ? "x "
+                                                                    : (aqData.european_aqi_ozone <= 500)   ? "* "
+                                                                                                           : "! ";
+            String so2Str = (aqData.european_aqi_sulphur_dioxide <= 100) ? "+ " : (aqData.european_aqi_sulphur_dioxide <= 200) ? "= "
+                                                                              : (aqData.european_aqi_sulphur_dioxide <= 350)   ? "~ "
+                                                                              : (aqData.european_aqi_sulphur_dioxide <= 500)   ? "- "
+                                                                              : (aqData.european_aqi_sulphur_dioxide <= 750)   ? "x "
+                                                                              : (aqData.european_aqi_sulphur_dioxide <= 999)   ? "* "
+                                                                                                                               : "! ";
 
-    writeTextReplaceBack(euStr, AQI_EU_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(usStr, AQI_US_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(pm25Str, AQI_EU_PM2_5_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(pm10Str, AQI_EU_PM10_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(no2Str, AQI_EU_NO2_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(ocy3Str, AQI_EU_OZONE_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(so2Str, AQI_EU_SO2_CORD, SCBlack, SCWhite, true, 1);
-}} else {
-    writeTextReplaceBack("?", AQI_EU_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack("?", AQI_US_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack("?", AQI_EU_PM2_5_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack("?", AQI_EU_PM10_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack("?", AQI_EU_NO2_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack("?", AQI_EU_OZONE_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack("?", AQI_EU_SO2_CORD, SCBlack, SCWhite, true, 1);
+            writeTextReplaceBack(euStr, AQI_EU_CORD, SCBlack, SCWhite, true, 1);
+            writeTextReplaceBack(usStr, AQI_US_CORD, SCBlack, SCWhite, true, 1);
+            writeTextReplaceBack(pm25Str, AQI_EU_PM2_5_CORD, SCBlack, SCWhite, true, 1);
+            writeTextReplaceBack(pm10Str, AQI_EU_PM10_CORD, SCBlack, SCWhite, true, 1);
+            writeTextReplaceBack(no2Str, AQI_EU_NO2_CORD, SCBlack, SCWhite, true, 1);
+            writeTextReplaceBack(ocy3Str, AQI_EU_OZONE_CORD, SCBlack, SCWhite, true, 1);
+            writeTextReplaceBack(so2Str, AQI_EU_SO2_CORD, SCBlack, SCWhite, true, 1);
+        }
+    }
+    else
+    {
+        writeTextReplaceBack("?", AQI_EU_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack("?", AQI_US_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack("?", AQI_EU_PM2_5_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack("?", AQI_EU_PM10_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack("?", AQI_EU_NO2_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack("?", AQI_EU_OZONE_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack("?", AQI_EU_SO2_CORD, SCBlack, SCWhite, true, 1);
+    }
+
+    /* if (aqData.fine == true) {
+        String euStr = (aqData.european_aqi <= 4) ? "+" :
+                       (aqData.european_aqi <= 39) ? "=" : "!";
+        String usStr = (aqData.us_aqi <= 4) ? "+" :
+                       (aqData.us_aqi <= 99) ? "=" : "!";
+        String pm25Str = (aqData.european_aqi_pm2_5 <= 1) ? "+" :
+                         (aqData.european_aqi_pm2_5 <= 39) ? "=" : "!";
+        String pm10Str = (aqData.european_aqi_pm10 <= 1) ? "+" :
+                         (aqData.european_aqi_pm10 <= 39) ? "=" : "!";
+
+        writeTextReplaceBack(euStr, AQI_EU_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(usStr, AQI_US_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(pm25Str, AQI_EU_PM2_5_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack(pm10Str, AQI_EU_PM10_CORD, SCBlack, SCWhite, true, 1);
+    } else {
+        // Only show "?" when there's no data
+        writeTextReplaceBack("?", AQI_EU_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack("?", AQI_US_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack("?", AQI_EU_PM2_5_CORD, SCBlack, SCWhite, true, 1);
+        writeTextReplaceBack("?", AQI_EU_PM10_CORD, SCBlack, SCWhite, true, 1);
+    }
+    */
 }
-
-/* if (aqData.fine == true) {
-    String euStr = (aqData.european_aqi <= 4) ? "+" : 
-                   (aqData.european_aqi <= 39) ? "=" : "!";
-    String usStr = (aqData.us_aqi <= 4) ? "+" : 
-                   (aqData.us_aqi <= 99) ? "=" : "!";
-    String pm25Str = (aqData.european_aqi_pm2_5 <= 1) ? "+" : 
-                     (aqData.european_aqi_pm2_5 <= 39) ? "=" : "!";
-    String pm10Str = (aqData.european_aqi_pm10 <= 1) ? "+" : 
-                     (aqData.european_aqi_pm10 <= 39) ? "=" : "!";
-    
-    writeTextReplaceBack(euStr, AQI_EU_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(usStr, AQI_US_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(pm25Str, AQI_EU_PM2_5_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(pm10Str, AQI_EU_PM10_CORD, SCBlack, SCWhite, true, 1);
-} else {
-    // Only show "?" when there's no data
-    writeTextReplaceBack("?", AQI_EU_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack("?", AQI_US_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack("?", AQI_EU_PM2_5_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack("?", AQI_EU_PM10_CORD, SCBlack, SCWhite, true, 1);
-}
-*/
-}
-
-
 
 String domainRemoveSpaces(String input)
 {

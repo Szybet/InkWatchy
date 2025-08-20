@@ -143,16 +143,15 @@ void initWeatherConditionMenu()
     // precipitation
 
     entryMenu buttons[9] = {
-        {WEATHER_MENU_TEMPERATURE, &emptyImgPack, showTemp}, 
-        {WEATHER_MENU_PRESSURE, &emptyImgPack, showPressure}, 
-        {WEATHER_MENU_HUMIDITY, &emptyImgPack, showHumidity}, 
-        {WEATHER_MENU_CONDITIONS, &emptyImgPack, showWeatherCond}, 
-        {WEATHER_MENU_CLOUDINESS, &emptyImgPack, showClouds}, 
-        {WEATHER_MENU_WIND_SPEED, &emptyImgPack, showWindSpeed}, 
-        {WEATHER_MENU_WIND_GUSTS, &emptyImgPack, showWindGuts}, 
-        {WEATHER_MENU_VISIBILITY, &emptyImgPack, showVisibility}, 
-        {WEATHER_MENU_PRECIPITATION, &emptyImgPack, showPop}
-    };
+        {WEATHER_MENU_TEMPERATURE, &emptyImgPack, showTemp},
+        {WEATHER_MENU_PRESSURE, &emptyImgPack, showPressure},
+        {WEATHER_MENU_HUMIDITY, &emptyImgPack, showHumidity},
+        {WEATHER_MENU_CONDITIONS, &emptyImgPack, showWeatherCond},
+        {WEATHER_MENU_CLOUDINESS, &emptyImgPack, showClouds},
+        {WEATHER_MENU_WIND_SPEED, &emptyImgPack, showWindSpeed},
+        {WEATHER_MENU_WIND_GUSTS, &emptyImgPack, showWindGuts},
+        {WEATHER_MENU_VISIBILITY, &emptyImgPack, showVisibility},
+        {WEATHER_MENU_PRECIPITATION, &emptyImgPack, showPop}};
     initMenu(buttons, 9, WEATHER_STAT_TITLE, 1);
 }
 
@@ -224,12 +223,12 @@ OM_OneHourWeather weatherGetDataHourly(uint8_t hourOffset)
     forecast.wet_bulb = weatherDataWork->wet_bulb_temperature_2m[smallestDiffIndex];
     forecast.cape = weatherDataWork->cape[smallestDiffIndex];
     forecast.is_day = weatherDataWork->is_day[smallestDiffIndex];
-    forecast.uv_index = weatherDataWork->uv_index[smallestDiffIndex];               // Add this
-    forecast.uv_index_clear_sky = weatherDataWork->uv_index_clear_sky[smallestDiffIndex]; // Add this
+    forecast.uv_index = weatherDataWork->uv_index[smallestDiffIndex];
+    forecast.uv_index_clear_sky = weatherDataWork->uv_index_clear_sky[smallestDiffIndex];
 
     // Daily things!
     forecast.daily_time = weatherDataWork->daily_time[0];
-    forecast.sunshine = weatherDataWork->sunshine_duration[0];   // Only the first day
+    forecast.sunshine = weatherDataWork->sunshine_duration[0];
     forecast.sunrise = weatherDataWork->sunrise[0];
     forecast.sunset = weatherDataWork->sunset[0];
 
@@ -238,12 +237,13 @@ OM_OneHourWeather weatherGetDataHourly(uint8_t hourOffset)
     return forecast;
 }
 
-OM_OneHourAirQuality airQualityGetDataHourly(uint8_t hourOffset) {
+OM_OneHourAirQuality airQualityGetDataHourly(uint8_t hourOffset)
+{
     String unixTimeAirQuality = String(simplifyUnix(getUnixTime(timeRTCLocal)));
-        debugLog("Getting air quality for unix: " + unixTimeAirQuality);
+    debugLog("Getting air quality for unix: " + unixTimeAirQuality);
     bufSize airData = fsGetBlob(unixTimeAirQuality, String(AIR_QUALITY_HOURLY_DIR) + "/");
-       debugLog("Air quality size is: " + String(airData.size) + " While is should be: " + String(sizeof(OM_AirQualityForecast)));
-OM_OneHourAirQuality airForecast = {0};
+    debugLog("Air quality size is: " + String(airData.size) + " While is should be: " + String(sizeof(OM_AirQualityForecast)));
+    OM_OneHourAirQuality airForecast = {0};
 
     if (airData.size != sizeof(OM_AirQualityForecast))
     {
@@ -274,7 +274,6 @@ OM_OneHourAirQuality airForecast = {0};
     airForecast.european_aqi_nitrogen_dioxide = airDataWork->european_aqi_nitrogen_dioxide[smallestDiffIndex];
     airForecast.european_aqi_ozone = airDataWork->european_aqi_ozone[smallestDiffIndex];
     airForecast.european_aqi_sulphur_dioxide = airDataWork->european_aqi_sulphur_dioxide[smallestDiffIndex];
-
 
     free(airData.buf);
     airForecast.fine = true;

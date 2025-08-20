@@ -1,8 +1,8 @@
 #include "weather.h"
 
 #if WEATHER_INFO
-#define MAX_WEATHER_DAYS 7
-#define MAX_AIR_DAYS 7
+#define MAX_WEATHER_DAYS 7 // 16 is the max from weather api, reduced here to lower delay to air quality data being loaded
+#define MAX_AIR_DAYS 7     // 7 is the max pull from air-quality api, loads after weather finishes
 #define ADD_DAY_UNIX 86400
 
 // http://api.open-meteo.com/v1/forecast?latitude=53.543082&longitude=9.994695&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto&forecast_days=16
@@ -50,7 +50,6 @@ void syncWeather()
       return;
     }
 
-
 #if DEBUG && true == false
     for (int i = 0; i < OM_WEATHER_MAX_HOURS; ++i)
     {
@@ -75,15 +74,14 @@ void syncWeather()
     {
       debugLog("Failed to set weather: currentDayDate");
     }
-
   }
 
-OM_AirQualityForecast *airForecast = new OM_AirQualityForecast;
-    removeDir(AIR_QUALITY_DIR);
-    fsCreateDir(AIR_QUALITY_DIR);
-fsCreateDir(AIR_QUALITY_HOURLY_DIR);
+  OM_AirQualityForecast *airForecast = new OM_AirQualityForecast;
+  removeDir(AIR_QUALITY_DIR);
+  fsCreateDir(AIR_QUALITY_DIR);
+  fsCreateDir(AIR_QUALITY_HOURLY_DIR);
 
-for (u8_t iw = 0; iw < MAX_AIR_DAYS; iw++)
+  for (u8_t iw = 0; iw < MAX_AIR_DAYS; iw++)
   {
     uint64_t unixTimeAir = simplifyUnix(getUnixTime(timeRTCLocal) + (ADD_DAY_UNIX * iw));
     String currentDayDate = unixToDate(unixTimeAir);
@@ -112,10 +110,10 @@ for (u8_t iw = 0; iw < MAX_AIR_DAYS; iw++)
       return;
     }
 
- if (fsSetBlob(String(unixTimeAir), (uint8_t *)airForecast, sizeof(OM_AirQualityForecast), String(AIR_QUALITY_HOURLY_DIR) + "/") == false) {
-        debugLog("Failed to set air quality: " + String(currentDayDate));
+    if (fsSetBlob(String(unixTimeAir), (uint8_t *)airForecast, sizeof(OM_AirQualityForecast), String(AIR_QUALITY_HOURLY_DIR) + "/") == false)
+    {
+      debugLog("Failed to set air quality: " + String(currentDayDate));
     }
-
   }
 
   debugLog("Finished syncing weather/airquality");
