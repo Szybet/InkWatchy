@@ -17,7 +17,7 @@ Subject to haptic and frenetic updates
 
 Might be better if SCREEN_FADING_AWAY_2_WORKAROUND=1
 
-modifications:UbuntuMono10
+modifications:
 + most images redone (weather, moon, watchface)
 + dogicafont modified
   -> dot removed from 0
@@ -87,7 +87,7 @@ String getDomainTimeString(tmElements_t timeEl)
         hourStr = "0" + hourStr; // Fixed: use "0" instead of " "
 
     String minuteStr = String(timeEl.Minute);
-    UbuntuMono10 if (minuteStr.length() == 1)
+    if (minuteStr.length() == 1)
         minuteStr = "0" + minuteStr;
 
     return hourStr + ":" + minuteStr;
