@@ -20,7 +20,7 @@ Now getting a bit <a href="https://github.com/Szybet/InkWatchy/tree/master/compo
 - Easy to install [demo](https://github.com/Szybet/InkWatchy/wiki/Trying-out-the-demo-firmware) (no compiling!)
 - [Modular and configurable](https://github.com/Szybet/InkWatchy/blob/master/src/defines/templates/gifnoc-template.h), a lot - if you disable a thing, it's not being compiled, it's like it was never there
 - A lot of [watchfaces](https://github.com/Szybet/InkWatchy/wiki/Watchfaces)
-- Language Support: No perf/binary compromise: fully-validated EN/PL + less-tested DE/SK
+- Language Support: No perf/binary compromise: fully-validated EN/PL + less-tested DE/SK/IT
 - Full weather info via open meteo api in charts, 16 day forecast + On watchface
 - Calendar show of events, their time and description from an ICS file (So any calendar should sync)
 - Alarms
