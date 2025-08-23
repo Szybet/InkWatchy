@@ -12,6 +12,7 @@
 #define PL 2
 #define DE 3
 #define SK 4
+#define IT 5
 
 // Ensure INKWATCHY_LANG is defined
 #ifndef INKWATCHY_LANG
@@ -30,8 +31,9 @@
 #include "languages/localization_de.h"
 #elif INKWATCHY_LANG == SK
 #include "languages/localization_sk.h"
-#else
-// Default fallback to English
+#elif INKWATCHY_LANG == IT
+#include "languages/localization_it.h"
+#else // Default fallback to English
 #include "languages/localization_en.h"
 #warning "Unsupported language! Defaulting to English. Please define INKWATCHY_LANG as EN, PL, DE, or SK in config.h"
 #endif
@@ -87,15 +89,15 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 // ==============================================================================
 
 // Check basic watchface weather conditions
-#if !defined(WF_S_WEATHER_CLEAR_SKY) || !defined(WF_S_WEATHER_MOSTLY_CLEAR) || !defined(WF_S_WEATHER_PARTLY_CLOUDY) || \
-    !defined(WF_S_WEATHER_OVERCAST) || !defined(WF_S_WEATHER_FOG) || !defined(WF_S_WEATHER_HEAVY_FOG) || \
-    !defined(WF_S_WEATHER_LIGHT_DRIZZLE) || !defined(WF_S_WEATHER_DRIZZLE) || !defined(WF_S_WEATHER_HEAVY_DRIZZLE) || \
+#if !defined(WF_S_WEATHER_CLEAR_SKY) || !defined(WF_S_WEATHER_MOSTLY_CLEAR) || !defined(WF_S_WEATHER_PARTLY_CLOUDY) ||     \
+    !defined(WF_S_WEATHER_OVERCAST) || !defined(WF_S_WEATHER_FOG) || !defined(WF_S_WEATHER_HEAVY_FOG) ||                   \
+    !defined(WF_S_WEATHER_LIGHT_DRIZZLE) || !defined(WF_S_WEATHER_DRIZZLE) || !defined(WF_S_WEATHER_HEAVY_DRIZZLE) ||      \
     !defined(WF_S_WEATHER_LIGHT_FREEZING) || !defined(WF_S_WEATHER_HEAVY_FREEZING) || !defined(WF_S_WEATHER_LIGHT_RAIN) || \
-    !defined(WF_S_WEATHER_RAIN) || !defined(WF_S_WEATHER_HEAVY_RAIN) || !defined(WF_S_WEATHER_FREEZING_RAIN) || \
-    !defined(WF_S_WEATHER_FREEZING_HARD) || !defined(WF_S_WEATHER_LIGHT_SNOW) || !defined(WF_S_WEATHER_SNOW) || \
-    !defined(WF_S_WEATHER_HEAVY_SNOW) || !defined(WF_S_WEATHER_SNOW_GRAINS) || !defined(WF_S_WEATHER_LIGHT_SHOWERS) || \
-    !defined(WF_S_WEATHER_SHOWERS) || !defined(WF_S_WEATHER_HEAVY_SHOWERS) || !defined(WF_S_WEATHER_SNOW_SHOWERS) || \
-    !defined(WF_S_WEATHER_THUNDERSTORM) || !defined(WF_S_WEATHER_LIGHT_HAIL) || !defined(WF_S_WEATHER_HEAVY_HAIL) || \
+    !defined(WF_S_WEATHER_RAIN) || !defined(WF_S_WEATHER_HEAVY_RAIN) || !defined(WF_S_WEATHER_FREEZING_RAIN) ||            \
+    !defined(WF_S_WEATHER_FREEZING_HARD) || !defined(WF_S_WEATHER_LIGHT_SNOW) || !defined(WF_S_WEATHER_SNOW) ||            \
+    !defined(WF_S_WEATHER_HEAVY_SNOW) || !defined(WF_S_WEATHER_SNOW_GRAINS) || !defined(WF_S_WEATHER_LIGHT_SHOWERS) ||     \
+    !defined(WF_S_WEATHER_SHOWERS) || !defined(WF_S_WEATHER_HEAVY_SHOWERS) || !defined(WF_S_WEATHER_SNOW_SHOWERS) ||       \
+    !defined(WF_S_WEATHER_THUNDERSTORM) || !defined(WF_S_WEATHER_LIGHT_HAIL) || !defined(WF_S_WEATHER_HEAVY_HAIL) ||       \
     !defined(WF_S_WEATHER_UNKNOWN)
 #error "Localization file is missing weather condition definitions."
 #endif
@@ -117,7 +119,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #endif
 
 // Check weather submenu items
-#if !defined(WEATHER_MENU_TEMPERATURE) || !defined(WEATHER_MENU_PRESSURE) || !defined(WEATHER_MENU_HUMIDITY) || \
+#if !defined(WEATHER_MENU_TEMPERATURE) || !defined(WEATHER_MENU_PRESSURE) || !defined(WEATHER_MENU_HUMIDITY) ||    \
     !defined(WEATHER_MENU_CONDITIONS) || !defined(WEATHER_MENU_CLOUDINESS) || !defined(WEATHER_MENU_WIND_SPEED) || \
     !defined(WEATHER_MENU_WIND_GUSTS) || !defined(WEATHER_MENU_VISIBILITY) || !defined(WEATHER_MENU_PRECIPITATION)
 #error "Localization file is missing weather submenu definitions."
@@ -130,7 +132,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #endif
 
 // Check weather chart titles
-#if !defined(WEATHER_CHART_TEMP) || !defined(WEATHER_CHART_PRESSURE) || !defined(WEATHER_CHART_HUMIDITY) || \
+#if !defined(WEATHER_CHART_TEMP) || !defined(WEATHER_CHART_PRESSURE) || !defined(WEATHER_CHART_HUMIDITY) ||       \
     !defined(WEATHER_CHART_CLOUDS) || !defined(WEATHER_CHART_WIND_SPEED) || !defined(WEATHER_CHART_WIND_GUSTS) || \
     !defined(WEATHER_CHART_VISIBILITY) || !defined(WEATHER_CHART_PRECIPITATION) || !defined(WEATHER_CONDITIONS_TITLE)
 #error "Localization file is missing weather chart definitions."
@@ -142,12 +144,12 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #endif
 
 // Check main menu translations
-#if !defined(MENU_MAIN) || !defined(MENU_CALENDAR) || !defined(MENU_SELECT_BOOK) || !defined(MENU_ALARMS) || \
-    !defined(MENU_WEATHER) || !defined(MENU_SETTINGS) || !defined(MENU_HEART_MONITOR) || !defined(MENU_VAULT) || \
+#if !defined(MENU_MAIN) || !defined(MENU_CALENDAR) || !defined(MENU_SELECT_BOOK) || !defined(MENU_ALARMS) ||              \
+    !defined(MENU_WEATHER) || !defined(MENU_SETTINGS) || !defined(MENU_HEART_MONITOR) || !defined(MENU_VAULT) ||          \
     !defined(MENU_WIFI_TOOL) || !defined(MENU_EATING_APPLES) || !defined(MENU_SMASHING_APPLES) || !defined(MENU_GAMES) || \
-    !defined(MENU_CREDITS) || !defined(MENU_WIFI) || !defined(MENU_DEBUG) || !defined(MENU_POWER_SETTINGS) || \
-    !defined(MENU_CHANGE_WATCHFACE) || !defined(MENU_TETRIS) || !defined(MENU_PONG) || !defined(MENU_VIDEO_PLAYER) || \
-    !defined(MENU_CONWAY) || !defined(MENU_PARTY) || !defined(MENU_VIBRATIONS_DIS) || !defined(MENU_WAKE_UP_DIS) || \
+    !defined(MENU_CREDITS) || !defined(MENU_WIFI) || !defined(MENU_DEBUG) || !defined(MENU_POWER_SETTINGS) ||             \
+    !defined(MENU_CHANGE_WATCHFACE) || !defined(MENU_TETRIS) || !defined(MENU_PONG) || !defined(MENU_VIDEO_PLAYER) ||     \
+    !defined(MENU_CONWAY) || !defined(MENU_PARTY) || !defined(MENU_VIBRATIONS_DIS) || !defined(MENU_WAKE_UP_DIS) ||       \
     !defined(MENU_POWER)
 #error "Localization file is missing main menu definitions."
 #endif
@@ -159,7 +161,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 
 // Check heart monitor translations
 #if !defined(HEART_MONITOR_TITLE) || !defined(HEART_MONITOR_NOT_MEDICAL) || !defined(HEART_MONITOR_PLACE_DEVICE) || \
-    !defined(HEART_MONITOR_CLICK_MENU) || !defined(HEART_MONITOR_START_3S) || !defined(HEART_MONITOR_TAKES_15S) || \
+    !defined(HEART_MONITOR_CLICK_MENU) || !defined(HEART_MONITOR_START_3S) || !defined(HEART_MONITOR_TAKES_15S) ||  \
     !defined(HEART_MONITOR_BREATHE_SLOWLY) || !defined(HEART_MONITOR_TIME_LEFT) || !defined(HEART_MONITOR_BPM)
 #error "Localization file is missing heart monitor definitions."
 #endif
@@ -193,8 +195,8 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #endif
 
 // Check accelerometer debug translations
-#if !defined(DEBUG_ACC_DISABLED) || !defined(DEBUG_ACC_FAILED_INIT) || !defined(DEBUG_ACC_DAMAGED) || \
-    !defined(DEBUG_ACC_WORKING) || !defined(DEBUG_ACC_CLICK_3D) || !defined(DEBUG_ACC_X) || !defined(DEBUG_ACC_Y) || \
+#if !defined(DEBUG_ACC_DISABLED) || !defined(DEBUG_ACC_FAILED_INIT) || !defined(DEBUG_ACC_DAMAGED) ||                  \
+    !defined(DEBUG_ACC_WORKING) || !defined(DEBUG_ACC_CLICK_3D) || !defined(DEBUG_ACC_X) || !defined(DEBUG_ACC_Y) ||   \
     !defined(DEBUG_ACC_Z) || !defined(DEBUG_ACC_PURE_X) || !defined(DEBUG_ACC_PURE_Y) || !defined(DEBUG_ACC_PURE_Z) || \
     !defined(DEBUG_ACC_STEPS) || !defined(DEBUG_ACC_IC)
 #error "Localization file is missing accelerometer debug definitions."
@@ -202,7 +204,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 
 // Check battery debug translations
 #if !defined(DEBUG_BATTERY_CURRENT_V) || !defined(DEBUG_BATTERY_MINIMUM_V) || !defined(DEBUG_BATTERY_MAXIMUM_V) || \
-    !defined(DEBUG_BATTERY_CRITICAL_V) || !defined(DEBUG_BATTERY_LEVEL) || !defined(DEBUG_BATTERY_CHARGING) || \
+    !defined(DEBUG_BATTERY_CRITICAL_V) || !defined(DEBUG_BATTERY_LEVEL) || !defined(DEBUG_BATTERY_CHARGING) ||     \
     !defined(DEBUG_BATTERY_FULLY)
 #error "Localization file is missing battery debug definitions."
 #endif
@@ -231,7 +233,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #endif
 
 // Check WiFi debug translations
-#if !defined(DEBUG_WIFI_MAC_ADDRESS) || !defined(DEBUG_WIFI_STATUS) || !defined(DEBUG_WIFI_IP) || \
+#if !defined(DEBUG_WIFI_MAC_ADDRESS) || !defined(DEBUG_WIFI_STATUS) || !defined(DEBUG_WIFI_IP) ||  \
     !defined(DEBUG_WIFI_SSID) || !defined(DEBUG_WIFI_SIGNAL) || !defined(DEBUG_WIFI_CONNECTING) || \
     !defined(DEBUG_WIFI_ON) || !defined(DEBUG_WIFI_OFF)
 #error "Localization file is missing WiFi debug definitions."
@@ -248,7 +250,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #endif
 
 // Check alarm menu titles
-#if !defined(ALARM_MENU_EDIT_DAYS) || !defined(ALARM_MENU_EDIT_ALARM) || !defined(ALARM_MENU_ALARMS) || \
+#if !defined(ALARM_MENU_EDIT_DAYS) || !defined(ALARM_MENU_EDIT_ALARM) || !defined(ALARM_MENU_ALARMS) ||                \
     !defined(ALARM_MENU_BROWSE_ALARMS) || !defined(ALARM_MENU_QUICK_ALARMS_SET) || !defined(ALARM_MENU_QUICK_ALARM) || \
     !defined(ALARM_MENU_POMODORO)
 #error "Localization file is missing alarm menu definitions."
@@ -280,7 +282,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 
 // Check Pomodoro strings
 #if !defined(POMODORO_STATUS) || !defined(POMODORO_RUNNING) || !defined(POMODORO_WORKING) || \
-    !defined(POMODORO_PAUSE) || !defined(POMODORO_ITER) || !defined(POMODORO_DISABLED) || \
+    !defined(POMODORO_PAUSE) || !defined(POMODORO_ITER) || !defined(POMODORO_DISABLED) ||    \
     !defined(POMODORO_RESET_TURN_OFF) || !defined(POMODORO_START)
 #error "Localization file is missing Pomodoro definitions."
 #endif
@@ -297,14 +299,14 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 
 /*
  * ADDING A NEW LANGUAGE:
- * 
+ *
  * STEP 1: Use the Translation Template
  * 1. Copy the file: src/templates/localization_template.h
  * 2. Rename it to: languages/localization_XX.h (where XX is your language code, e.g., FR, ES, IT)
  * 3. Fill in all empty strings "" using the English references in comments
  * 4. Follow the guidelines in the template (character limits, special characters, etc.)
  * 5. Use the checklist at the end of the template to verify completeness
- * 
+ *
  * STEP 2: Register the Language in System
  * 6. Add a new language constant above: #define XX 5 (next available number)
  * 7. Add a new #elif case in the include section: #include "languages/localization_XX.h"
@@ -323,7 +325,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
  * CURRENTLY SUPPORTED LANGUAGES:
  * - EN (English) - Reference implementation
  * - PL (Polish) - Full support
- * - DE (German) - Full support  
+ * - DE (German) - Full support
  * - SK (Slovak) - Full support
  * - Template available for new languages
  *
@@ -341,17 +343,17 @@ inline String getCurrentLocalizedDayName(int offset = 0)
  * 5. Update this documentation if creating new categories
  *
  * TECHNICAL DETAILS:
- * 
+ *
  * Temperature Formatting:
  * - Temperature functions are in temperature.h
  * - Use formatTemperature() for consistent display across languages
- * 
+ *
  * Compile-Time Validation System:
  * - Automatically checks 120+ required macro definitions during compilation
  * - Organized into logical categories (weather, menus, debug, alarms, etc.)
  * - Fails compilation with descriptive error if any translation is missing
  * - Ensures 100% translation completeness across all language files
- * 
+ *
  * Validation Categories:
  * - Weather conditions: All WF_S_WEATHER_* definitions (28 variables)
  * - Day/time format: WF_S_DAY_*, WF_TIME_*, error messages (12 variables)
@@ -362,7 +364,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
  * - Debug system: DEBUG_MENU_*, DEBUG_ITEM_*, DEBUG_*_* (45+ variables)
  * - Alarms & Pomodoro: ALARM_*, POMODORO_* (30+ variables)
  * - Time units: TIME_UNIT_* including plural forms (10 variables)
- * 
+ *
  * TROUBLESHOOTING:
  * - "missing definitions" error → Use template, check variable names match exactly
  * - Text doesn't fit on screen → Shorten translations, use abbreviations
