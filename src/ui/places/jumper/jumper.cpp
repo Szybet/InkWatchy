@@ -38,7 +38,7 @@ void drawObstacles()
 {
     for (int i = 0; i < NUM_OBSTACLES; i++)
     {
-        if (obstacles[i].y >= 0) // only draw if lane exists
+        if (obstacles[i].y >= 0)
         {
             dis->fillRect(obstacles[i].x, obstacles[i].y, STEP_X, OBSTACLE_SIZE, SCBlack);
         }
@@ -54,11 +54,14 @@ bool checkCollision()
             int obsSpeed = obstacles[i].speed;
             int prevX = obstacles[i].x - obsSpeed;
 
-            // clamp prevX if wrapping occurred
             if (obsSpeed > 0 && prevX < 0)
+            {
                 prevX = 0;
+            }
             if (obsSpeed < 0 && prevX > SCREEN_W - STEP_X)
+            {
                 prevX = SCREEN_W - STEP_X;
+            }
 
             int obsMinX = min(prevX, obstacles[i].x);
             int obsMaxX = max(prevX, obstacles[i].x) + STEP_X;
@@ -80,13 +83,19 @@ void moveObstacles()
     for (int i = 0; i < NUM_OBSTACLES; i++)
     {
         if (obstacles[i].y < 0)
-            continue; // skip disabled lanes
+        {
+            continue;
+        }
 
         obstacles[i].x += obstacles[i].speed;
         if (obstacles[i].x < 0)
+        {
             obstacles[i].x = SCREEN_W - STEP_X;
+        }
         if (obstacles[i].x > SCREEN_W - STEP_X)
+        {
             obstacles[i].x = 0;
+        }
     }
 }
 
@@ -95,8 +104,8 @@ void initJumper()
     jumper.x = (SCREEN_W - JUMPER_SIZE) / 2;
     jumper.y = SCREEN_H - STEP_Y;
 
-    int laneHeight = STEP_Y;                    // spacing between lanes
-    int maxLanes = (SCREEN_H / laneHeight) - 1; // number of possible lanes
+    int laneHeight = STEP_Y;
+    int maxLanes = (SCREEN_H / laneHeight) - 1;
     debugLog("Max lanes: " + String(maxLanes));
     int c = 0;
 
@@ -115,7 +124,7 @@ void initJumper()
         }
         else
         {
-            obstacles[i].y = -1; // empty lane
+            obstacles[i].y = -1;
         }
     }
 
@@ -171,9 +180,13 @@ void loopJumper()
         }
 
         if (jumper.x < 0)
+        {
             jumper.x = 0;
+        }
         if (jumper.x > SCREEN_W - JUMPER_SIZE)
+        {
             jumper.x = SCREEN_W - JUMPER_SIZE;
+        }
         if (jumper.y < 0)
         {
             jumperPoints += 10;
@@ -181,7 +194,9 @@ void loopJumper()
             return;
         }
         if (jumper.y > SCREEN_H - JUMPER_SIZE)
+        {
             jumper.y = SCREEN_H - JUMPER_SIZE;
+        }
 
         dis->fillScreen(SCWhite);
         drawJumper();
@@ -193,7 +208,9 @@ void loopJumper()
     else
     {
         if (btn != None)
+        {
             initJumper();
+        }
     }
 
     resetSleepDelay();
