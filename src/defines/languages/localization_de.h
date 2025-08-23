@@ -104,6 +104,8 @@
 #define MENU_CHANGE_WATCHFACE "Zifferblatt and."
 #define MENU_TETRIS "Blockchy"
 #define MENU_PONG "Pong"
+#define MENU_SNAKE "Schlange"
+#define MENU_JUMPER "Springer"
 #define MENU_VIDEO_PLAYER "Video Player"
 #define MENU_CONWAY "Conway"
 #define MENU_PARTY "Party"

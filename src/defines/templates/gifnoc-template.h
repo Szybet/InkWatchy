@@ -276,6 +276,9 @@ The default is this:
 // Tetris
 #define TETRIS 1
 
+// Jumper
+#define JUMPER 1
+
 // Snake
 #define SNAKE 1
 

@@ -5,10 +5,11 @@
 #define SCREEN_W 200
 #define SCREEN_H 200
 #define JUMPER_SIZE 15
-#define OBSTACLE_SIZE 7
+#define OBSTACLE_SIZE 5
 #define STEP_X 20
 #define STEP_Y 20
-#define NUM_OBSTACLES 5
+#define NUM_OBSTACLES 10
+#define MINIMUM_OBSTACLES 3
 
 struct xy
 {
@@ -16,8 +17,15 @@ struct xy
     int y;
 };
 
+struct obstacle
+{
+    int x;
+    int y;
+    int speed;
+};
+
 xy jumper;
-xy obstacles[NUM_OBSTACLES];
+obstacle obstacles[NUM_OBSTACLES];
 bool lostJumper = false;
 int jumperPoints;
 
@@ -30,7 +38,10 @@ void drawObstacles()
 {
     for (int i = 0; i < NUM_OBSTACLES; i++)
     {
-        dis->fillRect(obstacles[i].x, obstacles[i].y, STEP_X, OBSTACLE_SIZE, SCBlack);
+        if (obstacles[i].y >= 0) // only draw if lane exists
+        {
+            dis->fillRect(obstacles[i].x, obstacles[i].y, STEP_X, OBSTACLE_SIZE, SCBlack);
+        }
     }
 }
 
@@ -38,9 +49,15 @@ bool checkCollision()
 {
     for (int i = 0; i < NUM_OBSTACLES; i++)
     {
-        if (jumper.y == obstacles[i].y && jumper.x < obstacles[i].x + STEP_X && jumper.x + JUMPER_SIZE > obstacles[i].x)
+        if (obstacles[i].y >= 0)
         {
-            return true;
+            if (jumper.x < obstacles[i].x + STEP_X &&
+                jumper.x + JUMPER_SIZE > obstacles[i].x &&
+                jumper.y < obstacles[i].y + OBSTACLE_SIZE &&
+                jumper.y + JUMPER_SIZE > obstacles[i].y)
+            {
+                return true;
+            }
         }
     }
     return false;
@@ -50,7 +67,10 @@ void moveObstacles()
 {
     for (int i = 0; i < NUM_OBSTACLES; i++)
     {
-        obstacles[i].x += (i % 2 == 0 ? STEP_X : -STEP_X);
+        if (obstacles[i].y < 0)
+            continue; // skip disabled lanes
+
+        obstacles[i].x += obstacles[i].speed;
         if (obstacles[i].x < 0)
             obstacles[i].x = SCREEN_W - STEP_X;
         if (obstacles[i].x > SCREEN_W - STEP_X)
@@ -60,13 +80,39 @@ void moveObstacles()
 
 void initJumper()
 {
-    jumper.x = (SCREEN_W - JUMPER_SIZE) / 2; // centered horizontally
+    jumper.x = (SCREEN_W - JUMPER_SIZE) / 2;
     jumper.y = SCREEN_H - STEP_Y;
+
+    int laneHeight = STEP_Y;                // spacing between lanes
+    int maxLanes = (SCREEN_H / laneHeight) - 1; // number of possible lanes
+    debugLog("Max lanes: " + String(maxLanes));
+    int c = 0;
+
     for (int i = 0; i < NUM_OBSTACLES; i++)
     {
-        obstacles[i].x = (i * 30) % SCREEN_W;
-        obstacles[i].y = (i + 1) * STEP_Y * 2;
+        bool hasCar = (betterRandom(0, 100) < 80);
+        hasCar = true;
+        if (hasCar && i < maxLanes)
+        {
+            c++;
+            obstacles[i].x = betterRandom(0, SCREEN_W - STEP_X);
+            obstacles[i].y = i * laneHeight;
+
+            int dir = (betterRandom(0, 2) == 0) ? -1 : 1;
+            obstacles[i].speed = dir * (betterRandom(1, 7) * (STEP_X / 3));
+        }
+        else
+        {
+            obstacles[i].y = -1; // empty lane
+        }
     }
+
+    if (c < MINIMUM_OBSTACLES)
+    {
+        initJumper();
+        return;
+    }
+
     jumperPoints = 0;
     lostJumper = false;
 }
@@ -103,7 +149,7 @@ void loopJumper()
         {
             jumper.y += STEP_Y;
         }
-        
+
         if (jumper.x < 0)
             jumper.x = 0;
         if (jumper.x > SCREEN_W - JUMPER_SIZE)

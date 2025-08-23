@@ -42,6 +42,7 @@ typedef enum
     videoMenu,
     pong,
     tetris,
+    jumperGame,
     snake,
     gamesMenu,
     credits,
@@ -133,6 +134,9 @@ void switchApple2();
 void switchPong();
 #if TETRIS
 void switchTetris();
+#endif
+#if JUMPER
+void switchJumper();
 #endif
 #if SNAKE
 void switchSnake();

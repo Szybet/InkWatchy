@@ -374,6 +374,13 @@ void loopManager()
 #endif
         break;
     }
+    case jumperGame:
+    {
+#if JUMPER
+        managerLaunchFunc(jumperGame, initJumper, loopJumper);
+#endif
+        break;
+    }
     case snake:
     {
 #if SNAKE

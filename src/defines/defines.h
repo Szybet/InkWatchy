@@ -186,6 +186,9 @@ extern uint16_t SCWhite;
 #if TETRIS
 #include "../ui/places/tetris/tetrisPlace.h"
 #endif
+#if JUMPER
+#include "../ui/places/jumper/jumper.h"
+#endif
 #if CREDITS
 #include "../ui/places/credits/credits.h"
 #endif

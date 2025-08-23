@@ -104,6 +104,8 @@
 #define MENU_CHANGE_WATCHFACE "Zmien tarcze"
 #define MENU_TETRIS "Blockchy"
 #define MENU_PONG "Pong"
+#define MENU_SNAKE "Waz"
+#define MENU_JUMPER "Skoczek"
 #define MENU_VIDEO_PLAYER "Odtwarzacz video"
 #define MENU_CONWAY "Conway"
 #define MENU_PARTY "Impreza"

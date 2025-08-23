@@ -166,6 +166,12 @@ void switchTetris()
 }
 #endif
 
+#if JUMPER
+void switchJumper() {
+    generalSwitch(jumperGame);
+}
+#endif
+
 #if SNAKE
 void switchSnake()
 {
