@@ -50,6 +50,7 @@ Now getting a bit <a href="https://github.com/Szybet/InkWatchy/tree/master/compo
    - Blockchy, a tetris like game
    - Snake (Written in rust!)
    - Pong game
+   - Jumper game
    - Conway game of life
    - Small video player
 - Experimental heart rate monitor (Just a proof of concept, works best on Yatchy)
