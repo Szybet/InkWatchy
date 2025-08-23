@@ -51,8 +51,20 @@ bool checkCollision()
     {
         if (obstacles[i].y >= 0)
         {
-            if (jumper.x < obstacles[i].x + STEP_X &&
-                jumper.x + JUMPER_SIZE > obstacles[i].x &&
+            int obsSpeed = obstacles[i].speed;
+            int prevX = obstacles[i].x - obsSpeed;
+
+            // clamp prevX if wrapping occurred
+            if (obsSpeed > 0 && prevX < 0)
+                prevX = 0;
+            if (obsSpeed < 0 && prevX > SCREEN_W - STEP_X)
+                prevX = SCREEN_W - STEP_X;
+
+            int obsMinX = min(prevX, obstacles[i].x);
+            int obsMaxX = max(prevX, obstacles[i].x) + STEP_X;
+
+            if (jumper.x + JUMPER_SIZE > obsMinX &&
+                jumper.x < obsMaxX &&
                 jumper.y < obstacles[i].y + OBSTACLE_SIZE &&
                 jumper.y + JUMPER_SIZE > obstacles[i].y)
             {
@@ -83,7 +95,7 @@ void initJumper()
     jumper.x = (SCREEN_W - JUMPER_SIZE) / 2;
     jumper.y = SCREEN_H - STEP_Y;
 
-    int laneHeight = STEP_Y;                // spacing between lanes
+    int laneHeight = STEP_Y;                    // spacing between lanes
     int maxLanes = (SCREEN_H / laneHeight) - 1; // number of possible lanes
     debugLog("Max lanes: " + String(maxLanes));
     int c = 0;
@@ -123,6 +135,14 @@ void loopJumper()
 
     if (!lostJumper)
     {
+        if (checkCollision())
+        {
+            lostJumper = true;
+            String msg = "You lost! Score: " + String(jumperPoints);
+            writeTextCenterReplaceBack(msg, SCREEN_H / 2);
+            disUp(true);
+            return;
+        }
         if (btn == Up)
         {
             jumper.y -= STEP_Y;
@@ -167,12 +187,6 @@ void loopJumper()
         drawJumper();
         moveObstacles();
         drawObstacles();
-        if (checkCollision())
-        {
-            lostJumper = true;
-            String msg = "You lost! Score: " + String(jumperPoints);
-            writeTextCenterReplaceBack(msg, SCREEN_H / 2);
-        }
         dUChange = true;
         debugLog("Updating jumper...");
     }
