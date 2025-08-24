@@ -7,7 +7,7 @@
 #define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
-#define WATCHFACE_DOMAIN_DOTP 1     // Blatant ripoff of InkField
+#define WATCHFACE_DOMAIN_DOTP 1 
 #define WATCHFACE_TAYCHRON 1
 #define WATCHFACE_TAYCHRON_DATE 0 // shows date below time
 #define WATCHFACE_SLATE 1

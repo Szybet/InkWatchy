@@ -202,8 +202,6 @@ void domainDrawWeather()
         int sunshine = round(wData.sunshine / 60.0);
         sunshine = (sunshine >= 1000) ? 999 : sunshine;
         writeTextReplaceBack(addZero(String(sunshine), 3), SUNLIGHT_MINUTES_CORD, SCBlack, SCWhite);
-    
-
     }
     else
     {
@@ -357,15 +355,24 @@ String domainRemoveSpaces(String input)
 String getWindDirectionIcon(uint16_t wind_deg)
 {
     // Convert wind degree to one of 8 cardinal directions
-    if (wind_deg >= 338 || wind_deg < 23) return "N";
-    else if (wind_deg >= 23 && wind_deg < 68) return "NE";
-    else if (wind_deg >= 68 && wind_deg < 113) return "E";
-    else if (wind_deg >= 113 && wind_deg < 158) return "SE";
-    else if (wind_deg >= 158 && wind_deg < 203) return "S";
-    else if (wind_deg >= 203 && wind_deg < 248) return "SW";
-    else if (wind_deg >= 248 && wind_deg < 293) return "W";
-    else if (wind_deg >= 293 && wind_deg < 338) return "NW";
-    else return "error"; // Default to North if something unexpected happens
+    if (wind_deg >= 338 || wind_deg < 23)
+        return "N";
+    else if (wind_deg >= 23 && wind_deg < 68)
+        return "NE";
+    else if (wind_deg >= 68 && wind_deg < 113)
+        return "E";
+    else if (wind_deg >= 113 && wind_deg < 158)
+        return "SE";
+    else if (wind_deg >= 158 && wind_deg < 203)
+        return "S";
+    else if (wind_deg >= 203 && wind_deg < 248)
+        return "SW";
+    else if (wind_deg >= 248 && wind_deg < 293)
+        return "W";
+    else if (wind_deg >= 293 && wind_deg < 338)
+        return "NW";
+    else
+        return "error"; // Default to North if something unexpected happens
 }
 
 void domainDrawWindCompass()
@@ -376,7 +383,7 @@ void domainDrawWindCompass()
     {
         // Get the appropriate wind direction icon
         String windDirection = getWindDirectionIcon(wData.wind_deg);
-        
+
         // Draw the compass image
         writeImageN(COMPASS_IMG_CORD, getImg("domain/wind_" + windDirection));
     }
