@@ -269,7 +269,7 @@ void initWeatherConditionMenu()
     // visibility
     // precipitation
 
-    entryMenu buttons[22] = {
+    entryMenu buttons[21] = {
         {WEATHER_MENU_TEMPERATURE, &emptyImgPack, showTemp},
         {WEATHER_MENU_PRESSURE, &emptyImgPack, showPressure},
         {WEATHER_MENU_HUMIDITY, &emptyImgPack, showHumidity},
@@ -294,7 +294,7 @@ void initWeatherConditionMenu()
         {WEATHER_MENU_DIRECT_RADIATION, &emptyImgPack, showDirectRadiation},
         //     {WEATHER_MENU_TOTAL_WATER_VAPOUR, &emptyImgPack, showTotalColumnIntegratedWaterVapour}
     };
-    initMenu(buttons, 22, WEATHER_STAT_TITLE, 1);
+    initMenu(buttons, 21, WEATHER_STAT_TITLE, 1);
 }
 
 OM_HourlyForecastReturn generalWeatherGetData()
@@ -348,7 +348,7 @@ void initAirQualityConditionMenu()
     // Ozone
     // Sulphur Dioxide
 
-    entryMenu buttons[22] = {
+    entryMenu buttons[21] = {
         {AIR_MENU_EUAQI, &emptyImgPack, showEuropeanAQI},
         {AIR_MENU_USAQI, &emptyImgPack, showUS_AQI},
         {AIR_MENU_EU_AQI_PM2_5, &emptyImgPack, showEUAQI_PM2_5},
@@ -371,7 +371,7 @@ void initAirQualityConditionMenu()
         //   {AIR_MENU_SEA_SALT_AEROSOL, &emptyImgPack, showSeaSaltAerosol},
         {AIR_MENU_NITROGEN_MONOXIDE, &emptyImgPack, showNitrogenMonoxide},
         {AIR_MENU_PEROXYACYL_NITRATES, &emptyImgPack, showPeroxyacylNitrates}};
-    initMenu(buttons, 22, AIR_QUALITY_STAT_TITLE, 1);
+    initMenu(buttons, 21, AIR_QUALITY_STAT_TITLE, 1);
 }
 
 OM_AirQualityForecastReturn generalAirQualityGetData()
