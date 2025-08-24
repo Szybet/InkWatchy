@@ -7,6 +7,7 @@
 #define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
+#define WATCHFACE_DOMAIN_DOTP 1 
 #define WATCHFACE_TAYCHRON 1
 #define WATCHFACE_TAYCHRON_DATE 0 // shows date below time
 #define WATCHFACE_SLATE 1
@@ -144,6 +145,7 @@ The default is this:
 #define WEATHER_INFO 1  // Enable weather
 #define WEATHER_TRIES 3 // Ammount of times to try to sync weather
 #define WEATHER_WATCHFACE_HOUR_OFFSET 1
+#define SUNRISE_SUNSET_HOUR_OFFSET 0 // (Domain watchface) Sunrise/Sunset is wrong, but everything else is fine? edit this instead.
 #define PRESSURE_HPA_MAX 1100 // 1013 is 50%
 #define PRESSURE_HPA_MIN 850
 #define VISIBILITY_M_MAX 150
@@ -451,5 +453,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 
 #define WEATHER_HOURLY_DIR "/weather/hourly"
 #define WEATHER_DIR "/weather"
+#define AIR_QUALITY_HOURLY_DIR "/air_quality/hourly"
+#define AIR_QUALITY_DIR "/air_quality"
 
 #define IMAGE_MODULE_PATH "watchfaceImages/"

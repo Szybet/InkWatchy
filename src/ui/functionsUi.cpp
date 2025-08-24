@@ -382,6 +382,32 @@ void drawProgressBar(int x, int y, int width, int height, int progress)
       if ((i + j) % 2 == 0)
       {
         dis->drawPixel(x + i, y + j, SCBlack);
+              }
+    }
+  }
+}
+
+void drawTempBar(int x, int y, int width, int height, int progress)
+{
+  progress = constrain(progress, 0, 100);
+
+  // Calculate filled height based on progress
+  int filledHeight = map(progress, 0, 100, 0, height);
+
+  // Clear entire area to white
+  dis->fillRect(x, y, width, height, SCWhite);
+  
+  // Draw filled portion (black) from bottom up
+  dis->fillRect(x, y + height - filledHeight, width, filledHeight, SCBlack);
+
+  // Calculate height of the unfilled area
+  int unfilledHeight = height - filledHeight;
+
+  // Apply checkerboard pattern to unfilled portion (top part)
+  for (int16_t j = 0; j < unfilledHeight; j++) {
+    for (int16_t i = 0; i < width; i++) {
+      if ((i + j) % 2 == 0) {
+        dis->drawPixel(x + i, y + j, SCBlack);
       }
     }
   }

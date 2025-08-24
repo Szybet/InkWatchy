@@ -18,6 +18,7 @@ const watchfaceDef szybetStarfield = {
     .data = (genPointer)&inkFieldDef,
 };
 #endif
+
 #if WATCHFACE_TAYCHRON
 const watchfaceDef tayDef = {
     .manager = wfmOne,
@@ -25,6 +26,7 @@ const watchfaceDef tayDef = {
     .data = (genPointer)&taychronDef,
 };
 #endif
+
 #if WATCHFACE_SLATE
 const watchfaceDef slateWatchface = {
     .manager = wfmOne,
@@ -32,6 +34,15 @@ const watchfaceDef slateWatchface = {
     .data = (genPointer)&slateDef,
 };
 #endif
+
+#if WATCHFACE_DOMAIN_DOTP
+const watchfaceDef dotpDomain = {
+    .manager = wfmOne,
+    .name = "DotP's Domain",
+    .data = (genPointer)&domainDef,
+};
+#endif
+
 #if WATCHFACE_SHADES_SZYBET
 const watchfaceDef szybetShades = {
     .manager = wfmOne,
@@ -39,6 +50,7 @@ const watchfaceDef szybetShades = {
     .data = (genPointer)&shadesDef,
 };
 #endif
+
 #if WATCHFACE_ANALOG_SHARP_SZYBET
 const watchfaceDef szybetAnalogConway = {
     .manager = wfmTwo,
@@ -46,6 +58,7 @@ const watchfaceDef szybetAnalogConway = {
     .data = (genPointer)&analogConwayDef,
 };
 #endif
+
 #if GSR_WATCHFACES && GSR_STARFIELD
 const watchfaceDef gsrStarfield = {
     .manager = wfmGSR,
@@ -53,6 +66,7 @@ const watchfaceDef gsrStarfield = {
     .data = (genPointer)&MyGSRWatchFaceStarfield,
 };
 #endif
+
 #if GSR_WATCHFACES && GSR_CLASSICS
 const watchfaceDef gsrClassics = {
     .manager = wfmGSR,
@@ -60,6 +74,7 @@ const watchfaceDef gsrClassics = {
     .data = (genPointer)&WatchyClassicsAddOnClassLoader,
 };
 #endif
+
 #if GSR_WATCHFACES && GSR_STATIONARY
 const watchfaceDef gsrStationary = {
     .manager = wfmGSR,
@@ -81,6 +96,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_SLATE
     &slateWatchface,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_DOMAIN_DOTP
+    &dotpDomain,
 #else
     &noWatchFace,
 #endif

@@ -76,6 +76,22 @@ RTC_DATA_ATTR rtcMem rM = {
         .positionEngaged = false,
     },
 #endif
+// Domain watchface
+#if WATCHFACE_DOMAIN_DOTP
+    .domain = {
+        .dayBar = 0,
+        .percentOfDay = 0,
+#if ACC_ENABLED
+        .percentSteps = 0,
+#else
+        .showedTemp = 0,
+#endif
+        .weatherMinutes = 0,
+        // inkput
+        .watchfacePos = 0,
+        .positionEngaged = false,
+    },
+#endif
 // Shades watchface
 #if WATCHFACE_SHADES_SZYBET
     .shades = {

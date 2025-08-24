@@ -118,11 +118,34 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #error "Localization file is missing time format definitions."
 #endif
 
+// Check weather/air quality menu items
+#if !defined(WEATHER_AQ_MENU_TITLE) || !defined(WEATHER_AQ_MENU_WEATHER) || !defined(WEATHER_AQ_MENU_AIR_QUALITY) || \
+    !defined(WEATHER_AQ_NOT_AVAILABLE)
+#error "Localization file is missing weather/air quality selection menu definitions."
+#endif
+
 // Check weather submenu items
-#if !defined(WEATHER_MENU_TEMPERATURE) || !defined(WEATHER_MENU_PRESSURE) || !defined(WEATHER_MENU_HUMIDITY) ||    \
-    !defined(WEATHER_MENU_CONDITIONS) || !defined(WEATHER_MENU_CLOUDINESS) || !defined(WEATHER_MENU_WIND_SPEED) || \
-    !defined(WEATHER_MENU_WIND_GUSTS) || !defined(WEATHER_MENU_VISIBILITY) || !defined(WEATHER_MENU_PRECIPITATION)
+#if !defined(WEATHER_MENU_TEMPERATURE) || !defined(WEATHER_MENU_PRESSURE) || !defined(WEATHER_MENU_HUMIDITY) ||                            \
+    !defined(WEATHER_MENU_CONDITIONS) || !defined(WEATHER_MENU_CLOUDINESS) || !defined(WEATHER_MENU_WIND_SPEED) ||                         \
+    !defined(WEATHER_MENU_WIND_GUSTS) || !defined(WEATHER_MENU_VISIBILITY) || !defined(WEATHER_MENU_PRECIPITATION) ||                      \
+    !defined(WEATHER_MENU_UV_INDEX) || !defined(WEATHER_MENU_UV_INDEX_CLEAR_SKY) || !defined(WEATHER_MENU_WET_BULB) ||                     \
+    !defined(WEATHER_MENU_CAPE) || !defined(WEATHER_MENU_DEW_POINT) || !defined(WEATHER_MENU_PRECIPITATION_AMOUNT) ||                      \
+    !defined(WEATHER_MENU_SNOW_DEPTH) || !defined(WEATHER_MENU_LIFTED_INDEX) || !defined(WEATHER_MENU_CONVECTIVE_INHIBITION) ||            \
+    !defined(WEATHER_MENU_TERRESTRIAL_RADIATION) || !defined(WEATHER_MENU_DIFFUSE_RADIATION) || !defined(WEATHER_MENU_DIRECT_RADIATION) || \
+    !defined(WEATHER_MENU_TOTAL_WATER_VAPOUR)
 #error "Localization file is missing weather submenu definitions."
+#endif
+
+// Check air quality submenu items
+#if !defined(AIR_MENU_EUAQI) || !defined(AIR_MENU_USAQI) || !defined(AIR_MENU_EU_AQI_PM2_5) ||                        \
+    !defined(AIR_MENU_EU_AQI_PM10) || !defined(AIR_MENU_EU_AQI_NO2) || !defined(AIR_MENU_EU_AQI_O3) ||                \
+    !defined(AIR_MENU_EU_AQI_SO2) || !defined(AIR_MENU_PM2_5) || !defined(AIR_MENU_PM10) ||                           \
+    !defined(AIR_MENU_CARBON_MONOXIDE) || !defined(AIR_MENU_CARBON_DIOXIDE) || !defined(AIR_MENU_NITROGEN_DIOXIDE) || \
+    !defined(AIR_MENU_SULPHUR_DIOXIDE) || !defined(AIR_MENU_OZONE) || !defined(AIR_MENU_AEROSOL_OPTICAL_DEPTH) ||     \
+    !defined(AIR_MENU_DUST) || !defined(AIR_MENU_METHANE) || !defined(AIR_MENU_FORMALDEHYDE) ||                       \
+    !defined(AIR_MENU_GLYOXAL) || !defined(AIR_MENU_SEA_SALT_AEROSOL) || !defined(AIR_MENU_NITROGEN_MONOXIDE) ||      \
+    !defined(AIR_MENU_PEROXYACYL_NITRATES)
+#error "Localization file is missing air quality submenu definitions."
 #endif
 
 // Check weather menu titles and messages
@@ -131,11 +154,34 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #error "Localization file is missing weather menu title definitions."
 #endif
 
+// Check air quality menu titles and messages
+#if !defined(AIR_QUALITY_SELECT_DATE) || !defined(AIR_QUALITY_STAT_TITLE) || !defined(AIR_QUALITY_NOT_AVAILABLE) || \
+    !defined(AIR_QUALITY_DATE_WRONG) || !defined(AIR_QUALITY_CORRUPTED)
+#error "Localization file is missing air quality menu title definitions."
+#endif
+
 // Check weather chart titles
-#if !defined(WEATHER_CHART_TEMP) || !defined(WEATHER_CHART_PRESSURE) || !defined(WEATHER_CHART_HUMIDITY) ||       \
-    !defined(WEATHER_CHART_CLOUDS) || !defined(WEATHER_CHART_WIND_SPEED) || !defined(WEATHER_CHART_WIND_GUSTS) || \
-    !defined(WEATHER_CHART_VISIBILITY) || !defined(WEATHER_CHART_PRECIPITATION) || !defined(WEATHER_CONDITIONS_TITLE)
+#if !defined(WEATHER_CHART_TEMP) || !defined(WEATHER_CHART_PRESSURE) || !defined(WEATHER_CHART_HUMIDITY) ||                                   \
+    !defined(WEATHER_CHART_CLOUDS) || !defined(WEATHER_CHART_WIND_SPEED) || !defined(WEATHER_CHART_WIND_GUSTS) ||                             \
+    !defined(WEATHER_CHART_VISIBILITY) || !defined(WEATHER_CHART_PRECIPITATION) || !defined(WEATHER_CONDITIONS_TITLE) ||                      \
+    !defined(WEATHER_CHART_UV_INDEX) || !defined(WEATHER_CHART_UV_INDEX_CLEAR_SKY) || !defined(WEATHER_CHART_WET_BULB) ||                     \
+    !defined(WEATHER_CHART_CAPE) || !defined(WEATHER_CHART_DEW_POINT) || !defined(WEATHER_CHART_PRECIPITATION_AMOUNT) ||                      \
+    !defined(WEATHER_CHART_SNOW_DEPTH) || !defined(WEATHER_CHART_LIFTED_INDEX) || !defined(WEATHER_CHART_CONVECTIVE_INHIBITION) ||            \
+    !defined(WEATHER_CHART_TERRESTRIAL_RADIATION) || !defined(WEATHER_CHART_DIFFUSE_RADIATION) || !defined(WEATHER_CHART_DIRECT_RADIATION) || \
+    !defined(WEATHER_CHART_TOTAL_WATER_VAPOUR)
 #error "Localization file is missing weather chart definitions."
+#endif
+
+// Check air quality chart titles
+#if !defined(AIR_CHART_EUAQI) || !defined(AIR_CHART_USAQI) || !defined(AIR_CHART_EU_AQI_PM2_5) ||                        \
+    !defined(AIR_CHART_EU_AQI_PM10) || !defined(AIR_CHART_EU_AQI_NO2) || !defined(AIR_CHART_EU_AQI_O3) ||                \
+    !defined(AIR_CHART_EU_AQI_SO2) || !defined(AIR_CHART_PM2_5) || !defined(AIR_CHART_PM10) ||                           \
+    !defined(AIR_CHART_CARBON_MONOXIDE) || !defined(AIR_CHART_CARBON_DIOXIDE) || !defined(AIR_CHART_NITROGEN_DIOXIDE) || \
+    !defined(AIR_CHART_SULPHUR_DIOXIDE) || !defined(AIR_CHART_OZONE) || !defined(AIR_CHART_AEROSOL_OPTICAL_DEPTH) ||     \
+    !defined(AIR_CHART_DUST) || !defined(AIR_CHART_METHANE) || !defined(AIR_CHART_FORMALDEHYDE) ||                       \
+    !defined(AIR_CHART_GLYOXAL) || !defined(AIR_CHART_SEA_SALT_AEROSOL) || !defined(AIR_CHART_NITROGEN_MONOXIDE) ||      \
+    !defined(AIR_CHART_PEROXYACYL_NITRATES)
+#error "Localization file is missing air quaity chart definitions."
 #endif
 
 // Check month names

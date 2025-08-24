@@ -49,7 +49,7 @@
 #include "macros.h"
 #include "definesVars.h"
 #include "confidential.h"
-static const WiFiCred* wifiCredStatic[] = {
+static const WiFiCred *wifiCredStatic[] = {
     &wifi_credential1,
     &wifi_credential2,
     &wifi_credential3,
@@ -59,8 +59,7 @@ static const WiFiCred* wifiCredStatic[] = {
     &wifi_credential7,
     &wifi_credential8,
     &wifi_credential9,
-    &wifi_credential10
-};
+    &wifi_credential10};
 #define SIZE_WIFI_CRED_STAT sizeof(wifiCredStatic) / sizeof(wifiCredStatic[0])
 
 #if WEATHER_INFO
@@ -234,6 +233,9 @@ extern uint16_t SCWhite;
 #endif
 #if WATCHFACE_INKFIELD_SZYBET
 #include "../ui/watchface/watchfaces/inkField_Szybet/inkField.h"
+#endif
+#if WATCHFACE_DOMAIN_DOTP
+#include "../ui/watchface/watchfaces/domain_DotP/domain.h"
 #endif
 #if WATCHFACE_SHADES_SZYBET
 #include "../ui/watchface/watchfaces/shades_Szybet/shades.h"
