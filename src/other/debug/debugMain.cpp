@@ -40,6 +40,9 @@ void simpleSleepTest()
 #endif
 #if IS_SCREEN
     initDisplay();
+    dis->fillCircle(100, 100, 100, SCBlack);
+    dis->fillCircle(100, 100, 50, SCWhite);
+    disUp(true, true, true);
 #endif
 #if IS_MOTOR
     pinMode(VIB_MOTOR_PIN, OUTPUT);
@@ -65,8 +68,8 @@ void simpleSleepTest()
     ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_DC), false));      // Fixes high fucking power consumption - confirmed
     initRtcInvidualGpio(EPD_BUSY, RTC_GPIO_MODE_INPUT_ONLY);
     initRtcInvidualGpio(EPD_SPI_MOSI, RTC_GPIO_MODE_OUTPUT_ONLY);
-    
-    // Set level for MOSI and SCK break lp core, so just skip it, it was not worth anything anyway. 
+
+    // Set level for MOSI and SCK break lp core, so just skip it, it was not worth anything anyway.
     // rtc_gpio_set_level with mosi to false doesn't change anything
     // ESP_ERROR_CHECK(rtc_gpio_set_level(gpio_num_t(EPD_SPI_MOSI), true)); // Fixes like 1 uA or nothing
 
@@ -130,7 +133,7 @@ void initLog()
             delayTask(1000);
         }
 #endif
-        Serial.println("Waiting for input...");
+        Serial.println("Waiting for input: \"123\"...");
     }
 #if WAIT_FOR_INPUT_MOTOR
     digitalWrite(VIB_MOTOR_PIN, 0);
