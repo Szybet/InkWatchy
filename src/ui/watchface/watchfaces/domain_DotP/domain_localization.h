@@ -13,3 +13,4 @@ String getLocalizedAMPM(tmElements_t timeEl);       // From slate_localization.c
 // Domain specific functions
 String getDomainLocalizedError();
 String getDomainLocalizedErrorShort();
+String getDomainLocalizedErrorLong();

@@ -44,13 +44,19 @@
 #define WF_S_DAY_SUN "SUN"
 
 // Error messages
-#define WF_T_ERROR "ERR"          // Taychron
-#define WF_I_ERROR "ERR"          // InkField (max 3 characters)
-#define WF_I_ERROR_SHORT "ER"     // InkField short
+#define WF_T_ERROR "ERROR"    // Taychron
+#define WF_I_ERROR "ERR"      // InkField (max 3 characters)
+#define WF_I_ERROR_SHORT "ER" // InkField short
 
 // Time format
 #define WF_TIME_AM "AM"
 #define WF_TIME_PM "PM"
+
+// Weather/Air Quality Selection items
+#define WEATHER_AQ_MENU_TITLE "Data Type"
+#define WEATHER_AQ_MENU_WEATHER "Weather"
+#define WEATHER_AQ_MENU_AIR_QUALITY "Air Quality"
+#define WEATHER_AQ_NOT_AVAILABLE "Weather/AQ both not available"
 
 // Weather submenu items
 #define WEATHER_MENU_TEMPERATURE "Temperature"
@@ -62,6 +68,19 @@
 #define WEATHER_MENU_WIND_GUSTS "Wind gusts"
 #define WEATHER_MENU_VISIBILITY "Visibility"
 #define WEATHER_MENU_PRECIPITATION "% of precipitation"
+#define WEATHER_MENU_UV_INDEX "UV Index"
+#define WEATHER_MENU_UV_INDEX_CLEAR_SKY "UV Clear Sky"
+#define WEATHER_MENU_WET_BULB "Wet Bulb Temp"
+#define WEATHER_MENU_CAPE "CAPE"
+#define WEATHER_MENU_DEW_POINT "Dew Point"
+#define WEATHER_MENU_PRECIPITATION_AMOUNT "Precipitation"
+#define WEATHER_MENU_SNOW_DEPTH "Snow Depth"
+#define WEATHER_MENU_LIFTED_INDEX "Lifted Index"
+#define WEATHER_MENU_CONVECTIVE_INHIBITION "Convective Inhibition"
+#define WEATHER_MENU_TERRESTRIAL_RADIATION "Terrestrial Rad"
+#define WEATHER_MENU_DIFFUSE_RADIATION "Diffuse Rad"
+#define WEATHER_MENU_DIRECT_RADIATION "Direct Rad"
+#define WEATHER_MENU_TOTAL_WATER_VAPOUR "Total Water Vapour"
 
 // Weather menu titles and messages
 #define WEATHER_SELECT_DATE "Select date"
@@ -80,6 +99,74 @@
 #define WEATHER_CHART_VISIBILITY "Visib. / m (24h)"
 #define WEATHER_CHART_PRECIPITATION "Prep. / % (24h)"
 #define WEATHER_CONDITIONS_TITLE "Weather conditions (24h)"
+#define WEATHER_CHART_UV_INDEX "UV Index (24h)"
+#define WEATHER_CHART_UV_INDEX_CLEAR_SKY "UV Clear Sky (24h)"
+#define WEATHER_CHART_WET_BULB "Wet Bulb / C (24h)"
+#define WEATHER_CHART_CAPE "CAPE / J/kg (24h)"
+#define WEATHER_CHART_DEW_POINT "Dew Point / C (24h)"
+#define WEATHER_CHART_PRECIPITATION_AMOUNT "Total Prep. / (24h)"
+#define WEATHER_CHART_SNOW_DEPTH "Snow Depth / (24h)"
+#define WEATHER_CHART_LIFTED_INDEX "Lifted Index / (24h)"
+#define WEATHER_CHART_CONVECTIVE_INHIBITION "Con. Inhib. / (24hr)"
+#define WEATHER_CHART_TERRESTRIAL_RADIATION "Terr. Rad. / (24hr)"
+#define WEATHER_CHART_DIFFUSE_RADIATION "Diff. Rad. / (24hr)"
+#define WEATHER_CHART_DIRECT_RADIATION "Direct Rad. / (24hr)"
+#define WEATHER_CHART_TOTAL_WATER_VAPOUR "Total Water Vap. (24hr)"
+
+// Air quality submenu items
+#define AIR_MENU_EUAQI "European AQI"
+#define AIR_MENU_USAQI "US AQI"
+#define AIR_MENU_EU_AQI_PM2_5 "EU AQI PM 2,5"
+#define AIR_MENU_EU_AQI_PM10 "EU AQI PM 10"
+#define AIR_MENU_EU_AQI_NO2 "EU AQI NO2"
+#define AIR_MENU_EU_AQI_O3 "EU AQI O3"
+#define AIR_MENU_EU_AQI_SO2 "EU AQI SO2"
+#define AIR_MENU_PM2_5 "Part Matter 2,5"
+#define AIR_MENU_PM10 "Part Matter 10"
+#define AIR_MENU_CARBON_MONOXIDE "Carbon Monoxide"
+#define AIR_MENU_CARBON_DIOXIDE "Carbon Dioxide"
+#define AIR_MENU_NITROGEN_DIOXIDE "Nitrogen Dioxide"
+#define AIR_MENU_SULPHUR_DIOXIDE "Sulphur Dioxide"
+#define AIR_MENU_OZONE "Ozone"
+#define AIR_MENU_AEROSOL_OPTICAL_DEPTH "Aerosol Depth"
+#define AIR_MENU_DUST "Dust"
+#define AIR_MENU_METHANE "Methane"
+#define AIR_MENU_FORMALDEHYDE "Formaldehyde"
+#define AIR_MENU_GLYOXAL "Glyoxal"
+#define AIR_MENU_SEA_SALT_AEROSOL "Sea Salt Aerosol"
+#define AIR_MENU_NITROGEN_MONOXIDE "Nitrogen Monoxide"
+#define AIR_MENU_PEROXYACYL_NITRATES "Peroxyacyl Nitrates"
+
+// Air quality meni titles and messages
+#define AIR_QUALITY_SELECT_DATE "Select date"
+#define AIR_QUALITY_STAT_TITLE "Air quality stat"
+#define AIR_QUALITY_NOT_AVAILABLE "Air quality not available"
+#define AIR_QUALITY_DATE_WRONG "Date is wrong?"
+#define AIR_QUALITY_CORRUPTED "Air quality corrupted"
+
+// Air quality chart titles with time notation
+#define AIR_CHART_EUAQI "EU Air Quality Index"
+#define AIR_CHART_USAQI "US Air Quality Index"
+#define AIR_CHART_EU_AQI_PM2_5 "PM2.5 / ug/m3 (24h)"
+#define AIR_CHART_EU_AQI_PM10 "PM10 / ug/m3 (24h)"
+#define AIR_CHART_EU_AQI_NO2 "NO2 / ug/m3 (24h)"
+#define AIR_CHART_EU_AQI_O3 "Oxide / ug/m3 (24h)"
+#define AIR_CHART_EU_AQI_SO2 "SO2 / ug/m3 (24h)"
+#define AIR_CHART_PM2_5 "PM2.5 / ug/m3 (24h)"
+#define AIR_CHART_PM10 "PM10 / ug/m3 (24h)"
+#define AIR_CHART_CARBON_MONOXIDE "CO / ug/m3 (24h)"
+#define AIR_CHART_CARBON_DIOXIDE "CO2 / ppm (24hr)"
+#define AIR_CHART_NITROGEN_DIOXIDE "NO2 / ug/m3 (24hr)"
+#define AIR_CHART_SULPHUR_DIOXIDE "SO2 / ug/m3 (24hr)"
+#define AIR_CHART_OZONE "O3 / ug/m3 (24hr)"
+#define AIR_CHART_AEROSOL_OPTICAL_DEPTH "AOD / (24hr)"
+#define AIR_CHART_DUST "Dust / ug/m3 (24hr)"
+#define AIR_CHART_METHANE "Methane / ug/m3 (24hr)"
+#define AIR_CHART_FORMALDEHYDE "CH2O / ug/m3 (24hr)"
+#define AIR_CHART_GLYOXAL "Glyoxal / ug/m3 (24h)"
+#define AIR_CHART_SEA_SALT_AEROSOL "Sea Salt Air / ug/m3 (24hr)"
+#define AIR_CHART_NITROGEN_MONOXIDE "NO / ug/m3 (24hr)"
+#define AIR_CHART_PEROXYACYL_NITRATES "PAN / ug/m3 (24hr)"
 
 // Month names
 #define LANGUAGE_MONTH_NAMES {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"}
@@ -120,7 +207,7 @@
 // Book reader messages
 #define BOOK_NO_SELECTED "No book selected"
 
-// Calendar messages  
+// Calendar messages
 #define CALENDAR_NO_DATA "No calendar data"
 
 // ==============================================================================

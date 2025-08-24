@@ -6,5 +6,6 @@
 
 void domainDrawWeather();
 void domainDrawMoon();
+void domainDrawWindCompass(); 
 
 #endif

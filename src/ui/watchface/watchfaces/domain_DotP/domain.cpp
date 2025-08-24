@@ -241,6 +241,7 @@ static void drawTimeAfterApply(bool forceDraw)
     {
         rM.domain.weatherMinutes = weatherMinutes;
         domainDrawWeather();
+        domainDrawWindCompass();
         drawProgressBar(AQI_BAR_CORD, GENERAL_BAR_SIZE, aqiPercent);
         domainDrawMoon();
     }

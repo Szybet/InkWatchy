@@ -18,8 +18,11 @@ typedef enum
     wifiDebug,
     gitDebug,
     accDebug,
-    weatherMenu,
-    weatherConditionMenu,
+    weatherMenu,             // Weather main menu
+    weatherDateMenu,         // Weather submenu (formally weatherMenu)
+    weatherConditionMenu,    // Weather date selection
+    airQualityDateMenu,      // Air quality submenu
+    airQualityConditionMenu, // Air quality date selection
     alarmSelectorMenu,
     alarmEditMenu,
     alarmRing,
@@ -33,7 +36,7 @@ typedef enum
     bookSelector,
     vault,
     vaultImage, // because of exit function
-    vaultMenu, // because of exit function
+    vaultMenu,  // because of exit function
     apple,
     apple2,
     calendarDateMenu,
@@ -84,7 +87,10 @@ void initSettingsMenu();
 void initGamesMenu();
 #if WEATHER_INFO
 void initWeatherMenu();
+void initWeatherDateMenu();
 void initWeatherConditionMenu();
+void initAirQualityDateMenu();
+void initAirQualityConditionMenu();
 #endif
 void initpowerMenu();
 #if FONT_MENU_ENABLED
@@ -107,7 +113,10 @@ void switchGitDebug();
 void switchAccDebug();
 void switchMotorDebug();
 void switchWeatherMenu();
-void switchWeatherSelectorMenu();
+void switchWeatherDateMenu();
+void switchWeatherConditionMenu();
+void switchAirQualityDateMenu();
+void switchAirQualityConditionMenu();
 #if INK_ALARMS
 void switchAlarmSelectorMenu();
 void switchAlarmEditMenu();
@@ -160,4 +169,3 @@ void switchBaiky();
 void switchFontsPreview();
 #endif
 void showTextDialog(String str, bool center, String title = "");
-

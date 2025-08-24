@@ -1,8 +1,8 @@
 #include "weather.h"
 
 #if WEATHER_INFO
-#define MAX_WEATHER_DAYS 7 // 16 is the max from weather api, reduced here to lower delay to air quality data being loaded
-#define MAX_AIR_DAYS 7     // 7 is the max pull from air-quality api, loads after weather finishes
+#define MAX_WEATHER_DAYS 16 // 16 is the max from weather api, reduced here to lower delay to air quality data being loaded
+#define MAX_AIR_DAYS 5      // 5 is the max pull from air-quality api, despite the website claiming max is 7. loads after weather finishes
 #define ADD_DAY_UNIX 86400
 
 // http://api.open-meteo.com/v1/forecast?latitude=53.543082&longitude=9.994695&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto&forecast_days=16
@@ -59,7 +59,7 @@ void syncWeather()
       debugLog(", Humidity: " + String(forecast->humidity[i]));
       debugLog(", Apparent Temperature: " + String(forecast->apparent_temp[i]));
       debugLog(", Pressure: " + String(forecast->pressure[i]));
-      debugLog(", Precipitation: " + String(forecast->precipitation[i]));
+      debugLog(", Pop: " + String(forecast->precipitation[i]));
       debugLog(", Cloud Cover: " + String(forecast->cloud_cover[i]));
       debugLog(", Visibility: " + String(forecast->visibility[i]));
       debugLog(", Wind Speed: " + String(forecast->wind_speed[i]));
@@ -67,12 +67,30 @@ void syncWeather()
       debugLog(", Wind Gust: " + String(forecast->wind_gust[i]));
       debugLog(", Weather Code: " + String(forecast->weather_code[i]));
       debugLog(", is Day: " + String(forecast->is_day[i]));
+      debugLog(", Wet Bulb Temperature: " + String(forecast->wet_bulb_temperature_2m[i]));
+      debugLog(", CAPE: " + String(forecast->cape[i]));
+      debugLog(", UV Index: " + String(forecast->uv_index[i]));
+      debugLog(", UV Index Clear Sky: " + String(forecast->uv_index_clear_sky[i]));
+      debugLog(", Dew Point: " + String(forecast->dew_point[i]));
+      debugLog(", Snow Depth: " + String(forecast->snow_depth[i]));
+      // debugLog(", Vapour Pressure Deficit: " + String(forecast->vapour_pressure_deficit[i]));
+      // debugLog(", Evapotranspiration: " + String(forecast->evapotranspiration[i]));
+      debugLog(", Lifted Index: " + String(forecast->lifted_index[i]));
+      debugLog(", Convective Inhibition: " + String(forecast->convective_inhibition[i]));
+      debugLog(", Precipitation Amount: " + String(forecast->precipitation_amount[i]));
+      debugLog(", Terrestrial Radiation: " + String(forecast->terrestrial_radiation[i]));
+      // debugLog(", Global Tilted Irradiance: " + String(forecast->global_tilted_irradiance[i]));
+      // debugLog(", Direct Normal Irradiance: " + String(forecast->direct_normal_irradiance[i]));
+      debugLog(", Diffuse Radiation: " + String(forecast->diffuse_radiation[i]));
+      debugLog(", Direct Radiation: " + String(forecast->direct_radiation[i]));
+      // debugLog(", Shortwave Radiation: " + String(forecast->shortwave_radiation[i]));
+      // debugLog(", Total Column Water Vapour: " + String(forecast->total_water_vapour[i]));
     }
 #endif
 
     if (fsSetBlob(String(unixTimeWeat), (uint8_t *)forecast, sizeof(OM_HourlyForecast), String(WEATHER_HOURLY_DIR) + "/") == false)
     {
-      debugLog("Failed to set weather: currentDayDate");
+      debugLog("Failed to set weather " + String(currentDayDate));
     }
   }
 
@@ -109,7 +127,33 @@ void syncWeather()
       delete airForecast;
       return;
     }
-
+#if DEBUG && true == false
+    for (size_t i = 0; i < OM_AIR_QUALITY_MAX_HOURS; i++)
+    {
+      debugLog(", European AQI: " + String(airForecast->european_aqi[i]));
+      debugLog(", US AQI: " + String(airForecast->us_aqi[i]));
+      debugLog(", European AQI PM2.5: " + String(airForecast->european_aqi_pm2_5[i]));
+      debugLog(", European AQI PM10: " + String(airForecast->european_aqi_pm10[i]));
+      debugLog(", European AQI Nitrogen Dioxide: " + String(airForecast->european_aqi_nitrogen_dioxide[i]));
+      debugLog(", European AQI Ozone: " + String(airForecast->european_aqi_ozone[i]));
+      debugLog(", European AQI Sulphur Dioxide: " + String(airForecast->european_aqi_sulphur_dioxide[i]));
+      debugLog(", PM2.5: " + String(airForecast->pm2_5[i]));
+      debugLog(", PM10: " + String(airForecast->pm10[i]));
+      debugLog(", Carbon Monoxide: " + String(airForecast->carbon_monoxide[i]));
+      debugLog(", Carbon Dioxide: " + String(airForecast->carbon_dioxide[i]));
+      debugLog(", Nitrogen Dioxide: " + String(airForecast->nitrogen_dioxide[i]));
+      debugLog(", Sulphur Dioxide: " + String(airForecast->sulphur_dioxide[i]));
+      debugLog(", Ozone: " + String(airForecast->ozone[i]));
+      debugLog(", Aerosol Optical Depth: " + String(airForecast->aerosol_optical_depth[i]));
+      debugLog(", Dust: " + String(airForecast->dust[i]));
+      debugLog(", Methane: " + String(airForecast->methane[i]));
+      debugLog(", Formaldehyde: " + String(airForecast->formaldehyde[i]));
+      debugLog(", Glyoxal: " + String(airForecast->glyoxal[i]));
+      // debugLog(", Sea Salt Aerosol: " + String(airForecast->sea_salt_aerosol[i]));
+      debugLog(", Nitrogen Monoxide: " + String(airForecast->nitrogen_monoxide[i]));
+      debugLog(", Peroxyacyl Nitrates: " + String(airForecast->peroxyacyl_nitrates[i]));
+    }
+#endif
     if (fsSetBlob(String(unixTimeAir), (uint8_t *)airForecast, sizeof(OM_AirQualityForecast), String(AIR_QUALITY_HOURLY_DIR) + "/") == false)
     {
       debugLog("Failed to set air quality: " + String(currentDayDate));

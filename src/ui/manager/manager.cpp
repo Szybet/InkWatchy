@@ -211,10 +211,31 @@ void loopManager()
 #endif
         break;
     }
+    case weatherDateMenu:
+    {
+#if WEATHER_INFO
+        managerLaunchFunc(weatherDateMenu, initWeatherDateMenu, loopMenu);
+#endif
+        break;
+    }
     case weatherConditionMenu:
     {
 #if WEATHER_INFO
         managerLaunchFunc(weatherConditionMenu, initWeatherConditionMenu, loopMenu);
+#endif
+        break;
+    }
+    case airQualityDateMenu:
+    {
+#if WEATHER_INFO
+        managerLaunchFunc(airQualityDateMenu, initAirQualityDateMenu, loopMenu);
+#endif
+        break;
+    }
+    case airQualityConditionMenu:
+    {
+#if WEATHER_INFO
+        managerLaunchFunc(airQualityConditionMenu, initAirQualityConditionMenu, loopMenu);
 #endif
         break;
     }

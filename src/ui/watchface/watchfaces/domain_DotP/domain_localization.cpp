@@ -11,3 +11,8 @@ String getDomainLocalizedErrorShort()
 {
     return WF_I_ERROR_SHORT;
 }
+
+String getDomainLocalizedErrorLong()
+{
+    return WF_T_ERROR;
+}

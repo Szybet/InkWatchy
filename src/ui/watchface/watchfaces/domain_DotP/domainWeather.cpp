@@ -24,6 +24,7 @@
 #define CAPE_CORD 121, 145
 #define SUNLIGHT_MINUTES_CORD 121, 157
 
+#define COMPASS_IMG_CORD 66, 73
 #define MOON_IMG_CORD 160, 124
 
 #define AQI_EU_CORD 103, 71
@@ -201,6 +202,8 @@ void domainDrawWeather()
         int sunshine = round(wData.sunshine / 60.0);
         sunshine = (sunshine >= 1000) ? 999 : sunshine;
         writeTextReplaceBack(addZero(String(sunshine), 3), SUNLIGHT_MINUTES_CORD, SCBlack, SCWhite);
+    
+
     }
     else
     {
@@ -220,6 +223,7 @@ void domainDrawWeather()
         writeTextReplaceBack(getDomainLocalizedError(), SUNLIGHT_MINUTES_CORD, SCBlack, SCWhite, true, 1);
         writeImageN(WEATHER_ICON_CORD, getImg("domain/" + getDomainWeatherIcon(255)));
         writeImageN(DAYNIGHT_ICON_CORD, getImg("domain/" + getDayNightIcon(255)));
+        writeImageN(COMPASS_IMG_CORD, getImg("domain/wind_error"));
     }
 #else
     // Use global language system for error messages
@@ -233,9 +237,9 @@ void domainDrawWeather()
     writeTextReplaceBack(getDomainLocalizedErrorShort(), CLOUD_COVER_CORD, SCBlack, SCWhite, true, 1);
     writeTextReplaceBack(getDomainLocalizedErrorShort(), SUNRISE_CORD, SCBlack, SCWhite, true, 1);
     writeTextReplaceBack(getDomainLocalizedErrorShort(), SUNSET_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getDomainLocalizedError(), WETBULB_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getDomainLocalizedError(), CAPE_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getDomainLocalizedError(), SUNLIGHT_MINUTES_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getDomainLocalizedErrorLong(), WETBULB_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getDomainLocalizedErrorLong(), CAPE_CORD, SCBlack, SCWhite, true, 1);
+    writeTextReplaceBack(getDomainLocalizedErrorLong(), SUNLIGHT_MINUTES_CORD, SCBlack, SCWhite, true, 1);
     writeImageN(WEATHER_ICON_CORD, getImg("domain/meteor"));
     writeImageN(DAYNIGHT_ICON_CORD, getImg("domain/meteortime"));
 #endif
@@ -348,6 +352,43 @@ String domainRemoveSpaces(String input)
         }
     }
     return output;
+}
+
+String getWindDirectionIcon(uint16_t wind_deg)
+{
+    // Convert wind degree to one of 8 cardinal directions
+    if (wind_deg >= 338 || wind_deg < 23) return "N";
+    else if (wind_deg >= 23 && wind_deg < 68) return "NE";
+    else if (wind_deg >= 68 && wind_deg < 113) return "E";
+    else if (wind_deg >= 113 && wind_deg < 158) return "SE";
+    else if (wind_deg >= 158 && wind_deg < 203) return "S";
+    else if (wind_deg >= 203 && wind_deg < 248) return "SW";
+    else if (wind_deg >= 248 && wind_deg < 293) return "W";
+    else if (wind_deg >= 293 && wind_deg < 338) return "NW";
+    else return "error"; // Default to North if something unexpected happens
+}
+
+void domainDrawWindCompass()
+{
+#if WEATHER_INFO
+    OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
+    if (wData.fine == true)
+    {
+        // Get the appropriate wind direction icon
+        String windDirection = getWindDirectionIcon(wData.wind_deg);
+        
+        // Draw the compass image
+        writeImageN(COMPASS_IMG_CORD, getImg("domain/wind_" + windDirection));
+    }
+    else
+    {
+        // Show a question mark when no data is available
+        writeImageN(COMPASS_IMG_CORD, getImg("domain/wind_error"));
+    }
+#else
+    // Show a question mark when weather info is disabled
+    writeImageN(COMPASS_IMG_CORD, getImg("domain/wind_error"));
+#endif
 }
 
 void domainDrawMoon()
