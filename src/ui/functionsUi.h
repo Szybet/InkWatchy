@@ -23,3 +23,8 @@ sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y);
 void wLineStr(String *dest, String *text, bool addNewLine = true);
 void wLineStr(String *dest, const char *text, bool addNewLine = true);
 void wLineStr(String *dest, String text, bool addNewLine = true);
+
+void invertScreenColors();
+void resetScreenColors();
+// When a library determines color
+void setNativeScreenColors();

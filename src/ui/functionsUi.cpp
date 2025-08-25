@@ -425,3 +425,19 @@ sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y)
   dUChange = true;
   return {w, h}; // hm?
 }
+
+void invertScreenColors() {
+  uint16_t SCTmp = SCBlack;
+  SCBlack = SCWhite;
+  SCWhite = SCTmp;
+}
+
+void resetScreenColors() {
+  SCBlack = SC_BLACK_INIT;
+  SCWhite = SC_WHITE_INIT;
+}
+
+void setNativeScreenColors() {
+  SCBlack = GxEPD_BLACK;
+  SCWhite = GxEPD_WHITE;
+}
