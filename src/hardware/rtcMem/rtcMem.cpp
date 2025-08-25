@@ -245,6 +245,12 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
         }
     }
 
+    // Watchface
+    if(source->watchfaceSelected != destination->watchfaceSelected) {
+        debugLog("Watchface selected differs");
+        return true;
+    }
+
     debugLog("No changes detected");
     return false;
 }
@@ -278,6 +284,9 @@ void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
             source->posixTimeZone,
             sizeof(destination->posixTimeZone));
     }
+
+    // Watchface selected
+    destination->watchfaceSelected = source->watchfaceSelected;
 }
 
 void rtcMemBackupManage()
