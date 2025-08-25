@@ -126,4 +126,12 @@ extern "C"
     {
         cleanAllMemory();
     }
+    
+    extern const uint16_t* getColorBlack() {
+        return &SCBlack;
+    }
+
+    extern const uint16_t* getColorWhite() {
+        return &SCWhite;
+    }
 }
