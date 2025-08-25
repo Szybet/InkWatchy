@@ -121,7 +121,7 @@ void showChart(float *data, uint dataCount, String chartName)
 }
 
 void showSideText(float *bothList, int bothSize) {
-
+  dis->setTextColor(SCBlack);
   sortList(bothList, bothSize);
 
   debugLog(String(bothList[0]));
