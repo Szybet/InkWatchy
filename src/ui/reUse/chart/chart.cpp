@@ -17,7 +17,7 @@ const ColorMapArray<2> really_black{
 // Values in data1 need to be higher that in data2 in the same index
 void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, String chartName)
 {
-  dis->fillScreen(SCWhite);
+  dis->fillScreen(GxEPD_WHITE);
   float highNum = findHighest(data1Max, dataCount);
   float lowNum = findLowest(data2Min, dataCount);
 
@@ -71,7 +71,7 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
 
 void showChart(float *data, uint dataCount, String chartName)
 {
-  dis->fillScreen(SCWhite);
+  dis->fillScreen(GxEPD_WHITE);
   float highNum = findHighest(data, dataCount);
   float lowNum = findLowest(data, dataCount);
 
