@@ -395,14 +395,3 @@ void toggleBit(uint8_t *num, uint8_t position)
     *num ^= (1 << position);
   }
 }
-
-void invertScreenColors() {
-  uint16_t SCTmp = SCBlack;
-  SCBlack = SCWhite;
-  SCWhite = SCTmp;
-}
-
-void resetScreenColors() {
-  SCBlack = SC_BLACK_INIT;
-  SCWhite = SC_WHITE_INIT;
-}

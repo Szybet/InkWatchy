@@ -1,5 +1,10 @@
-use embedded_graphics_core::{pixelcolor::Rgb565, prelude::{Dimensions, DrawTarget, PixelColor, RgbColor}};
-use crate::{external::generic::{drawPixel, updateScreen}};
+use crate::external::generic::getColorBlack;
+use crate::external::generic::getColorWhite;
+use crate::external::generic::{drawPixel, updateScreen};
+use embedded_graphics_core::{
+    pixelcolor::Rgb565,
+    prelude::{Dimensions, DrawTarget, PixelColor, RgbColor},
+};
 
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
 pub enum Color {
@@ -45,6 +50,8 @@ impl DrawTarget for Framebuffer {
     where
         I: IntoIterator<Item = embedded_graphics_core::Pixel<Rgb565>>,
     {
+        let good_black = unsafe { getColorBlack() };
+        let good_white = unsafe { getColorWhite() };
         for embedded_graphics_core::Pixel(point, color) in pixels {
             let x = point.x as i16;
             let y = point.y as i16;
@@ -54,19 +61,23 @@ impl DrawTarget for Framebuffer {
             }
 
             let color_bit1: u16 = match color {
-                Rgb565::WHITE => 0xFFFF,
-                Rgb565::BLACK => 0x0000,
+                Rgb565::WHITE => *good_white,
+                Rgb565::BLACK => *good_black,
                 other => {
                     // info!(&alloc::format!("Processing color {:?}", other));
                     let r = other.r() as u16;
                     let g = other.g() as u16;
                     let b = other.b() as u16;
-                    
+
                     const THRESHOLD: u16 = 5891;
-                    
+
                     let value = 62 * (r + b) + 126 * g;
-                    
-                    if value >= THRESHOLD { 0xFFFF } else { 0x0000 }
+
+                    if value >= THRESHOLD {
+                        *good_white
+                    } else {
+                        *good_black
+                    }
                 }
             };
 

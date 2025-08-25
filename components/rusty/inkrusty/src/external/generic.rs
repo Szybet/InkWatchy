@@ -26,6 +26,8 @@ unsafe extern "C" {
     pub fn rustSetCpuSpeed(speed: c_int);
     pub fn rustGetCpuSpeed() -> c_int;
     pub fn rustCleanMemory();
+    pub fn getColorBlack() -> &'static u16;
+    pub fn getColorWhite() -> &'static u16;
 }
 
 pub const RUST_BUTTON_NONE: u32 = 0;

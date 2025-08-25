@@ -382,7 +382,7 @@ void drawProgressBar(int x, int y, int width, int height, int progress)
       if ((i + j) % 2 == 0)
       {
         dis->drawPixel(x + i, y + j, SCBlack);
-              }
+      }
     }
   }
 }
@@ -396,7 +396,7 @@ void drawTempBar(int x, int y, int width, int height, int progress)
 
   // Clear entire area to white
   dis->fillRect(x, y, width, height, SCWhite);
-  
+
   // Draw filled portion (black) from bottom up
   dis->fillRect(x, y + height - filledHeight, width, filledHeight, SCBlack);
 
@@ -404,9 +404,12 @@ void drawTempBar(int x, int y, int width, int height, int progress)
   int unfilledHeight = height - filledHeight;
 
   // Apply checkerboard pattern to unfilled portion (top part)
-  for (int16_t j = 0; j < unfilledHeight; j++) {
-    for (int16_t i = 0; i < width; i++) {
-      if ((i + j) % 2 == 0) {
+  for (int16_t j = 0; j < unfilledHeight; j++)
+  {
+    for (int16_t i = 0; i < width; i++)
+    {
+      if ((i + j) % 2 == 0)
+      {
         dis->drawPixel(x + i, y + j, SCBlack);
       }
     }
@@ -424,4 +427,26 @@ sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y)
   dis->print(text);
   dUChange = true;
   return {w, h}; // hm?
+}
+
+void invertScreenColors()
+{
+  uint16_t SCTmp = SCBlack;
+  SCBlack = SCWhite;
+  SCWhite = SCTmp;
+  dis->setTextColor(SCBlack);
+}
+
+void resetScreenColors()
+{
+  SCBlack = SC_BLACK_INIT;
+  SCWhite = SC_WHITE_INIT;
+  dis->setTextColor(SCBlack);
+}
+
+void setNativeScreenColors()
+{
+  SCBlack = GxEPD_BLACK;
+  SCWhite = GxEPD_WHITE;
+  dis->setTextColor(SCBlack);
 }
