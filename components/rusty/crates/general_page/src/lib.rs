@@ -126,6 +126,8 @@ mod tests {
         ui.global::<Adapter>().set_main_text("weather bro".into());
         
         ui.global::<Adapter>().set_title_enabled(true);
+        ui.global::<Adapter>()
+            .set_title_text("Test title is here".into());
 
         ui.global::<Adapter>().set_main_align_center(true);
 

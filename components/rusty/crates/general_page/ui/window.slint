@@ -13,7 +13,7 @@ export global Adapter {
 
     in property <bool> buttons_shown: false;
     in-out property <length> scroll;
-    in-out property <length> scroll_viewport_height;
+    in-out property <length> scroll_viewport_height: 200px;
     in property <bool> show_menu: false;
     in-out property <int> current_item: 0;
     in property <int> how_many_items: 0;
@@ -92,12 +92,8 @@ export component GeneralPage inherits Window {
 
         scrollView := CustomScrollView {
             viewport-y: Adapter.scroll;
-
             VerticalLayout {
-                padding: 3px;
-                spacing: 1px;
-                alignment: Adapter.main_align_center == true && !Adapter.title_enabled ? center: start; 
-                preferred-height: Adapter.scroll_viewport_height;
+                alignment: start;
 
                 if Adapter.title_enabled: Text {
                     text: Adapter.title_text;
@@ -113,13 +109,21 @@ export component GeneralPage inherits Window {
                     background: black;
                 }
 
-                Text {
-                    text: Adapter.main_text;
-                    overflow: elide;
-                    vertical-alignment: (Adapter.main_align_center_vertical == true || (Adapter.main_align_center == true && !Adapter.title_enabled)) ? center: top;
-                    wrap: word-wrap;
-                    font-size: 20px;
-                    horizontal-alignment: Adapter.main_align_center == true ? center: left;
+                VerticalLayout {
+                    padding: 3px;
+                    spacing: 1px;
+                    alignment: (Adapter.main_align_center_vertical == true || (Adapter.main_align_center == true && !Adapter.title_enabled)) ? center : start;
+                    preferred-height: Adapter.scroll_viewport_height;
+
+                    Text {
+                        vertical-stretch: 1;
+                        text: Adapter.main_text;
+                        overflow: elide;
+                        vertical-alignment: (Adapter.main_align_center_vertical == true || (Adapter.main_align_center == true && !Adapter.title_enabled)) ? center : top;
+                        wrap: word-wrap;
+                        font-size: 20px;
+                        horizontal-alignment: Adapter.main_align_center == true ? center : left;
+                    }
                 }
             }
         }
