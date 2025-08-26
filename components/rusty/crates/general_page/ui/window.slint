@@ -9,6 +9,7 @@ export global Adapter {
     in property <string> title_text;
     in property <string> main_text;
     in property <bool> main_align_center: false;
+    in property <bool> main_align_center_vertical: false;
 
     in property <bool> buttons_shown: false;
     in-out property <length> scroll;
@@ -115,7 +116,7 @@ export component GeneralPage inherits Window {
                 Text {
                     text: Adapter.main_text;
                     overflow: elide;
-                    vertical-alignment: Adapter.main_align_center == true && !Adapter.title_enabled ? center: top;
+                    vertical-alignment: (Adapter.main_align_center_vertical == true || (Adapter.main_align_center == true && !Adapter.title_enabled)) ? center: top;
                     wrap: word-wrap;
                     font-size: 20px;
                     horizontal-alignment: Adapter.main_align_center == true ? center: left;

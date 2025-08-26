@@ -167,7 +167,7 @@ void isChargingCheck()
     rM.gpioExpander.setPinState(MCP_STAT_OUT, true);
     delayTask(5);
     bool statInStateAfter = rM.gpioExpander.digitalRead(MCP_STAT_IN);
-#if DEBUG && true == true
+#if DEBUG && true == false
     debugLog("Executed isCharging");
     debugLog("fiveVolt: " + String(fiveVolt));
     debugLog("statInStateBefore: " + String(statInStateBefore));

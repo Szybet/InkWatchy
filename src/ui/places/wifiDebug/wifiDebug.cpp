@@ -29,7 +29,7 @@ void wifiNtpBtn() {
 
 void initWifiDebugDisplay()
 {
-    init_general_page(50);
+    init_general_page(6);
     general_page_set_title(DEBUG_MENU_WIFI);
     genpage_set_center();
 

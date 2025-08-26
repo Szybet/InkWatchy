@@ -8,10 +8,16 @@ use alloc::{boxed::Box, string::String, vec::Vec};
 use general_page::{get_general_page, Adapter, GeneralPage};
 use slint::{ComponentHandle, ModelRc, SharedString, StandardListViewItem, VecModel};
 
+struct Line {
+    id: u16,
+    str: String,
+}
+
 pub struct GeneralApp {
     window: GeneralPage,
     button_func: Vec<fn()>,
-    main_str: String,
+    main_str: Vec<Line>,
+    str_id: u16,
     main_change: bool,
 }
 
@@ -31,7 +37,7 @@ impl SlintApp for GeneralApp {
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn init_general_page(str_capacity: u16) {
+pub unsafe extern "C" fn init_general_page(line_init_capacity: u16) {
     slint_init();
 
     let ui = get_general_page();
@@ -49,7 +55,8 @@ pub unsafe extern "C" fn init_general_page(str_capacity: u16) {
     let my_struct = Box::new(GeneralApp {
         window: ui,
         button_func: Vec::new(),
-        main_str: String::with_capacity(str_capacity as usize),
+        main_str: Vec::with_capacity(line_init_capacity as usize),
+        str_id: 0,
         main_change: false,
     });
 
@@ -119,14 +126,20 @@ pub unsafe extern "C" fn general_page_set_main() {
         return;
     }
 
-    if general_app.main_str.ends_with('\n') {
-        general_app.main_str.pop();
+    let mut string = String::with_capacity(20);
+
+    let len = general_app.main_str.len();
+    for (c, the_line) in general_app.main_str.iter().enumerate() {
+        string.push_str(&the_line.str);
+        if c != len - 1 {
+            string.push('\n');
+        }
     }
 
     general_app
         .window
         .global::<Adapter>()
-        .set_main_text(general_app.main_str.clone().into());
+        .set_main_text(string.into());
 }
 
 #[repr(C)]
@@ -160,15 +173,72 @@ pub unsafe extern "C" fn general_page_set_buttons(buttons: *const GeneralPageBut
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn genpage_add(s: *const c_char) -> u16 {
     let general_app: &mut GeneralApp = get_general_app().unwrap();
-    let string = c_char_to_string(s);
+    let new_string = c_char_to_string(s);
 
-    general_app.main_str.push_str(&string);
-    let lines = general_app.main_str.lines().count() as u16 - 1;
-    general_app.main_str.push('\n');
+    let line = Line {
+        id: general_app.str_id,
+        str: new_string,
+    };
+    general_app.str_id += 1;
+
+    general_app.main_str.push(line);
 
     general_app.main_change = true;
 
-    lines
+    general_app.str_id - 1
+}
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn genpage_insert(s: *const c_char, add_after_id: u16) -> u16 {
+    let general_app: &mut GeneralApp = get_general_app().unwrap();
+    let new_string = c_char_to_string(s);
+
+    let line = Line {
+        id: general_app.str_id,
+        str: new_string,
+    };
+    general_app.str_id += 1;
+
+    let mut vec_index: usize = usize::MAX;
+    for (c, the_line) in general_app.main_str.iter().enumerate() {
+        if the_line.id == add_after_id {
+            vec_index = c;
+            break;
+        }
+    }
+    #[cfg(feature = "debug")]
+    if vec_index == usize::MAX {
+        info!("Failed to find line! Critical! Ignoring adding the line");
+        return u16::MAX;
+    }
+
+    general_app.main_str.insert(vec_index + 1, line);
+
+    general_app.main_change = true;
+
+    general_app.str_id - 1
+}
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn genpage_remove(remove_id: u16) {
+    let general_app: &mut GeneralApp = get_general_app().unwrap();
+
+    let mut vec_index: usize = usize::MAX;
+    for (c, the_line) in general_app.main_str.iter().enumerate() {
+        if the_line.id == remove_id {
+            vec_index = c;
+            break;
+        }
+    }
+    #[cfg(feature = "debug")]
+    if vec_index == usize::MAX {
+        info!("Failed to find line! Critical! Ignoring removing the line");
+        return;
+    }
+
+    general_app.main_str.remove(vec_index);
+
+    general_app.main_change = true;
 }
 
 /*
@@ -189,14 +259,14 @@ pub unsafe extern "C" fn genpage_change(s: *const c_char, line: u16) {
 #[unsafe(no_mangle)]
 pub unsafe extern "C" fn genpage_change(s: *const c_char, line: u16) {
     let general_app: &mut GeneralApp = get_general_app().unwrap();
-    let new_line = c_char_to_string(s);
+    let new_string = c_char_to_string(s);
 
-    let mut start = 0;
-    for _ in 0..line {
-        start += general_app.main_str[start..].find('\n').map_or(0, |i| i + 1);
+    for the_line in general_app.main_str.iter_mut() {
+        if the_line.id == line {
+            the_line.str = new_string;
+            break;
+        }
     }
-    let end = start + general_app.main_str[start..].find('\n').unwrap_or_else(|| general_app.main_str.len() - start);
-    general_app.main_str.replace_range(start..end, &new_line);
 
     general_app.main_change = true;
 }
@@ -205,9 +275,7 @@ pub unsafe extern "C" fn genpage_change(s: *const c_char, line: u16) {
 pub unsafe extern "C" fn genpage_is_menu() -> bool {
     let general_app: &mut GeneralApp = get_general_app().unwrap();
 
-    general_app
-    .window
-    .global::<Adapter>().get_show_menu()
+    general_app.window.global::<Adapter>().get_show_menu()
 }
 
 pub fn button_clicked(i: u16) {
@@ -220,6 +288,20 @@ pub unsafe extern "C" fn genpage_set_center() {
     let general_app: &mut GeneralApp = get_general_app().unwrap();
 
     general_app
-    .window
-    .global::<Adapter>().set_main_align_center(true);
+        .window
+        .global::<Adapter>()
+        .set_main_align_center(true);
+
+    general_app.main_change = true;
+}
+
+#[unsafe(no_mangle)]
+pub unsafe extern "C" fn genpage_set_center_vertical() {
+    let general_app: &mut GeneralApp = get_general_app().unwrap();
+    general_app
+        .window
+        .global::<Adapter>()
+        .set_main_align_center_vertical(true);
+
+    general_app.main_change = true;
 }

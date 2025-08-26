@@ -41,7 +41,7 @@ String getHeapStr()
 
 void initGeneralDebugDisplay()
 {
-    init_general_page(50);
+    init_general_page(5);
     general_page_set_title(DEBUG_MENU_HARDWARE);
     genpage_set_center();
 

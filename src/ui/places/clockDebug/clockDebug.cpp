@@ -45,7 +45,7 @@ void cleanClockFiles() {
 
 void initClockDebug()
 {
-    init_general_page(50);
+    init_general_page(5);
     general_page_set_title(DEBUG_MENU_CLOCK);
     genpage_set_center();
 

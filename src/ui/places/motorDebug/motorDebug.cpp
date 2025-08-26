@@ -59,7 +59,7 @@ void setMotorSetTime()
 
 void initMotorDebug()
 {
-    init_general_page(50);
+    init_general_page(5);
     general_page_set_title(DEBUG_MENU_MOTOR);
     rustLimitButtons = true;
 

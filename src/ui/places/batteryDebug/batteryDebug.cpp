@@ -14,7 +14,7 @@ void initBatteryDebugDisplay()
 {
     bDdata = rM.bat;
     
-    init_general_page(50);
+    init_general_page(5);
     general_page_set_title(DEBUG_MENU_BATTERY);
 
     lineCurrentVoltage = genpage_add(String(DEBUG_BATTERY_CURRENT_V + String(bDdata.curV)).c_str());

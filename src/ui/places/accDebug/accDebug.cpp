@@ -39,8 +39,9 @@ void initAccDebug()
 
   is3DOn = false;
 
-  init_general_page(50);
+  init_general_page(5);
   general_page_set_title(DEBUG_MENU_ACC);
+  genpage_set_center_vertical();
 
   String accDevice = DEBUG_ACC_IC;
 #if !ACC_ENABLED
@@ -179,7 +180,8 @@ void loopAccDebug()
   }
   else
   {
-    if(useButton() == Menu) {
+    if (useButton() == Menu)
+    {
       turn3D();
       return;
     }

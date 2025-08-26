@@ -259,7 +259,7 @@ void showTextDialog(String str, bool center, String title)
     simpleCenterText(str);
     disUp(true);
     */
-    init_general_page(10);
+    init_general_page(1);
 
     if(title != "") {
         general_page_set_title(title.c_str());
