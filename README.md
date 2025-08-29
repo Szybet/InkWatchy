@@ -123,7 +123,7 @@ For a small coffe I can manage your firmware and provide you personalised binari
 - https://github.com/Szybet/Yatchy
 
 ## Questions / Contact
-Create a github issue or get in touch with me on Quill OS or <a href="https://discord.gg/6PUmRXZRGD">*atchy community</a> discord servers
+Create a github issue or get in touch with me on <a href="https://discord.gg/6PUmRXZRGD">*atchy community</a> discord server
 
 or via matrix: @szybet:matrix.org
 
