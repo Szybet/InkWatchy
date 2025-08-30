@@ -61,6 +61,7 @@ typedef enum
     generalMenuPlace,
     imagePlace,
     textDialog,
+    errorDialog,
     ChartPlace,
     NoPlace,
 } UiPlace;

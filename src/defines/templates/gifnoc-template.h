@@ -7,7 +7,7 @@
 #define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_INKFIELD_SZYBET 1
-#define WATCHFACE_DOMAIN_DOTP 1 
+#define WATCHFACE_DOMAIN_DOTP 1
 #define WATCHFACE_TAYCHRON 1
 #define WATCHFACE_TAYCHRON_DATE 0 // shows date below time
 #define WATCHFACE_SLATE 1
@@ -307,6 +307,7 @@ The default is this:
 #define SMALL_BUTTON_DELAY_MS 15
 #define BAT_MINIMAL_DIFFERENCE 0.02
 #define AVOID_SLEEP_USB_JTAG 1 // If your device has USB JTAG (Yatchy, I don't have a Watchy v3 to test) it will avoid going to sleep if it detects it is being used. Useful when you want to reprogram the watch but it goes to sleep
+#define BUTTON_STUCK_MS 10000
 
 // Wifi Quick settings
 #define WIFI_QUICK_CHECK_MS 30

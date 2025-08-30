@@ -58,11 +58,13 @@ void switchGitDebug()
     generalSwitch(gitDebug);
 }
 
-void switchAccDebug() {
+void switchAccDebug()
+{
     generalSwitch(accDebug);
 }
 
-void switchMotorDebug() {
+void switchMotorDebug()
+{
     generalSwitch(motorDebug);
 }
 
@@ -122,7 +124,8 @@ void switchAlarmQuick()
     generalSwitch(alarmQuick);
 }
 
-void switchPomodoroMenu() {
+void switchPomodoroMenu()
+{
     generalSwitch(pomodoroMenu);
 }
 #endif
@@ -182,7 +185,8 @@ void switchTetris()
 #endif
 
 #if JUMPER
-void switchJumper() {
+void switchJumper()
+{
     generalSwitch(jumperGame);
 }
 #endif
@@ -216,13 +220,15 @@ void switchParty()
 #endif
 
 #if HEART_MONITOR
-void switchHeartMonitor() {
+void switchHeartMonitor()
+{
     generalSwitch(heartMonitor);
 }
 #endif
 
 #if BAIKY
-void switchBaiky() {
+void switchBaiky()
+{
     generalSwitch(baikyApp);
 }
 #endif
@@ -261,13 +267,17 @@ void showTextDialog(String str, bool center, String title)
     */
     init_general_page(1);
 
-    if(title != "") {
+    if (title != "")
+    {
         general_page_set_title(title.c_str());
-    } else {
+    }
+    else
+    {
         general_page_disable_title();
     }
 
-    if(center == true) {
+    if (center == true)
+    {
         genpage_set_center();
     }
 

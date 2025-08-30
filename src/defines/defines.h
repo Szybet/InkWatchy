@@ -255,6 +255,7 @@ extern uint16_t SCWhite;
 #if BAIKY
 #include "../ui/places/baiky/baiky.h"
 #endif
+#include "../ui/places/errorScreen/errorScreen.h"
 
 // Other
 #if DEBUG

@@ -137,9 +137,14 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
         setButton(longButton);
         debugLog("Vibrating long button now");
         vibrateMotor(VIBRATION_BUTTON_LONG_TIME);
+        int64_t now = millisBetter();
         while (buttonRead(buttonPin) == BUT_CLICK_STATE)
         {
             delayTask(SMALL_BUTTON_DELAY_MS);
+            if(millisBetter() - now > BUTTON_STUCK_MS) {
+                showErrorOnScreen("Button is stuck: " + getButtonString(normalButton));
+                break;
+            }
         }
     }
     else
@@ -435,7 +440,7 @@ String getButtonString(buttonState state)
     case LongDown:
         return "LongDown";
     default:
-        return "Error";
+        return "Really unknown";
     }
 }
 #endif

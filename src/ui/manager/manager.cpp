@@ -204,6 +204,11 @@ void loopManager()
         managerLaunchFunc(textDialog, NULL, slint_loop, slintExit);
         break;
     }
+    case errorDialog:
+    {
+        managerLaunchFunc(errorDialog, NULL, loopErrorScreen, exitErrorScreen);
+        break;
+    }
     case weatherMenu:
     {
 #if WEATHER_INFO
