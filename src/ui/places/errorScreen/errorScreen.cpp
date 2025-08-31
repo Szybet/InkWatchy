@@ -36,6 +36,7 @@ void loopErrorScreen()
     {
         screenErrorMillis = millisBetter();
         debugLog("Erroring: " + errorScreenStr);
+        vibrateMotor();
         setRgb(currentErrorColor);
         if (currentErrorColor == IWColors::IwRed)
         {

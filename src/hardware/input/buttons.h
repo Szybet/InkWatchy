@@ -27,6 +27,5 @@ bool buttonRead(uint8_t pin); // Wrapper for digitalRead for buttons
 
 #if DEBUG
 void dumpButtons();
-String getButtonString(buttonState state);
 #endif
-
+String getButtonString(buttonState state);

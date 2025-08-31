@@ -67,15 +67,17 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
             debugLog("Executing init function");
             dis->fillScreen(SCWhite);
             initFunc();
-            if (exitFunc != nullptr)
-            {
-                debugLog("Saving exit func");
-                exitFuncGlob = exitFunc;
-            }
         }
         else
         {
             debugLog("No init function supplied");
+        }
+        if (exitFunc != nullptr)
+        {
+            debugLog("Saving exit func");
+            exitFuncGlob = exitFunc;
+        } else {
+            debugLog("No exit function supplied");
         }
     }
 }

@@ -414,7 +414,7 @@ void dumpButtons()
         debugLog("Down button pressed");
     }
 }
-
+#endif
 String getButtonString(buttonState state)
 {
     switch (state)
@@ -443,7 +443,6 @@ String getButtonString(buttonState state)
         return "Really unknown";
     }
 }
-#endif
 
 void turnOnButtons()
 {
