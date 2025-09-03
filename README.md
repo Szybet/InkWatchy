@@ -21,6 +21,7 @@ Now getting a bit <a href="https://github.com/Szybet/InkWatchy/tree/master/compo
 - [Modular and configurable](https://github.com/Szybet/InkWatchy/blob/master/src/defines/templates/gifnoc-template.h), a lot - if you disable a thing, it's not being compiled, it's like it was never there
 - A lot of [watchfaces](https://github.com/Szybet/InkWatchy/wiki/Watchfaces)
 - Language Support: No perf/binary compromise: fully-validated EN/PL + less-tested DE/SK/IT
+- All the regular goodies you would expect from a firmware: timezones, time drift compensation, NTP sync etc. (in one form or another)
 - Full weather info via open meteo api in charts, 16 day weather forecast, 5 days of air quality + on watchfaces
 - Calendar show of events, their time and description from an ICS file (So any calendar should sync)
 - Alarms
@@ -68,6 +69,7 @@ A weekend project and a weekend feature, so it looks like it looks, but works we
 </details>
 
 - Reset cause shower. If your battery will be the cause of a reset, you will be informed about it on boot.
+- Stuck button detection & error screen. Perfect when assembling the case or designing a new one
 - ~~I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.~~
 - ~~https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.~~ <sub>Those 2 options were removed because I updated the build system and didn't bother to make it work with it, with some cmake you should be able to easily re-add those features, I you can't use cmake, then you shouldn't probably use either of those features anyway</sub>
 
