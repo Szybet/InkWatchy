@@ -3,7 +3,7 @@
 char loadedFontNames[FONT_COUNT][RESOURCES_NAME_LENGTH] = {0};
 uint8_t *loadedFontPointer[FONT_COUNT] = {NULL};
 GFXfont *loadedFont[FONT_COUNT] = {NULL};
-// Todo garbage collecting here too
+uint8_t loadedFontIndex = 0;
 
 const GFXfont *getFont(String name)
 {
@@ -12,7 +12,7 @@ const GFXfont *getFont(String name)
         debugLog("Failed to setup fs");
         return &FreeSansBold9pt7b;
     }
-    uint8_t emptyListIndex = 0;
+    int8_t emptyListIndex = -1;
     for (int i = 0; i < FONT_COUNT; i++)
     {
         if (strcmp(loadedFontNames[i], name.c_str()) == 0)
@@ -28,7 +28,24 @@ const GFXfont *getFont(String name)
             }
         }
     }
-    // Bitmap
+    if (emptyListIndex == -1)
+    {
+        debugLog("Font count exceeded, freeing memory");
+        loadedFontIndex = loadedFontIndex + 1;
+        if (loadedFontIndex >= FONT_COUNT)
+        {
+            loadedFontIndex = 0;
+        }
+        debugLog("Freeing memory at index: " + String(loadedFontIndex));
+        free(loadedFontPointer[loadedFontIndex]);
+        loadedFontPointer[loadedFontIndex] = NULL;
+        GFXfont *font = loadedFont[loadedFontIndex];
+        delete font;
+        loadedFont[loadedFontIndex] = NULL;
+        memset(loadedFontNames[loadedFontIndex], '\0', RESOURCES_NAME_LENGTH);
+        emptyListIndex = loadedFontIndex;
+    }
+
     File fileFont = LittleFS.open("/font/" + name);
     if (fileFont == false)
     {
@@ -42,7 +59,8 @@ const GFXfont *getFont(String name)
         debugLog("This file has size 0: " + name);
     }
     uint8_t *fileBuf = (uint8_t *)malloc(fileFontSize * sizeof(uint8_t));
-    if (fileBuf == NULL) {
+    if (fileBuf == NULL)
+    {
         debugLog("Failed to mallocate memory for font: " + name);
         fileFont.close();
         return &FreeSansBold9pt7b;
@@ -102,22 +120,27 @@ const GFXfont *getFont(String name)
         debugLog("Resource name: " + name + " is too big because RESOURCES_NAME_LENGTH. Buffer overflow.");
     }
 #endif
+
+    loadedFontIndex = emptyListIndex;
     memset(loadedFontNames[emptyListIndex], '\0', RESOURCES_NAME_LENGTH); // To be sure comparison works
-    strncpy(loadedFontNames[emptyListIndex], name.c_str(), RESOURCES_NAME_LENGTH);
+    strncpy(loadedFontNames[emptyListIndex], name.c_str(), nameLength);
     loadedFont[emptyListIndex] = newFont;
     return loadedFont[emptyListIndex];
 }
 
 void cleanFontCache()
 {
+    loadedFontIndex = 0;
     memset(loadedFontNames, 0, sizeof(loadedFontNames));
     for (int i = 0; i < FONT_COUNT; i++)
     {
-        if(loadedFontPointer[i] != NULL) {
+        if (loadedFontPointer[i] != NULL)
+        {
             free(loadedFontPointer[i]);
             loadedFontPointer[i] = NULL;
-            GFXfont* font = loadedFont[i];
+            GFXfont *font = loadedFont[i];
             delete font;
+            loadedFont[i] = NULL;
         }
     }
 }

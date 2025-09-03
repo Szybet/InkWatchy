@@ -416,7 +416,7 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 // Other other, resources thing
 #define RESOURCES_NAME_LENGTH 50
 #define IMG_COUNT 10
-#define FONT_COUNT 30
+#define FONT_COUNT 20
 // So it's 50*30 bytes
 
 // Task memory size
