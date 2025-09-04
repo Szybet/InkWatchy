@@ -2,7 +2,7 @@
 
 char loadedFontNames[FONT_COUNT][RESOURCES_NAME_LENGTH] = {0};
 uint8_t *loadedFontPointer[FONT_COUNT] = {NULL};
-GFXfont *loadedFont[FONT_COUNT] = {NULL};
+GFXfont loadedFont[FONT_COUNT] = {0};
 uint8_t loadedFontIndex = 0;
 
 const GFXfont *getFont(String name)
@@ -17,7 +17,7 @@ const GFXfont *getFont(String name)
     {
         if (strcmp(loadedFontNames[i], name.c_str()) == 0)
         {
-            return loadedFont[i];
+            return &loadedFont[i];
         }
         else
         {
@@ -39,9 +39,6 @@ const GFXfont *getFont(String name)
         debugLog("Freeing memory at index: " + String(loadedFontIndex));
         free(loadedFontPointer[loadedFontIndex]);
         loadedFontPointer[loadedFontIndex] = NULL;
-        GFXfont *font = loadedFont[loadedFontIndex];
-        delete font;
-        loadedFont[loadedFontIndex] = NULL;
         memset(loadedFontNames[loadedFontIndex], '\0', RESOURCES_NAME_LENGTH);
         emptyListIndex = loadedFontIndex;
     }
@@ -76,9 +73,9 @@ const GFXfont *getFont(String name)
     uint16_t fontBitmapSize = fileBuf[0] | (fileBuf[1] << 8);
     // debugLog("Bitmap size: " + String(fontBitmapSize) + " for font: " + name);
     // GFXfont *newFont = (GFXfont *)malloc(sizeof(GFXfont));
-    GFXfont *newFont = new GFXfont();
+    GFXfont newFont;
 
-    newFont->bitmap = fileBuf + 2; // To skip the uint16_t
+    newFont.bitmap = fileBuf + 2; // To skip the uint16_t
     /*
     {
         debugLog("Dumping bitmap");
@@ -90,7 +87,7 @@ const GFXfont *getFont(String name)
         printf("\n");
     }
     */
-    newFont->glyph = (GFXglyph *)(fileBuf + 2 + fontBitmapSize);
+    newFont.glyph = (GFXglyph *)(fileBuf + 2 + fontBitmapSize);
     /*
     {
         debugLog("Dumping glyph");
@@ -105,9 +102,9 @@ const GFXfont *getFont(String name)
     */
 
     size_t metaDataOffset = 2 + fontBitmapSize + 95 * sizeof(GFXglyph); // There are exactly 95 glyphs, always
-    newFont->first = *reinterpret_cast<uint16_t *>(fileBuf + metaDataOffset);
-    newFont->last = *reinterpret_cast<uint16_t *>(fileBuf + metaDataOffset + sizeof(uint16_t));
-    newFont->yAdvance = *(fileBuf + metaDataOffset + 2 * sizeof(uint16_t));
+    newFont.first = *reinterpret_cast<uint16_t *>(fileBuf + metaDataOffset);
+    newFont.last = *reinterpret_cast<uint16_t *>(fileBuf + metaDataOffset + sizeof(uint16_t));
+    newFont.yAdvance = *(fileBuf + metaDataOffset + 2 * sizeof(uint16_t));
 
     // debugLog("Value first: " + String(newFont->first) + " for font: " + name);
     // debugLog("Value last: " + String(newFont->last) + " for font: " + name);
@@ -125,7 +122,7 @@ const GFXfont *getFont(String name)
     memset(loadedFontNames[emptyListIndex], '\0', RESOURCES_NAME_LENGTH); // To be sure comparison works
     strncpy(loadedFontNames[emptyListIndex], name.c_str(), nameLength);
     loadedFont[emptyListIndex] = newFont;
-    return loadedFont[emptyListIndex];
+    return &loadedFont[emptyListIndex];
 }
 
 void cleanFontCache()
@@ -138,9 +135,6 @@ void cleanFontCache()
         {
             free(loadedFontPointer[i]);
             loadedFontPointer[i] = NULL;
-            GFXfont *font = loadedFont[i];
-            delete font;
-            loadedFont[i] = NULL;
         }
     }
 }
