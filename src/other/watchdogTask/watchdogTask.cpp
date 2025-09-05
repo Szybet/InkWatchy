@@ -22,7 +22,7 @@ bool anyButtonCheck()
 #if WATCHDOG_TASK
 TaskHandle_t watchdogTask = NULL;
 
-#define WATCHDOG_DELAY 60 * 1000
+#define WATCHDOG_DELAY 30 * 1000
 #define WATCHDOG_SMALL_DELAY 3 * 1000
 int64_t watchdogMillis = 0;
 std::atomic<bool> watchdogFlag{false};

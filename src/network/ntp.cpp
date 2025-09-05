@@ -70,9 +70,13 @@ void syncNtp(bool doDriftThings)
         {
             fsSetString(CONF_UNIX_PREVIOUS_SYNC, fsGetString(CONF_UNIX_LAST_SYNC, ""));
         }
-        if (fsGetString(CONF_UNIX_PREVIOUS_SYNC, "") != "")
+        // To make sure it shows between actual synces, not just initial time
+        if (secondsDriftTmp.Year > 2024)
         {
-            fsSetString(CONF_SECONDS_DRIFT, String(int64_t(getUnixTime(secondsDriftTmp)) - int64_t(epochTime)));
+            if (fsGetString(CONF_UNIX_PREVIOUS_SYNC, "") != "")
+            {
+                fsSetString(CONF_SECONDS_DRIFT, String(int64_t(getUnixTime(secondsDriftTmp)) - int64_t(epochTime)));
+            }
         }
         fsSetString(CONF_UNIX_LAST_SYNC, String(epochTime));
 #endif

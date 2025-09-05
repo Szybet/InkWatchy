@@ -127,6 +127,10 @@ void saveRTC(tmElements_t timeToSave)
   rM.SRTC.read(test);
   debugLog("Readed time back: " + String(getUnixTime(test)));
 #endif
+
+#if INK_ALARMS
+  calculateNextAlarm();
+#endif
 }
 
 tmElements_t convertToTmElements(const struct tm &tmStruct)
@@ -268,7 +272,7 @@ void readRTC()
   bool rtcGarbage = false;
   if (timeRTCUTC0.Year < 50 || timeRTCUTC0.Year > 100)
   {
-    timeRTCUTC0.Year = 54;
+    timeRTCUTC0.Year = 50;
     rtcGarbage = true;
   }
   if (timeRTCUTC0.Month > 11)

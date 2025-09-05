@@ -73,7 +73,7 @@ RTC_DATA_ATTR rtcMem rM = {
         .weatherMinutes = 0,
         // inkput
         .watchfacePos = 0,
-        .positionEngaged = false,
+        .positionEngaged = true,
     },
 #endif
 // Domain watchface
@@ -89,7 +89,7 @@ RTC_DATA_ATTR rtcMem rM = {
         .weatherMinutes = 0,
         // inkput
         .watchfacePos = 0,
-        .positionEngaged = false,
+        .positionEngaged = true,
     },
 #endif
 // Shades watchface
@@ -251,6 +251,12 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
         return true;
     }
 
+    // Watchface modules
+    if(source->currentModule != destination->currentModule) {
+        debugLog("Current module differs");
+        return true;
+    }
+
     debugLog("No changes detected");
     return false;
 }
@@ -287,6 +293,9 @@ void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
 
     // Watchface selected
     destination->watchfaceSelected = source->watchfaceSelected;
+
+    // Current module
+    destination->currentModule = source->currentModule;
 }
 
 void rtcMemBackupManage()
