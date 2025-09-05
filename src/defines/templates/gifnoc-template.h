@@ -100,8 +100,8 @@ The default is this:
 #define BTN_REMAP_DOWN BTN_REMAP_VAL_DOWN
 
 // Timezone! So:
-// - You don't set anything, it will try to ques based on IP, it can fail sometimes
-// - You set olson, which still can be incorrect (probably won't). If this is set, there will be no quesing
+// - You don't set anything, it will try to guess your timezone based on IP, which will be incorrect sometimes
+// - You set olson, which still can be incorrect (probably won't). If this is set, there will be no more guesswork
 // - You set posix, it will overwrite everything above, no quesing or anything
 // Set this as a string of olson timezone time
 // List here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
