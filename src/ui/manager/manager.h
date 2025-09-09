@@ -56,6 +56,7 @@ typedef enum
     fontPreview,
     fontPreviewMenu,
     watchfaceSelector,
+    setTimeWatchPlace, // manual set watch time
     // General places now:
     inputPinPlace,
     generalMenuPlace,
@@ -170,3 +171,7 @@ void switchBaiky();
 void switchFontsPreview();
 #endif
 void showTextDialog(String str, bool center, String title = "");
+void initSetTimeWatch();
+void loopSetTimeWatch();
+void exitSetTimeWatch();
+void switchSetTimeWatch();
