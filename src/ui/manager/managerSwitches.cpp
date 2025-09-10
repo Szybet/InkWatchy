@@ -33,6 +33,11 @@ void switchWatchfaceSelectorMenu()
     generalSwitch(watchfaceSelector);
 }
 
+void switchSetTimeWatch()
+{
+    generalSwitch(setTimeWatchPlace);
+}
+
 void switchGeneralDebug()
 {
     generalSwitch(generalDebug);
@@ -254,6 +259,7 @@ void switchBookSelector()
 {
     generalSwitch(bookSelector);
 }
+
 
 // call generalSwitch(textDialog); or overwriteSwitch(textDialog); before this
 void showTextDialog(String str, bool center, String title)
