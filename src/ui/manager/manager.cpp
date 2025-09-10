@@ -154,6 +154,17 @@ void loopManager()
         managerLaunchFunc(settingsMenu, initSettingsMenu, loopMenu);
         break;
     }
+
+    // Here goes manual set time on watch
+
+    case setTimeWatchPlace:
+    {
+         managerLaunchFunc(setTimeWatchPlace, initSetTimeWatch, loopSetTimeWatch, exitSetTimeWatch);
+         break;
+    }
+
+    // Manual set time end
+
     case generalDebug:
     {
 #if DEBUG_MENUS
