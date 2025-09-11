@@ -12,12 +12,14 @@ pub fn get_time_picker() -> TimePicker {
 
 // Return hour, minute
 pub fn get_time(ui: &TimePicker) -> (u8, u8) {
-
+    let hour = ui.get_hours() as u8;
+    let minute = ui.get_minutes() as u8;
+    (hour, minute)
 }
 
 #[cfg(test)]
 mod tests {
-    use slint::StandardListViewItem;
+    
 
     use super::*;
 
