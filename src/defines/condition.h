@@ -212,7 +212,7 @@ Template for versioning
 
 // Yatchy specific things
 #if ATCHY_VER == YATCHY
-#define LP_CORE 0
+#define LP_CORE 1
 
 // Pin definitions for YATCHY
 #define MENU_PIN_BARE 0 // A0
