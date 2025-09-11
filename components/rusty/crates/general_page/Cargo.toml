@@ -4,13 +4,13 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-slint = { version = "=1.11.0", default-features = false }
+slint = { version = "=1.13.0", default-features = false }
 
 [build-dependencies]
-slint-build = { version = "=1.11.0", features = ["sdf-fonts"] }
+slint-build = { version = "=1.13.0", features = ["sdf-fonts"] }
 
 [dev-dependencies]
-slint = { version = "=1.11.0", default-features = true}
+slint = { version = "=1.13.0", default-features = true}
 
 [profile.dev]
 opt-level = 1
