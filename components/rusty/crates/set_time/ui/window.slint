@@ -13,9 +13,6 @@ export component TimePicker inherits Window {
     in-out property <int> minute_tens: 0;
     in-out property <int> minute_units: 0;
 
-    in property <int> hours: hour_tens * 10 + hour_units;
-    in property <int> minutes: minute_tens * 10 + minute_units;
-
     in-out property <int> selected_row: 1; // 1: Hour Tens, 2: Hour Units, 3: Minute Tens, 4: Minute Units
 
     // Internal

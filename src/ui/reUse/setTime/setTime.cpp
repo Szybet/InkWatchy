@@ -7,11 +7,11 @@ void initSetTime()
 {
     init_set_time();
     set_time_set_time(setTimeHour, setTimeMinute);
-    resetSleepDelay(SLEEP_EVERY_MS);
 }
 
 void loopSetTime()
 {
+    resetSleepDelay(SLEEP_EVERY_MS);
     slint_loop();
 }
 
