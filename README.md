@@ -102,7 +102,7 @@ It doesn't use the watchy sub-class but it uses the same libraries. With that in
 Supported devices:
 - [Yatchy](https://github.com/Szybet/Yatchy)
 - Watchy 2.0
-- Watchy 3.0 thanks to the community :) - [Crashes recently for some users](https://github.com/Szybet/InkWatchy/issues/63), I don't have this device, help with debugging it from owners would be appreciated
+- Watchy 3.0 thanks to the community :)
 - Watchy 1.0, 1.5 too but less used, less tested
 
 ## Easy to install demo, Compiling, Some instructions, Further informations
