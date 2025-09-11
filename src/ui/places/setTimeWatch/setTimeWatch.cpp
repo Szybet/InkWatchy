@@ -1,22 +1,26 @@
 #include "setTimeWatch.h"
-#include "rtcMem.h"
-#include "../../reUse/setTime/setTime.h"
-#include "rtc.h" // for timeRTCUTC0, timeZoneOffset
 
-static bool setTimeWatch_initialized = false;
+#if SET_TIME_GUI
+
+static bool setTimeWatchInitialized = false;
 
 // Helper to add seconds to hour/minute (no day wrap, for simplicity)
-void addSecondsToHourMinute(uint8_t baseHour, uint8_t baseMinute, int32_t seconds, int& outHour, int& outMinute) {
+void addSecondsToHourMinute(uint8_t baseHour, uint8_t baseMinute, int32_t seconds, int &outHour, int &outMinute)
+{
     int totalMinutes = baseHour * 60 + baseMinute + seconds / 60;
     // Wrap around 24 hours
-    if (totalMinutes < 0) totalMinutes += 24 * 60;
-    if (totalMinutes >= 24 * 60) totalMinutes -= 24 * 60;
+    if (totalMinutes < 0)
+        totalMinutes += 24 * 60;
+    if (totalMinutes >= 24 * 60)
+        totalMinutes -= 24 * 60;
     outHour = (totalMinutes / 60) % 24;
     outMinute = totalMinutes % 60;
 }
 
-void initSetTimeWatch() {
-    if (!setTimeWatch_initialized) {
+void initSetTimeWatch()
+{
+    if (!setTimeWatchInitialized)
+    {
         // Correct: subtract timezone offset (if offset is negative for GMT+1)
         int localHour, localMinute;
         addSecondsToHourMinute(
@@ -24,21 +28,22 @@ void initSetTimeWatch() {
             timeRTCUTC0.Minute,
             -(int32_t)(timeZoneOffset), // <-- FIXED SIGN
             localHour,
-            localMinute
-        );
+            localMinute);
         setTimeHour = localHour;
         setTimeMinute = localMinute;
         initSetTime();
-        setTimeWatch_initialized = true;
+        setTimeWatchInitialized = true;
     }
 }
 
-void loopSetTimeWatch() {
+void loopSetTimeWatch()
+{
     loopSetTime();
 }
 
-void exitSetTimeWatch() {
-    setTimeWatch_initialized = false;
+void exitSetTimeWatch()
+{
+    setTimeWatchInitialized = false;
     exitSetTime(); // Commit UI edits
 
     // Correct: add timezone offset to get back to UTC
@@ -48,8 +53,7 @@ void exitSetTimeWatch() {
         setTimeMinute,
         (int32_t)(timeZoneOffset), // <-- FIXED SIGN
         utcHour,
-        utcMinute
-    );
+        utcMinute);
 
     tmElements_t newTime = timeRTCUTC0;
     newTime.Hour = utcHour;
@@ -58,3 +62,4 @@ void exitSetTimeWatch() {
     saveRTC(newTime);
     readRTC();
 }
+#endif

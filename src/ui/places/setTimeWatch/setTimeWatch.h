@@ -2,9 +2,8 @@
 
 #include "defines.h"
 
-extern int setTimeWatchMinute;
-extern int setTimeWatchHour;
-
+#if SET_TIME_GUI
 void initSetTimeWatch();
 void loopSetTimeWatch();
 void exitSetTimeWatch();
+#endif

@@ -76,7 +76,9 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
         {
             debugLog("Saving exit func");
             exitFuncGlob = exitFunc;
-        } else {
+        }
+        else
+        {
             debugLog("No exit function supplied");
         }
     }
@@ -154,17 +156,13 @@ void loopManager()
         managerLaunchFunc(settingsMenu, initSettingsMenu, loopMenu);
         break;
     }
-
-    // Here goes manual set time on watch
-
     case setTimeWatchPlace:
     {
-         managerLaunchFunc(setTimeWatchPlace, initSetTimeWatch, loopSetTimeWatch, exitSetTimeWatch);
-         break;
+#if SET_TIME_GUI
+        managerLaunchFunc(setTimeWatchPlace, initSetTimeWatch, loopSetTimeWatch, exitSetTimeWatch);
+#endif
+        break;
     }
-
-    // Manual set time end
-
     case generalDebug:
     {
 #if DEBUG_MENUS

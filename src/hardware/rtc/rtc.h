@@ -9,7 +9,6 @@ extern int64_t timeZoneOffset;
 extern SmallRTC SRTC;
 // Chatgpt said 38 is max, I trust him :)
 #define POSIX_TIMEZONE_MAX_LENGTH 50
-extern char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH];
 extern bool dontTouchTimeZone;
 void timeZoneApply();
 void removeTimeZoneVars();
