@@ -17,6 +17,7 @@ export component TimePicker inherits Window {
 
     // Internal
     in property <float> text_size: 0.07;
+    in property <length> button_container_width: root.width * ((1 - dot_size) / 4);
     // Do
     in property <float> dot_size: 0.05;
     in property <length> dot_border_radius: 5px;
@@ -31,7 +32,7 @@ export component TimePicker inherits Window {
             Row {
                 // Hour Tens
                 VerticalLayout {
-                    width: root.width * ((1 - dot_size) / 4);
+                    width: button_container_width;
                     Button {
                         text: "▲";
                         clicked => {
@@ -60,7 +61,7 @@ export component TimePicker inherits Window {
 
                 // Hour Units
                 VerticalLayout {
-                    width: root.width * ((1 - dot_size) / 4);
+                    width: button_container_width;
                     Button {
                         text: "▲";
                         clicked => {
@@ -116,7 +117,7 @@ export component TimePicker inherits Window {
 
                 // Minute Tens
                 VerticalLayout {
-                    width: root.width * ((1 - dot_size) / 4);
+                    width: button_container_width;
                     Button {
                         text: "▲";
                         clicked => {
@@ -139,7 +140,7 @@ export component TimePicker inherits Window {
 
                 // Minute Units
                 VerticalLayout {
-                    width: root.width * ((1 - dot_size) / 4);
+                    width: button_container_width;
                     Button {
                         text: "▲";
                         clicked => {
