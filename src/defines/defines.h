@@ -256,6 +256,9 @@ extern uint16_t SCWhite;
 #include "../ui/places/baiky/baiky.h"
 #endif
 #include "../ui/places/errorScreen/errorScreen.h"
+#if SET_TIME_GUI
+#include "../ui/places/setTimeWatch/setTimeWatch.h"
+#endif
 
 // Other
 #if DEBUG

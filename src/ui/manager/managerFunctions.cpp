@@ -52,7 +52,7 @@ void initMainMenu()
 #if HEART_MONITOR
     {
         count = count + 1;
-        buttons[count] = {MENU_HEART_MONITOR, getImg("heartmonitor/heartIcon"), switchHeartMonitor};
+        buttons[count] = {MENU_HEART_MONITOR, getImg("heartMonitor/heartIcon"), switchHeartMonitor};
     }
 #endif
 #if VAULT
@@ -154,7 +154,7 @@ void initDebugMenu()
 void initSettingsMenu()
 {
     int count = -1;
-    entryMenu buttons[5];
+    entryMenu buttons[6];
     {
         debugLog("Adding wifi to menu");
         count = count + 1;
@@ -174,6 +174,13 @@ void initSettingsMenu()
         count = count + 1;
         buttons[count] = {MENU_CHANGE_WATCHFACE, getImg("watchfaceIcon"), switchWatchfaceSelectorMenu};
     }
+#if SET_TIME_GUI
+    {
+        count = count + 1;
+        buttons[count] = {"Set Time", getImg("setTimeGui/setTimeClock"), switchSetTimeWatch};
+    }
+#endif
+
     count = count + 1;
     initMenu(buttons, count, MENU_SETTINGS, 1);
 }

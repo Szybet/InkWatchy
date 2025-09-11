@@ -76,7 +76,9 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
         {
             debugLog("Saving exit func");
             exitFuncGlob = exitFunc;
-        } else {
+        }
+        else
+        {
             debugLog("No exit function supplied");
         }
     }
@@ -152,6 +154,13 @@ void loopManager()
     case settingsMenu:
     {
         managerLaunchFunc(settingsMenu, initSettingsMenu, loopMenu);
+        break;
+    }
+    case setTimeWatchPlace:
+    {
+#if SET_TIME_GUI
+        managerLaunchFunc(setTimeWatchPlace, initSetTimeWatch, loopSetTimeWatch, exitSetTimeWatch);
+#endif
         break;
     }
     case generalDebug:

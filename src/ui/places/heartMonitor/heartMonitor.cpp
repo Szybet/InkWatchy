@@ -214,7 +214,7 @@ void initHeartMonitor()
 }
 
 void pineapple() {
-    writeImageN(185, 185, getImg("heartmonitor/pineapple"));
+    writeImageN(185, 185, getImg("heartMonitor/pineapple"));
 }
 
 void loopHeartMonitor()
