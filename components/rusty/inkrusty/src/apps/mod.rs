@@ -2,3 +2,4 @@
 pub mod snake;
 
 pub mod general_page;
+pub mod set_time;

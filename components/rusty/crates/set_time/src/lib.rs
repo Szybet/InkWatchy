@@ -10,13 +10,22 @@ pub fn get_time_picker() -> TimePicker {
     ui
 }
 
-// Return hour, minute
-pub fn get_time(ui: &TimePicker) -> (u8, u8) {
-    let hour = ui.get_hours() as u8;
-    let minute = ui.get_minutes() as u8;
-    (hour, minute)
+#[repr(C)]
+pub struct SetTimeTime {
+    pub hour: u8,
+    pub minute: u8,
 }
 
+// Return hour, minute
+pub fn get_time(ui: &TimePicker) -> SetTimeTime {
+    let hour = ui.get_hours() as u8;
+    let minute = ui.get_minutes() as u8;
+    SetTimeTime {hour, minute}
+}
+
+pub fn set_time(ui: &TimePicker) {
+
+}
 #[cfg(test)]
 mod tests {
     
