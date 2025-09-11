@@ -17,13 +17,13 @@ export component TimePicker inherits Window {
 
     // Internal
     in property <float> text_size: 0.07;
-    in property <length> button_container_width: root.width * ((1 - dot_size) / 4);
-    // Do
+    // Dot
     in property <float> dot_size: 0.05;
     in property <length> dot_border_radius: 5px;
     in property <float> dot_space_width: 0.5;
     in property <float> dot_space_height: 0.45;
-
+    // Button
+    in property <length> button_container_width: root.width * ((1 - dot_size) / 4);
     in property <length> button_border_width: 2px;
     in property <length> button_border_radius: 5px;
     in property <color> button_border_color: black;
