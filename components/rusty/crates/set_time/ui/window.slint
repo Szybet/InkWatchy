@@ -15,6 +15,8 @@ export component TimePicker inherits Window {
     in property <int> hours: hour_tens * 10 + hour_units;
     in property <int> minutes: minute_tens * 10 + minute_units;
 
+    in property <int> selected_row: 1; // 1: Hour Tens, 2: Hour Units, 3: Minute Tens, 4: Minute Units
+
     // Internal
     in property <length> text_size: root.height * 0.3;
     // Dot
@@ -48,7 +50,7 @@ export component TimePicker inherits Window {
                             y: button_border_width;
                             width: parent.width - (2 * button_border_width);
                             height: parent.height - (2 * button_border_width);
-                            background: white; // Default button background
+                            background: selected_row == 1 ? black : white;
                             border-radius: button_border_radius;
 
                             Text {
@@ -57,6 +59,7 @@ export component TimePicker inherits Window {
                                 vertical-alignment: center;
                                 width: parent.width;
                                 height: parent.height;
+                                color: selected_row == 1 ? white : black;
                             }
 
                             TouchArea {
@@ -84,7 +87,7 @@ export component TimePicker inherits Window {
                             y: button_border_width;
                             width: parent.width - (2 * button_border_width);
                             height: parent.height - (2 * button_border_width);
-                            background: white; // Default button background
+                            background: selected_row == 1 ? black : white;
                             border-radius: button_border_radius;
 
                             Text {
@@ -93,6 +96,7 @@ export component TimePicker inherits Window {
                                 vertical-alignment: center;
                                 width: parent.width;
                                 height: parent.height;
+                                color: selected_row == 1 ? white : black;
                             }
 
                             TouchArea {
@@ -119,7 +123,7 @@ export component TimePicker inherits Window {
                             y: button_border_width;
                             width: parent.width - (2 * button_border_width);
                             height: parent.height - (2 * button_border_width);
-                            background: white; // Default button background
+                            background: selected_row == 2 ? black : white;
                             border-radius: button_border_radius;
 
                             Text {
@@ -128,6 +132,7 @@ export component TimePicker inherits Window {
                                 vertical-alignment: center;
                                 width: parent.width;
                                 height: parent.height;
+                                color: selected_row == 2 ? white : black;
                             }
 
                             TouchArea {
@@ -156,7 +161,7 @@ export component TimePicker inherits Window {
                             y: button_border_width;
                             width: parent.width - (2 * button_border_width);
                             height: parent.height - (2 * button_border_width);
-                            background: white; // Default button background
+                            background: selected_row == 2 ? black : white;
                             border-radius: button_border_radius;
 
                             Text {
@@ -165,6 +170,7 @@ export component TimePicker inherits Window {
                                 vertical-alignment: center;
                                 width: parent.width;
                                 height: parent.height;
+                                color: selected_row == 2 ? white : black;
                             }
 
                             TouchArea {
@@ -217,7 +223,7 @@ export component TimePicker inherits Window {
                             y: button_border_width;
                             width: parent.width - (2 * button_border_width);
                             height: parent.height - (2 * button_border_width);
-                            background: white; // Default button background
+                            background: selected_row == 3 ? black : white;
                             border-radius: button_border_radius;
 
                             Text {
@@ -226,6 +232,7 @@ export component TimePicker inherits Window {
                                 vertical-alignment: center;
                                 width: parent.width;
                                 height: parent.height;
+                                color: selected_row == 3 ? white : black;
                             }
 
                             TouchArea {
@@ -250,7 +257,7 @@ export component TimePicker inherits Window {
                             y: button_border_width;
                             width: parent.width - (2 * button_border_width);
                             height: parent.height - (2 * button_border_width);
-                            background: white; // Default button background
+                            background: selected_row == 3 ? black : white;
                             border-radius: button_border_radius;
 
                             Text {
@@ -259,6 +266,7 @@ export component TimePicker inherits Window {
                                 vertical-alignment: center;
                                 width: parent.width;
                                 height: parent.height;
+                                color: selected_row == 3 ? white : black;
                             }
 
                             TouchArea {
@@ -282,7 +290,7 @@ export component TimePicker inherits Window {
                             y: button_border_width;
                             width: parent.width - (2 * button_border_width);
                             height: parent.height - (2 * button_border_width);
-                            background: white; // Default button background
+                            background: selected_row == 4 ? black : white;
                             border-radius: button_border_radius;
 
                             Text {
@@ -291,6 +299,7 @@ export component TimePicker inherits Window {
                                 vertical-alignment: center;
                                 width: parent.width;
                                 height: parent.height;
+                                color: selected_row == 4 ? white : black;
                             }
 
                             TouchArea {
@@ -315,7 +324,7 @@ export component TimePicker inherits Window {
                             y: button_border_width;
                             width: parent.width - (2 * button_border_width);
                             height: parent.height - (2 * button_border_width);
-                            background: white; // Default button background
+                            background: selected_row == 4 ? black : white;
                             border-radius: button_border_radius;
 
                             Text {
@@ -324,6 +333,7 @@ export component TimePicker inherits Window {
                                 vertical-alignment: center;
                                 width: parent.width;
                                 height: parent.height;
+                                color: selected_row == 4 ? white : black;
                             }
 
                             TouchArea {
