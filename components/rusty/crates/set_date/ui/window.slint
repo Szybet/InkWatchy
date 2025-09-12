@@ -111,7 +111,32 @@ export component DatePicker inherits Window {
     VerticalLayout {
         width: root.width;
         height: root.height;
-        my-key-handler := FocusScope { }
+        my-key-handler := FocusScope {
+            key-pressed(event) => {
+                if event.text == "w" {
+                    current-date.day = current-date.day + 1;
+                    if (current-date.day > root.days-in-month(current-date.year, current-date.month)) {
+                        current-date.day = 1;
+                        current-date.month = current-date.month + 1;
+                        if (current-date.month > 12) {
+                            current-date.month = 1;
+                            current-date.year = current-date.year + 1;
+                        }
+                    }
+                } else if event.text == "s" {
+                    current-date.day = current-date.day - 1;
+                    if (current-date.day < 1) {
+                        current-date.month = current-date.month - 1;
+                        if (current-date.month < 1) {
+                            current-date.month = 12;
+                            current-date.year = current-date.year - 1;
+                        }
+                        current-date.day = root.days-in-month(current-date.year, current-date.month);
+                    }
+                }
+                return EventResult.accept;
+            }
+        }
 
         Rectangle {
             width: root.width;
