@@ -50,7 +50,8 @@ component Button inherits Rectangle {
 }
 
 export component DatePicker inherits Window {
-    // Removed fixed width and height to allow it to take the whole window
+    width: 200px;
+    height: 200px;
     default-font-family: "Fira Sans";
     forward-focus: my-key-handler;
 
