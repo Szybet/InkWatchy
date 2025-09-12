@@ -140,7 +140,7 @@ export component DatePicker inherits Window {
 
                     Text {
                         text: "\{current-date.month}/\{current-date.year}";
-                        font-size: 16px * root.master-scale;
+                        font-size: 20px * root.master-scale;
                         color: Palette.foreground;
                         horizontal-alignment: center;
                         vertical-alignment: center;
@@ -170,7 +170,7 @@ export component DatePicker inherits Window {
                         for day-name in ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]: Text {
                             text: day-name;
                             color: Palette.foreground;
-                            font-size: 14px * root.master-scale;
+                            font-size: 21px * root.master-scale;
                             horizontal-alignment: center;
                             vertical-alignment: center;
                             width: 40px * root.master-scale; // Approximate width for each day cell
@@ -204,7 +204,7 @@ export component DatePicker inherits Window {
                             Text {
                                 text: is-valid-day ? "\{day-number}" : "";
                                 color: is-selected ? Palette.accent-foreground : Palette.foreground;
-                                font-size: 14px * root.master-scale;
+                                font-size: 25px * root.master-scale;
                                 horizontal-alignment: center;
                                 vertical-alignment: center;
                             }
