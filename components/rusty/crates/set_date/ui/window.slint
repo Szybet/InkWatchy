@@ -45,7 +45,9 @@ component Button inherits Rectangle {
     }
 
     TouchArea {
-        clicked => { root.clicked(); }
+        clicked => {
+            root.clicked();
+        }
     }
 }
 
@@ -66,7 +68,7 @@ export component DatePicker inherits Window {
     callback canceled();
     callback accepted(date: Date);
 
-    in property <float> master-scale: 200.0 / 360.0;
+    in property <float> master-scale: 0.623;
 
     // Helper function to get the number of days in a month
     function days-in-month(year: int, month: int) -> int {
@@ -107,13 +109,13 @@ export component DatePicker inherits Window {
     }
 
     VerticalLayout {
-        width: 100%;
-        height: 100%;
+        width: root.width;
+        height: root.height;
         my-key-handler := FocusScope { }
 
         Rectangle {
-            width: 100%;
-            height: 100%;
+            width: root.width;
+            height: root.height;
             background: Palette.control-background;
 
             VerticalLayout {
@@ -165,7 +167,7 @@ export component DatePicker inherits Window {
                     // Weekday headers
                     HorizontalLayout {
                         spacing: 4px * root.master-scale;
-                        for day-name in ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] : Text {
+                        for day-name in ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]: Text {
                             text: day-name;
                             color: Palette.foreground;
                             font-size: 14px * root.master-scale;
@@ -176,9 +178,9 @@ export component DatePicker inherits Window {
                     }
 
                     // Days of the month
-                    for row-index in 6 : HorizontalLayout {
+                    for row-index in 6: HorizontalLayout {
                         spacing: 4px * root.master-scale;
-                        for col-index in 7 : Rectangle {
+                        for col-index in 7: Rectangle {
                             property <int> i: row-index * 7 + col-index;
                             property <int> day-number: i - root.first-day-of-month(root.current-date.year, root.current-date.month) + 1;
                             property <bool> is-valid-day: day-number > 0 && day-number <= root.days-in-month(root.current-date.year, root.current-date.month);
@@ -187,7 +189,7 @@ export component DatePicker inherits Window {
 
                             background: is-selected ? Palette.accent-background : (is-today ? Palette.border : Palette.control-background);
                             border-radius: 4px * root.master-scale;
-                                                        width: 40px * root.master-scale; // Approximate width for each day cell
+                            width: 40px * root.master-scale; // Approximate width for each day cell
                             height: 40px * root.master-scale;
 
                             TouchArea {
