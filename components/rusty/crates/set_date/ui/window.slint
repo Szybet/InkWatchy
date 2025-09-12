@@ -49,8 +49,7 @@ component Button inherits Rectangle {
 }
 
 export component DatePicker inherits Window {
-    width: 360px;
-    height: 524px;
+    // Removed fixed width and height to allow it to take the whole window
     default-font-family: "Fira Sans";
     forward-focus: my-key-handler;
 
@@ -104,16 +103,14 @@ export component DatePicker inherits Window {
     }
 
     VerticalLayout {
-        width: root.width;
-        height: root.height;
-        padding: 8px;
+        // Removed width and height bindings to avoid binding loops
         my-key-handler := FocusScope { }
 
         Rectangle {
             background: Palette.control-background;
             border-radius: 8px;
-            width: parent.width;
-            height: parent.height;
+            // Removed width and height bindings to avoid binding loops
+            // It will naturally fill the parent (VerticalLayout) which fills the window
 
             VerticalLayout {
                 padding: 8px;
