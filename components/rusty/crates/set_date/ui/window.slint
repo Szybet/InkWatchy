@@ -26,12 +26,13 @@ global Palette {
 
 component Button inherits Rectangle {
     in property <string> text;
+    in property <float> scale: 1.0;
     property <brush> foreground: #ffffff;
     callback clicked;
 
-    height: 30px;
-    width: 80px;
-    border-radius: 5px;
+    height: 30px * root.scale;
+    width: 80px * root.scale;
+    border-radius: 5px * root.scale;
     background: #666666; // Set background directly on the root Rectangle
 
     Text {
@@ -63,6 +64,8 @@ export component DatePicker inherits Window {
 
     callback canceled();
     callback accepted(date: Date);
+
+    in property <float> master-scale: 1.0;
 
     // Helper function to get the number of days in a month
     function days-in-month(year: int, month: int) -> int {
@@ -108,20 +111,21 @@ export component DatePicker inherits Window {
 
         Rectangle {
             background: Palette.control-background;
-            border-radius: 8px;
+            border-radius: 8px * root.master-scale;
             // Removed width and height bindings to avoid binding loops
             // It will naturally fill the parent (VerticalLayout) which fills the window
 
             VerticalLayout {
-                padding: 8px;
+                padding: 8px * root.master-scale;
 
                 // Month and Year Navigation
                 HorizontalLayout {
-                    spacing: 10px;
+                    spacing: 10px * root.master-scale;
                     alignment: center;
 
                     Button {
                         text: "<";
+                        scale: root.master-scale;
                         clicked => {
                             current-date.month = current-date.month - 1;
                             if (current-date.month == 0) {
@@ -133,15 +137,16 @@ export component DatePicker inherits Window {
 
                     Text {
                         text: "\{current-date.month}/\{current-date.year}";
-                        font-size: 16px;
+                        font-size: 16px * root.master-scale;
                         color: Palette.foreground;
                         horizontal-alignment: center;
                         vertical-alignment: center;
-                        width: 100px;
+                        width: 100px * root.master-scale;
                     }
 
                     Button {
                         text: ">";
+                        scale: root.master-scale;
                         clicked => {
                             current-date.month = current-date.month + 1;
                             if (current-date.month == 13) {
@@ -154,24 +159,24 @@ export component DatePicker inherits Window {
 
                 // Calendar Grid
                 VerticalLayout {
-                    spacing: 4px;
+                    spacing: 4px * root.master-scale;
 
                     // Weekday headers
                     HorizontalLayout {
-                        spacing: 4px;
+                        spacing: 4px * root.master-scale;
                         for day-name in ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] : Text {
                             text: day-name;
                             color: Palette.foreground;
-                            font-size: 14px;
+                            font-size: 14px * root.master-scale;
                             horizontal-alignment: center;
                             vertical-alignment: center;
-                            width: 40px; // Approximate width for each day cell
+                            width: 40px * root.master-scale; // Approximate width for each day cell
                         }
                     }
 
                     // Days of the month
                     for row-index in 6 : HorizontalLayout {
-                        spacing: 4px;
+                        spacing: 4px * root.master-scale;
                         for col-index in 7 : Rectangle {
                             property <int> i: row-index * 7 + col-index;
                             property <int> day-number: i - root.first-day-of-month(root.current-date.year, root.current-date.month) + 1;
@@ -180,9 +185,9 @@ export component DatePicker inherits Window {
                             property <bool> is-today: is-valid-day && day-number == 12 && root.current-date.month == 9 && root.current-date.year == 2025; // Hardcoded for now
 
                             background: is-selected ? Palette.accent-background : (is-today ? Palette.border : Palette.control-background);
-                            border-radius: 4px;
-                            width: 40px;
-                            height: 40px;
+                            border-radius: 4px * root.master-scale;
+                                                        width: 40px * root.master-scale; // Approximate width for each day cell
+                            height: 40px * root.master-scale;
 
                             TouchArea {
                                 clicked => {
@@ -196,7 +201,7 @@ export component DatePicker inherits Window {
                             Text {
                                 text: is-valid-day ? "\{day-number}" : "";
                                 color: is-selected ? Palette.accent-foreground : Palette.foreground;
-                                font-size: 14px;
+                                font-size: 14px * root.master-scale;
                                 horizontal-alignment: center;
                                 vertical-alignment: center;
                             }
