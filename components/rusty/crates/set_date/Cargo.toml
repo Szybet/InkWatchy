@@ -1,0 +1,38 @@
+[package]
+name = "set_time"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+slint = { version = "=1.13.0", default-features = false }
+
+[build-dependencies]
+slint-build = { version = "=1.13.0", features = ["sdf-fonts"] }
+
+[dev-dependencies]
+slint = { version = "=1.13.0", default-features = true}
+
+[profile.dev]
+opt-level = 1
+[profile.dev.package."*"]
+opt-level = 3
+
+[profile.release]
+strip = true
+opt-level = "z"
+lto = true
+codegen-units = 1
+panic = "abort"
+# This not
+# RUSTFLAGS="-Zlocation-detail=none" cargo +nightly build --release
+# because
+# rust-lld: error: undefined symbol: __stack_top
+# And
+# cargo +nightly build --release
+# Increases size by a few bytes
+
+# Those don't change anything
+debug = 0
+debug-assertions = false
+incremental = false
+overflow-checks = false

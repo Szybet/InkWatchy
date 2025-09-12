@@ -1,0 +1,14 @@
+import "./FiraSans-Medium.ttf";
+
+export component DatePicker inherits Window {
+    width: 200px;
+    height: 200px;
+    default-font-family: "Fira Sans";
+    forward-focus: my-key-handler;
+
+    VerticalLayout {
+        width: root.width;
+        height: root.width;
+        my-key-handler := FocusScope { }
+    }
+}
