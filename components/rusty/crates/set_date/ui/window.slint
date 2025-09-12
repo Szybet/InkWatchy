@@ -15,25 +15,25 @@ global Palette {
     // Basic Palette for styling, assuming dark mode for now
     // These are properties of the global object, not fields of a struct
     in property <ColorScheme> color-scheme: ColorScheme.dark;
-    in property <brush> control-background: #333333;
-    in property <brush> border: #555555;
-    in property <brush> accent-background: #007bff;
+    in property <brush> control-background: #ffffff;
+    in property <brush> border: #ffffff;
+    in property <brush> accent-background: #000000;
     in property <brush> accent-foreground: #ffffff;
-    in property <brush> foreground: #ffffff;
-    in property <brush> state-brush: #ffffff;
-    in property <brush> state-brush-secondary: #000000;
+    in property <brush> foreground: #000000;
+    in property <brush> state-brush: #000000;
+    in property <brush> state-brush-secondary: #ffffff;
 }
 
 component Button inherits Rectangle {
     in property <string> text;
     in property <float> scale: 1.0;
-    property <brush> foreground: #ffffff;
+    property <brush> foreground: #000000;
     callback clicked;
 
     height: 30px * root.scale;
     width: 80px * root.scale;
     border-radius: 5px * root.scale;
-    background: #666666; // Set background directly on the root Rectangle
+    background: #ffffff; // Set background directly on the root Rectangle
 
     Text {
         text: root.text;
@@ -62,8 +62,8 @@ export component DatePicker inherits Window {
     property <Date> current-date: { year: 2025, month: 9, day: 12 }; // Default to today's date
     property <int> selected-day: current-date.day;
 
-    property <brush> state: Palette.color-scheme == ColorScheme.dark ? #ffffff : #000000;
-    property <brush> state-secondary: Palette.color-scheme == ColorScheme.dark ? #000000 : #ffffff;
+    property <brush> state: #000000;
+    property <brush> state-secondary: #ffffff;
 
     callback canceled();
     callback accepted(date: Date);
