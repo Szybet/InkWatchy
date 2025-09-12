@@ -5,16 +5,16 @@ use crate::{
     info,
 };
 use alloc::boxed::Box;
-use set_time::set_time;
-use set_time::{get_time, get_time_picker, TimePicker};
+use set_date::get_date_picker;
+use set_date::{date_picker_set_date, date_picket_get_date, DatePicker};
 use slint::ComponentHandle;
 
-pub struct SetTimeApp {
-    window: TimePicker,
+pub struct SetDateApp {
+    window: DatePicker,
     cpu_speed: CpuSpeed,
 }
 
-impl SlintApp for SetTimeApp {
+impl SlintApp for SetDateApp {
     fn show(&self) {
         self.window.show().unwrap();
     }
@@ -31,12 +31,12 @@ impl SlintApp for SetTimeApp {
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn init_set_time() {
+pub unsafe extern "C" fn init_set_date() {
     slint_init();
 
-    let ui = get_time_picker();
+    let ui = get_date_picker();
 
-    let my_struct = Box::new(SetTimeApp {
+    let my_struct = Box::new(SetDateApp {
         window: ui,
         cpu_speed: get_cpu_speed(),
     });
@@ -47,39 +47,42 @@ pub unsafe extern "C" fn init_set_time() {
 }
 
 #[repr(C)]
-pub struct SetTimeTime {
-    pub hour: u8,
-    pub minute: u8,
+pub struct RustDate {
+    pub year: u16,
+    pub month: u8,
+    pub day: u8,
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn set_time_get_time() -> SetTimeTime {
+pub unsafe extern "C" fn set_date_get_date() -> RustDate {
     #[allow(static_mut_refs)]
     if let Some(slint_app) = &mut SLINT_APP_STORE {
-        if let Some(set_time_app) = slint_app.as_any_mut().downcast_mut::<SetTimeApp>() {
-            let t = get_time(&set_time_app.window);
-            return SetTimeTime {
-                hour: t.0,
-                minute: t.1,
+        if let Some(set_date_app) = slint_app.as_any_mut().downcast_mut::<SetDateApp>() {
+            let t = date_picket_get_date(&set_date_app.window);
+            return RustDate {
+                year: t.0,
+                month: t.1,
+                day: t.2,
             };
         } else {
-            info!("Error downcasting to time app");
+            info!("Error downcasting to date app");
         }
     } else {
         info!("SLINT_APP_STORE is None");
     }
-    SetTimeTime {
-        hour: 255,
-        minute: 255,
+    RustDate {
+        year: 2025,
+        month: 255,
+        day: 255,
     }
 }
 
 #[unsafe(no_mangle)]
-pub unsafe extern "C" fn set_time_set_time(hour: u8, minute: u8) {
+pub unsafe extern "C" fn set_date_set_date(year: u16, month: u8, day: u8) {
     #[allow(static_mut_refs)]
     if let Some(slint_app) = &mut SLINT_APP_STORE {
-        if let Some(set_time_app) = slint_app.as_any_mut().downcast_mut::<SetTimeApp>() {
-            return set_time(&set_time_app.window, hour, minute);
+        if let Some(set_date_app) = slint_app.as_any_mut().downcast_mut::<SetDateApp>() {
+            return date_picker_set_date(&set_date_app.window, year, month, day);
         } else {
             info!("Error downcasting to general app");
         }

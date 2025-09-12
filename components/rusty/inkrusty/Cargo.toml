@@ -18,6 +18,7 @@ slint = { version = "=1.13.0", default-features = false, features = [
 snake_lib = { git = "https://github.com/Szybet/snake-slint.git", package = "snake_lib" }
 general_page = { path = "../crates/general_page" }
 set_time = { path = "../crates/set_time" }
+set_date = { path = "../crates/set_date" }
 
 [build-dependencies]
 slint-build = "1.13.0"

@@ -142,6 +142,11 @@ void switchSetTime()
     generalSwitch(setTimePlace);
 }
 
+void switchSetDate()
+{
+    generalSwitch(setDatePlace);
+}
+
 void switchPowerMenu()
 {
     generalSwitch(powerMenu);

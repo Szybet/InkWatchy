@@ -29,6 +29,7 @@ typedef enum
     alarmQuick,
     alarmSetChooser,
     setTimePlace,
+    setDatePlace,
     alarmEditDays,
     pomodoroMenu,
     powerMenu,
@@ -129,6 +130,7 @@ void switchAlarmQuick();
 void switchPomodoroMenu();
 #endif
 void switchSetTime();
+void switchSetDate();
 void switchPowerMenu();
 void switchWatchfaceSelectorMenu();
 

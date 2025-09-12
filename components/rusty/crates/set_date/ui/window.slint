@@ -127,13 +127,13 @@ export component DatePicker inherits Window {
                         }
                         current-date.day = root.days-in-month(current-date.year, current-date.month);
                     }
-                } else if event.text == "e" {
+                } else if event.text == "q" {
                     current-date.month = current-date.month + 1;
                     if (current-date.month > 12) {
                         current-date.month = 1;
                         current-date.year = current-date.year + 1;
                     }
-                } else if event.text == "d" {
+                } else if event.text == "z" {
                     current-date.month = current-date.month - 1;
                     if (current-date.month < 1) {
                         current-date.month = 12;

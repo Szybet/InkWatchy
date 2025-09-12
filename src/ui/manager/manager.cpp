@@ -274,6 +274,11 @@ void loopManager()
         managerLaunchFunc(setTimePlace, initSetTime, loopSetTime, exitSetTime);
         break;
     }
+    case setDatePlace:
+    {
+        managerLaunchFunc(setDatePlace, initSetDate, loopSetDate, exitSetDate);
+        break;
+    }
     case alarmEditDays:
     {
 #if INK_ALARMS
