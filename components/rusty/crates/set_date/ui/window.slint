@@ -118,14 +118,6 @@ export component DatePicker inherits Window {
             VerticalLayout {
                 padding: 8px;
 
-                Text {
-                    text: "Select date"; // Directly set title here
-                    font-size: 18px;
-                    font-weight: 500;
-                    color: Palette.foreground;
-                    horizontal-alignment: center;
-                }
-
                 // Month and Year Navigation
                 HorizontalLayout {
                     spacing: 10px;
@@ -212,22 +204,6 @@ export component DatePicker inherits Window {
                                 vertical-alignment: center;
                             }
                         }
-                    }
-                }
-
-                // Action Buttons
-                HorizontalLayout {
-                    spacing: 10px;
-                    alignment: center;
-
-                    Button {
-                        text: "Cancel";
-                        clicked => { root.canceled(); }
-                    }
-
-                    Button {
-                        text: "OK";
-                        clicked => { root.accepted(root.current-date); }
                     }
                 }
             }
