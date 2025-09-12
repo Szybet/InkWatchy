@@ -100,7 +100,8 @@ export component DatePicker inherits Window {
         // Adjust result to be 0 for Sunday, 1 for Monday, ..., 6 for Saturday
         // Zeller's congruence returns 0 for Saturday, 1 for Sunday, ..., 6 for Friday
         // So, (h + 6) % 7 will map Saturday (0) to 6, Sunday (1) to 0, etc.
-        return Math.mod((h + 6), 7);
+        let original_day_index = Math.mod((h + 6), 7); // 0=Sun, 1=Mon, ..., 6=Sat
+        return Math.mod((original_day_index - 1 + 7), 7); // 0=Mon, 1=Tue, ..., 6=Sun
     }
 
     VerticalLayout {
@@ -199,7 +200,7 @@ export component DatePicker inherits Window {
                     // Weekday headers
                     HorizontalLayout {
                         spacing: 4px * root.master-scale;
-                        for day-name in ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]: Text {
+                        for day-name in ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]: Text {
                             text: day-name;
                             color: Palette.foreground;
                             font-size: 21px * root.master-scale;
