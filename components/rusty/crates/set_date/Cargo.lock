@@ -3921,7 +3921,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "set_time"
+name = "set_date"
 version = "0.1.0"
 dependencies = [
  "slint",

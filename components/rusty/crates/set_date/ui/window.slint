@@ -1,14 +1,236 @@
 import "./FiraSans-Medium.ttf";
 
+struct Date {
+    year: int,
+    month: int, // 1-12
+    day: int,   // 1-31
+}
+
+enum ColorScheme {
+    dark,
+    light,
+}
+
+global Palette {
+    // Basic Palette for styling, assuming dark mode for now
+    // These are properties of the global object, not fields of a struct
+    in property <ColorScheme> color-scheme: ColorScheme.dark;
+    in property <brush> control-background: #333333;
+    in property <brush> border: #555555;
+    in property <brush> accent-background: #007bff;
+    in property <brush> accent-foreground: #ffffff;
+    in property <brush> foreground: #ffffff;
+    in property <brush> state-brush: #ffffff;
+    in property <brush> state-brush-secondary: #000000;
+}
+
+component Button inherits Rectangle {
+    in property <string> text;
+    property <brush> foreground: #ffffff;
+    callback clicked;
+
+    height: 30px;
+    width: 80px;
+    border-radius: 5px;
+    background: #666666; // Set background directly on the root Rectangle
+
+    Text {
+        text: root.text;
+        color: root.foreground;
+        horizontal-alignment: center;
+        vertical-alignment: center;
+        width: parent.width;
+        height: parent.height;
+    }
+
+    TouchArea {
+        clicked => { root.clicked(); }
+    }
+}
+
 export component DatePicker inherits Window {
-    width: 200px;
-    height: 200px;
+    width: 360px;
+    height: 524px;
     default-font-family: "Fira Sans";
     forward-focus: my-key-handler;
 
+    in-out property <Date> date <=> current-date;
+
+    property <Date> current-date: { year: 2025, month: 9, day: 12 }; // Default to today's date
+    property <int> selected-day: current-date.day;
+
+    property <brush> state: Palette.color-scheme == ColorScheme.dark ? #ffffff : #000000;
+    property <brush> state-secondary: Palette.color-scheme == ColorScheme.dark ? #000000 : #ffffff;
+
+    callback canceled();
+    callback accepted(date: Date);
+
+    // Helper function to get the number of days in a month
+    function days-in-month(year: int, month: int) -> int {
+        if month == 2 {
+            if (Math.mod(year, 4) == 0 && (Math.mod(year, 100) != 0 || Math.mod(year, 400) == 0)) {
+                return 29; // Leap year
+            } else {
+                return 28;
+            }
+        } else if month == 4 || month == 6 || month == 9 || month == 11 {
+            return 30;
+        } else {
+            return 31;
+        }
+    }
+
+    // Helper function to get the day of the week for the first day of the month
+    // Returns 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+    function first-day-of-month(year: int, month: int) -> int {
+        // Zeller's congruence algorithm
+        // Adjust month and year for January and February
+        let adjusted_month = month <= 2 ? month + 12 : month;
+        let adjusted_year = month <= 2 ? year - 1 : year;
+
+        let k = Math.mod(adjusted_year, 100); // Year of the century
+        let j = adjusted_year / 100; // Century
+
+        // Zeller's congruence formula
+        // h = (q + floor(13*(m+1)/5) + k + floor(k/4) + floor(j/4) + 5*j) mod 7
+        // q is the day of the month (1 for the first day)
+        // For the first day of the month, q = 1
+        let h = Math.mod((1 + (13 * (adjusted_month + 1)) / 5 + k + k / 4 + j / 4 + 5 * j), 7);
+
+        // Adjust result to be 0 for Sunday, 1 for Monday, etc.
+        // Zeller's congruence returns 0 for Saturday, 1 for Sunday, ..., 6 for Friday
+        // So, (h + 6) % 7 will map Saturday (0) to 6, Sunday (1) to 0, etc.
+        return Math.mod((h + 6), 7);
+    }
+
     VerticalLayout {
         width: root.width;
-        height: root.width;
+        height: root.height;
+        padding: 8px;
         my-key-handler := FocusScope { }
+
+        Rectangle {
+            background: Palette.control-background;
+            border-radius: 8px;
+            width: parent.width;
+            height: parent.height;
+
+            VerticalLayout {
+                padding: 8px;
+
+                Text {
+                    text: "Select date"; // Directly set title here
+                    font-size: 18px;
+                    font-weight: 500;
+                    color: Palette.foreground;
+                    horizontal-alignment: center;
+                }
+
+                // Month and Year Navigation
+                HorizontalLayout {
+                    spacing: 10px;
+                    alignment: center;
+
+                    Button {
+                        text: "<";
+                        clicked => {
+                            current-date.month = current-date.month - 1;
+                            if (current-date.month == 0) {
+                                current-date.month = 12;
+                                current-date.year = current-date.year - 1;
+                            }
+                        }
+                    }
+
+                    Text {
+                        text: "\{current-date.month}/\{current-date.year}";
+                        font-size: 16px;
+                        color: Palette.foreground;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                        width: 100px;
+                    }
+
+                    Button {
+                        text: ">";
+                        clicked => {
+                            current-date.month = current-date.month + 1;
+                            if (current-date.month == 13) {
+                                current-date.month = 1;
+                                current-date.year = current-date.year + 1;
+                            }
+                        }
+                    }
+                }
+
+                // Calendar Grid
+                VerticalLayout {
+                    spacing: 4px;
+
+                    // Weekday headers
+                    HorizontalLayout {
+                        spacing: 4px;
+                        for day-name in ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] : Text {
+                            text: day-name;
+                            color: Palette.foreground;
+                            font-size: 14px;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                            width: 40px; // Approximate width for each day cell
+                        }
+                    }
+
+                    // Days of the month
+                    for row-index in 6 : HorizontalLayout {
+                        spacing: 4px;
+                        for col-index in 7 : Rectangle {
+                            property <int> i: row-index * 7 + col-index;
+                            property <int> day-number: i - root.first-day-of-month(root.current-date.year, root.current-date.month) + 1;
+                            property <bool> is-valid-day: day-number > 0 && day-number <= root.days-in-month(root.current-date.year, root.current-date.month);
+                            property <bool> is-selected: is-valid-day && day-number == root.selected-day;
+                            property <bool> is-today: is-valid-day && day-number == 12 && root.current-date.month == 9 && root.current-date.year == 2025; // Hardcoded for now
+
+                            background: is-selected ? Palette.accent-background : (is-today ? Palette.border : Palette.control-background);
+                            border-radius: 4px;
+                            width: 40px;
+                            height: 40px;
+
+                            TouchArea {
+                                clicked => {
+                                    if (parent.is-valid-day) {
+                                        root.selected-day = parent.day-number;
+                                        root.current-date.day = parent.day-number;
+                                    }
+                                }
+                            }
+
+                            Text {
+                                text: is-valid-day ? "\{day-number}" : "";
+                                color: is-selected ? Palette.accent-foreground : Palette.foreground;
+                                font-size: 14px;
+                                horizontal-alignment: center;
+                                vertical-alignment: center;
+                            }
+                        }
+                    }
+                }
+
+                // Action Buttons
+                HorizontalLayout {
+                    spacing: 10px;
+                    alignment: center;
+
+                    Button {
+                        text: "Cancel";
+                        clicked => { root.canceled(); }
+                    }
+
+                    Button {
+                        text: "OK";
+                        clicked => { root.accepted(root.current-date); }
+                    }
+                }
+            }
+        }
     }
 }
