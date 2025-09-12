@@ -88,21 +88,16 @@ export component DatePicker inherits Window {
     // Helper function to get the day of the week for the first day of the month
     // Returns 0 for Sunday, 1 for Monday, ..., 6 for Saturday
     function first-day-of-month(year: int, month: int) -> int {
-        // Zeller's congruence algorithm
-        // Adjust month and year for January and February
-        let adjusted_month = month <= 2 ? month + 12 : month;
-        let adjusted_year = month <= 2 ? year - 1 : year;
+        let q = 1; // First day of the month
 
-        let k = Math.mod(adjusted_year, 100); // Year of the century
-        let j = adjusted_year / 100; // Century
+        let m_val = month <= 2 ? month + 12 : month;
+        let y_val = month <= 2 ? year - 1 : year;
 
-        // Zeller's congruence formula
-        // h = (q + floor(13*(m+1)/5) + k + floor(k/4) + floor(j/4) + 5*j) mod 7
-        // q is the day of the month (1 for the first day)
-        // For the first day of the month, q = 1
-        let h = Math.mod((1 + (13 * (adjusted_month + 1)) / 5 + k + k / 4 + j / 4 + 5 * j), 7);
+        // Zeller's congruence (simplified form / Gauss's algorithm variant)
+        // h = (q + floor(13*(m_val+1)/5) + y_val + floor(y_val/4) - floor(y_val/100) + floor(y_val/400)) mod 7
+        let h = Math.mod((q + (13 * (m_val + 1)) / 5 + y_val + y_val / 4 - y_val / 100 + y_val / 400), 7);
 
-        // Adjust result to be 0 for Sunday, 1 for Monday, etc.
+        // Adjust result to be 0 for Sunday, 1 for Monday, ..., 6 for Saturday
         // Zeller's congruence returns 0 for Saturday, 1 for Sunday, ..., 6 for Friday
         // So, (h + 6) % 7 will map Saturday (0) to 6, Sunday (1) to 0, etc.
         return Math.mod((h + 6), 7);
