@@ -58,7 +58,7 @@ export component DatePicker inherits Window {
 
     in-out property <Date> date <=> current-date;
 
-    property <Date> current-date: { year: 2025, month: 9, day: 12 };
+    property <Date> current-date;
     property <int> selected-day: current-date.day;
 
     property <brush> state: #000000;
@@ -68,6 +68,8 @@ export component DatePicker inherits Window {
     callback accepted(date: Date);
 
     in property <float> master-scale: 0.623;
+
+    in property <Date> today-date;
 
     function days-in-month(year: int, month: int) -> int {
         if month == 2 {
@@ -210,7 +212,7 @@ export component DatePicker inherits Window {
                             property <int> day-number: i - root.first-day-of-month(root.current-date.year, root.current-date.month) + 1;
                             property <bool> is-valid-day: day-number > 0 && day-number <= root.days-in-month(root.current-date.year, root.current-date.month);
                             property <bool> is-selected: is-valid-day && day-number == root.selected-day;
-                            property <bool> is-today: is-valid-day && day-number == 12 && root.current-date.month == 9 && root.current-date.year == 2025;
+                            property <bool> is-today: is-valid-day && day-number == root.today-date.day && root.current-date.month == root.today-date.month && root.current-date.year == root.today-date.year;
 
                             background: is-selected ? Palette.accent-background : (is-today ? Palette.border : Palette.control-background);
                             border-radius: 4px * root.master-scale;

@@ -7,6 +7,19 @@ slint::include_modules!();
 
 pub fn get_date_picker() -> DatePicker {
     let ui = DatePicker::new().unwrap();
+
+    // Create a sample date for demonstration
+    let current_date = Date {
+        year: 2025,
+        month: 9, // September
+        day: 12,
+    };
+
+    // Set the initial date for the DatePicker
+    ui.set_date(current_date.clone()); // Clone for the first use
+    // Set today's date for highlighting
+    ui.set_today_date(current_date);
+
     ui
 }
 
