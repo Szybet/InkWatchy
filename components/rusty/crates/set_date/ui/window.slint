@@ -2,8 +2,8 @@ import "./FiraSans-Medium.ttf";
 
 struct Date {
     year: int,
-    month: int, // 1-12
-    day: int,   // 1-31
+    month: int,
+    day: int,
 }
 
 enum ColorScheme {
@@ -12,8 +12,7 @@ enum ColorScheme {
 }
 
 global Palette {
-    // Basic Palette for styling, assuming dark mode for now
-    // These are properties of the global object, not fields of a struct
+    
     in property <ColorScheme> color-scheme: ColorScheme.dark;
     in property <brush> control-background: #ffffff;
     in property <brush> border: #ffffff;
@@ -33,7 +32,7 @@ component Button inherits Rectangle {
     height: 30px * root.scale;
     width: 80px * root.scale;
     border-radius: 5px * root.scale;
-    background: #ffffff; // Set background directly on the root Rectangle
+    background: #ffffff;
 
     Text {
         text: root.text;
@@ -59,7 +58,7 @@ export component DatePicker inherits Window {
 
     in-out property <Date> date <=> current-date;
 
-    property <Date> current-date: { year: 2025, month: 9, day: 12 }; // Default to today's date
+    property <Date> current-date: { year: 2025, month: 9, day: 12 };
     property <int> selected-day: current-date.day;
 
     property <brush> state: #000000;
@@ -70,11 +69,10 @@ export component DatePicker inherits Window {
 
     in property <float> master-scale: 0.623;
 
-    // Helper function to get the number of days in a month
     function days-in-month(year: int, month: int) -> int {
         if month == 2 {
             if (Math.mod(year, 4) == 0 && (Math.mod(year, 100) != 0 || Math.mod(year, 400) == 0)) {
-                return 29; // Leap year
+                return 29;
             } else {
                 return 28;
             }
@@ -85,8 +83,6 @@ export component DatePicker inherits Window {
         }
     }
 
-    // Helper function to get the day of the week for the first day of the month
-    // Returns 0 for Sunday, 1 for Monday, ..., 6 for Saturday
     function first-day-of-month(year: int, month: int) -> int {
         let q = 1; // First day of the month
 
@@ -154,7 +150,6 @@ export component DatePicker inherits Window {
             VerticalLayout {
                 padding: 8px * root.master-scale;
 
-                // Month and Year Navigation
                 HorizontalLayout {
                     spacing: 10px * root.master-scale;
                     alignment: center;
@@ -193,11 +188,9 @@ export component DatePicker inherits Window {
                     }
                 }
 
-                // Calendar Grid
                 VerticalLayout {
                     spacing: 4px * root.master-scale;
 
-                    // Weekday headers
                     HorizontalLayout {
                         spacing: 4px * root.master-scale;
                         for day-name in ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]: Text {
@@ -210,7 +203,6 @@ export component DatePicker inherits Window {
                         }
                     }
 
-                    // Days of the month
                     for row-index in 6: HorizontalLayout {
                         spacing: 4px * root.master-scale;
                         for col-index in 7: Rectangle {
@@ -218,11 +210,11 @@ export component DatePicker inherits Window {
                             property <int> day-number: i - root.first-day-of-month(root.current-date.year, root.current-date.month) + 1;
                             property <bool> is-valid-day: day-number > 0 && day-number <= root.days-in-month(root.current-date.year, root.current-date.month);
                             property <bool> is-selected: is-valid-day && day-number == root.selected-day;
-                            property <bool> is-today: is-valid-day && day-number == 12 && root.current-date.month == 9 && root.current-date.year == 2025; // Hardcoded for now
+                            property <bool> is-today: is-valid-day && day-number == 12 && root.current-date.month == 9 && root.current-date.year == 2025;
 
                             background: is-selected ? Palette.accent-background : (is-today ? Palette.border : Palette.control-background);
                             border-radius: 4px * root.master-scale;
-                            width: 40px * root.master-scale; // Approximate width for each day cell
+                            width: 40px * root.master-scale;
                             height: 40px * root.master-scale;
 
                             TouchArea {
