@@ -66,7 +66,7 @@ export component DatePicker inherits Window {
     callback canceled();
     callback accepted(date: Date);
 
-    in property <float> master-scale: 1.0;
+    in property <float> master-scale: 200.0 / 360.0;
 
     // Helper function to get the number of days in a month
     function days-in-month(year: int, month: int) -> int {
@@ -107,14 +107,14 @@ export component DatePicker inherits Window {
     }
 
     VerticalLayout {
-        // Removed width and height bindings to avoid binding loops
+        width: 100%;
+        height: 100%;
         my-key-handler := FocusScope { }
 
         Rectangle {
+            width: 100%;
+            height: 100%;
             background: Palette.control-background;
-            border-radius: 8px * root.master-scale;
-            // Removed width and height bindings to avoid binding loops
-            // It will naturally fill the parent (VerticalLayout) which fills the window
 
             VerticalLayout {
                 padding: 8px * root.master-scale;
