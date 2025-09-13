@@ -42,6 +42,7 @@ export component DatePicker inherits Window {
 
     property <Date> current-date;
     property <int> selected-day: current-date.day;
+    property <int> day-step: 1;
 
     property <brush> state: #000000;
     property <brush> state-secondary: #ffffff;
@@ -90,9 +91,9 @@ export component DatePicker inherits Window {
         return Math.mod((original_day_index - 1 + 7), 7); // 0=Mon, 1=Tue, ..., 6=Sun
     }
 
-        function calculate-new-date(current: Date, action: DateAction) -> Date {
+        function calculate-new-date(current: Date, action: DateAction, step: int) -> Date {
         if action == DateAction.AddDay {
-            let new-day = current.day + 1;
+            let new-day = current.day + step;
             if (new-day > root.days-in-month(current.year, current.month)) {
                 let new-month = current.month + 1;
                 if (new-month > 12) {
@@ -104,7 +105,7 @@ export component DatePicker inherits Window {
                 return { year: current.year, month: current.month, day: new-day };
             }
         } else if action == DateAction.SubtractDay {
-            let new-day = current.day - 1;
+            let new-day = current.day - step;
             if (new-day < 1) {
                 let new-month = current.month - 1;
                 if (new-month < 1) {
@@ -142,13 +143,19 @@ export component DatePicker inherits Window {
         my-key-handler := FocusScope {
             key-pressed(event) => {
                 if event.text == "w" {
-                    current-date = root.calculate-new-date(current-date, DateAction.AddDay);
+                    current-date = root.calculate-new-date(current-date, DateAction.AddDay, root.day-step);
                 } else if event.text == "s" {
-                    current-date = root.calculate-new-date(current-date, DateAction.SubtractDay);
+                    current-date = root.calculate-new-date(current-date, DateAction.SubtractDay, root.day-step);
                 } else if event.text == "q" {
-                    current-date = root.calculate-new-date(current-date, DateAction.AddMonth);
+                    current-date = root.calculate-new-date(current-date, DateAction.AddMonth, 1);
                 } else if event.text == "z" {
-                    current-date = root.calculate-new-date(current-date, DateAction.SubtractMonth);
+                    current-date = root.calculate-new-date(current-date, DateAction.SubtractMonth, 1);
+                } else if event.text == "a" {
+                    if (root.day-step == 1) {
+                        day-step = 5;
+                    } else {
+                        day-step = 1;
+                    }
                 }
                 return EventResult.accept;
             }
