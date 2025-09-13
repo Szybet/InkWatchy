@@ -23,32 +23,7 @@ global Palette {
     in property <brush> state-brush-secondary: #ffffff;
 }
 
-component Button inherits Rectangle {
-    in property <string> text;
-    in property <float> scale: 1.0;
-    property <brush> foreground: #000000;
-    callback clicked;
 
-    height: 30px * root.scale;
-    width: 80px * root.scale;
-    border-radius: 5px * root.scale;
-    background: #ffffff;
-
-    Text {
-        text: root.text;
-        color: root.foreground;
-        horizontal-alignment: center;
-        vertical-alignment: center;
-        width: parent.width;
-        height: parent.height;
-    }
-
-    TouchArea {
-        clicked => {
-            root.clicked();
-        }
-    }
-}
 
 export component DatePicker inherits Window {
     width: 200px;
@@ -184,11 +159,18 @@ export component DatePicker inherits Window {
                     spacing: 10px * root.master-scale;
                     alignment: center;
 
-                    Button {
-                        text: "<";
-                        scale: root.master-scale;
-                        clicked => {
-                            current-date = root.calculate-new-date(current-date, "subtract-month");
+                    Rectangle {
+                        width: 80px * root.master-scale;
+                        height: 30px * root.master-scale;
+                        border-radius: 5px * root.master-scale;
+                        background: #ffffff;
+                        Text {
+                            text: "<";
+                            color: #000000;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                            width: parent.width;
+                            height: parent.height;
                         }
                     }
 
@@ -201,11 +183,18 @@ export component DatePicker inherits Window {
                         width: 100px * root.master-scale;
                     }
 
-                    Button {
-                        text: ">";
-                        scale: root.master-scale;
-                        clicked => {
-                            current-date = root.calculate-new-date(current-date, "add-month");
+                    Rectangle {
+                        width: 80px * root.master-scale;
+                        height: 30px * root.master-scale;
+                        border-radius: 5px * root.master-scale;
+                        background: #ffffff;
+                        Text {
+                            text: ">";
+                            color: #000000;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                            width: parent.width;
+                            height: parent.height;
                         }
                     }
                 }
@@ -238,15 +227,6 @@ export component DatePicker inherits Window {
                             border-radius: 4px * root.master-scale;
                             width: 40px * root.master-scale;
                             height: 40px * root.master-scale;
-
-                            TouchArea {
-                                clicked => {
-                                    if (parent.is-valid-day) {
-                                        root.selected-day = parent.day-number;
-                                        root.current-date.day = parent.day-number;
-                                    }
-                                }
-                            }
 
                             Text {
                                 text: is-valid-day ? "\{day-number}" : "";
