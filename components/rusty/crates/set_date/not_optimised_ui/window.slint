@@ -49,7 +49,7 @@ export component DatePicker inherits Window {
     callback canceled();
     callback accepted(date: Date);
 
-    
+    in property <float> master-scale: 0.623;
 
     in property <Date> today-date;
 
@@ -160,16 +160,16 @@ export component DatePicker inherits Window {
             background: Palette.control-background;
 
             VerticalLayout {
-                padding: 5px;
+                padding: 8px * root.master-scale;
 
                 HorizontalLayout {
-                    spacing: 6px;
+                    spacing: 10px * root.master-scale;
                     alignment: center;
 
                     Rectangle {
-                        width: 50px;
-                        height: 19px;
-                        border-radius: 3px;
+                        width: 80px * root.master-scale;
+                        height: 30px * root.master-scale;
+                        border-radius: 5px * root.master-scale;
                         background: #ffffff;
                         Text {
                             text: "<";
@@ -183,17 +183,17 @@ export component DatePicker inherits Window {
 
                     Text {
                         text: "\{current-date.month}/\{current-date.year}";
-                        font-size: 12px;
+                        font-size: 20px * root.master-scale;
                         color: Palette.foreground;
                         horizontal-alignment: center;
                         vertical-alignment: center;
-                        width: 62px;
+                        width: 100px * root.master-scale;
                     }
 
                     Rectangle {
-                        width: 50px;
-                        height: 19px;
-                        border-radius: 3px;
+                        width: 80px * root.master-scale;
+                        height: 30px * root.master-scale;
+                        border-radius: 5px * root.master-scale;
                         background: #ffffff;
                         Text {
                             text: ">";
@@ -207,22 +207,22 @@ export component DatePicker inherits Window {
                 }
 
                 VerticalLayout {
-                    spacing: 2px;
+                    spacing: 4px * root.master-scale;
 
                     HorizontalLayout {
-                        spacing: 2px;
+                        spacing: 4px * root.master-scale;
                         for day-name in ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]: Text {
                             text: day-name;
                             color: Palette.foreground;
-                            font-size: 13px;
+                            font-size: 21px * root.master-scale;
                             horizontal-alignment: center;
                             vertical-alignment: center;
-                            width: 25px; // Approximate width for each day cell
+                            width: 40px * root.master-scale; // Approximate width for each day cell
                         }
                     }
 
                     for row-index in 6: HorizontalLayout {
-                        spacing: 2px;
+                        spacing: 4px * root.master-scale;
                         for col-index in 7: Rectangle {
                             property <int> i: row-index * 7 + col-index;
                             property <int> day-number: i - root.current-month-first-day + 1;
@@ -231,14 +231,14 @@ export component DatePicker inherits Window {
                             property <bool> is-today: is-valid-day && day-number == root.today-date.day && root.current-date.month == root.today-date.month && root.current-date.year == root.today-date.year;
 
                             background: is-selected ? Palette.accent-background : (is-today ? Palette.border : Palette.control-background);
-                            border-radius: 2px;
-                            width: 25px;
-                            height: 25px;
+                            border-radius: 4px * root.master-scale;
+                            width: 40px * root.master-scale;
+                            height: 40px * root.master-scale;
 
                             Text {
                                 text: is-valid-day ? "\{day-number}" : "";
                                 color: is-selected ? Palette.accent-foreground : Palette.foreground;
-                                font-size: 24px;
+                                font-size: 38px * root.master-scale;
                                 horizontal-alignment: center;
                                 vertical-alignment: center;
                             }
