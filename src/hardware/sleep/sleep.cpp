@@ -269,6 +269,8 @@ void manageSleep()
             }
 #endif
 
+// below v2 interrupts don't work, so without that
+#if ATCHY_VER != WATCHY_1 && ATCHY_VER != WATCHY_1_5
             // Is button task running?
             if (buttonsActivated == true)
             {
@@ -280,6 +282,7 @@ void manageSleep()
                     return;
                 }
             }
+#endif
 
 #if RGB_DIODE
             rgbTaskMutex.lock();

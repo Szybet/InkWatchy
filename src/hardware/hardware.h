@@ -28,9 +28,9 @@ void setSleepDelay(int addMs);
 
 typedef enum
 {
-    minimalSpeed,
-    normalSpeed,
-    maxSpeed,
+    minimalSpeed = 0,
+    normalSpeed = 1,
+    maxSpeed = 2,
 } cpuSpeed;
 
 extern cpuSpeed savedCpuSpeed;

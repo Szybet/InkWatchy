@@ -1,7 +1,9 @@
 #[cfg(feature = "debug")]
 use core::ffi::c_char;
-use core::ffi::c_int;
+#[cfg(feature = "debug")]
+use alloc::format;
 
+use core::ffi::c_int;
 use crate::info;
 
 #[cfg(feature = "debug")]
@@ -63,7 +65,7 @@ pub fn get_buttons() -> RustButton {
     }
 }
 
-#[derive(PartialEq)]
+#[derive(PartialEq, Debug)]
 pub enum CpuSpeed {
     Min,
     Normal,
@@ -81,6 +83,7 @@ impl CpuSpeed {
 }
 
 pub fn set_cpu_speed(speed: &CpuSpeed) {
+    info!(&format!("Rust setting cpu speed to: {:?}", speed));
     unsafe {
         rustSetCpuSpeed(speed.speed_to_int());
     }
@@ -93,7 +96,7 @@ pub fn get_cpu_speed() -> CpuSpeed {
         1 => CpuSpeed::Normal,
         2 => CpuSpeed::Max,
         _ => {
-            info!(&alloc::format!("Unknown cpu speed: {}", speed));
+            info!(&format!("Unknown cpu speed: {}", speed));
             panic!("Unknown cpu speed");
         }
     }

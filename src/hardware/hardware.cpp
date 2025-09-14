@@ -193,6 +193,7 @@ String resetReasonToString(esp_reset_reason_t reason)
 cpuSpeed savedCpuSpeed = minimalSpeed;
 void setCpuSpeed(cpuSpeed speed)
 {
+    debugLog("Setting cpu speed to index: " + String(speed));
     if (getCpuSpeed() == speed)
     {
         return;
@@ -224,17 +225,17 @@ cpuSpeed getCpuSpeed()
     debugLog("cpu Mhz bare: " + String(cpuMhz));
     switch (cpuMhz)
     {
-    case 80:
+    case CPU_MINIMAL_SPEED:
     {
         savedCpuSpeed = minimalSpeed;
         return minimalSpeed;
     }
-    case 160:
+    case CPU_NORMAL_SPEED:
     {
         savedCpuSpeed = normalSpeed;
         return normalSpeed;
     }
-    case 240:
+    case CPU_FAST_SPEED:
     {
         savedCpuSpeed = maxSpeed;
         return maxSpeed;
