@@ -163,6 +163,14 @@ void loopManager()
 #endif
         break;
     }
+    case setTimezoneWatchPlace:
+    {
+#if SET_TIME_GUI
+        managerLaunchFunc(setTimezoneWatchPlace, initSetTimezoneWatch, loopSetTimezoneWatch, exitSetTimezoneWatch);
+#endif
+        break;
+    }
+
     case generalDebug:
     {
 #if DEBUG_MENUS
@@ -272,11 +280,6 @@ void loopManager()
     case setTimePlace:
     {
         managerLaunchFunc(setTimePlace, initSetTime, loopSetTime, exitSetTime);
-        break;
-    }
-    case setDatePlace:
-    {
-        managerLaunchFunc(setDatePlace, initSetDate, loopSetDate, exitSetDate);
         break;
     }
     case alarmEditDays:
