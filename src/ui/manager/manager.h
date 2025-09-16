@@ -29,7 +29,6 @@ typedef enum
     alarmQuick,
     alarmSetChooser,
     setTimePlace,
-    setDatePlace,
     alarmEditDays,
     pomodoroMenu,
     powerMenu,
@@ -57,7 +56,8 @@ typedef enum
     fontPreview,
     fontPreviewMenu,
     watchfaceSelector,
-    setTimeWatchPlace, // manual set watch time
+    setTimeWatchPlace,     // manual set watch time
+    setTimezoneWatchPlace, // manual set watch tmz
     // General places now:
     inputPinPlace,
     generalMenuPlace,
@@ -130,7 +130,6 @@ void switchAlarmQuick();
 void switchPomodoroMenu();
 #endif
 void switchSetTime();
-void switchSetDate();
 void switchPowerMenu();
 void switchWatchfaceSelectorMenu();
 
@@ -175,4 +174,5 @@ void switchFontsPreview();
 void showTextDialog(String str, bool center, String title = "");
 #if SET_TIME_GUI
 void switchSetTimeWatch();
+void switchSetTimezoneWatch();
 #endif
