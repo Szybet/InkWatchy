@@ -83,14 +83,44 @@ get_pio_env() {
     return
 }
 
+# Old
+# output=$("$esptool_path" flash_id 2>&1)
+# last_port=$(echo "$output" | grep "Serial port" | awk '{print $3}' | tail -n 1)
+# echo -n "$last_port"
 extract_serial_port() {
-  local esptool_path=$1
-  local output
-  local last_port
+    local esptool_path=$1
+    local port
 
-  output=$("$esptool_path" flash_id 2>&1)
-  last_port=$(echo "$output" | grep "Serial port" | awk '{print $3}' | tail -n 1)
-  echo -n "$last_port"
+    if [[ -f /tmp/inkwatchy_port ]]; then
+        port=$(tr -d '\n' < /tmp/inkwatchy_port)
+        if "$esptool_path" --port "$port" chip_id >&2; then
+            echo -n "$port"
+            return
+        else
+            rm -f /tmp/inkwatchy_port
+        fi
+    fi
+
+    local ports=(/dev/ttyUSB* /dev/ttyACM*)
+    local choices=()
+    for p in "${ports[@]}"; do [[ -e $p ]] && choices+=("$p" ""); done
+    if [[ ${#choices[@]} -eq 0 ]]; then
+        echo "No serial ports found" >&2
+        exit 1
+    fi
+
+    local cmd=(dialog --clear --menu "Select serial port" 15 50 5)
+    port=$("${cmd[@]}" "${choices[@]}" 2>&1 >/dev/tty)
+
+    echo "Checking the selected port if it's valid" >&2
+    if "$esptool_path" --port "$port" chip_id >&2; then
+        echo -n "$port" > /tmp/inkwatchy_port
+        echo -n "$port"
+    else
+        echo "Selected port failed esptool check" >&2
+        rm -f /tmp/inkwatchy_port
+        exit 1
+    fi
 }
 
 extract_monitor_speed() {

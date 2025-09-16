@@ -3,7 +3,12 @@ import os
 import sys
 Import("env")
 
-#print(env.Dump())
+# print(env.Dump())
+
+port = env.get("UPLOAD_PORT")
+if port:
+    with open("/tmp/inkwatchy_port", "w") as f:
+        f.write(port)
 
 pio_env = env.get('PIOENV', '')
 print("Current pio env: " + str(pio_env))

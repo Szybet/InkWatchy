@@ -26,4 +26,10 @@ source .root/.platformio/packages/framework-espidf/export.sh
 
 pio_env=$(get_pio_env ../../../../.vscode/launch.json)
 
-PYTHONPATH=~/.espressif/python_env/idf5.4_py3.12_env/lib/python3.12/site-packages:$PYTHONPATH ~/.espressif/python_env/idf5.4_py3.12_env/bin/esp-coredump info_corefile .pio/build/$pio_env/firmware.elf
+serial_port=$(extract_serial_port "resources/tools/other/in/esptool")
+if [[ $? -ne 0 || -z "$serial_port" ]]; then
+    echo "Failed to detect a valid serial port" >&2
+    exit 1
+fi
+
+PYTHONPATH=~/.espressif/python_env/idf5.4_py3.12_env/lib/python3.12/site-packages:$PYTHONPATH ~/.espressif/python_env/idf5.4_py3.12_env/bin/esp-coredump --port $serial_port info_corefile .pio/build/$pio_env/firmware.elf

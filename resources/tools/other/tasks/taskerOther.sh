@@ -2,7 +2,7 @@
 
 source resources/tools/globalFunctions.sh
 
-OPTIONS=("1" "Patch wifi" 
+OPTIONS=("1" "Reset choosed serial port" 
          "2" "Create demo image"
          "3" "Launch watchy-scom"
          "4" "Compile, Upload, Scom"
@@ -25,9 +25,11 @@ CHOICE=$(dialog --clear \
                 2>&1 >/dev/tty)
 
 clear
+
+# cd resources/tools/other/wifiTool/ && ./patch.sh
 case $CHOICE in
     1)
-        cd resources/tools/other/wifiTool/ && ./patch.sh
+        rm -rf /tmp/inkwatchy_port
         ;;
     2)
         dialog --yesno "Do you want to clean and regenerate config?" 7 50
@@ -76,21 +78,29 @@ case $CHOICE in
         ;;
     3)
         baudrate=$(extract_monitor_speed platformio.ini)
-        device=$(extract_serial_port resources/tools/other/in/esptool)
+        serial_port=$(extract_serial_port "../in/esptool")
+        if [[ $? -ne 0 || -z "$serial_port" ]]; then
+            echo "Failed to detect a valid serial port" >&2
+            exit 1
+        fi
         cd src/other/scomTask/watchy-scom/
         ./generate_symlinks.sh
         cd watchy-scom/
-        cargo run --release -- -b $baudrate -p $device
+        cargo run --release -- -b $baudrate -p $serial_port
         ;;
     4)
         baudrate=$(extract_monitor_speed platformio.ini)
-        device=$(extract_serial_port resources/tools/other/in/esptool)
+        serial_port=$(extract_serial_port "../in/esptool")
+        if [[ $? -ne 0 || -z "$serial_port" ]]; then
+            echo "Failed to detect a valid serial port" >&2
+            exit 1
+        fi
         pio_env=$(get_pio_env .vscode/launch.json)
-        pio run -e $pio_env -t upload --upload-port $device
+        pio run -e $pio_env -t upload --upload-port $serial_port
         cd src/other/scomTask/watchy-scom/
         ./generate_symlinks.sh
         cd watchy-scom/
-        cargo run --release -- -b $baudrate -p $device
+        cargo run --release -- -b $baudrate -p $serial_port
         ;;
     5)
         resources/tools/other/calendar/getEvents.sh
