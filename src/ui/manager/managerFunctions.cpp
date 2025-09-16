@@ -181,6 +181,13 @@ void initSettingsMenu()
     }
 #endif
 
+#if SET_TIME_GUI
+    {
+        count = count + 1;
+        buttons[count] = {"Set Timezone", getImg("setTimeGui/setTimeClock"), switchSetTimezoneWatch};
+    }
+#endif
+
     count = count + 1;
     initMenu(buttons, count, MENU_SETTINGS, 1);
 }
