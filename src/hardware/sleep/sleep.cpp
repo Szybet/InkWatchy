@@ -269,14 +269,38 @@ void manageSleep()
             }
 #endif
 
+// below v2 interrupts don't work, so without that
+#if ATCHY_VER != WATCHY_1 && ATCHY_VER != WATCHY_1_5
+            // Is button task running?
+            if (buttonsActivated == true)
+            {
+                eTaskState taskState = eTaskGetState(buttonTask);
+                if (taskState != eSuspended)
+                {
+                    debugLog("Button task is running, delaying sleep");
+                    setSleepDelay(sleepDelayMs + 1000);
+                    return;
+                }
+            }
+#endif
+
 #if RGB_DIODE
             rgbTaskMutex.lock();
-            if (rgbTaskRunning == true || currentColor != IwNone)
+            bool tryLockStatus = currentColorMutex.try_lock();
+            if (rgbTaskRunning == true || tryLockStatus == false || currentColor != IwNone)
             {
-                debugLog("Rgb task running or rgb diode not turned off, delaying");
+                if (tryLockStatus == true)
+                {
+                    currentColorMutex.unlock();
+                }
+                debugLog("Rgb task running or rgb diode not turned off, delaying sleep");
                 rgbTaskMutex.unlock();
                 setSleepDelay(1000);
                 return;
+            }
+            if (tryLockStatus == true)
+            {
+                currentColorMutex.unlock();
             }
             rgbTaskMutex.unlock();
 #endif

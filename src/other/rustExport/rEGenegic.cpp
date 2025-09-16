@@ -90,17 +90,20 @@ extern "C"
 
     extern void rustSetCpuSpeed(int speed)
     {
-        if (cpuSpeed::minimalSpeed == 0)
+        if (cpuSpeed::minimalSpeed == speed)
         {
             setCpuSpeed(cpuSpeed::minimalSpeed);
+            return;
         }
-        if (cpuSpeed::normalSpeed == 1)
+        if (cpuSpeed::normalSpeed == speed)
         {
             setCpuSpeed(cpuSpeed::normalSpeed);
+            return;
         }
-        if (cpuSpeed::maxSpeed == 2)
+        if (cpuSpeed::maxSpeed == speed)
         {
             setCpuSpeed(cpuSpeed::maxSpeed);
+            return;
         }
     }
 

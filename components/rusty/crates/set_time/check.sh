@@ -1,0 +1,1 @@
+SLINT_BACKEND=winit-software cargo check --tests

@@ -1,0 +1,251 @@
+import "./FiraSans-Medium.ttf";
+
+struct Date {
+    year: int,
+    month: int,
+    day: int,
+}
+
+enum DateAction {
+    AddDay,
+    SubtractDay,
+    AddMonth,
+    SubtractMonth,
+}
+
+enum ColorScheme {
+    dark,
+    light,
+}
+
+global Palette {
+    
+    in property <ColorScheme> color-scheme: ColorScheme.dark;
+    in property <brush> control-background: #ffffff;
+    in property <brush> border: #ffffff;
+    in property <brush> accent-background: #000000;
+    in property <brush> accent-foreground: #ffffff;
+    in property <brush> foreground: #000000;
+    in property <brush> state-brush: #000000;
+    in property <brush> state-brush-secondary: #ffffff;
+}
+
+
+
+export component DatePicker inherits Window {
+    width: 200px;
+    height: 200px;
+    default-font-family: "Fira Sans";
+    forward-focus: my-key-handler;
+
+    in-out property <Date> date <=> current-date;
+
+    property <Date> current-date;
+    property <int> selected-day: current-date.day;
+
+    property <brush> state: #000000;
+    property <brush> state-secondary: #ffffff;
+
+    callback canceled();
+    callback accepted(date: Date);
+
+    in property <float> master-scale: 0.623;
+
+    in property <Date> today-date;
+
+    // Optimized properties for date calculations
+    property <int> current-month-days: root.days-in-month(current-date.year, current-date.month);
+    property <int> current-month-first-day: root.first-day-of-month(current-date.year, current-date.month);
+
+    // Moved functions to be static or helper functions if possible, or kept as is if Slint requires them as methods.
+    // For now, keeping them as functions but their results are cached in properties above.
+    function days-in-month(year: int, month: int) -> int {
+        if month == 2 {
+            if (Math.mod(year, 4) == 0 && (Math.mod(year, 100) != 0 || Math.mod(year, 400) == 0)) {
+                return 29;
+            } else {
+                return 28;
+            }
+        } else if month == 4 || month == 6 || month == 9 || month == 11 {
+            return 30;
+        } else {
+            return 31;
+        }
+    }
+
+    function first-day-of-month(year: int, month: int) -> int {
+        let q = 1; // First day of the month
+
+        let m_val = month <= 2 ? month + 12 : month;
+        let y_val = month <= 2 ? year - 1 : year;
+
+        // Zeller's congruence (simplified form / Gauss's algorithm variant)
+        // h = (q + floor(13*(m_val+1)/5) + y_val + floor(y_val/4) - floor(y_val/100) + floor(y_val/400)) mod 7
+        let h = Math.mod((q + (13 * (m_val + 1)) / 5 + y_val + y_val / 4 - y_val / 100 + y_val / 400), 7);
+
+        // Adjust result to be 0 for Sunday, 1 for Monday, ..., 6 for Saturday
+        // Zeller's congruence returns 0 for Saturday, 1 for Sunday, ..., 6 for Friday
+        // So, (h + 6) % 7 will map Saturday (0) to 6, Sunday (1) to 0, etc.
+        let original_day_index = Math.mod((h + 6), 7); // 0=Sun, 1=Mon, ..., 6=Sat
+        return Math.mod((original_day_index - 1 + 7), 7); // 0=Mon, 1=Tue, ..., 6=Sun
+    }
+
+        function calculate-new-date(current: Date, action: DateAction) -> Date {
+        if action == DateAction.AddDay {
+            let new-day = current.day + 1;
+            if (new-day > root.days-in-month(current.year, current.month)) {
+                let new-month = current.month + 1;
+                if (new-month > 12) {
+                    return { year: current.year + 1, month: 1, day: 1 };
+                } else {
+                    return { year: current.year, month: new-month, day: 1 };
+                }
+            } else {
+                return { year: current.year, month: current.month, day: new-day };
+            }
+        } else if action == DateAction.SubtractDay {
+            let new-day = current.day - 1;
+            if (new-day < 1) {
+                let new-month = current.month - 1;
+                if (new-month < 1) {
+                    let new-year = current.year - 1;
+                    let days = root.days-in-month(new-year, 12);
+                    return { year: new-year, month: 12, day: days };
+                } else {
+                    let days = root.days-in-month(current.year, new-month);
+                    return { year: current.year, month: new-month, day: days };
+                }
+            } else {
+                return { year: current.year, month: current.month, day: new-day };
+            }
+        } else if action == DateAction.AddMonth {
+            let new-month = current.month + 1;
+            if (new-month > 12) {
+                return { year: current.year + 1, month: 1, day: current.day };
+            } else {
+                return { year: current.year, month: new-month, day: current.day };
+            }
+        } else if action == DateAction.SubtractMonth {
+            let new-month = current.month - 1;
+            if (new-month < 1) {
+                return { year: current.year - 1, month: 12, day: current.day };
+            } else {
+                return { year: current.year, month: new-month, day: current.day };
+            }
+        }
+        return current; // Should not happen
+    }
+
+    VerticalLayout {
+        width: root.width;
+        height: root.height;
+        my-key-handler := FocusScope {
+            key-pressed(event) => {
+                if event.text == "w" {
+                    current-date = root.calculate-new-date(current-date, DateAction.AddDay);
+                } else if event.text == "s" {
+                    current-date = root.calculate-new-date(current-date, DateAction.SubtractDay);
+                } else if event.text == "q" {
+                    current-date = root.calculate-new-date(current-date, DateAction.AddMonth);
+                } else if event.text == "z" {
+                    current-date = root.calculate-new-date(current-date, DateAction.SubtractMonth);
+                }
+                return EventResult.accept;
+            }
+        }
+
+        Rectangle {
+            width: root.width;
+            height: root.height;
+            background: Palette.control-background;
+
+            VerticalLayout {
+                padding: 8px * root.master-scale;
+
+                HorizontalLayout {
+                    spacing: 10px * root.master-scale;
+                    alignment: center;
+
+                    Rectangle {
+                        width: 80px * root.master-scale;
+                        height: 30px * root.master-scale;
+                        border-radius: 5px * root.master-scale;
+                        background: #ffffff;
+                        Text {
+                            text: "<";
+                            color: #000000;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                            width: parent.width;
+                            height: parent.height;
+                        }
+                    }
+
+                    Text {
+                        text: "\{current-date.month}/\{current-date.year}";
+                        font-size: 20px * root.master-scale;
+                        color: Palette.foreground;
+                        horizontal-alignment: center;
+                        vertical-alignment: center;
+                        width: 100px * root.master-scale;
+                    }
+
+                    Rectangle {
+                        width: 80px * root.master-scale;
+                        height: 30px * root.master-scale;
+                        border-radius: 5px * root.master-scale;
+                        background: #ffffff;
+                        Text {
+                            text: ">";
+                            color: #000000;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                            width: parent.width;
+                            height: parent.height;
+                        }
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 4px * root.master-scale;
+
+                    HorizontalLayout {
+                        spacing: 4px * root.master-scale;
+                        for day-name in ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]: Text {
+                            text: day-name;
+                            color: Palette.foreground;
+                            font-size: 21px * root.master-scale;
+                            horizontal-alignment: center;
+                            vertical-alignment: center;
+                            width: 40px * root.master-scale; // Approximate width for each day cell
+                        }
+                    }
+
+                    for row-index in 6: HorizontalLayout {
+                        spacing: 4px * root.master-scale;
+                        for col-index in 7: Rectangle {
+                            property <int> i: row-index * 7 + col-index;
+                            property <int> day-number: i - root.current-month-first-day + 1;
+                            property <bool> is-valid-day: day-number > 0 && day-number <= root.current-month-days;
+                            property <bool> is-selected: is-valid-day && day-number == root.selected-day;
+                            property <bool> is-today: is-valid-day && day-number == root.today-date.day && root.current-date.month == root.today-date.month && root.current-date.year == root.today-date.year;
+
+                            background: is-selected ? Palette.accent-background : (is-today ? Palette.border : Palette.control-background);
+                            border-radius: 4px * root.master-scale;
+                            width: 40px * root.master-scale;
+                            height: 40px * root.master-scale;
+
+                            Text {
+                                text: is-valid-day ? "\{day-number}" : "";
+                                color: is-selected ? Palette.accent-foreground : Palette.foreground;
+                                font-size: 38px * root.master-scale;
+                                horizontal-alignment: center;
+                                vertical-alignment: center;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

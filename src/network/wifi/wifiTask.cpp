@@ -40,6 +40,29 @@ void createWifiTask(uint8_t tries, void (*functionToRunAfterConnection)(), uint8
     }
 }
 
+#if EXTREME_HARDWARE_POWER_SAVINGS
+void wifiPowerSaving()
+{
+    debugLog("Setting EXTREME power saving for wifi");
+    if(getCpuSpeed() != minimalSpeed) {
+        setCpuSpeed(minimalSpeed);
+    }
+    WiFi.setSleep(WIFI_PS_MAX_MODEM);
+    WiFi.setTxPower(WIFI_POWER_2dBm);
+}
+#elif HARDWARE_POWER_SAVINGS
+void wifiPowerSaving()
+{
+    debugLog("Setting power saving for wifi");
+    WiFi.setSleep(WIFI_PS_MAX_MODEM);
+}
+#else
+void wifiPowerSaving()
+{
+    debugLog("Not applying any power saving for wifi");
+}
+#endif
+
 void tryToConnectWifi()
 {
     debugLog("sizeof(wifiCredStatic): " + String(SIZE_WIFI_CRED_STAT));
@@ -60,6 +83,8 @@ void tryToConnectWifi()
 
         setWifiCountryCode();
         WiFi.begin(wifiCredStatic[i]->ssid, wifiCredStatic[i]->password);
+        wifiPowerSaving();
+
         setWifiCountryCode();
 
         for (int i = 0; i < WIFI_SYNC_TIME / 1000; i++)
@@ -90,22 +115,20 @@ void turnOnWifiTask(void *parameter)
     for (int i = 0; i < wifiConnectionTries; i++)
     {
         debugLog("Running wifi loop: " + String(i));
-// debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
-#if HARDWARE_POWER_SAVINGS
-        WiFi.setSleep(WIFI_PS_MAX_MODEM);
-        debugLog("Setting sleep mode for wifi");
-#endif
-        // We don't have NVS anymore
+        // debugLog("isWifiTaskRunning: " + BOOL_STR(isWifiTaskCheck()));
+
         // esp_wifi_set_storage(WIFI_STORAGE_RAM);
         // WiFi.persistent(false);
         // Won't work, fuck IDF for forcing that. We need a NVS partition
         // https://docs.espressif.com/projects/esp-idf/en/stable/esp32/api-guides/partition-tables.html
         // 0x3000 bytes we need
+        wifiPowerSaving();
         softStartDelay();
         setWifiCountryCode();
         WiFi.mode(WIFI_STA);
         setWifiCountryCode();
         softStartDelay();
+        wifiPowerSaving();
 
         debugLog("Wifi sleep mode: " + String(WiFi.getSleep()));
 
@@ -186,7 +209,9 @@ void turnOffWifi()
             {
                 vTaskDelete(wifiTask);
                 wifiTask = NULL;
-            } else {
+            }
+            else
+            {
                 debugLog("Wifi task not running but bool running? Bad");
             }
             isWifiTaskRunning = false;

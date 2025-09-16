@@ -149,6 +149,7 @@ extern uint16_t SCWhite;
 #include "../ui/reUse/menu/menu.h"
 #include "../ui/reUse/chart/chart.h"
 #include "../ui/reUse/setTime/setTime.h"
+#include "../ui/reUse/setDate/setDate.h"
 #include "../ui/manager/manager.h"
 #include "../ui/watchface/watchFaceLogic.h"
 #include "../ui/watchface/watchfaceManagers/wManageOne.h"
@@ -258,6 +259,7 @@ extern uint16_t SCWhite;
 #include "../ui/places/errorScreen/errorScreen.h"
 #if SET_TIME_GUI
 #include "../ui/places/setTimeWatch/setTimeWatch.h"
+#include "../ui/places/setTimeWatch/setTimezoneWatch.h"
 #endif
 
 // Other

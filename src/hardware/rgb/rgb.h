@@ -4,6 +4,7 @@
 
 extern bool rgbTaskRunning;
 extern std::mutex rgbTaskMutex;
+extern std::mutex currentColorMutex;
 
 typedef enum
 {

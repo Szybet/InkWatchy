@@ -9,16 +9,23 @@ crate-type = ["staticlib"]
 [dependencies]
 mallocator = "0.1.0"
 embedded-graphics-core = "0.4.0"
-slint = { version = "1.8.0", default-features = false, features = ["compat-1-2", "renderer-software", "libm", "unsafe-single-threaded"] }
+slint = { version = "=1.13.0", default-features = false, features = [
+    "compat-1-2",
+    "renderer-software",
+    "libm",
+    "unsafe-single-threaded",
+] }
 snake_lib = { git = "https://github.com/Szybet/snake-slint.git", package = "snake_lib" }
-general_page = {path = "../crates/general_page" }
+general_page = { path = "../crates/general_page" }
+set_time = { path = "../crates/set_time" }
+set_date = { path = "../crates/set_date" }
 
 [build-dependencies]
-slint-build = "1.8.0"
+slint-build = "1.13.0"
 
 [features]
 default = []
-none = [] # Placeholder for bash script
+none = []    # Placeholder for bash script
 debug = []
 snake = []
 

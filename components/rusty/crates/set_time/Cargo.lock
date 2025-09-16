@@ -1646,14 +1646,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "general_page"
-version = "0.1.0"
-dependencies = [
- "slint",
- "slint-build",
-]
-
-[[package]]
 name = "gethostname"
 version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3926,6 +3918,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bf41e0cfaf7226dca15e8197172c295a782857fcb97fad1808a166870dee75a3"
 dependencies = [
  "serde",
+]
+
+[[package]]
+name = "set_time"
+version = "0.1.0"
+dependencies = [
+ "slint",
+ "slint-build",
 ]
 
 [[package]]
