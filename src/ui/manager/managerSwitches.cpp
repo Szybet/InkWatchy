@@ -40,6 +40,13 @@ void switchSetTimeWatch()
 }
 #endif
 
+#if SET_TIME_GUI
+void switchSetTimezoneWatch()
+{
+    generalSwitch(setTimezoneWatchPlace);
+}
+#endif
+
 void switchGeneralDebug()
 {
     generalSwitch(generalDebug);
@@ -140,11 +147,6 @@ void switchPomodoroMenu()
 void switchSetTime()
 {
     generalSwitch(setTimePlace);
-}
-
-void switchSetDate()
-{
-    generalSwitch(setDatePlace);
 }
 
 void switchPowerMenu()
@@ -266,7 +268,6 @@ void switchBookSelector()
 {
     generalSwitch(bookSelector);
 }
-
 
 // call generalSwitch(textDialog); or overwriteSwitch(textDialog); before this
 void showTextDialog(String str, bool center, String title)
