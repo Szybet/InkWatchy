@@ -382,7 +382,7 @@ Template for versioning
 #else
 #define SET_TIME_GUI 0
 #endif
-#if SET_CLOCK_GUI && DISABLE_SET_TIMEZONE == 0
+#if SET_CLOCK_GUI
 #define SET_DATE_GUI 1
 #else
 #define SET_DATE_GUI 0

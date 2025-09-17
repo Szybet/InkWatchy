@@ -232,7 +232,6 @@ The default is this:
 
 // Menu to manually set time
 #define SET_CLOCK_GUI 1
-#define DISABLE_SET_TIMEZONE 0 // Forces disabling of set timezone. Usefull when timezone is set manually in config.h and a bit of flash storage needs to be saved (very little)
 
 // Watchface modules
 #define MODULE_PERSISTENT 1       // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space
