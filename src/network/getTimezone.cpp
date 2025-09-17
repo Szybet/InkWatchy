@@ -5,7 +5,7 @@
 void syncTimezone()
 {   
     // We could here also strlen(rM.posixTimeZone) == 0 but what if we move?
-    if (strlen(TIMEZONE_OLSON) == 0 && strlen(TIMEZONE_POSIX) == 0)
+    if (strlen(rM.posixTimeZone) == 0 && strlen(TIMEZONE_OLSON) == 0 && strlen(TIMEZONE_POSIX) == 0)
     {
         Olson2POSIX timezoneMagic;
 

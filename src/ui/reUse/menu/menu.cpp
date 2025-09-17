@@ -31,6 +31,13 @@ void resetPreviousItems()
 
 void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSize, int linesThick)
 {
+#if DEBUG
+  if (totalMenus > MAX_MENU_ITEMS)
+  {
+    debugLog("CRITICAL: too many menu items!");
+  }
+#endif
+
   // A lot of funny problems right here!
   // memcpy(data.entryList, entryList, sizeof(entryList[0]) * totalMenus);
   int realTotalMenus = 0;
@@ -148,7 +155,7 @@ void showMenu()
     // debugLog("Menu entry text is: " + data.entryList[i].text);
     String textToShow = data.entryList[i].text;
     // To show the cut off text fully when it's selected :D the value of 18 should be calculated somehow
-    ImageDef* img = data.entryList[i].image;
+    ImageDef *img = data.entryList[i].image;
 
     if (textToShow.length() > 18 && data.currentButton != i)
     {
@@ -191,7 +198,7 @@ void loopMenu()
     data.currentButton -= 1;
     checkMaxMin(&data.currentButton, data.totalMenus - 1);
     currentMenuItem = data.currentButton;
-    //debugLog("Updating currentMenuItem: " + String(currentMenuItem));
+    // debugLog("Updating currentMenuItem: " + String(currentMenuItem));
     showMenu();
     break;
   }
@@ -200,7 +207,7 @@ void loopMenu()
     data.currentButton += 1;
     checkMaxMin(&data.currentButton, data.totalMenus - 1);
     currentMenuItem = data.currentButton;
-    //debugLog("Updating currentMenuItem: " + String(currentMenuItem));
+    // debugLog("Updating currentMenuItem: " + String(currentMenuItem));
     showMenu();
     break;
   }

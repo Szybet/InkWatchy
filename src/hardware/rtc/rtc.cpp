@@ -178,7 +178,9 @@ void timeZoneApply()
     int64_t initialUnixTime = getUnixTime(timeRTCUTC0);
     // https://man7.org/linux/man-pages/man3/setenv.3.html
     const char *currentTZ = getenv("TZ");
-    bool isItSet = (currentTZ != nullptr && strcmp(currentTZ, rM.posixTimeZone) != 0);
+    debugLog("currentTZ: " + String(currentTZ));
+    bool isItSet = (currentTZ != nullptr && strcmp(currentTZ, rM.posixTimeZone) == 0);
+    debugLog("isItSet: " + BOOL_STR(isItSet));
     if (isItSet || setenv("TZ", rM.posixTimeZone, 1) == 0)
     {
       if (isItSet == false)
@@ -683,4 +685,17 @@ uint getCurrentSeconds()
   // debugLog("lastTimeReadSec: " + String(lastTimeReadSec));
   uint currentSeconds = (getLastTimeReadSec() + timeRTCLocal.Second) % 60;
   return currentSeconds;
+}
+
+// From gadgetbridge branch
+void setRTCTimeZoneByUtcOffset(int offset)
+{
+  // Flip the sign because that's how posix timezones are defined.
+  // Use GMT for now, which will create a static timezone,
+  // meaning we won't account for daylight saving time.
+  String tz = "GMT" + String(offset * -1);
+  debugLog("Setting timezone to: " + tz);
+  strncpy(rM.posixTimeZone, tz.c_str(), tz.length());
+  rM.posixTimeZone[tz.length()] = '\0';
+  readRTC();
 }

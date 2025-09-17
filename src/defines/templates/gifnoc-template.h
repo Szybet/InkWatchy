@@ -100,18 +100,22 @@ The default is this:
 #define BTN_REMAP_DOWN BTN_REMAP_VAL_DOWN
 
 // Timezone! So:
-// - You don't set anything, it will try to guess your timezone based on IP, which will be incorrect sometimes
+// - You don't set anything, it will try to guess your timezone based on IP when syncing wifi, which will be incorrect sometimes
+// - If SET_CLOCK_GUI is enabled, you can set pure UTC timezones via GUI in settings/Clock.
+// ^If you set anything via the GUI, it will not try to gues while syncing wifi. Note that GUI won't work for Daylight / Standard time automatically.
+// ^If you set any of those options below, the option to set timezone manually via gui will not appear.
 // - You set olson, which still can be incorrect (probably won't). If this is set, there will be no more guesswork
 // - You set posix, it will overwrite everything above, no quesing or anything
 // Set this as a string of olson timezone time
 // List here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 // The "TZ" identifier in the table
 #define TIMEZONE_OLSON "" // Example value: "Europe/Warsaw"
-// Here is an example table:
+// Here are some example websites to get it:
+// Copy the posix timezone string table column
 // https://support.cyberdata.net/portal/en/kb/articles/010d63c0cfce3676151e1f2d5442e311
-// Better one probably: https://github.com/yuan910715/Esp8266_Wifi_Matrix_Clock/blob/master/posix.md
-// Better one probably: https://github.com/yuan910715/Esp8266_Wifi_Matrix_Clock/blob/master/posix.md
-// From the Posix timezone string table column
+// https://github.com/yuan910715/Esp8266_Wifi_Matrix_Clock/blob/master/posix.md
+// https://www.topyuan.top/posix
+// https://github.com/majodi/TimeZoneBuilder
 // This function overwrites the TIMEZONE_OLSON variable if it's set
 #define TIMEZONE_POSIX "" // Example value for poland: "CET-1CEST,M3.5.0,M10.5.0/3"
 
@@ -226,7 +230,9 @@ The default is this:
 
 #define VIDEO_PLAYER 0
 
+// Menu to manually set time
 #define SET_CLOCK_GUI 1
+#define DISABLE_SET_TIMEZONE 0 // Forces disabling of set timezone. Usefull when timezone is set manually in config.h and a bit of flash storage needs to be saved (very little)
 
 // Watchface modules
 #define MODULE_PERSISTENT 1       // Makes modules, like bitcoin not dissmissable, they will always appear and be choosen. The image module always will be shown, if you disable it will simply be an empty space

@@ -36,6 +36,7 @@ String unixToDate(uint64_t unixTime);
 long getHourDifference(time_t currentTime, time_t targetTime);
 uint64_t getLastTimeReadSec();
 uint getCurrentSeconds();
+void setRTCTimeZoneByUtcOffset(int offset);
 
 #if DEBUG
 void initRTCDebug();

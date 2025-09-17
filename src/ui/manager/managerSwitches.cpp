@@ -38,6 +38,10 @@ void switchSetTimeWatch()
 {
     generalSwitch(setTimeWatchPlace);
 }
+
+void switchSetTimezoneWatch() {
+    generalSwitch(setTimezoneWatchPlace);
+}
 #endif
 
 void switchGeneralDebug()
