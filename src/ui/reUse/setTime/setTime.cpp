@@ -1,5 +1,7 @@
 #include "setTime.h"
 
+#if SET_TIME_GUI
+
 int setTimeMinute = 0;
 int setTimeHour = 0;
 
@@ -22,3 +24,5 @@ void exitSetTime()
     setTimeMinute = int(time.minute);
     slintExit();
 }
+
+#endif

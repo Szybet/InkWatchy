@@ -41,8 +41,8 @@ RTC_DATA_ATTR rtcMem rM = {
     // Wifi logic
     .lastSyncUnix = 0,
     .lastTryUnix = 0,
-    // Ntp
-    // Time drift correction
+// Ntp
+// Time drift correction
 #if TIME_DRIFT_CORRECTION
     .driftStartUnix = 0,
 #endif
@@ -221,7 +221,8 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
 {
     debugLog("Comparing rtc data");
 
-    // Alarms
+// Alarms
+#if INK_ALARMS
     if (memcmp(source->alarms, destination->alarms, sizeof(source->alarms)) != 0)
     {
         debugLog("Alarms data differs");
@@ -234,6 +235,7 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
         debugLog("Alarm metadata differs");
         return true;
     }
+#endif
 
     // posixTimeZone
     if (strlen(TIMEZONE_POSIX) == 0 && strlen(TIMEZONE_OLSON) == 0)
@@ -246,13 +248,15 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
     }
 
     // Watchface
-    if(source->watchfaceSelected != destination->watchfaceSelected) {
+    if (source->watchfaceSelected != destination->watchfaceSelected)
+    {
         debugLog("Watchface selected differs");
         return true;
     }
 
     // Watchface modules
-    if(source->currentModule != destination->currentModule) {
+    if (source->currentModule != destination->currentModule)
+    {
         debugLog("Current module differs");
         return true;
     }
@@ -264,7 +268,8 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
 void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
 {
     debugLog("Retrieving data for rtc memory");
-    // Alarms
+// Alarms
+#if INK_ALARMS
     /*
     for (int i = 0; i < MAX_ALARMS; i++) {
         destination->alarms[i] = source->alarms[i];
@@ -276,6 +281,7 @@ void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
     // destination->nextAlarm = source->nextAlarm;
     // destination->nextAlarmIndex = source->nextAlarmIndex;
     calculateNextAlarm();
+#endif
 
     // posixTimeZone
     /*

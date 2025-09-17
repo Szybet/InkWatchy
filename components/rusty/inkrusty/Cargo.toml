@@ -25,9 +25,9 @@ slint-build = "1.13.0"
 
 [features]
 default = []
-none = []    # Placeholder for bash script
 debug = []
 snake = []
+set_time = []
 
 [profile.release]
 strip = true

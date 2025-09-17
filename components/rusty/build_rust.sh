@@ -17,7 +17,7 @@ base_features=""
 check_features() {
     local config_path=$1
     shift
-    base_features="none"
+    base_features=""
     
     for feature in "$@"; do
         # echo $feature
@@ -33,11 +33,32 @@ check_features() {
             base_features="$base_features,$feature"
         fi
     done
-
-    echo "Features are: $base_features"
 }
 
-check_features "src/defines/config.h" debug snake
+check_features "src/defines/config.h" debug snake ink_alarms set_clock_gui
+
+# A bit of condition.h logic
+has_ink=false
+has_clock=false
+
+if [[ $base_features == *"ink_alarms"* ]]; then
+  base_features=${base_features//",ink_alarms"/}
+  has_ink=true
+fi
+
+if [[ $base_features == *"set_clock_gui"* ]]; then
+  base_features=${base_features//",set_clock_gui"/}
+  has_clock=true
+fi
+
+if $has_ink || $has_clock; then
+  base_features="$base_features,set_time"
+fi
+
+# Done
+base_features="${base_features:1}"
+
+echo "Features are: $base_features"
 
 cd components/rusty
 
@@ -59,7 +80,7 @@ else
 fi
 
 cd inkrusty/
-cargo build --target "$target" --release --features $base_features || {
+cargo build --target "$target" --release --features=$base_features || {
     echo "Build failed for target: $target" >&2
     exit 1
 }

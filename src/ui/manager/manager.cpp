@@ -271,7 +271,9 @@ void loopManager()
     }
     case setTimePlace:
     {
+#if SET_TIME_GUI
         managerLaunchFunc(setTimePlace, initSetTime, loopSetTime, exitSetTime);
+#endif
         break;
     }
     case setDatePlace:

@@ -376,3 +376,9 @@ Template for versioning
 #define TASK_STACK_RGB INIT_TASK_STACK_RGB
 #define TASK_STACK_DUMP_BATTERY INIT_TASK_STACK_DUMP_BATTERY
 #endif
+
+#if SET_CLOCK_GUI || INK_ALARMS
+#define SET_TIME_GUI 1
+#else
+#define SET_TIME_GUI 0
+#endif

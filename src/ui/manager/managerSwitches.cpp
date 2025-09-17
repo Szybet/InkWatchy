@@ -137,10 +137,12 @@ void switchPomodoroMenu()
 }
 #endif
 
+#if SET_TIME_GUI
 void switchSetTime()
 {
     generalSwitch(setTimePlace);
 }
+#endif
 
 void switchSetDate()
 {

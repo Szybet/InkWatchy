@@ -254,6 +254,12 @@ void unix_offset_call()
 }
 */
 
+#if !INK_ALARMS
+bool willAlarmTrigger() {
+    return false;
+}
+#endif
+
 void initManageLpCore()
 {
     if (bootStatus.fromWakeup == true && willAlarmTrigger() == false)

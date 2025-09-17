@@ -129,7 +129,9 @@ void switchAlarmSetChooser();
 void switchAlarmQuick();
 void switchPomodoroMenu();
 #endif
+#if SET_TIME_GUI
 void switchSetTime();
+#endif
 void switchSetDate();
 void switchPowerMenu();
 void switchWatchfaceSelectorMenu();
