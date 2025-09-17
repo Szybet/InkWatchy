@@ -33,7 +33,7 @@ void switchWatchfaceSelectorMenu()
     generalSwitch(watchfaceSelector);
 }
 
-#if SET_TIME_GUI
+#if SET_CLOCK_GUI
 void switchSetTimeWatch()
 {
     generalSwitch(setTimeWatchPlace);

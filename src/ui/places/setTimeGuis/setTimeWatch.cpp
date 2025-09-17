@@ -1,6 +1,6 @@
 #include "setTimeWatch.h"
 
-#if SET_TIME_GUI
+#if SET_CLOCK_GUI
 
 bool setTimeWatchInitialized = false;
 

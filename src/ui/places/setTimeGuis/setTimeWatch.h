@@ -2,7 +2,7 @@
 
 #include "defines.h"
 
-#if SET_TIME_GUI
+#if SET_CLOCK_GUI
 void initSetTimeWatch();
 void loopSetTimeWatch();
 void exitSetTimeWatch();

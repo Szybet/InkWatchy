@@ -158,7 +158,7 @@ void loopManager()
     }
     case setTimeWatchPlace:
     {
-#if SET_TIME_GUI
+#if SET_CLOCK_GUI
         managerLaunchFunc(setTimeWatchPlace, initSetTimeWatch, loopSetTimeWatch, exitSetTimeWatch);
 #endif
         break;

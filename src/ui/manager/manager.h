@@ -173,6 +173,6 @@ void switchBaiky();
 void switchFontsPreview();
 #endif
 void showTextDialog(String str, bool center, String title = "");
-#if SET_TIME_GUI
+#if SET_CLOCK_GUI
 void switchSetTimeWatch();
 #endif

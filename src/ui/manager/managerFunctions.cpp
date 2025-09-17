@@ -174,7 +174,7 @@ void initSettingsMenu()
         count = count + 1;
         buttons[count] = {MENU_CHANGE_WATCHFACE, getImg("watchfaceIcon"), switchWatchfaceSelectorMenu};
     }
-#if SET_TIME_GUI
+#if SET_CLOCK_GUI
     {
         count = count + 1;
         buttons[count] = {"Set Time", getImg("setTimeGui/setTimeClock"), switchSetTimeWatch};
