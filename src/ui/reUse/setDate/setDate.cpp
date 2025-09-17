@@ -1,5 +1,7 @@
 #include "setDate.h"
 
+#if SET_DATE_GUI
+
 int setDateDay = 0;
 int setDateMonth = 0;
 int setDateYear = 0;
@@ -24,3 +26,5 @@ void exitSetDate()
     int setDateYear = date.year;
     slintExit();
 }
+
+#endif

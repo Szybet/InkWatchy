@@ -144,10 +144,12 @@ void switchSetTime()
 }
 #endif
 
+#if SET_DATE_GUI
 void switchSetDate()
 {
     generalSwitch(setDatePlace);
 }
+#endif
 
 void switchPowerMenu()
 {

@@ -38,21 +38,24 @@ check_features() {
 check_features "src/defines/config.h" debug snake ink_alarms set_clock_gui
 
 # A bit of condition.h logic
-has_ink=false
-has_clock=false
+has_ink_alarms=false
+has_set_clock_gui=false
 
 if [[ $base_features == *"ink_alarms"* ]]; then
   base_features=${base_features//",ink_alarms"/}
-  has_ink=true
+  has_ink_alarms=true
 fi
 
 if [[ $base_features == *"set_clock_gui"* ]]; then
   base_features=${base_features//",set_clock_gui"/}
-  has_clock=true
+  has_set_clock_gui=true
 fi
 
-if $has_ink || $has_clock; then
+if $has_ink_alarms || $has_set_clock_gui; then
   base_features="$base_features,set_time"
+fi
+if $has_set_clock_gui; then
+  base_features="$base_features,set_date"
 fi
 
 # Done

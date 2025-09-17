@@ -278,7 +278,9 @@ void loopManager()
     }
     case setDatePlace:
     {
+#if initSetDate
         managerLaunchFunc(setDatePlace, initSetDate, loopSetDate, exitSetDate);
+#endif
         break;
     }
     case alarmEditDays:

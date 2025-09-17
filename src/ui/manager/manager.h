@@ -132,7 +132,9 @@ void switchPomodoroMenu();
 #if SET_TIME_GUI
 void switchSetTime();
 #endif
+#if SET_DATE_GUI
 void switchSetDate();
+#endif
 void switchPowerMenu();
 void switchWatchfaceSelectorMenu();
 
