@@ -258,7 +258,7 @@ extern uint16_t SCWhite;
 #endif
 #include "../ui/places/errorScreen/errorScreen.h"
 #if SET_CLOCK_GUI
-#include "../ui/places/setTimeGuis/setTimeWatch.h"
+#include "../ui/places/setClockGuis/setTimeWatch.h"
 #endif
 
 // Other
