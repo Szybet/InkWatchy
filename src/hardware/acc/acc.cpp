@@ -121,7 +121,7 @@ bool accConfig()
 {
     bool status = true;
     // Enabling default BMA config
-    if (rM.SBMA.defaultConfig(true) == false)
+    if (rM.SBMA.defaultConfig(ACC_POWER_SAVING) == false)
     {
         debugLog("defaultConfig failed");
         return false;
