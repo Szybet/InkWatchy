@@ -1,6 +1,7 @@
 #include "clockDebug.h"
 
 #if DEBUG_MENUS
+#include "rtcMem.h"
 
 uint16_t timeClockLine;
 
@@ -55,6 +56,13 @@ void initClockDebug()
     readRTC();
     timeClockLine = genpage_add(getClockPrecise().c_str());
 
+    genpage_add(String("Timezone:").c_str());
+    genpage_add(String(rM.posixTimeZone).c_str());
+    
+    if(strlen(TIMEZONE_OLSON) != 0) {
+        genpage_add(String(String("Olson timezone: ") + String(TIMEZONE_OLSON)).c_str());
+    }
+    
     genpage_add(DEBUG_CLOCK_DRIFT_SYNCS);
     genpage_add(fsGetString(CONF_SECONDS_DRIFT, DEBUG_CLOCK_NOT_AVAILABLE).c_str());
     {
