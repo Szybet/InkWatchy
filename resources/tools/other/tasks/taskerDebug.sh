@@ -1,5 +1,7 @@
 #!/bin/bash
 
+source resources/tools/globalFunctions.sh
+
 OPTIONS=("1" "Reset ESP"
          "2" "Reset and monitor"
          "3" "Backtrace resolver"
@@ -25,9 +27,18 @@ CHOICE=$(dialog --clear \
                 2>&1 >/dev/tty)
 
 clear
+
+esptool="resources/tools/other/in/esptool"
+
 case $CHOICE in
     1)
-        resources/tools/other/in/esptool --before default_reset chip_id
+        serial_port=$(extract_serial_port "$esptool")
+        if [[ $? -ne 0 || -z "$serial_port" ]]; then
+            echo "Failed to detect a valid serial port" >&2
+            exit 1
+        fi
+
+        $esptool --port $serial_port --before default_reset chip_id
         ;;
     2)
         cd resources/tools/other/debug/
@@ -43,9 +54,19 @@ case $CHOICE in
         ./getCoreDump.sh
         ;;
     5)
-        resources/tools/other/in/esptool erase_flash
+        serial_port=$(extract_serial_port "$esptool")
+        if [[ $? -ne 0 || -z "$serial_port" ]]; then
+            echo "Failed to detect a valid serial port" >&2
+            exit 1
+        fi
+        $esptool --port $serial_port erase_flash
         ;;
     6)
-        resources/tools/other/in/esptool --after no_reset chip_id
+        serial_port=$(extract_serial_port "$esptool")
+        if [[ $? -ne 0 || -z "$serial_port" ]]; then
+            echo "Failed to detect a valid serial port" >&2
+            exit 1
+        fi
+        $esptool --port $serial_port --after no_reset chip_id
         ;;
 esac
