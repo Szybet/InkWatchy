@@ -75,6 +75,7 @@ void drawBleStatus() {
 }
 
 void drawSpeed() {
+    dis->fillRect(0, 0, 130, 38, SCWhite);
     setFont(getFont("baiky/UbuntuMono31"));
     String speedStr = String(speed);
     while(speedStr.length() < 4) {
