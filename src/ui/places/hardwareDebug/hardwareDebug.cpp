@@ -56,6 +56,7 @@ void initGeneralDebugDisplay()
 
 #if TEMP_CHECKS_ENABLED
     previousTempUi = getTemp();
+    debugLog("Previous temp ui is: " + String(previousTempUi));
     lineTemp = genpage_add(String(DEBUG_HW_CPU_TEMP + String(previousTempUi)).c_str());
     lineInitTemp = genpage_add(String(DEBUG_HW_INIT_TEMP + String(rM.initialTemp)).c_str());
 #endif
