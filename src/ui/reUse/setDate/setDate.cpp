@@ -21,9 +21,9 @@ void loopSetDate()
 void exitSetDate()
 {
     RustDate date = set_date_get_date();
-    int setDateDay = date.day;
-    int setDateMonth = date.month;
-    int setDateYear = date.year;
+    setDateDay = date.day;
+    setDateMonth = date.month;
+    setDateYear = date.year;
     slintExit();
 }
 

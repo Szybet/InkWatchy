@@ -170,6 +170,13 @@ void loopManager()
 #endif
         break;
     }
+    case setDateWatchPlace:
+    {
+#if SET_CLOCK_GUI
+        managerLaunchFunc(setDateWatchPlace, initSetDateWatch, loopSetDateWatch, exitSetDateWatch);
+#endif
+        break;
+    }
     case generalDebug:
     {
 #if DEBUG_MENUS
@@ -285,7 +292,7 @@ void loopManager()
     }
     case setDatePlace:
     {
-#if initSetDate
+#if SET_DATE_GUI
         managerLaunchFunc(setDatePlace, initSetDate, loopSetDate, exitSetDate);
 #endif
         break;

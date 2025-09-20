@@ -59,6 +59,7 @@ typedef enum
     watchfaceSelector,
     setTimeWatchPlace,
     setTimezoneWatchPlace,
+    setDateWatchPlace,
     // General places now:
     inputPinPlace,
     generalMenuPlace,
@@ -181,4 +182,5 @@ void showTextDialog(String str, bool center, String title = "");
 #if SET_CLOCK_GUI
 void switchSetTimeWatch();
 void switchSetTimezoneWatch();
+void switchSetDateWatch();
 #endif

@@ -260,6 +260,7 @@ extern uint16_t SCWhite;
 #if SET_CLOCK_GUI
 #include "../ui/places/setClockGuis/setTimeWatch.h"
 #include "../ui/places/setClockGuis/setTimezoneWatch.h"
+#include "../ui/places/setClockGuis/setDateWatch.h"
 #endif
 
 // Other

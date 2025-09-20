@@ -42,6 +42,10 @@ void switchSetTimeWatch()
 void switchSetTimezoneWatch() {
     generalSwitch(setTimezoneWatchPlace);
 }
+
+void switchSetDateWatch() {
+    generalSwitch(setDateWatchPlace);
+}
 #endif
 
 void switchGeneralDebug()

@@ -274,7 +274,7 @@ void readRTC()
   bool rtcGarbage = false;
   if (timeRTCUTC0.Year < 50 || timeRTCUTC0.Year > 100)
   {
-    timeRTCUTC0.Year = 50;
+    timeRTCUTC0.Year = 55;
     rtcGarbage = true;
   }
   if (timeRTCUTC0.Month > 11)
