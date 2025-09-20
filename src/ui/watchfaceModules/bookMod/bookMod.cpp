@@ -9,6 +9,12 @@ void wfBookcheckShow(bool *showBool, bool *redrawBool)
     *showBool = true;
 }
 
+void calcBookTextMod()
+{
+    calculateBookTextHeight();
+    startHeightBook = startHeightBook - 3;
+}
+
 void wfBookrequestShow(buttonState button, bool *showBool)
 {
     debugLog("Launched");
@@ -22,8 +28,7 @@ void wfBookrequestShow(buttonState button, bool *showBool)
             if (rM.disableSomeDrawing == false)
             {
                 rM.disableSomeDrawing = true;
-                calculateBookTextHeight();
-                startHeightBook = startHeightBook - 3;
+                calcBookTextMod();
                 showPageChecker = true;
             }
             else
@@ -39,6 +44,7 @@ void wfBookrequestShow(buttonState button, bool *showBool)
         debugLog("Book mod down");
         changePageDown(BOOK_MODULE_CHARS_PER_PAGE, false);
         showPageChecker = true;
+        calcBookTextMod();
         break;
     }
     case Up:
@@ -46,6 +52,7 @@ void wfBookrequestShow(buttonState button, bool *showBool)
         debugLog("Book mod up");
         changePageUp(BOOK_MODULE_CHARS_PER_PAGE, false);
         showPageChecker = true;
+        calcBookTextMod();
         break;
     }
     default:
@@ -70,7 +77,8 @@ void wfBookrequestShow(buttonState button, bool *showBool)
             sizeInfo s = drawTextSimple("Selected book:", "dogicapixel4", modSq.cord.x, modSq.cord.y);
             // Max BOOK_NAME_MODULE_NAME_MAX
             String curBookTmp = curBook;
-            if(curBookTmp.length() > BOOK_NAME_MODULE_NAME_MAX) {
+            if (curBookTmp.length() > BOOK_NAME_MODULE_NAME_MAX)
+            {
                 curBookTmp = curBookTmp.substring(0, BOOK_NAME_MODULE_NAME_MAX);
             }
             sizeInfo ss = drawTextSimple(curBookTmp, "dogicapixel4", modSq.cord.x, modSq.cord.y + s.h + 2);
