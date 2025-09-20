@@ -126,7 +126,7 @@ pub unsafe extern "C" fn general_page_set_main() {
         return;
     }
 
-    let mut string = String::with_capacity(20);
+    let mut string = String::new();
 
     let len = general_app.main_str.len();
     for (c, the_line) in general_app.main_str.iter().enumerate() {

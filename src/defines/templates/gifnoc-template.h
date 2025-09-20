@@ -40,7 +40,7 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define GSR_CLASSICS_STARRY 0
 #define GSR_CLASSICS_TETRIS 0
 #define GSR_CLASSICS_MAC 0
-#define GSR_CLASSICS_MARIO 1
+#define GSR_CLASSICS_MARIO 0
 // No more classics
 #define GSR_STATIONARY 0
 
@@ -211,7 +211,8 @@ The default is this:
 #define BOOK_FONT getFont("UbuntuMono10")
 
 // Conway, It will drain your battery a lot
-#define CONWAY 1
+// And A LOT of memory
+#define CONWAY 0
 #define CONWAY_CPU_SPEED 0    // When calculating conway, increase cpu speed. This obviously increases battery usage but makes the watch faster with the conway module AND is a "maybe" fix for some resets related to watchdog
 #define CONWAY_MODULE_DEBUG 0 // speed up the module. Don't
 
@@ -241,10 +242,11 @@ The default is this:
 // It's important to note that even with this, modules are optimised no to redraw so often. They will simply check more often if to redraw
 #define MODULES_FAST 0
 #define WIFI_MODULE 1
-#define BITCOIN_MODULE 1   // Remember to define the api key for it in confidential.h
+// Bitcoin is pretty heavy on memory while syncing. If it crashes when enabled for you, some more optimisation might be needed. Create a github issue.
+#define BITCOIN_MODULE 0
 #define SMALL_BTC_MODULE 1 // At default, show the small btc module mode, if 0 show the bigger one
 #define BITCOIN_SYNC_TRIES 3
-#define CONWAY_MODULE 1                  // Conway module. to make it enabled CONWAY itself needs to be enabled
+#define CONWAY_MODULE 0                  // Conway module. to make it enabled CONWAY itself needs to be enabled
 #define CONWAY_MODULE_GRID_PERCANTAGE 50 // Percentage of initial grid filling
 
 #define BOOK_MODULE 1

@@ -183,6 +183,10 @@ void showInitLogs()
 #endif
 }
 
+#if DUMP_LOOP_SOFTWARE_DEBUG
+uint32_t peakHeap = 0;
+#endif
+
 void endLoopDebug()
 {
 #if DEBUG && EINK_COUNTER
@@ -228,6 +232,11 @@ void endLoopDebug()
 #endif
 #if DUMP_LOOP_SOFTWARE_DEBUG
         loopGeneralDebug();
+        uint32_t heapNow = (ESP.getHeapSize() - ESP.getFreeHeap()) / 1024;
+        if(heapNow > peakHeap) {
+            peakHeap = heapNow;
+        }
+        debugLog("Peak heap is: " + String(peakHeap));
 #endif
     }
 #endif
