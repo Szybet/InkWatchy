@@ -10,15 +10,15 @@ int tzSelected = TZ_SELECTED;
 
 void timezoneClicked()
 {
-   String selected = lastMenuSelected;
-   selected.remove(0, 3);
-   int offset = selected.toInt();
-   debugLog("Selected UTC is: " + String(offset) + " bare UTC is: " + lastMenuSelected + " selected is: " + selected);
+    String selected = lastMenuSelected;
+    selected.remove(0, 3);
+    int offset = selected.toInt();
+    debugLog("Selected UTC is: " + String(offset) + " bare UTC is: " + lastMenuSelected + " selected is: " + selected);
 
-   setRTCTimeZoneByUtcOffset(offset);
+    setRTCTimeZoneByUtcOffset(offset);
 
-   // tzSelected = offset + 12;
-   initSetTimezoneWatch();
+    // tzSelected = offset + 12;
+    initSetTimezoneWatch();
 }
 
 void initSetTimezoneWatch()

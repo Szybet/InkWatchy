@@ -70,7 +70,8 @@ void initSetTimezoneMenu()
     {
         count = count + 1;
         void (*theFunction)() = switchSetTimezoneWatch;
-        if(setTimezoneWarningConfirmed == false) {
+        if (setTimezoneWarningConfirmed == false)
+        {
             theFunction = showTimezoneWarning;
         }
         buttons[count] = {SETCLOCK_SET_TIMEZONE, &emptyImgPack, theFunction};

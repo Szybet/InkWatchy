@@ -37,7 +37,7 @@ void exitSetDateWatch()
         int monthDiff = int(timeRTCLocal.Day) - int(timeRTCUTC0.Day);
         int yearDiff = int(timeRTCLocal.Year) - int(timeRTCUTC0.Year);
         timeRTCUTC0.Day = setDateDay + dayDiff;
-        timeRTCUTC0.Month = (setDateMonth - 1)+ monthDiff;
+        timeRTCUTC0.Month = (setDateMonth - 1) + monthDiff;
         timeRTCUTC0.Year = (setDateYear - 1970) + yearDiff;
         saveRTC(timeRTCUTC0);
         readRTC();

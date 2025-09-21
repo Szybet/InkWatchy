@@ -68,7 +68,9 @@ void exitSetTimeWatch()
         newTime.Second = 0;
         saveRTC(newTime);
         readRTC();
-    } else {
+    }
+    else
+    {
         debugLog("exitSetTimeWatch - It's true!");
     }
 }
