@@ -177,6 +177,13 @@ void loopManager()
 #endif
         break;
     }
+    case setClockMenu:
+    {
+#if SET_CLOCK_GUI
+        managerLaunchFunc(setClockMenu, initSetClockMenu, loopMenu);
+#endif
+        break;
+    }
     case generalDebug:
     {
 #if DEBUG_MENUS

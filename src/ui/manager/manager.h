@@ -60,6 +60,7 @@ typedef enum
     setTimeWatchPlace,
     setTimezoneWatchPlace,
     setDateWatchPlace,
+    setClockMenu,
     // General places now:
     inputPinPlace,
     generalMenuPlace,

@@ -154,7 +154,7 @@ void initDebugMenu()
 void initSettingsMenu()
 {
     int count = -1;
-    entryMenu buttons[8];
+    entryMenu buttons[6];
     {
         debugLog("Adding wifi to menu");
         count = count + 1;
@@ -177,16 +177,7 @@ void initSettingsMenu()
 #if SET_CLOCK_GUI
     {
         count = count + 1;
-        buttons[count] = {"Set time", getImg("setTimeGui/setTimeClock"), switchSetTimeWatch};
-    }
-    {
-        count = count + 1;
-        buttons[count] = {"Set date", getImg("setTimeGui/setTimeClock"), switchSetDateWatch};
-    }
-    if (strlen(TIMEZONE_OLSON) == 0 && strlen(TIMEZONE_POSIX) == 0)
-    {
-        count = count + 1;
-        buttons[count] = {"Set timezone", getImg("setTimeGui/setTimeClock"), switchSetTimezoneWatch};
+        buttons[count] = {"Set clock", getImg("setTimeGui/setTimeClock"), switchSetClockMenu};
     }
 #endif
 
