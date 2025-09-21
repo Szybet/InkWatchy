@@ -23,6 +23,7 @@ void timezoneClicked()
 
 void initSetTimezoneWatch()
 {
+    /*
     tzSelected = TZ_SELECTED;
     String timezone = String(rM.posixTimeZone);
     if(strlen(rM.posixTimeZone) <= 6 && timezone.substring(0, 3) == "GMT") {
@@ -34,6 +35,9 @@ void initSetTimezoneWatch()
     if(tzSelected < 0 || tzSelected >= TZ_COUNT) {
         tzSelected = TZ_SELECTED;
     }
+    */
+    int timezoneOffsetConv = ((timeZoneOffset / 60) / 60) * -1;
+    tzSelected = timezoneOffsetConv + 12;
 
     entryMenu tzEntries[TZ_COUNT];
     for (int i = 0; i < TZ_COUNT; i++)

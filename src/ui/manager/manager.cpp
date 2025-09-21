@@ -184,6 +184,13 @@ void loopManager()
 #endif
         break;
     }
+    case setTimezoneMenu:
+    {
+#if SET_CLOCK_GUI
+        managerLaunchFunc(setTimezoneMenu, initSetTimezoneMenu, loopMenu);
+#endif
+        break;
+    }
     case generalDebug:
     {
 #if DEBUG_MENUS
