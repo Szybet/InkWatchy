@@ -14,20 +14,20 @@ void initSetClockMenu()
     entryMenu buttons[3];
     {
         count = count + 1;
-        buttons[count] = {"Set time", &emptyImgPack, switchSetTimeWatch};
+        buttons[count] = {SETCLOCK_SET_TIME, &emptyImgPack, switchSetTimeWatch};
     }
     {
         count = count + 1;
-        buttons[count] = {"Set date", &emptyImgPack, switchSetDateWatch};
+        buttons[count] = {SETCLOCK_SET_DATE, &emptyImgPack, switchSetDateWatch};
     }
     if (strlen(TIMEZONE_OLSON) == 0 && strlen(TIMEZONE_POSIX) == 0)
     {
         count = count + 1;
-        buttons[count] = {"Timezone menu", &emptyImgPack, switchSetTimezoneMenu};
+        buttons[count] = {SETCLOCK_TIMEZONE_MENU, &emptyImgPack, switchSetTimezoneMenu};
     }
 
     count = count + 1;
-    initMenu(buttons, count, "Clock settings", 1);
+    initMenu(buttons, count, SETCLOCK_CLOCK_SETTINGS, 1);
 }
 
 void switchSetTimezoneMenu()
@@ -46,7 +46,7 @@ bool setTimezoneWarningConfirmed = false;
 void showTimezoneWarning()
 {
     generalSwitch(textDialog);
-    showTextDialog("This menu ignores daylight/standard time and will overwrite your timezone, which may already have it.\nClick back button to confirm", false, "Warning");
+    showTextDialog(SETCLOCK_TIMEZONE_WARNING, false, SETCLOCK_WARNING_TITLE);
     setTimezoneWarningConfirmed = true;
 }
 
@@ -61,11 +61,11 @@ void initSetTimezoneMenu()
         {
             currentTimezone = String(rM.posixTimeZone);
         }
-        buttons[count] = {String("Current timezone: ") + currentTimezone, &emptyImgPack, NULL};
+        buttons[count] = {String(SETCLOCK_CURRENT_TIMEZONE) + currentTimezone, &emptyImgPack, NULL};
     }
     {
         count = count + 1;
-        buttons[count] = {"Clear timezone", &emptyImgPack, clearTimezone};
+        buttons[count] = {SETCLOCK_CLEAR_TIMEZONE, &emptyImgPack, clearTimezone};
     }
     {
         count = count + 1;
@@ -73,11 +73,11 @@ void initSetTimezoneMenu()
         if(setTimezoneWarningConfirmed == false) {
             theFunction = showTimezoneWarning;
         }
-        buttons[count] = {"Set timezone", &emptyImgPack, theFunction};
+        buttons[count] = {SETCLOCK_SET_TIMEZONE, &emptyImgPack, theFunction};
     }
 
     count = count + 1;
-    initMenu(buttons, count, "Timezone settings", 1);
+    initMenu(buttons, count, SETCLOCK_TIMEZONE_SETTINGS, 1);
 }
 
 #endif

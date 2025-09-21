@@ -177,7 +177,7 @@ void initSettingsMenu()
 #if SET_CLOCK_GUI
     {
         count = count + 1;
-        buttons[count] = {"Set clock", getImg("setTimeGui/setTimeClock"), switchSetClockMenu};
+        buttons[count] = {SETCLOCK_CLOCK_SETTINGS, getImg("setTimeGui/setTimeClock"), switchSetClockMenu};
     }
 #endif
 

@@ -410,6 +410,19 @@
 #define POMODORO_RESET_TURN_OFF "Zurücksetzen & Ausschalten"
 #define POMODORO_START "Start"
 
+// Set Clock GUI
+#define SETCLOCK_SET_TIME "Uhrzeit einstellen"
+#define SETCLOCK_SET_DATE "Datum einstellen"
+#define SETCLOCK_TIMEZONE_MENU "Zeitzonen-Menue"
+#define SETCLOCK_CLOCK_SETTINGS "Uhr-Einstellungen"
+#define SETCLOCK_CURRENT_TIMEZONE "Aktuelle Zeitzone: "
+#define SETCLOCK_CLEAR_TIMEZONE "Zeitzone loeschen"
+#define SETCLOCK_SET_TIMEZONE "Zeitzone einstellen"
+#define SETCLOCK_TIMEZONE_SETTINGS "Zeitzonen-Einstellungen"
+#define SETCLOCK_TIMEZONE_WARNING "Dieses Menue ignoriert Sommer-/Winterzeit und ueberschreibt Ihre Zeitzone, die diese moeglicherweise bereits enthaelt.\nKlicken Sie auf die Zurueck-Taste, um zu bestaetigen"
+#define SETCLOCK_WARNING_TITLE "Warnung"
+#define SETCLOCK_SELECT_TIMEZONE "Zeitzone waehlen"
+
 // Time unit translations (for automatic formatting)
 #define TIME_UNIT_MINUTE "Minute"
 #define TIME_UNIT_MINUTES "Minuten"

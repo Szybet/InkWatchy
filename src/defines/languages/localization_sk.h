@@ -411,6 +411,19 @@
 #define POMODORO_RESET_TURN_OFF "Reset & Vypnutie"
 #define POMODORO_START "Start"
 
+// Set Clock GUI
+#define SETCLOCK_SET_TIME "Nastavit cas"
+#define SETCLOCK_SET_DATE "Nastavit datum"
+#define SETCLOCK_TIMEZONE_MENU "Menu casovej zony"
+#define SETCLOCK_CLOCK_SETTINGS "Nastavenia hodiniek"
+#define SETCLOCK_CURRENT_TIMEZONE "Aktualna casova zona: "
+#define SETCLOCK_CLEAR_TIMEZONE "Vymazat casovu zonu"
+#define SETCLOCK_SET_TIMEZONE "Nastavit casovu zonu"
+#define SETCLOCK_TIMEZONE_SETTINGS "Nastavenia casovej zony"
+#define SETCLOCK_TIMEZONE_WARNING "Toto menu ignoruje letny/zimny cas a prepise vasu casovu zonu, ktora ho uz moze obsahovat.\nKliknite na tlacidlo spat pre potvrdenie"
+#define SETCLOCK_WARNING_TITLE "Upozornenie"
+#define SETCLOCK_SELECT_TIMEZONE "Vyberte casovu zonu"
+
 // Time unit translations (for automatic formatting)
 #define TIME_UNIT_MINUTE "minuta"
 #define TIME_UNIT_MINUTES "minuty"

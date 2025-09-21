@@ -333,6 +333,15 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #error "Localization file is missing Pomodoro definitions."
 #endif
 
+// Check Set Clock GUI translations
+#if !defined(SETCLOCK_SET_TIME) || !defined(SETCLOCK_SET_DATE) || !defined(SETCLOCK_TIMEZONE_MENU) || \
+    !defined(SETCLOCK_CLOCK_SETTINGS) || !defined(SETCLOCK_CURRENT_TIMEZONE) || !defined(SETCLOCK_CLEAR_TIMEZONE) || \
+    !defined(SETCLOCK_SET_TIMEZONE) || !defined(SETCLOCK_TIMEZONE_SETTINGS) || !defined(SETCLOCK_TIMEZONE_WARNING) || \
+    !defined(SETCLOCK_WARNING_TITLE) || !defined(SETCLOCK_SELECT_TIMEZONE)
+#error "Localization file is missing Set Clock GUI definitions."
+#endif
+
+
 // Check time unit translations
 #if !defined(TIME_UNIT_MINUTE) || !defined(TIME_UNIT_MINUTES) || !defined(TIME_UNIT_HOUR) || \
     !defined(TIME_UNIT_HOURS) || !defined(TIME_UNIT_DAY) || !defined(TIME_UNIT_DAYS) || !defined(TIME_UNIT_AND)

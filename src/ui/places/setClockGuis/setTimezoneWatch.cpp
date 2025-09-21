@@ -65,7 +65,7 @@ void initSetTimezoneWatch()
     }
 
     currentMenuItem = tzSelected;
-    initMenu(tzEntries, TZ_COUNT, "Select Timezone");
+    initMenu(tzEntries, TZ_COUNT, SETCLOCK_SELECT_TIMEZONE);
 }
 
 void exitSetTimezoneWatch()

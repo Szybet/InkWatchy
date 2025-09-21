@@ -410,6 +410,19 @@
 #define POMODORO_RESET_TURN_OFF "Reset & Turn off"
 #define POMODORO_START "Start"
 
+// Set Clock GUI
+#define SETCLOCK_SET_TIME "Set time"
+#define SETCLOCK_SET_DATE "Set date"
+#define SETCLOCK_TIMEZONE_MENU "Timezone menu"
+#define SETCLOCK_CLOCK_SETTINGS "Clock settings"
+#define SETCLOCK_CURRENT_TIMEZONE "Current timezone: "
+#define SETCLOCK_CLEAR_TIMEZONE "Clear timezone"
+#define SETCLOCK_SET_TIMEZONE "Set timezone"
+#define SETCLOCK_TIMEZONE_SETTINGS "Timezone settings"
+#define SETCLOCK_TIMEZONE_WARNING "This menu ignores daylight/standard time and will overwrite your timezone, which may already have it.\nClick back button to confirm"
+#define SETCLOCK_WARNING_TITLE "Warning"
+#define SETCLOCK_SELECT_TIMEZONE "Select Timezone"
+
 // Time unit translations (for automatic formatting)
 #define TIME_UNIT_MINUTE "minute"
 #define TIME_UNIT_MINUTES "minutes"

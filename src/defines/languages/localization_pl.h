@@ -411,6 +411,21 @@
 #define POMODORO_START "Start"
 
 // Time unit translations (for automatic formatting)
+// Set Clock GUI
+#define SETCLOCK_SET_TIME "Ustaw czas"
+#define SETCLOCK_SET_DATE "Ustaw date"
+#define SETCLOCK_TIMEZONE_MENU "Menu strefy czasowej"
+#define SETCLOCK_CLOCK_SETTINGS "Ustawienia zegara"
+#define SETCLOCK_CURRENT_TIMEZONE "Aktualna strefa czasowa: "
+#define SETCLOCK_CLEAR_TIMEZONE "Wyczysc strefe czasowa"
+#define SETCLOCK_SET_TIMEZONE "Ustaw strefe czasowa"
+#define SETCLOCK_TIMEZONE_SETTINGS "Ustawienia strefy czasowej"
+#define SETCLOCK_TIMEZONE_WARNING "To menu ignoruje czas letni/zimowy i nadpisze Twoja strefe czasowa, ktora moze juz go zawierac.
+Nacisnij przycisk wstecz, aby potwierdzic"
+#define SETCLOCK_WARNING_TITLE "Ostrzezenie"
+#define SETCLOCK_SELECT_TIMEZONE "Wybierz strefe czasowa"
+
+// Time unit translations (for automatic formatting)
 #define TIME_UNIT_MINUTE "minuta"
 #define TIME_UNIT_MINUTES "minut"
 #define TIME_UNIT_MINUTES_2_4 "minuty"
@@ -420,4 +435,4 @@
 #define TIME_UNIT_DAY "dzien"
 #define TIME_UNIT_DAYS "dni"
 #define TIME_UNIT_DAYS_2_4 "dni" // Same as TIME_UNIT_DAYS in Polish
-#define TIME_UNIT_AND "i"
+#define TIME_UNIT_AND "i" 

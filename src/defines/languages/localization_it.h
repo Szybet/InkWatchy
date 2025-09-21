@@ -410,6 +410,19 @@
 #define POMODORO_RESET_TURN_OFF "Reset e spegni"
 #define POMODORO_START "Avvia"
 
+// Set Clock GUI
+#define SETCLOCK_SET_TIME "Imposta ora"
+#define SETCLOCK_SET_DATE "Imposta data"
+#define SETCLOCK_TIMEZONE_MENU "Menu fuso orario"
+#define SETCLOCK_CLOCK_SETTINGS "Impostazioni orologio"
+#define SETCLOCK_CURRENT_TIMEZONE "Fuso orario attuale: "
+#define SETCLOCK_CLEAR_TIMEZONE "Cancella fuso orario"
+#define SETCLOCK_SET_TIMEZONE "Imposta fuso orario"
+#define SETCLOCK_TIMEZONE_SETTINGS "Impostazioni fuso orario"
+#define SETCLOCK_TIMEZONE_WARNING "Questo menu ignora l'ora legale/solare e sovrascrivera il fuso orario, che potrebbe gia includerla.\nFare clic sul pulsante Indietro per confermare"
+#define SETCLOCK_WARNING_TITLE "Avviso"
+#define SETCLOCK_SELECT_TIMEZONE "Seleziona fuso orario"
+
 // Time unit translations (for automatic formatting)
 #define TIME_UNIT_MINUTE "minuto"
 #define TIME_UNIT_MINUTES "minuti"
