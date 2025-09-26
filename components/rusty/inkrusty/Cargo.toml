@@ -21,7 +21,7 @@ set_time = { path = "../crates/set_time", optional = true}
 set_date = { path = "../crates/set_date", optional = true }
 
 [build-dependencies]
-slint-build = "1.13.0"
+slint-build = "=1.13.0"
 
 [features]
 default = []
