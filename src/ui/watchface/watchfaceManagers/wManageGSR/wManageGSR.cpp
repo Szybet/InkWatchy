@@ -48,7 +48,7 @@ void wManageGsrLaunch(WatchyGSR *gsr, bool init)
             dUChange = true;    
         }
     }
-    disUp(dUChange, false, true);
+    disUp();
 }
 
 #endif
