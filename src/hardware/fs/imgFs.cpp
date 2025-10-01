@@ -46,26 +46,16 @@ ImageDef *getImg(String name)
         emptyListIndex = loadedImgIndex;
     }
 
-    File file = LittleFS.open("/img/" + name);
-    if (file == false)
+    bufSize imgBlob = fsGetBlob("/img/" + name, "");
+
+    if (imgBlob.buf == nullptr || imgBlob.size <= 0)
     {
-        debugLog("File is not available: " + name);
+        debugLog("Failed to get image blob: " + name);
         return &emptyImgPack;
     }
-    int fileSize = file.size();
-    // debugLog("file size: " + String(fileSize));
-    if (fileSize <= 0)
-    {
-        debugLog("This file has size 0: " + name);
-        return &emptyImgPack;
-    }
-    uint8_t *imgBuf = (uint8_t *)malloc(fileSize * sizeof(uint8_t));
-    if (file.read(imgBuf, fileSize) == 0)
-    {
-        debugLog("Failed to read the file: " + name);
-        return &emptyImgPack;
-    }
-    file.close();
+
+    uint8_t *imgBuf = imgBlob.buf;
+    int fileSize = imgBlob.size;
 
     ImageDef newImg = *(ImageDef *)imgBuf;
     newImg.bitmap = imgBuf + sizeof(newImg.bh) + sizeof(newImg.bw);

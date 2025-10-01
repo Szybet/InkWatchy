@@ -43,31 +43,16 @@ const GFXfont *getFont(String name)
         emptyListIndex = loadedFontIndex;
     }
 
-    File fileFont = LittleFS.open("/font/" + name);
-    if (fileFont == false)
+    bufSize fontBlob = fsGetBlob("/font/" + name, "");
+
+    if (fontBlob.buf == nullptr || fontBlob.size <= 0)
     {
-        debugLog("File is not available: " + name);
+        debugLog("Failed to get font blob: " + name);
         return &FreeSansBold9pt7b;
     }
-    int fileFontSize = fileFont.size();
-    // debugLog("file size: " + String(fileFontSize));
-    if (fileFontSize <= 0)
-    {
-        debugLog("This file has size 0: " + name);
-    }
-    uint8_t *fileBuf = (uint8_t *)malloc(fileFontSize * sizeof(uint8_t));
-    if (fileBuf == NULL)
-    {
-        debugLog("Failed to mallocate memory for font: " + name);
-        fileFont.close();
-        return &FreeSansBold9pt7b;
-    }
-    if (fileFont.read(fileBuf, fileFontSize) == 0)
-    {
-        debugLog("Failed to read the file: " + name);
-        return &FreeSansBold9pt7b;
-    }
-    fileFont.close();
+
+    uint8_t *fileBuf = fontBlob.buf;
+    int fileFontSize = fontBlob.size;
 
     loadedFontPointer[emptyListIndex] = fileBuf;
     uint16_t fontBitmapSize = fileBuf[0] | (fileBuf[1] << 8);
