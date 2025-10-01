@@ -2,6 +2,8 @@
 
 #define STR_ERROR "Failed to setup fs"
 
+uint8_t window_buffer[1 << WINDOW_BITS];
+
 /*
 // Just use default value
 bool fsIsConfig(String conf, String dir)
@@ -46,7 +48,7 @@ String fsGetString(String conf, String defaultValue, String dir)
     }
     String str = String((char *)buf);
     str = str.substring(0, fileSize); // Garbage?
-    //debugLog("Conf file: " + conf + " value: " + str);
+    // debugLog("Conf file: " + conf + " value: " + str);
     file.close();
     return str;
 }
@@ -64,7 +66,8 @@ bool fsSetString(String conf, String value, String dir)
         debugLog("Failed to set conf: " + conf);
         return false;
     }
-    if(file.print(value) == false) {
+    if (file.print(value) == false)
+    {
         debugLog("Failed to print to file " + conf + " value: " + value);
         return false;
     }
@@ -85,37 +88,181 @@ bufSize fsGetBlob(String conf, String dir)
         debugLog("There is no conf file: " + conf);
         return emptyBuff;
     }
+
     int fileSize = file.size();
-    uint8_t *buf = (uint8_t *)malloc(fileSize * sizeof(uint8_t));
-    if (file.read(buf, fileSize) == 0)
+    uint8_t *file_content_buffer = (uint8_t *)malloc(fileSize);
+    if (!file_content_buffer)
     {
-        debugLog("Failed to read the file: " + conf);
+        debugLog("Failed to allocate memory for file content buffer");
+        file.close();
+        return emptyBuff;
+    }
+
+    if (file.read(file_content_buffer, fileSize) == 0)
+    {
+        debugLog("Failed to read the entire file: " + conf);
+        file.close();
+        free(file_content_buffer);
         return emptyBuff;
     }
     file.close();
+
+    size_t original_size;
+    size_t compressed_size;
+    size_t offset = 0;
+
+    // Read original_size
+    if (fileSize < sizeof(size_t))
+    {
+        debugLog("File too small to contain original_size: " + conf);
+        free(file_content_buffer);
+        return emptyBuff;
+    }
+    memcpy(&original_size, file_content_buffer + offset, sizeof(size_t));
+    offset += sizeof(size_t);
+
+    // Read compressed_size
+    if (fileSize < offset + sizeof(size_t))
+    {
+        debugLog("File too small to contain compressed_size: " + conf);
+        free(file_content_buffer);
+        return emptyBuff;
+    }
+    memcpy(&compressed_size, file_content_buffer + offset, sizeof(size_t));
+    offset += sizeof(size_t);
+
+    // Add debug logs here
+    debugLog("fsGetBlob: fileSize: " + String(fileSize) + ", original_size: " + String(original_size) + ", compressed_size: " + String(compressed_size) + ", offset: " + String(offset));
+
+    // Check if remaining file size matches compressed_size
+    if (fileSize < offset + compressed_size)
+    {
+        debugLog("File content size mismatch with compressed_size: " + conf);
+        free(file_content_buffer);
+        return emptyBuff;
+    }
+
+    uint8_t *compressed_data = file_content_buffer + offset;
+
+    uint8_t *decompressed_buffer = (uint8_t *)malloc(original_size);
+    if (!decompressed_buffer)
+    {
+        debugLog("Failed to allocate memory for decompressed buffer");
+        free(file_content_buffer);
+        return emptyBuff;
+    }
+
+    TampDecompressor decompressor;
+    tamp_decompressor_init(&decompressor, NULL, window_buffer); // NULL for implicit header read
+
+    size_t output_written_size;
+    size_t input_consumed_size;
+
+    tamp_res res = tamp_decompressor_decompress(
+        &decompressor,
+        decompressed_buffer, original_size, &output_written_size,
+        compressed_data, compressed_size, &input_consumed_size);
+
+    free(file_content_buffer); // Free the entire file content buffer
+
+    if (res != TAMP_OK && res != TAMP_INPUT_EXHAUSTED && res != TAMP_OUTPUT_FULL)
+    {
+        debugLog("Tamp decompression failed with error: " + String(res));
+        free(decompressed_buffer);
+        return emptyBuff;
+    }
+
+    if (output_written_size != original_size)
+    {
+        debugLog("Decompressed size mismatch. Expected: " + String(original_size) + ", Got: " + String(output_written_size));
+        free(decompressed_buffer);
+        return emptyBuff;
+    }
+
     bufSize retBuf = {
-        buf, fileSize
-    };
+        decompressed_buffer, (int)output_written_size};
     return retBuf;
 }
 
-bool fsSetBlob(String conf, uint8_t* value, int size, String dir)
+bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
 {
     if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
         return false;
     }
+
+    // Allocate buffer for compressed data
+    // Max compressed size can be slightly larger than original for small inputs,
+    // so allocate a bit more. A safe upper bound is usually original_size + header_size.
+    // For TAMP, header is small, so let's assume original_size + 100 bytes is enough.
+    // Or, to be very safe, size * 2. Let's use size * 2 for now.
+    size_t compressed_buffer_max_size = size * 2;
+    uint8_t *compressed_buffer = (uint8_t *)malloc(compressed_buffer_max_size);
+    if (!compressed_buffer)
+    {
+        debugLog("Failed to allocate memory for compressed buffer");
+        return false;
+    }
+
+    TampCompressor compressor;
+    TampConf tamp_conf = {
+        .window = WINDOW_BITS,
+        .literal = 8, // Default literal bits
+        .use_custom_dictionary = false};
+
+    tamp_compressor_init(&compressor, &tamp_conf, window_buffer);
+
+    size_t output_written_size;
+    size_t input_consumed_size;
+
+    tamp_res res = tamp_compressor_compress_and_flush(
+        &compressor,
+        compressed_buffer, compressed_buffer_max_size, &output_written_size,
+        value, size, &input_consumed_size,
+        true // write_token: true to write FLUSH token, indicating end of stream
+    );
+
+    if (res != TAMP_OK)
+    {
+        debugLog("Tamp compression failed with error: " + String(res));
+        free(compressed_buffer);
+        return false;
+    }
+
+    size_t original_data_size = size; // Cast int to size_t
+    debugLog("fsSetBlob: Original size: " + String(original_data_size) + ", Compressed size: " + String(output_written_size));
+
     File file = LittleFS.open(dir + conf, FILE_WRITE, true);
     if (file == false)
     {
         debugLog("Failed to set conf: " + conf);
+        free(compressed_buffer);
         return false;
     }
-    if(file.write(value, size) == false) {
-        debugLog("Failed to write blob to file " + conf);
+    // Write the original size, then the compressed size, then the compressed data
+    if (file.write((uint8_t *)&original_data_size, sizeof(size_t)) == 0)
+    { // Original size
+        debugLog("Failed to write original size to file " + conf);
+        file.close();
+        free(compressed_buffer);
+        return false;
+    }
+    if (file.write((uint8_t *)&output_written_size, sizeof(size_t)) == 0)
+    { // Compressed size
+        debugLog("Failed to write compressed size to file " + conf);
+        file.close();
+        free(compressed_buffer);
+        return false;
+    }
+    if (file.write(compressed_buffer, output_written_size) == 0)
+    {
+        debugLog("Failed to write compressed blob to file " + conf);
+        file.close();
+        free(compressed_buffer);
         return false;
     }
     file.close();
+    free(compressed_buffer);
     return true;
 }
