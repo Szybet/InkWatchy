@@ -162,10 +162,19 @@ bufSize fsGetBlob(String conf, String dir)
     size_t output_written_size;
     size_t input_consumed_size;
 
+#if DEBUG
+    uint64_t start_time = millis();
+#endif
+
     tamp_res res = tamp_decompressor_decompress(
         &tamp_decompressor,
         decompressed_buffer, original_size, &output_written_size,
         compressed_data, compressed_size, &input_consumed_size);
+
+#if DEBUG
+    uint64_t end_time = millis();
+    uint64_t decompression_time_ms = end_time - start_time;
+#endif
 
     free(file_content_buffer);
 
@@ -182,6 +191,9 @@ bufSize fsGetBlob(String conf, String dir)
         free(decompressed_buffer);
         return emptyBuff;
     }
+#if DEBUG
+    debugLog("fsGetBlob: Decompression Time: " + String(decompression_time_ms) + "ms");
+#endif
 
     bufSize retBuf = {
         decompressed_buffer, (int)output_written_size};
@@ -215,11 +227,20 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
     size_t output_written_size;
     size_t input_consumed_size;
 
+#if DEBUG
+    uint64_t start_time = millis();
+#endif
+
     tamp_res res = tamp_compressor_compress_and_flush(
         &compressor,
         compressed_buffer, compressed_buffer_max_size, &output_written_size,
         value, size, &input_consumed_size,
         true);
+
+#if DEBUG
+    uint64_t end_time = millis();
+    uint64_t compression_time_ms = end_time - start_time;
+#endif
 
     if (res != TAMP_OK)
     {
@@ -229,7 +250,15 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
     }
 
     size_t original_data_size = size;
-    debugLog("fsSetBlob: Original size: " + String(original_data_size) + ", Compressed size: " + String(output_written_size));
+#if DEBUG
+    int compression_percentage = 0;
+    if (original_data_size > 0) {
+        compression_percentage = (100 * (original_data_size - output_written_size)) / original_data_size;
+    }
+
+    debugLog("fsSetBlob: Original size: " + String(original_data_size) + ", Compressed size: " + String(output_written_size) +
+             ", Compression: " + String(compression_percentage) + "%, Time: " + String(compression_time_ms) + "ms");
+#endif
 
     File file = LittleFS.open(dir + conf, FILE_WRITE, true);
     if (file == false)
