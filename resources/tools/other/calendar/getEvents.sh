@@ -14,7 +14,7 @@ rm -rf $calendar_dir/*
 
 for url in "${urls[@]}"; do
     echo "Processing URL: $url"
-    cargo run --manifest-path src/ui/places/calendar/ics-to-json-rs/Cargo.toml -- -u "$url" -o $calendar_dir/
+    cargo run --release --manifest-path src/ui/places/calendar/ics-to-json-rs/Cargo.toml -- -u "$url" -o $calendar_dir/
 done
 
 merged_file="$calendar_dir/index.txt"

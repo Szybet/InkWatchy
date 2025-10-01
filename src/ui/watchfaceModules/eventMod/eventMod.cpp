@@ -4,7 +4,7 @@
 #if EVENT_MODULE
 
 #define DATE_BYTES 11 // unix is 10 bytes + \n
-#define LINE_LIMIT 28
+#define LINE_LIMIT 26
 
 // Makes redrawing turned off for the current day
 void wfEventresetValues() {
