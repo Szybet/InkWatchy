@@ -75,6 +75,16 @@ bool fsSetString(String conf, String value, String dir)
     return true;
 }
 
+TampDecompressor tamp_decompressor;
+bool tamp_decompressor_initialized = false;
+
+void initTampDecompressor() {
+    if (!tamp_decompressor_initialized) {
+        tamp_decompressor_init(&tamp_decompressor, NULL, window_buffer);
+        tamp_decompressor_initialized = true;
+    }
+}
+
 bufSize fsGetBlob(String conf, String dir)
 {
     if (fsSetup() == false)
@@ -111,7 +121,6 @@ bufSize fsGetBlob(String conf, String dir)
     size_t compressed_size;
     size_t offset = 0;
 
-    // Read original_size
     if (fileSize < sizeof(size_t))
     {
         debugLog("File too small to contain original_size: " + conf);
@@ -121,7 +130,6 @@ bufSize fsGetBlob(String conf, String dir)
     memcpy(&original_size, file_content_buffer + offset, sizeof(size_t));
     offset += sizeof(size_t);
 
-    // Read compressed_size
     if (fileSize < offset + sizeof(size_t))
     {
         debugLog("File too small to contain compressed_size: " + conf);
@@ -131,10 +139,8 @@ bufSize fsGetBlob(String conf, String dir)
     memcpy(&compressed_size, file_content_buffer + offset, sizeof(size_t));
     offset += sizeof(size_t);
 
-    // Add debug logs here
     debugLog("fsGetBlob: fileSize: " + String(fileSize) + ", original_size: " + String(original_size) + ", compressed_size: " + String(compressed_size) + ", offset: " + String(offset));
 
-    // Check if remaining file size matches compressed_size
     if (fileSize < offset + compressed_size)
     {
         debugLog("File content size mismatch with compressed_size: " + conf);
@@ -152,18 +158,16 @@ bufSize fsGetBlob(String conf, String dir)
         return emptyBuff;
     }
 
-    TampDecompressor decompressor;
-    tamp_decompressor_init(&decompressor, NULL, window_buffer); // NULL for implicit header read
-
+    initTampDecompressor();
     size_t output_written_size;
     size_t input_consumed_size;
 
     tamp_res res = tamp_decompressor_decompress(
-        &decompressor,
+        &tamp_decompressor,
         decompressed_buffer, original_size, &output_written_size,
         compressed_data, compressed_size, &input_consumed_size);
 
-    free(file_content_buffer); // Free the entire file content buffer
+    free(file_content_buffer);
 
     if (res != TAMP_OK && res != TAMP_INPUT_EXHAUSTED && res != TAMP_OUTPUT_FULL)
     {
@@ -192,11 +196,6 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         return false;
     }
 
-    // Allocate buffer for compressed data
-    // Max compressed size can be slightly larger than original for small inputs,
-    // so allocate a bit more. A safe upper bound is usually original_size + header_size.
-    // For TAMP, header is small, so let's assume original_size + 100 bytes is enough.
-    // Or, to be very safe, size * 2. Let's use size * 2 for now.
     size_t compressed_buffer_max_size = size * 2;
     uint8_t *compressed_buffer = (uint8_t *)malloc(compressed_buffer_max_size);
     if (!compressed_buffer)
@@ -208,7 +207,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
     TampCompressor compressor;
     TampConf tamp_conf = {
         .window = WINDOW_BITS,
-        .literal = 8, // Default literal bits
+        .literal = 8,
         .use_custom_dictionary = false};
 
     tamp_compressor_init(&compressor, &tamp_conf, window_buffer);
@@ -220,8 +219,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         &compressor,
         compressed_buffer, compressed_buffer_max_size, &output_written_size,
         value, size, &input_consumed_size,
-        true // write_token: true to write FLUSH token, indicating end of stream
-    );
+        true);
 
     if (res != TAMP_OK)
     {
@@ -230,7 +228,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         return false;
     }
 
-    size_t original_data_size = size; // Cast int to size_t
+    size_t original_data_size = size;
     debugLog("fsSetBlob: Original size: " + String(original_data_size) + ", Compressed size: " + String(output_written_size));
 
     File file = LittleFS.open(dir + conf, FILE_WRITE, true);
@@ -240,16 +238,15 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         free(compressed_buffer);
         return false;
     }
-    // Write the original size, then the compressed size, then the compressed data
     if (file.write((uint8_t *)&original_data_size, sizeof(size_t)) == 0)
-    { // Original size
+    {
         debugLog("Failed to write original size to file " + conf);
         file.close();
         free(compressed_buffer);
         return false;
     }
     if (file.write((uint8_t *)&output_written_size, sizeof(size_t)) == 0)
-    { // Compressed size
+    {
         debugLog("Failed to write compressed size to file " + conf);
         file.close();
         free(compressed_buffer);
