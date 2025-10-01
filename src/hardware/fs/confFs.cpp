@@ -2,8 +2,6 @@
 
 #define STR_ERROR "Failed to setup fs"
 
-uint8_t window_buffer[1 << WINDOW_BITS];
-
 /*
 // Just use default value
 bool fsIsConfig(String conf, String dir)
@@ -76,6 +74,7 @@ bool fsSetString(String conf, String value, String dir)
 }
 
 #define WINDOW_BITS 10
+uint8_t window_buffer[1 << WINDOW_BITS];
 static TampDecompressor tamp_decompressor;
 static bool tamp_decompressor_initialized = false;
 
