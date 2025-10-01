@@ -75,13 +75,29 @@ bool fsSetString(String conf, String value, String dir)
     return true;
 }
 
-TampDecompressor tamp_decompressor;
-bool tamp_decompressor_initialized = false;
+#define WINDOW_BITS 10
+static TampDecompressor tamp_decompressor;
+static bool tamp_decompressor_initialized = false;
 
-void initTampDecompressor() {
+static void initTampDecompressor() {
     if (!tamp_decompressor_initialized) {
         tamp_decompressor_init(&tamp_decompressor, NULL, window_buffer);
         tamp_decompressor_initialized = true;
+    }
+}
+
+static TampCompressor tamp_compressor;
+static bool tamp_compressor_initialized = false;
+
+static void initTampCompressor() {
+    if (!tamp_compressor_initialized) {
+        TampConf tamp_conf = {
+            .window = WINDOW_BITS,
+            .literal = 8,
+            .use_custom_dictionary = false
+        };
+        tamp_compressor_init(&tamp_compressor, &tamp_conf, window_buffer);
+        tamp_compressor_initialized = true;
     }
 }
 
@@ -138,8 +154,6 @@ bufSize fsGetBlob(String conf, String dir)
     }
     memcpy(&compressed_size, file_content_buffer + offset, sizeof(size_t));
     offset += sizeof(size_t);
-
-    debugLog("fsGetBlob: fileSize: " + String(fileSize) + ", original_size: " + String(original_size) + ", compressed_size: " + String(compressed_size) + ", offset: " + String(offset));
 
     if (fileSize < offset + compressed_size)
     {
@@ -216,13 +230,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         return false;
     }
 
-    TampCompressor compressor;
-    TampConf tamp_conf = {
-        .window = WINDOW_BITS,
-        .literal = 8,
-        .use_custom_dictionary = false};
-
-    tamp_compressor_init(&compressor, &tamp_conf, window_buffer);
+    initTampCompressor();
 
     size_t output_written_size;
     size_t input_consumed_size;
@@ -232,7 +240,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
 #endif
 
     tamp_res res = tamp_compressor_compress_and_flush(
-        &compressor,
+        &tamp_compressor,
         compressed_buffer, compressed_buffer_max_size, &output_written_size,
         value, size, &input_consumed_size,
         true);

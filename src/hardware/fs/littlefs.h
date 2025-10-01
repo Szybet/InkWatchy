@@ -4,8 +4,6 @@
 #include "tamp/compressor.h"
 #include "tamp/decompressor.h"
 
-#define WINDOW_BITS 10
-extern uint8_t window_buffer[1 << WINDOW_BITS];
 // https://github.com/espressif/arduino-esp32/blob/master/libraries/LittleFS/examples/LITTLEFS_test/LITTLEFS_test.ino
 
 bool fsSetup();
