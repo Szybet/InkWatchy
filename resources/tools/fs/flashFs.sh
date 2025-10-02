@@ -35,11 +35,16 @@ else
 fi
 
 rm -rf out/fs.bin
-./in/mklittlefs --all-files -c /tmp/littlefs -s $size out/fs.bin
+mklittlefs_output=$(./in/mklittlefs --all-files -c /tmp/littlefs -s $size out/fs.bin 2>&1)
 rm -rf /tmp/littlefs
 
+if echo "$mklittlefs_output" | grep -q "No more free space"; then
+    echo "Error: Filesystem is too big and won't fit" >&2
+    exit 1
+fi
+
 if [ ! -f out/fs.bin ]; then
-    echo "Error: Filesystem is too big and won't fit. 'out/fs.bin' was not created." >&2
+    echo "'out/fs.bin' was not created." >&2
     exit 1
 fi
 
