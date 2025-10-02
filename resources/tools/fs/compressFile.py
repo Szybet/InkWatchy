@@ -12,21 +12,20 @@ def compress_file(original_file_path):
     compressed_temp_file = f"{original_file_path}.tamp_compressed"
 
     try:
-        # Run tamp compress and output to a temporary file with settings from confFs.cpp
+        # Run tamp compress with explicit --input and --output flags
         subprocess_cmd = [
             "tamp",
             "compress",
-            original_file_path,
+            "--input", original_file_path,
+            "--output", compressed_temp_file,
             "--window", "10",
             "--literal", "8"
         ]
-        with open(compressed_temp_file, 'wb') as f_out:
-            subprocess.run(
-                subprocess_cmd,
-                check=True,
-                stdout=f_out,
-                stderr=subprocess.PIPE
-            )
+        subprocess.run(
+            subprocess_cmd,
+            check=True,
+            stderr=subprocess.PIPE
+        )
     except subprocess.CalledProcessError as e:
         print(f"Error compressing file with tamp: {e.stderr.decode()}\nOriginal file: {original_file_path}", file=sys.stderr)
         if os.path.exists(compressed_temp_file):
