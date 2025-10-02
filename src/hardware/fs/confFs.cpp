@@ -82,11 +82,7 @@ static void initTampDecompressor()
 {
     if (!tamp_decompressor_initialized)
     {
-        TampConf tamp_conf = {
-            .window = WINDOW_BITS,
-            .literal = 8,
-            .use_custom_dictionary = false};
-        tamp_decompressor_init(&tamp_decompressor, &tamp_conf, window_buffer);
+        tamp_decompressor_init(&tamp_decompressor, NULL, window_buffer);
         tamp_decompressor_initialized = true;
     }
 }
