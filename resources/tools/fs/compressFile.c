@@ -10,7 +10,6 @@
 #define LITERAL_BITS 8
 #define WINDOW_SIZE (1 << WINDOW_BITS)
 
-// Global window buffer for Tamp compressor/decompressor
 uint8_t window_buffer[WINDOW_SIZE];
 
 int main(int argc, char *argv[])
@@ -24,7 +23,6 @@ int main(int argc, char *argv[])
     const char *input_filename = argv[1];
     const char *output_filename = argv[2];
 
-    // 1. Read input file
     FILE *input_file = fopen(input_filename, "rb");
     if (!input_file)
     {
@@ -60,7 +58,6 @@ int main(int argc, char *argv[])
     }
     fclose(input_file);
 
-    // 2. Initialize Tamp Compressor
     TampCompressor tamp_compressor;
     TampConf tamp_conf = {
         .window = WINDOW_BITS,
@@ -68,10 +65,8 @@ int main(int argc, char *argv[])
         .use_custom_dictionary = false};
     tamp_compressor_init(&tamp_compressor, &tamp_conf, window_buffer);
 
-    // 3. Compress data
     uint32_t original_data_size = (uint32_t)input_file_size;
-    // Max compressed size can be slightly larger than original, use a safe upper bound
-    uint32_t compressed_buffer_max_size = original_data_size + (original_data_size / 8) + 100; // A common heuristic for max compressed size
+    uint32_t compressed_buffer_max_size = original_data_size + (original_data_size / 8) + 100;
 
     uint8_t *compressed_buffer = (uint8_t *)malloc(compressed_buffer_max_size);
     if (!compressed_buffer)
@@ -88,7 +83,7 @@ int main(int argc, char *argv[])
         &tamp_compressor,
         compressed_buffer, compressed_buffer_max_size, &output_written_size,
         input_buffer, original_data_size, &input_consumed_size,
-        true); // Flush at the end
+        true); 
 
     if (res != TAMP_OK)
     {
@@ -120,14 +115,13 @@ int main(int argc, char *argv[])
     printf("File: %s - Saved: %.2f%%\n", input_filename, percentage_saved);
 
     if (percentage_saved < 0.5 && original_data_size > 0)
-    { // Only save if there is actual data
+    {
         size_to_write = original_data_size;
-        output_written_size_u32 = 0; // Indicate no compression
+        output_written_size_u32 = 0;
         data_to_write = input_buffer;
         printf("Compression too low (%.2f%%), saving original data.\n", percentage_saved);
     }
 
-    // 4. Write output file
     FILE *output_file = fopen(output_filename, "wb");
     if (!output_file)
     {
@@ -137,7 +131,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Write original size
     if (fwrite(&original_data_size, sizeof(uint32_t), 1, output_file) != 1)
     {
         perror("Error writing original size to output file");
@@ -147,7 +140,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Write compressed size (or 0 if original data is saved)
     if (fwrite(&output_written_size_u32, sizeof(uint32_t), 1, output_file) != 1)
     {
         perror("Error writing compressed size to output file");
@@ -157,7 +149,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Write compressed data or original data
     if (fwrite(data_to_write, 1, size_to_write, output_file) != size_to_write)
     {
         perror("Error writing data to output file");
@@ -169,7 +160,6 @@ int main(int argc, char *argv[])
 
     fclose(output_file);
 
-    // Cleanup
     free(input_buffer);
     free(compressed_buffer);
 
