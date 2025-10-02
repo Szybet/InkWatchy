@@ -24,53 +24,46 @@ bool fsIsConfig(String conf, String dir)
 
 String fsGetString(String conf, String defaultValue, String dir)
 {
-    if (fsSetup() == false)
+    bufSize blob = fsGetBlob(conf, dir);
+    if (blob.buf == nullptr)
     {
-        debugLog("Failed to setup fs");
-        return defaultValue;
-    }
-    File file = LittleFS.open(dir + conf);
-    if (file == false)
-    {
-        debugLog("There is no conf file: " + conf);
+        debugLog("Failed to get blob for conf: " + conf + ", setting default value.");
         fsSetString(conf, defaultValue, dir);
         return defaultValue;
     }
-    int fileSize = file.size();
-    uint8_t *buf = (uint8_t *)malloc(fileSize * sizeof(uint8_t));
-    if (file.read(buf, fileSize) == 0)
+
+    // Ensure null termination for String conversion
+    char *str_buf = (char *)malloc(blob.size + 1);
+    if (!str_buf)
     {
-        debugLog("Failed to read the file: " + conf);
-        fsSetString(conf, defaultValue, dir);
+        debugLog("Failed to allocate memory for string buffer.");
+        free(blob.buf);
         return defaultValue;
     }
-    String str = String((char *)buf);
-    str = str.substring(0, fileSize); // Garbage?
-    // debugLog("Conf file: " + conf + " value: " + str);
-    file.close();
+    memcpy(str_buf, blob.buf, blob.size);
+    str_buf[blob.size] = '\0'; // Null-terminate the string
+
+    String str = String(str_buf);
+    free(blob.buf); // Free the buffer allocated by fsGetBlob
+    free(str_buf);  // Free the temporary string buffer
     return str;
 }
 
 bool fsSetString(String conf, String value, String dir)
 {
-    if (fsSetup() == false)
+    // Convert String to uint8_t* and its size
+    int size = value.length();
+    uint8_t *buf = (uint8_t *)malloc(size);
+    if (!buf)
     {
-        debugLog("Failed to setup fs");
+        debugLog("Failed to allocate memory for string conversion.");
         return false;
     }
-    File file = LittleFS.open(dir + conf, FILE_WRITE);
-    if (file == false)
-    {
-        debugLog("Failed to set conf: " + conf);
-        return false;
-    }
-    if (file.print(value) == false)
-    {
-        debugLog("Failed to print to file " + conf + " value: " + value);
-        return false;
-    }
-    file.close();
-    return true;
+    memcpy(buf, value.c_str(), size);
+
+    bool success = fsSetBlob(conf, buf, size, dir);
+    free(buf);
+    return success;
 }
 
 static std::mutex tamp_mutex;
