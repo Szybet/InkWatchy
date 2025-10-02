@@ -1,8 +1,6 @@
 #pragma once
 
 #include "defines.h"
-#include "tamp/compressor.h"
-#include "tamp/decompressor.h"
 
 // https://github.com/espressif/arduino-esp32/blob/master/libraries/LittleFS/examples/LITTLEFS_test/LITTLEFS_test.ino
 

@@ -319,6 +319,8 @@ The default is this:
 #define BAT_MINIMAL_DIFFERENCE 0.02
 #define AVOID_SLEEP_USB_JTAG 1 // If your device has USB JTAG (Yatchy, I don't have a Watchy v3 to test) it will avoid going to sleep if it detects it is being used. Useful when you want to reprogram the watch but it goes to sleep
 #define BUTTON_STUCK_MS 10000
+// Experimental, consumes battery, takes longer to load everything
+#define FILESYSTEM_COMPRESSION 1
 
 // Wifi Quick settings
 #define WIFI_QUICK_CHECK_MS 30

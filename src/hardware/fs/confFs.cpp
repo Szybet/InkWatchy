@@ -1,7 +1,5 @@
 #include "littlefs.h"
 
-#define STR_ERROR "Failed to setup fs"
-
 /*
 // Just use default value
 bool fsIsConfig(String conf, String dir)
@@ -65,6 +63,10 @@ bool fsSetString(String conf, String value, String dir)
     free(buf);
     return success;
 }
+
+#if FILESYSTEM_COMPRESSION
+#include "tamp/compressor.h"
+#include "tamp/decompressor.h"
 
 static std::mutex tamp_mutex;
 #define WINDOW_BITS 10
@@ -305,7 +307,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
     free(compressed_buffer);
     return true;
 }
-
+#endif
 /*
 #if DEBUG
   debugLog("Starting Tamp compression/decompression test...");
@@ -376,3 +378,53 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
   delayTask(9999999);
 #endif
 */
+
+#if !FILESYSTEM_COMPRESSION
+bufSize fsGetBlob(String conf, String dir)
+{
+    if (fsSetup() == false)
+    {
+        debugLog("Failed to setup fs");
+        return emptyBuff;
+    }
+    File file = LittleFS.open(dir + conf);
+    if (file == false)
+    {
+        debugLog("There is no conf file: " + conf);
+        return emptyBuff;
+    }
+    int fileSize = file.size();
+    uint8_t *buf = (uint8_t *)malloc(fileSize * sizeof(uint8_t));
+    if (file.read(buf, fileSize) == 0)
+    {
+        debugLog("Failed to read the file: " + conf);
+        return emptyBuff;
+    }
+    file.close();
+    bufSize retBuf = {
+        buf, fileSize
+    };
+    return retBuf;
+}
+
+bool fsSetBlob(String conf, uint8_t* value, int size, String dir)
+{
+    if (fsSetup() == false)
+    {
+        debugLog("Failed to setup fs");
+        return false;
+    }
+    File file = LittleFS.open(dir + conf, FILE_WRITE, true);
+    if (file == false)
+    {
+        debugLog("Failed to set conf: " + conf);
+        return false;
+    }
+    if(file.write(value, size) == false) {
+        debugLog("Failed to write blob to file " + conf);
+        return false;
+    }
+    file.close();
+    return true;
+}
+#endif
