@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h> // For uint32_t
+#include <stdint.h>
 
 #include "compressor.h"
 #include "common.h"
@@ -9,111 +9,144 @@
 #define WINDOW_BITS 10
 #define LITERAL_BITS 8
 #define WINDOW_SIZE (1 << WINDOW_BITS)
-#define INPUT_BUFFER_SIZE 1024 * 16
-#define OUTPUT_BUFFER_SIZE 1024 * 16 // A reasonable buffer size
 
-int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        fprintf(stderr, "Usage: %s <input_file> <output_file>\n", argv[0]);
+// Global window buffer for Tamp compressor/decompressor
+uint8_t window_buffer[WINDOW_SIZE];
+
+int main(int argc, char *argv[])
+{
+    if (argc != 3)
+    {
+        fprintf(stderr, "Usage: %s <input_file> <output_file>", argv[0]);
         return 1;
     }
 
     const char *input_filename = argv[1];
     const char *output_filename = argv[2];
 
+    // 1. Read input file
     FILE *input_file = fopen(input_filename, "rb");
-    if (!input_file) {
+    if (!input_file)
+    {
         perror("Error opening input file");
         return 1;
     }
 
-    FILE *output_file = fopen(output_filename, "wb");
-    if (!output_file) {
-        perror("Error opening output file");
+    fseek(input_file, 0, SEEK_END);
+    long input_file_size = ftell(input_file);
+    fseek(input_file, 0, SEEK_SET);
+
+    if (input_file_size == -1)
+    {
+        perror("Error getting input file size");
         fclose(input_file);
         return 1;
     }
 
-    // Seek to the end of the input file to get its size
-    fseek(input_file, 0, SEEK_END);
-    uint32_t original_size = ftell(input_file);
-    fseek(input_file, 0, SEEK_SET); // Rewind to the beginning
+    uint8_t *input_buffer = (uint8_t *)malloc(input_file_size);
+    if (!input_buffer)
+    {
+        perror("Error allocating memory for input buffer");
+        fclose(input_file);
+        return 1;
+    }
 
-    // Write placeholder for original_size and compressed_size
-    // These will be updated later
-    uint32_t placeholder = 0;
-    fwrite(&placeholder, sizeof(uint32_t), 1, output_file); // Original size placeholder
-    fwrite(&placeholder, sizeof(uint32_t), 1, output_file); // Compressed size placeholder
+    if (fread(input_buffer, 1, input_file_size, input_file) != input_file_size)
+    {
+        perror("Error reading input file");
+        free(input_buffer);
+        fclose(input_file);
+        return 1;
+    }
+    fclose(input_file);
 
-    TampCompressor compressor;
-    TampConf conf = {
+    // 2. Initialize Tamp Compressor
+    TampCompressor tamp_compressor;
+    TampConf tamp_conf = {
         .window = WINDOW_BITS,
         .literal = LITERAL_BITS,
-        .use_custom_dictionary = 0,
-    };
+        .use_custom_dictionary = false};
+    tamp_compressor_init(&tamp_compressor, &tamp_conf, window_buffer);
 
-    unsigned char window[WINDOW_SIZE];
-    tamp_res res = tamp_compressor_init(&compressor, &conf, window);
-    if (res != TAMP_OK) {
-        fprintf(stderr, "Error initializing compressor: %d\n", res);
-        fclose(input_file);
-        fclose(output_file);
+    // 3. Compress data
+    uint32_t original_data_size = (uint32_t)input_file_size;
+    // Max compressed size can be slightly larger than original, use a safe upper bound
+    uint32_t compressed_buffer_max_size = original_data_size + (original_data_size / 8) + 100; // A common heuristic for max compressed size
+
+    uint8_t *compressed_buffer = (uint8_t *)malloc(compressed_buffer_max_size);
+    if (!compressed_buffer)
+    {
+        perror("Error allocating memory for compressed buffer");
+        free(input_buffer);
         return 1;
     }
 
-    unsigned char input_buffer[INPUT_BUFFER_SIZE];
-    unsigned char output_buffer[OUTPUT_BUFFER_SIZE];
-    size_t bytes_read;
-    size_t total_compressed_bytes = 0;
+    size_t output_written_size;
+    size_t input_consumed_size;
 
-    size_t output_written = 0;
-    while ((bytes_read = fread(input_buffer, 1, INPUT_BUFFER_SIZE, input_file)) > 0) {
-        size_t input_consumed = 0;
-        while (input_consumed < bytes_read) {
-            res = tamp_compressor_compress(&compressor, output_buffer, OUTPUT_BUFFER_SIZE,
-                                           &output_written,
-                                           input_buffer + input_consumed, bytes_read - input_consumed,
-                                           &input_consumed);
+    tamp_res res = tamp_compressor_compress_and_flush(
+        &tamp_compressor,
+        compressed_buffer, compressed_buffer_max_size, &output_written_size,
+        input_buffer, original_data_size, &input_consumed_size,
+        true); // Flush at the end
 
-            if (output_written > 0) {
-                fwrite(output_buffer, 1, output_written, output_file);
-                total_compressed_bytes += output_written;
-            }
-
-            if (res != TAMP_OK && res != TAMP_OUTPUT_FULL) {
-                fprintf(stderr, "Error during compression: %d\n", res);
-                fclose(input_file);
-                fclose(output_file);
-                return 1;
-            }
-        }
-    }
-
-    // Flush any remaining data
-    output_written = 0;
-    res = tamp_compressor_flush(&compressor, output_buffer, OUTPUT_BUFFER_SIZE, &output_written, true);
-    if (output_written > 0) {
-        fwrite(output_buffer, 1, output_written, output_file);
-        total_compressed_bytes += output_written;
-    }
-    if (res != TAMP_OK) {
-        fprintf(stderr, "Error flushing compressor: %d\n", res);
-        fclose(input_file);
-        fclose(output_file);
+    if (res != TAMP_OK)
+    {
+        fprintf(stderr, "Tamp compression failed with error: %d", res);
+        free(input_buffer);
+        free(compressed_buffer);
         return 1;
     }
 
-    // Update original_size and compressed_size at the beginning of the file
-    fseek(output_file, 0, SEEK_SET);
-    fwrite(&original_size, sizeof(uint32_t), 1, output_file);
-    fwrite(&total_compressed_bytes, sizeof(uint32_t), 1, output_file);
+    // 4. Write output file
+    FILE *output_file = fopen(output_filename, "wb");
+    if (!output_file)
+    {
+        perror("Error opening output file");
+        free(input_buffer);
+        free(compressed_buffer);
+        return 1;
+    }
 
-    fclose(input_file);
+    // Write original size
+    if (fwrite(&original_data_size, sizeof(uint32_t), 1, output_file) != 1)
+    {
+        perror("Error writing original size to output file");
+        fclose(output_file);
+        free(input_buffer);
+        free(compressed_buffer);
+        return 1;
+    }
+
+    // Write compressed size
+    uint32_t output_written_size_u32 = (uint32_t)output_written_size;
+    if (fwrite(&output_written_size_u32, sizeof(uint32_t), 1, output_file) != 1)
+    {
+        perror("Error writing compressed size to output file");
+        fclose(output_file);
+        free(input_buffer);
+        free(compressed_buffer);
+        return 1;
+    }
+
+    // Write compressed data
+    if (fwrite(compressed_buffer, 1, output_written_size, output_file) != output_written_size)
+    {
+        perror("Error writing compressed data to output file");
+        fclose(output_file);
+        free(input_buffer);
+        free(compressed_buffer);
+        return 1;
+    }
+
     fclose(output_file);
 
-    fprintf(stdout, "Compressed: %s (Original: %u bytes, Compressed: %zu bytes, Saved: %.2f%%)\n",
-            input_filename, original_size, total_compressed_bytes,
-            original_size > 0 ? ((double)(original_size - total_compressed_bytes) / original_size) * 100.0 : 0.0);
+    // rintf("File compressed successfully: %s -> %s", input_filename, output_filename);
+    printf("Original size: %u bytes, Compressed size: %u bytes\n", original_data_size, output_written_size_u32);
+
+    // Cleanup
+    free(input_buffer);
+    free(compressed_buffer);
 
     return 0;
 }
