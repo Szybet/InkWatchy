@@ -282,7 +282,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         free(compressed_buffer);
         return false;
     }
-    if (file.write((uint8_t *)&original_data_size, sizeof(size_t)) == 0)
+    if (file.write((uint8_t *)&original_data_size, sizeof(uint32_t)) == 0)
     {
         debugLog("Failed to write original size to file " + conf);
         file.close();
