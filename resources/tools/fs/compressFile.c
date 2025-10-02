@@ -92,7 +92,15 @@ int main(int argc, char *argv[])
 
     if (res != TAMP_OK)
     {
-        fprintf(stderr, "Tamp compression failed with error: %d", res);
+        fprintf(stderr, "Tamp compression failed with error: %d\n", res);
+        free(input_buffer);
+        free(compressed_buffer);
+        return 1;
+    }
+
+    if (input_consumed_size != original_data_size)
+    {
+        fprintf(stderr, "Error: Not all input data was consumed by the compressor. Consumed: %zu, Original: %u\n", input_consumed_size, original_data_size);
         free(input_buffer);
         free(compressed_buffer);
         return 1;
@@ -141,8 +149,7 @@ int main(int argc, char *argv[])
 
     fclose(output_file);
 
-    // rintf("File compressed successfully: %s -> %s", input_filename, output_filename);
-    printf("Original size: %u bytes, Compressed size: %u bytes\n", original_data_size, output_written_size_u32);
+    printf("File compressed successfully: %s -> %s (Original: %u bytes, Compressed: %u bytes)\n", input_filename, output_filename, original_data_size, output_written_size_u32);
 
     // Cleanup
     free(input_buffer);
