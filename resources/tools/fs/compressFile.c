@@ -3,6 +3,9 @@
 #include <string.h>
 #include <stdint.h>
 
+// This doesn't work on esp side, so let's just try that
+// Experimental, but should just work?
+#define TAMP_LAZY_MATCHING 1
 #include "compressor.h"
 #include "common.h"
 
