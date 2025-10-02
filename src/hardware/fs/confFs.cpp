@@ -73,38 +73,30 @@ bool fsSetString(String conf, String value, String dir)
     return true;
 }
 
+static std::mutex tamp_mutex;
 #define WINDOW_BITS 10
 uint8_t window_buffer[1 << WINDOW_BITS];
 static TampDecompressor tamp_decompressor;
-static bool tamp_decompressor_initialized = false;
 
 static void initTampDecompressor()
 {
-    if (!tamp_decompressor_initialized)
-    {
-        tamp_decompressor_init(&tamp_decompressor, NULL, window_buffer);
-        tamp_decompressor_initialized = true;
-    }
+    tamp_decompressor_init(&tamp_decompressor, NULL, window_buffer);
 }
 
 static TampCompressor tamp_compressor;
-static bool tamp_compressor_initialized = false;
-
 static void initTampCompressor()
 {
-    if (!tamp_compressor_initialized)
-    {
-        TampConf tamp_conf = {
-            .window = WINDOW_BITS,
-            .literal = 8,
-            .use_custom_dictionary = false};
-        tamp_compressor_init(&tamp_compressor, &tamp_conf, window_buffer);
-        tamp_compressor_initialized = true;
-    }
+    TampConf tamp_conf = {
+        .window = WINDOW_BITS,
+        .literal = 8,
+        .use_custom_dictionary = false};
+    tamp_compressor_init(&tamp_compressor, &tamp_conf, window_buffer);
 }
 
 bufSize fsGetBlob(String conf, String dir)
 {
+    std::lock_guard<std::mutex> lock(tamp_mutex);
+    memset(window_buffer, 0, sizeof(window_buffer));
     if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
@@ -220,6 +212,8 @@ bufSize fsGetBlob(String conf, String dir)
 
 bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
 {
+    std::lock_guard<std::mutex> lock(tamp_mutex);
+    memset(window_buffer, 0, sizeof(window_buffer));
     if (fsSetup() == false)
     {
         debugLog("Failed to setup fs");
@@ -308,8 +302,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
 }
 
 /*
-
-  // Tamp compression/decompression test
+#if DEBUG
   debugLog("Starting Tamp compression/decompression test...");
 
   const char* test_data_str = "This is a test string for Tamp compression. It should be compressed and then decompressed correctly.";
@@ -346,6 +339,35 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
   }
   debugLog("Tamp compression/decompression test finished.");
 
-#endif
+  debugLog("Starting Python-generated TAMP compression test...");
+
+  const char* python_test_data_str = "This is a test string for Python-generated TAMP compression. It should be compressed by the Python script and then decompressed correctly by the C++ code.";
+  uint8_t* python_original_data = (uint8_t*)python_test_data_str;
+  int python_original_size = strlen(python_test_data_str) + 1; // +1 for null terminator
+
+  String python_test_blob_name = "/test_python_compression.txt";
+  String python_test_dir = "/"; // Assuming it's in the root of littlefs
+
+  // Get blob (read and decompress)
+  bufSize python_retrieved_blob = fsGetBlob(python_test_blob_name, python_test_dir);
+
+  if (python_retrieved_blob.buf != nullptr && python_retrieved_blob.size > 0) {
+    debugLog("fsGetBlob successful for Python-generated " + python_test_blob_name + ", decompressed size: " + String(python_retrieved_blob.size));
+
+    // Compare original and decompressed data
+    if (python_retrieved_blob.size == python_original_size && memcmp(python_original_data, python_retrieved_blob.buf, python_original_size) == 0) {
+      debugLog("Python-generated TAMP test PASSED: Original and decompressed data match!");
+    } else {
+      debugLog("Python-generated TAMP test FAILED: Original and decompressed data DO NOT match!");
+      debugLog("Original: " + String((char*)python_original_data));
+      debugLog("Decompressed: " + String((char*)python_retrieved_blob.buf));
+    }
+    free(python_retrieved_blob.buf); // Free the allocated buffer
+  } else {
+    debugLog("Python-generated TAMP test FAILED: fsGetBlob returned empty buffer or failed.");
+  }
+  debugLog("Python-generated TAMP compression test finished.");
+
   delayTask(9999999);
+#endif
 */
