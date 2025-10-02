@@ -78,9 +78,15 @@ uint8_t window_buffer[1 << WINDOW_BITS];
 static TampDecompressor tamp_decompressor;
 static bool tamp_decompressor_initialized = false;
 
-static void initTampDecompressor() {
-    if (!tamp_decompressor_initialized) {
-        tamp_decompressor_init(&tamp_decompressor, NULL, window_buffer);
+static void initTampDecompressor()
+{
+    if (!tamp_decompressor_initialized)
+    {
+        TampConf tamp_conf = {
+            .window = WINDOW_BITS,
+            .literal = 8,
+            .use_custom_dictionary = false};
+        tamp_decompressor_init(&tamp_decompressor, &tamp_conf, window_buffer);
         tamp_decompressor_initialized = true;
     }
 }
@@ -88,13 +94,14 @@ static void initTampDecompressor() {
 static TampCompressor tamp_compressor;
 static bool tamp_compressor_initialized = false;
 
-static void initTampCompressor() {
-    if (!tamp_compressor_initialized) {
+static void initTampCompressor()
+{
+    if (!tamp_compressor_initialized)
+    {
         TampConf tamp_conf = {
             .window = WINDOW_BITS,
             .literal = 8,
-            .use_custom_dictionary = false
-        };
+            .use_custom_dictionary = false};
         tamp_compressor_init(&tamp_compressor, &tamp_conf, window_buffer);
         tamp_compressor_initialized = true;
     }
@@ -259,7 +266,8 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
     size_t original_data_size = size;
 #if DEBUG
     int compression_percentage = 0;
-    if (original_data_size > 0) {
+    if (original_data_size > 0)
+    {
         compression_percentage = (100 * (original_data_size - output_written_size)) / original_data_size;
     }
 
@@ -299,7 +307,6 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
     free(compressed_buffer);
     return true;
 }
-
 
 /*
 

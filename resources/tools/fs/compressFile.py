@@ -12,10 +12,17 @@ def compress_file(original_file_path):
     compressed_temp_file = f"{original_file_path}.tamp_compressed"
 
     try:
-        # Run tamp compress and output to a temporary file
+        # Run tamp compress and output to a temporary file with settings from confFs.cpp
+        subprocess_cmd = [
+            "tamp",
+            "compress",
+            original_file_path,
+            "--window", "10",
+            "--literal", "8"
+        ]
         with open(compressed_temp_file, 'wb') as f_out:
             subprocess.run(
-                ["tamp", "compress", original_file_path],
+                subprocess_cmd,
                 check=True,
                 stdout=f_out,
                 stderr=subprocess.PIPE
@@ -36,7 +43,7 @@ def compress_file(original_file_path):
     if original_size > 0:
         percentage_saved = ((original_size - compressed_size) / original_size) * 100
 
-    print(f"Compressed: {original_file_path} (Original: {original_size} bytes, Compressed: {compressed_size} bytes, Saved: {percentage_saved:.2f}% ) ")
+    print(f"Compressed: {original_file_path} (Original: {original_size} bytes, Compressed: {compressed_size} bytes, Saved: {percentage_saved:.2f}%) ")
 
     # Read the compressed data from the temporary file
     with open(compressed_temp_file, 'rb') as f_in:
