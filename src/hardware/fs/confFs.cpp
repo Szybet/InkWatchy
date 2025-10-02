@@ -135,27 +135,29 @@ bufSize fsGetBlob(String conf, String dir)
     }
     file.close();
 
-    size_t original_size;
-    size_t compressed_size;
-    size_t offset = 0;
+    uint32_t original_size;
+    uint32_t compressed_size;
+    uint32_t offset = 0;
 
-    if (fileSize < sizeof(size_t))
+    if (fileSize < sizeof(uint32_t))
     {
         debugLog("File too small to contain original_size: " + conf);
         free(file_content_buffer);
         return emptyBuff;
     }
-    memcpy(&original_size, file_content_buffer + offset, sizeof(size_t));
-    offset += sizeof(size_t);
+    memcpy(&original_size, file_content_buffer + offset, sizeof(uint32_t));
+    offset += sizeof(uint32_t);
+    debugLog("fsGetBlob: Read original_size from header: " + String(original_size));
 
-    if (fileSize < offset + sizeof(size_t))
+    if (fileSize < offset + sizeof(uint32_t))
     {
         debugLog("File too small to contain compressed_size: " + conf);
         free(file_content_buffer);
         return emptyBuff;
     }
-    memcpy(&compressed_size, file_content_buffer + offset, sizeof(size_t));
-    offset += sizeof(size_t);
+    memcpy(&compressed_size, file_content_buffer + offset, sizeof(uint32_t));
+    offset += sizeof(uint32_t);
+    debugLog("fsGetBlob: Read compressed_size from header: " + String(compressed_size));
 
     if (fileSize < offset + compressed_size)
     {
@@ -224,7 +226,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         return false;
     }
 
-    size_t compressed_buffer_max_size = size * 2;
+    uint32_t compressed_buffer_max_size = size * 2;
     uint8_t *compressed_buffer = (uint8_t *)malloc(compressed_buffer_max_size);
     if (!compressed_buffer)
     {
@@ -259,7 +261,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         return false;
     }
 
-    size_t original_data_size = size;
+    uint32_t original_data_size = size;
 #if DEBUG
     int compression_percentage = 0;
     if (original_data_size > 0)
@@ -285,7 +287,8 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         free(compressed_buffer);
         return false;
     }
-    if (file.write((uint8_t *)&output_written_size, sizeof(uint32_t)) == 0)
+    uint32_t output_written_size_u32 = (uint32_t)output_written_size;
+    if (file.write((uint8_t *)&output_written_size_u32, sizeof(uint32_t)) == 0)
     {
         debugLog("Failed to write compressed size to file " + conf);
         file.close();
