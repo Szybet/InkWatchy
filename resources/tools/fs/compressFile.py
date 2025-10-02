@@ -11,8 +11,6 @@ def compress_file(original_file_path):
     original_size = os.path.getsize(original_file_path)
     compressed_temp_file = f"{original_file_path}.tamp_compressed"
 
-    print(f"Compressing: {original_file_path} (Original size: {original_size} bytes)")
-
     try:
         # Run tamp compress and output to a temporary file
         with open(compressed_temp_file, 'wb') as f_out:
@@ -32,7 +30,13 @@ def compress_file(original_file_path):
         sys.exit(1)
 
     compressed_size = os.path.getsize(compressed_temp_file)
-    print(f"Compressed size: {compressed_size} bytes")
+
+    # Calculate percentage saved
+    percentage_saved = 0.0
+    if original_size > 0:
+        percentage_saved = ((original_size - compressed_size) / original_size) * 100
+
+    print(f"Compressed: {original_file_path} (Original: {original_size} bytes, Compressed: {compressed_size} bytes, Saved: {percentage_saved:.2f}% ) ")
 
     # Read the compressed data from the temporary file
     with open(compressed_temp_file, 'rb') as f_in:
