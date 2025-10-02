@@ -15,9 +15,14 @@ if [[ $? -ne 0 || -z "$serial_port" ]]; then
     exit 1
 fi
 
-rm -rf out/fs.bin
 mv ./littlefs/other/yatchy-lp-program*.bin ./littlefs/other/yatchy-lp-program.bin 2>/dev/null || true
-./in/mklittlefs --all-files -c littlefs -s $size out/fs.bin
+rm -rf /tmp/littlefs
+cp -r littlefs /tmp/
+
+find /tmp/littlefs -type f ! -path "*/book/*" ! -name ".keep" -exec sh -c 'echo "Compressing: $1"; tamp compress "$1" > "$1.tmp" && mv "$1.tmp" "$1"' _ {} \;
+rm -rf out/fs.bin
+./in/mklittlefs --all-files -c /tmp/littlefs -s $size out/fs.bin
+rm -rf /tmp/littlefs
 
 if [ $? -ne 0 ]; then
     echo "Command failed. Exiting the script."

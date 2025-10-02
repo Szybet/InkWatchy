@@ -86,3 +86,6 @@ ENV PATH=$PATH:$HOME/.cargo/bin
 # For rusty stuff
 # Idk weird fix with update
 RUN apt-get update && apt-get install -y gcc build-essential curl pkg-config libinput10
+
+# Compression
+RUN pip install --no-input --break-system-packages tamp==1.10.1

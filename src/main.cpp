@@ -23,46 +23,7 @@ void setup()
 {
 #if DEBUG
   initLog();
-
-  // Tamp compression/decompression test
-  debugLog("Starting Tamp compression/decompression test...");
-
-  const char* test_data_str = "This is a test string for Tamp compression. It should be compressed and then decompressed correctly.";
-  uint8_t* original_data = (uint8_t*)test_data_str;
-  int original_size = strlen(test_data_str) + 1; // +1 for null terminator
-
-  String test_blob_name = "/test_blob.tamp";
-  String test_dir = "/conf/";
-
-  // Set blob (compress and write)
-  if (fsSetBlob(test_blob_name, original_data, original_size, test_dir)) {
-    debugLog("fsSetBlob successful for " + test_blob_name);
-
-    // Get blob (read and decompress)
-    bufSize retrieved_blob = fsGetBlob(test_blob_name, test_dir);
-
-    if (retrieved_blob.buf != nullptr && retrieved_blob.size > 0) {
-      debugLog("fsGetBlob successful for " + test_blob_name + ", decompressed size: " + String(retrieved_blob.size));
-
-      // Compare original and decompressed data
-      if (retrieved_blob.size == original_size && memcmp(original_data, retrieved_blob.buf, original_size) == 0) {
-        debugLog("Tamp test PASSED: Original and decompressed data match!");
-      } else {
-        debugLog("Tamp test FAILED: Original and decompressed data DO NOT match!");
-        debugLog("Original: " + String((char*)original_data));
-        debugLog("Decompressed: " + String((char*)retrieved_blob.buf));
-      }
-      free(retrieved_blob.buf); // Free the allocated buffer
-    } else {
-      debugLog("Tamp test FAILED: fsGetBlob returned empty buffer.");
-    }
-  } else {
-    debugLog("Tamp test FAILED: fsSetBlob failed.");
-  }
-  debugLog("Tamp compression/decompression test finished.");
-
 #endif
-  delayTask(9999999);
   
   initHardware();
   // debugLog("Starting millis: " + String(millisBetter()));
