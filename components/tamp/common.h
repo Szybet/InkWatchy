@@ -9,6 +9,8 @@ extern "C" {
 #include <stdint.h>
 #include <stdlib.h>
 
+#define TAMP_LAZY_MATCHING 1
+
 #if ESP_PLATFORM
 // (External) code #including this header MUST use the SAME TAMP_ESP32 setting that is used when
 // building this lib!

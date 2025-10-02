@@ -62,7 +62,9 @@ int main(int argc, char *argv[])
     TampConf tamp_conf = {
         .window = WINDOW_BITS,
         .literal = LITERAL_BITS,
-        .use_custom_dictionary = false};
+        .use_custom_dictionary = false,
+        .lazy_matching = true,
+    };
     tamp_compressor_init(&tamp_compressor, &tamp_conf, window_buffer);
 
     uint32_t original_data_size = (uint32_t)input_file_size;
@@ -83,7 +85,7 @@ int main(int argc, char *argv[])
         &tamp_compressor,
         compressed_buffer, compressed_buffer_max_size, &output_written_size,
         input_buffer, original_data_size, &input_consumed_size,
-        true); 
+        true);
 
     if (res != TAMP_OK)
     {
