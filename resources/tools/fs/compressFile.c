@@ -149,7 +149,9 @@ int main(int argc, char *argv[])
 
     fclose(output_file);
 
-    printf("File compressed successfully: %s -> %s (Original: %u bytes, Compressed: %u bytes)\n", input_filename, output_filename, original_data_size, output_written_size_u32);
+    double percentage_saved = 0.0;
+    percentage_saved = ((double)((int64_t)original_data_size - (int64_t)output_written_size_u32) / (int64_t)original_data_size) * 100.0;
+    printf("File: %s - Saved: %.2f%%\n", input_filename, percentage_saved);
 
     // Cleanup
     free(input_buffer);
