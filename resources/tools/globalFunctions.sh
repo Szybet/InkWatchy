@@ -139,7 +139,7 @@ check_define() {
 
     if [[ ! -f "$file_path" ]]; then
         echo "File not found: $file_path"
-        return 1
+        return 0
     fi
 
     # Check if the define is turned on
