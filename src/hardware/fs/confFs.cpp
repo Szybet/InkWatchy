@@ -132,7 +132,7 @@ bufSize fsGetBlob(String conf, String dir)
     }
     memcpy(&original_size, file_content_buffer + offset, sizeof(uint32_t));
     offset += sizeof(uint32_t);
-    // debugLog("fsGetBlob: Read original_size from header: " + String(original_size));
+    // debugLog("Read original_size from header: " + String(original_size));
 
     if (fileSize < offset + sizeof(uint32_t))
     {
@@ -142,7 +142,7 @@ bufSize fsGetBlob(String conf, String dir)
     }
     memcpy(&compressed_size, file_content_buffer + offset, sizeof(uint32_t));
     offset += sizeof(uint32_t);
-    // debugLog("fsGetBlob: Read compressed_size from header: " + String(compressed_size));
+    // debugLog("Read compressed_size from header: " + String(compressed_size));
 
     if (fileSize < offset + compressed_size)
     {
@@ -169,17 +169,17 @@ bufSize fsGetBlob(String conf, String dir)
 
     if (compressed_size == 0)
     {
-        debugLog("Data was not compressed, just copy original data")
-            memcpy(decompressed_buffer, compressed_data, original_size);
+        debugLog("Data was not compressed, just copy original data");
+        memcpy(decompressed_buffer, compressed_data, original_size);
         output_written_size = original_size;
     }
     else
     {
-        initTampDecompressor();
-
 #if DEBUG
         uint64_t start_time = millis();
 #endif
+
+        initTampDecompressor();
 
         tamp_res res = tamp_decompressor_decompress(
             &tamp_decompressor,
@@ -208,7 +208,7 @@ bufSize fsGetBlob(String conf, String dir)
         return emptyBuff;
     }
 #if DEBUG
-    debugLog("fsGetBlob: Decompression Time: " + String(decompression_time_ms) + "ms");
+    debugLog("Decompression Time: " + String(decompression_time_ms) + "ms");
 #endif
 
     bufSize retBuf = {
@@ -269,8 +269,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         compression_percentage = (100 * (original_data_size - output_written_size)) / original_data_size;
     }
 
-    debugLog("fsSetBlob: Original size: " + String(original_data_size) + ", Compressed size: " + String(output_written_size) +
-             ", Compression: " + String(compression_percentage) + "%, Time: " + String(compression_time_ms) + "ms");
+    debugLog("fsSetBlob compression: " + String(compression_percentage) + "%, Time: " + String(compression_time_ms) + "ms");
 #endif
 
     File file = LittleFS.open(dir + conf, FILE_WRITE, true);
