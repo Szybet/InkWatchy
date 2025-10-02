@@ -19,7 +19,7 @@ mv ./littlefs/other/yatchy-lp-program*.bin ./littlefs/other/yatchy-lp-program.bi
 rm -rf /tmp/littlefs
 cp -r littlefs /tmp/
 
-if ! check_define FILESYYSTEM_COMPRESSION ../../../src/defines/config.h; then
+if ! check_define FILESYSTEM_COMPRESSION ../../../src/defines/config.h; then
     echo "FILESYSTEM_COMPRESSION is enabled. Applying compression..."
     # Compile the C compressor
     echo "Compiling compressFile.c..."
