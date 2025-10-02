@@ -139,7 +139,7 @@ bufSize fsGetBlob(String conf, String dir)
     }
     memcpy(&original_size, file_content_buffer + offset, sizeof(uint32_t));
     offset += sizeof(uint32_t);
-    debugLog("fsGetBlob: Read original_size from header: " + String(original_size));
+    // debugLog("fsGetBlob: Read original_size from header: " + String(original_size));
 
     if (fileSize < offset + sizeof(uint32_t))
     {
@@ -149,7 +149,7 @@ bufSize fsGetBlob(String conf, String dir)
     }
     memcpy(&compressed_size, file_content_buffer + offset, sizeof(uint32_t));
     offset += sizeof(uint32_t);
-    debugLog("fsGetBlob: Read compressed_size from header: " + String(compressed_size));
+    // debugLog("fsGetBlob: Read compressed_size from header: " + String(compressed_size));
 
     if (fileSize < offset + compressed_size)
     {
