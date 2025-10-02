@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 size=$(<in/size.txt tr -d '\n')
 offset=$(<in/offset.txt tr -d '\n')
@@ -19,18 +19,29 @@ mv ./littlefs/other/yatchy-lp-program*.bin ./littlefs/other/yatchy-lp-program.bi
 rm -rf /tmp/littlefs
 cp -r littlefs /tmp/
 
-# Compile the C compressor
-echo "Compiling compressFile.c..."
-gcc -o in/compressFile -I../../../components/tamp/ ../../../components/tamp/common.c ../../../components/tamp/compressor.c compressFile.c
-if [ $? -ne 0 ]; then
-    echo "Error compiling compressFile.c. Exiting."
-    exit 1
+if ! check_define FILESYYSTEM_COMPRESSION ../../src/defines/config.h; then
+    echo "FILESYSTEM_COMPRESSION is enabled. Applying compression..."
+    # Compile the C compressor
+    echo "Compiling compressFile.c..."
+    gcc -o in/compressFile -I../../../components/tamp/ ../../../components/tamp/common.c ../../../components/tamp/compressor.c compressFile.c
+    if [ $? -ne 0 ]; then
+        echo "Error compiling compressFile.c. Exiting."
+        exit 1
+    fi
+
+    find /tmp/littlefs -type f ! -path "*/book/*" ! -name ".keep" -exec bash -c './in/compressFile "$0" "$0.compressed" && mv "$0.compressed" "$0"' {} \;
+else
+    echo "FILESYSTEM_COMPRESSION is not enabled. Skipping compression."
 fi
 
-find /tmp/littlefs -type f ! -path "*/book/*" ! -name ".keep" -exec bash -c './in/compressFile "$0" "$0.compressed" && mv "$0.compressed" "$0"' {} \;
 rm -rf out/fs.bin
 ./in/mklittlefs --all-files -c /tmp/littlefs -s $size out/fs.bin
 rm -rf /tmp/littlefs
+
+if [ ! -f out/fs.bin ]; then
+    echo "Error: Filesystem is too big and won't fit. 'out/fs.bin' was not created." >&2
+    exit 1
+fi
 
 if [ $? -ne 0 ]; then
     echo "Command failed. Exiting the script."
