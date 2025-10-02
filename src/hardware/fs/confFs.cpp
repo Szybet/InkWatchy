@@ -161,31 +161,44 @@ bufSize fsGetBlob(String conf, String dir)
         return emptyBuff;
     }
 
-    initTampDecompressor();
-    size_t output_written_size;
-    size_t input_consumed_size;
-
+    size_t output_written_size = 0;
+    size_t input_consumed_size = 0;
 #if DEBUG
-    uint64_t start_time = millis();
+    uint64_t decompression_time_ms = 0;
 #endif
 
-    tamp_res res = tamp_decompressor_decompress(
-        &tamp_decompressor,
-        decompressed_buffer, original_size, &output_written_size,
-        compressed_data, compressed_size, &input_consumed_size);
-
-#if DEBUG
-    uint64_t end_time = millis();
-    uint64_t decompression_time_ms = end_time - start_time;
-#endif
-
-    free(file_content_buffer);
-
-    if (res != TAMP_OK && res != TAMP_INPUT_EXHAUSTED && res != TAMP_OUTPUT_FULL)
+    if (compressed_size == 0)
     {
-        debugLog("Tamp decompression failed with error: " + String(res));
-        free(decompressed_buffer);
-        return emptyBuff;
+        debugLog("Data was not compressed, just copy original data")
+            memcpy(decompressed_buffer, compressed_data, original_size);
+        output_written_size = original_size;
+    }
+    else
+    {
+        initTampDecompressor();
+
+#if DEBUG
+        uint64_t start_time = millis();
+#endif
+
+        tamp_res res = tamp_decompressor_decompress(
+            &tamp_decompressor,
+            decompressed_buffer, original_size, &output_written_size,
+            compressed_data, compressed_size, &input_consumed_size);
+
+#if DEBUG
+        uint64_t end_time = millis();
+        decompression_time_ms = end_time - start_time;
+#endif
+
+        free(file_content_buffer);
+
+        if (res != TAMP_OK && res != TAMP_INPUT_EXHAUSTED && res != TAMP_OUTPUT_FULL)
+        {
+            debugLog("Tamp decompression failed with error: " + String(res));
+            free(decompressed_buffer);
+            return emptyBuff;
+        }
     }
 
     if (output_written_size != original_size)

@@ -106,6 +106,27 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    uint32_t output_written_size_u32 = (uint32_t)output_written_size;
+
+    double percentage_saved = 0.0;
+    if (original_data_size > 0)
+    {
+        percentage_saved = ((double)((int64_t)original_data_size - (int64_t)output_written_size_u32) / (int64_t)original_data_size) * 100.0;
+    }
+
+    uint8_t *data_to_write = compressed_buffer;
+    uint32_t size_to_write = output_written_size_u32;
+
+    printf("File: %s - Saved: %.2f%%\n", input_filename, percentage_saved);
+
+    if (percentage_saved < 0.5 && original_data_size > 0)
+    { // Only save if there is actual data
+        size_to_write = original_data_size;
+        output_written_size_u32 = 0; // Indicate no compression
+        data_to_write = input_buffer;
+        printf("Compression too low (%.2f%%), saving original data.\n", percentage_saved);
+    }
+
     // 4. Write output file
     FILE *output_file = fopen(output_filename, "wb");
     if (!output_file)
@@ -126,8 +147,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Write compressed size
-    uint32_t output_written_size_u32 = (uint32_t)output_written_size;
+    // Write compressed size (or 0 if original data is saved)
     if (fwrite(&output_written_size_u32, sizeof(uint32_t), 1, output_file) != 1)
     {
         perror("Error writing compressed size to output file");
@@ -137,10 +157,10 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // Write compressed data
-    if (fwrite(compressed_buffer, 1, output_written_size, output_file) != output_written_size)
+    // Write compressed data or original data
+    if (fwrite(data_to_write, 1, size_to_write, output_file) != size_to_write)
     {
-        perror("Error writing compressed data to output file");
+        perror("Error writing data to output file");
         fclose(output_file);
         free(input_buffer);
         free(compressed_buffer);
@@ -148,10 +168,6 @@ int main(int argc, char *argv[])
     }
 
     fclose(output_file);
-
-    double percentage_saved = 0.0;
-    percentage_saved = ((double)((int64_t)original_data_size - (int64_t)output_written_size_u32) / (int64_t)original_data_size) * 100.0;
-    printf("File: %s - Saved: %.2f%%\n", input_filename, percentage_saved);
 
     // Cleanup
     free(input_buffer);
