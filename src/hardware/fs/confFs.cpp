@@ -285,7 +285,7 @@ bool fsSetBlob(String conf, uint8_t *value, int size, String dir)
         free(compressed_buffer);
         return false;
     }
-    if (file.write((uint8_t *)&output_written_size, sizeof(size_t)) == 0)
+    if (file.write((uint8_t *)&output_written_size, sizeof(uint32_t)) == 0)
     {
         debugLog("Failed to write compressed size to file " + conf);
         file.close();
