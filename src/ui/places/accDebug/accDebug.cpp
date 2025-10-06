@@ -84,6 +84,7 @@ void initAccDebug()
 
   if (workingAcc == true)
   {
+    delayTask(50);
     rM.SBMA.enableAccel();
     Accel acc;
     runAccelStatus = rM.SBMA.getAccel(&acc);
@@ -136,6 +137,18 @@ void loopAccDebug()
 
           Accel acc;
           bool runAccelStatusTmp = rM.SBMA.getAccel(&acc);
+
+          // Weird fallback
+          /*
+          if (runAccelStatusTmp == true && acc.x == 0 && acc.y == 0 && acc.z == 0)
+          {
+            runAccelStatusTmp = false;
+            debugLog("Weird acc workaround fix");
+            rM.SBMA.enableAccel();
+            rM.SBMA.enableStepCount();
+          }
+          */
+
           if (runAccelStatusTmp != runAccelStatus)
           {
             runAccelStatus = runAccelStatusTmp;

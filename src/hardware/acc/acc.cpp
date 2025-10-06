@@ -8,7 +8,6 @@
 #if BMAM_4
 uint16_t readRegisterBMA4(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {
-    // Watchy v3 requires it
     watchdogPing();
 #if ATCHY_VER == YATCHY || ATCHY_VER == WATCHY_3
     if (initI2C() == false)
@@ -30,7 +29,6 @@ uint16_t readRegisterBMA4(uint8_t address, uint8_t reg, uint8_t *data, uint16_t 
 
 uint16_t writeRegisterBMA4(uint8_t address, uint8_t reg, uint8_t *data, uint16_t len)
 {
-    // Watchy v3 requires it
     watchdogPing();
 #if ATCHY_VER == YATCHY || ATCHY_VER == WATCHY_3
     if (initI2C() == false)
@@ -47,6 +45,7 @@ uint16_t writeRegisterBMA4(uint8_t address, uint8_t reg, uint8_t *data, uint16_t
 #elif BMAM_5
 int8_t readRegisterBMA5(uint8_t reg_addr, uint8_t *reg_data, uint32_t length, void *intf_ptr)
 {
+    watchdogPing();
 #if ATCHY_VER == YATCHY
     if (initI2C() == false)
     {
@@ -93,6 +92,7 @@ int8_t readRegisterBMA5(uint8_t reg_addr, uint8_t *reg_data, uint32_t length, vo
 int8_t writeRegisterBMA5(uint8_t reg_addr, const uint8_t *reg_data, uint32_t length,
                          void *intf_ptr)
 {
+    watchdogPing();
 #if ATCHY_VER == YATCHY
     if (initI2C() == false)
     {

@@ -42,7 +42,7 @@ void loopWatchdogTask(void *parameter)
             // debugLog("Detected all buttons high, resetting...");
             assert(0);
         }
-        if (watchdogMillis + WATCHDOG_DELAY > millisBetter())
+        if (millisBetter() - watchdogMillis > WATCHDOG_DELAY)
         {
             watchdogMillis = millisBetter();
             if (watchdogFlag.load(std::memory_order_relaxed) == false)
