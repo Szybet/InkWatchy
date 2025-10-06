@@ -279,6 +279,7 @@ The default is this:
 #define SOFT_START_THINGS 1          // Slowly starts things, like wifi to prevent brownout reset.
 #define SOFT_START_DELAY_MS 4500
 #define FORCE_DISABLE_ACC 0 // 1 Means ACC is disabled, BMA530 doesn't like that, increases power consumption
+#define LED_MAX_TIME_MS 30000 // Fallback if diode is on and you forgot to turn it off (flashlight)
 
 // Vault
 #define VAULT 1

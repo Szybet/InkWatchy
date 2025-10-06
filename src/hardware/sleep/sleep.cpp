@@ -293,9 +293,26 @@ void manageSleep()
                 {
                     currentColorMutex.unlock();
                 }
-                debugLog("Rgb task running or rgb diode not turned off, delaying sleep");
                 rgbTaskMutex.unlock();
-                setSleepDelay(1000);
+
+                bool diodeOff = false;
+                if (ledOnTime == 0)
+                {
+                    ledOnTime = millisBetter();
+                }
+                else if (millisBetter() - ledOnTime > LED_MAX_TIME_MS)
+                {
+                    debugLog("Led max time finished, turning off led");
+                    setRgb(IwNone, false);
+                    ledOnTime = 0;
+                    diodeOff = true;
+                }
+
+                if (diodeOff == false)
+                {
+                    debugLog("Rgb task running or rgb diode not turned off, delaying sleep");
+                    setSleepDelay(1000);
+                }
                 return;
             }
             if (tryLockStatus == true)
@@ -303,6 +320,7 @@ void manageSleep()
                 currentColorMutex.unlock();
             }
             rgbTaskMutex.unlock();
+            ledOnTime = 0;
 #endif
 
 #if !MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS

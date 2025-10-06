@@ -5,6 +5,7 @@ uint rgbTimer = 0;
 TaskHandle_t rgbTask = NULL;
 bool rgbTaskRunning = false;
 std::mutex rgbTaskMutex;
+int ledOnTime = 0;
 
 std::mutex currentColorMutex;
 IWColors currentColor = IWColors::IwNone;
