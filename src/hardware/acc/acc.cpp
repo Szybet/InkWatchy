@@ -136,7 +136,8 @@ bool accConfig()
     //     return false;
     // }
 
-    if (rM.SBMA.enableStepCount() == false) {
+    if (rM.SBMA.enableStepCount() == false)
+    {
         debugLog("enableStepCount failed");
         return false;
     }
@@ -218,7 +219,7 @@ void initAcc()
 // All in one function to get steps, it manages everything
 // TODO: after changing watchface that doesn't use steps, the acc is still turned on with this feature while its not used
 uint16_t getSteps()
-{    
+{
     uint16_t steps = 0;
     if (rM.initedAcc == true)
     {
@@ -226,6 +227,7 @@ uint16_t getSteps()
         {
             rM.stepsInited = true;
             rM.SBMA.resetStepCounter();
+            debugLog("Resetting steps at init");
         }
         else
         {
@@ -233,6 +235,7 @@ uint16_t getSteps()
             {
                 rM.stepDay = timeRTCLocal.Day;
                 rM.SBMA.resetStepCounter();
+                debugLog("Resetting steps at new day");
             }
             else
             {

@@ -5,6 +5,9 @@
 
 bool workingAcc = false;
 
+bool runAccelStatus = false;
+uint8_t lineRunAccelStatus = 0;
+
 int16_t accX = 0;
 uint8_t lineAccX;
 int16_t accY = 0;
@@ -70,12 +73,12 @@ void initAccDebug()
     if (rM.SBMA.damagedAcc == true)
     {
       workingAcc = false;
-      genpage_add(DEBUG_ACC_DAMAGED);
+      lineRunAccelStatus = genpage_add(DEBUG_ACC_DAMAGED);
     }
     else
     {
       workingAcc = true;
-      genpage_add(DEBUG_ACC_WORKING);
+      lineRunAccelStatus = genpage_add(DEBUG_ACC_WORKING);
     }
   }
 
@@ -83,7 +86,7 @@ void initAccDebug()
   {
     rM.SBMA.enableAccel();
     Accel acc;
-    rM.SBMA.getAccel(&acc);
+    runAccelStatus = rM.SBMA.getAccel(&acc);
 
     GeneralPageButton button = GeneralPageButton{DEBUG_ACC_CLICK_3D, turn3D};
     general_page_set_buttons(&button, 1);
@@ -115,6 +118,7 @@ void initAccDebug()
   general_page_set_main();
 }
 
+int accDataTime = 0;
 void loopAccDebug()
 {
 #if ACC_ENABLED
@@ -125,55 +129,73 @@ void loopAccDebug()
     {
       if (genpage_is_menu() == false)
       {
-        Accel acc;
-        rM.SBMA.getAccel(&acc);
-        if (acc.x != accX)
+        uint16_t tmpSteps = stepsAccDebug;
+        if (millisBetter() - accDataTime > 500)
         {
-          genpage_change(String(DEBUG_ACC_X + String(acc.x)).c_str(), lineAccX);
-          accX = acc.x;
-          // debugLog("Acc x changed");
-        }
-        if (acc.y != accY)
-        {
-          genpage_change(String(DEBUG_ACC_Y + String(acc.y)).c_str(), lineAccY);
-          accY = acc.y;
-          // debugLog("Acc y changed");
-        }
-        if (acc.z != accZ)
-        {
-          genpage_change(String(DEBUG_ACC_Z + String(acc.z)).c_str(), lineAccZ);
-          accZ = acc.z;
-          // debugLog("Acc z changed");
-        }
+          accDataTime = millisBetter();
 
-        uint16_t tmpSteps = getSteps();
-        if (tmpSteps != stepsAccDebug)
-        {
-          genpage_change(String(DEBUG_ACC_STEPS + String(tmpSteps)).c_str(), lineAccSteps);
-          stepsAccDebug = tmpSteps;
-          // debugLog("Steps changed");
-        }
+          Accel acc;
+          bool runAccelStatusTmp = rM.SBMA.getAccel(&acc);
+          if (runAccelStatusTmp != runAccelStatus)
+          {
+            runAccelStatus = runAccelStatusTmp;
+            if (runAccelStatus == true)
+            {
+              genpage_change(String(DEBUG_ACC_WORKING).c_str(), lineRunAccelStatus);
+            }
+            else
+            {
+              genpage_change(String(DEBUG_ACC_DAMAGED).c_str(), lineRunAccelStatus);
+            }
+          }
+          if (acc.x != accX)
+          {
+            genpage_change(String(DEBUG_ACC_X + String(acc.x)).c_str(), lineAccX);
+            accX = acc.x;
+            // debugLog("Acc x changed");
+          }
+          if (acc.y != accY)
+          {
+            genpage_change(String(DEBUG_ACC_Y + String(acc.y)).c_str(), lineAccY);
+            accY = acc.y;
+            // debugLog("Acc y changed");
+          }
+          if (acc.z != accZ)
+          {
+            genpage_change(String(DEBUG_ACC_Z + String(acc.z)).c_str(), lineAccZ);
+            accZ = acc.z;
+            // debugLog("Acc z changed");
+          }
+
+          uint16_t tmpSteps = getSteps();
+          if (tmpSteps != stepsAccDebug)
+          {
+            genpage_change(String(DEBUG_ACC_STEPS + String(tmpSteps)).c_str(), lineAccSteps);
+            stepsAccDebug = tmpSteps;
+            // debugLog("Steps changed");
+          }
 
 #if BMA_VERSION == 530 || BMA_VERSION == 456
-        Accel accPure;
-        rM.SBMA.getAccelPure(&accPure);
-        if (accPure.x != accXPure)
-        {
-          genpage_change(String(DEBUG_ACC_PURE_X + String(accPure.x)).c_str(), lineAccXPure);
-          accXPure = accPure.x;
-        }
-        if (accPure.y != accYPure)
-        {
-          genpage_change(String(DEBUG_ACC_PURE_Y + String(accPure.y)).c_str(), lineAccYPure);
-          accYPure = accPure.y;
-        }
-        if (accPure.z != accZPure)
-        {
-          genpage_change(String(DEBUG_ACC_PURE_Z + String(accPure.z)).c_str(), lineAccZPure);
-          accZPure = accPure.z;
-        }
+          Accel accPure;
+          rM.SBMA.getAccelPure(&accPure);
+          if (accPure.x != accXPure)
+          {
+            genpage_change(String(DEBUG_ACC_PURE_X + String(accPure.x)).c_str(), lineAccXPure);
+            accXPure = accPure.x;
+          }
+          if (accPure.y != accYPure)
+          {
+            genpage_change(String(DEBUG_ACC_PURE_Y + String(accPure.y)).c_str(), lineAccYPure);
+            accYPure = accPure.y;
+          }
+          if (accPure.z != accZPure)
+          {
+            genpage_change(String(DEBUG_ACC_PURE_Z + String(accPure.z)).c_str(), lineAccZPure);
+            accZPure = accPure.z;
+          }
 #endif
-        general_page_set_main();
+          general_page_set_main();
+        }
       }
     }
   }
