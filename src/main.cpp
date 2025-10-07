@@ -24,7 +24,7 @@ void setup()
 #if DEBUG
   initLog();
 #endif
-  
+
   initHardware();
   // debugLog("Starting millis: " + String(millisBetter()));
 
@@ -53,10 +53,32 @@ void setup()
 #if INK_ALARMS
   checkAlarms();
 #endif
+  rM.gpioExpander.setPinMode(MCP_ACC_INT_1, MCP_INPUT);
+  rM.gpioExpander.setPinMode(MCP_ACC_INT_2, MCP_INPUT);
+  getSteps();
+
+  // bma4_set_advance_power_save(0, &rM.SBMA._devFptr4);
 }
 
 void loop()
 {
+  getSteps();
+  debugLog("Acc int state 1: " + String(rM.gpioExpander.digitalRead(MCP_ACC_INT_1)));
+  debugLog("Acc int state 2: " + String(rM.gpioExpander.digitalRead(MCP_ACC_INT_2)));
+  debugLog("Error code: " + String(rM.SBMA.getErrorCode()));
+  debugLog("Status code: " + String(rM.SBMA.getStatus()));
+  uint8_t power = 0;
+  // bma4_set_advance_power_save(0, &rM.SBMA._devFptr4);
+  bma4_get_advance_power_save(&power, &rM.SBMA._devFptr4);
+  debugLog("bma4_get_advance_power_save: " + String(power)) if (rM.SBMA.getStatus() == 16)
+  {
+    debugLog("FUCK");
+    delayTask(5000);
+    // rM.SBMA.enableAccel();
+    // rM.SBMA.enableStepCount();
+  }
+  delayTask(500);
+
   if (isFullMode() == true)
   {
     watchdogPing();
