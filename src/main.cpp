@@ -67,10 +67,12 @@ void loop()
   debugLog("Acc int state 2: " + String(rM.gpioExpander.digitalRead(MCP_ACC_INT_2)));
   debugLog("Error code: " + String(rM.SBMA.getErrorCode()));
   debugLog("Status code: " + String(rM.SBMA.getStatus()));
+  debugLog("Step counter: " + String(rM.SBMA.isStepCounter()));
   uint8_t power = 0;
   // bma4_set_advance_power_save(0, &rM.SBMA._devFptr4);
   bma4_get_advance_power_save(&power, &rM.SBMA._devFptr4);
-  debugLog("bma4_get_advance_power_save: " + String(power)) if (rM.SBMA.getStatus() == 16)
+  debugLog("bma4_get_advance_power_save: " + String(power));
+  if (rM.SBMA.getStatus() == 16)
   {
     debugLog("FUCK");
     delayTask(5000);
