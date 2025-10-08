@@ -284,6 +284,8 @@
 #define DEBUG_ACC_PURE_Z "Accel puro Z: "
 #define DEBUG_ACC_STEPS "Passi: "
 #define DEBUG_ACC_IC "IC: "
+#define DEBUG_ACC_ERROR_CODE "Codice errore: "
+#define DEBUG_ACC_STATUS_CODE "Codice stato: "
 
 // Battery debug
 #define DEBUG_BATTERY_CURRENT_V "Tensione att.: "

@@ -285,6 +285,8 @@
 #define DEBUG_ACC_PURE_Z "Akcelerometer ciste Z: "
 #define DEBUG_ACC_STEPS "Kroky: "
 #define DEBUG_ACC_IC "IC: "
+#define DEBUG_ACC_ERROR_CODE "Kod chyby: "
+#define DEBUG_ACC_STATUS_CODE "Kod stavu: "
 
 // Battery debug
 #define DEBUG_BATTERY_CURRENT_V "Aktualne V: "

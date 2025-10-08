@@ -108,9 +108,9 @@ void initAccDebug()
     lineAccSteps = genpage_add(String(DEBUG_ACC_STEPS + String(stepsAccDebug)).c_str());
 
     errorCode = rM.SBMA.getErrorCode();
-    lineErrorCode = genpage_add(String("Error code: " + String(errorCode)).c_str());
+    lineErrorCode = genpage_add(String(DEBUG_ACC_ERROR_CODE + String(errorCode)).c_str());
     statusCode = rM.SBMA.getStatus();
-    lineStatusCode = genpage_add(String("Status code: " + String(statusCode)).c_str());
+    lineStatusCode = genpage_add(String(DEBUG_ACC_STATUS_CODE + String(statusCode)).c_str());
 
 #if BMA_VERSION == 530 || BMA_VERSION == 456
     Accel accPure;
@@ -203,13 +203,13 @@ void loopAccDebug()
           int16_t tmpErrorCode = rM.SBMA.getErrorCode();
           if (tmpErrorCode != errorCode)
           {
-            genpage_change(String("Error code: " + String(tmpErrorCode)).c_str(), lineErrorCode);
+            genpage_change(String(DEBUG_ACC_ERROR_CODE + String(tmpErrorCode)).c_str(), lineErrorCode);
             errorCode = tmpErrorCode;
           }
 
           if (tmpStatusCode != statusCode)
           {
-            genpage_change(String("Status code: " + String(tmpStatusCode)).c_str(), lineStatusCode);
+            genpage_change(String(DEBUG_ACC_STATUS_CODE + String(tmpStatusCode)).c_str(), lineStatusCode);
             statusCode = tmpStatusCode;
           }
 

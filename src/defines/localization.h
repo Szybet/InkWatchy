@@ -244,7 +244,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 #if !defined(DEBUG_ACC_DISABLED) || !defined(DEBUG_ACC_FAILED_INIT) || !defined(DEBUG_ACC_DAMAGED) ||                  \
     !defined(DEBUG_ACC_WORKING) || !defined(DEBUG_ACC_CLICK_3D) || !defined(DEBUG_ACC_X) || !defined(DEBUG_ACC_Y) ||   \
     !defined(DEBUG_ACC_Z) || !defined(DEBUG_ACC_PURE_X) || !defined(DEBUG_ACC_PURE_Y) || !defined(DEBUG_ACC_PURE_Z) || \
-    !defined(DEBUG_ACC_STEPS) || !defined(DEBUG_ACC_IC)
+    !defined(DEBUG_ACC_STEPS) || !defined(DEBUG_ACC_IC) || !defined(DEBUG_ACC_ERROR_CODE) || !defined(DEBUG_ACC_STATUS_CODE)
 #error "Localization file is missing accelerometer debug definitions."
 #endif
 

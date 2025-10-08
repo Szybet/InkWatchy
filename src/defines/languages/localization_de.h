@@ -284,6 +284,8 @@
 #define DEBUG_ACC_PURE_Z "Acc rein Z: "
 #define DEBUG_ACC_STEPS "Schritte: "
 #define DEBUG_ACC_IC "IC: "
+#define DEBUG_ACC_ERROR_CODE "Fehlercode: "
+#define DEBUG_ACC_STATUS_CODE "Statuscode: "
 
 // Battery debug
 #define DEBUG_BATTERY_CURRENT_V "Aktuell V: "

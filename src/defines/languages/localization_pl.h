@@ -284,6 +284,8 @@
 #define DEBUG_ACC_PURE_Z "Acc czyste Z: "
 #define DEBUG_ACC_STEPS "Kroki: "
 #define DEBUG_ACC_IC "IC: "
+#define DEBUG_ACC_ERROR_CODE "Kod bledu: "
+#define DEBUG_ACC_STATUS_CODE "Kod statusu: "
 
 // Battery debug
 #define DEBUG_BATTERY_CURRENT_V "Obecne V: "
