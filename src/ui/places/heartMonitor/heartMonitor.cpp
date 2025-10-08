@@ -167,7 +167,6 @@ void heartrateHandle(void *parameter)
 void start()
 {
     initAcc();
-    rM.SBMA.enableAccel();
     heartRateHandle = NULL;
 
     xTaskCreate(
@@ -275,8 +274,6 @@ void exitHeartMonitor()
         }
     }
     heartRateHandle = NULL;
-
-    rM.SBMA.disableAccel();
 }
 
 #endif

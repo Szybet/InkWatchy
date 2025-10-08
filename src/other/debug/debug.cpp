@@ -36,7 +36,6 @@ void showEinkCounter()
 void initAccLog()
 {
     initAcc();
-    rM.SBMA.enableAccel();
 }
 
 #if DUMP_LOOP_ACC_DIFF

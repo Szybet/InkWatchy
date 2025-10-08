@@ -222,7 +222,6 @@ void initBook()
     resetSleepDelayBook();
 #if ACC_ENABLED
     initAcc();
-    rM.SBMA.enableAccel();
     resetStartAxc();
 #endif
     calculateBookTextHeight();
