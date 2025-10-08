@@ -313,7 +313,7 @@ void rtcMemBackupManage()
         String filePath = String("/conf/") + String(CONF_RTC_BACKUP);
         if (fsFileExists(filePath) == true)
         {
-            if (fsGetFileSize(filePath) == sizeof(rtcMem))
+            if (FILESYSTEM_COMPRESSION == true || fsGetFileSize(filePath) == sizeof(rtcMem))
             {
                 debugLog("Rtc backup exists and is correct size, recovering it");
                 bufSize buff = fsGetBlob(CONF_RTC_BACKUP);
