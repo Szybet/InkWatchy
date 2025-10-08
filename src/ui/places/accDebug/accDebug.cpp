@@ -27,6 +27,11 @@ uint8_t lineAccZPure;
 uint16_t stepsAccDebug = 0;
 uint8_t lineAccSteps;
 
+int16_t errorCode = 0;
+uint8_t lineErrorCode;
+int16_t statusCode = 0;
+uint8_t lineStatusCode;
+
 bool is3DOn = false;
 
 void turn3D()
@@ -102,6 +107,11 @@ void initAccDebug()
     stepsAccDebug = getSteps();
     lineAccSteps = genpage_add(String(DEBUG_ACC_STEPS + String(stepsAccDebug)).c_str());
 
+    errorCode = rM.SBMA.getErrorCode();
+    lineErrorCode = genpage_add(String("Error code: " + String(errorCode)).c_str());
+    statusCode = rM.SBMA.getStatus();
+    lineStatusCode = genpage_add(String("Status code: " + String(statusCode)).c_str());
+
 #if BMA_VERSION == 530 || BMA_VERSION == 456
     Accel accPure;
     rM.SBMA.getAccelPure(&accPure);
@@ -134,6 +144,8 @@ void loopAccDebug()
         if (millisBetter() - accDataTime > 500)
         {
           accDataTime = millisBetter();
+          // It's moved here to get the status before requesting acceleration
+          int16_t tmpStatusCode = rM.SBMA.getStatus();
 
           Accel acc;
           bool runAccelStatusTmp = rM.SBMA.getAccel(&acc);
@@ -186,6 +198,19 @@ void loopAccDebug()
             genpage_change(String(DEBUG_ACC_STEPS + String(tmpSteps)).c_str(), lineAccSteps);
             stepsAccDebug = tmpSteps;
             // debugLog("Steps changed");
+          }
+
+          int16_t tmpErrorCode = rM.SBMA.getErrorCode();
+          if (tmpErrorCode != errorCode)
+          {
+            genpage_change(String("Error code: " + String(tmpErrorCode)).c_str(), lineErrorCode);
+            errorCode = tmpErrorCode;
+          }
+
+          if (tmpStatusCode != statusCode)
+          {
+            genpage_change(String("Status code: " + String(tmpStatusCode)).c_str(), lineStatusCode);
+            statusCode = tmpStatusCode;
           }
 
 #if BMA_VERSION == 530 || BMA_VERSION == 456
