@@ -179,6 +179,8 @@
 #define MENU_WEATHER "Weather"
 #define MENU_SETTINGS "Settings"
 #define MENU_HEART_MONITOR "Heart monitor"
+#define MENU_HEALTH "Health"
+#define MENU_STEPS_PER_DAY "Steps per day"
 #define MENU_VAULT "Vault"
 #define MENU_WIFI_TOOL "Wifi tool"
 #define MENU_EATING_APPLES "Eating apples"
@@ -223,6 +225,14 @@
 #define HEART_MONITOR_BREATHE_SLOWLY "Try to breath slowly"
 #define HEART_MONITOR_TIME_LEFT "Time left: "
 #define HEART_MONITOR_BPM "bpm"
+
+
+// Steps translations
+#define STEPS_NOT_AVAILABLE "Steps not available"
+#define STEPS_DATE_WRONG "Date is wrong?"
+#define STEPS_CORRUPTED "Steps corrupted"
+#define DAILY_STEPS_TITLE "Daily Steps"
+#define STEPS_CHART_TITLE "Steps / (24h)"
 
 // ==============================================================================
 // VIDEO PLAYER TRANSLATIONS

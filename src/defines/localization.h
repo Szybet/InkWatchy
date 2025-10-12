@@ -191,7 +191,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 
 // Check main menu translations
 #if !defined(MENU_MAIN) || !defined(MENU_CALENDAR) || !defined(MENU_SELECT_BOOK) || !defined(MENU_ALARMS) ||              \
-    !defined(MENU_WEATHER) || !defined(MENU_SETTINGS) || !defined(MENU_HEART_MONITOR) || !defined(MENU_VAULT) ||          \
+    !defined(MENU_WEATHER) || !defined(MENU_SETTINGS) || !defined(MENU_HEART_MONITOR) || !defined(MENU_HEALTH) || !defined(MENU_STEPS_PER_DAY) || !defined(MENU_VAULT) ||          \
     !defined(MENU_WIFI_TOOL) || !defined(MENU_EATING_APPLES) || !defined(MENU_SMASHING_APPLES) || !defined(MENU_GAMES) || \
     !defined(MENU_CREDITS) || !defined(MENU_WIFI) || !defined(MENU_DEBUG) || !defined(MENU_POWER_SETTINGS) ||             \
     !defined(MENU_CHANGE_WATCHFACE) || !defined(MENU_TETRIS) || !defined(MENU_PONG) || !defined(MENU_VIDEO_PLAYER) ||     \
@@ -421,8 +421,8 @@ inline String getCurrentLocalizedDayName(int offset = 0)
  * - Time units: TIME_UNIT_* including plural forms (10 variables)
  *
  * TROUBLESHOOTING:
- * - "missing definitions" error → Use template, check variable names match exactly
- * - Text doesn't fit on screen → Shorten translations, use abbreviations
- * - Special characters display wrong → Avoid diacritics or test on device
- * - Compilation fails → Check all validation categories, ensure no empty strings
+ * - "missing definitions" error -> Use template, check variable names match exactly
+ * - Text doesn't fit on screen -> Shorten translations, use abbreviations
+ * - Special characters display wrong -> Avoid diacritics or test on device
+ * - Compilation fails -> Check all validation categories, ensure no empty strings
  */

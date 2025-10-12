@@ -263,6 +263,9 @@ extern uint16_t SCWhite;
 #include "../ui/places/setClockGuis/setDateWatch.h"
 #include "../ui/places/setClockGuis/setClockMenus.h"
 #endif
+#if PRECISE_STEP_COUNTING
+#include "../ui/places/dailyStepsChartMenu/dailyStepsChartMenu.h"
+#endif
 
 // Other
 #if DEBUG

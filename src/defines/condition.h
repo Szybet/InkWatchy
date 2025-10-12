@@ -387,3 +387,9 @@ Template for versioning
 #else
 #define SET_DATE_GUI 0
 #endif
+
+#if HEART_MONITOR || PRECISE_STEP_COUNTING
+#define HEALTH_MENU 1
+#else
+#define HEALTH_MENU 0
+#endif

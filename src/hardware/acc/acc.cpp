@@ -228,11 +228,79 @@ uint16_t getSteps()
             rM.stepsInited = true;
             rM.SBMA.resetStepCounter();
             debugLog("Resetting steps at init");
+#if PRECISE_STEP_COUNTING
+            for (uint8_t i = 0; i < 24; i++)
+            {
+                rM.preciseSteps[i] = 0;
+            }
+            rM.preciseStepsHour = timeRTCLocal.Hour;
+#endif
         }
         else
         {
             if (rM.stepDay != timeRTCLocal.Day)
             {
+#if PRECISE_STEP_COUNTING
+                debugLog("New day detected, saving precise steps");
+                if (fsSetup() == true)
+                {
+                    if (fsFileExists(PRECISE_STEP_COUNTING_DIR) == false)
+                    {
+                        fsCreateDir(PRECISE_STEP_COUNTING_DIR);
+                    }
+
+                    File root = LittleFS.open(PRECISE_STEP_COUNTING_DIR);
+                    if (root && root.isDirectory()) {
+                        int fileCount = 0;
+                        uint64_t oldestUnixTime = -1;
+                        String oldestFileName = "";
+
+                        File file = root.openNextFile();
+                        while (file) {
+                            if (!file.isDirectory()) {
+                                fileCount++;
+                                String fileName = file.name();
+                                uint64_t currentFileUnix = fileName.toInt();
+                                if (currentFileUnix < oldestUnixTime) {
+                                    oldestUnixTime = currentFileUnix;
+                                    oldestFileName = fileName;
+                                }
+                            }
+                            file.close();
+                            file = root.openNextFile();
+                        }
+                        root.close();
+
+                        if (fileCount >= PRECISE_STEPS_DAYS_LIMIT) {
+                            debugLog("Precise step files count (" + String(fileCount) + ") >= limit (" + String(PRECISE_STEPS_DAYS_LIMIT) + "). Deleting oldest file: " + oldestFileName);
+                            String fullPathToDelete = String(PRECISE_STEP_COUNTING_DIR) + oldestFileName;
+                            fsRemoveFile(fullPathToDelete);
+                        }
+                    }
+
+                    uint64_t currentUnix = getUnixTime(timeRTCLocal);
+                    uint64_t previousDayUnix = currentUnix - 86400; // Subtract one day
+                    uint64_t simplifiedPreviousDayUnix = simplifyUnix(previousDayUnix);
+                    if (fsSetBlob(String(simplifiedPreviousDayUnix), (uint8_t *)rM.preciseSteps, sizeof(rM.preciseSteps), PRECISE_STEP_COUNTING_DIR) == true)
+                    {
+                        debugLog("Precise steps saved as: " + String(simplifiedPreviousDayUnix));
+                    }
+                    else
+                    {
+                        debugLog("Failed to save precise steps: " + String(simplifiedPreviousDayUnix));
+                    }
+                }
+                else
+                {
+                    debugLog("Filesystem not set up, cannot save precise steps");
+                }
+                for (uint8_t i = 0; i < 24; i++)
+                {
+                    rM.preciseSteps[i] = 0;
+                }
+                rM.preciseStepsHour = timeRTCLocal.Hour;
+
+#endif
                 rM.stepDay = timeRTCLocal.Day;
                 rM.SBMA.resetStepCounter();
                 debugLog("Resetting steps at new day");
@@ -240,6 +308,18 @@ uint16_t getSteps()
             else
             {
                 steps = (uint16_t)rM.SBMA.getCounter();
+#if PRECISE_STEP_COUNTING
+                if (rM.preciseStepsHour != timeRTCLocal.Hour)
+                {
+                    uint16_t totalStepsUntilPreviousHour = 0;
+                    for (uint8_t i = 0; i < rM.preciseStepsHour; i++)
+                    {
+                        totalStepsUntilPreviousHour += rM.preciseSteps[i];
+                    }
+                    rM.preciseSteps[rM.preciseStepsHour] = steps - totalStepsUntilPreviousHour;
+                    rM.preciseStepsHour = timeRTCLocal.Hour;
+                }
+#endif
             }
         }
     }

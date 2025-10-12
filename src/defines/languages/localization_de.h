@@ -179,6 +179,8 @@
 #define MENU_WEATHER "Wetter"
 #define MENU_SETTINGS "Einstellungen"
 #define MENU_HEART_MONITOR "Herzmonitor"
+#define MENU_HEALTH "Gesundheit"
+#define MENU_STEPS_PER_DAY "Schritte pro Tag"
 #define MENU_VAULT "Tresor"
 #define MENU_WIFI_TOOL "WiFi Tool"
 #define MENU_EATING_APPLES "Apfel essen"

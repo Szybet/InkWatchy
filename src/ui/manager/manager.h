@@ -52,6 +52,7 @@ typedef enum
     credits,
     conwayApp,
     partyApp,
+    healthMenu,
     heartMonitor,
     baikyApp,
     fontPreview,
@@ -62,6 +63,7 @@ typedef enum
     setDateWatchPlace,
     setClockMenu,
     setTimezoneMenu,
+    dailyStepsChartMenu,
     // General places now:
     inputPinPlace,
     generalMenuPlace,
@@ -92,6 +94,9 @@ void initDebugMenu();
 #endif
 void initSettingsMenu();
 void initGamesMenu();
+#if HEALTH_MENU
+void initHealthMenu();
+#endif
 #if WEATHER_INFO
 void initWeatherMenu();
 void initWeatherDateMenu();
@@ -119,6 +124,12 @@ void switchWifiDebug();
 void switchGitDebug();
 void switchAccDebug();
 void switchMotorDebug();
+#if HEALTH_MENU
+void switchHealthMenu();
+#endif
+#if PRECISE_STEP_COUNTING
+void switchDailyStepsChartMenu();
+#endif
 void switchWeatherMenu();
 void switchWeatherDateMenu();
 void switchWeatherConditionMenu();

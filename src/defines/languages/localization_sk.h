@@ -179,6 +179,8 @@
 #define MENU_WEATHER "Pocasie"
 #define MENU_SETTINGS "Nastavenia"
 #define MENU_HEART_MONITOR "Monitor srdca"
+#define MENU_HEALTH "Zdravie"
+#define MENU_STEPS_PER_DAY "Kroky za den"
 #define MENU_VAULT "Trezor"
 #define MENU_WIFI_TOOL "Wifi nastroj"
 #define MENU_EATING_APPLES "Jedenie jablk"

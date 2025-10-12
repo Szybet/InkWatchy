@@ -49,10 +49,10 @@ void initMainMenu()
         count = count + 1;
         buttons[count] = {MENU_SETTINGS, getImg("settings"), switchSettingsMenu};
     }
-#if HEART_MONITOR
+#if HEALTH_MENU
     {
         count = count + 1;
-        buttons[count] = {MENU_HEART_MONITOR, getImg("heartMonitor/heartIcon"), switchHeartMonitor};
+        buttons[count] = {MENU_HEALTH, &emptyImgPack, switchHealthMenu};
     }
 #endif
 #if VAULT
@@ -241,4 +241,24 @@ void initGamesMenu()
 #endif
     count = count + 1;
     initMenu(buttons, count, MENU_GAMES, 1);
+}
+
+void initHealthMenu()
+{
+    int count = -1;
+    entryMenu buttons[2];
+#if HEART_MONITOR
+    {
+        count = count + 1;
+        buttons[count] = {MENU_HEART_MONITOR, getImg("heartMonitor/heartIcon"), switchHeartMonitor};
+    }
+#endif
+#if PRECISE_STEP_COUNTING
+    {
+        count = count + 1;
+        buttons[count] = {MENU_STEPS_PER_DAY, getImg("stepsIcon"), switchDailyStepsChartMenu};
+    }
+#endif
+    count = count + 1;
+    initMenu(buttons, count, MENU_HEALTH, 1);
 }

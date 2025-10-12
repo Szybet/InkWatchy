@@ -191,6 +191,13 @@ void loopManager()
 #endif
         break;
     }
+    case dailyStepsChartMenu:
+    {
+#if PRECISE_STEP_COUNTING
+        managerLaunchFunc(dailyStepsChartMenu, initDailyStepsChartMenu, loopMenu);
+#endif
+        break;
+    }
     case generalDebug:
     {
 #if DEBUG_MENUS
@@ -485,6 +492,13 @@ void loopManager()
     {
 #if RGB_DIODE
         managerLaunchFunc(partyApp, initParty, loopParty, exitParty);
+#endif
+        break;
+    }
+    case healthMenu:
+    {
+#if HEALTH_MENU
+        managerLaunchFunc(healthMenu, initHealthMenu, loopMenu);
 #endif
         break;
     }

@@ -19,6 +19,10 @@ struct rtcMem
     uint8_t initAccTries : 4; // Max 15
     bool stepsInited : 1;
     uint8_t stepDay; // For steps to reset each days
+#if PRECISE_STEP_COUNTING
+    uint16_t preciseSteps[24]; // New: Stores steps for each hour
+    uint8_t preciseStepsHour;  // New: Stores the hour when preciseSteps was last updated
+#endif
 #endif
     // Display
     GxEPD2_BW<GxEPD2_154_D67, GxEPD2_154_D67::HEIGHT> display;

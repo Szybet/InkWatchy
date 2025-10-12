@@ -83,6 +83,18 @@ void switchMotorDebug()
     generalSwitch(motorDebug);
 }
 
+void switchHealthMenu()
+{
+    generalSwitch(healthMenu);
+}
+
+#if PRECISE_STEP_COUNTING
+void switchDailyStepsChartMenu()
+{
+    generalSwitch(dailyStepsChartMenu);
+}
+#endif
+
 void switchWeatherMenu()
 {
     generalSwitch(weatherMenu);

@@ -21,6 +21,10 @@ RTC_DATA_ATTR rtcMem rM = {
     .initedAcc = false,
     .stepsInited = false,
     .stepDay = 0,
+#if PRECISE_STEP_COUNTING
+    .preciseSteps = {0},
+    .preciseStepsHour = 0,
+#endif
 #endif
     // Display
     .display = GxEPD2_154_D67(EPD_CS, EPD_DC, EPD_RESET, EPD_BUSY),
@@ -59,7 +63,7 @@ RTC_DATA_ATTR rtcMem rM = {
     .disableSomeDrawing = false,
     .batteryPercantageWF = 0,
     // wManageAll
-    .watchfaceSelected = 0,
+    .watchfaceSelected = DEFAULT_WATCHFACE_INDEX,
 // Inkfield watchface
 #if WATCHFACE_INKFIELD_SZYBET
     .inkfield = {
@@ -116,7 +120,7 @@ RTC_DATA_ATTR rtcMem rM = {
 #endif
     // Watchface modules
     .latestModuleUpdate = 0,
-    .currentModule = -1,
+    .currentModule = DEFAULT_WATCHFACE_MODULE_INDEX,
     .previousModuleCount = -1,
     .previousCurrentModule = -1, // The translated one!
 // wFApi

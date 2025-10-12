@@ -55,6 +55,9 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define VIBRATION_MULTIPLIER_OVERWRITE 0
 #define VIBRATION_MULTIPLIER 1.0
 #define STEPS_GOAL 7000
+// Precise step counting
+#define PRECISE_STEP_COUNTING 0
+#define PRECISE_STEPS_DAYS_LIMIT 30
 // Backups RTC memory to flash, so after updating the firmware (When resources weren't updated, or rtc memory wasn't changed) it will still keep data like alarms
 // Might introduce weird behaviour or crashes on a update, but it tries to avoid it.
 // Might consume a bit of battery, but that's marginal.
@@ -323,6 +326,8 @@ The default is this:
 // Experimental, consumes battery, takes longer to load everything
 // Probably won't work on devices with low memory (So everything that is not yatchy)
 #define FILESYSTEM_COMPRESSION 0
+#define DEFAULT_WATCHFACE_INDEX 0 // Do not touch if you don't know what you are doing
+#define DEFAULT_WATCHFACE_MODULE_INDEX -1 // Do not touch if you don't know what you are doing
 
 // Wifi Quick settings
 #define WIFI_QUICK_CHECK_MS 30
@@ -463,3 +468,4 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define AIR_QUALITY_DIR "/air_quality"
 
 #define IMAGE_MODULE_PATH "watchfaceImages/"
+#define PRECISE_STEP_COUNTING_DIR "/other/steps/"

@@ -173,6 +173,8 @@
 #define MENU_WEATHER ""          // "Weather"
 #define MENU_SETTINGS ""         // "Settings"
 #define MENU_HEART_MONITOR ""    // "Heart monitor"
+#define MENU_HEALTH ""           // "Health"
+#define MENU_STEPS_PER_DAY ""    // "Steps per day"
 #define MENU_VAULT ""            // "Vault"
 #define MENU_WIFI_TOOL ""        // "Wifi tool"
 #define MENU_EATING_APPLES ""    // "Eating apples"
