@@ -226,6 +226,13 @@
 #define HEART_MONITOR_TIME_LEFT "Verbleibend: "
 #define HEART_MONITOR_BPM "bpm"
 
+// Steps translations
+#define STEPS_NOT_AVAILABLE "Schritte nicht verfügbar"
+#define STEPS_DATE_WRONG "Datum falsch?"
+#define STEPS_CORRUPTED "Schritte beschädigt"
+#define DAILY_STEPS_TITLE "Tägliche Schritte"
+#define STEPS_CHART_TITLE "Schritte / (24h)"
+
 // ==============================================================================
 // VIDEO PLAYER TRANSLATIONS
 // ==============================================================================

@@ -226,6 +226,13 @@
 #define HEART_MONITOR_TIME_LEFT "Zostava: "
 #define HEART_MONITOR_BPM "bpm"
 
+// Steps translations
+#define STEPS_NOT_AVAILABLE "Kroky nedostupne"
+#define STEPS_DATE_WRONG "Datum nespravny?"
+#define STEPS_CORRUPTED "Kroky poskodene"
+#define DAILY_STEPS_TITLE "Denne kroky"
+#define STEPS_CHART_TITLE "Kroky / (24h)"
+
 // ==============================================================================
 // VIDEO PLAYER TRANSLATIONS
 // ==============================================================================
@@ -436,3 +443,4 @@
 #define TIME_UNIT_DAY "den"
 #define TIME_UNIT_DAYS "dni"
 #define TIME_UNIT_AND "a"
+

@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[14];
+    entryMenu buttons[15];
 #if CALENDAR
     {
         count = count + 1;
@@ -52,7 +52,7 @@ void initMainMenu()
 #if HEALTH_MENU
     {
         count = count + 1;
-        buttons[count] = {MENU_HEALTH, &emptyImgPack, switchHealthMenu};
+        buttons[count] = {MENU_HEALTH, getImg("healthIcon"), switchHealthMenu};
     }
 #endif
 #if VAULT
@@ -256,7 +256,7 @@ void initHealthMenu()
 #if PRECISE_STEP_COUNTING
     {
         count = count + 1;
-        buttons[count] = {MENU_STEPS_PER_DAY, getImg("stepsIcon"), switchDailyStepsChartMenu};
+        buttons[count] = {MENU_STEPS_PER_DAY, &emptyImgPack, switchDailyStepsChartMenu};
     }
 #endif
     count = count + 1;

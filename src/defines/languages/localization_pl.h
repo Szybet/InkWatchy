@@ -226,6 +226,13 @@
 #define HEART_MONITOR_TIME_LEFT "Pozostalo: "
 #define HEART_MONITOR_BPM "bpm"
 
+// Steps translations
+#define STEPS_NOT_AVAILABLE "Kroki niedostepne"
+#define STEPS_DATE_WRONG "Data nieprawidlowa?"
+#define STEPS_CORRUPTED "Kroki uszkodzone"
+#define DAILY_STEPS_TITLE "Dzienne kroki"
+#define STEPS_CHART_TITLE "Kroki / (24h)"
+
 // ==============================================================================
 // VIDEO PLAYER TRANSLATIONS
 // ==============================================================================
@@ -414,7 +421,6 @@
 #define POMODORO_RESET_TURN_OFF "Resetuj i wylacz"
 #define POMODORO_START "Start"
 
-// Time unit translations (for automatic formatting)
 // Set Clock GUI
 #define SETCLOCK_SET_TIME "Ustaw czas"
 #define SETCLOCK_SET_DATE "Ustaw date"
@@ -424,8 +430,7 @@
 #define SETCLOCK_CLEAR_TIMEZONE "Wyczysc strefe czasowa"
 #define SETCLOCK_SET_TIMEZONE "Ustaw strefe czasowa"
 #define SETCLOCK_TIMEZONE_SETTINGS "Ustawienia strefy czasowej"
-#define SETCLOCK_TIMEZONE_WARNING "To menu ignoruje czas letni/zimowy i nadpisze Twoja strefe czasowa, ktora moze juz go zawierac.
-Nacisnij przycisk wstecz, aby potwierdzic"
+#define SETCLOCK_TIMEZONE_WARNING "To menu ignoruje czas letni/zimowy i nadpisze Twoja strefe czasowa, ktora moze juz go zawierac.\nNacisnij przycisk wstecz, aby potwierdzic"
 #define SETCLOCK_WARNING_TITLE "Ostrzezenie"
 #define SETCLOCK_SELECT_TIMEZONE "Wybierz strefe czasowa"
 
@@ -439,4 +444,4 @@ Nacisnij przycisk wstecz, aby potwierdzic"
 #define TIME_UNIT_DAY "dzien"
 #define TIME_UNIT_DAYS "dni"
 #define TIME_UNIT_DAYS_2_4 "dni" // Same as TIME_UNIT_DAYS in Polish
-#define TIME_UNIT_AND "i" 
+#define TIME_UNIT_AND "i"
