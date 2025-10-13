@@ -96,7 +96,7 @@ case $CHOICE in
             exit 1
         fi
         pio_env=$(get_pio_env .vscode/launch.json)
-        pio run -e $pio_env -t upload --upload-port $serial_port
+        ~/.platformio/penv/bin/pio run -e $pio_env -t upload --upload-port $serial_port
         cd src/other/scomTask/watchy-scom/
         ./generate_symlinks.sh
         cd watchy-scom/
