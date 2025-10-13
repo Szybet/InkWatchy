@@ -56,7 +56,7 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define VIBRATION_MULTIPLIER 1.0
 #define STEPS_GOAL 7000
 // Precise step counting
-#define PRECISE_STEP_COUNTING 0
+#define PRECISE_STEP_COUNTING 1
 #define PRECISE_STEPS_DAYS_LIMIT 30
 // Backups RTC memory to flash, so after updating the firmware (When resources weren't updated, or rtc memory wasn't changed) it will still keep data like alarms
 // Might introduce weird behaviour or crashes on a update, but it tries to avoid it.
@@ -226,7 +226,7 @@ The default is this:
 // import only events today onwards
 #define FUTURE_ONLY 0
 // Number of future days to include in calendar
-#define CALENDAR_NEXT_DAYS 50
+#define CALENDAR_NEXT_DAYS 30
 // Shorter names needed
 #define CALENDAR_SPLIT_DESCRIPTION 1
 #define CALENDAR_SPLIT_DESCRIPTION_STRING "\\n"

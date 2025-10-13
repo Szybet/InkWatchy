@@ -200,7 +200,7 @@ void watchfaceManageAll(bool init)
     }
     case wfmNone:
     {
-        debugLog("So here we are, you, trying to debug wtf is going on with inkwatchy and me, trying to provide good documentation on how to update it. Here, look, the link: https://github.com/Szybet/InkWatchy/wiki/Updating-the-firmware I really can't help you further... :(");
+        debugLog("So here we are, you, trying to debug wtf is going on with inkwatchy. Probably no watchfaces enabled");
         break;
     }
     default:
