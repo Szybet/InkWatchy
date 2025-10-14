@@ -319,10 +319,18 @@ void rtcMemBackupManage()
         {
             if (FILESYSTEM_COMPRESSION == true || fsGetFileSize(filePath) == sizeof(rtcMem))
             {
-                debugLog("Rtc backup exists and is correct size, recovering it");
                 bufSize buff = fsGetBlob(CONF_RTC_BACKUP);
-                rtcMem *rtcMemTmp = (rtcMem *)buff.buf;
-                rtcMemRetrieve(rtcMemTmp, &rM);
+                if (buff.size == sizeof(rtcMem))
+                {
+                    debugLog("Rtc backup exists and is correct size, recovering it");
+                    rtcMem *rtcMemTmp = (rtcMem *)buff.buf;
+                    rtcMemRetrieve(rtcMemTmp, &rM);
+                }
+                else
+                {
+                    debugLog("Rtc backup after reading size is wrong");
+                    fsRemoveFile(filePath);
+                }
                 free(buff.buf);
 
                 // Yatchy doesn't go to sleep so often, so we don't remove it here
