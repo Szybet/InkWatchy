@@ -11,8 +11,6 @@ const ColorMapArray<2> really_black{
 #define X_MAX_VALUE_OFFSET -0.5
 #define CELL_VERTICAL_COUNT 6
 #define WALL_VALUE_OFFSET float(0.08)
-#define SIDE_TEXT_OFFSET 30
-#define SIDE_TEXT_REPAIR 14.5
 
 // Values in data1 need to be higher that in data2 in the same index
 void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, String chartName)
@@ -24,7 +22,8 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
 
   float offsetMin = WALL_VALUE_OFFSET;
   float offsetMax = WALL_VALUE_OFFSET;
-  if(dataCount == 1) {
+  if (dataCount == 1)
+  {
     offsetMax = 0.0;
     offsetMin = 0.5;
   }
@@ -63,7 +62,7 @@ void showDoubleDataBarChart(float *data1Max, float *data2Min, uint dataCount, St
 #endif
 
   concatenateFloatLists(data1Max, dataCount, data2Min, dataCount, bothList);
-  
+
   showSideText(bothList, bothSize);
 
   disUp(true);
@@ -80,7 +79,8 @@ void showChart(float *data, uint dataCount, String chartName)
 
   float offsetMin = WALL_VALUE_OFFSET;
   float offsetMax = WALL_VALUE_OFFSET;
-  if(dataCount == 1) {
+  if (dataCount == 1)
+  {
     offsetMax = 0.0;
     offsetMin = 0.5;
   }
@@ -120,146 +120,118 @@ void showChart(float *data, uint dataCount, String chartName)
   resetScreenColors();
 }
 
-void showSideText(float *bothList, int bothSize) {
+String formatFloat(float num)
+{
+  String s = String(num);
+  int dotZero = s.indexOf(".0");
+  if (dotZero != -1)
+    s = s.substring(0, dotZero);
+  if (s.indexOf(".") != -1)
+  {
+    while (s.endsWith("0"))
+    {
+      s.remove(s.length() - 1);
+    }
+  }
+
+  // Split
+  // Horrible
+  if (s.length() >= 3 && ((isdigit(s.charAt(0)) && isdigit(s.charAt(1)) && s.charAt(2) == '.') || (isdigit(s.charAt(0)) && s.charAt(1) == '.' && isdigit(s.charAt(2)))))
+  {
+    s = s.substring(0, 3) + "\n" + s.substring(3);
+  }
+  else
+  {
+    if (s.length() > 2)
+    {
+      s = s.substring(0, 2) + "\n" + s.substring(2);
+    }
+    else
+    {
+      s += "\n";
+    }
+  }
+
+  // Ensure second line length
+  if (s.indexOf('\n') != -1 && s.substring(s.indexOf('\n') + 1).length() > 2)
+    s = s.substring(0, s.indexOf('\n') + 2);
+  return s;
+}
+
+#define SIDE_TEXT_OFFSET_Y 40
+#define INIT_REPAIR 10
+#define NEW_LINE_OFFSET 8
+
+void showOneString(float one)
+{
+  String str = formatFloat(one);
+  debugLog("Str to format show: " + str);
+  int newlineIndex = str.indexOf('\n');
+  int16_t cursorX = dis->getCursorX();
+  int16_t cursorY = dis->getCursorY();
+  if (newlineIndex != -1)
+  {
+    String line1 = str.substring(0, newlineIndex);
+    String line2 = str.substring(newlineIndex + 1);
+    dis->setCursor(cursorX, cursorY);
+    dis->print(line1);
+    dis->setCursor(cursorX, cursorY + NEW_LINE_OFFSET);
+    dis->print(line2);
+  }
+  else
+  {
+    dis->setCursor(cursorX, cursorY);
+    dis->print(str);
+  }
+}
+
+void showOne(float one)
+{
+  dis->setCursor(0, 200 - INIT_REPAIR);
+  showOneString(one);
+}
+
+void showSideText(float *bothList, int bothSize)
+{
   sortList(bothList, bothSize);
-
-  debugLog(String(bothList[0]));
-  debugLog(String(bothList[bothSize - 1]));
-
-  float stepper = float((bothSize)) / float(CELL_VERTICAL_COUNT);
-  if (int(round(stepper)) == 0)
+  dis->setFont(getFont("dogicapixel4"));
+  if (bothSize == 1)
   {
-    stepper = 1; // We can't divide by zero!
+    showOne(bothList[0]);
+    return;
   }
 
-  debugLog("Stepper: " + String(stepper));
-  debugLog("bothSize: " + String(bothSize));
-
-  int valuesCount = -1;
-  float values[CELL_VERTICAL_COUNT] = {0};
-  for (float i = 0; i < bothSize; i += stepper)
+  float max = bothList[0];
+  float min = bothList[0];
+  for (int i = 1; i < bothSize; i++)
   {
-    debugLog("Iterating: " + String(i));
-    // Insanity
-    int ti = int(floor(i));
-    if (String(bothList[ti]) != "0.00" && String(bothList[ti]) != "-0.00" && String(bothList[ti]) != "0" && String(bothList[ti]) != "-0")
+    if (bothList[i] > max)
     {
-      bool contains = false;
-      for (int j = 0; j < valuesCount + 1; j++)
-      {
-        if (values[j] == bothList[ti])
-        {
-          contains = true;
-        }
-      }
-      if (contains == false)
-      {
-        valuesCount = valuesCount + 1;
-        debugLog("Value to show is: " + String(bothList[ti]) + " at value: " + String(valuesCount));
-        values[valuesCount] = bothList[ti];
-      }
-      else
-      {
-        debugLog("duplicate");
-      }
+      max = bothList[i];
     }
-    else
+    if (bothList[i] < min)
     {
-      debugLog("Weird 0");
+      min = bothList[i];
     }
   }
-  valuesCount = valuesCount + 1; // To show actually the count
-  sortList(values, valuesCount);
 
-#if DEBUG
-  for (int i = 0; i < valuesCount; i++)
+  if (min == max)
   {
-    debugLog("for i: " + String(i) + " is: " + String(values[i]));
+    showOne(min);
+    return;
   }
-#endif
 
-  debugLog("valuesCount: " + String(valuesCount));
-  debugLog("Highest value: " + String(values[valuesCount - 1]));
-  float currentHeightDown = dis->height() - 23;
-  float currentHeightUp = SIDE_TEXT_OFFSET;
-
-  float offset = (dis->height() - (SIDE_TEXT_OFFSET - SIDE_TEXT_REPAIR)) / valuesCount ;
-  bool down = false;
-  dis->setFont();
-  for (float i = 0; i < float(valuesCount) / 2; i += 0.5)
+  float newList[5];
+  for (int i = 0; i < 5; i++)
   {
-    int ji = int(floor(i));
-    debugLog("i: " + String(i));
-    debugLog("ji: " + String(ji));
-
-    if (down == true)
-    {
-      dis->setCursor(0, round(currentHeightDown));
-    }
-    else
-    {
-      dis->setCursor(0, round(currentHeightUp));
-    }
-
-    String number;
-    if (down == true)
-    {
-      number = String(values[ji]);
-    }
-    else
-    {
-      number = String(values[valuesCount - ji - 1]);
-    }
-    debugLog("Number is:" + number);
-    debugLog("Down is: " + BOOL_STR(down));
-
-    int indexOfDecimal = number.indexOf(".");
-    if(number.length() - 1 > indexOfDecimal && number[indexOfDecimal + 1] == '0') {
-      number.remove(indexOfDecimal, number.length() - indexOfDecimal);
-    }
-
-    if (number.length() > 3)
-    {
-      /*
-      if (isDecimalZero(bothList[i]) == true && String(int(bothList[i])).length() <= 3)
-      {
-        dis->print(String(int(bothList[i])));
-      }
-      else
-      */
-      {
-        String part1 = number.substring(0, 3);
-        String part2 = number.substring(3);
-        if (part2.length() > 3)
-        {
-          part2 = part2.substring(0, 3);
-        }
-        dis->println(part1);
-        dis->print(part2);
-      }
-    }
-    else
-    {
-      dis->print(number);
-    }
-
-    if (down == true)
-    {
-      currentHeightDown = currentHeightDown - offset;
-    }
-    else
-    {
-      currentHeightUp = currentHeightUp + offset;
-    }
-    down = !down;
+    newList[i] = min + ((max - min) * (i / 4.0f));
   }
 
-  if(values[0] == 0.0) {
-    dis->setCursor(0, round(currentHeightUp));
-    dis->print("0");
+  for (int i = 0; i < 5; i++)
+  {
+    dis->setCursor(0, (200 - (SIDE_TEXT_OFFSET_Y * i)) - INIT_REPAIR);
+    showOneString(newList[i]);
   }
-
-  setFont(font);
 }
 
 // Clear example
