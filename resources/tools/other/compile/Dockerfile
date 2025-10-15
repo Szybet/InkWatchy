@@ -72,7 +72,7 @@ RUN mkdir -p /root/.espressif/
 
 # Adding rust to path
 ENV PATH=$PATH:/root/.cargo/bin
-ENV PATH=$PATH:$HOME/.cargo/bin
+RUN echo 'export PATH="$PATH:$HOME/.cargo/bin"' | tee -a /root/.bashrc /root/.zshrc
 
 # For rusty stuff
 # Idk weird fix with update
