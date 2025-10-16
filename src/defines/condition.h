@@ -388,7 +388,7 @@ Template for versioning
 #define SET_DATE_GUI 0
 #endif
 
-#if HEART_MONITOR || PRECISE_STEP_COUNTING
+#if HEART_MONITOR || PRECISE_STEP_COUNTING || BAIKY
 #define HEALTH_MENU 1
 #else
 #define HEALTH_MENU 0

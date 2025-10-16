@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[15];
+    entryMenu buttons[14];
 #if CALENDAR
     {
         count = count + 1;
@@ -39,12 +39,7 @@ void initMainMenu()
         buttons[count] = {MENU_WEATHER, getImg("weather"), switchWeatherMenu};
     }
 #endif
-#if BAIKY
-    {
-        count = count + 1;
-        buttons[count] = {"Baiky", getImg("baiky/baikyIcon"), switchBaiky};
-    }
-#endif
+
     {
         count = count + 1;
         buttons[count] = {MENU_SETTINGS, getImg("settings"), switchSettingsMenu};
@@ -246,7 +241,13 @@ void initGamesMenu()
 void initHealthMenu()
 {
     int count = -1;
-    entryMenu buttons[2];
+    entryMenu buttons[3];
+#if BAIKY
+    {
+        count = count + 1;
+        buttons[count] = {"Baiky", getImg("baiky/baikyIcon"), switchBaiky};
+    }
+#endif
 #if HEART_MONITOR
     {
         count = count + 1;
