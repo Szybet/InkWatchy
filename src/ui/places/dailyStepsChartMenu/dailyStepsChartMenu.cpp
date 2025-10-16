@@ -24,7 +24,7 @@ void showDailyStepsChart()
     debugLog("Showing daily steps for day: " + stepsDay);
 
     uint16_t preciseSteps[24];
-    bufSize stepsData = fsGetBlob(String(dateToUnix(stepsDay)), String(PRECISE_STEP_COUNTING_DIR) + "/");
+    bufSize stepsData = fsGetBlob(String(dateToUnix(stepsDay)), String(PRECISE_STEP_COUNTING_DIR));
 
     if (stepsData.size != sizeof(preciseSteps))
     {
