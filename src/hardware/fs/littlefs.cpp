@@ -40,13 +40,20 @@ bool fsSetup()
       if (bootStatus.fromWakeup == false)
       {
         isDebug(fsListDir("/", 0));
-        debugLog("Little fs total bytes: " + String(LittleFS.totalBytes()));
-        debugLog("Little fs used bytes: " + String(LittleFS.usedBytes()));
+        debugLog(getLittleFsSizeString());
       }
 #endif
     }
   }
   return true;
+}
+
+String getLittleFsSizeString()
+{
+  String ret = "LittleFS: ";
+  ret = ret + String(LittleFS.usedBytes() / (1024.0 * 1024.0), 2) + "/";
+  ret = ret + String(LittleFS.totalBytes() / (1024.0 * 1024.0), 2) + "MB";
+  return ret;
 }
 
 void fsCreateDir(String path)

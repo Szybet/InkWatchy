@@ -12,6 +12,7 @@ size_t fsGetFileSize(String path);
 void fsRemoveFile(String path);
 bool fsFileExists(String path);
 bool removeDir(String path);
+String getLittleFsSizeString();
 
 extern char loadedImgNames[IMG_COUNT][RESOURCES_NAME_LENGTH];
 extern ImageDef loadedImg[IMG_COUNT];

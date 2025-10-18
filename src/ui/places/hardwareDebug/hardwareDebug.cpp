@@ -54,6 +54,8 @@ void initGeneralDebugDisplay()
     usedHeapLast = ESP.getFreeHeap();
     lineHeap = genpage_add(heapStr.c_str());
 
+    genpage_add(getLittleFsSizeString().c_str());
+
 #if TEMP_CHECKS_ENABLED
     previousTempUi = getTemp();
     debugLog("Previous temp ui is: " + String(previousTempUi));
