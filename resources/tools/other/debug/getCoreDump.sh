@@ -32,4 +32,4 @@ if [[ $? -ne 0 || -z "$serial_port" ]]; then
     exit 1
 fi
 
-PYTHONPATH=~/.espressif/python_env/idf5.4_py3.12_env/lib/python3.12/site-packages:$PYTHONPATH ~/.espressif/python_env/idf5.4_py3.12_env/bin/esp-coredump --port $serial_port info_corefile .pio/build/$pio_env/firmware.elf
+PYTHONPATH=~/.espressif/python_env/idf5.5_py3.12_env/lib/python3.12/site-packages:$PYTHONPATH ~/.espressif/python_env/idf5.5_py3.12_env/bin/esp-coredump --port $serial_port info_corefile .pio/build/$pio_env/firmware.elf
