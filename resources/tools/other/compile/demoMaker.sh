@@ -128,7 +128,7 @@ function generalThings {
 generalThings "$cleanFlag" "$accChoice" "$checkForAll"
 
 function compileEnv {
-    pio run -e $1
+    ~/.platformio/penv/bin/pio run -e $1
 }
 
 for env in "${envList[@]}"; do

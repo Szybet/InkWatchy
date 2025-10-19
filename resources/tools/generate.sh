@@ -22,7 +22,7 @@ cd ../../
 pio_env=$(get_pio_env .vscode/launch.json)
 if [ ! -d ".pio/libdeps/$pio_env/Adafruit GFX Library/fontconvert/" ]; then
   echo "Fontconvert does not exist, installing libs"
-  pio pkg install -e $pio_env
+  ~/.platformio/penv/bin/pio pkg install -e $pio_env
 else
   echo "Fontconvert exist, not installing libs"
 fi

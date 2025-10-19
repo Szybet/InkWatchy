@@ -46,8 +46,8 @@ if [ ! -f "other/in/esptool" ]; then
     rm -rf esptool-download
 fi
 
-if ! command -v pio &> /dev/null; then
-    echo "install platformio (pio command). The rest will fail."
+if ! command -v ~/.platformio/penv/bin/pio &> /dev/null; then
+    echo "install platformio (pio command (at ~/.platformio/penv/bin/pio)). The rest will fail."
 fi
 
 current_path=$(pwd)
