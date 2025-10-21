@@ -286,6 +286,7 @@ The default is this:
 
 // Vault
 #define VAULT 1
+#define VAULT_FULL_REFRESH 0
 
 // Pong
 #define PONG 1

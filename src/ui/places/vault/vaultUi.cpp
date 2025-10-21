@@ -277,6 +277,9 @@ void showVaultImage(String file)
             so the issue is here, in decrypting. Maybe in the base64 part, maybe in the decrypting itself, idk
         */
         dis->drawFastHLine(0, 0, 200, SCWhite);
+#if VAULT_FULL_REFRESH
+        rM.updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
+#endif
         disUp(true);
 
         delete[] realImage;
