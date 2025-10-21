@@ -24,15 +24,19 @@ TaskHandle_t watchdogTask = NULL;
 
 #define WATCHDOG_DELAY 30 * 1000
 #define WATCHDOG_SMALL_DELAY 3 * 1000
+#if WATCHDOG_TASK_TIMEOUT
 int64_t watchdogMillis = 0;
 std::atomic<bool> watchdogFlag{false};
+#endif
 
 void loopWatchdogTask(void *parameter)
 {
-    // debugLog("Watchdog starting, slowly");
-    // delayTask(WATCHDOG_DELAY);
-    // debugLog("Watchdog finally started!");
+// debugLog("Watchdog starting, slowly");
+// delayTask(WATCHDOG_DELAY);
+// debugLog("Watchdog finally started!");
+#if WATCHDOG_TASK_TIMEOUT
     watchdogMillis = millisBetter();
+#endif
     delayTask(WATCHDOG_SMALL_DELAY);
     while (true)
     {
@@ -42,6 +46,7 @@ void loopWatchdogTask(void *parameter)
             // debugLog("Detected all buttons high, resetting...");
             assert(0);
         }
+#if WATCHDOG_TASK_TIMEOUT
         if (millisBetter() - watchdogMillis > WATCHDOG_DELAY)
         {
             watchdogMillis = millisBetter();
@@ -55,6 +60,7 @@ void loopWatchdogTask(void *parameter)
                 watchdogFlag.store(false, std::memory_order_relaxed);
             }
         }
+#endif
         delayTask(WATCHDOG_SMALL_DELAY);
     }
 }
@@ -84,8 +90,10 @@ void deInitWatchdogTask()
 
 void watchdogPing()
 {
-    // debugLog("watchdogPing called");
+// debugLog("watchdogPing called");
+#if WATCHDOG_TASK_TIMEOUT
     watchdogFlag.store(true, std::memory_order_relaxed);
+#endif
 }
 
 #else

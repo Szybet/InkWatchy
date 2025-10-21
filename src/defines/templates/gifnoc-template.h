@@ -127,6 +127,7 @@ The default is this:
 #define FULL_DISPLAY_UPDATE_QUEUE 60 // Make a full display update after x of partial ones
 #define LONG_BACK_FULL_REFRESH 1     // Make a full refresh at long back button clicked
 #define WATCHDOG_TASK 1              // Wastes resources but tries to detect hangups and you can reset the watch with clicking all buttons too
+#define WATCHDOG_TASK_TIMEOUT 0      // Hangup detection, doesn't work on anything besides yatchy, probably. Idk why.
 
 // Drift & NTP & Syncing
 // Sync wifi is disabled by default because Watchy v2, watchy v3 have bad charging detection and it will drain a lot of battery before detecting it and going to sleep & disabling the wifi - only on yatchy this feature works fully correct, on others it drains more battery. If your battery drained fully, this is the first thing to disable, if that worked report it to me

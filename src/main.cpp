@@ -59,7 +59,10 @@ void loop()
 {
   if (isFullMode() == true)
   {
+#if WATCHDOG_TASK_TIMEOUT
     watchdogPing();
+#endif
+
     manageRTC();
 #if INK_ALARMS
     checkAlarms();
