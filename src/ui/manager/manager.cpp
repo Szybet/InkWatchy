@@ -18,7 +18,6 @@ void executeExitFunc()
 {
     if (exitFuncGlob != nullptr)
     {
-        debugLog("Executing exit func");
         void (*exitFuncGlobTmp)() = exitFuncGlob;
         exitFuncGlob = nullptr;
         exitFuncGlobTmp();
@@ -61,6 +60,7 @@ void managerLaunchFunc(UiPlace place, void (*initFunc)(), void (*loopFunc)(), vo
             wasBacked = false;
         }
 
+        debugLog("Executing exit func in managerLaunchFunc");
         executeExitFunc();
         if (initFunc != nullptr)
         {
@@ -104,7 +104,7 @@ void loopManager()
                 }
             }
 
-            if (currentPlaceIndex > 0)
+            if (currentPlaceIndex > 0 && (backButton == Back || backButton == LongBack))
             {
                 if (backButton == Back)
                 {
@@ -125,6 +125,7 @@ void loopManager()
 #endif
                     currentPlaceIndex = 0;
                 }
+                debugLog("Executing exit func in loopManager");
                 executeExitFunc();
             }
         }
