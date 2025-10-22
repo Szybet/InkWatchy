@@ -1,10 +1,9 @@
-use core::ffi::{c_char, CStr};
-
 use crate::{
     graphics::slint_platform::{preserve_app, slint_init, SlintApp, SLINT_APP_STORE},
     info,
 };
 use alloc::{boxed::Box, string::String, vec::Vec};
+use core::ffi::{c_char, CStr};
 use general_page::{get_general_page, Adapter, GeneralPage};
 use slint::{ComponentHandle, ModelRc, SharedString, StandardListViewItem, VecModel};
 
@@ -23,8 +22,11 @@ pub struct GeneralApp {
 
 impl SlintApp for GeneralApp {
     fn show(&self) {
-        self.window.show().unwrap();
+        if let Err(_) = self.window.show() {
+            info!("Failed to show window");
+        }
     }
+
     fn on_exit(&self) {}
 
     fn as_any(&self) -> &dyn core::any::Any {
@@ -36,20 +38,21 @@ impl SlintApp for GeneralApp {
     }
 }
 
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn init_general_page(line_init_capacity: u16) {
     slint_init();
-
     let ui = get_general_page();
 
     let ui_weak = ui.as_weak();
     let ui_clone = ui_weak.clone();
     ui.on_button_pressed(move || {
-        let an_an_ui = ui_clone.upgrade().unwrap();
-        let an_ui = an_an_ui.global::<Adapter>();
-        let i = an_ui.get_current_item();
-        button_clicked(i as u16);
-        // println!("button pressed on index: {}", i);
+        if let Some(an_an_ui) = ui_clone.upgrade() {
+            let an_ui = an_an_ui.global::<Adapter>();
+            let i = an_ui.get_current_item();
+            button_clicked(i as u16);
+        } else {
+            info!("Failed to upgrade UI weak reference");
+        }
     });
 
     let my_struct = Box::new(GeneralApp {
@@ -74,7 +77,7 @@ pub unsafe fn get_general_app() -> Option<&'static mut GeneralApp> {
         if let Some(general_app) = slint_app.as_any_mut().downcast_mut::<GeneralApp>() {
             return Some(general_app);
         } else {
-            info!("Error downcasting to general app");
+            info!("Failed to downcast to GeneralApp");
         }
     } else {
         info!("SLINT_APP_STORE is None");
@@ -82,44 +85,38 @@ pub unsafe fn get_general_app() -> Option<&'static mut GeneralApp> {
     None
 }
 
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn general_page_set_title(s: *const c_char) {
-    let general_app = get_general_app().unwrap();
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in set_title");
+        return;
+    };
     let string = c_char_to_string(s);
-
     general_app
         .window
         .global::<Adapter>()
         .set_title_text(string.into());
 }
 
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn general_page_disable_title() {
-    let general_app = get_general_app().unwrap();
-
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in disable_title");
+        return;
+    };
     general_app
         .window
         .global::<Adapter>()
         .set_title_enabled(false);
 }
 
-/*
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn general_page_set_main(s: *const c_char) {
-    let general_app = get_general_app().unwrap();
-    let string = c_char_to_string(s);
-
-    general_app
-        .window
-        .global::<Adapter>()
-        .set_main_text(string.into());
-}
-*/
-
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn general_page_set_main() {
-    let general_app = get_general_app().unwrap();
-
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in set_main");
+        return;
+    };
+    
     if general_app.main_change {
         general_app.main_change = !general_app.main_change;
     } else {
@@ -127,7 +124,6 @@ pub unsafe extern "C" fn general_page_set_main() {
     }
 
     let mut string = String::new();
-
     let len = general_app.main_str.len();
     for (c, the_line) in general_app.main_str.iter().enumerate() {
         string.push_str(&the_line.str);
@@ -150,14 +146,16 @@ pub struct GeneralPageButton {
 
 #[no_mangle]
 pub unsafe extern "C" fn general_page_set_buttons(buttons: *const GeneralPageButton, length: i16) {
-    let general_app: &mut GeneralApp = get_general_app().unwrap();
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in set_buttons");
+        return;
+    };
     let mut button_names = Vec::new();
     button_names.push(StandardListViewItem::from(SharedString::from("exit")));
 
     for i in 0..length {
         let button = &*buttons.offset(i as isize);
         general_app.button_func.push(button.function);
-
         let string = c_char_to_string(button.string);
         button_names.push(StandardListViewItem::from(SharedString::from(string)));
     }
@@ -170,9 +168,12 @@ pub unsafe extern "C" fn general_page_set_buttons(buttons: *const GeneralPageBut
     general_app.window.set_button_items(model);
 }
 
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn genpage_add(s: *const c_char) -> u16 {
-    let general_app: &mut GeneralApp = get_general_app().unwrap();
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in add");
+        return u16::MAX;
+    };
     let new_string = c_char_to_string(s);
 
     let line = Line {
@@ -180,17 +181,17 @@ pub unsafe extern "C" fn genpage_add(s: *const c_char) -> u16 {
         str: new_string,
     };
     general_app.str_id += 1;
-
     general_app.main_str.push(line);
-
     general_app.main_change = true;
-
     general_app.str_id - 1
 }
 
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn genpage_insert(s: *const c_char, add_after_id: u16) -> u16 {
-    let general_app: &mut GeneralApp = get_general_app().unwrap();
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in insert");
+        return u16::MAX;
+    };
     let new_string = c_char_to_string(s);
 
     let line = Line {
@@ -199,109 +200,111 @@ pub unsafe extern "C" fn genpage_insert(s: *const c_char, add_after_id: u16) -> 
     };
     general_app.str_id += 1;
 
-    let mut vec_index: usize = usize::MAX;
+    let mut vec_index: Option<usize> = None;
     for (c, the_line) in general_app.main_str.iter().enumerate() {
         if the_line.id == add_after_id {
-            vec_index = c;
+            vec_index = Some(c);
             break;
         }
     }
-    #[cfg(feature = "debug")]
-    if vec_index == usize::MAX {
-        info!("Failed to find line! Critical! Ignoring adding the line");
+
+    let Some(idx) = vec_index else {
+        info!("Failed to find line for insert");
         return u16::MAX;
-    }
+    };
 
-    general_app.main_str.insert(vec_index + 1, line);
-
+    general_app.main_str.insert(idx + 1, line);
     general_app.main_change = true;
-
     general_app.str_id - 1
 }
 
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn genpage_remove(remove_id: u16) {
-    let general_app: &mut GeneralApp = get_general_app().unwrap();
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in remove");
+        return;
+    };
 
-    let mut vec_index: usize = usize::MAX;
+    let mut vec_index: Option<usize> = None;
     for (c, the_line) in general_app.main_str.iter().enumerate() {
         if the_line.id == remove_id {
-            vec_index = c;
+            vec_index = Some(c);
             break;
         }
     }
-    #[cfg(feature = "debug")]
-    if vec_index == usize::MAX {
-        info!("Failed to find line! Critical! Ignoring removing the line");
+
+    let Some(idx) = vec_index else {
+        info!("Failed to find line for removal");
         return;
-    }
+    };
 
-    general_app.main_str.remove(vec_index);
-
+    general_app.main_str.remove(idx);
     general_app.main_change = true;
 }
 
-/*
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn genpage_change(s: *const c_char, line: u16) {
-    let general_app: &mut GeneralApp = get_general_app().unwrap();
-    let string = c_char_to_string(s);
-
-    let mut lines: Vec<&str> = general_app.main_str.lines().collect();
-    lines[line as usize] = &string;
-    general_app.main_str = lines.join("\n");
-
-    general_app.main_change = true;
-}
-*/
-
-// More efficient?
-#[unsafe(no_mangle)]
-pub unsafe extern "C" fn genpage_change(s: *const c_char, line: u16) {
-    let general_app: &mut GeneralApp = get_general_app().unwrap();
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in change");
+        return;
+    };
     let new_string = c_char_to_string(s);
 
     for the_line in general_app.main_str.iter_mut() {
         if the_line.id == line {
             the_line.str = new_string;
-            break;
+            general_app.main_change = true;
+            return;
         }
     }
-
-    general_app.main_change = true;
+    info!("Failed to find line to change");
 }
 
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn genpage_is_menu() -> bool {
-    let general_app: &mut GeneralApp = get_general_app().unwrap();
-
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in is_menu");
+        return false;
+    };
     general_app.window.global::<Adapter>().get_show_menu()
 }
 
-pub fn button_clicked(i: u16) {
-    let general_app: &mut GeneralApp = unsafe { get_general_app().unwrap() };
-    general_app.button_func[(i - 1) as usize]();
+pub unsafe fn button_clicked(i: u16) {
+    let Some(general_app) = get_general_app() else {
+        info!("GeneralApp not found in button_clicked");
+        return;
+    };
+
+    if i == 0 || i as usize > general_app.button_func.len() {
+        info!("Invalid button index");
+        return;
+    }
+
+    (general_app.button_func[(i - 1) as usize])();
 }
 
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn genpage_set_center() {
-    let general_app: &mut GeneralApp = get_general_app().unwrap();
-
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in set_center");
+        return;
+    };
     general_app
         .window
         .global::<Adapter>()
         .set_main_align_center(true);
-
     general_app.main_change = true;
 }
 
-#[unsafe(no_mangle)]
+#[no_mangle]
 pub unsafe extern "C" fn genpage_set_center_vertical() {
-    let general_app: &mut GeneralApp = get_general_app().unwrap();
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in set_center_vertical");
+        return;
+    };
     general_app
         .window
         .global::<Adapter>()
         .set_main_align_center_vertical(true);
-
     general_app.main_change = true;
 }
