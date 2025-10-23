@@ -141,7 +141,8 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
         while (buttonRead(buttonPin) == BUT_CLICK_STATE)
         {
             delayTask(SMALL_BUTTON_DELAY_MS);
-            if(millisBetter() - now > BUTTON_STUCK_MS) {
+            if (millisBetter() - now > BUTTON_STUCK_MS)
+            {
                 showErrorOnScreen("Button is stuck: " + getButtonString(normalButton));
                 break;
             }
@@ -157,7 +158,6 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_3 || ATCHY_VER == YATCHY
 void loopButtonsTask(void *parameter)
 {
-    buttonsActivated = true;
     if (isFullMode() == false)
     {
         // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
@@ -448,6 +448,7 @@ void turnOnButtons()
 {
     if (buttonsActivated == false)
     {
+        buttonsActivated = true;
         initButtonTask();
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_3 || ATCHY_VER == YATCHY
         turnOnInterrupts();

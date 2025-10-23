@@ -49,6 +49,7 @@ void vibrateMotor(int vTime, int power)
             debugLog("Deleting motor task");
             motorTaskRunning = false;
             vTaskDelete(motorTask);
+            motorTask = NULL;
         }
         return;
     }
@@ -75,14 +76,21 @@ void vibrateMotor(int vTime, int power)
         vibrateTime = vTime;
         vibrationPower = power;
         motorMutex.unlock();
-        eTaskState taskState = eTaskGetState(motorTask);
-        if (taskState == eSuspended)
+        if (motorTask != NULL)
         {
-            vTaskResume(motorTask);
+            eTaskState taskState = eTaskGetState(motorTask);
+            if (taskState == eSuspended)
+            {
+                vTaskResume(motorTask);
+            }
+            else
+            {
+                debugLog("Unknown motor task state: " + String(taskState));
+            }
         }
         else
         {
-            debugLog("Unknown motor task state: " + String(taskState));
+            debugLog("motorTask handle is NULL");
         }
     }
     debugLog("Mottor task done");
