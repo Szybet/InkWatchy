@@ -43,12 +43,7 @@ void initCredits()
     genpage_add("Szybet");
     genpage_add("github.com/Szybet");
     genpage_add("Helped:");
-    genpage_add("Cat in a hoodie");
-    genpage_add("GuruSR");
-    genpage_add("Prokuon");
-    genpage_add("Jason2866");
-    genpage_add("C4nn0n");
-    genpage_add("invpt");
+    genpage_add(get_credits_nicks());
 
     GeneralPageButton buttons[] = {
         GeneralPageButton{CREDITS_INKWATCHY_QR, turnInkWatchyQr},

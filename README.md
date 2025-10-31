@@ -146,11 +146,14 @@ https://www.youtube.com/watch?v=gFOCqalJidQ
 
 ## Some credits
 - [Can in a hoodie](https://www.youtube.com/@cat_in_a_hoodie_27) - Many awesome graphics, the logo
+- C4nn0n - Testing a lot for the watchy v3 and beyond
+- Glowy The Glow bug - For finding bugs, bugs bugs bugs bugs bugs
+- [izzylaif](https://github.com/izzylaif) - Who did the "Fine, I will do it myself" move, respect
+- [picarica](https://github.com/picarica) - Calendar improvements, many bugs reported, and more :D
+- [invpt](https://github.com/invpt) - Huge thanks for pointing out the direction for a potential fix for screen ghosting, I easily have spend 2 weeks on it ;o 
+- [Jason2866](https://github.com/Jason2866) - Help with solving platformio hackery
 - [GuruSR](https://github.com/GuruSR/Watchy_GSR) - I used some of his awesome libraries and looked at the code for how the watchy hardware should be handled. Also answered a few questions on discord. Thanks!
 - [Prokuon](https://github.com/Prokuon/watchy-starfield/) - I really liked the design of this watchface and almost coppied it. Thanks! - well the code is completly diffrent
-- [Jason2866](https://github.com/Jason2866) - Help with solving platformio hackery
-- C4nn0n - Testing a lot for the watchy v3 and beyond
-- [invpt](https://github.com/invpt) - Huge thanks for pointing out the direction for a potential fix for screen ghosting, I easily have spend 2 weeks on it ;o 
 
 and many other contributors, whom you can see on the panel on the right
 

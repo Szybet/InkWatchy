@@ -37,7 +37,7 @@ fn main() {
     fs::write(
         &dest_path,
         format!(
-            "pub const CREDITS_NICKS: &str = r\"{}\";",
+            "pub const CREDITS_NICKS: &str = r\"{}\0\";",
             credits.join("\n")
         ),
     )
