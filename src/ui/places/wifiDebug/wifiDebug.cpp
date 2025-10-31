@@ -12,6 +12,9 @@ String wifiStatusLastStr;
 String taskStatusLastStr;
 int wifiSignalLast;
 
+#define EMPTY_MAC "00:00:00:00:00:00"
+#define EMPTY_IP "0.0.0.0"
+
 void wifiOnBtn()
 {
     turnOnWifiRegular();
@@ -46,7 +49,7 @@ void initWifiDebugDisplay()
     }
     else
     {
-        previousMac = "";
+        previousMac = EMPTY_MAC;
     }
     macAddressLine = genpage_add(previousMac.c_str());
 
@@ -62,7 +65,7 @@ void initWifiDebugDisplay()
     }
     else
     {
-        ipLine = genpage_add(String(DEBUG_WIFI_IP).c_str());
+        ipLine = genpage_add(String(String(DEBUG_WIFI_IP) + String(EMPTY_IP)).c_str());
         ssidLine = genpage_add(String(DEBUG_WIFI_SSID).c_str());
         signalStrengthLine = genpage_add((String(DEBUG_WIFI_SIGNAL) + String("0") + String(DEBUG_COMMON_PERCENT)).c_str());
     }
@@ -77,30 +80,45 @@ void loopWifiDebugDisplay()
 {
     if (genpage_is_menu() == false)
     {
+        String macNow = EMPTY_MAC;
+
         if (wifiStatusWrap() != wifiStatusSimple::WifiOff)
         {
-            String macNow = WiFi.macAddress();
-            if (previousMac != macNow)
-            {
-                previousMac = macNow;
-                genpage_change(macNow.c_str(), macAddressLine);
-            }
+            macNow = WiFi.macAddress();
+        }
+        if (previousMac != macNow)
+        {
+            previousMac = macNow;
+            genpage_change(macNow.c_str(), macAddressLine);
+        }
 
-            String wifiStatusStr = wifiStatus();
-            if (wifiStatusStr != wifiStatusLastStr)
+        String wifiStatusStr = wifiStatus();
+        if (wifiStatusStr != wifiStatusLastStr)
+        {
+            wifiStatusLastStr = wifiStatusStr;
+            genpage_change(wifiStatusLastStr.c_str(), statusLine);
+            if (wifiStatusWrap() != wifiStatusSimple::WifiOff)
             {
-                wifiStatusLastStr = wifiStatusStr;
-                genpage_change(wifiStatusLastStr.c_str(), statusLine);
+
                 genpage_change(String(DEBUG_WIFI_IP + WiFi.localIP().toString()).c_str(), ipLine);
                 genpage_change(String(DEBUG_WIFI_SSID + WiFi.SSID()).c_str(), ssidLine);
             }
-
-            int wifiSignal = getSignalStrength();
-            if (wifiSignal != wifiSignalLast)
+            else
             {
-                wifiSignalLast = wifiSignal;
-                genpage_change(String(DEBUG_WIFI_SIGNAL + String(wifiSignal) + DEBUG_COMMON_PERCENT).c_str(), signalStrengthLine);
+                genpage_change(String(String(DEBUG_WIFI_IP) + String(EMPTY_IP)).c_str(), ipLine);
+                genpage_change(String(DEBUG_WIFI_SSID).c_str(), ssidLine);
             }
+        }
+
+        int wifiSignal = 0;
+        if (wifiStatusWrap() != wifiStatusSimple::WifiOff)
+        {
+            wifiSignal = getSignalStrength();
+        }
+        if (wifiSignal != wifiSignalLast)
+        {
+            wifiSignalLast = wifiSignal;
+            genpage_change(String(DEBUG_WIFI_SIGNAL + String(wifiSignal) + DEBUG_COMMON_PERCENT).c_str(), signalStrengthLine);
         }
 
         String wifiTaskStatus = BOOL_STR(isWifiTaskCheck());
