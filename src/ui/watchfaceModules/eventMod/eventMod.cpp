@@ -7,7 +7,8 @@
 #define LINE_LIMIT 26
 
 // Makes redrawing turned off for the current day
-void wfEventresetValues() {
+void wfEventresetValues()
+{
     rM.currentEventTime = 0;
     rM.currentDay = day(getUnixTime(timeRTCLocal));
 }
@@ -15,10 +16,14 @@ void wfEventresetValues() {
 void wfEventcheckShow(bool *showBool, bool *redrawBool)
 {
     *showBool = true;
-    if(rM.currentDay == day(getUnixTime(timeRTCLocal))) {
+    if (rM.currentDay == day(getUnixTime(timeRTCLocal)))
+    {
         return;
-    } else {
-        if(rM.currentEventTime < getUnixTime(timeRTCLocal)) {
+    }
+    else
+    {
+        if (rM.currentEventTime < getUnixTime(timeRTCLocal))
+        {
             *redrawBool = true;
         }
     }
@@ -75,7 +80,8 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     JsonDocument doc = getCalendarJson(unixToDate(theUnix));
     JsonArray array = doc.as<JsonArray>();
     int arraySize = array.size();
-    if(array == 0) {
+    if (array == 0)
+    {
         dis->print("Invalid json?");
         wfEventresetValues();
         return;
@@ -86,16 +92,19 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     for (int i = 0; i < arraySize; i++)
     {
         uint64_t startUnix = array[i]["start_time"].as<String>().toInt();
-        if(startUnix > currentTime) {
+        if (startUnix > currentTime)
+        {
             int diff = llabs(startUnix - currentTime);
-            if(diff < smallDiff) {
+            if (diff < smallDiff)
+            {
                 finalI = i;
                 smallDiff = diff;
                 eventUnix = startUnix;
             }
         }
     }
-    if(finalI == -1) {
+    if (finalI == -1)
+    {
         dis->print("No more events");
         wfEventresetValues();
         return;
@@ -106,13 +115,16 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     String btnStr = getHourMinuteUnix(eventUnix) + "-" + getHourMinuteUnix(end) + " " + des;
     debugLog("btnStr: " + btnStr);
 
-    if(btnStr.length() <= LINE_LIMIT) {
+    if (btnStr.length() <= LINE_LIMIT)
+    {
         dis->print(btnStr);
-    } else {
+    }
+    else
+    {
         String btnStr1 = btnStr.substring(0, LINE_LIMIT);
-        //String btnStr2 = btnStr.substring(LINE_LIMIT, btnStr.length());
-        //String btnStr2 = btnStr2.substring(0, LINE_LIMIT);
-        // Not tested yet
+        // String btnStr2 = btnStr.substring(LINE_LIMIT, btnStr.length());
+        // String btnStr2 = btnStr2.substring(0, LINE_LIMIT);
+        //  Not tested yet
         String btnStr2 = btnStr.substring(LINE_LIMIT, LINE_LIMIT + LINE_LIMIT);
         dis->print(btnStr1);
         dis->setCursor(modSq.cord.x, modSq.cord.y + 10 + 10);
@@ -130,7 +142,7 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     rM.currentDay = -1;
 
     // No.
-    //drawButton(MODULE_RECT_X + img->bw + 2, MODULE_RECT_Y + 10, btnStr, &emptyImgPack, false, 2, 0, SCBlack, SCWhite, true, getFont("dogicapixel4"));
+    // drawButton(MODULE_RECT_X + img->bw + 2, MODULE_RECT_Y + 10, btnStr, &emptyImgPack, false, 2, 0, SCBlack, SCWhite, true, getFont("dogicapixel4"));
 }
 
 #endif
