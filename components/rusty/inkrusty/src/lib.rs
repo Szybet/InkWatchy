@@ -1,6 +1,8 @@
 #![no_std]
 #![no_main]
 
+include!(concat!(env!("OUT_DIR"), "/credits.rs"));
+
 // Alloc things
 extern crate alloc;
 use mallocator::Mallocator;
