@@ -478,7 +478,7 @@ void loopManager()
     case credits:
     {
 #if CREDITS
-        managerLaunchFunc(credits, initCredits, loopCredits);
+        managerLaunchFunc(credits, initCredits, loopCredits, slintExit);
 #endif
         break;
     }

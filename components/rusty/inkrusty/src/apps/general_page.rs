@@ -116,7 +116,7 @@ pub unsafe extern "C" fn general_page_set_main() {
         info!("Failed to get GeneralApp in set_main");
         return;
     };
-    
+
     if general_app.main_change {
         general_app.main_change = !general_app.main_change;
     } else {
@@ -132,6 +132,7 @@ pub unsafe extern "C" fn general_page_set_main() {
         }
     }
 
+    info!("General page update yes yes!");
     general_app
         .window
         .global::<Adapter>()
@@ -307,4 +308,13 @@ pub unsafe extern "C" fn genpage_set_center_vertical() {
         .global::<Adapter>()
         .set_main_align_center_vertical(true);
     general_app.main_change = true;
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn genpage_force_update() {
+    let Some(general_app) = get_general_app() else {
+        info!("Failed to get GeneralApp in genpage_force_update");
+        return;
+    };
+    general_app.window.window().request_redraw();
 }
