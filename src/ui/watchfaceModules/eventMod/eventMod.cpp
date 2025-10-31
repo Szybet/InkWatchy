@@ -15,17 +15,30 @@ void wfEventresetValues()
 
 void wfEventcheckShow(bool *showBool, bool *redrawBool)
 {
+    debugLog("Entered calendar check show");
     *showBool = true;
-    if (rM.currentDay == day(getUnixTime(timeRTCLocal)))
+
+    time_t now = getUnixTime(timeRTCLocal);
+    int today = day(now);
+
+    debugLog("showBool: " + String(*showBool));
+    debugLog("now: " + String(now));
+    debugLog("today: " + String(today));
+    debugLog("rM.currentDay: " + String(rM.currentDay));
+    debugLog("rM.currentEventTime: " + String(rM.currentEventTime));
+
+    if (rM.currentDay == today)
     {
         return;
     }
-    else
+
+    int nextDay = day(now + 86400);
+    debugLog("nextDay: " + String(nextDay));
+
+    if (rM.currentEventTime < now || rM.currentDay == nextDay)
     {
-        if (rM.currentEventTime < getUnixTime(timeRTCLocal))
-        {
-            *redrawBool = true;
-        }
+        debugLog("Redraw is true");
+        *redrawBool = true;
     }
 }
 
@@ -64,13 +77,14 @@ void wfEventrequestShow(buttonState button, bool *showBool)
         debugLog("Got unix: " + retrUnix);
         int64_t newUnix = retrUnix.toInt();
         int diff = abs(currentTime - newUnix);
-        if (diff < smallestDifference)
+        if (diff < smallestDifference && newUnix > currentTime)
         {
             smallestDifference = diff;
             theUnix = newUnix;
         }
     }
     debugLog("Current time: " + String(currentTime));
+    debugLog("theUnix: " + String(theUnix));
     if (day(theUnix) != day(currentTime) || month(theUnix) != month(currentTime))
     {
         dis->print("No events today");
