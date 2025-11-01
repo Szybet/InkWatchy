@@ -201,6 +201,7 @@ The default is this:
 
 // Book things
 #define BOOK 0
+#define BOOK_ACC_SWITCHING 0
 #define BOOK_ADD_SLEEP_DELAY_MS 60000
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_UP 300
 #define BOOK_AX_X_PAGE_CHANGE_VALUE_DOWN 250

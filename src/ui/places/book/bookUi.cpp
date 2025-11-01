@@ -110,7 +110,7 @@ int16_t staAx_Y;
 int16_t staAx_Z;
 bool waitForReturn = false;
 
-#if ACC_ENABLED
+#if ACC_ENABLED && BOOK_ACC_SWITCHING
 #define MIDDLE_MULTI 0.075
 int axis_XTop;
 int axis_XBott;
@@ -220,7 +220,7 @@ void initBook()
         return;
     }
     resetSleepDelayBook();
-#if ACC_ENABLED
+#if ACC_ENABLED && BOOK_ACC_SWITCHING
     initAcc();
     resetStartAxc();
 #endif
@@ -264,7 +264,7 @@ void loopBook()
     {
     case Up:
     {
-#if ACC_ENABLED
+#if ACC_ENABLED && BOOK_ACC_SWITCHING
         resetStartAxc();
 #endif
         changePageUp();
@@ -275,7 +275,7 @@ void loopBook()
     }
     case Down:
     {
-#if ACC_ENABLED
+#if ACC_ENABLED && BOOK_ACC_SWITCHING
         resetStartAxc();
 #endif
         changePageDown();
@@ -309,7 +309,7 @@ void loopBook()
     }
     }
 
-#if ACC_ENABLED
+#if ACC_ENABLED && BOOK_ACC_SWITCHING
     Accel accel;
     if (excOn == true && rM.SBMA.getAccel(&accel))
     {
