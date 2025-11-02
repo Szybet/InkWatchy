@@ -28,11 +28,6 @@ extern "C"
         delayTask(timeMs);
     }
 
-    extern void drawPixel(int16_t x, int16_t y, uint16_t color)
-    {
-        dis->drawPixel(x, y, color);
-    }
-
     extern void updateScreen(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
     {
         disUp(reallyUpdate, ignoreCounter, ignoreSleep);
@@ -129,12 +124,29 @@ extern "C"
     {
         cleanAllMemory();
     }
-    
-    extern const uint16_t* getColorBlack() {
+
+    extern const uint16_t *getColorBlack()
+    {
         return &SCBlack;
     }
 
-    extern const uint16_t* getColorWhite() {
+    extern const uint16_t *getColorWhite()
+    {
         return &SCWhite;
+    }
+
+    extern uint8_t *getScreenBuffer()
+    {
+        return dis->_buffer;
+    }
+
+    extern uint8_t getRotation()
+    {
+        return dis->getRotation();
+    }
+
+    extern bool getMirror()
+    {
+        return dis->_mirror;
     }
 }

@@ -1,6 +1,7 @@
+use crate::drawing::draw_pixel;
 use crate::external::generic::getColorBlack;
 use crate::external::generic::getColorWhite;
-use crate::external::generic::{drawPixel, updateScreen};
+use crate::external::generic::updateScreen;
 use embedded_graphics_core::{
     pixelcolor::Rgb565,
     prelude::{Dimensions, DrawTarget, PixelColor, RgbColor},
@@ -53,16 +54,13 @@ impl DrawTarget for Framebuffer {
         let good_black = unsafe { getColorBlack() };
         let good_white = unsafe { getColorWhite() };
         for embedded_graphics_core::Pixel(point, color) in pixels {
-            let x = point.x as i16;
-            let y = point.y as i16;
-
-            if x >= 200 || y >= 200 {
+            if point.x >= 200 || point.y >= 200 {
                 continue;
             }
 
-            let color_bit1: u16 = match color {
-                Rgb565::WHITE => *good_white,
-                Rgb565::BLACK => *good_black,
+            let color_bit1: bool = match color {
+                Rgb565::WHITE => *good_white != 0,
+                Rgb565::BLACK => *good_black != 0,
                 other => {
                     // info!(&alloc::format!("Processing color {:?}", other));
                     let r = other.r() as u16;
@@ -74,16 +72,14 @@ impl DrawTarget for Framebuffer {
                     let value = 62 * (r + b) + 126 * g;
 
                     if value >= THRESHOLD {
-                        *good_white
+                        *good_white != 0
                     } else {
-                        *good_black
+                        *good_black != 0
                     }
                 }
             };
 
-            unsafe {
-                drawPixel(x, y, color_bit1);
-            }
+            draw_pixel(point.x as u16, point.y as u16, color_bit1);
         }
         Ok(())
     }

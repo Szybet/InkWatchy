@@ -20,7 +20,6 @@ unsafe extern "C" {
 unsafe extern "C" {
     pub fn rustPanic();
     pub fn delayRust(timeMs: c_int);
-    pub fn drawPixel(x: i16, y: i16, color: u16);
     pub fn updateScreen(reallyUpdate: bool, ignoreCounter: bool, ignoreSleep: bool);
     pub fn rustMicros() -> u32;
     pub fn rustButtons() -> u32;
@@ -28,8 +27,11 @@ unsafe extern "C" {
     pub fn rustSetCpuSpeed(speed: c_int);
     pub fn rustGetCpuSpeed() -> c_int;
     pub fn rustCleanMemory();
+    pub fn getScreenBuffer() -> *mut u8;
     pub fn getColorBlack() -> &'static u16;
     pub fn getColorWhite() -> &'static u16;
+    pub fn getRotation() -> u8;
+    pub fn getMirror() -> bool;
 }
 
 pub const RUST_BUTTON_NONE: u32 = 0;

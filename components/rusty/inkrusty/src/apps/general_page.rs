@@ -132,7 +132,6 @@ pub unsafe extern "C" fn general_page_set_main() {
         }
     }
 
-    info!("General page update yes yes!");
     general_app
         .window
         .global::<Adapter>()

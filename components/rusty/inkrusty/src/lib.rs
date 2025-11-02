@@ -54,6 +54,7 @@ pub mod apps;
 pub mod external;
 pub mod graphics;
 pub mod logs;
+pub mod drawing;
 
 #[cfg(feature = "debug")]
 use crate::external::generic::rust_ink_test;
