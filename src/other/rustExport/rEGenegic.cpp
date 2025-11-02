@@ -144,9 +144,4 @@ extern "C"
     {
         return dis->getRotation();
     }
-
-    extern bool getMirror()
-    {
-        return dis->_mirror;
-    }
 }

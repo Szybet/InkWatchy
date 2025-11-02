@@ -1,15 +1,10 @@
-use crate::external::generic::{getMirror, getRotation, getScreenBuffer};
+use crate::external::generic::{getRotation, getScreenBuffer};
 
 const WIDTH: u16 = 200;
 const HEIGHT: u16 = 200;
 
 // Replicating this function here instead of doing it in C saves like 100-150ms
 pub fn draw_pixel(mut x: u16, mut y: u16, color: bool) {
-    let mirror = unsafe { getMirror() };
-    if mirror {
-        x = WIDTH - x - 1;
-    }
-
     let rotation = unsafe { getRotation() };
     match rotation {
         1 => {

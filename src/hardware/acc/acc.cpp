@@ -238,6 +238,13 @@ uint16_t getSteps()
         }
         else
         {
+#if PRECISE_STEP_COUNTING
+            // 1735689661 is march 1 2025
+            if (getUnixTime(timeRTCLocal) < 1740787261)
+            {
+                rM.stepDay = timeRTCLocal.Day;
+            }
+#endif
             if (rM.stepDay != timeRTCLocal.Day)
             {
 #if PRECISE_STEP_COUNTING
@@ -250,18 +257,22 @@ uint16_t getSteps()
                     }
 
                     File root = LittleFS.open(PRECISE_STEP_COUNTING_DIR);
-                    if (root && root.isDirectory()) {
+                    if (root && root.isDirectory())
+                    {
                         int fileCount = 0;
                         uint64_t oldestUnixTime = -1;
                         String oldestFileName = "";
 
                         File file = root.openNextFile();
-                        while (file) {
-                            if (!file.isDirectory()) {
+                        while (file)
+                        {
+                            if (!file.isDirectory())
+                            {
                                 fileCount++;
                                 String fileName = file.name();
                                 uint64_t currentFileUnix = fileName.toInt();
-                                if (currentFileUnix < oldestUnixTime) {
+                                if (currentFileUnix < oldestUnixTime)
+                                {
                                     oldestUnixTime = currentFileUnix;
                                     oldestFileName = fileName;
                                 }
@@ -271,7 +282,8 @@ uint16_t getSteps()
                         }
                         root.close();
 
-                        if (fileCount >= PRECISE_STEPS_DAYS_LIMIT) {
+                        if (fileCount >= PRECISE_STEPS_DAYS_LIMIT)
+                        {
                             debugLog("Precise step files count (" + String(fileCount) + ") >= limit (" + String(PRECISE_STEPS_DAYS_LIMIT) + "). Deleting oldest file: " + oldestFileName);
                             String fullPathToDelete = String(PRECISE_STEP_COUNTING_DIR) + oldestFileName;
                             fsRemoveFile(fullPathToDelete);

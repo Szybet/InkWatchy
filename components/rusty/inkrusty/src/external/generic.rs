@@ -31,7 +31,6 @@ unsafe extern "C" {
     pub fn getColorBlack() -> &'static u16;
     pub fn getColorWhite() -> &'static u16;
     pub fn getRotation() -> u8;
-    pub fn getMirror() -> bool;
 }
 
 pub const RUST_BUTTON_NONE: u32 = 0;
