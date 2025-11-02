@@ -74,6 +74,7 @@ void setRgb(IWColors color, bool clearPrevious, uint timeMs)
     if (color != IwNone)
     {
         setRgbPullUp(false);
+        ledOnTime = 0;
     }
 
     switch (color)
