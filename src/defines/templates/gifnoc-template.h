@@ -151,6 +151,9 @@ The default is this:
 
 // Weather
 #define WEATHER_INFO 1  // Enable weather
+#define MAX_WEATHER_DAYS 16 // 16 is the max from weather api
+#define WEATHER_AIR_ENABLED 1
+#define MAX_AIR_DAYS 5      // 5 is the max pull from air-quality api, despite the website claiming max is 7
 #define WEATHER_TRIES 3 // Ammount of times to try to sync weather
 #define WEATHER_WATCHFACE_HOUR_OFFSET 1
 #define SUNRISE_SUNSET_HOUR_OFFSET 0 // (Domain watchface) Sunrise/Sunset is wrong, but everything else is fine? edit this instead.

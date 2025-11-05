@@ -1,8 +1,6 @@
 #include "weather.h"
 
 #if WEATHER_INFO
-#define MAX_WEATHER_DAYS 16 // 16 is the max from weather api, reduced here to lower delay to air quality data being loaded
-#define MAX_AIR_DAYS 5      // 5 is the max pull from air-quality api, despite the website claiming max is 7. loads after weather finishes
 #define ADD_DAY_UNIX 86400
 
 // http://api.open-meteo.com/v1/forecast?latitude=53.543082&longitude=9.994695&hourly=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation_probability,weather_code,pressure_msl,cloud_cover,visibility,wind_speed_10m,wind_direction_10m,wind_gusts_10m,is_day&daily=sunrise,sunset&timeformat=unixtime&timezone=auto&forecast_days=16
@@ -93,7 +91,9 @@ void syncWeather()
       debugLog("Failed to set weather " + String(currentDayDate));
     }
   }
+  delete forecast;
 
+#if WEATHER_AIR_ENABLED
   OM_AirQualityForecast *airForecast = new OM_AirQualityForecast;
   removeDir(AIR_QUALITY_DIR);
   fsCreateDir(AIR_QUALITY_DIR);
@@ -159,10 +159,9 @@ void syncWeather()
       debugLog("Failed to set air quality: " + String(currentDayDate));
     }
   }
-
-  debugLog("Finished syncing weather/airquality");
-  delete forecast;
   delete airForecast;
+#endif
+  debugLog("Finished syncing weather/airquality");
 }
 
 #if DEBUG
