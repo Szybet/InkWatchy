@@ -279,14 +279,14 @@ void loopManager()
     }
     case airQualityDateMenu:
     {
-#if WEATHER_INFO
+#if WEATHER_INFO && WEATHER_AIR_ENABLED
         managerLaunchFunc(airQualityDateMenu, initAirQualityDateMenu, loopMenu);
 #endif
         break;
     }
     case airQualityConditionMenu:
     {
-#if WEATHER_INFO
+#if WEATHER_INFO && WEATHER_AIR_ENABLED
         managerLaunchFunc(airQualityConditionMenu, initAirQualityConditionMenu, loopMenu);
 #endif
         break;

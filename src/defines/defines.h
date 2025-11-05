@@ -129,6 +129,7 @@ extern uint16_t SCWhite;
 #if WEATHER_INFO
 #include "../network/weather.h"
 #include "../ui/places/weather/weatherSwitches.h"
+#include "../ui/places/weather/weatherQuality.h"
 #endif
 
 // Alarms
