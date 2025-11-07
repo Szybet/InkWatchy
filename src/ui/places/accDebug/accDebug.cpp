@@ -36,6 +36,16 @@ bool is3DOn = false;
 
 void turn3D()
 {
+#if SCREEN_ROTATION != 0
+  if (is3DOn == true)
+  {
+    dis->setRotation(SCREEN_ROTATION);
+  }
+  else
+  {
+    dis->setRotation(0);
+  }
+#endif
   is3DOn = !is3DOn;
 }
 
@@ -259,6 +269,9 @@ void loopAccDebug()
 
 void exitAccDebug()
 {
+#if SCREEN_ROTATION != 0
+  dis->setRotation(SCREEN_ROTATION);
+#endif
   slintExit();
 }
 #endif
