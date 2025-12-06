@@ -133,6 +133,7 @@ void runLpCore()
         .wakeup_source = ULP_LP_CORE_WAKEUP_SOURCE_LP_TIMER,
         .lp_timer_sleep_duration_us = uint32_t(2 * 1000000),
     };
+    uint64_t micros = 1;
 #else
     uint64_t micros = microsTillNextMin();
     debugLog("Micros till next minute: " + String(micros) + " while seconds is: " + String(getCurrentSeconds()) + " so it will wake up in: " + String(micros / 1000000));
