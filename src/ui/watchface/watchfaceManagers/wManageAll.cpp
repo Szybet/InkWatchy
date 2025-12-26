@@ -43,6 +43,14 @@ const watchfaceDef dotpDomain = {
 };
 #endif
 
+#if WATCHFACE_TERRAIN
+const watchfaceDef terrainDef = {
+    .manager = wfmOne,
+    .name = "Szybet's Terrain",
+    .data = (genPointer)&terrainDefOne,
+};
+#endif
+
 #if WATCHFACE_SHADES_SZYBET
 const watchfaceDef szybetShades = {
     .manager = wfmOne,
@@ -101,6 +109,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_DOMAIN_DOTP
     &dotpDomain,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_TERRAIN
+    &terrainDef,
 #else
     &noWatchFace,
 #endif

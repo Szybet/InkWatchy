@@ -251,6 +251,9 @@ extern uint16_t SCWhite;
 #if WATCHFACE_SLATE
 #include "../ui/watchface/watchfaces/slate_Suddoku/slate.h"
 #endif
+#if WATCHFACE_TERRAIN
+#include "../ui/watchface/watchfaces/terrain_Szybet/terrain.h"
+#endif
 #if GSR_WATCHFACES
 #include "../ui/watchface/watchfaceManagers/wManageGSR/wManageGSR.h"
 #endif
