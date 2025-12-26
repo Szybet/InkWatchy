@@ -12,12 +12,15 @@
 // #define TIME_FONT getFont("terrain/font_terrain20")
 #define TIME_FONT getFont("terrain/octosquares21")
 
+void clearTime() {
+    dis->fillRect(TIME_CORD_X, TIME_CORD_Y - TIME_HEIGHT, TIME_WIDTH, TIME_HEIGHT, SCWhite);
+}
+
 void showTimeFull()
 {
     setTextSize(1);
     setFont(TIME_FONT);
-    // First clear because font sizes
-    dis->fillRect(TIME_CORD_X, TIME_CORD_Y - TIME_HEIGHT, TIME_WIDTH, TIME_HEIGHT, SCBlack);
+    clearTime();
     writeTextReplaceBack(getHourMinute(timeRTCLocal), TIME_CORD);
 }
 
@@ -57,6 +60,8 @@ const watchfaceDefOne terrainDefOne = {
     .watchfaceModSquare = {.size{.w = 0, .h = 0}, .cord{.x = 0, .y = 0}},
     .someDrawingSquare = {.size{.w = 0, .h = 0}, .cord{.x = 0, .y = 0}},
     .isModuleEngaged = []()
-    { return false; }};
+    { return false; },
+    .lpCoreScreenPrepareCustom = clearTime,
+};
 
 #endif

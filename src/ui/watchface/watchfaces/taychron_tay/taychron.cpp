@@ -58,7 +58,7 @@ static void showTimeFull()
     screenTimeChanged = true;
 #endif
     // Now UI
-    dis->fillRect(0, TIME_CORD_Y, 200, 30, SCBlack);            // Clear middle
+    dis->fillRect(0, TIME_CORD_Y, 200, 30, SCBlack);                // Clear middle
     String currTime = getTaychronLocalizedTimeString(timeRTCLocal); // Use localized function
 
 #if WATCHFACE_12H
@@ -129,6 +129,8 @@ const watchfaceDefOne taychronDef = {
     .watchfaceModSquare = {.size{.w = 0, .h = 0}, .cord{.x = 0, .y = 0}},
     .someDrawingSquare = {.size{.w = 0, .h = 0}, .cord{.x = 0, .y = 0}},
     .isModuleEngaged = []()
-    { return false; }};
+    { return false; },
+    .lpCoreScreenPrepareCustom = NULL,
+};
 
 #endif

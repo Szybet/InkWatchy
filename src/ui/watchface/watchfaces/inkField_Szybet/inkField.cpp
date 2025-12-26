@@ -240,6 +240,8 @@ const watchfaceDefOne inkFieldDef = {
             return true;
         }
         return false;
-    }};
+    },
+    .lpCoreScreenPrepareCustom = NULL,
+};
 
 #endif

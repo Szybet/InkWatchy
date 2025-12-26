@@ -6,10 +6,10 @@
 bool screenForceNextFullTimeWrite = false; // Make the watchface update the whole time bar
 bool screenTimeChanged = false;            // If the watchface has written time (minutes / hours) to the screen
 
-#define LP_CORE_SCREEN_X 8
-#define LP_CORE_SCREEN_Y 2
-#define LP_CORE_SCREEN_W 185
-#define LP_CORE_SCREEN_H 56
+#define LP_CORE_SCREEN_DEFAULT_X 8
+#define LP_CORE_SCREEN_DEFAULT_Y 2
+#define LP_CORE_SCREEN_DEFAULT_W 185
+#define LP_CORE_SCREEN_DEFAULT_H 56
 
 struct customRtcData
 {
@@ -31,7 +31,20 @@ customRtcData *customRtcDataGet()
 void lpCoreScreenPrepare(bool now, bool setDuChange)
 {
     debugLog("Clearing screen space for lp core");
-    dis->fillRect(LP_CORE_SCREEN_X, LP_CORE_SCREEN_Y, LP_CORE_SCREEN_W, LP_CORE_SCREEN_H, SCWhite);
+
+    const watchfaceDefOne *currentWatchface = getwatchfaceDefOne();
+    if (currentWatchface != NULL)
+    {
+        if (currentWatchface->lpCoreScreenPrepareCustom != NULL)
+        {
+            currentWatchface->lpCoreScreenPrepareCustom();
+        }
+        else
+        {
+            dis->fillRect(LP_CORE_SCREEN_DEFAULT_X, LP_CORE_SCREEN_DEFAULT_Y, LP_CORE_SCREEN_DEFAULT_W, LP_CORE_SCREEN_DEFAULT_H, SCWhite);
+        }
+    }
+    
     if (now == true)
     {
         updateDisplay(PARTIAL_UPDATE);
@@ -256,7 +269,8 @@ void unix_offset_call()
 */
 
 #if !INK_ALARMS
-bool willAlarmTrigger() {
+bool willAlarmTrigger()
+{
     return false;
 }
 #endif

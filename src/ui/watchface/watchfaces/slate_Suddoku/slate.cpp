@@ -354,7 +354,8 @@ const watchfaceDefOne slateDef = {
     .watchfaceModules = false,
     .watchfaceModSquare = {.size{.w = 0, .h = 0}, .cord{.x = 0, .y = 0}},
     .someDrawingSquare = {.size{.w = 0, .h = 0}, .cord{.x = 0, .y = 0}},
-    .isModuleEngaged = []() { return false; }
+    .isModuleEngaged = []() { return false; },
+    .lpCoreScreenPrepareCustom = NULL,
 };
 
 #endif
