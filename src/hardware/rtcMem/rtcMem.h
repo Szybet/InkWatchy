@@ -130,6 +130,7 @@ struct rtcMem
     struct
     {
         uint16_t steps;
+        uint16_t duskDawnHour;
     } terrain;
 #endif
     // Watchface modules

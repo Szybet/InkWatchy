@@ -26,6 +26,43 @@
 #define DATE_CORD_X 3
 #define DATE_CORD_Y 157
 
+void drawFancyDuskDawn()
+{
+    // Clear
+    dis->fillRect(127, 10, 4, 53, SCWhite);
+    bool ticTac = true;
+    for (int i = 0; i < 55; i++)
+    {
+        dis->drawPixel(131, 9 + i, ticTac);
+        dis->drawPixel(132, 9 + i, !ticTac);
+        dis->drawPixel(133, 9 + i, ticTac);
+        ticTac = !ticTac;
+    }
+
+    // The arrow
+    int wherePointY = map(timeRTCLocal.Hour, 0, 24, 12, 60);
+    dis->drawLine(127, wherePointY, 129, wherePointY, SCBlack);
+    dis->drawLine(127, wherePointY - 1, 128, wherePointY - 1, SCBlack);
+    dis->drawLine(127, wherePointY + 1, 128, wherePointY + 1, SCBlack);
+    dis->drawLine(127, wherePointY - 2, 127, wherePointY - 2, SCBlack);
+    dis->drawLine(127, wherePointY + 2, 127, wherePointY + 2, SCBlack);
+
+    // The bar bar
+    OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
+    if (wData.fine == true)
+    {
+        int sunrise = hour(wData.sunrise);
+        int sunset = hour(wData.sunset);
+        // debugLog("sunrise: " + String(sunrise));
+        // debugLog("sunset: " + String(sunset));
+
+        int ySunset = map(sunset, 0, 24, 12, 60);
+        int ySunrise = map(sunrise, 0, 24, 12, 60);
+
+        dis->fillRect(131, ySunrise, 3, ySunset - ySunrise + 1, SCBlack);
+    }
+}
+
 void clearTime()
 {
     dis->fillRect(TIME_CORD_X, TIME_CORD_Y - TIME_HEIGHT, TIME_WIDTH, TIME_HEIGHT, SCWhite);
@@ -85,6 +122,18 @@ static void drawBattery()
     }
 }
 
+void drawDuskDawnText()
+{
+    setTextSize(1);
+    setFont(getFont("terrain/dedicool4"));
+    OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
+    if (wData.fine == true)
+    {
+        writeTextReplaceBack(addZero(String(hour(wData.sunrise)), 2) + ":00 DAWN", 130, 5);
+        writeTextReplaceBack(addZero(String(hour(wData.sunset)), 2) + ":00 DUSK", 130, 71);
+    }
+}
+
 static void drawTimeAfterApply(bool forceDraw)
 {
     // uint16_t percentStepsTmp = uint16_t(((float)getSteps() / (float)STEPS_GOAL) * 100.0);
@@ -109,6 +158,12 @@ static void drawTimeAfterApply(bool forceDraw)
         int toX = map(percentStepsTmp, 4, 103, 0, 100);
         // debugLog("toX: " + String(toX) + " percentStepsTmp: " + String(percentStepsTmp));
         dis->fillRect(4, 30, toX - 4, 5, SCBlack);
+    }
+
+    if (rM.terrain.duskDawnHour != timeRTCLocal.Hour || forceDraw == true)
+    {
+        rM.terrain.duskDawnHour = timeRTCLocal.Hour;
+        drawFancyDuskDawn();
     }
 }
 
@@ -153,6 +208,8 @@ static void drawDay()
     String year = "20" + String((timeRTCLocal.Year + 70) % 100);
     String finalDate = month + "-" + dayDate + "-" + year;
     writeTextReplaceBack(finalDate, DATE_CORD_X, DATE_CORD_Y);
+
+    drawDuskDawnText();
 }
 
 const watchfaceDefOne terrainDefOne = {
