@@ -4,7 +4,8 @@ OPTIONS=("1" "Generate resources"
          #"2" "Generate partition table"
          "3" "Flash filesystem"
          "4" "Get filesystem from device"
-         "5" "Flash filesystem you got from the device")
+         "5" "Flash filesystem you got from the device"
+         "6" "(COULD FAIL) Fast resource generation")
 
 NUM_OPTIONS=$((${#OPTIONS[@]} / 2))
 
@@ -39,5 +40,8 @@ case $CHOICE in
         ;;
     5)
         cd resources/tools/fs/ && ./flashPersonalFs.sh
+        ;;
+    6)
+        cd resources/tools/ && ./generate_fast.sh
         ;;
 esac

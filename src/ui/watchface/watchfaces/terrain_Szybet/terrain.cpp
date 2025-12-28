@@ -12,11 +12,19 @@
 // #define TIME_FONT getFont("terrain/font_terrain20")
 #define TIME_FONT getFont("terrain/octosquares21")
 #define STEPS_FONT getFont("terrain/octosquares11")
+#define DAY_FONT getFont("terrain/fullmoon10")
+#define DATE_FONT getFont("terrain/fullmoon9")
 
 #define STEPS_CORD_X 1
 #define STEPS_CORD_Y 25
 #define STEPS_WIDTH 93
 #define STEPS_HEIGHT 18
+
+#define DAY_CORD_X 3
+#define DAY_CORD_Y 144
+
+#define DATE_CORD_X 3
+#define DATE_CORD_Y 157
 
 void clearTime()
 {
@@ -89,7 +97,8 @@ static void drawTimeAfterApply(bool forceDraw)
         // Clear the area
         dis->fillRect(STEPS_CORD_X, STEPS_CORD_Y - STEPS_HEIGHT, STEPS_WIDTH, STEPS_HEIGHT, SCWhite);
         String stepsStr = String(steps);
-        while(stepsStr.length() < 5) {
+        while (stepsStr.length() < 5)
+        {
             stepsStr = "0" + stepsStr;
         }
         writeTextReplaceBack(stepsStr, STEPS_CORD_X, STEPS_CORD_Y);
@@ -103,10 +112,53 @@ static void drawTimeAfterApply(bool forceDraw)
     }
 }
 
+String getDayByIndexTerrain(int dayOfWeek, int offset = 0)
+{
+    static const String dayNames[] = {
+        "MONDAY",
+        "TUESDAY",
+        "WEDNESDAY",
+        "THURSDAY",
+        "FRIDAY",
+        "SATURDAY",
+        "SUNDAY"};
+
+    // Apply offset and wrap around
+    int dayIndex = (dayOfWeek + offset + 6) % 7;
+
+    if (dayIndex >= 0 && dayIndex < 7)
+    {
+        return dayNames[dayIndex];
+    }
+    return "???";
+}
+
+static void drawDay()
+{
+    // Month
+    setTextSize(1);
+    setFont(DAY_FONT);
+    dis->fillRect(DAY_CORD_X, DAY_CORD_Y, 90, 14, SCWhite);
+    writeTextReplaceBack(getDayByIndexTerrain(timeRTCLocal.Wday), DAY_CORD_X, DAY_CORD_Y);
+
+    // Date
+    setFont(DATE_FONT);
+    String month = getLocalizedMonthName(rM.wFTime.Month);
+    month.toUpperCase();
+    String dayDate = String(rM.wFTime.Day);
+    if (dayDate.length() < 2)
+    {
+        dayDate = "0" + dayDate;
+    }
+    String year = "20" + String((timeRTCLocal.Year + 70) % 100);
+    String finalDate = month + "-" + dayDate + "-" + year;
+    writeTextReplaceBack(finalDate, DATE_CORD_X, DATE_CORD_Y);
+}
+
 const watchfaceDefOne terrainDefOne = {
     .drawTimeBeforeApply = showTimeFull,
     .drawTimeAfterApply = drawTimeAfterApply,
-    .drawDay = []() {},
+    .drawDay = drawDay,
     .drawMonth = []() {},
     .showTimeFull = showTimeFull,
     .initWatchface = initWatchface,
