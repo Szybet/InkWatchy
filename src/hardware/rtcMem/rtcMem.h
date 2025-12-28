@@ -125,6 +125,13 @@ struct rtcMem
         uint8_t Hours;
     } taychron;
 #endif
+// terrain watchface
+#if WATCHFACE_TERRAIN
+    struct
+    {
+        uint16_t steps;
+    } terrain;
+#endif
     // Watchface modules
     uint64_t latestModuleUpdate;
     int currentModule; // Int because checkMinMax again

@@ -11,6 +11,12 @@
 
 // #define TIME_FONT getFont("terrain/font_terrain20")
 #define TIME_FONT getFont("terrain/octosquares21")
+#define STEPS_FONT getFont("terrain/octosquares11")
+
+#define STEPS_CORD_X 1
+#define STEPS_CORD_Y 25
+#define STEPS_WIDTH 93
+#define STEPS_HEIGHT 18
 
 void clearTime()
 {
@@ -71,9 +77,35 @@ static void drawBattery()
     }
 }
 
+static void drawTimeAfterApply(bool forceDraw)
+{
+    // uint16_t percentStepsTmp = uint16_t(((float)getSteps() / (float)STEPS_GOAL) * 100.0);
+    uint16_t steps = getSteps();
+    if (rM.terrain.steps != steps || forceDraw == true)
+    {
+        rM.terrain.steps = steps;
+        setTextSize(1);
+        setFont(STEPS_FONT);
+        // Clear the area
+        dis->fillRect(STEPS_CORD_X, STEPS_CORD_Y - STEPS_HEIGHT, STEPS_WIDTH, STEPS_HEIGHT, SCWhite);
+        String stepsStr = String(steps);
+        while(stepsStr.length() < 5) {
+            stepsStr = "0" + stepsStr;
+        }
+        writeTextReplaceBack(stepsStr, STEPS_CORD_X, STEPS_CORD_Y);
+
+        // Bar
+        writeImageN(4, 30, getImg("terrain/stepsbar"));
+        uint16_t percentStepsTmp = uint16_t(((float)steps / (float)STEPS_GOAL) * 100.0);
+        int toX = map(percentStepsTmp, 4, 103, 0, 100);
+        // debugLog("toX: " + String(toX) + " percentStepsTmp: " + String(percentStepsTmp));
+        dis->fillRect(4, 30, toX - 4, 5, SCBlack);
+    }
+}
+
 const watchfaceDefOne terrainDefOne = {
     .drawTimeBeforeApply = showTimeFull,
-    .drawTimeAfterApply = [](bool forceDraw) {},
+    .drawTimeAfterApply = drawTimeAfterApply,
     .drawDay = []() {},
     .drawMonth = []() {},
     .showTimeFull = showTimeFull,

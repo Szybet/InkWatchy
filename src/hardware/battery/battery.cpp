@@ -264,6 +264,11 @@ void isChargingCheck()
     // debugLog("Turning on interrupt back on");
     delayTask(10);
     rM.gpioExpander.setInterrupt(MCP_STAT_IN, true); // Turn on interrupt
+
+    // So watchfaces look good
+    if(rM.bat.isFullyCharged == true) {
+        rM.bat.percentage = 100;
+    }
 #endif
 #if DEBUG && true == false
     if (rM.bat.isCharging != previousCharging)
