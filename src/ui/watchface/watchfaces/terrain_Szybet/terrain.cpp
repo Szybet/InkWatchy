@@ -68,7 +68,7 @@ void clearTime()
     dis->fillRect(TIME_CORD_X, TIME_CORD_Y - TIME_HEIGHT, TIME_WIDTH, TIME_HEIGHT, SCWhite);
 }
 
-void showTimeFull()
+static void showTimeFull()
 {
     setTextSize(1);
     setFont(TIME_FONT);

@@ -1,16 +1,24 @@
 #pragma once
 
+#define INKWATCHY_LANG EN // EN, PL, DE and SK | Supported watchfaces: InkField, Slate and Taychron
+
 // Watchfaces!
 // https://github.com/Szybet/InkWatchy/wiki/Watchfaces
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
-#define INKWATCHY_LANG EN           // EN, PL, DE and SK | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate and Taychron
 #define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
+// InkField
 #define WATCHFACE_INKFIELD_SZYBET 1
-#define WATCHFACE_DOMAIN_DOTP 1
+// Taychron
 #define WATCHFACE_TAYCHRON 1
 #define WATCHFACE_TAYCHRON_DATE 0 // shows date below time
+// Slate
 #define WATCHFACE_SLATE 1
+// Domain
+#define WATCHFACE_DOMAIN_DOTP 1
+// Terrain
+#define WATCHFACE_TERRAIN 0
+// Shades & Analog (Code preview watchfaces)
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
 
@@ -150,10 +158,10 @@ The default is this:
 #define NTP_SERVER_URL "ntp.ubuntu.com"    // Change it to something else if it doesn't work as a first step to troubleshoot. pool.ntp.org has a rate limiter apparently
 
 // Weather
-#define WEATHER_INFO 1  // Enable weather
+#define WEATHER_INFO 1      // Enable weather
 #define MAX_WEATHER_DAYS 16 // 16 is the max from weather api
 #define WEATHER_AIR_ENABLED 1
-#define MAX_AIR_DAYS 5      // 5 is the max pull from air-quality api, despite the website claiming max is 7
+#define MAX_AIR_DAYS 5  // 5 is the max pull from air-quality api, despite the website claiming max is 7
 #define WEATHER_TRIES 3 // Ammount of times to try to sync weather
 #define WEATHER_WATCHFACE_HOUR_OFFSET 1
 #define SUNRISE_SUNSET_HOUR_OFFSET 0 // (Domain watchface) Sunrise/Sunset is wrong, but everything else is fine? edit this instead.
@@ -286,7 +294,7 @@ The default is this:
 #define BUTTON_CPU_SPEED normalSpeed // Cpu speed when it has woken up by a button
 #define SOFT_START_THINGS 1          // Slowly starts things, like wifi to prevent brownout reset.
 #define SOFT_START_DELAY_MS 4500
-#define FORCE_DISABLE_ACC 0 // 1 Means ACC is disabled, BMA530 doesn't like that, increases power consumption
+#define FORCE_DISABLE_ACC 0   // 1 Means ACC is disabled, BMA530 doesn't like that, increases power consumption
 #define LED_MAX_TIME_MS 30000 // Fallback if diode is on and you forgot to turn it off (flashlight)
 
 // Vault
@@ -332,7 +340,7 @@ The default is this:
 // Experimental, consumes battery, takes longer to load everything
 // Probably won't work on devices with low memory (So everything that is not yatchy)
 #define FILESYSTEM_COMPRESSION 0
-#define DEFAULT_WATCHFACE_INDEX 0 // Do not touch if you don't know what you are doing
+#define DEFAULT_WATCHFACE_INDEX 0         // Do not touch if you don't know what you are doing
 #define DEFAULT_WATCHFACE_MODULE_INDEX -1 // Do not touch if you don't know what you are doing
 
 // Wifi Quick settings

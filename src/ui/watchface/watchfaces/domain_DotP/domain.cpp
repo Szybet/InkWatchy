@@ -350,7 +350,7 @@ const watchfaceDefOne domainDef = {
             return true;
         }
         return false;
-    }
+    },
     .lpCoreScreenPrepareCustom = NULL,
 };
 
