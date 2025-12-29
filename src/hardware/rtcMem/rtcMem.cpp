@@ -118,6 +118,15 @@ RTC_DATA_ATTR rtcMem rM = {
         .Hours = 0,
     },
 #endif
+// terrain watchface
+#if WATCHFACE_TERRAIN
+    .terrain = {
+        .steps = 0,
+        .duskDawnHour = 0,
+        .watchfacePos = 0,
+        .positionEngaged = true,
+    },
+#endif
     // Watchface modules
     .latestModuleUpdate = 0,
     .currentModule = DEFAULT_WATCHFACE_MODULE_INDEX,

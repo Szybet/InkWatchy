@@ -79,6 +79,7 @@ void showTimeFull()
 static void initWatchface()
 {
     writeImageN(0, 0, getImg("terrain/watchface"));
+    drawPosMarkerTerrain();
 }
 
 void drawBatteryThing(int x, int y)
@@ -170,13 +171,14 @@ static void drawTimeAfterApply(bool forceDraw)
 String getDayByIndexTerrain(int dayOfWeek, int offset = 0)
 {
     static const String dayNames[] = {
+        "SUNDAY",
         "MONDAY",
         "TUESDAY",
         "WEDNESDAY",
         "THURSDAY",
         "FRIDAY",
         "SATURDAY",
-        "SUNDAY"};
+    };
 
     // Apply offset and wrap around
     int dayIndex = (dayOfWeek + offset + 6) % 7;
@@ -220,25 +222,18 @@ const watchfaceDefOne terrainDefOne = {
     .showTimeFull = showTimeFull,
     .initWatchface = initWatchface,
     .drawBattery = drawBattery,
-    .manageInput = [](buttonState bt)
-    {
-    switch (bt)
-    {
-    case Menu:
-    {
-        generalSwitch(mainMenu);
-        break;
-    }
-    default: {
-        break;
-    }
-    }; },
+    .manageInput = terrainManageInput,
 
-    .watchfaceModules = false,
-    .watchfaceModSquare = {.size{.w = 0, .h = 0}, .cord{.x = 0, .y = 0}},
-    .someDrawingSquare = {.size{.w = 0, .h = 0}, .cord{.x = 0, .y = 0}},
+    .watchfaceModules = true,
+    .watchfaceModSquare = {.size{.w = 177, .h = 37}, .cord{.x = 7, .y = 160}},
+    .someDrawingSquare = {.size{.w = 200, .h = 139}, .cord{.x = 0, .y = 61}},
     .isModuleEngaged = []()
-    { return false; },
+    {
+        if (rM.terrain.watchfacePos == MODULE_ENG_POS && rM.terrain.positionEngaged == true)
+        {
+            return true;
+        }
+        return false; },
     .lpCoreScreenPrepareCustom = clearTime,
 };
 

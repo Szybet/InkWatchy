@@ -131,6 +131,8 @@ struct rtcMem
     {
         uint16_t steps;
         uint16_t duskDawnHour;
+        int watchfacePos; // It needs to be int because it's used in checkMinMax
+        bool positionEngaged : 1;
     } terrain;
 #endif
     // Watchface modules
