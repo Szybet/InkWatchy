@@ -65,7 +65,7 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define STEPS_GOAL 7000
 // Precise step counting
 #define PRECISE_STEP_COUNTING 1
-#define PRECISE_STEPS_DAYS_LIMIT 30
+#define PRECISE_STEPS_DAYS_LIMIT 10
 // Backups RTC memory to flash, so after updating the firmware (When resources weren't updated, or rtc memory wasn't changed) it will still keep data like alarms
 // Might introduce weird behaviour or crashes on a update, but it tries to avoid it.
 // Might consume a bit of battery, but that's marginal.
