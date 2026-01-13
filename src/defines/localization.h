@@ -336,7 +336,7 @@ inline String getCurrentLocalizedDayName(int offset = 0)
 // Check Set Clock GUI translations
 #if !defined(SETCLOCK_SET_TIME) || !defined(SETCLOCK_SET_DATE) || !defined(SETCLOCK_TIMEZONE_MENU) || \
     !defined(SETCLOCK_CLOCK_SETTINGS) || !defined(SETCLOCK_CURRENT_TIMEZONE) || !defined(SETCLOCK_CLEAR_TIMEZONE) || \
-    !defined(SETCLOCK_SET_TIMEZONE) || !defined(SETCLOCK_TIMEZONE_SETTINGS) || !defined(SETCLOCK_TIMEZONE_WARNING) || \
+    !defined(SETCLOCK_SET_UTC_TIMEZONE) || !defined(SETCLOCK_TIMEZONE_SETTINGS) || !defined(SETCLOCK_TIMEZONE_WARNING) || \
     !defined(SETCLOCK_WARNING_TITLE) || !defined(SETCLOCK_SELECT_TIMEZONE)
 #error "Localization file is missing Set Clock GUI definitions."
 #endif

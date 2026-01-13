@@ -18,10 +18,10 @@ void timezoneClicked()
     setRTCTimeZoneByUtcOffset(offset);
 
     // tzSelected = offset + 12;
-    initSetTimezoneWatch();
+    initSetTimezoneUtcWatch();
 }
 
-void initSetTimezoneWatch()
+void initSetTimezoneUtcWatch()
 {
     /*
     tzSelected = TZ_SELECTED;
@@ -68,10 +68,100 @@ void initSetTimezoneWatch()
     initMenu(tzEntries, TZ_COUNT, SETCLOCK_SELECT_TIMEZONE);
 }
 
-void exitSetTimezoneWatch()
+void exitSetTimezoneUtcWatch()
 {
     // setRTCTimeZoneByUtcOffset already reads it again
     // readRTC();
+}
+
+static const char *tzHeaders[] = {
+    "AFRICA", "AMERICA", "ANTARCTICA", "ARCTIC", "ASIA", "ATLANTIC",
+    "AUSTRALIA", "ETC", "EUROPE", "INDIAN", "PACIFIC"};
+#define TZ_HEADER_COUNT (sizeof(tzHeaders) / sizeof(tzHeaders[0]))
+
+void initSetTimezoneContinentWatch()
+{
+    entryMenu tzEntries[TZ_HEADER_COUNT];
+
+    for (int i = 0; i < TZ_HEADER_COUNT; i++)
+    {
+        tzEntries[i].text = String(tzHeaders[i]);
+        tzEntries[i].image = &emptyImgPack;
+        tzEntries[i].function = switchSetTimezoneCityWatchPlace;
+    }
+
+    initMenu(tzEntries, TZ_HEADER_COUNT, SETCLOCK_SELECT_TIMEZONE);
+}
+
+void setTimezoneCity()
+{
+}
+
+String *zonesToClear;
+struct ZoneList
+{
+    String *zones;
+    int count;
+};
+
+ZoneList listZonesForHeader(String header)
+{
+    int hlen = header.length();
+    int count = 0;
+
+    for (int i = 0; i < sOLSON.length(); i++)
+        if (sOLSON[i] == '|')
+        {
+            int start = i + 1;
+            if (sOLSON.startsWith(header, start) && sOLSON[start + hlen] == '/')
+                count++;
+        }
+
+    String *zones = new String[count];
+    zonesToClear = zones;
+    int idx = 0;
+
+    for (int i = 0; i < sOLSON.length() && idx < count; i++)
+        if (sOLSON[i] == '|')
+        {
+            int start = i + 1;
+            if (sOLSON.startsWith(header, start) && sOLSON[start + hlen] == '/')
+            {
+                int end = sOLSON.indexOf('|', start);
+                zones[idx++] = sOLSON.substring(start + hlen + 1, end);
+                i = end;
+            }
+        }
+
+    return {zones, count};
+}
+
+void initSetTimezoneCityWatch()
+{
+    String selectedHeader = lastMenuSelected;
+    debugLog("Selected header: " + String(selectedHeader));
+    ZoneList zones = listZonesForHeader(selectedHeader);
+    /*
+    for (int i = 0; i < zones.count; i++)
+    {
+        debugLog("Zone " + String(i) + " is: " + zones.zones[i]);
+    }
+    */
+
+    entryMenu menuEntries[zones.count];
+
+    for (int i = 0; i < zones.count; i++)
+    {
+        menuEntries[i].text = zones.zones[i];
+        menuEntries[i].image = &emptyImgPack;
+        menuEntries[i].function = setTimezoneCity;
+    }
+
+    initMenu(menuEntries, zones.count, SETCLOCK_SELECT_TIMEZONE);
+}
+
+void exitTimezoneCityWatch() {
+    delete[] zonesToClear;
 }
 
 #endif

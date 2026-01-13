@@ -39,8 +39,16 @@ void switchSetTimeWatch()
     generalSwitch(setTimeWatchPlace);
 }
 
-void switchSetTimezoneWatch() {
-    generalSwitch(setTimezoneWatchPlace);
+void switchSetTimezoneUtcWatch() {
+    generalSwitch(setTimezoneUtcWatchPlace);
+}
+
+void switchSetTimezoneContinentWatchPlace() {
+    generalSwitch(setTimezoneContinentWatchPlace);
+}
+
+void switchSetTimezoneCityWatchPlace() {
+    generalSwitch(setTimezoneCityWatchPlace);
 }
 
 void switchSetDateWatch() {

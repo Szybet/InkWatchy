@@ -59,7 +59,9 @@ typedef enum
     fontPreviewMenu,
     watchfaceSelector,
     setTimeWatchPlace,
-    setTimezoneWatchPlace,
+    setTimezoneUtcWatchPlace,
+    setTimezoneContinentWatchPlace,
+    setTimezoneCityWatchPlace,
     setDateWatchPlace,
     setClockMenu,
     setTimezoneMenu,
@@ -194,6 +196,8 @@ void switchFontsPreview();
 void showTextDialog(String str, bool center, String title = "");
 #if SET_CLOCK_GUI
 void switchSetTimeWatch();
-void switchSetTimezoneWatch();
+void switchSetTimezoneUtcWatch();
+void switchSetTimezoneContinentWatchPlace();
+void switchSetTimezoneCityWatchPlace();
 void switchSetDateWatch();
 #endif

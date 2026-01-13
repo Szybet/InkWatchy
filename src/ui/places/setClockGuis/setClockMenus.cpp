@@ -69,14 +69,22 @@ void initSetTimezoneMenu()
     }
     {
         count = count + 1;
-        void (*theFunction)() = switchSetTimezoneWatch;
+        void (*theFunction)() = switchSetTimezoneUtcWatch;
         if (setTimezoneWarningConfirmed == false)
         {
             theFunction = showTimezoneWarning;
         }
-        buttons[count] = {SETCLOCK_SET_TIMEZONE, &emptyImgPack, theFunction};
+        buttons[count] = {SETCLOCK_SET_UTC_TIMEZONE, &emptyImgPack, theFunction};
     }
-
+    {
+        count = count + 1;
+        void (*theFunction)() = switchSetTimezoneContinentWatchPlace;
+        if (setTimezoneWarningConfirmed == false)
+        {
+            theFunction = showTimezoneWarning;
+        }
+        buttons[count] = {SETCLOCK_SET_LOCATION_TIMEZONE, &emptyImgPack, theFunction};
+    }
     count = count + 1;
     initMenu(buttons, count, SETCLOCK_TIMEZONE_SETTINGS, 1);
 }

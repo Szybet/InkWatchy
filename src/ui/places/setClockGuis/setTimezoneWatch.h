@@ -3,6 +3,10 @@
 #include "defines.h"
 
 #if SET_CLOCK_GUI
-void initSetTimezoneWatch();
-void exitSetTimezoneWatch();
+void initSetTimezoneUtcWatch();
+void exitSetTimezoneUtcWatch();
+
+void initSetTimezoneContinentWatch();
+void initSetTimezoneCityWatch();
+void exitTimezoneCityWatch();
 #endif

@@ -164,10 +164,24 @@ void loopManager()
 #endif
         break;
     }
-    case setTimezoneWatchPlace:
+    case setTimezoneUtcWatchPlace:
     {
 #if SET_CLOCK_GUI
-        managerLaunchFunc(setTimezoneWatchPlace, initSetTimezoneWatch, loopMenu, exitSetTimezoneWatch);
+        managerLaunchFunc(setTimezoneUtcWatchPlace, initSetTimezoneUtcWatch, loopMenu, exitSetTimezoneUtcWatch);
+#endif
+        break;
+    }
+    case setTimezoneContinentWatchPlace:
+    {
+#if SET_CLOCK_GUI
+        managerLaunchFunc(setTimezoneContinentWatchPlace, initSetTimezoneContinentWatch, loopMenu);
+#endif
+        break;
+    }
+    case setTimezoneCityWatchPlace:
+    {
+#if SET_CLOCK_GUI
+        managerLaunchFunc(setTimezoneCityWatchPlace, initSetTimezoneCityWatch, loopMenu, exitTimezoneCityWatch);
 #endif
         break;
     }
