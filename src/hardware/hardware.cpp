@@ -380,4 +380,10 @@ void cleanAllMemory()
 {
     cleanFontCache();
     cleanImgCache();
+    // Clear menu allocation
+    if (currentMenuData.entryList != nullptr)
+    {
+        delete[] currentMenuData.entryList;
+        currentMenuData.entryList = nullptr;
+    }
 }

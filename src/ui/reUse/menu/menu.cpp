@@ -1,6 +1,6 @@
 #include "menu.h"
 
-menuData data = {};
+menuData currentMenuData = {0, 0, "", 0, nullptr, 0, 0};
 #define buttonsOffset 2;
 int currentMenuItem = 0;
 
@@ -29,42 +29,29 @@ void resetPreviousItems()
   buttonSize.w = 0;
 }
 
-void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSize, int linesThick)
+void initMenu(entryMenu* entryList, int totalMenus, String menuName, int textSize, int linesThick)
 {
-#if DEBUG
-  if (totalMenus > MAX_MENU_ITEMS)
-  {
-    debugLog("CRITICAL: too many menu items!");
+  if (currentMenuData.entryList != nullptr) {
+    delete[] currentMenuData.entryList;
   }
-#endif
-
-  // A lot of funny problems right here!
-  // memcpy(data.entryList, entryList, sizeof(entryList[0]) * totalMenus);
-  int realTotalMenus = 0;
-  for (int i = 0; i < totalMenus; i++)
-  {
-    if (entryList[i].text != "")
-    {
-      data.entryList[realTotalMenus].text = entryList[i].text;
-      data.entryList[realTotalMenus].image = entryList[i].image;
-      data.entryList[realTotalMenus].function = entryList[i].function;
-      realTotalMenus = realTotalMenus + 1;
-    }
+  currentMenuData.entryList = new entryMenu[totalMenus];
+  for (int i = 0; i < totalMenus; i++) {
+    currentMenuData.entryList[i] = entryList[i];
   }
 
-  data.totalMenus = realTotalMenus;
-  data.textSize = textSize;
-  data.menuName = menuName;
-  data.linesThick = linesThick;
-  data.currentButton = currentMenuItem;
+  currentMenuData.totalMenus = totalMenus;
+  currentMenuData.textSize = textSize;
+  currentMenuData.menuName = menuName;
+  currentMenuData.linesThick = linesThick;
+  currentMenuData.currentButton = currentMenuItem;
 
   if (textSize == 1)
   {
-    data.itemsOnPage = 7;
+    currentMenuData.itemsOnPage = 7;
   }
   else
   {
-    data.itemsOnPage = 5;
+    currentMenuData.itemsOnPage = 5;
   }
 
   resetPreviousItems();
@@ -85,10 +72,10 @@ void showMenu()
   setFont(&FreeSansBold9pt7b);
   setTextSize(1);
   dis->setCursor(1, 1);
-  getTextBounds(data.menuName, NULL, NULL, NULL, &textHeight);
+  getTextBounds(currentMenuData.menuName, NULL, NULL, NULL, &textHeight);
 
-  currentPage = data.currentButton / data.itemsOnPage;
-  pageNumber = ceil(float(data.totalMenus) / float(data.itemsOnPage));
+  currentPage = currentMenuData.currentButton / currentMenuData.itemsOnPage;
+  pageNumber = ceil(float(currentMenuData.totalMenus) / float(currentMenuData.itemsOnPage));
 
   String pageString = String(currentPage + 1) + "/" + String(pageNumber);
   debugLog(pageString);
@@ -115,7 +102,7 @@ void showMenu()
   dis->setCursor(1, currentHeight);
   if (showedMenuName == false)
   {
-    dis->print(data.menuName);
+    dis->print(currentMenuData.menuName);
     showedMenuName = true;
     debugLog("Printing menu name");
   }
@@ -125,43 +112,43 @@ void showMenu()
   dis->fillRect(0, currentHeight, dis->width(), 1, SCBlack);
   currentHeight = currentHeight + 4; // +2 to offset line and button
 
-  while (startingButton + data.itemsOnPage <= data.currentButton)
+  while (startingButton + currentMenuData.itemsOnPage <= currentMenuData.currentButton)
   {
-    startingButton = startingButton + data.itemsOnPage;
+    startingButton = startingButton + currentMenuData.itemsOnPage;
   }
-  // debugLog("current button: " + String(data.currentButton));
+  // debugLog("current button: " + String(currentMenuData.currentButton));
   // debugLog("starting button: " + String(startingButton));
-  setTextSize(data.textSize);
-  for (int i = startingButton; i < startingButton + data.itemsOnPage && i < data.totalMenus; i++)
+  setTextSize(currentMenuData.textSize);
+  for (int i = startingButton; i < startingButton + currentMenuData.itemsOnPage && i < currentMenuData.totalMenus; i++)
   {
     // debugLog("iterating " + String(i));
-    // debugLog("iterating list" + String(i % data.itemsOnPage));
+    // debugLog("iterating list" + String(i % currentMenuData.itemsOnPage));
 
     bool invert = false;
-    if (data.currentButton == i)
+    if (currentMenuData.currentButton == i)
     {
       invert = true;
     }
     bool draw = false;
 
-    if (data.entryList[i].text != previousButtons[i % data.itemsOnPage].text || previousButtons[i % data.itemsOnPage].inverted != invert)
+    if (currentMenuData.entryList[i].text != previousButtons[i % currentMenuData.itemsOnPage].text || previousButtons[i % currentMenuData.itemsOnPage].inverted != invert)
     {
       draw = true;
-      previousButtons[i % data.itemsOnPage].text = data.entryList[i].text;
-      previousButtons[i % data.itemsOnPage].inverted = invert;
-      // debugLog("Printing button: " + String(i % data.itemsOnPage));
+      previousButtons[i % currentMenuData.itemsOnPage].text = currentMenuData.entryList[i].text;
+      previousButtons[i % currentMenuData.itemsOnPage].inverted = invert;
+      // debugLog("Printing button: " + String(i % currentMenuData.itemsOnPage));
     }
 
-    // debugLog("Menu entry text is: " + data.entryList[i].text);
-    String textToShow = data.entryList[i].text;
+    // debugLog("Menu entry text is: " + currentMenuData.entryList[i].text);
+    String textToShow = currentMenuData.entryList[i].text;
     // To show the cut off text fully when it's selected :D the value of 18 should be calculated somehow
-    ImageDef *img = data.entryList[i].image;
+    ImageDef *img = currentMenuData.entryList[i].image;
 
-    if (textToShow.length() > 18 && data.currentButton != i)
+    if (textToShow.length() > 18 && currentMenuData.currentButton != i)
     {
       textToShow = textToShow.substring(0, 18);
     }
-    else if (textToShow.length() > 18 && data.currentButton == i)
+    else if (textToShow.length() > 18 && currentMenuData.currentButton == i)
     {
       previousPageNumber = ""; // To reset the next iteration
       img = &emptyImgPack;
@@ -195,33 +182,33 @@ void loopMenu()
   {
   case Up:
   {
-    data.currentButton -= 1;
-    checkMaxMin(&data.currentButton, data.totalMenus - 1);
-    currentMenuItem = data.currentButton;
+    currentMenuData.currentButton -= 1;
+    checkMaxMin(&currentMenuData.currentButton, currentMenuData.totalMenus - 1);
+    currentMenuItem = currentMenuData.currentButton;
     // debugLog("Updating currentMenuItem: " + String(currentMenuItem));
     showMenu();
     break;
   }
   case Down:
   {
-    data.currentButton += 1;
-    checkMaxMin(&data.currentButton, data.totalMenus - 1);
-    currentMenuItem = data.currentButton;
+    currentMenuData.currentButton += 1;
+    checkMaxMin(&currentMenuData.currentButton, currentMenuData.totalMenus - 1);
+    currentMenuItem = currentMenuData.currentButton;
     // debugLog("Updating currentMenuItem: " + String(currentMenuItem));
     showMenu();
     break;
   }
   case Menu:
   {
-    if (data.entryList[data.currentButton].function != nullptr)
+    if (currentMenuData.entryList[currentMenuData.currentButton].function != nullptr)
     {
-      lastMenuSelected = data.entryList[data.currentButton].text;
-      data.entryList[data.currentButton].function();
+      lastMenuSelected = currentMenuData.entryList[currentMenuData.currentButton].text;
+      currentMenuData.entryList[currentMenuData.currentButton].function();
     }
 #if DEBUG
     else
     {
-      debugLog("Menu entry item has a invalid function: " + data.entryList[data.currentButton].text);
+      debugLog("Menu entry item has a invalid function: " + currentMenuData.entryList[currentMenuData.currentButton].text);
     }
 #endif
     break;
@@ -230,9 +217,9 @@ void loopMenu()
   {
     currentPage -= 1;
     checkMaxMin(&currentPage, pageNumber - 1);
-    data.currentButton = currentPage * data.itemsOnPage;
-    currentMenuItem = data.currentButton;
-    debugLog("data.currentButton: " + String(data.currentButton));
+    currentMenuData.currentButton = currentPage * currentMenuData.itemsOnPage;
+    currentMenuItem = currentMenuData.currentButton;
+    debugLog("currentMenuData.currentButton: " + String(currentMenuData.currentButton));
     showMenu();
     break;
   }
@@ -240,9 +227,9 @@ void loopMenu()
   {
     currentPage += 1;
     checkMaxMin(&currentPage, pageNumber - 1);
-    data.currentButton = currentPage * data.itemsOnPage;
-    currentMenuItem = data.currentButton;
-    debugLog("data.currentButton: " + String(data.currentButton));
+    currentMenuData.currentButton = currentPage * currentMenuData.itemsOnPage;
+    currentMenuItem = currentMenuData.currentButton;
+    debugLog("currentMenuData.currentButton: " + String(currentMenuData.currentButton));
     showMenu();
     break;
   }

@@ -444,7 +444,6 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 #define BATTERY_CHARGE_DETECTION_DIFFERENCE 0.10 // The minimum difference to detect that the battery is charging
 
 // Other
-#define MAX_MENU_ITEMS 35
 #define FULL_MODE_AFTER_S 10 // Entering full mode after x seconds.
 
 // Other other, resources thing

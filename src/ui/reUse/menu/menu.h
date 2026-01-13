@@ -17,15 +17,17 @@ struct menuData
   int textSize;
   String menuName;
   int linesThick;
-  entryMenu entryList[MAX_MENU_ITEMS];
+  entryMenu *entryList;
   int itemsOnPage;
   int currentButton;
 };
 
+extern menuData currentMenuData;
+
 extern String lastMenuSelected;
 extern int currentMenuItem;
 
-void initMenu(entryMenu entryList[MAX_MENU_ITEMS], int totalMenus, String menuName, int textSize = 1, int linesThick = 0);
+void initMenu(entryMenu* entryList, int totalMenus, String menuName, int textSize = 1, int linesThick = 0);
 void showMenu();
 void loopMenu();
 
