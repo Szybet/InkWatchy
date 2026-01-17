@@ -270,6 +270,9 @@ extern uint16_t SCWhite;
 #if PRECISE_STEP_COUNTING
 #include "../ui/places/dailyStepsChartMenu/dailyStepsChartMenu.h"
 #endif
+#if NOTES_APP
+#include "../ui/places/notes/notes.h"
+#endif
 
 // Other
 #if DEBUG

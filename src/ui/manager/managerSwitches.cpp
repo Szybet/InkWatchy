@@ -103,6 +103,13 @@ void switchDailyStepsChartMenu()
 }
 #endif
 
+#if NOTES_APP
+void switchNotesApp()
+{
+    generalSwitch(notesApp);
+}
+#endif
+
 void switchWeatherMenu()
 {
     generalSwitch(weatherMenu);

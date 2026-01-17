@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[14];
+    entryMenu buttons[15];
 #if CALENDAR
     {
         count = count + 1;
@@ -88,6 +88,13 @@ void initMainMenu()
         count = count + 1;
         buttons[count] = {MENU_GAMES, getImg("games"), switchGamesMenu};
     }
+#if NOTES_APP
+    {
+        debugLog("Adding Notes app");
+        count = count + 1;
+        buttons[count] = {"Notes", &emptyImgPack, switchNotesApp};
+    }
+#endif
 #if CREDITS
     {
         debugLog("Adding Credits");

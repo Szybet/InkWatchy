@@ -66,6 +66,7 @@ typedef enum
     setClockMenu,
     setTimezoneMenu,
     dailyStepsChartMenu,
+    notesApp,
     // General places now:
     inputPinPlace,
     generalMenuPlace,
@@ -129,9 +130,8 @@ void switchMotorDebug();
 #if HEALTH_MENU
 void switchHealthMenu();
 #endif
-#if PRECISE_STEP_COUNTING
 void switchDailyStepsChartMenu();
-#endif
+void switchNotesApp();
 void switchWeatherMenu();
 void switchWeatherDateMenu();
 void switchWeatherConditionMenu();

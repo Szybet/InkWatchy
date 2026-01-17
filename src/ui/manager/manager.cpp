@@ -213,6 +213,13 @@ void loopManager()
 #endif
         break;
     }
+    case notesApp:
+    {
+#if NOTES_APP
+        managerLaunchFunc(notesApp, initNotesApp, loopNotesApp, exitNotesApp);
+#endif
+        break;
+    }
     case generalDebug:
     {
 #if DEBUG_MENUS
