@@ -26,7 +26,7 @@ void initBle()
 {
     debugLog("Init ble called");
     bleClientConnected = false;
-    BLEDevice::init("InkWatchy");
+    BLEDevice::init(BLE_NAME);
     pServer = BLEDevice::createServer();
     pServer->setCallbacks(new bleServerCallbacks());
 }
