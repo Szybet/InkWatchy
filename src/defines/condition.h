@@ -352,7 +352,12 @@ Template for versioning
 
 // Task memory size
 #define INIT_TASK_STACK_BUTTON 4700
+// Testing, no idea honestly
+#if ATCHY_VER == WATCHY_3
+#define INIT_TASK_STACK_VIBRATION 1500
+#else
 #define INIT_TASK_STACK_VIBRATION 1000
+#endif
 #define INIT_TASK_STACK_WIFI 8192
 #define INIT_TASK_STACK_SCOM 10000
 #define INIT_TASK_STACK_WATCHDOG 1000
