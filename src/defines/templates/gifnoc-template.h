@@ -76,6 +76,7 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 // 1: Rotate 90 degrees clockwise
 // 2: Rotate 180 degrees
 // 3: Rotate 270 degrees clockwise
+// You DON't put here 90,180,270 BUT ONLY 1,2,3 as described above
 #define SCREEN_ROTATION 0
 // Inverts the color, initially
 // Yatchy lp core will not work correctly with inverted watchface, please request this feature to work if you are an yatchy owner
