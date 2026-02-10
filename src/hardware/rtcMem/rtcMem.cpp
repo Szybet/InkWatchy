@@ -125,6 +125,7 @@ RTC_DATA_ATTR rtcMem rM = {
         .duskDawnHour = 0,
         .watchfacePos = 0,
         .positionEngaged = true,
+        .energySaving = false,
     },
 #endif
     // Watchface modules

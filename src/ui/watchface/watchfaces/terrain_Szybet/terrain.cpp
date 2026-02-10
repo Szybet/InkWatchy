@@ -68,12 +68,76 @@ void clearTime()
     dis->fillRect(TIME_CORD_X, TIME_CORD_Y - TIME_HEIGHT, TIME_WIDTH, TIME_HEIGHT, SCWhite);
 }
 
+#if WATCHFACE_12H
+String convertTo12HourFormat(String time24) {
+    // Split the input time (hh:mm) into hours and minutes
+    int colonIndex = time24.indexOf(':');
+    int hour = time24.substring(0, colonIndex).toInt();
+    String minute = time24.substring(colonIndex + 1);
+
+    // Convert the hour to 12-hour format
+    if (hour == 0) {
+        hour = 12; // Midnight case
+    } else if (hour > 12) {
+        hour -= 12; // Afternoon case
+    }
+
+    // Add leading zero to the hour if necessary
+    String hourStr = String(hour);
+    if (hourStr.length() == 1) {
+        hourStr = "0" + hourStr;
+    }
+
+    // Combine hour and minute for the final result
+    return hourStr + ":" + minute;
+}
+#endif
+
+// Formats time string according to 12H/24H setting from config.h
+String getTerrainLocalizedTimeString(tmElements_t timeEl)
+{
+#if WATCHFACE_12H
+    String time24 = getHourMinute(timeEl);
+    return convertTo12HourFormat(time24);
+#else
+    return getHourMinute(timeEl);
+#endif
+}
+
+#if WATCHFACE_12H
+#define AM_PM_X 6
+#define AM_PM_Y 80 - 14
+void drawAmPm()
+{
+    bool isPM = (timeRTCLocal.Hour >= 12);
+    writeImageN(1, 82 - 19, getImg("terrain/PmAm"));
+    if(isPM == true) {
+        writeImageN(AM_PM_X, AM_PM_Y, getImg("terrain/pm"));
+    }  else {
+        writeImageN(AM_PM_X, AM_PM_Y, getImg("terrain/am"));
+    }
+}
+#endif
+
+static void showTimeBeforeApply()
+{
+#if WATCHFACE_12H
+    if (rM.wFTime.Hour != timeRTCLocal.Hour)
+    {
+        drawAmPm();
+    }
+#endif
+}
+
 static void showTimeFull()
 {
     setTextSize(1);
     setFont(TIME_FONT);
     clearTime();
-    writeTextReplaceBack(getHourMinute(timeRTCLocal), TIME_CORD);
+    writeTextReplaceBack(getTerrainLocalizedTimeString(timeRTCLocal), TIME_CORD);
+#if WATCHFACE_12H
+    drawAmPm();
+#endif
 }
 
 static void initWatchface()
@@ -93,6 +157,11 @@ void drawBatteryThing(int x, int y)
 #define BATTERY_START_SHORT_HEIGHT 81
 #define BATTERY_START_NORMAL_Y 153
 #define BATTERY_START_NORMAL_HEIGHT 83
+
+#define LOW_FUEL_X 167
+#define LOW_FUEL_Y 141
+#define LOW_FUEL_W 21
+#define LOW_FUEL_H 14
 
 static void drawBattery()
 {
@@ -130,7 +199,9 @@ void drawDuskDawnText()
     OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
     if (wData.fine == true)
     {
-        writeTextReplaceBack(addZero(String(hour(wData.sunrise)), 2) + ":00 DAWN", 130, 5);
+        writeTextReplaceBack(addZero(String(hour(wData.sunrise)), 2) + ":00 DAWN", 130, 6);
+        // Sadly needed, offset on the bottom
+        writeImageN(138, 8, getImg("terrain/DuskDawnFix"));
         writeTextReplaceBack(addZero(String(hour(wData.sunset)), 2) + ":00 DUSK", 130, 71);
     }
 }
@@ -166,18 +237,29 @@ static void drawTimeAfterApply(bool forceDraw)
         rM.terrain.duskDawnHour = timeRTCLocal.Hour;
         drawFancyDuskDawn();
     }
+
+    if (rM.terrain.energySaving != rM.isBatterySaving || forceDraw == true)
+    {
+        rM.terrain.energySaving = rM.isBatterySaving;
+        // Clear
+        dis->fillRect(LOW_FUEL_X, LOW_FUEL_Y - LOW_FUEL_H, LOW_FUEL_W, LOW_FUEL_H, SCWhite);
+        if (rM.terrain.energySaving)
+        {
+            writeImageN(LOW_FUEL_X, LOW_FUEL_Y, getImg("terrain/lowFuel"));
+        }
+    }
 }
 
 String getDayByIndexTerrain(int dayOfWeek, int offset = 0)
 {
     static const String dayNames[] = {
-        "SUNDAY",
-        "MONDAY",
-        "TUESDAY",
-        "WEDNESDAY",
-        "THURSDAY",
-        "FRIDAY",
-        "SATURDAY",
+        "SUN",
+        "MON",
+        "TUE",
+        "WED",
+        "THU",
+        "FRI",
+        "SAT",
     };
 
     // Apply offset and wrap around
@@ -215,7 +297,7 @@ static void drawDay()
 }
 
 const watchfaceDefOne terrainDefOne = {
-    .drawTimeBeforeApply = showTimeFull,
+    .drawTimeBeforeApply = showTimeBeforeApply,
     .drawTimeAfterApply = drawTimeAfterApply,
     .drawDay = drawDay,
     .drawMonth = []() {},

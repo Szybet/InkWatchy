@@ -3,18 +3,21 @@
 #if WATCHFACE_TERRAIN
 #include "rtcMem.h"
 
+#define SYS_CORD_X 127
+#define SYS_CORD_Y 147
+
 void drawMarker1Terrain(uint16_t c, bool active)
 {
-    dis->fillRect(122, 141, 25, 13, SCWhite);
+    dis->fillRect(SYS_CORD_X, SYS_CORD_Y, 21, 10, SCWhite);
     if (c != SCWhite)
     {
         if (active)
         {
-            writeImageN(123, 142, getImg("terrain/sysOk"));
+            writeImageN(SYS_CORD_X, SYS_CORD_Y, getImg("terrain/sysOk"));
         }
         else
         {
-            writeImageN(123, 142, getImg("terrain/sysOff"));
+            writeImageN(SYS_CORD_X, SYS_CORD_Y, getImg("terrain/sysOff"));
         }
     }
 }
