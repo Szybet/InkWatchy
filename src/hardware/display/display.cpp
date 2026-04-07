@@ -17,7 +17,7 @@ void initDisplayDriver(bool initial) {
     dis->init(0, initial, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
 #elif ATCHY_VER == YATCHY
     SPI.begin(EPD_SPI_SCK, EPD_SPI_MISO, EPD_SPI_MOSI, EPD_SPI_SS);
-    dis->init(0, initial, 10, true, SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
+    dis->init(0, initial, 10, true, SPI, SPISettings(10000000, MSBFIRST, SPI_MODE0));
 #endif
 }
 

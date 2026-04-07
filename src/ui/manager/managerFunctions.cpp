@@ -56,6 +56,12 @@ void initMainMenu()
         buttons[count] = {MENU_VAULT, getImg("vault"), switchVault};
     }
 #endif
+#if NOTES_APP
+    {
+        count = count + 1;
+        buttons[count] = {"Notes", getImg("notes/notesIcon"), switchNotesManager};
+    }
+#endif
 #if WIFI_TOOL
     {
         count = count + 1;

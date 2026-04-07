@@ -118,7 +118,7 @@ export component GeneralPage inherits Window {
                     Text {
                         vertical-stretch: 1;
                         text: Adapter.main_text;
-                        overflow: elide;
+                        overflow: clip;
                         vertical-alignment: (Adapter.main_align_center_vertical == true || (Adapter.main_align_center == true && !Adapter.title_enabled)) ? center : top;
                         wrap: word-wrap;
                         font-size: 20px;

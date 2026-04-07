@@ -260,6 +260,13 @@ extern uint16_t SCWhite;
 #if BAIKY
 #include "../ui/places/baiky/baiky.h"
 #endif
+#if NOTES_APP
+#include "../ui/places/notes/notes.h"
+#include "../ui/places/notes/notesManager.h"
+#endif
+#if BLE_HOST_ENABLED
+#include "../ui/places/BLEHostScanner/BLEHostScanner.h"
+#endif
 #include "../ui/places/errorScreen/errorScreen.h"
 #if SET_CLOCK_GUI
 #include "../ui/places/setClockGuis/setTimeWatch.h"

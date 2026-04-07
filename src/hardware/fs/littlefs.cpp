@@ -147,7 +147,7 @@ int fsItemsInDir(String dir)
   if (root.isDirectory() == false)
   {
     debugLog("Not a directory");
-    return -1;
+    return 0;
   }
   int count = 0;
   File file = root.openNextFile();

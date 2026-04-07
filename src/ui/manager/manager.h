@@ -55,6 +55,9 @@ typedef enum
     healthMenu,
     heartMonitor,
     baikyApp,
+    notesManager,
+    notesApp,
+    bluetoothHostScanner,
     fontPreview,
     fontPreviewMenu,
     watchfaceSelector,
@@ -189,6 +192,13 @@ void switchHeartMonitor();
 #endif
 #if BAIKY
 void switchBaiky();
+#endif
+#if NOTES_APP
+void switchNotes();
+void switchNotesManager();
+#endif
+#if BLE_HOST_ENABLED
+void switchBluetoothHostScanner();
 #endif
 #if FONT_MENU_ENABLED
 void switchFontsPreview();

@@ -277,6 +277,25 @@ void switchBaiky()
 }
 #endif
 
+#if NOTES_APP
+void switchNotes()
+{
+    generalSwitch(notesApp);
+}
+
+void switchNotesManager() 
+{
+    generalSwitch(notesManager);
+}
+#endif
+
+#if BLE_HOST_ENABLED
+void switchBluetoothHostScanner()
+{
+    generalSwitch(bluetoothHostScanner);
+}
+#endif
+
 #if FONT_MENU_ENABLED
 void switchFontsPreview()
 {

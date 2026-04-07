@@ -324,10 +324,30 @@ The default is this:
 // It's really heavy on memory too. DO NOT ENABLE BLE until you know what you want.
 // If PANIC happens with this enabled, turn it off, check again
 // If it works without it, disable other things (snake, bitcoin etc.)
-#define BLE_ENABLED 0 // Ble in general
+#define BLE_ENABLED 1 // Ble in general
+#define BLE_NAME "InkWatchy"
 
-// Baiky, requires BLE enabled + Baiky app
+// For keyboard for example
+/*
+To enable ble host, you need to edit resources/tools/buildTime/sdkconfigs/sdkconfig_general.defaults and set or change (if it's already in the file) in the # BT section:
+CONFIG_BT_BLE_ENABLED=y
+CONFIG_BT_ACL_CONNECTIONS=10
+CONFIG_BT_BLE_50_FEATURES_SUPPORTED=y
+CONFIG_BT_BLE_42_DTM_TEST_EN=y
+CONFIG_BT_BLE_42_SCAN_EN=y
+CONFIG_BT_LE_LL_RESOLV_LIST_SIZE=10
+CONFIG_BT_LE_MAX_CONNECTIONS=10
+CONFIG_GATTC_ENABLE=y
+CONFIG_BLE_SMP_ENABLE=y
+CONFIG_BT_BLE_ENABLED=y
+*/
+#define BLE_HOST_ENABLED 0
+
+// Baiky, requires BLE_ENABLED + Baiky app
 #define BAIKY 0
+
+// Notes, needs BLE_HOST_ENABLED
+#define NOTES_APP 0
 
 // Advanced
 #define BUTTON_TASK_DELAY 30 // In ms, lower means faster button detection but more cpu usage
@@ -482,3 +502,4 @@ Supported country codes are "01"(world safe mode) "AT","AU","BE","BG","BR", "CA"
 
 #define IMAGE_MODULE_PATH "watchfaceImages/"
 #define PRECISE_STEP_COUNTING_DIR "/other/steps/"
+#define NOTES_DIR "/notes"
