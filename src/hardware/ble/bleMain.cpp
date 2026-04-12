@@ -69,6 +69,72 @@ class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks
     }
 };
 
+void remove_all_bonded_devices()
+{
+    int device_count = esp_ble_get_bond_device_num();
+
+    if (device_count < 0)
+    {
+        debugLog("Error: Failed to retrieve the number of bonded devices.");
+        return;
+    }
+
+    if (device_count == 0)
+    {
+        debugLog("No bonded devices found to remove.");
+        return;
+    }
+
+    esp_ble_bond_dev_t *device_list = (esp_ble_bond_dev_t *)malloc(sizeof(esp_ble_bond_dev_t) * device_count);
+
+    if (device_list == NULL)
+    {
+        debugLog("Error: Failed to allocate memory for bonded devices.");
+        return;
+    }
+
+    esp_err_t ret = esp_ble_get_bond_device_list(&device_count, device_list);
+
+    if (ret != ESP_OK)
+    {
+        String errStr = String(ret);
+        debugLog("Error: Failed to retrieve bonded device list. Code: ");
+        debugLog(errStr);
+        free(device_list);
+        return;
+    }
+
+    debugLog("Successfully retrieved " + String(device_count) + " bonded devices.");
+
+    for (int i = 0; i < device_count; i++)
+    {
+#if DEBUG
+        String logMsg = "Attempting to remove device " + String(i + 1) + "/" + String(device_count) + " with address: ";
+        for (int j = 0; j < 6; j++)
+        {
+            char buffer[3];
+            sprintf(buffer, "%02X", device_list[i].bd_addr[j]);
+            logMsg += String(buffer);
+            if (j < 5)
+                logMsg += ":";
+        }
+        debugLog(logMsg);
+#endif
+        esp_err_t remove_ret = esp_ble_remove_bond_device(device_list[i].bd_addr);
+
+        if (remove_ret != ESP_OK)
+        {
+            debugLog("Failed to remove: " + String(remove_ret));
+        }
+        else
+        {
+            debugLog("Successfully removed.");
+        }
+    }
+
+    free(device_list);
+}
+
 void hostBleDeInitEverything()
 {
     debugLog("Called hostBleDeInitEverything");
@@ -95,6 +161,7 @@ void hostBleDeInitEverything()
         pScannedDevices = NULL;
     }
     */
+    remove_all_bonded_devices();
     hostBleClientName = "";
     bleClientConnected = false;
     BLEDevice::deinit();
@@ -110,6 +177,7 @@ void hostBleInitClient()
     pSecurity = new BLESecurity();
     pSecurity->setCapability(ESP_IO_CAP_NONE);
     pSecurity->setAuthenticationMode(true, false, true);
+    pSecurity->regenPassKeyOnConnect(true);
     BLEDevice::setSecurityCallbacks(new BLESecurityCallbacks());
 
     pBLEScan = BLEDevice::getScan();
