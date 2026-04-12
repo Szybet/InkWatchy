@@ -68,6 +68,14 @@ A weekend project and a weekend feature, so it looks like it looks, but works we
 
 </details>
 
+<details> <summary>Notes via BLE keyboard (Click for details)</summary>
+
+https://github.com/user-attachments/assets/e3c0ac6c-c742-4acc-8b5e-61f1d838352d
+
+Experimental, but works for me
+
+</details>
+
 - Reset cause shower. If your battery will be the cause of a reset, you will be informed about it on boot.
 - Stuck button detection & error screen. Perfect when assembling the case or designing a new one
 - ~~I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.~~
