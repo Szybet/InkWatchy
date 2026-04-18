@@ -226,6 +226,9 @@ static void drawTimeAfterApply(bool forceDraw)
 
         // Bar
         writeImageN(4, 30, getImg("terrain/stepsbar"));
+        if(steps > STEPS_GOAL) {
+            steps = STEPS_GOAL;
+        }
         uint16_t percentStepsTmp = uint16_t(((float)steps / (float)STEPS_GOAL) * 100.0);
         int toX = map(percentStepsTmp, 4, 103, 0, 100);
         // debugLog("toX: " + String(toX) + " percentStepsTmp: " + String(percentStepsTmp));
