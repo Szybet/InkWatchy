@@ -301,8 +301,9 @@ OM_OneHourWeather weatherGetDataHourly(uint8_t hourOffset)
     // Daily things!
     forecast.daily_time = weatherDataWork->daily_time[0];
     forecast.sunshine = weatherDataWork->sunshine_duration[0];
-    forecast.sunrise = weatherDataWork->sunrise[0];
-    forecast.sunset = weatherDataWork->sunset[0];
+    // Convert sunrise and sunset to local timezone for watchfaces to use
+    forecast.sunrise = weatherDataWork->sunrise[0] - timeZoneOffset;
+    forecast.sunset = weatherDataWork->sunset[0] - timeZoneOffset;
 
     free(weatherData.buf);
     forecast.fine = true;

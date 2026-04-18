@@ -27,7 +27,7 @@ void initSetTimeWatch()
         addSecondsToHourMinute(
             timeRTCUTC0.Hour,
             timeRTCUTC0.Minute,
-            -(int32_t)(timeZoneOffset), // <-- FIXED SIGN
+            -(int32_t)(timeZoneOffset),
             localHour,
             localMinute);
         setTimeHour = localHour;
@@ -58,7 +58,7 @@ void exitSetTimeWatch()
         addSecondsToHourMinute(
             setTimeHour,
             setTimeMinute,
-            (int32_t)(timeZoneOffset), // <-- FIXED SIGN
+            (int32_t)(timeZoneOffset),
             utcHour,
             utcMinute);
 
