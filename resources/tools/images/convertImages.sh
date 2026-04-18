@@ -92,3 +92,4 @@ done
 
 rm -rf ../fs/littlefs/img/ 1>/dev/null 2>/dev/null
 mv out ../fs/littlefs/img/
+echo $(git log -1 --format=%h) > ../fs/littlefs/conf/resources_commit

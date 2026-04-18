@@ -11,6 +11,11 @@ void initGitDebug()
     genpage_add(DEBUG_GIT_COMMIT_HASH);
     genpage_add(GIT_COMMIT_HASH);
 
+    genpage_add("Generation hash:");
+    String generationHash = fsGetString("resources_commit", "NULL");
+    generationHash.trim();
+    genpage_add(generationHash.c_str());
+
     genpage_add(DEBUG_GIT_BRANCH);
     genpage_add(GIT_BRANCH);
 
