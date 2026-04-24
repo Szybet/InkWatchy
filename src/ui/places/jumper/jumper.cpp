@@ -99,7 +99,7 @@ void moveObstacles()
     }
 }
 
-void initJumper()
+void setupMap()
 {
     jumper.x = (SCREEN_W - JUMPER_SIZE) / 2;
     jumper.y = SCREEN_H - STEP_Y;
@@ -130,12 +130,17 @@ void initJumper()
 
     if (c < MINIMUM_OBSTACLES)
     {
-        initJumper();
+        setupMap();
         return;
     }
 
-    jumperPoints = 0;
     lostJumper = false;
+}
+
+void initJumper()
+{
+    setupMap();
+    jumperPoints = 0;
 }
 
 void loopJumper()
@@ -155,7 +160,6 @@ void loopJumper()
         if (btn == Up)
         {
             jumper.y -= STEP_Y;
-            jumperPoints++;
         }
         if (btn == Down)
         {
@@ -164,7 +168,6 @@ void loopJumper()
         if (btn == Menu)
         {
             jumper.y -= STEP_Y;
-            jumperPoints++;
         }
         if (btn == LongUp)
         {
@@ -189,8 +192,8 @@ void loopJumper()
         }
         if (jumper.y < 0)
         {
-            jumperPoints += 10;
-            initJumper();
+            jumperPoints++;
+            setupMap();
             return;
         }
         if (jumper.y > SCREEN_H - JUMPER_SIZE)
