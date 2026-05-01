@@ -32,7 +32,35 @@ uint8_t lineErrorCode;
 int16_t statusCode = 0;
 uint8_t lineStatusCode;
 
+uint8_t lineAccXDeg;
+uint8_t lineAccYDeg;
+uint8_t lineAccZDeg;
+
 bool is3DOn = false;
+
+bool showPureAcc = false;
+void togglePureValues()
+{
+  showPureAcc = !showPureAcc;
+  // To clean
+  if (showPureAcc == false)
+  {
+    genpage_change(String("").c_str(), lineAccX);
+    genpage_change(String("").c_str(), lineAccY);
+    genpage_change(String("").c_str(), lineAccZ);
+#if BMA_VERSION == 530 || BMA_VERSION == 456
+    genpage_change(String("").c_str(), lineAccXPure);
+    genpage_change(String("").c_str(), lineAccYPure);
+    genpage_change(String("").c_str(), lineAccZPure);
+#endif
+  }
+  else
+  {
+    accX = 0;
+    accY = 0;
+    accZ = 0;
+  }
+}
 
 void turn3D()
 {
@@ -47,6 +75,16 @@ void turn3D()
   }
 #endif
   is3DOn = !is3DOn;
+}
+
+float getAxisDegrees(int16_t val, int16_t axisA, int16_t axisB)
+{
+  float magnitude = sqrt((float)val * val + (float)axisA * axisA + (float)axisB * axisB);
+
+  if (magnitude == 0)
+    return 0;
+
+  return asin((float)val / magnitude) * 57.29577f;
 }
 
 void initAccDebug()
@@ -104,15 +142,10 @@ void initAccDebug()
     Accel acc;
     runAccelStatus = rM.SBMA.getAccel(&acc);
 
-    GeneralPageButton button = GeneralPageButton{DEBUG_ACC_CLICK_3D, turn3D};
-    general_page_set_buttons(&button, 1);
-
-    lineAccX = genpage_add(String(DEBUG_ACC_X + String(acc.x)).c_str());
-    accX = acc.x;
-    lineAccY = genpage_add(String(DEBUG_ACC_Y + String(acc.y)).c_str());
-    accY = acc.y;
-    lineAccZ = genpage_add(String(DEBUG_ACC_Z + String(acc.z)).c_str());
-    accZ = acc.z;
+    GeneralPageButton buttons[2] = {
+        {DEBUG_ACC_CLICK_3D, turn3D},
+        {"Toggle pure values", togglePureValues}};
+    general_page_set_buttons(buttons, 2);
 
     stepsAccDebug = getSteps();
     lineAccSteps = genpage_add(String(DEBUG_ACC_STEPS + String(stepsAccDebug)).c_str());
@@ -121,6 +154,17 @@ void initAccDebug()
     lineErrorCode = genpage_add(String(DEBUG_ACC_ERROR_CODE + String(errorCode)).c_str());
     statusCode = rM.SBMA.getStatus();
     lineStatusCode = genpage_add(String(DEBUG_ACC_STATUS_CODE + String(statusCode)).c_str());
+
+    lineAccXDeg = genpage_add("X Deg: 0.0");
+    lineAccYDeg = genpage_add("Y Deg: 0.0");
+    lineAccZDeg = genpage_add("Z Deg: 0.0");
+
+    lineAccX = genpage_add(String(DEBUG_ACC_X + String(acc.x)).c_str());
+    accX = acc.x;
+    lineAccY = genpage_add(String(DEBUG_ACC_Y + String(acc.y)).c_str());
+    accY = acc.y;
+    lineAccZ = genpage_add(String(DEBUG_ACC_Z + String(acc.z)).c_str());
+    accZ = acc.z;
 
 #if BMA_VERSION == 530 || BMA_VERSION == 456
     Accel accPure;
@@ -132,6 +176,18 @@ void initAccDebug()
     lineAccZPure = genpage_add(String(DEBUG_ACC_PURE_Z + String(accPure.z)).c_str());
     accZPure = accPure.z;
 #endif
+
+    if (showPureAcc == false)
+    {
+      genpage_change(String("").c_str(), lineAccX);
+      genpage_change(String("").c_str(), lineAccY);
+      genpage_change(String("").c_str(), lineAccZ);
+#if BMA_VERSION == 530 || BMA_VERSION == 456
+      genpage_change(String("").c_str(), lineAccXPure);
+      genpage_change(String("").c_str(), lineAccYPure);
+      genpage_change(String("").c_str(), lineAccZPure);
+#endif
+    }
   }
 
 #endif
@@ -183,22 +239,38 @@ void loopAccDebug()
               genpage_change(String(DEBUG_ACC_DAMAGED).c_str(), lineRunAccelStatus);
             }
           }
+
           if (acc.x != accX)
           {
-            genpage_change(String(DEBUG_ACC_X + String(acc.x)).c_str(), lineAccX);
-            accX = acc.x;
+            if (showPureAcc == true)
+            {
+              genpage_change(String(DEBUG_ACC_X + String(acc.x)).c_str(), lineAccX);
+            }
+#if !(BMA_VERSION == 530 || BMA_VERSION == 456)
+            genpage_change((String("X Deg: ") + precisionToString(getAxisDegrees(accX, accY, accZ), 1)).c_str(), lineAccXDeg);
+#endif accX = acc.x;
             // debugLog("Acc x changed");
           }
           if (acc.y != accY)
           {
-            genpage_change(String(DEBUG_ACC_Y + String(acc.y)).c_str(), lineAccY);
-            accY = acc.y;
+            if (showPureAcc == true)
+            {
+              genpage_change(String(DEBUG_ACC_Y + String(acc.y)).c_str(), lineAccY);
+            }
+#if !(BMA_VERSION == 530 || BMA_VERSION == 456)
+            genpage_change((String("Y Deg: ") + precisionToString(getAxisDegrees(accY, accX, accZ), 1)).c_str(), lineAccYDeg);
+#endif accY = acc.y;
             // debugLog("Acc y changed");
           }
           if (acc.z != accZ)
           {
-            genpage_change(String(DEBUG_ACC_Z + String(acc.z)).c_str(), lineAccZ);
-            accZ = acc.z;
+            if (showPureAcc == true)
+            {
+              genpage_change(String(DEBUG_ACC_Z + String(acc.z)).c_str(), lineAccZ);
+            }
+#if !(BMA_VERSION == 530 || BMA_VERSION == 456)
+            genpage_change((String("Z Deg: ") + precisionToString(getAxisDegrees(accZ, accX, accY), 1)).c_str(), lineAccZDeg);
+#endif accZ = acc.z;
             // debugLog("Acc z changed");
           }
 
@@ -228,17 +300,29 @@ void loopAccDebug()
           rM.SBMA.getAccelPure(&accPure);
           if (accPure.x != accXPure)
           {
-            genpage_change(String(DEBUG_ACC_PURE_X + String(accPure.x)).c_str(), lineAccXPure);
+            if (showPureAcc == true)
+            {
+              genpage_change(String(DEBUG_ACC_PURE_X + String(accPure.x)).c_str(), lineAccXPure);
+            }
+            genpage_change((String("X Deg: ") + precisionToString(getAxisDegrees(accPure.x, accPure.y, accPure.z), 1)).c_str(), lineAccXDeg);
             accXPure = accPure.x;
           }
           if (accPure.y != accYPure)
           {
-            genpage_change(String(DEBUG_ACC_PURE_Y + String(accPure.y)).c_str(), lineAccYPure);
+            if (showPureAcc == true)
+            {
+              genpage_change(String(DEBUG_ACC_PURE_Y + String(accPure.y)).c_str(), lineAccYPure);
+            }
+            genpage_change((String("Y Deg: ") + precisionToString(getAxisDegrees(accPure.y, accPure.x, accPure.z), 1)).c_str(), lineAccYDeg);
             accYPure = accPure.y;
           }
           if (accPure.z != accZPure)
           {
-            genpage_change(String(DEBUG_ACC_PURE_Z + String(accPure.z)).c_str(), lineAccZPure);
+            if (showPureAcc == true)
+            {
+              genpage_change(String(DEBUG_ACC_PURE_Z + String(accPure.z)).c_str(), lineAccZPure);
+            }
+            genpage_change((String("Z Deg: ") + precisionToString(getAxisDegrees(accPure.z, accPure.x, accPure.y), 1)).c_str(), lineAccZDeg);
             accZPure = accPure.z;
           }
 #endif

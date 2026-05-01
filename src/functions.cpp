@@ -395,3 +395,9 @@ void toggleBit(uint8_t *num, uint8_t position)
     *num ^= (1 << position);
   }
 }
+
+// For the string to look better
+String precisionToString(float f, int places)
+{
+  return String(f, places);
+}
