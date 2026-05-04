@@ -1,4 +1,6 @@
 #include "domain.h"
+
+#if WATCHFACE_DOMAIN_DOTP
 #include "domain_localization.h"
 #include <MoonPhase.h>
 
@@ -405,3 +407,4 @@ void domainDrawMoon()
     mp.calculate(getUnixTime(timeRTCLocal));
     writeImageN(MOON_IMG_CORD, getImg("domain/" + domainRemoveSpaces(String(mp.phaseName))));
 }
+#endif
