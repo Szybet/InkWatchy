@@ -248,7 +248,8 @@ void loopAccDebug()
             }
 #if !(BMA_VERSION == 530 || BMA_VERSION == 456)
             genpage_change((String("X Deg: ") + precisionToString(getAxisDegrees(accX, accY, accZ), 1)).c_str(), lineAccXDeg);
-#endif accX = acc.x;
+#endif
+            accX = acc.x;
             // debugLog("Acc x changed");
           }
           if (acc.y != accY)
@@ -259,7 +260,8 @@ void loopAccDebug()
             }
 #if !(BMA_VERSION == 530 || BMA_VERSION == 456)
             genpage_change((String("Y Deg: ") + precisionToString(getAxisDegrees(accY, accX, accZ), 1)).c_str(), lineAccYDeg);
-#endif accY = acc.y;
+#endif
+            accY = acc.y;
             // debugLog("Acc y changed");
           }
           if (acc.z != accZ)
@@ -270,7 +272,8 @@ void loopAccDebug()
             }
 #if !(BMA_VERSION == 530 || BMA_VERSION == 456)
             genpage_change((String("Z Deg: ") + precisionToString(getAxisDegrees(accZ, accX, accY), 1)).c_str(), lineAccZDeg);
-#endif accZ = acc.z;
+#endif
+            accZ = acc.z;
             // debugLog("Acc z changed");
           }
 
