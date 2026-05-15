@@ -378,7 +378,24 @@ void wakeUpManageRTC()
   if (rM.nextAlarm != 0)
   {
     uint64_t unixTimeNow = getUnixTime(timeRTCLocal);
-    uint32_t minutesTillAlarm = (rM.nextAlarm - unixTimeNow) / 60;
+    uint32_t minutesTillAlarm = 1;
+
+    // Impossible edge case handling, but it's alarms so it's important
+    if (rM.nextAlarm <= unixTimeNow)
+    {
+      debugLog("rM.nextAlarm <= unixTimeNow matches, this is bad");
+      minutesTillAlarm = 1;
+    }
+    else
+    {
+      minutesTillAlarm = (rM.nextAlarm - unixTimeNow) / 60;
+      if (minutesTillAlarm == 0)
+      {
+        debugLog("minutesTillAlarm is 0, it will call soon!");
+        minutesTillAlarm = 1;
+      }
+    }
+
     debugLog("unixTimeNow: " + String(unixTimeNow));
     debugLog("rM.nextAlarm: " + String(rM.nextAlarm));
     debugLog("minutesTillAlarm: " + String(minutesTillAlarm));
