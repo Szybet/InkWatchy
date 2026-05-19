@@ -248,6 +248,9 @@ extern uint16_t SCWhite;
 #if WATCHFACE_TAYCHRON
 #include "../ui/watchface/watchfaces/taychron_tay/taychron.h"
 #endif
+#if WATCHFACE_ORBITAL
+#include "../ui/watchface/watchfaces/orbital_Defaltastra/orbital.h"
+#endif
 #if WATCHFACE_SLATE
 #include "../ui/watchface/watchfaces/slate_Suddoku/slate.h"
 #endif

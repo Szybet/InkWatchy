@@ -1,6 +1,10 @@
 #include "wManageAll.h"
 #include "rtcMem.h"
 
+#if WATCHFACE_ORBITAL
+#include "../watchfaces/orbital_Defaltastra/orbital.h"
+#endif
+
 #if GSR_WATCHFACES
 #include "importGSR.h"
 #endif
@@ -67,6 +71,14 @@ const watchfaceDef szybetAnalogSharp = {
 };
 #endif
 
+#if WATCHFACE_ORBITAL
+const watchfaceDef orbitalWatchface = {
+    .manager = wfmOne,
+    .name = "Orbital Defaltastra",
+    .data = (genPointer)&orbitalDef,
+};
+#endif
+
 #if GSR_WATCHFACES && GSR_STARFIELD
 const watchfaceDef gsrStarfield = {
     .manager = wfmGSR,
@@ -124,6 +136,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_ANALOG_SHARP_SZYBET
     &szybetAnalogSharp,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_ORBITAL
+    &orbitalWatchface,
 #else
     &noWatchFace,
 #endif
