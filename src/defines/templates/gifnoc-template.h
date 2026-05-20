@@ -18,6 +18,13 @@
 #define WATCHFACE_DOMAIN_DOTP 1
 // Terrain
 #define WATCHFACE_TERRAIN 0
+// Orbital - Concentric rings for time display with moon and sunrise/sunset
+// Defaults are privacy-safe; Orbital will prefer weather coordinates/runtime timezone when available
+#define WATCHFACE_ORBITAL 1
+#define ORBITAL_LAT 0.0f   // Default latitude (0.0 = unset)
+#define ORBITAL_LON 0.0f   // Default longitude (0.0 = unset)
+#define ORBITAL_GMT_OFFSET 0   // Default GMT offset in hours (e.g., 1 for CET)
+
 // Shades & Analog (Code preview watchfaces)
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
