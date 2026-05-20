@@ -3,8 +3,6 @@
 #if WATCHFACE_ORBITAL
 
 #include "rtcMem.h"
-#include "rtc.h"
-#include <Fonts/FreeSansBold9pt7b.h>
 #include <MoonPhase.h>
 
 static MoonPhase moonPhase;
