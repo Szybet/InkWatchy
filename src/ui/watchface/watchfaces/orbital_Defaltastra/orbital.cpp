@@ -3,6 +3,7 @@
 #if WATCHFACE_ORBITAL
 
 #include "rtcMem.h"
+#include "rtc.h"
 #include <Fonts/FreeSansBold9pt7b.h>
 #include <MoonPhase.h>
 
@@ -323,8 +324,25 @@ static void orbitalDrawMoon()
 static void orbitalDrawNightTime()
 {
     int year = tmYearToCalendar(timeRTCLocal.Year);
-    float sunrise = computeSolarEventMinutes(true, ORBITAL_LAT, ORBITAL_LON, ORBITAL_GMT_OFFSET, year, timeRTCLocal.Month, timeRTCLocal.Day);
-    float sunset = computeSolarEventMinutes(false, ORBITAL_LAT, ORBITAL_LON, ORBITAL_GMT_OFFSET, year, timeRTCLocal.Month, timeRTCLocal.Day);
+
+    // Prefer weather coordinates if provided in confidential.h, otherwise fall back to ORBITAL_ macros
+    float lat = ORBITAL_LAT;
+    float lon = ORBITAL_LON;
+    if (String(WEATHER_LATIT).length() > 0 && String(WEATHER_LONGTIT).length() > 0)
+    {
+        lat = String(WEATHER_LATIT).toFloat();
+        lon = String(WEATHER_LONGTIT).toFloat();
+    }
+
+    // Prefer runtime timezone offset (seconds) if available, convert to hours
+    int tzOffsetHours = ORBITAL_GMT_OFFSET;
+    if (timeZoneOffset != 0)
+    {
+        tzOffsetHours = int(timeZoneOffset / 60);
+    }
+
+    float sunrise = computeSolarEventMinutes(true, lat, lon, tzOffsetHours, year, timeRTCLocal.Month, timeRTCLocal.Day);
+    float sunset = computeSolarEventMinutes(false, lat, lon, tzOffsetHours, year, timeRTCLocal.Month, timeRTCLocal.Day);
 
     if (sunrise < 0.0f || sunset < 0.0f)
     {
@@ -353,7 +371,12 @@ void orbitalDrawWatchFace()
 
     dis->setCursor(174, 182);
     char buffer[8];
-    sprintf(buffer, "%+03d", ORBITAL_GMT_OFFSET);
+    int tzDisp = ORBITAL_GMT_OFFSET;
+    if (timeZoneOffset != 0)
+    {
+        tzDisp = int(timeZoneOffset / 60);
+    }
+    sprintf(buffer, "%+03d", tzDisp);
     dis->println(buffer);
 
     dis->setCursor(160, 198);
