@@ -289,7 +289,7 @@ static void orbitalDrawWatchMonth()
 
 static void orbitalDrawBattery()
 {
-    dis->setCursor(158, 12);
+    dis->setCursor(140, 12);
     dis->setFont(&FreeSansBold9pt7b);
     char batBuffer[12];
     snprintf(batBuffer, sizeof(batBuffer), "%.2fV", rM.bat.curV);
