@@ -291,9 +291,11 @@ static void orbitalDrawBattery()
 {
     dis->setCursor(158, 12);
     dis->setFont(&FreeSansBold9pt7b);
-    dis->println(analogReadMilliVolts(BATT_ADC_PIN) * 2);
+    char batBuffer[8];
+    snprintf(batBuffer, sizeof(batBuffer), "%.2f", rM.bat.curV);
+    dis->println(batBuffer);
     dis->setCursor(170, 28);
-    dis->println("mV");
+    dis->println("V");
 }
 
 static void orbitalDrawMoon()
