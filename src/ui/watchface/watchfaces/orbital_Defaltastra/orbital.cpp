@@ -367,16 +367,6 @@ void orbitalDrawWatchFace()
     localTime.Month = orbitalMonthForTimeLib(localTime.Month);
     dis->println(dayShortStr(weekday(makeTime(localTime))));
 
-    dis->setCursor(174, 182);
-    char buffer[8];
-    int tzDisp = ORBITAL_GMT_OFFSET;
-    if (timeZoneOffset != 0)
-    {
-        tzDisp = int(timeZoneOffset / 60);
-    }
-    sprintf(buffer, "%+03d", tzDisp);
-    dis->println(buffer);
-
     dis->setCursor(160, 198);
     dis->println(tmYearToCalendar(timeRTCLocal.Year));
 

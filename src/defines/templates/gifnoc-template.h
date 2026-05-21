@@ -27,8 +27,8 @@
 // RTC `timeZoneOffset` when available. These macros provide defaults and can
 // be customized in your `src/defines/config.h` copy.
 #define WATCHFACE_ORBITAL 1
-#define ORBITAL_LAT 51.5074f   // Default latitude (decimal degrees)
-#define ORBITAL_LON -0.1278f   // Default longitude (decimal degrees)
+#define ORBITAL_LAT 0.0f   // Default latitude (decimal degrees)
+#define ORBITAL_LON 0.0f   // Default longitude (decimal degrees)
 #define ORBITAL_GMT_OFFSET 0   // Default GMT offset in hours (e.g., 1 for CET)
 
 // GSR watchfaces
