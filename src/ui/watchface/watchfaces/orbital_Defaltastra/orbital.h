@@ -7,7 +7,6 @@
 // Forward declaration
 struct watchfaceDefOne;
 
-
 extern const watchfaceDefOne orbitalDef;
 
 #endif

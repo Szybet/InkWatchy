@@ -53,7 +53,7 @@ void showTimezoneWarning()
 void initSetTimezoneMenu()
 {
     int count = -1;
-    entryMenu buttons[3];
+    entryMenu buttons[4];
     {
         count = count + 1;
         String currentTimezone = "none";
