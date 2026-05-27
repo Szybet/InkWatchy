@@ -19,11 +19,7 @@
 // Terrain
 #define WATCHFACE_TERRAIN 0
 // Orbital watchface
-// If you prefer automatic values, Orbital will use weather coordinates and the regular RTC subsystem
 #define WATCHFACE_ORBITAL 1
-#define ORBITAL_LAT 0.0f     // Default latitude (decimal degrees)
-#define ORBITAL_LON 0.0f     // Default longitude (decimal degrees)
-#define ORBITAL_GMT_OFFSET 0 // Default GMT offset in hours (e.g., 1 for CET)
 // Shades & Analog (Code preview watchfaces)
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
