@@ -55,6 +55,14 @@ const watchfaceDef terrainDef = {
 };
 #endif
 
+#if WATCHFACE_ORBITAL
+const watchfaceDef orbitalWatchface = {
+    .manager = wfmOne,
+    .name = "Orbital Defaltastra",
+    .data = (genPointer)&orbitalDef,
+};
+#endif
+
 #if WATCHFACE_SHADES_SZYBET
 const watchfaceDef szybetShades = {
     .manager = wfmOne,
@@ -68,14 +76,6 @@ const watchfaceDef szybetAnalogSharp = {
     .manager = wfmTwo,
     .name = "Szybet's Analog sharp",
     .data = (genPointer)&analogConwayDef,
-};
-#endif
-
-#if WATCHFACE_ORBITAL
-const watchfaceDef orbitalWatchface = {
-    .manager = wfmOne,
-    .name = "Orbital Defaltastra",
-    .data = (genPointer)&orbitalDef,
 };
 #endif
 
@@ -129,6 +129,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #else
     &noWatchFace,
 #endif
+#if WATCHFACE_ORBITAL
+    &orbitalWatchface,
+#else
+    &noWatchFace,
+#endif
 #if WATCHFACE_SHADES_SZYBET
     &szybetShades,
 #else
@@ -136,11 +141,6 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_ANALOG_SHARP_SZYBET
     &szybetAnalogSharp,
-#else
-    &noWatchFace,
-#endif
-#if WATCHFACE_ORBITAL
-    &orbitalWatchface,
 #else
     &noWatchFace,
 #endif
