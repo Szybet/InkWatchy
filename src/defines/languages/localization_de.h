@@ -1,8 +1,6 @@
 #pragma once
 
-// ==============================================================================
 // GERMAN TRANSLATIONS
-// ==============================================================================
 
 // Slate watchface weather conditions
 #define WF_S_WEATHER_CLEAR_SKY "Klarer Himmel"
@@ -203,9 +201,7 @@
 #define MENU_WAKE_UP_DIS "Aufwachen aus"
 #define MENU_POWER "Energie-Menu"
 
-// ==============================================================================
 // APP AND BOOK TRANSLATIONS
-// ==============================================================================
 
 // Book reader messages
 #define BOOK_NO_SELECTED "Kein Buch ausgewaehlt"
@@ -213,9 +209,23 @@
 // Calendar messages  
 #define CALENDAR_NO_DATA "Keine Kalenderdaten"
 
-// ==============================================================================
+// BLE Scanner
+#define BLE_SCANNER_TITLE "BLE-Scanner"
+#define BLE_SCANNER_SCANNING "Scannen..."
+#define BLE_SCANNER_NONE "Keine Geraete gefunden"
+#define BLE_SCANNER_CHOOSE "Geraet waehlen"
+#define BLE_SCANNER_CONNECT "Verbinden mit "
+#define BLE_SCANNER_CONNECTED "Verbunden mit "
+#define BLE_SCANNER_FAILED "Verbindung fehlgeschlagen mit "
+
+// Notes
+#define NOTES_TITLE "Notizen"
+#define NOTES_NEW "Neue Notiz"
+#define NOTES_DELETE "Notiz loeschen"
+#define NOTES_CONNECT_KBD "Tastatur verbinden"
+#define NOTES_CONNECTED "Verbunden: "
+
 // HEART MONITOR TRANSLATIONS
-// ==============================================================================
 
 #define HEART_MONITOR_TITLE "Herzmonitor"
 #define HEART_MONITOR_NOT_MEDICAL "Nicht medizinisch nutzbar"
@@ -234,21 +244,15 @@
 #define DAILY_STEPS_TITLE "Tägliche Schritte"
 #define STEPS_CHART_TITLE "Schritte/(24h)"
 
-// ==============================================================================
 // VIDEO PLAYER TRANSLATIONS
-// ==============================================================================
 
 #define VIDEO_PLAYER_CHOOSE "Video waehlen"
 
-// ==============================================================================
 // WATCHFACE SELECTION TRANSLATIONS
-// ==============================================================================
 
 #define WATCHFACE_SELECT_TITLE "Zifferblatt waehlen"
 
-// ==============================================================================
 // TETRIS GAME TRANSLATIONS
-// ==============================================================================
 
 // Tetris UI labels
 #define TETRIS_LINE_CLEARS "Zeilen gel.:"
@@ -258,9 +262,7 @@
 #define TETRIS_CONTROLS_DOWN "Runter:Links"
 #define TETRIS_GAME_OVER "SPIELENDE"
 
-// ==============================================================================
 // DEBUG MENU TRANSLATIONS
-// ==============================================================================
 
 // Debug menu titles
 #define DEBUG_MENU_ACC "Debug Menu: Beschl."
@@ -313,6 +315,9 @@
 #define DEBUG_CLOCK_PREVIOUS_SYNC "Vorige Synch.:"
 #define DEBUG_CLOCK_LAST_CHARGE "Letzte Ladung:"
 #define DEBUG_CLOCK_REMOVE_FILES "Uhrdateien entfernen"
+#define DEBUG_CLOCK_TIMEZONE "Zeitzone:"
+#define DEBUG_CLOCK_OLSON "Olson-Zeitzone: "
+#define DEBUG_CLOCK_DRIFT_VALUES "Drift-Werte:"
 
 // Git debug
 #define DEBUG_GIT_COMMIT_HASH "Commit-Hash:"
@@ -355,23 +360,23 @@
 #define DEBUG_COMMON_PERCENT "%"
 #define DEBUG_COMMON_COLON ": "
 
-// ==============================================================================
 // GAME AND APP TRANSLATIONS
-// ==============================================================================
 
 // Pong game
 #define PONG_YOU_LOST "Du hast verloren!"
+
+// Jumper game
+#define JUMPER_LOST "Verloren! Punkte: "
 
 // Party app
 #define PARTY_MESSAGE "Party Party"
 
 // Vault app
+#define VAULT_TITLE "Tresor"
 #define VAULT_KEY_INCORRECT "Schluessel ist falsch"
 #define VAULT_EMPTY "Tresor ist leer?"
 
-// ==============================================================================
 // ALARM TRANSLATIONS
-// ==============================================================================
 
 // Alarm menu titles
 #define ALARM_MENU_EDIT_DAYS "Tage bearbeiten"

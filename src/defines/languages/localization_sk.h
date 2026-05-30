@@ -1,8 +1,6 @@
 #pragma once
 
-// ==============================================================================
 // SLOVAK TRANSLATIONS (bez diakritiky)
-// ==============================================================================
 
 // Slate watchface weather conditions
 #define WF_S_WEATHER_CLEAR_SKY "Jasna obloha"
@@ -203,9 +201,7 @@
 #define MENU_WAKE_UP_DIS "Alarm vypnuty"
 #define MENU_POWER "Napajanie"
 
-// ==============================================================================
 // APP AND BOOK TRANSLATIONS
-// ==============================================================================
 
 // Book reader messages
 #define BOOK_NO_SELECTED "Nevybrana kniha"
@@ -213,10 +209,24 @@
 // Calendar messages  
 #define CALENDAR_NO_DATA "Kalendar bez dat"
 
+// BLE Scanner
+#define BLE_SCANNER_TITLE "Skenovanie BLE"
+#define BLE_SCANNER_SCANNING "Skenovanie..."
+#define BLE_SCANNER_NONE "Ziadne zariadenia"
+#define BLE_SCANNER_CHOOSE "Vyber zariadenie"
+#define BLE_SCANNER_CONNECT "Pripajanie k "
+#define BLE_SCANNER_CONNECTED "Pripojene k "
+#define BLE_SCANNER_FAILED "Nepodarilo sa pripojit k "
 
-// ==============================================================================
+// Notes
+#define NOTES_TITLE "Poznamky"
+#define NOTES_NEW "Nova poznamka"
+#define NOTES_DELETE "Zmazat poznamku"
+#define NOTES_CONNECT_KBD "Pripojit klavesnicu"
+#define NOTES_CONNECTED "Pripojene: "
+
+
 // HEART MONITOR TRANSLATIONS
-// ==============================================================================
 #define HEART_MONITOR_TITLE "Monitor srdca"
 #define HEART_MONITOR_NOT_MEDICAL "Nie na lekarske pouzitie"
 #define HEART_MONITOR_PLACE_DEVICE "Poloz zariadenie na srdce"
@@ -234,22 +244,16 @@
 #define DAILY_STEPS_TITLE "Denne kroky"
 #define STEPS_CHART_TITLE "Kroky/(24h)"
 
-// ==============================================================================
 // VIDEO PLAYER TRANSLATIONS
-// ==============================================================================
 
 #define VIDEO_PLAYER_CHOOSE "Vyber video"
 
-// ==============================================================================
 // WATCHFACE SELECTION TRANSLATIONS
-// ==============================================================================
 
 #define WATCHFACE_SELECT_TITLE "Vyber cifernik"
 
 
-// ==============================================================================
 // TETRIS GAME TRANSLATIONS
-// ==============================================================================
 
 //tetris UI Labels
 #define TETRIS_LINE_CLEARS "Tetris:"
@@ -259,9 +263,7 @@
 #define TETRIS_CONTROLS_DOWN "Dole:Dolava"
 #define TETRIS_GAME_OVER "KONIEC"
 
-// ==============================================================================
 // DEBUG MENU TRANSLATIONS
-// ==============================================================================
 
 // Debug menu titles
 #define DEBUG_MENU_ACC "Ladenie: Akcelerometer"
@@ -314,6 +316,9 @@
 #define DEBUG_CLOCK_PREVIOUS_SYNC "Predch. sync:"
 #define DEBUG_CLOCK_LAST_CHARGE "Posledne nabijanie:"
 #define DEBUG_CLOCK_REMOVE_FILES "Odstranit subory hodiniek"
+#define DEBUG_CLOCK_TIMEZONE "Casova zona:"
+#define DEBUG_CLOCK_OLSON "Olson casova zona: "
+#define DEBUG_CLOCK_DRIFT_VALUES "Hodnoty driftu:"
 
 // Git debug
 #define DEBUG_GIT_COMMIT_HASH "Hash commitu:"
@@ -356,23 +361,23 @@
 #define DEBUG_COMMON_PERCENT "%"
 #define DEBUG_COMMON_COLON ": "
 
-// ==============================================================================
 // GAME AND APP TRANSLATIONS
-// ==============================================================================
 
 // Pong Game
 #define PONG_YOU_LOST "Prehral si!"
+
+// Jumper game
+#define JUMPER_LOST "Prehral si! Skore: "
 
 // Party app
 #define PARTY_MESSAGE "Party party"
 
 //Vault app
+#define VAULT_TITLE "Trezor"
 #define VAULT_KEY_INCORRECT "Kluc je nespravny"
 #define VAULT_EMPTY "Trezor prazdny?"
 
-// ==============================================================================
 // ALARM TRANSLATIONS
-// ==============================================================================
 
 // Alarm menu titles
 #define ALARM_MENU_EDIT_DAYS "Uprav dni"
@@ -445,4 +450,3 @@
 #define TIME_UNIT_DAY "den"
 #define TIME_UNIT_DAYS "dni"
 #define TIME_UNIT_AND "a"
-

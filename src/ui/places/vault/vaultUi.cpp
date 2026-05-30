@@ -193,7 +193,7 @@ void initVault()
             file.close();
             root.close();
 
-            initMenu(buttons, itemsInDir, "Vault");
+            initMenu(buttons, itemsInDir, VAULT_TITLE);
             generalSwitch(vaultMenu);
         }
         else

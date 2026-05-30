@@ -3,10 +3,6 @@
 #include "config.h"
 #include "../hardware/temp/temperature.h"
 
-// ==============================================================================
-// LANGUAGE CONFIGURATION
-// ==============================================================================
-
 // Language definitions
 #define EN 1
 #define PL 2
@@ -18,10 +14,6 @@
 #ifndef INKWATCHY_LANG
 #define INKWATCHY_LANG EN
 #endif
-
-// ==============================================================================
-// INCLUDE THE APPROPRIATE LANGUAGE FILE
-// ==============================================================================
 
 #if INKWATCHY_LANG == EN
 #include "languages/localization_en.h"
@@ -37,10 +29,6 @@
 #include "languages/localization_en.h"
 #warning "Unsupported language! Defaulting to English. Please define INKWATCHY_LANG as EN, PL, DE, or SK in config.h"
 #endif
-
-// ==============================================================================
-// HELPER MACROS AND FUNCTIONS
-// ==============================================================================
 
 // Helper macro for building day name arrays at compile time
 // Array starts with Sunday (index 0) to match standard Wday convention
@@ -83,10 +71,6 @@ inline String getCurrentLocalizedDayName(int offset = 0)
     extern tmElements_t timeRTCLocal; // Forward declaration
     return getLocalizedDayByIndex(timeRTCLocal.Wday, offset);
 }
-
-// ==============================================================================
-// COMPILE-TIME VALIDATION
-// ==============================================================================
 
 // Check basic watchface weather conditions
 #if !defined(WF_S_WEATHER_CLEAR_SKY) || !defined(WF_S_WEATHER_MOSTLY_CLEAR) || !defined(WF_S_WEATHER_PARTLY_CLOUDY) ||     \
@@ -347,82 +331,3 @@ inline String getCurrentLocalizedDayName(int offset = 0)
     !defined(TIME_UNIT_HOURS) || !defined(TIME_UNIT_DAY) || !defined(TIME_UNIT_DAYS) || !defined(TIME_UNIT_AND)
 #error "Localization file is missing time unit definitions."
 #endif
-
-// ==============================================================================
-// NOTES FOR DEVELOPERS
-// ==============================================================================
-
-/*
- * ADDING A NEW LANGUAGE:
- *
- * STEP 1: Use the Translation Template
- * 1. Copy the file: src/templates/localization_template.h
- * 2. Rename it to: languages/localization_XX.h (where XX is your language code, e.g., FR, ES, IT)
- * 3. Fill in all empty strings "" using the English references in comments
- * 4. Follow the guidelines in the template (character limits, special characters, etc.)
- * 5. Use the checklist at the end of the template to verify completeness
- *
- * STEP 2: Register the Language in System
- * 6. Add a new language constant above: #define XX 5 (next available number)
- * 7. Add a new #elif case in the include section: #include "languages/localization_XX.h"
- * 8. Update the warning message to include your new language code
- * 9. Test compilation - the validation system will catch any missing translations
- * 10. Test functionality on actual device to ensure text fits properly
- *
- * TRANSLATION GUIDELINES:
- * - Keep abbreviations SHORT: Day names (2-4 chars), Month names (3-4 chars), Errors (2-3 chars)
- * - Test on actual watch hardware - text must fit on small screen
- * - Avoid diacritics/special characters if possible for better compatibility
- * - Weather chart titles should maintain format: "Parameter / Unit (24h)"
- * - Time units may need special handling for languages with complex plural rules
- * - Technical terms (like RTC types) often stay in English
- *
- * CURRENTLY SUPPORTED LANGUAGES:
- * - EN (English) - Reference implementation
- * - PL (Polish) - Full support
- * - DE (German) - Full support
- * - SK (Slovak) - Full support
- * - Template available for new languages
- *
- * MODIFYING EXISTING TRANSLATIONS:
- * - Only edit individual language files (localization_en.h, localization_pl.h, etc.)
- * - Do NOT modify this main localization.h file unless adding new language support
- * - Always test compilation after changes - validation will catch errors
- * - Consider impact on screen space when changing text length
- *
- * ADDING NEW TRANSLATABLE STRINGS:
- * 1. Add the new #define to ALL existing language files (EN, PL, DE, SK, template)
- * 2. Add validation check in the appropriate category above
- * 3. Document the new string in the template with English reference
- * 4. Test compilation with all languages to ensure completeness
- * 5. Update this documentation if creating new categories
- *
- * TECHNICAL DETAILS:
- *
- * Temperature Formatting:
- * - Temperature functions are in temperature.h
- * - Use formatTemperature() for consistent display across languages
- *
- * Compile-Time Validation System:
- * - Automatically checks 120+ required macro definitions during compilation
- * - Organized into logical categories (weather, menus, debug, alarms, etc.)
- * - Fails compilation with descriptive error if any translation is missing
- * - Ensures 100% translation completeness across all language files
- *
- * Validation Categories:
- * - Weather conditions: All WF_S_WEATHER_* definitions (28 variables)
- * - Day/time format: WF_S_DAY_*, WF_TIME_*, error messages (12 variables)
- * - Weather UI: WEATHER_MENU_*, WEATHER_CHART_*, WEATHER_* (18 variables)
- * - Main menu: All MENU_* definitions (25 variables)
- * - Applications: BOOK_*, CALENDAR_*, HEART_MONITOR_*, etc. (11 variables)
- * - Games: TETRIS_*, PONG_*, PARTY_*, VAULT_* (10 variables)
- * - Debug system: DEBUG_MENU_*, DEBUG_ITEM_*, DEBUG_*_* (45+ variables)
- * - Alarms & Pomodoro: ALARM_*, POMODORO_* (30+ variables)
- * - Time units: TIME_UNIT_* including plural forms (10 variables)
- *
- * TROUBLESHOOTING:
- * - "missing definitions" error -> Use template, check variable names match exactly
- * - Text doesn't fit on screen -> Shorten translations, use abbreviations
- * - Special characters display wrong -> Avoid diacritics or test on device
- * - Compilation fails -> Check all validation categories, ensure no empty strings
- */

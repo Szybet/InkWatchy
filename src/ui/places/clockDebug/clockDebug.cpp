@@ -111,7 +111,7 @@ void initClockDebug()
     {
         genpage_add(DEBUG_CLOCK_DRIFT_SYNCS);
         genpage_add(fsGetString(CONF_SECONDS_DRIFT, DEBUG_CLOCK_NOT_AVAILABLE).c_str());
-        genpage_add("Drift values:");
+        genpage_add(DEBUG_CLOCK_DRIFT_VALUES);
         genpage_add(String("DRIFT: " + fsGetString(CONF_DRIFT, DEBUG_CLOCK_NOT_AVAILABLE)).c_str());
         genpage_add(String("DRIFT_FAST: " + fsGetString(CONF_DRIFT_FAST, DEBUG_CLOCK_NOT_AVAILABLE)).c_str());
     }

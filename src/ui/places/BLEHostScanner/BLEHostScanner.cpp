@@ -35,7 +35,7 @@ bool hostScannerMenu = true;
 void initBluetoothHostScanner()
 {
     debugLog("Init bluetooth host scanner called");
-    showTextDialog("Scanning...", true, "BLE scanner");
+    showTextDialog(BLE_SCANNER_SCANNING, true, BLE_SCANNER_TITLE);
     showTextSimplify();
 
     resetSleepDelay(SLEEP_EVERY_MS);
@@ -48,7 +48,7 @@ void initBluetoothHostScanner()
 
     if (count == 0)
     {
-        showTextDialog("No devices found", true, "BLE scanner");
+        showTextDialog(BLE_SCANNER_NONE, true, BLE_SCANNER_TITLE);
         hostScannerMenu = false;
         return;
     }

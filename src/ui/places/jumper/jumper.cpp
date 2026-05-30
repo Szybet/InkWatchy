@@ -152,7 +152,7 @@ void loopJumper()
         if (checkCollision())
         {
             lostJumper = true;
-            String msg = "You lost! Score: " + String(jumperPoints);
+            String msg = JUMPER_LOST + String(jumperPoints);
             writeTextCenterReplaceBack(msg, SCREEN_H / 2);
             disUp(true);
             return;

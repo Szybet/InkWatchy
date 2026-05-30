@@ -1,8 +1,6 @@
 #pragma once
 
-// ==============================================================================
 // ITALIAN TRANSLATIONS
-// ==============================================================================
 
 // Slate watchface weather conditions
 #define WF_S_WEATHER_CLEAR_SKY "Cielo sereno"
@@ -203,9 +201,7 @@
 #define MENU_WAKE_UP_DIS "Risveglio disabilitato"
 #define MENU_POWER "Menu alimentazione"
 
-// ==============================================================================
 // APP AND BOOK TRANSLATIONS
-// ==============================================================================
 
 // Book reader messages
 #define BOOK_NO_SELECTED "Nessun libro selezionato"
@@ -213,9 +209,23 @@
 // Calendar messages
 #define CALENDAR_NO_DATA "Nessun dato calendario"
 
-// ==============================================================================
+// BLE Scanner
+#define BLE_SCANNER_TITLE "Scanner BLE"
+#define BLE_SCANNER_SCANNING "Scansione..."
+#define BLE_SCANNER_NONE "Nessun dispositivo"
+#define BLE_SCANNER_CHOOSE "Scegli dispositivo"
+#define BLE_SCANNER_CONNECT "Connessione a "
+#define BLE_SCANNER_CONNECTED "Connesso a "
+#define BLE_SCANNER_FAILED "Connessione fallita con "
+
+// Notes
+#define NOTES_TITLE "Note"
+#define NOTES_NEW "Nuova nota"
+#define NOTES_DELETE "Elimina nota"
+#define NOTES_CONNECT_KBD "Connetti tastiera"
+#define NOTES_CONNECTED "Connesso: "
+
 // HEART MONITOR TRANSLATIONS
-// ==============================================================================
 
 #define HEART_MONITOR_TITLE "Misurazione frequenza cardiaca"
 #define HEART_MONITOR_NOT_MEDICAL "Non per uso medico"
@@ -234,21 +244,15 @@
 #define DAILY_STEPS_TITLE "Passi giornalieri"
 #define STEPS_CHART_TITLE "Passi/(24h)"
 
-// ==============================================================================
 // VIDEO PLAYER TRANSLATIONS
-// ==============================================================================
 
 #define VIDEO_PLAYER_CHOOSE "Scegli video"
 
-// ==============================================================================
 // WATCHFACE SELECTION TRANSLATIONS
-// ==============================================================================
 
 #define WATCHFACE_SELECT_TITLE "Seleziona quadrante"
 
-// ==============================================================================
 // TETRIS GAME TRANSLATIONS
-// ==============================================================================
 
 // Tetris UI labels
 #define TETRIS_LINE_CLEARS "Lines clr:"
@@ -258,9 +262,7 @@
 #define TETRIS_CONTROLS_DOWN "Down:Left"
 #define TETRIS_GAME_OVER "GAMEOVER"
 
-// ==============================================================================
 // DEBUG MENU TRANSLATIONS
-// ==============================================================================
 
 // Debug menu titles
 #define DEBUG_MENU_ACC "Menu debug: Acc"
@@ -313,6 +315,9 @@
 #define DEBUG_CLOCK_PREVIOUS_SYNC "Sincronizzazione precedente:"
 #define DEBUG_CLOCK_LAST_CHARGE "Ultima carica:"
 #define DEBUG_CLOCK_REMOVE_FILES "Rimuovi file orologio"
+#define DEBUG_CLOCK_TIMEZONE "Fuso orario:"
+#define DEBUG_CLOCK_OLSON "Fuso Olson: "
+#define DEBUG_CLOCK_DRIFT_VALUES "Valori dryftu:"
 
 // Git debug
 #define DEBUG_GIT_COMMIT_HASH "Commit hash:"
@@ -355,23 +360,23 @@
 #define DEBUG_COMMON_PERCENT "%"
 #define DEBUG_COMMON_COLON ": "
 
-// ==============================================================================
 // GAME AND APP TRANSLATIONS
-// ==============================================================================
 
 // Pong game
 #define PONG_YOU_LOST "You lost!"
+
+// Jumper game
+#define JUMPER_LOST "Hai perso! Punteggio: "
 
 // Party app
 #define PARTY_MESSAGE "Party party"
 
 // Vault app
+#define VAULT_TITLE "Vault"
 #define VAULT_KEY_INCORRECT "Key is incorrect"
 #define VAULT_EMPTY "Vault is empty?"
 
-// ==============================================================================
 // ALARM TRANSLATIONS
-// ==============================================================================
 
 // Alarm menu titles
 #define ALARM_MENU_EDIT_DAYS "Modifica giorni"

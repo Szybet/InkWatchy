@@ -1,8 +1,6 @@
 #pragma once
 
-// ==============================================================================
 // ENGLISH TRANSLATIONS
-// ==============================================================================
 
 // Slate watchface weather conditions
 #define WF_S_WEATHER_CLEAR_SKY "Clear Sky"
@@ -203,9 +201,7 @@
 #define MENU_WAKE_UP_DIS "Wake up disabled"
 #define MENU_POWER "Power menu"
 
-// ==============================================================================
 // APP AND BOOK TRANSLATIONS
-// ==============================================================================
 
 // Book reader messages
 #define BOOK_NO_SELECTED "No book selected"
@@ -213,9 +209,23 @@
 // Calendar messages
 #define CALENDAR_NO_DATA "No calendar data"
 
-// ==============================================================================
+// BLE Scanner
+#define BLE_SCANNER_TITLE "BLE scanner"
+#define BLE_SCANNER_SCANNING "Scanning..."
+#define BLE_SCANNER_NONE "No devices found"
+#define BLE_SCANNER_CHOOSE "Choose device"
+#define BLE_SCANNER_CONNECT "Connecting to "
+#define BLE_SCANNER_CONNECTED "Connected to "
+#define BLE_SCANNER_FAILED "Failed to connect to "
+
+// Notes
+#define NOTES_TITLE "Notes"
+#define NOTES_NEW "New note"
+#define NOTES_DELETE "Delete note"
+#define NOTES_CONNECT_KBD "Connect keyboard"
+#define NOTES_CONNECTED "Connected: "
+
 // HEART MONITOR TRANSLATIONS
-// ==============================================================================
 
 #define HEART_MONITOR_TITLE "Heart rate monitor"
 #define HEART_MONITOR_NOT_MEDICAL "Not for medical use"
@@ -235,21 +245,15 @@
 #define DAILY_STEPS_TITLE "Daily Steps"
 #define STEPS_CHART_TITLE "Steps/(24h)"
 
-// ==============================================================================
 // VIDEO PLAYER TRANSLATIONS
-// ==============================================================================
 
 #define VIDEO_PLAYER_CHOOSE "Choose video"
 
-// ==============================================================================
 // WATCHFACE SELECTION TRANSLATIONS
-// ==============================================================================
 
 #define WATCHFACE_SELECT_TITLE "Select watchface"
 
-// ==============================================================================
 // TETRIS GAME TRANSLATIONS
-// ==============================================================================
 
 // Tetris UI labels
 #define TETRIS_LINE_CLEARS "Lines clr:"
@@ -259,9 +263,7 @@
 #define TETRIS_CONTROLS_DOWN "Down:Left"
 #define TETRIS_GAME_OVER "GAMEOVER"
 
-// ==============================================================================
 // DEBUG MENU TRANSLATIONS
-// ==============================================================================
 
 // Debug menu titles
 #define DEBUG_MENU_ACC "Debug Menu: Acc"
@@ -314,6 +316,9 @@
 #define DEBUG_CLOCK_PREVIOUS_SYNC "Previous sync:"
 #define DEBUG_CLOCK_LAST_CHARGE "Last charge:"
 #define DEBUG_CLOCK_REMOVE_FILES "Remove clock files"
+#define DEBUG_CLOCK_TIMEZONE "Timezone:"
+#define DEBUG_CLOCK_OLSON "Olson timezone: "
+#define DEBUG_CLOCK_DRIFT_VALUES "Drift values:"
 
 // Git debug
 #define DEBUG_GIT_COMMIT_HASH "Commit hash:"
@@ -356,23 +361,23 @@
 #define DEBUG_COMMON_PERCENT "%"
 #define DEBUG_COMMON_COLON ": "
 
-// ==============================================================================
 // GAME AND APP TRANSLATIONS
-// ==============================================================================
 
 // Pong game
 #define PONG_YOU_LOST "You lost!"
+
+// Jumper game
+#define JUMPER_LOST "You lost! Score: "
 
 // Party app
 #define PARTY_MESSAGE "Party party"
 
 // Vault app
+#define VAULT_TITLE "Vault"
 #define VAULT_KEY_INCORRECT "Key is incorrect"
 #define VAULT_EMPTY "Vault is empty?"
 
-// ==============================================================================
 // ALARM TRANSLATIONS
-// ==============================================================================
 
 // Alarm menu titles
 #define ALARM_MENU_EDIT_DAYS "Edit days"

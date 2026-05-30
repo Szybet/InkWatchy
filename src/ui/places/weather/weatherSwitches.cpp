@@ -70,7 +70,7 @@ void initWeatherDateMenu()
     {
         debugLog("Failed to open weather directory");
         overwriteSwitch(textDialog);
-        showTextDialog("WEATHER_NOT_AVAILABLE", true);
+        showTextDialog(WEATHER_NOT_AVAILABLE, true);
         return;
     }
 
@@ -79,7 +79,7 @@ void initWeatherDateMenu()
         debugLog("Not a directory: " + String(WEATHER_HOURLY_DIR));
         root.close();
         overwriteSwitch(textDialog);
-        showTextDialog("WEATHER_NOT_AVAILABLE", true);
+        showTextDialog(WEATHER_NOT_AVAILABLE, true);
         return;
     }
 
@@ -95,7 +95,7 @@ void initWeatherDateMenu()
     if (days == 0)
     {
         overwriteSwitch(textDialog);
-        showTextDialog("WEATHER_NOT_AVAILABLE", true);
+        showTextDialog(WEATHER_NOT_AVAILABLE, true);
         return;
     }
 

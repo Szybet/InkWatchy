@@ -2,16 +2,13 @@
 
 #if NOTES_APP
 
-#define CONNECT_KEYBOARD "Connect keyboard"
-#define NEW_NOTE "New note"
-
 bool goingUp = false;
 void noteSelected() {
-    if(lastMenuSelected == CONNECT_KEYBOARD) {
+    if(lastMenuSelected == NOTES_CONNECT_KBD) {
         hostBleNotifyCallback = hostBleKeyboardNotify;
         goingUp = true;
         switchBluetoothHostScanner();
-    } else if(lastMenuSelected == NEW_NOTE) {
+    } else if(lastMenuSelected == NOTES_NEW) {
         uint64_t unixTime = getUnixTime(timeRTCLocal);
         String filePath = String(NOTES_DIR) + "/" + unixToDate(unixTime) + " " + getHourMinuteUnix(unixTime);
         if(fsFileExists(filePath) == false) {
@@ -43,11 +40,11 @@ void initNotesManager() {
 
     entryMenu *entry = new entryMenu[count];
     if(bleClientConnected == false) {
-        entry[0] = {CONNECT_KEYBOARD, &emptyImgPack, noteSelected};
+        entry[0] = {NOTES_CONNECT_KBD, &emptyImgPack, noteSelected};
     } else {
-        entry[0] = {"Connected: " + hostBleClientName, &emptyImgPack, NULL};
+        entry[0] = {String(NOTES_CONNECTED) + hostBleClientName, &emptyImgPack, NULL};
     }
-    entry[1] = {NEW_NOTE, &emptyImgPack, noteSelected};
+    entry[1] = {NOTES_NEW, &emptyImgPack, noteSelected};
 
     File root = LittleFS.open(NOTES_DIR);
     File file = root.openNextFile();
@@ -64,7 +61,7 @@ void initNotesManager() {
     }
     root.close();
 
-    initMenu(entry, count, "Notes");
+    initMenu(entry, count, NOTES_TITLE);
 }
 
 void loopNotesManager() {

@@ -141,10 +141,11 @@ void initNotes()
 {
     debugLog("Init notes called");
     init_general_page(1);
-    GeneralPageButton button = GeneralPageButton{"Delete note", deleteNote};
+    GeneralPageButton button = GeneralPageButton{NOTES_DELETE, deleteNote};
     general_page_set_buttons(&button, 1);
 
-    general_page_set_title(String("Notes: " + getBatteryLevel()).c_str());
+
+    general_page_set_title(String(String(NOTES_TITLE) + ": " + getBatteryLevel()).c_str());
     // fsListDir(NOTES_DIR, 1);
     notesContent = fsGetString(lastMenuSelected, "", String(NOTES_DIR) + "/");
     contentLine = genpage_add(notesContent.c_str());
@@ -162,7 +163,7 @@ void loopNotes()
     }
     if (batteryLevelChanged)
     {
-        general_page_set_title(String("Notes: " + getBatteryLevel()).c_str());
+        general_page_set_title(String(String(NOTES_TITLE) + ": " + getBatteryLevel()).c_str());
     }
     if (notesChanged || batteryLevelChanged)
     {
