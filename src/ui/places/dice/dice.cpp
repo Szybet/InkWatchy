@@ -96,7 +96,7 @@ void loopDiceApp()
         }
     }
 
-    if (rolling && millisBetter() - rollStartTime > 2000)
+    if (rolling && millisBetter() - rollStartTime > DICE_ANIMATION_TIME_MS)
     {
         rolling = false;
         lastRolls[2] = lastRolls[1];

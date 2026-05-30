@@ -317,6 +317,10 @@ The default is this:
 // Snake
 #define SNAKE 1
 
+// Dice app
+#define DICE 1
+#define DICE_ANIMATION_TIME_MS 2000
+
 // Credits page
 #define CREDITS 1 // Feel free to disable it for your own usage :D
 
