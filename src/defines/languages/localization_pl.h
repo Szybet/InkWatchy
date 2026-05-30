@@ -195,6 +195,7 @@
 #define MENU_PONG "Pong"
 #define MENU_SNAKE "Waz"
 #define MENU_JUMPER "Skoczek"
+#define MENU_DICE "Kostka"
 #define MENU_VIDEO_PLAYER "Odtwarzacz video"
 #define MENU_CONWAY "Conway"
 #define MENU_PARTY "Impreza"

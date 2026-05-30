@@ -242,6 +242,18 @@ void switchSnake()
 }
 #endif
 
+#if DICE
+void switchDiceMenu()
+{
+    generalSwitch(diceMenu);
+}
+
+void switchDiceApp()
+{
+    generalSwitch(diceApp);
+}
+#endif
+
 #if CREDITS
 void switchCredits()
 {

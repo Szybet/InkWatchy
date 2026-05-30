@@ -191,7 +191,7 @@ void initSettingsMenu()
 void initGamesMenu()
 {
     int count = -1;
-    entryMenu buttons[7];
+    entryMenu buttons[8];
 #if TETRIS
     {
         debugLog("Adding Tetris");
@@ -203,7 +203,6 @@ void initGamesMenu()
     {
         debugLog("Adding Snake");
         count = count + 1;
-        // Snake game, is everywhere in the world called "Snake", right? right? It's not WĄŻ
         buttons[count] = {MENU_SNAKE, getImg("snake/snakeIcon"), switchSnake};
     }
 #endif
@@ -219,6 +218,13 @@ void initGamesMenu()
         debugLog("Adding jumper");
         count = count + 1;
         buttons[count] = {MENU_JUMPER, getImg("jumper/jumperIcon"), switchJumper};
+    }
+#endif
+#if DICE
+    {
+        debugLog("Adding Dice");
+        count = count + 1;
+        buttons[count] = {MENU_DICE, getImg("dice/diceIcon"), switchDiceMenu};
     }
 #endif
 #if VIDEO_PLAYER

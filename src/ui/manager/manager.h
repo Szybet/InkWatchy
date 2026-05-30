@@ -48,6 +48,8 @@ typedef enum
     tetris,
     jumperGame,
     snake,
+    diceMenu,
+    diceApp,
     gamesMenu,
     credits,
     conwayApp,
@@ -177,6 +179,10 @@ void switchJumper();
 #endif
 #if SNAKE
 void switchSnake();
+#endif
+#if DICE
+void switchDiceMenu();
+void switchDiceApp();
 #endif
 #if CREDITS
 void switchCredits();

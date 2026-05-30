@@ -190,6 +190,9 @@ extern uint16_t SCWhite;
 #if JUMPER
 #include "../ui/places/jumper/jumper.h"
 #endif
+#if DICE
+#include "../ui/places/dice/dice.h"
+#endif
 #if CREDITS
 #include "../ui/places/credits/credits.h"
 #endif

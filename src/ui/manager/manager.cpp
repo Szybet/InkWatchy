@@ -484,6 +484,20 @@ void loopManager()
 #endif
         break;
     }
+    case diceMenu:
+    {
+#if DICE
+        managerLaunchFunc(diceMenu, initDiceMenu, loopMenu);
+#endif
+        break;
+    }
+    case diceApp:
+    {
+#if DICE
+        managerLaunchFunc(diceApp, initDiceApp, loopDiceApp, exitDiceApp);
+#endif
+        break;
+    }
     case gamesMenu:
     {
         managerLaunchFunc(gamesMenu, initGamesMenu, loopMenu);
