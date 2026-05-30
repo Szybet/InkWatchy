@@ -1,7 +1,7 @@
 #include "analogSharp.h"
-#include "rtcMem.h"
 
 #if WATCHFACE_ANALOG_SHARP_SZYBET
+#include "rtcMem.h"
 
 void drawHand(int centerX, int centerY, uint16_t angle, int length)
 {
