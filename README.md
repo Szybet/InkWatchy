@@ -11,7 +11,7 @@
 A <b>firmware</b> written from the ground up for the <a href="https://watchy.sqfmi.com">watchy</a> and now also <a href="https://github.com/Szybet/Yatchy">yatchy</a>
 </p>
 <p align="center">
-Now getting a bit <a href="https://github.com/Szybet/InkWatchy/tree/master/components/rusty/inkrusty">rusty</a>🦀
+Now getting <a href="https://github.com/Szybet/InkWatchy/tree/master/components/rusty/inkrusty">rusty</a>🦀
 </p>
   
 ### [Demo video previews here](https://github.com/Szybet/InkWatchy/wiki/Demo-videos)

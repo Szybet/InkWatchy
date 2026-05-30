@@ -32,21 +32,8 @@ export component GeneralPage inherits Window {
     }
 
     public function scrollList(dir: int) {
-        if Adapter.current_item == 0 && dir == -1 {
-            return;
-        }
-        if Adapter.current_item == Adapter.how_many_items - 1 && dir == 1 {
-            return;
-        }
-        Adapter.current_item = Adapter.current_item + dir;
-        buttonMenu.set-current-item(Adapter.current_item);
-        if dir == -1 {
-            buttonMenu.set-current-item(Adapter.current_item - 1);
-        }
-        if dir == +1 {
-            buttonMenu.set-current-item(Adapter.current_item + 1);
-        }
-        buttonMenu.set-current-item(Adapter.current_item);
+        Adapter.current_item = Math.mod(Adapter.current_item + dir + Adapter.how_many_items, Adapter.how_many_items);
+        buttonMenu.current-item = Adapter.current_item;
     }
 
     public function handleUpButton() {
