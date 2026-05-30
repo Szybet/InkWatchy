@@ -20,6 +20,8 @@
 #define WATCHFACE_TERRAIN 0
 // Orbital watchface
 #define WATCHFACE_ORBITAL 1
+// Station watchface
+#define WATCHFACE_STATION 0
 // Shades & Analog (Code preview watchfaces)
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1

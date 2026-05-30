@@ -242,6 +242,9 @@ extern uint16_t SCWhite;
 #if WATCHFACE_SHADES_SZYBET
 #include "../ui/watchface/watchfaces/shades_Szybet/shades.h"
 #endif
+#if WATCHFACE_STATION
+#include "../ui/watchface/watchfaces/station_Szybet/station.h"
+#endif
 #if WATCHFACE_ANALOG_SHARP_SZYBET
 #include "../ui/watchface/watchfaces/analogSharp_Szybet/analogSharp.h"
 #endif

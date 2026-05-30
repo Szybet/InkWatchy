@@ -63,6 +63,14 @@ const watchfaceDef orbitalWatchface = {
 };
 #endif
 
+#if WATCHFACE_STATION
+const watchfaceDef stationWatchface = {
+    .manager = wfmOne,
+    .name = "Szybet's station",
+    .data = (genPointer)&stationDef,
+};
+#endif
+
 #if WATCHFACE_SHADES_SZYBET
 const watchfaceDef szybetShades = {
     .manager = wfmOne,
@@ -131,6 +139,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_ORBITAL
     &orbitalWatchface,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_STATION
+    &stationWatchface,
 #else
     &noWatchFace,
 #endif

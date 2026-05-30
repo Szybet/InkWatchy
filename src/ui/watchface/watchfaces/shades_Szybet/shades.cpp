@@ -1,9 +1,9 @@
 #include "shades.h"
-#include "rtcMem.h"
 
 #if WATCHFACE_SHADES_SZYBET
+#include "rtcMem.h"
 
-void showTimeFull()
+static void showTimeFull()
 {
     setTextSize(1);
     setFont(getFont("shades/RampartOne30"));
