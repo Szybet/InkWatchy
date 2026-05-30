@@ -81,31 +81,6 @@ Experimental, but works for me
 - ~~I integrated https://github.com/risinek/esp32-wifi-penetration-tool to this firmware as a service. I won't provide support for it or give any advice how to use it. Use for your own responsibility, don't do illegall stuff. Seriously.~~
 - ~~https://github.com/ckcr4lyf/EvilAppleJuice-ESP32 too. the same story as above.~~ <sub>Those 2 options were removed because I updated the build system and didn't bother to make it work with it, with some cmake you should be able to easily re-add those features, I you can't use cmake, then you shouldn't probably use either of those features anyway</sub>
 
-<details> 
-<summary><h2>Code features</h2></summary>
-
-This list is outdated ;)
-
-It doesn't use the watchy sub-class but it uses the same libraries. With that in mind, those are further diffrences from other firmwares:
-<sub>Every small text is a reason why I was mad enough to rewrite everything myself...</sub>
-- Welcome to contributions!
-- It's splitted into files and folders <sub>In my opinion a file that has 5k lines is heresy</sub>
-- It's function - not object based for the reason above and to make it easier for beginners to use
-- It uses free rtos tasks where needed
-- All resources like images, fonts, books are converted into variables dynamically via scripts. Editing images, changing font spacing is just one click. <sub>I can't believe I was the first to make this that way</sub>
-- The Ui is dynamically written. There are functions to do it eassly. Adding a new menu is just a few lines for example<sub>It's not just a collection of drawBitmap</sub>
-- It has a "manager" and design for various apps to run eassly
-- Has logs via serial. They can be disabled that they don't get compiled with changing one define - and the code doesn't look bad because it's a macro. Amazing <sub>Yea, this is a feature compared to other ones I have looked at</sub>
-- Uses libraries instead of pure calls to NTP or open weather
-- Many configurable values via defines in config.h
-- Many debugging tools in config.h
-- Most UI is rendered only when needed / values it's showing changed. Good for battery life
-- <sub> Proper variable naming and camelCase everywhere</sub>
-- LittleFS is used instead of NVS. Which means better code, logs in file system. Resources not uploaded on every program change. Awesome
-- Various tasks which speed up the debugging / development process (`resources/tools/other/tasks`)
-
-</details>
-
 ## Devices supported
 Supported devices:
 - [Yatchy](https://github.com/Szybet/Yatchy)
