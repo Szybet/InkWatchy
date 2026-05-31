@@ -52,6 +52,7 @@ Getting <a href="https://github.com/Szybet/InkWatchy/tree/master/components/rust
    - Snake (Written in rust!)
    - Pong game
    - Jumper game
+   - Dice app, with 3D animation
    - Conway game of life
    - Small video player
 - Experimental heart rate monitor (Just a proof of concept, works best on Yatchy)
