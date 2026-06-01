@@ -52,8 +52,8 @@ Getting <a href="https://github.com/Szybet/InkWatchy/tree/master/components/rust
    - Snake (Written in rust!)
    - Pong game
    - Jumper game
-   - Dice rolling, with animation
-   - Paint controlled by accelerometer
+   - Dice app, with 3D animation
+   - Paint, controller by accelerometer
    - Conway game of life
    - Small video player
 - Experimental heart rate monitor (Just a proof of concept, works best on Yatchy)
@@ -94,15 +94,6 @@ Supported devices:
 Don't try anything by yourself without the wiki, you will probably fail.
 
 Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
-
-## Donations
-This is a passion project at this point. To help an open source developer and motivate him to create this software feel free to donate
-
-For paypall you need to contact me
-
-Bitcoin address: `bc1qm2d3w6a3qd93zrfuz4l6rs9yr30dmkl2t2z3y5`
-
-For a small coffe I can manage your firmware and provide you personalised binaries, if you can't compile it yourself, even add some features for you
 
 ## Sister projects
 - https://github.com/Szybet/WatchySourcingHub
