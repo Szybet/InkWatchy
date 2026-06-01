@@ -1,14 +1,14 @@
 #include "dice.h"
-#include "rtcMem.h"
 
 #if DICE
+#include "rtcMem.h"
 
 int currentDiceType = 0;
 int lastRolls[3] = {0, 0, 0};
 int rollResult = 0;
 bool rolling = false;
 uint32_t rollStartTime = 0;
-float angleX = 0, angleY = 0, angleZ = 0;
+int16_t angleX = 0, angleY = 0, angleZ = 0;
 
 void setDiceType(int type)
 {
@@ -67,7 +67,7 @@ struct Shape
 {
     int numVertices;
     int numEdges;
-    float (*vertices)[3];
+    int16_t (*vertices)[3];
     uint8_t (*edges)[2];
 };
 
@@ -107,38 +107,38 @@ void loopDiceApp()
 
     if (rolling)
     {
-        angleX += 0.2f;
-        angleY += 0.3f;
-        angleZ += 0.1f;
+        angleX = (angleX + 12) % 360;
+        angleY = (angleY + 18) % 360;
+        angleZ = (angleZ + 6) % 360;
         dUChange = true;
     }
 
     if (dUChange)
     {
-        float d2Verts[16][3] = {
-            {1.000f, 0.000f, 0.1f}, {0.707f, 0.707f, 0.1f}, {0.000f, 1.000f, 0.1f}, {-0.707f, 0.707f, 0.1f}, {-1.000f, 0.000f, 0.1f}, {-0.707f, -0.707f, 0.1f}, {0.000f, -1.000f, 0.1f}, {0.707f, -0.707f, 0.1f}, {1.000f, 0.000f, -0.1f}, {0.707f, 0.707f, -0.1f}, {0.000f, 1.000f, -0.1f}, {-0.707f, 0.707f, -0.1f}, {-1.000f, 0.000f, -0.1f}, {-0.707f, -0.707f, -0.1f}, {0.000f, -1.000f, -0.1f}, {0.707f, -0.707f, -0.1f}};
-        uint8_t d2Edges[24][2] = {
+        static int16_t d2Verts[16][3] = {
+            {100, 0, 10}, {71, 71, 10}, {0, 100, 10}, {-71, 71, 10}, {-100, 0, 10}, {-71, -71, 10}, {0, -100, 10}, {71, -71, 10}, {100, 0, -10}, {71, 71, -10}, {0, 100, -10}, {-71, 71, -10}, {-100, 0, -10}, {-71, -71, -10}, {0, -100, -10}, {71, -71, -10}};
+        static uint8_t d2Edges[24][2] = {
             {0, 1}, {1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}, {7, 0}, {8, 9}, {9, 10}, {10, 11}, {11, 12}, {12, 13}, {13, 14}, {14, 15}, {15, 8}, {0, 8}, {1, 9}, {2, 10}, {3, 11}, {4, 12}, {5, 13}, {6, 14}, {7, 15}};
 
-        float d6Verts[8][3] = {
-            {-1.0f, -1.0f, -1.0f}, {1.0f, -1.0f, -1.0f}, {1.0f, 1.0f, -1.0f}, {-1.0f, 1.0f, -1.0f}, {-1.0f, -1.0f, 1.0f}, {1.0f, -1.0f, 1.0f}, {1.0f, 1.0f, 1.0f}, {-1.0f, 1.0f, 1.0f}};
-        uint8_t d6Edges[12][2] = {
+        static int16_t d6Verts[8][3] = {
+            {-100, -100, -100}, {100, -100, -100}, {100, 100, -100}, {-100, 100, -100}, {-100, -100, 100}, {100, -100, 100}, {100, 100, 100}, {-100, 100, 100}};
+        static uint8_t d6Edges[12][2] = {
             {0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7}};
 
-        float d10Verts[12][3] = {
-            {0, 0, 1.2f}, {0, 0, -1.2f}, {1.0f, 0.0f, 0.3f}, {0.309f, 0.951f, 0.3f}, {-0.809f, 0.588f, 0.3f}, {-0.809f, -0.588f, 0.3f}, {0.309f, -0.951f, 0.3f}, {0.809f, 0.588f, -0.3f}, {-0.309f, 0.951f, -0.3f}, {-1.0f, 0.0f, -0.3f}, {-0.309f, -0.951f, -0.3f}, {0.809f, -0.588f, -0.3f}};
-        uint8_t d10Edges[20][2] = {
+        static int16_t d10Verts[12][3] = {
+            {0, 0, 120}, {0, 0, -120}, {100, 0, 30}, {31, 95, 30}, {-81, 59, 30}, {-81, -59, 30}, {31, -95, 30}, {81, 59, -30}, {-31, 95, -30}, {-100, 0, -30}, {-31, -95, -30}, {81, -59, -30}};
+        static uint8_t d10Edges[20][2] = {
             {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6}, {1, 7}, {1, 8}, {1, 9}, {1, 10}, {1, 11}, {2, 7}, {7, 3}, {3, 8}, {8, 4}, {4, 9}, {9, 5}, {5, 10}, {10, 6}, {6, 11}, {11, 2}};
 
-        float d30Verts[26][3] = {
-            {0, 0, 1.3f}, {0, 0, -1.3f}, {1.0f, 0.0f, 0.4f}, {0.866f, 0.5f, 0.4f}, {0.5f, 0.866f, 0.4f}, {0.0f, 1.0f, 0.4f}, {-0.5f, 0.866f, 0.4f}, {-0.866f, 0.5f, 0.4f}, {-1.0f, 0.0f, 0.4f}, {-0.866f, -0.5f, 0.4f}, {-0.5f, -0.866f, 0.4f}, {0.0f, -1.0f, 0.4f}, {0.5f, -0.866f, 0.4f}, {0.866f, -0.5f, 0.4f}, {0.966f, 0.259f, -0.4f}, {0.707f, 0.707f, -0.4f}, {0.259f, 0.966f, -0.4f}, {-0.259f, 0.966f, -0.4f}, {-0.707f, 0.707f, -0.4f}, {-0.966f, 0.259f, -0.4f}, {-0.966f, -0.259f, -0.4f}, {-0.707f, -0.707f, -0.4f}, {-0.259f, -0.966f, -0.4f}, {0.259f, -0.966f, -0.4f}, {0.707f, -0.707f, -0.4f}, {0.966f, -0.259f, -0.4f}};
-        uint8_t d30Edges[48][2] = {
+        static int16_t d30Verts[26][3] = {
+            {0, 0, 130}, {0, 0, -130}, {100, 0, 40}, {87, 50, 40}, {50, 87, 40}, {0, 100, 40}, {-50, 87, 40}, {-87, 50, 40}, {-100, 0, 40}, {-87, -50, 40}, {-50, -87, 40}, {0, -100, 40}, {50, -87, 40}, {87, -50, 40}, {97, 26, -40}, {71, 71, -40}, {26, 97, -40}, {-26, 97, -40}, {-71, 71, -40}, {-97, 26, -40}, {-97, -26, -40}, {-71, -71, -40}, {-26, -97, -40}, {26, -97, -40}, {71, -71, -40}, {97, -26, -40}};
+        static uint8_t d30Edges[48][2] = {
             {0, 2}, {0, 3}, {0, 4}, {0, 5}, {0, 6}, {0, 7}, {0, 8}, {0, 9}, {0, 10}, {0, 11}, {0, 12}, {0, 13}, {1, 14}, {1, 15}, {1, 16}, {1, 17}, {1, 18}, {1, 19}, {1, 20}, {1, 21}, {1, 22}, {1, 23}, {1, 24}, {1, 25}, {2, 14}, {3, 15}, {4, 16}, {5, 17}, {6, 18}, {7, 19}, {8, 20}, {9, 21}, {10, 22}, {11, 23}, {12, 24}, {13, 25}, {2, 25}, {3, 14}, {4, 15}, {5, 16}, {6, 17}, {7, 18}, {8, 19}, {9, 20}, {10, 21}, {11, 22}, {12, 23}, {13, 24}};
 
-        float phi_val = 1.618f;
-        float d20Verts[12][3] = {
-            {0, 1, phi_val}, {0, 1, -phi_val}, {0, -1, phi_val}, {0, -1, -phi_val}, {1, phi_val, 0}, {1, -phi_val, 0}, {-1, phi_val, 0}, {-1, -phi_val, 0}, {phi_val, 0, 1}, {phi_val, 0, -1}, {-phi_val, 0, 1}, {-phi_val, 0, -1}};
-        uint8_t d20Edges[30][2] = {
+        int16_t phi_val = 162;
+        static int16_t d20Verts[12][3] = {
+            {0, 100, phi_val}, {0, 100, -phi_val}, {0, -100, phi_val}, {0, -100, -phi_val}, {100, phi_val, 0}, {100, -phi_val, 0}, {-100, phi_val, 0}, {-100, -phi_val, 0}, {phi_val, 0, 100}, {phi_val, 0, -100}, {-phi_val, 0, 100}, {-phi_val, 0, -100}};
+        static uint8_t d20Edges[30][2] = {
             {0, 2}, {0, 4}, {0, 6}, {0, 8}, {0, 10}, {1, 3}, {1, 4}, {1, 6}, {1, 9}, {1, 11}, {2, 5}, {2, 7}, {2, 8}, {2, 10}, {3, 5}, {3, 7}, {3, 9}, {3, 11}, {4, 6}, {4, 8}, {4, 9}, {5, 7}, {5, 8}, {5, 9}, {6, 10}, {6, 11}, {7, 10}, {7, 11}, {8, 9}, {10, 11}};
 
         Shape shapes[] = {
@@ -164,44 +164,31 @@ void loopDiceApp()
         Shape s = shapes[currentDiceType];
         int centerX = 100;
         int centerY = 80;
-        int scale = 0;
-        if (currentDiceType == 0)
-        {
-            scale = 60;
-        }
-        else if (currentDiceType == 1)
-        {
-            scale = 48;
-        }
-        else if (currentDiceType == 2)
-        {
-            scale = 65;
-        }
-        else if (currentDiceType == 3)
-        {
-            scale = 40;
-        }
-        else
-        {
-            scale = 60;
-        }
+        int16_t scale = 0;
+        if (currentDiceType == 0) scale = 60;
+        else if (currentDiceType == 1) scale = 48;
+        else if (currentDiceType == 2) scale = 65;
+        else if (currentDiceType == 3) scale = 40;
+        else scale = 60;
 
         int16_t projX[32], projY[32];
+        const float rad = 3.14159f / 180.0f;
+        float ax = angleX * rad, ay = angleY * rad, az = angleZ * rad;
+
         for (int i = 0; i < s.numVertices; i++)
         {
-            float x = s.vertices[i][0];
-            float y = s.vertices[i][1];
-            float z = s.vertices[i][2];
+            float x = s.vertices[i][0] / 100.0f;
+            float y = s.vertices[i][1] / 100.0f;
+            float z = s.vertices[i][2] / 100.0f;
 
-            float y1 = y * cos(angleX) - z * sin(angleX);
-            float z1 = y * sin(angleX) + z * cos(angleX);
-            float x2 = x * cos(angleY) + z1 * sin(angleY);
-            float z2 = -x * sin(angleY) + z1 * cos(angleY);
-            float x3 = x2 * cos(angleZ) - y1 * sin(angleZ);
-            float y3 = x2 * sin(angleZ) + y1 * cos(angleZ);
+            float y1 = y * cos(ax) - z * sin(ax);
+            float z1 = y * sin(ax) + z * cos(ax);
+            float x2 = x * cos(ay) + z1 * sin(ay);
+            float x3 = (x2 * cos(az) - y1 * sin(az)) * scale;
+            float y3 = (x2 * sin(az) + y1 * cos(az)) * scale;
 
-            projX[i] = centerX + (int16_t)(x3 * scale);
-            projY[i] = centerY + (int16_t)(y3 * scale);
+            projX[i] = centerX + (int16_t)x3;
+            projY[i] = centerY + (int16_t)y3;
         }
 
         for (int i = 0; i < s.numEdges; i++)
