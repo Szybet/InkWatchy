@@ -89,7 +89,7 @@ void initMainMenu()
         buttons[count] = {MENU_SMASHING_APPLES, getImg("apple"), switchApple2};
     }
 #endif
-#if PONG || TETRIS || JUMPER || SNAKE
+#if PONG || TETRIS || JUMPER || SNAKE || DICE || PAINT
     {
         debugLog("Adding games");
         count = count + 1;
