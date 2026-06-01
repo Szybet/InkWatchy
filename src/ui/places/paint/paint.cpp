@@ -13,6 +13,9 @@ uint8_t cursorMovementCount = 0;
 bool isDrawing = false;
 uint8_t *savedFramebuffer = nullptr;
 
+int lastAccX = 0;
+int lastAccY = 0;
+
 #define PAINT_CURSOR_SIZE 2
 #define FRAMEBUFFER_SIZE 5000
 
@@ -36,6 +39,8 @@ void initPaint()
     cursorY = paintY;
     cursorMovementCount = 0;
     isDrawing = false;
+    lastAccX = 0;
+    lastAccY = 0;
 
     cleanAllMemory();
     if (savedFramebuffer == nullptr)
@@ -67,7 +72,7 @@ void loopPaint()
         }
         else
         {
-            cursorMovementCount = 5;
+            cursorMovementCount = 15;
 
             if (savedFramebuffer != nullptr)
             {
@@ -133,9 +138,16 @@ void loopPaint()
         lastPaintX = paintX;
         lastPaintY = paintY;
         dUChange = true;
+
+        if (abs(lastAccX - moveX) > 30 || abs(lastAccY - moveY) > 30)
+        {
+            resetSleepDelay();
+            debugLog("lastAccX is: " + String(lastAccX) + "lastAccY is:  " + String(lastAccY));
+            lastAccX = acc.x;
+            lastAccY = acc.y;
+        }
     }
 
-    resetSleepDelay();
     disUp();
 }
 

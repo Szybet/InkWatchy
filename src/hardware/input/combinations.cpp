@@ -18,22 +18,58 @@ void initCombinations()
 
 void loopCombinations()
 {
+#if ATCHY_VER != YATCHY
     if (buttonRead(BACK_PIN) == BUT_CLICK_STATE)
     {
+        // debugLog("loopCombinations, back pin");
         combinationsChecks[BACK_INDEX] = BACK_PIN;
     }
     if (buttonRead(MENU_PIN) == BUT_CLICK_STATE)
     {
+        // debugLog("loopCombinations, menu pin");
         combinationsChecks[MENU_INDEX] = MENU_PIN;
     }
     if (buttonRead(UP_PIN) == BUT_CLICK_STATE)
     {
+        // debugLog("loopCombinations, up pin");
         combinationsChecks[UP_INDEX] = UP_PIN;
     }
     if (buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
     {
+        // debugLog("loopCombinations, down pin");
         combinationsChecks[DOWN_INDEX] = DOWN_PIN;
     }
+#else
+    // Optimise + avoid i2c error
+    uint16_t reg = rM.gpioExpander.readRegister(MCP_GPIO);
+    bool backBtn = !rM.gpioExpander.checkBit(reg, BACK_PIN);
+    bool menuBtn = !rM.gpioExpander.checkBit(reg, MENU_PIN);
+    bool downBtn = !rM.gpioExpander.checkBit(reg, DOWN_PIN);
+    bool upBtn = !rM.gpioExpander.checkBit(reg, UP_PIN);
+
+    if (backBtn && menuBtn && downBtn && upBtn)
+    {
+        debugLog("Possible I2C error, all buttons clicked");
+        return;
+    }
+
+    if (backBtn)
+    {
+        combinationsChecks[BACK_INDEX] = BACK_PIN;
+    }
+    if (menuBtn)
+    {
+        combinationsChecks[MENU_INDEX] = MENU_PIN;
+    }
+    if (upBtn)
+    {
+        combinationsChecks[UP_INDEX] = UP_PIN;
+    }
+    if (downBtn)
+    {
+        combinationsChecks[DOWN_INDEX] = DOWN_PIN;
+    }
+#endif
 }
 
 bool wasClicked(uint8_t pin)

@@ -363,9 +363,12 @@ bool mcp23018::digitalRead(uint8_t pin)
   {
     return false;
   }
+  // TODO
   // Manage YATCHY_BACK_BTN not existing here
   // Also consider using interrupts
-  return checkBit(readRegister(GPIO), pin);
+  uint16_t reg = readRegister(MCP_GPIO);
+  // debugLog("Reg in digitalRead: " + uint16ToBinaryString(reg));
+  return checkBit(reg, pin);
 }
 
 void mcp23018::setDefaultInterrupts()

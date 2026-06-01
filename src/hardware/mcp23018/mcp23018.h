@@ -68,7 +68,7 @@ Reading from this register reads the port. Writing to this
 register modifies the Output Latch (OLAT) register
 1 = Logic-high.
 0 = Logic-low. */
-#define GPIO 0x12
+#define MCP_GPIO 0x12
 /* Reflects the logic level on the output latch.
 Not really useful, this register shows which value we want and GPIO register which value there is. Maybe detecting shorts, but not really
 1 = Logic-high.

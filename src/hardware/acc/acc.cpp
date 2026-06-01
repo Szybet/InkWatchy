@@ -216,6 +216,16 @@ void initAcc()
     }
 }
 
+float getAxisDegrees(int16_t val, int16_t axisA, int16_t axisB)
+{
+  float magnitude = sqrt((float)val * val + (float)axisA * axisA + (float)axisB * axisB);
+
+  if (magnitude == 0)
+    return 0;
+
+  return asin((float)val / magnitude) * 57.29577f;
+}
+
 // All in one function to get steps, it manages everything
 // TODO: after changing watchface that doesn't use steps, the acc is still turned on with this feature while its not used
 uint16_t getSteps()
