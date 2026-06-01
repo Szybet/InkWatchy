@@ -45,6 +45,7 @@ typedef enum
     videoPlayer,
     videoMenu,
     pong,
+    paint,
     tetris,
     jumperGame,
     snake,
@@ -171,6 +172,9 @@ void switchVideoMenu();
 void switchApple();
 void switchApple2();
 void switchPong();
+#if PAINT
+void switchPaint();
+#endif
 #if TETRIS
 void switchTetris();
 #endif

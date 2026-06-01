@@ -221,6 +221,13 @@ void switchPong()
     generalSwitch(pong);
 }
 
+#if PAINT
+void switchPaint()
+{
+    generalSwitch(paint);
+}
+#endif
+
 #if TETRIS
 void switchTetris()
 {

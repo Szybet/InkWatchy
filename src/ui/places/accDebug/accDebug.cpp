@@ -1,7 +1,7 @@
 #include "accDebug.h"
-#include "rtcMem.h"
 
-#if DEBUG_MENUS == 1
+#if DEBUG_MENUS
+#include "rtcMem.h"
 
 bool workingAcc = false;
 

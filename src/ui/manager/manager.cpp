@@ -463,6 +463,13 @@ void loopManager()
 #endif
         break;
     }
+    case paint:
+    {
+#if PAINT
+        managerLaunchFunc(paint, initPaint, loopPaint, exitPaint);
+#endif
+        break;
+    }
     case tetris:
     {
 #if TETRIS

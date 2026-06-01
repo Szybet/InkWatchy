@@ -191,7 +191,7 @@ void initSettingsMenu()
 void initGamesMenu()
 {
     int count = -1;
-    entryMenu buttons[8];
+    entryMenu buttons[9];
 #if TETRIS
     {
         debugLog("Adding Tetris");
@@ -225,6 +225,13 @@ void initGamesMenu()
         debugLog("Adding Dice");
         count = count + 1;
         buttons[count] = {MENU_DICE, getImg("dice/diceIcon"), switchDiceMenu};
+    }
+#endif
+#if PAINT
+    {
+        debugLog("Adding paint");
+        count = count + 1;
+        buttons[count] = {"Paint", getImg("paint/paintIcon"), switchPaint};
     }
 #endif
 #if VIDEO_PLAYER

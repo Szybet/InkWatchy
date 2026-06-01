@@ -317,6 +317,9 @@ The default is this:
 // Snake
 #define SNAKE 1
 
+// Paint, requires ACC
+#define PAINT 1
+
 // Dice app
 #define DICE 1
 #define DICE_ANIMATION_TIME_MS 2000
