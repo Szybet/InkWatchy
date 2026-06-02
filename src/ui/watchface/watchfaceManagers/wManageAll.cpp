@@ -1,6 +1,7 @@
 #include "wManageAll.h"
 #include "rtcMem.h"
 
+
 #if WATCHFACE_ORBITAL
 #include "../watchfaces/orbital_Defaltastra/orbital.h"
 #endif
@@ -207,8 +208,54 @@ const watchfaceDefOne *getwatchfaceDefOne()
     return NULL;
 }
 
-void watchfaceManageAll(bool init)
+static void cycleTopLevel(bool forward)
 {
+    uint8_t i = rM.watchfaceSelected;
+    for (uint8_t n = 0; n < WATCHFACE_COUNT; n++)
+    {
+        i = forward ? (i + 1) % WATCHFACE_COUNT : (i + WATCHFACE_COUNT - 1) % WATCHFACE_COUNT;
+        if (watchfacesList[i]->manager != wfmNone)
+        {
+            rM.watchfaceSelected = i;
+            return;
+        }
+    }
+}
+
+static void handleCycle(bool forward)
+{
+    const watchfaceDef *cur = getCurrentWatchface();
+#if GSR_WATCHFACES
+    if (cur->manager == wfmGSR)
+    {
+        WatchyGSR *gsr = reinterpret_cast<WatchyGSR *>(cur->data);
+        if (forward && !gsr->AtLastStyle())  { gsr->NextStyle(); return; }
+        if (!forward && !gsr->AtFirstStyle()) { gsr->PrevStyle(); return; }
+    }
+#endif
+    cycleTopLevel(forward);
+#if GSR_WATCHFACES
+    // After a top-level switch, position sub-styles at the correct entry point
+    const watchfaceDef *next = getCurrentWatchface();
+    if (next->manager == wfmGSR)
+    {
+        WatchyGSR *gsr = reinterpret_cast<WatchyGSR *>(next->data);
+        if (forward) gsr->JumpToFirstStyle();
+        else         gsr->JumpToLastStyle();
+    }
+#endif
+}
+
+void cycleWatchfaceCombination(bool forward)
+{
+    handleCycle(forward);
+    rM.currentPlace = NoPlace;  // force initWatchfaceManage on next loop iteration
+}
+
+void watchfaceManageAll(bool initParam)
+{
+    bool init = initParam;
+
     const watchfaceDef *watchfaceSel = getCurrentWatchface();
     switch (watchfaceSel->manager)
     {

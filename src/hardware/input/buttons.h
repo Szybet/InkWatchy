@@ -10,6 +10,8 @@ extern TaskHandle_t buttonTask;
 buttonState useButtonBack();
 buttonState useButton();
 buttonState useAllButtons();
+buttonState peekButton();
+buttonState useButtonNoLong();
 void useButtonBlank();
 void loopButtonsTask(void *parameter);
 void manageButtonWakeUp();

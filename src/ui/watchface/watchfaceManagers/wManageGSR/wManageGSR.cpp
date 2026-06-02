@@ -33,24 +33,13 @@ void wManageGsrLaunch(WatchyGSR *gsr, bool init)
     }
 #endif
 
-    buttonState btn = useButton();
-    if (btn == Menu)
+    if (useButton() == Menu)
     {
         resetSleepDelay();
         generalSwitch(mainMenu);
     }
     else
     {
-        if (btn == LongDown)
-        {
-            gsr->NextStyle();
-            draw = true;
-        }
-        else if (btn == LongUp)
-        {
-            gsr->PrevStyle();
-            draw = true;
-        }
         setSleepDelay(0);
         if(draw == true) {
             dis->fillScreen(SCWhite);

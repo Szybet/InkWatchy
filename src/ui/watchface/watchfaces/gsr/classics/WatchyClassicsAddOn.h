@@ -7624,6 +7624,20 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
         InsertInitWatchStyle(gsrClassicsCurrentStyle);
     }
 
+    bool AtLastStyle() override { return gsrClassicsCurrentStyle == GSR_CLASSICS_COUNT; }
+
+    bool AtFirstStyle() override { return gsrClassicsCurrentStyle == 1; }
+
+    void JumpToFirstStyle() override {
+        gsrClassicsCurrentStyle = 1;
+        InsertInitWatchStyle(gsrClassicsCurrentStyle);
+    }
+
+    void JumpToLastStyle() override {
+        gsrClassicsCurrentStyle = GSR_CLASSICS_COUNT;
+        InsertInitWatchStyle(gsrClassicsCurrentStyle);
+    }
+
     void RegisterWatchFaces(){};
 
 // This function sets up the WatchFace Styles, this is required for AddOns,

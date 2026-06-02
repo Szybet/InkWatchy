@@ -118,4 +118,12 @@ void WatchyGSR::NextStyle() {}
 
 void WatchyGSR::PrevStyle() {}
 
+bool WatchyGSR::AtLastStyle() { return true; }
+
+bool WatchyGSR::AtFirstStyle() { return true; }
+
+void WatchyGSR::JumpToFirstStyle() {}
+
+void WatchyGSR::JumpToLastStyle() {}
+
 #endif

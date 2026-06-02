@@ -37,6 +37,10 @@ public:
     virtual uint8_t GetCurrentStyleID();
     virtual void NextStyle();
     virtual void PrevStyle();
+    virtual bool AtLastStyle();
+    virtual bool AtFirstStyle();
+    virtual void JumpToFirstStyle();
+    virtual void JumpToLastStyle();
 };
 
 struct TimeData final {
