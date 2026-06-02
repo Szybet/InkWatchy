@@ -60,6 +60,7 @@ void syncNtp(bool doDriftThings)
 #endif
 
         rM.SRTC.doBreakTime(epochTime, timeRTCUTC0);
+        debugLog("Saving UTC0 time: " + String(getHourMinute(timeRTCUTC0)));
         saveRTC(timeRTCUTC0);
         debugLog("Reading rtc from ntp");
         dontTouchTimeZone = false;
@@ -87,30 +88,41 @@ void syncNtp(bool doDriftThings)
 #if TIME_DRIFT_CORRECTION
         if (doDriftThings == true)
         {
-            if (rM.SRTC.checkingDrift() == true && (getUnixTime(timeRTCLocal) - rM.driftStartUnix > TIME_DRIFT_MINIMUM_TIME * 3600 || rM.driftStartUnix == 0))
+            if (rM.driftDone == false)
             {
-                debugLog("Ending drift");
-                rM.SRTC.endDrift(timeRTCLocal);
-                rM.driftStartUnix = 0;
-                uint32_t driftValue = rM.SRTC.getDrift();
-                bool driftIsFast = rM.SRTC.isFastDrift();
-                debugLog("isFast: " + String(driftIsFast) + " drift value: " + String(driftValue));
-                fsSetString(CONF_DRIFT, String(driftValue));
-                fsSetString(CONF_DRIFT_FAST, String(driftIsFast));
+                if (rM.SRTC.checkingDrift() == true && (getUnixTime(timeRTCUTC0) - rM.driftStartUnix >= TIME_DRIFT_MINIMUM_TIME * 3600 || rM.driftStartUnix == 0))
+                {
+                    debugLog("Ending drift");
+                    readRTC(); // Did a second pass compared to a few lines above?
+                    rM.SRTC.endDrift(timeRTCUTC0);
+                    rM.driftStartUnix = 0;
+                    uint32_t driftValue = rM.SRTC.getDrift();
+                    bool driftIsFast = rM.SRTC.isFastDrift();
+                    debugLog("isFast: " + String(driftIsFast) + " drift value: " + String(driftValue));
+                    fsSetString(CONF_DRIFT, String(driftValue));
+                    fsSetString(CONF_DRIFT_FAST, String(driftIsFast));
+                    rM.driftDone = true;
+                }
+                else
+                {
+                    debugLog("Beginning new drift");
+                    readRTC(); // Did a second pass compared to a few lines above?
+                    rM.SRTC.beginDrift(timeRTCUTC0);
+                    rM.driftStartUnix = getUnixTime(timeRTCUTC0);
+                }
             }
             else
             {
-                debugLog("Beginning new drift");
-                // Drift is not going on or it's going on to quick to end it
-                rM.SRTC.beginDrift(timeRTCLocal);
-                rM.driftStartUnix = getUnixTime(timeRTCLocal);
+                debugLog("Drift is already done, not doing anything new");
             }
         }
+        /*
         else
         {
             debugLog("Canceling drift");
             rM.SRTC.setDrift(0, 0);
         }
+        */
 #endif
 
         timeClient.end();

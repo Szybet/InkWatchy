@@ -49,6 +49,7 @@ RTC_DATA_ATTR rtcMem rM = {
 // Time drift correction
 #if TIME_DRIFT_CORRECTION
     .driftStartUnix = 0,
+    .driftDone = false,
 #endif
     // Power settings
     .disableAllVibration = false,

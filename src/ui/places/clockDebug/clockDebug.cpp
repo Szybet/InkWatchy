@@ -37,10 +37,19 @@ String timeSince(int64_t unixTime)
 
 void cleanClockFiles()
 {
-    fsRemoveFile("/conf/" + String(CONF_SECONDS_DRIFT));
     fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_SYNC));
     fsRemoveFile("/conf/" + String(CONF_UNIX_PREVIOUS_SYNC));
     fsRemoveFile("/conf/" + String(CONF_UNIX_LAST_CHARGE));
+    slintExit();
+    initClockDebug();
+}
+
+void resetDrift() {
+    fsRemoveFile("/conf/" + String(CONF_DRIFT));
+    fsRemoveFile("/conf/" + String(CONF_DRIFT_FAST));
+    rM.SRTC.setDrift(0, 0);
+    rM.driftStartUnix = 0;
+    rM.driftDone = false;
     slintExit();
     initClockDebug();
 }
@@ -51,8 +60,8 @@ void initClockDebug()
     general_page_set_title(DEBUG_MENU_CLOCK);
     genpage_set_center();
 
-    GeneralPageButton button = GeneralPageButton{DEBUG_CLOCK_REMOVE_FILES, cleanClockFiles};
-    general_page_set_buttons(&button, 1);
+    GeneralPageButton buttons[2] = {GeneralPageButton{DEBUG_CLOCK_REMOVE_FILES, cleanClockFiles}, GeneralPageButton{"Undo drift fix", resetDrift}};
+    general_page_set_buttons(buttons, 2);
 
     readRTC();
     timeClockLine = genpage_add(getClockPrecise().c_str());

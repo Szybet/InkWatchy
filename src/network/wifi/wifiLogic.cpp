@@ -71,7 +71,7 @@ void turnOnWifiKindOfPersistent()
 
 void wifiOnlyNtp() {
     debugLog("Launching wifi only ntp");
-    syncNtp(false);
+    syncNtp();
 }
 
 void turnOnWifiNtpOnly() {

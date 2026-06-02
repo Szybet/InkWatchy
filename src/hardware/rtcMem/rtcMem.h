@@ -47,6 +47,7 @@ struct rtcMem
 // Time drift correction
 #if TIME_DRIFT_CORRECTION
     uint64_t driftStartUnix;
+    bool driftDone: 1;
 #endif
     // Power settings
     bool disableAllVibration : 1;
