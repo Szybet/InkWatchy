@@ -7589,16 +7589,7 @@ const unsigned char *marionumbers [10] = {mario0, mario1, mario2, mario3, mario4
 #define Y_PADDING 2*COIN_SPACING+COIN_H
 
 // Place all your Variables here.
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnBasicStyle = GSR_CLASSICS_BASICS;  // Remember RTC_DATA_ATTR for your variables so they don't get wiped on deep sleep.
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnSSegStyle = GSR_CLASSICS_7SEG;   // 7_SEG
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnDOSStyle = GSR_CLASSICS_DOS;    // DOS
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnPokeStyle = GSR_CLASSICS_POKE;   // Pokemon
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnStarryStyle = GSR_CLASSICS_STARRY; // Starry Horizon
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnTetrisStyle = GSR_CLASSICS_TETRIS; // Tetris
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnMacStyle = GSR_CLASSICS_MAC;    // Mac Paint
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnMarioStyle = GSR_CLASSICS_MARIO;  // Mario
-
-// If you want more than one WatchFaceStyle, make more variables and be sure to register them below in RegisterWatchFaces().
+RTC_DATA_ATTR uint8_t gsrClassicsCurrentStyle = GSR_CLASSICS_BASICS; // tracks which classic style is active
 
 // This is used to keep track of times you're in various looping functions (like AskForWiFi calling InsertWiFi).
 // Use more of these type of variables with the looping functions for various WatchFace Styles in this file.
@@ -7619,19 +7610,27 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
     public:
     WatchyClassicsAddOnClass() : WatchyGSR() { initAddOn(this); } // *** DO NOT EDIT THE CONTENTS OF THIS FUNCTION ***
 
+    uint8_t GetCurrentStyleID() override { return gsrClassicsCurrentStyle; }
 
-// This function is required by AddOns and is used to register one or more WatchFace Styles at startup, you can add more here, but you need more variables above
-// to track all of the WatchFaces and determine which ones match the CurrentStyleID(), as WatchFace Styles are collected and assigned at boot.
+    void NextStyle() override {
+        gsrClassicsCurrentStyle++;
+        if (gsrClassicsCurrentStyle > GSR_CLASSICS_COUNT) gsrClassicsCurrentStyle = 1;
+        InsertInitWatchStyle(gsrClassicsCurrentStyle);
+    }
 
-    void RegisterWatchFaces(){
+    void PrevStyle() override {
+        gsrClassicsCurrentStyle--;
+        if (gsrClassicsCurrentStyle < 1) gsrClassicsCurrentStyle = GSR_CLASSICS_COUNT;
+        InsertInitWatchStyle(gsrClassicsCurrentStyle);
+    }
 
-    };
+    void RegisterWatchFaces(){};
 
 // This function sets up the WatchFace Styles, this is required for AddOns,
 // as it sets up the Style when it is called for the first time and each time the Watchy is switched to another Watchface.
 
     void InsertInitWatchStyle(uint8_t StyleID){
-      if (StyleID == WatchyClassicsAddOnBasicStyle){
+      if (StyleID == GSR_CLASSICS_BASICS){
           Design.Face.Gutter = 5;
           Design.Face.Time = 113;
           Design.Face.TimeHeight = 53;
@@ -7639,7 +7638,7 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           Design.Face.TimeFont = &DSEG7_Classic_Bold_53;
           Design.Face.TimeLeft = 5;
           Design.Face.TimeStyle = WatchyGSR::dRIGHT;
-      } else if (StyleID == WatchyClassicsAddOnSSegStyle){
+      } else if (StyleID == GSR_CLASSICS_7SEG){
           WantWeather(true);
           Design.Face.Gutter = 5;
           Design.Face.Time = 58;
@@ -7671,7 +7670,7 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           Design.Status.BatteryInverted = false;
           Design.Status.BATTx = 154;
           Design.Status.BATTy = 73;
-      } else if (StyleID == WatchyClassicsAddOnMarioStyle){
+      } else if (StyleID == GSR_CLASSICS_MARIO){
           Design.Status.WIFIy = 163;
           Design.Status.BATTy = 148;
       }
@@ -7689,9 +7688,9 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
       FC = (LM ? BackColor() : ForeColor());
       BC = (LM ? ForeColor() : BackColor());
 
-      if (StyleID == WatchyClassicsAddOnBasicStyle){
+      if (StyleID == GSR_CLASSICS_BASICS){
           if (SafeToDraw()) SSeg_drawTime();
-      } else if (StyleID == WatchyClassicsAddOnSSegStyle){
+      } else if (StyleID == GSR_CLASSICS_7SEG){
           if (SafeToDraw()) SSeg_drawTime();
           display.setFont(&Seven_Segment10pt7b);
           String dayOfWeek = dayStr(WatchTime.Local.Wday + 1);
@@ -7725,7 +7724,7 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
                   display.fillRect(Design.Status.BATTx + 5 + (batterySegments * 9), Design.Status.BATTy + 5, 7, 11, ForeColor());
               }
           }
-      } else if (StyleID == WatchyClassicsAddOnDOSStyle){
+      } else if (StyleID == GSR_CLASSICS_DOS){
           T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
           display.setTextColor(ForeColor());
           display.setFont(&Px437_IBM_BIOS5pt7b);
@@ -7752,14 +7751,14 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           display.println(T);
           display.println(" ");
           display.print("<C:\\>esptool");
-      } else if (StyleID == WatchyClassicsAddOnPokeStyle){
+      } else if (StyleID == GSR_CLASSICS_POKE){
           display.drawBitmap(0, 0, WatchyClassic_Pokemon, 200, 200, SCBlack, SCWhite);
           T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
           display.setTextColor(SCBlack);
           display.setFont(&FreeMonoBold9pt7b);
           display.setCursor(16, 165);
           display.print(T);
-      } else if (StyleID == WatchyClassicsAddOnStarryStyle) {
+      } else if (StyleID == GSR_CLASSICS_STARRY) {
           display.fillScreen(SCBlack);
           if (SafeToDraw() && NoMenu()){
               display.fillCircle(100, horizonY + planetR, planetR, SCWhite);
@@ -7777,7 +7776,7 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           asprintf(&dateStr, "%s %s %d", dayOfWeek.c_str(), monthStr.c_str(), WatchTime.Local.Day);
           Starry_drawCenteredString(dateStr, 100, 140, true);
           free(dateStr);
-      } else if (StyleID == WatchyClassicsAddOnTetrisStyle) {
+      } else if (StyleID == GSR_CLASSICS_TETRIS) {
           display.drawBitmap(0, 0, tetrisbg, 200, 200, SCBlack, SCWhite);
           //Hour
           display.drawBitmap(25, 20, tetris_nums[WatchTime.Local.Hour/10], 40, 60, SCBlack, SCWhite); //first digit
@@ -7785,7 +7784,7 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           //Minute
           display.drawBitmap(25, 110, tetris_nums[WatchTime.Local.Minute/10], 40, 60, SCBlack, SCWhite); //first digit
           display.drawBitmap(75, 110, tetris_nums[WatchTime.Local.Minute%10], 40, 60, SCBlack, SCWhite); //second digit
-      } else if (StyleID == WatchyClassicsAddOnMacStyle) {
+      } else if (StyleID == GSR_CLASSICS_MAC) {
           display.drawBitmap(0, 0, Mac_window, 200, 200, ForeColor());
           //Hour
           display.drawBitmap(35, 70, Mac_numbers[WatchTime.Local.Hour/10], 38, 50, ForeColor()); //first digit
@@ -7795,7 +7794,7 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           //Minute
           display.drawBitmap(115, 70, Mac_numbers[WatchTime.Local.Minute/10], 38, 50, ForeColor()); //first digit
           display.drawBitmap(153, 70, Mac_numbers[WatchTime.Local.Minute%10], 38, 50, ForeColor()); //second digit
-      } else if (StyleID == WatchyClassicsAddOnMarioStyle) {
+      } else if (StyleID == GSR_CLASSICS_MARIO) {
           display.drawBitmap(0, 0, mariobg, 200, 200, ForeColor());
           int hour10 = WatchTime.Local.Hour/10;
           int hour01 = WatchTime.Local.Hour%10;
@@ -7827,7 +7826,7 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
     void InsertDrawWeather(uint8_t StyleID, bool Status){
         int16_t  x1, y1;
         uint16_t w, h;
-        if (StyleID == WatchyClassicsAddOnSSegStyle){
+        if (StyleID == GSR_CLASSICS_7SEG){
             if (IsWeatherAvailable()){
                 const unsigned char* weatherIcon = getWeatherIcon(GetWeatherID());
                 String T = String(GetWeatherTemperatureFeelsLike());

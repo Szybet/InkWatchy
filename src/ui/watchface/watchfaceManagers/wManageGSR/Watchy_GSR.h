@@ -34,6 +34,9 @@ public:
     virtual int GetWeatherTemperatureFeelsLike() final;
     virtual void InsertInitWatchStyle(uint8_t StyleID);
     virtual void RegisterWatchFaces();
+    virtual uint8_t GetCurrentStyleID();
+    virtual void NextStyle();
+    virtual void PrevStyle();
 };
 
 struct TimeData final {
