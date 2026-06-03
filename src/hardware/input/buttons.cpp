@@ -41,32 +41,6 @@ buttonState useButton()
     return buttonPressedTmp;
 }
 
-// Should be used only in watchface
-buttonState peekButton()
-{
-    buttMut.lock();
-    buttonState btn = buttonPressed;
-    buttMut.unlock();
-    return btn;
-}
-
-// Like useButton() but leaves LongUp/LongDown unconsumed so the cycling
-// check in watchfaceManageAll can catch them on the next loop iteration.
-buttonState useButtonNoLong()
-{
-    buttMut.lock();
-    if (buttonPressed == LongDown || buttonPressed == LongUp ||
-        buttonPressed == Back     || buttonPressed == LongBack)
-    {
-        buttMut.unlock();
-        return None;
-    }
-    buttonState tmp = buttonPressed;
-    buttonPressed = None;
-    buttMut.unlock();
-    return tmp;
-}
-
 buttonState useAllButtons()
 {
     buttMut.lock();
@@ -74,7 +48,7 @@ buttonState useAllButtons()
     // {
     //     buttMut.unlock();
     //     return None;
-    // }
+    // }TIME_DRIFT_CORRECTION
     buttonState buttonPressedTmp = buttonPressed;
     buttonPressed = None;
 

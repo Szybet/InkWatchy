@@ -88,15 +88,18 @@ bool wasClicked(uint8_t pin)
 void executeCombination()
 {
     resetSleepDelay(); // Faster so it won't escape...
-    if (wasClicked(MENU_PIN) == true && wasClicked(DOWN_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(UP_PIN) == false)
+    if (rM.currentPlace == watchface)
     {
-        cycleWatchfaceCombination(true);
-        return;
-    }
-    if (wasClicked(MENU_PIN) == true && wasClicked(UP_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(DOWN_PIN) == false)
-    {
-        cycleWatchfaceCombination(false);
-        return;
+        if (wasClicked(MENU_PIN) == true && wasClicked(DOWN_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(UP_PIN) == false)
+        {
+            cycleWatchfaceCombination(true);
+            return;
+        }
+        if (wasClicked(MENU_PIN) == true && wasClicked(UP_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(DOWN_PIN) == false)
+        {
+            cycleWatchfaceCombination(false);
+            return;
+        }
     }
     if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true && wasClicked(MENU_PIN) == false && wasClicked(DOWN_PIN) == false)
     {
