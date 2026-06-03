@@ -44,7 +44,9 @@ void cleanClockFiles()
     initClockDebug();
 }
 
-void resetDrift() {
+#if TIME_DRIFT_CORRECTION
+void resetDrift()
+{
     fsRemoveFile("/conf/" + String(CONF_DRIFT));
     fsRemoveFile("/conf/" + String(CONF_DRIFT_FAST));
     rM.SRTC.setDrift(0, 0);
@@ -53,15 +55,21 @@ void resetDrift() {
     slintExit();
     initClockDebug();
 }
+#endif
 
 void initClockDebug()
 {
-    init_general_page(5);
+    init_general_page(7);
     general_page_set_title(DEBUG_MENU_CLOCK);
     genpage_set_center();
 
+#if TIME_DRIFT_CORRECTION
     GeneralPageButton buttons[2] = {GeneralPageButton{DEBUG_CLOCK_REMOVE_FILES, cleanClockFiles}, GeneralPageButton{"Undo drift fix", resetDrift}};
     general_page_set_buttons(buttons, 2);
+#else
+    GeneralPageButton buttons[1] = {GeneralPageButton{DEBUG_CLOCK_REMOVE_FILES, cleanClockFiles}};
+    general_page_set_buttons(buttons, 1);
+#endif
 
     readRTC();
     timeClockLine = genpage_add(getClockPrecise().c_str());
