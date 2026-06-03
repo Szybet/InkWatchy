@@ -9,15 +9,16 @@ uint8_t lastPaintX = 0;
 uint8_t lastPaintY = 0;
 uint8_t cursorX = 0;
 uint8_t cursorY = 0;
-uint8_t cursorMovementCount = 0;
 bool isDrawing = false;
 uint8_t *savedFramebuffer = nullptr;
 
-int lastAccX = 0;
-int lastAccY = 0;
+uint8_t veryLastPaintX = 0;
+uint8_t veryLastPaintY = 0;
+uint8_t loopCount = 0;
 
 #define PAINT_CURSOR_SIZE 2
 #define FRAMEBUFFER_SIZE 5000
+#define SLEEP_DIFF 20
 
 void updateStatus()
 {
@@ -37,24 +38,21 @@ void initPaint()
     lastPaintY = paintY;
     cursorX = paintX;
     cursorY = paintY;
-    cursorMovementCount = 0;
     isDrawing = false;
-    lastAccX = 0;
-    lastAccY = 0;
+    lastPaintX = 0;
+    lastPaintY = 0;
+    veryLastPaintX = 0;
+    veryLastPaintY = 0;
+    loopCount = 0;
 
     cleanAllMemory();
-    if (savedFramebuffer == nullptr)
-    {
-        savedFramebuffer = (uint8_t *)malloc(FRAMEBUFFER_SIZE);
-        if (savedFramebuffer != nullptr)
-        {
-            memset(savedFramebuffer, 255, FRAMEBUFFER_SIZE);
-        }
-    }
+    savedFramebuffer = (uint8_t *)malloc(FRAMEBUFFER_SIZE);
+    memset(savedFramebuffer, 255, FRAMEBUFFER_SIZE);
 
     updateStatus();
     disUp(true);
     initAcc();
+    resetSleepDelay(SLEEP_EVERY_MS);
 }
 
 void loopPaint()
@@ -72,8 +70,6 @@ void loopPaint()
         }
         else
         {
-            cursorMovementCount = 15;
-
             if (savedFramebuffer != nullptr)
             {
                 memcpy(savedFramebuffer, dis->_buffer, FRAMEBUFFER_SIZE);
@@ -114,37 +110,30 @@ void loopPaint()
                 dis->drawLine(lastPaintX + i, lastPaintY, paintX + i, paintY, SCBlack);
                 dis->drawLine(lastPaintX, lastPaintY + i, paintX, paintY + i, SCBlack);
             }
+            lastPaintX = paintX;
+            lastPaintY = paintY;
         }
         else
         {
-            if (cursorMovementCount != 0)
-            {
-                cursorMovementCount -= 1;
 
-                if (savedFramebuffer != nullptr)
-                {
-                    memcpy(dis->_buffer, savedFramebuffer, FRAMEBUFFER_SIZE);
-                }
-
-                updateStatus();
-            }
-
-            dis->fillCircle(cursorX, cursorY, PAINT_CURSOR_SIZE, SCWhite);
+            memcpy(dis->_buffer, savedFramebuffer, FRAMEBUFFER_SIZE);
+            updateStatus();
             cursorX = paintX;
             cursorY = paintY;
             dis->fillCircle(cursorX, cursorY, PAINT_CURSOR_SIZE, SCBlack);
         }
-
-        lastPaintX = paintX;
-        lastPaintY = paintY;
         dUChange = true;
 
-        if (abs(lastAccX - moveX) > 30 || abs(lastAccY - moveY) > 30)
+        loopCount++;
+        if (loopCount % 5 == 0)
         {
-            resetSleepDelay();
-            debugLog("lastAccX is: " + String(lastAccX) + "lastAccY is:  " + String(lastAccY));
-            lastAccX = acc.x;
-            lastAccY = acc.y;
+            if (abs(veryLastPaintX - paintX) > SLEEP_DIFF || abs(veryLastPaintY - paintY) > SLEEP_DIFF)
+            {
+                resetSleepDelay(SLEEP_EVERY_MS);
+                veryLastPaintX = paintX;
+                veryLastPaintY = paintY;
+            }
+            loopCount = 0;
         }
     }
 
@@ -153,11 +142,9 @@ void loopPaint()
 
 void exitPaint()
 {
-    if (savedFramebuffer != nullptr)
-    {
-        free(savedFramebuffer);
-        savedFramebuffer = nullptr;
-    }
+
+    free(savedFramebuffer);
+    savedFramebuffer = nullptr;
 }
 
 #endif
