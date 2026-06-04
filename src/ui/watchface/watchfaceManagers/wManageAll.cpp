@@ -272,7 +272,7 @@ const watchfaceDef *getCurrentWatchface()
     // debugLog("Watchface selected: " + String(watchfaceSel->name));
     if (watchfaceSel->manager == wfmNone)
     {
-        for (uint8_t i = rM.watchfaceSelected; i < WATCHFACE_COUNT; i++)
+        for (uint8_t i = 0; i < WATCHFACE_COUNT; i++)
         {
             if (watchfacesList[i]->manager != wfmNone)
             {
