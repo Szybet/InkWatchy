@@ -320,6 +320,9 @@ The default is this:
 // Paint, requires ACC
 #define PAINT 1
 
+// Maze game, requires ACC
+#define MAZE 1
+
 // Dice app
 #define DICE 1
 #define DICE_ANIMATION_TIME_MS 2000

@@ -470,6 +470,13 @@ void loopManager()
 #endif
         break;
     }
+    case maze:
+    {
+#if MAZE
+        managerLaunchFunc(maze, initMaze, loopMaze, exitMaze);
+#endif
+        break;
+    }
     case tetris:
     {
 #if TETRIS

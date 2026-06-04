@@ -228,6 +228,13 @@ void switchPaint()
 }
 #endif
 
+#if MAZE
+void switchMaze()
+{
+    generalSwitch(maze);
+}
+#endif
+
 #if TETRIS
 void switchTetris()
 {

@@ -187,6 +187,9 @@ extern uint16_t SCWhite;
 #if PAINT
 #include "../ui/places/paint/paint.h"
 #endif
+#if MAZE
+#include "../ui/places/maze/maze.h"
+#endif
 #if TETRIS
 #include "../ui/places/tetris/tetrisPlace.h"
 #endif
