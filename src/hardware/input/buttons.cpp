@@ -41,7 +41,6 @@ buttonState useButton()
     return buttonPressedTmp;
 }
 
-// Should be used only in watchface
 buttonState useAllButtons()
 {
     buttMut.lock();
@@ -49,7 +48,7 @@ buttonState useAllButtons()
     // {
     //     buttMut.unlock();
     //     return None;
-    // }
+    // }TIME_DRIFT_CORRECTION
     buttonState buttonPressedTmp = buttonPressed;
     buttonPressed = None;
 

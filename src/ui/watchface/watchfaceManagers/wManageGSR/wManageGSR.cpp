@@ -16,7 +16,7 @@ void wManageGsrLaunch(WatchyGSR *gsr, bool init)
 
     if (init == true)
     {
-        gsr->InsertInitWatchStyle(1);
+        gsr->InsertInitWatchStyle(gsr->GetCurrentStyleID());
         gsr->RegisterWatchFaces();
     }
 
@@ -43,9 +43,9 @@ void wManageGsrLaunch(WatchyGSR *gsr, bool init)
         setSleepDelay(0);
         if(draw == true) {
             dis->fillScreen(SCWhite);
-            gsr->InsertDrawWeather(1, true);
-            gsr->InsertDrawWatchStyle(1);
-            dUChange = true;    
+            gsr->InsertDrawWeather(gsr->GetCurrentStyleID(), true);
+            gsr->InsertDrawWatchStyle(gsr->GetCurrentStyleID());
+            dUChange = true;
         }
     }
     disUp();

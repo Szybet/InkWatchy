@@ -112,4 +112,18 @@ void WatchyGSR::InsertInitWatchStyle(uint8_t StyleID) {}
 
 void WatchyGSR::RegisterWatchFaces(){};
 
+uint8_t WatchyGSR::GetCurrentStyleID() { return 1; }
+
+void WatchyGSR::NextStyle() {}
+
+void WatchyGSR::PrevStyle() {}
+
+bool WatchyGSR::AtLastStyle() { return true; }
+
+bool WatchyGSR::AtFirstStyle() { return true; }
+
+void WatchyGSR::JumpToFirstStyle() {}
+
+void WatchyGSR::JumpToLastStyle() {}
+
 #endif

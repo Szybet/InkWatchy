@@ -50,8 +50,10 @@ void resetDrift()
     fsRemoveFile("/conf/" + String(CONF_DRIFT));
     fsRemoveFile("/conf/" + String(CONF_DRIFT_FAST));
     rM.SRTC.setDrift(0, 0);
+#if TIME_DRIFT_CORRECTION
     rM.driftStartUnix = 0;
     rM.driftDone = false;
+#endif
     slintExit();
     initClockDebug();
 }

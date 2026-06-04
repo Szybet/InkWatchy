@@ -1,5 +1,6 @@
 #include "combinations.h"
 #include "rtcMem.h"
+#include "../../ui/watchface/watchfaceManagers/wManageAll.h"
 
 #define BACK_INDEX 0
 #define MENU_INDEX 1
@@ -87,6 +88,19 @@ bool wasClicked(uint8_t pin)
 void executeCombination()
 {
     resetSleepDelay(); // Faster so it won't escape...
+    if (rM.currentPlace == watchface)
+    {
+        if (wasClicked(MENU_PIN) == true && wasClicked(DOWN_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(UP_PIN) == false)
+        {
+            cycleWatchfaceCombination(true);
+            return;
+        }
+        if (wasClicked(MENU_PIN) == true && wasClicked(UP_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(DOWN_PIN) == false)
+        {
+            cycleWatchfaceCombination(false);
+            return;
+        }
+    }
     if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true && wasClicked(MENU_PIN) == false && wasClicked(DOWN_PIN) == false)
     {
         if (rM.currentPlace != wifiDebug)

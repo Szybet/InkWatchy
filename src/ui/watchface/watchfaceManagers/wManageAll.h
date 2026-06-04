@@ -12,4 +12,5 @@ const watchfaceDef *getCurrentWatchface();
 const watchfaceDefOne *getwatchfaceDefOne();
 void initWatchfaceManage();
 void loopWatchfaceManage();
+void cycleWatchfaceCombination(bool forward);
 
