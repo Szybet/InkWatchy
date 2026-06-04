@@ -43,8 +43,6 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define GSR_WATCHFACES_OPTIMISE 1 // Draws only every minute, not all the time, small optimisations, doesn't change much but could break things but hey
 #define GSR_STARFIELD 0
 #define GSR_STARFIELD_TIMEZONE_THING 0.0 // Hours.Minutes of your timezone (kind of UTC) - yes too lazy to automate that
-#define GSR_CLASSICS 0
-// Only one of them needs to be enabled at the time.
 #define GSR_CLASSICS_BASICS 0
 #define GSR_CLASSICS_7SEG 0
 #define GSR_CLASSICS_DOS 0
@@ -53,7 +51,6 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define GSR_CLASSICS_TETRIS 0
 #define GSR_CLASSICS_MAC 0
 #define GSR_CLASSICS_MARIO 0
-// No more classics
 #define GSR_STATIONARY 0
 
 // Basics

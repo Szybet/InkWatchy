@@ -95,6 +95,8 @@ class TextualTimeGSR : public WatchyGSR {
             display.print(lows[WatchTime.Local.Minute % 10]);
           }
         }
+        display.setTextColor(ForeColor());
+        display.setTextWrap(true);
       }
     }
 };

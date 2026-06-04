@@ -110,6 +110,19 @@ void executeCombination()
         return;
     }
 #endif
+    // Only when in watchface
+    // For now not behind any config define
+    if (rM.placeTree[currentPlaceIndex] == FIRST_PLACE)
+    {
+        if (wasClicked(UP_PIN) == true && wasClicked(DOWN_PIN) == false && wasClicked(BACK_PIN) == false && wasClicked(MENU_PIN) == true)
+        {
+            nextWatchface();
+        }
+        if (wasClicked(UP_PIN) == false && wasClicked(DOWN_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(MENU_PIN) == true)
+        {
+            previousWatchFace();
+        }
+    }
 }
 
 bool endCombinations(uint8_t currentPin)

@@ -1,5 +1,5 @@
 #include "defines.h"
-#if GSR_WATCHFACES && GSR_CLASSICS
+#if GSR_WATCHFACES && (GSR_CLASSICS_BASICS || GSR_CLASSICS_7SEG || GSR_CLASSICS_DOS || GSR_CLASSICS_POKE || GSR_CLASSICS_STARRY || GSR_CLASSICS_TETRIS || GSR_CLASSICS_MAC || GSR_CLASSICS_MARIO)
 // 7_SEG Weather Icons in 2 flavors, original and half sized.
 
 // 'Celsius', 26x20px

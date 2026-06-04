@@ -95,11 +95,67 @@ const watchfaceDef gsrStarfield = {
 };
 #endif
 
-#if GSR_WATCHFACES && GSR_CLASSICS
-const watchfaceDef gsrClassics = {
+#if GSR_WATCHFACES && GSR_CLASSICS_BASICS
+const watchfaceDef gsrBasic = {
     .manager = wfmGSR,
-    .name = "GSR Classics",
-    .data = (genPointer)&WatchyClassicsAddOnClassLoader,
+    .name = "GSR Basic",
+    .data = (genPointer)&GSRBasicLoader,
+};
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_7SEG
+const watchfaceDef gsr7Seg = {
+    .manager = wfmGSR,
+    .name = "GSR 7-SEG",
+    .data = (genPointer)&GSR7SEGLoader,
+};
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_DOS
+const watchfaceDef gsrDos = {
+    .manager = wfmGSR,
+    .name = "GSR DOS",
+    .data = (genPointer)&GSRDOSLoader,
+};
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_POKE
+const watchfaceDef gsrPokemon = {
+    .manager = wfmGSR,
+    .name = "GSR Pokemon",
+    .data = (genPointer)&GSRPokemonLoader,
+};
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_STARRY
+const watchfaceDef gsrStarry = {
+    .manager = wfmGSR,
+    .name = "GSR Starry Horizon",
+    .data = (genPointer)&GSRStarryHorizonLoader,
+};
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_TETRIS
+const watchfaceDef gsrTetris = {
+    .manager = wfmGSR,
+    .name = "GSR Tetris",
+    .data = (genPointer)&GSRTetrisLoader,
+};
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_MAC
+const watchfaceDef gsrMac = {
+    .manager = wfmGSR,
+    .name = "GSR Mac Paint",
+    .data = (genPointer)&GSRMacPaintLoader,
+};
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_MARIO
+const watchfaceDef gsrMario = {
+    .manager = wfmGSR,
+    .name = "GSR Mario",
+    .data = (genPointer)&GSRMarioLoader,
 };
 #endif
 
@@ -162,8 +218,43 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #else
     &noWatchFace,
 #endif
-#if GSR_WATCHFACES && GSR_CLASSICS
-    &gsrClassics,
+#if GSR_WATCHFACES && GSR_CLASSICS_BASICS
+    &gsrBasic,
+#else
+    &noWatchFace,
+#endif
+#if GSR_WATCHFACES && GSR_CLASSICS_7SEG
+    &gsr7Seg,
+#else
+    &noWatchFace,
+#endif
+#if GSR_WATCHFACES && GSR_CLASSICS_DOS
+    &gsrDos,
+#else
+    &noWatchFace,
+#endif
+#if GSR_WATCHFACES && GSR_CLASSICS_POKE
+    &gsrPokemon,
+#else
+    &noWatchFace,
+#endif
+#if GSR_WATCHFACES && GSR_CLASSICS_STARRY
+    &gsrStarry,
+#else
+    &noWatchFace,
+#endif
+#if GSR_WATCHFACES && GSR_CLASSICS_TETRIS
+    &gsrTetris,
+#else
+    &noWatchFace,
+#endif
+#if GSR_WATCHFACES && GSR_CLASSICS_MAC
+    &gsrMac,
+#else
+    &noWatchFace,
+#endif
+#if GSR_WATCHFACES && GSR_CLASSICS_MARIO
+    &gsrMario,
 #else
     &noWatchFace,
 #endif
@@ -181,7 +272,7 @@ const watchfaceDef *getCurrentWatchface()
     // debugLog("Watchface selected: " + String(watchfaceSel->name));
     if (watchfaceSel->manager == wfmNone)
     {
-        for (uint8_t i = 0; i < WATCHFACE_COUNT; i++)
+        for (uint8_t i = rM.watchfaceSelected; i < WATCHFACE_COUNT; i++)
         {
             if (watchfacesList[i]->manager != wfmNone)
             {
@@ -274,4 +365,41 @@ void initWatchfaceManage()
 #if WATCHFACE_INVERT_COLORS
     resetScreenColors();
 #endif
+}
+
+// Only called when in watchface!
+void nextWatchface()
+{
+    rM.watchfaceSelected += 1;
+    if (rM.watchfaceSelected >= WATCHFACE_COUNT)
+    {
+        rM.watchfaceSelected = 0;
+    }
+    const watchfaceDef *watchfaceSel = watchfacesList[rM.watchfaceSelected];
+    if (watchfaceSel->manager == wfmNone)
+    {
+        nextWatchface();
+        return;
+    }
+    rM.currentPlace = NoPlace; // force initWatchfaceManage on next loop iteration, hacky, works
+}
+
+// Only called when in watchface!
+void previousWatchFace()
+{
+    if (rM.watchfaceSelected == 0)
+    {
+        rM.watchfaceSelected = WATCHFACE_COUNT - 1;
+    }
+    else
+    {
+        rM.watchfaceSelected -= 1;
+    }
+    const watchfaceDef *watchfaceSel = watchfacesList[rM.watchfaceSelected];
+    if (watchfaceSel->manager == wfmNone)
+    {
+        previousWatchFace();
+        return;
+    }
+    rM.currentPlace = NoPlace; // force initWatchfaceManage on next loop iteration, hacky, works
 }

@@ -42,7 +42,7 @@
 #define WF_S_DAY_SUN "SO"
 
 // Error messages
-#define WF_T_ERROR "FEHLER"      // Taychron
+#define WF_T_ERROR "ERR"      // Taychron
 #define WF_I_ERROR "ERR"         // InkField (max 3 characters)
 #define WF_I_ERROR_SHORT "FE"    // InkField short
 

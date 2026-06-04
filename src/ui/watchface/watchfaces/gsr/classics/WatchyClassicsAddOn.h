@@ -1,5 +1,5 @@
 #include "defines.h"
-#if GSR_WATCHFACES && GSR_CLASSICS
+#if GSR_WATCHFACES && (GSR_CLASSICS_BASICS || GSR_CLASSICS_7SEG || GSR_CLASSICS_DOS || GSR_CLASSICS_POKE || GSR_CLASSICS_STARRY || GSR_CLASSICS_TETRIS || GSR_CLASSICS_MAC || GSR_CLASSICS_MARIO)
 
 #include "WeatherIcons.h"
 
@@ -7589,49 +7589,15 @@ const unsigned char *marionumbers [10] = {mario0, mario1, mario2, mario3, mario4
 #define Y_PADDING 2*COIN_SPACING+COIN_H
 
 // Place all your Variables here.
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnBasicStyle = GSR_CLASSICS_BASICS;  // Remember RTC_DATA_ATTR for your variables so they don't get wiped on deep sleep.
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnSSegStyle = GSR_CLASSICS_7SEG;   // 7_SEG
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnDOSStyle = GSR_CLASSICS_DOS;    // DOS
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnPokeStyle = GSR_CLASSICS_POKE;   // Pokemon
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnStarryStyle = GSR_CLASSICS_STARRY; // Starry Horizon
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnTetrisStyle = GSR_CLASSICS_TETRIS; // Tetris
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnMacStyle = GSR_CLASSICS_MAC;    // Mac Paint
-RTC_DATA_ATTR uint8_t WatchyClassicsAddOnMarioStyle = GSR_CLASSICS_MARIO;  // Mario
 
-// If you want more than one WatchFaceStyle, make more variables and be sure to register them below in RegisterWatchFaces().
-
-// This is used to keep track of times you're in various looping functions (like AskForWiFi calling InsertWiFi).
-// Use more of these type of variables with the looping functions for various WatchFace Styles in this file.
-// Looping variables don't necessarily need RTC_DATA_ATTR, unless you're using this variable during deep sleep minute wakes.
-int WatchyClassicsAddOnState = 0;
-
-
-class WatchyClassicsAddOnClass : public WatchyGSR {
-/*
- * Keep your functions inside the class, but at the bottom to avoid confusion.
- * Be sure to visit https://github.com/GuruSR/Watchy_GSR/blob/main/Override%20Information.md for full information on AddOns.
- * Overriding is not possible with an AddOn, you only have access to most of the Insert style functions.
- * The full available range of WatchyGSR public functions and data elements are available, you do not need to use WatchyGSR:: at the start.
- * Design elements do have a WatchyGSR:: at the start to specify those elements from WatchyGSR, if there is confusion with the compiler, use
- * WatchyGSR:: in front of items it can't distinguish or rename the ones you've added in this file to avoid the issue.
- */
-
+#if GSR_WATCHFACES && GSR_CLASSICS_BASICS
+RTC_DATA_ATTR uint8_t GSRBasicStyleID;
+class GSRBasic : public WatchyGSR {
     public:
-    WatchyClassicsAddOnClass() : WatchyGSR() { initAddOn(this); } // *** DO NOT EDIT THE CONTENTS OF THIS FUNCTION ***
-
-
-// This function is required by AddOns and is used to register one or more WatchFace Styles at startup, you can add more here, but you need more variables above
-// to track all of the WatchFaces and determine which ones match the CurrentStyleID(), as WatchFace Styles are collected and assigned at boot.
-
-    void RegisterWatchFaces(){
-
-    };
-
-// This function sets up the WatchFace Styles, this is required for AddOns,
-// as it sets up the Style when it is called for the first time and each time the Watchy is switched to another Watchface.
-
-    void InsertInitWatchStyle(uint8_t StyleID){
-      if (StyleID == WatchyClassicsAddOnBasicStyle){
+    GSRBasic() : WatchyGSR() { initAddOn(this); }
+    void RegisterWatchFaces() override { GSRBasicStyleID = AddWatchStyle("Basic", this); }
+    void InsertInitWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSRBasicStyleID){
           Design.Face.Gutter = 5;
           Design.Face.Time = 113;
           Design.Face.TimeHeight = 53;
@@ -7639,7 +7605,31 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           Design.Face.TimeFont = &DSEG7_Classic_Bold_53;
           Design.Face.TimeLeft = 5;
           Design.Face.TimeStyle = WatchyGSR::dRIGHT;
-      } else if (StyleID == WatchyClassicsAddOnSSegStyle){
+      }
+    }
+    void InsertDrawWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSRBasicStyleID && SafeToDraw()) SSeg_drawTime();
+    }
+    void SSeg_drawTime(){
+        uint8_t H = WatchTime.Local.Hour;
+        if (!(!IsAM() && !IsPM())) H = ((H + 11)%12)+1;
+        display.setTextColor(ForeColor());
+        display.setFont(Design.Face.TimeFont);
+        display.setCursor(Design.Face.TimeLeft, Design.Face.Time);
+        display.print(MakeMinutes(H) + ":" + MakeMinutes(WatchTime.Local.Minute));
+    }
+};
+GSRBasic GSRBasicLoader;
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_7SEG
+RTC_DATA_ATTR uint8_t GSR7SEGStyleID;
+class GSR7SEG : public WatchyGSR {
+    public:
+    GSR7SEG() : WatchyGSR() { initAddOn(this); }
+    void RegisterWatchFaces() override { GSR7SEGStyleID = AddWatchStyle("7-SEG", this); }
+    void InsertInitWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSR7SEGStyleID){
           WantWeather(true);
           Design.Face.Gutter = 5;
           Design.Face.Time = 58;
@@ -7671,28 +7661,13 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           Design.Status.BatteryInverted = false;
           Design.Status.BATTx = 154;
           Design.Status.BATTy = 73;
-      } else if (StyleID == WatchyClassicsAddOnMarioStyle){
-          Design.Status.WIFIy = 163;
-          Design.Status.BATTy = 148;
       }
-    };
-
-// This function will draw the WatchFace on the screen, drawStatus and drawChargeMe functions are done elsewhere and do not need to be done here.
-// This function is required for AddOns, otherwise there will be no drawing of the Watchface.
- 
-    void InsertDrawWatchStyle(uint8_t StyleID){
-      int16_t  x1, y1;
-      uint16_t w, h;
-      String T;
-      bool LM = (SCBlack == ForeColor());
-      uint16_t FC, BC;
-      FC = (LM ? BackColor() : ForeColor());
-      BC = (LM ? ForeColor() : BackColor());
-
-      if (StyleID == WatchyClassicsAddOnBasicStyle){
-          if (SafeToDraw()) SSeg_drawTime();
-      } else if (StyleID == WatchyClassicsAddOnSSegStyle){
-          if (SafeToDraw()) SSeg_drawTime();
+    }
+    void InsertDrawWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSR7SEGStyleID && SafeToDraw()) {
+          SSeg_drawTime();
+          int16_t  x1, y1;
+          uint16_t w, h;
           display.setFont(&Seven_Segment10pt7b);
           String dayOfWeek = dayStr(WatchTime.Local.Wday + 1);
           display.getTextBounds(dayOfWeek, 5, 85, &x1, &y1, &w, &h);
@@ -7709,24 +7684,69 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           if(WatchTime.Local.Day < 10) display.print("0");
           display.print(WatchTime.Local.Day);
           display.setCursor(5, 150);
-          display.println(WatchTime.Local.Year + SRTC.getLocalYearOffset());// offset from 1970, since year is stored in uint8_t
+          display.println(WatchTime.Local.Year + SRTC.getLocalYearOffset());
           if (BMAAvailable()){
-          display.drawBitmap(10, 165, SSEG_steps, 19, 23, ForeColor(), BackColor());
-          display.setCursor(35, 190);
-          display.print(CurrentStepCount());
+              display.drawBitmap(10, 165, SSEG_steps, 19, 23, ForeColor(), BackColor());
+              display.setCursor(35, 190);
+              display.print(CurrentStepCount());
           }
           drawWeather();
           if (IsBatteryHidden()){
               float blow = SRTC.getRTCBattery(true);
-              float size = ((getBatteryVoltage() - blow) / (4.2 - blow)) + 0.34; // Add 1 third onto it, to keep the indicator on longer.
+              float size = ((getBatteryVoltage() - blow) / (4.2 - blow)) + 0.34;
               byte segs = constrain(size * 3,0,3);
               display.drawBitmap(Design.Status.BATTx, 73, SSEG_battery, 37, 21, ForeColor(), BackColor());
               for(int8_t batterySegments = 0; batterySegments < segs; batterySegments++){
                   display.fillRect(Design.Status.BATTx + 5 + (batterySegments * 9), Design.Status.BATTy + 5, 7, 11, ForeColor());
               }
           }
-      } else if (StyleID == WatchyClassicsAddOnDOSStyle){
-          T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
+      }
+    }
+    void InsertDrawWeather(uint8_t StyleID, bool Status) override {
+        int16_t  x1, y1;
+        uint16_t w, h;
+        if (StyleID == GSR7SEGStyleID){
+            if (IsWeatherAvailable()){
+                const unsigned char* weatherIcon = getWeatherIcon(GetWeatherID());
+                String T = String(GetWeatherTemperatureFeelsLike());
+                display.setFont(&DSEG7_Classic_Regular_39);
+                display.getTextBounds(T, 0, 0, &x1, &y1, &w, &h);
+                if(159 - w - x1 > 87) display.setCursor(159 - w - x1, 150);
+                else {
+                    display.setFont(&DSEG7_Classic_Bold_25);
+                    x1 = 0; y1 = 0;
+                    display.getTextBounds(T, 0, 0, &x1, &y1, &w, &h);
+                    display.setCursor(159 - w - x1, 136);
+                }
+                display.print(T);
+                display.drawBitmap(165, 110, getTemperatureScaleIcon(IsMetric()), 26, 20, ForeColor(), BackColor());
+                if (weatherIcon != nullptr){
+                    display.drawBitmap(145, 158, weatherIcon, 48, 32, ForeColor(), BackColor());
+                }
+            }
+        }
+    }
+    void SSeg_drawTime(){
+        uint8_t H = WatchTime.Local.Hour;
+        if (!(!IsAM() && !IsPM())) H = ((H + 11)%12)+1;
+        display.setTextColor(ForeColor());
+        display.setFont(Design.Face.TimeFont);
+        display.setCursor(Design.Face.TimeLeft, Design.Face.Time);
+        display.print(MakeMinutes(H) + ":" + MakeMinutes(WatchTime.Local.Minute));
+    }
+};
+GSR7SEG GSR7SEGLoader;
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_DOS
+RTC_DATA_ATTR uint8_t GSRDOSStyleID;
+class GSRDOS : public WatchyGSR {
+    public:
+    GSRDOS() : WatchyGSR() { initAddOn(this); }
+    void RegisterWatchFaces() override { GSRDOSStyleID = AddWatchStyle("DOS", this); }
+    void InsertDrawWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSRDOSStyleID && SafeToDraw()){
+          String T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
           display.setTextColor(ForeColor());
           display.setFont(&Px437_IBM_BIOS5pt7b);
           display.setCursor(0, 24);
@@ -7752,23 +7772,49 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           display.println(T);
           display.println(" ");
           display.print("<C:\\>esptool");
-      } else if (StyleID == WatchyClassicsAddOnPokeStyle){
+      }
+    }
+};
+GSRDOS GSRDOSLoader;
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_POKE
+RTC_DATA_ATTR uint8_t GSRPokeStyleID;
+class GSRPokemon : public WatchyGSR {
+    public:
+    GSRPokemon() : WatchyGSR() { initAddOn(this); }
+    void RegisterWatchFaces() override { GSRPokeStyleID = AddWatchStyle("Pokemon", this); }
+    void InsertDrawWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSRPokeStyleID && SafeToDraw()){
           display.drawBitmap(0, 0, WatchyClassic_Pokemon, 200, 200, SCBlack, SCWhite);
-          T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
+          String T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
           display.setTextColor(SCBlack);
           display.setFont(&FreeMonoBold9pt7b);
           display.setCursor(16, 165);
           display.print(T);
-      } else if (StyleID == WatchyClassicsAddOnStarryStyle) {
+      }
+    }
+};
+GSRPokemon GSRPokemonLoader;
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_STARRY
+RTC_DATA_ATTR uint8_t GSRStarryStyleID;
+class GSRStarryHorizon : public WatchyGSR {
+    public:
+    GSRStarryHorizon() : WatchyGSR() { initAddOn(this); }
+    void RegisterWatchFaces() override { GSRStarryStyleID = AddWatchStyle("Starry Horizon", this); }
+    void InsertDrawWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSRStarryStyleID && SafeToDraw()){
           display.fillScreen(SCBlack);
-          if (SafeToDraw() && NoMenu()){
+          if (NoMenu()){
               display.fillCircle(100, horizonY + planetR, planetR, SCWhite);
               Starry_drawGrid();
               Starry_drawStars(STARS);
           }
           display.setFont(&MADE_Sunflower_PERSONAL_USE39pt7b);
           display.setTextColor(SCWhite);
-          T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
+          String T = MakeMinutes(WatchTime.Local.Hour) + ":" + MakeMinutes(WatchTime.Local.Minute);
           Starry_drawCenteredString(T, 100, 115, false);
           String monthStr = monthShortStr(WatchTime.Local.Month + 1);
           String dayOfWeek = dayShortStr(WatchTime.Local.Wday + 1);
@@ -7777,148 +7823,121 @@ class WatchyClassicsAddOnClass : public WatchyGSR {
           asprintf(&dateStr, "%s %s %d", dayOfWeek.c_str(), monthStr.c_str(), WatchTime.Local.Day);
           Starry_drawCenteredString(dateStr, 100, 140, true);
           free(dateStr);
-      } else if (StyleID == WatchyClassicsAddOnTetrisStyle) {
-          display.drawBitmap(0, 0, tetrisbg, 200, 200, SCBlack, SCWhite);
-          //Hour
-          display.drawBitmap(25, 20, tetris_nums[WatchTime.Local.Hour/10], 40, 60, SCBlack, SCWhite); //first digit
-          display.drawBitmap(75, 20, tetris_nums[WatchTime.Local.Hour%10], 40, 60, SCBlack, SCWhite); //second digit
-          //Minute
-          display.drawBitmap(25, 110, tetris_nums[WatchTime.Local.Minute/10], 40, 60, SCBlack, SCWhite); //first digit
-          display.drawBitmap(75, 110, tetris_nums[WatchTime.Local.Minute%10], 40, 60, SCBlack, SCWhite); //second digit
-      } else if (StyleID == WatchyClassicsAddOnMacStyle) {
-          display.drawBitmap(0, 0, Mac_window, 200, 200, ForeColor());
-          //Hour
-          display.drawBitmap(35, 70, Mac_numbers[WatchTime.Local.Hour/10], 38, 50, ForeColor()); //first digit
-          display.drawBitmap(70, 70, Mac_numbers[WatchTime.Local.Hour%10], 38, 50, ForeColor()); //second digit
-          //Colon
-          display.drawBitmap(100, 80, Mac_colon, 11, 31, ForeColor()); //second digit
-          //Minute
-          display.drawBitmap(115, 70, Mac_numbers[WatchTime.Local.Minute/10], 38, 50, ForeColor()); //first digit
-          display.drawBitmap(153, 70, Mac_numbers[WatchTime.Local.Minute%10], 38, 50, ForeColor()); //second digit
-      } else if (StyleID == WatchyClassicsAddOnMarioStyle) {
-          display.drawBitmap(0, 0, mariobg, 200, 200, ForeColor());
-          int hour10 = WatchTime.Local.Hour/10;
-          int hour01 = WatchTime.Local.Hour%10;
-          int minute10 = WatchTime.Local.Minute/10;
-          int minute01 = WatchTime.Local.Minute%10;
-          int pos = 0;
-          if(hour01 == 0 && minute10 == 0 && minute01 == 0) pos = 0;
-          else if(minute10 == 0 && minute01 == 0) pos = 1;
-          else if(minute01 == 0) pos = 2; else pos = 3;
-          display.drawBitmap(X_PADDING + pos*(NUM_SPACING + NUM_W) + (NUM_W/2 - MARIO_W/2) + (pos < 2 ? 8 : -8), Y_PADDING+NUM_H + 4, pos < 2 ? mariomariol : mariomarior, MARIO_W, MARIO_H, ForeColor()); //mario        
-          display.drawBitmap(X_PADDING + pos*(NUM_SPACING + NUM_W) + (NUM_W/2 - COIN_W/2), COIN_SPACING, mariocoin, COIN_W, COIN_H, ForeColor()); //coin
-          if(pos == 0) display.drawBitmap(200 - 2*PIPE_W, PIPE_PADDING, mariopipe, PIPE_W, PIPE_H, ForeColor()); //pipe  
-          else if(pos == 1 || pos == 2){
-              display.drawBitmap(X_PADDING, PIPE_PADDING, mariopipe, PIPE_W, PIPE_H, ForeColor()); //pipe
-              display.drawBitmap(200 - PIPE_W - X_PADDING, PIPE_PADDING, mariopipe, PIPE_W, PIPE_H, ForeColor()); //pipe  
-          }
-          else display.drawBitmap(2*PIPE_W, PIPE_PADDING, mariopipe, PIPE_W, PIPE_H, ForeColor()); //pipe  
-          //Hour
-          display.drawBitmap(X_PADDING, pos == 0 ? Y_PADDING : Y_PADDING + 20, marionumbers[hour10], NUM_W, NUM_H, ForeColor()); //first digit
-          display.drawBitmap(X_PADDING+NUM_SPACING+NUM_W, pos == 1 ? Y_PADDING : Y_PADDING + 20, marionumbers[hour01], NUM_W, NUM_H, ForeColor()); //second digit
-          //Minute
-          display.drawBitmap(X_PADDING+2*(NUM_SPACING+NUM_W), pos == 2 ? Y_PADDING : Y_PADDING + 20, marionumbers[minute10], NUM_W, NUM_H, ForeColor()); //first digit
-          display.drawBitmap(X_PADDING+3*(NUM_SPACING+NUM_W), pos == 3 ? Y_PADDING : Y_PADDING + 20, marionumbers[minute01], NUM_W, NUM_H, ForeColor()); //second digit   
       }
-    };
-
-    // This function is useful to draw the Weather on the screen, if Status is true, means the Watchy_GSR status area asked for the icons to be placed there, use the Design.Status.WIFIx and WIFIy for positioning.
-
-    void InsertDrawWeather(uint8_t StyleID, bool Status){
-        int16_t  x1, y1;
-        uint16_t w, h;
-        if (StyleID == WatchyClassicsAddOnSSegStyle){
-            if (IsWeatherAvailable()){
-                const unsigned char* weatherIcon = getWeatherIcon(GetWeatherID());
-                String T = String(GetWeatherTemperatureFeelsLike());
-                display.setFont(&DSEG7_Classic_Regular_39);
-                display.getTextBounds(T, 0, 0, &x1, &y1, &w, &h);
-                if(159 - w - x1 > 87) display.setCursor(159 - w - x1, 150);
-                else {
-                    display.setFont(&DSEG7_Classic_Bold_25);
-                    x1 = 0; y1 = 0;
-                    display.getTextBounds(T, 0, 0, &x1, &y1, &w, &h);
-                    display.setCursor(159 - w - x1, 136);
-                }
-                display.print(T);
-                display.drawBitmap(165, 110, getTemperatureScaleIcon(IsMetric()), 26, 20, ForeColor(), BackColor());
-                if (weatherIcon != nullptr){
-                    display.drawBitmap(145, 158, weatherIcon, 48, 32, ForeColor(), BackColor());
-                }
-            }
-        }
-    };
-
-    /* 7SEG & Basic */
-
-    void SSeg_drawTime(){
-        uint8_t H = WatchTime.Local.Hour;
-        if (!(!IsAM() && !IsPM())) H = ((H + 11)%12)+1;
-        display.setTextColor(ForeColor());
-        display.setFont(Design.Face.TimeFont);
-        display.setCursor(Design.Face.TimeLeft, Design.Face.Time);
-        display.print(MakeMinutes(H) + ":" + MakeMinutes(WatchTime.Local.Minute));
     }
-
-    /* StarryHorizon */
-
     void Starry_drawGrid() {
       int prevY = horizonY;
       for(int i = 0; i < 40; i+= 1) {
         int y = prevY + int(abs(sin(double(i) / 10) * 10));
-        if(y <= 200) {
-          display.drawFastHLine(0, y, 200, SCBlack);
-        }
+        if(y <= 200) display.drawFastHLine(0, y, 200, SCBlack);
         prevY = y;
       }
       int vanishY = horizonY - 25;
-      for (int x = -230; x < 430; x += 20) {
-        display.drawLine(x, 200, 100, vanishY, SCBlack);
-      }
+      for (int x = -230; x < 430; x += 20) display.drawLine(x, 200, 100, vanishY, SCBlack);
     }
     void Starry_drawStars(const StarryStar stars[]) {
-      // draw field of stars
-      // rotate stars so that they make an entire revolution once per hour
       int minute = (int)WatchTime.Local.Minute;
       double minuteAngle = ((2.0 * M_PI) / 60.0) * (double)minute;
-  //          printf("Minute %d, angle %f\n", (int)WatchTime.Local.Minute, minuteAngle);
-
       for(int starI = 0; starI < STAR_COUNT; starI++) {
         int starX = stars[starI].x;
         int starY = stars[starI].y;
         int starR = stars[starI].r;
-
         struct xyPoint rotated = Starry_rotatePointAround(starX, starY, 100, 100, minuteAngle);
-        if(rotated.x < 0 || rotated.y < 0 || rotated.x > 200 || rotated.y > horizonY) {
-          continue;
-        }
-        if(starR == 0) {
-          display.drawPixel(rotated.x, rotated.y, SCWhite);
-        } else {
-          display.fillCircle(rotated.x, rotated.y, starR, SCWhite);
-        }
+        if(rotated.x < 0 || rotated.y < 0 || rotated.x > 200 || rotated.y > horizonY) continue;
+        if(starR == 0) display.drawPixel(rotated.x, rotated.y, SCWhite);
+        else display.fillCircle(rotated.x, rotated.y, starR, SCWhite);
       }
     }
     void Starry_drawCenteredString(const String &str, int x, int y, bool drawBg) {
       int16_t x1, y1;
       uint16_t w, h;
-
       display.getTextBounds(str, x, y, &x1, &y1, &w, &h);
-  //          printf("bounds: %d x %d y, %d x1 %d y1, %d w, %d h\n", 0, 100, x1, y1, w, h);
       display.setCursor(x - w / 2, y);
       if(drawBg) {
         int padY = 3;
         int padX = 10;
         display.fillRect(x - (w / 2 + padX), y - (h + padY), w + padX*2, h + padY*2, ForeColor());
       }
-      // uncomment to draw bounding box
-  //          display.drawRect(x - w / 2, y - h, w, h, SCWhite);
       display.print(str);
     }
-
 };
+GSRStarryHorizon GSRStarryHorizonLoader;
+#endif
 
-WatchyClassicsAddOnClass WatchyClassicsAddOnClassLoader;
+#if GSR_WATCHFACES && GSR_CLASSICS_TETRIS
+RTC_DATA_ATTR uint8_t GSRTetrisStyleID;
+class GSRTetris : public WatchyGSR {
+    public:
+    GSRTetris() : WatchyGSR() { initAddOn(this); }
+    void RegisterWatchFaces() override { GSRTetrisStyleID = AddWatchStyle("Tetris", this); }
+    void InsertDrawWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSRTetrisStyleID && SafeToDraw()){
+          display.drawBitmap(0, 0, tetrisbg, 200, 200, SCBlack, SCWhite);
+          display.drawBitmap(25, 20, tetris_nums[WatchTime.Local.Hour/10], 40, 60, SCBlack, SCWhite);
+          display.drawBitmap(75, 20, tetris_nums[WatchTime.Local.Hour%10], 40, 60, SCBlack, SCWhite);
+          display.drawBitmap(25, 110, tetris_nums[WatchTime.Local.Minute/10], 40, 60, SCBlack, SCWhite);
+          display.drawBitmap(75, 110, tetris_nums[WatchTime.Local.Minute%10], 40, 60, SCBlack, SCWhite);
+      }
+    }
+};
+GSRTetris GSRTetrisLoader;
+#endif
 
-// Put your functions here, outside of the class.
+#if GSR_WATCHFACES && GSR_CLASSICS_MAC
+RTC_DATA_ATTR uint8_t GSRMacStyleID;
+class GSRMacPaint : public WatchyGSR {
+    public:
+    GSRMacPaint() : WatchyGSR() { initAddOn(this); }
+    void RegisterWatchFaces() override { GSRMacStyleID = AddWatchStyle("Mac Paint", this); }
+    void InsertDrawWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSRMacStyleID && SafeToDraw()){
+          display.drawBitmap(0, 0, Mac_window, 200, 200, ForeColor());
+          display.drawBitmap(35, 70, Mac_numbers[WatchTime.Local.Hour/10], 38, 50, ForeColor());
+          display.drawBitmap(70, 70, Mac_numbers[WatchTime.Local.Hour%10], 38, 50, ForeColor());
+          display.drawBitmap(100, 80, Mac_colon, 11, 31, ForeColor());
+          display.drawBitmap(115, 70, Mac_numbers[WatchTime.Local.Minute/10], 38, 50, ForeColor());
+          display.drawBitmap(153, 70, Mac_numbers[WatchTime.Local.Minute%10], 38, 50, ForeColor());
+      }
+    }
+};
+GSRMacPaint GSRMacPaintLoader;
+#endif
+
+#if GSR_WATCHFACES && GSR_CLASSICS_MARIO
+RTC_DATA_ATTR uint8_t GSRMarioStyleID;
+class GSRMario : public WatchyGSR {
+    public:
+    GSRMario() : WatchyGSR() { initAddOn(this); }
+    void RegisterWatchFaces() override { GSRMarioStyleID = AddWatchStyle("Mario", this); }
+    void InsertInitWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSRMarioStyleID){
+          Design.Status.WIFIy = 163;
+          Design.Status.BATTy = 148;
+      }
+    }
+    void InsertDrawWatchStyle(uint8_t StyleID) override {
+      if (StyleID == GSRMarioStyleID && SafeToDraw()){
+          display.drawBitmap(0, 0, mariobg, 200, 200, ForeColor());
+          int hour10 = WatchTime.Local.Hour/10;
+          int hour01 = WatchTime.Local.Hour%10;
+          int minute10 = WatchTime.Local.Minute/10;
+          int minute01 = WatchTime.Local.Minute%10;
+          int pos = (minute01 == 0) ? ((minute10 == 0) ? ((hour01 == 0) ? 0 : 1) : 2) : 3;
+          display.drawBitmap(X_PADDING + pos*(NUM_SPACING + NUM_W) + (NUM_W/2 - MARIO_W/2) + (pos < 2 ? 8 : -8), Y_PADDING+NUM_H + 4, pos < 2 ? mariomariol : mariomarior, MARIO_W, MARIO_H, ForeColor());
+          display.drawBitmap(X_PADDING + pos*(NUM_SPACING + NUM_W) + (NUM_W/2 - COIN_W/2), COIN_SPACING, mariocoin, COIN_W, COIN_H, ForeColor());
+          if(pos == 0) display.drawBitmap(200 - 2*PIPE_W, PIPE_PADDING, mariopipe, PIPE_W, PIPE_H, ForeColor());
+          else if(pos == 1 || pos == 2){
+              display.drawBitmap(X_PADDING, PIPE_PADDING, mariopipe, PIPE_W, PIPE_H, ForeColor());
+              display.drawBitmap(200 - PIPE_W - X_PADDING, PIPE_PADDING, mariopipe, PIPE_W, PIPE_H, ForeColor());
+          } else display.drawBitmap(2*PIPE_W, PIPE_PADDING, mariopipe, PIPE_W, PIPE_H, ForeColor());
+          display.drawBitmap(X_PADDING, pos == 0 ? Y_PADDING : Y_PADDING + 20, marionumbers[hour10], NUM_W, NUM_H, ForeColor());
+          display.drawBitmap(X_PADDING+NUM_SPACING+NUM_W, pos == 1 ? Y_PADDING : Y_PADDING + 20, marionumbers[hour01], NUM_W, NUM_H, ForeColor());
+          display.drawBitmap(X_PADDING+2*(NUM_SPACING+NUM_W), pos == 2 ? Y_PADDING : Y_PADDING + 20, marionumbers[minute10], NUM_W, NUM_H, ForeColor());
+          display.drawBitmap(X_PADDING+3*(NUM_SPACING+NUM_W), pos == 3 ? Y_PADDING : Y_PADDING + 20, marionumbers[minute01], NUM_W, NUM_H, ForeColor());
+      }
+    }
+};
+GSRMario GSRMarioLoader;
+#endif
+
 #endif
