@@ -87,7 +87,13 @@ bool wasClicked(uint8_t pin)
 void executeCombination()
 {
     resetSleepDelay(); // Faster so it won't escape...
-    if (wasClicked(BACK_PIN) == true && wasClicked(UP_PIN) == true && wasClicked(MENU_PIN) == false && wasClicked(DOWN_PIN) == false)
+
+    bool back = wasClicked(BACK_PIN);
+    bool menu = wasClicked(MENU_PIN);
+    bool up = wasClicked(UP_PIN);
+    bool down = wasClicked(DOWN_PIN);
+
+    if (back && up && !menu && !down)
     {
         if (rM.currentPlace != wifiDebug)
         {
@@ -96,8 +102,9 @@ void executeCombination()
         }
         return;
     }
+
 #if RGB_DIODE
-    if (wasClicked(UP_PIN) == true && wasClicked(DOWN_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(MENU_PIN) == false)
+    if (up && down && !back && !menu)
     {
         if (currentColor != IwWhite)
         {
@@ -110,15 +117,16 @@ void executeCombination()
         return;
     }
 #endif
+
     // Only when in watchface
     // For now not behind any config define
     if (rM.placeTree[currentPlaceIndex] == FIRST_PLACE)
     {
-        if (wasClicked(UP_PIN) == true && wasClicked(DOWN_PIN) == false && wasClicked(BACK_PIN) == false && wasClicked(MENU_PIN) == true)
+        if (up && !down && !back && menu)
         {
             nextWatchface();
         }
-        if (wasClicked(UP_PIN) == false && wasClicked(DOWN_PIN) == true && wasClicked(BACK_PIN) == false && wasClicked(MENU_PIN) == true)
+        else if (!up && down && !back && menu)
         {
             previousWatchFace();
         }
