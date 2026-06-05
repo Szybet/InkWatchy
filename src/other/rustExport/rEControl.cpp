@@ -4,16 +4,14 @@ bool rustLimitButtons = false;
 
 buttonState getButtonsRust()
 {
-    buttMut.lock();
-    // debugLog("useButtonBack state: " + getButtonString(buttonPressed));
-    if (buttonPressed != LongUp && buttonPressed != LongDown && buttonPressed != LongMenu)
+    buttonState state = buttonPressed.load();
+    if (state != LongUp && state != LongDown && state != LongMenu && state != None)
     {
-        buttonState buttonPressedTmp = buttonPressed;
-        buttonPressed = None;
-        buttMut.unlock();
-        return buttonPressedTmp;
+        if (buttonPressed.compare_exchange_strong(state, None))
+        {
+            return state;
+        }
     }
-    buttMut.unlock();
     return None;
 }
 

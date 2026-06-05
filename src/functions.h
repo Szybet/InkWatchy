@@ -2,7 +2,9 @@
 
 #include "defines.h"
 
+#if SCOM_TASK_ENABLED || DEBUG
 extern std::mutex serialWrite;
+#endif
 #if DEBUG
 void initLogs();
 void logFunction(String file, int line, String func, String message);

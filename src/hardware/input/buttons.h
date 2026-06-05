@@ -3,8 +3,7 @@
 #include "defines.h"
 
 extern bool buttonsActivated;
-extern std::mutex buttMut;
-extern buttonState buttonPressed;
+extern std::atomic<buttonState> buttonPressed;
 extern TaskHandle_t buttonTask;
 
 buttonState useButtonBack();

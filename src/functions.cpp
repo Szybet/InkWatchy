@@ -1,6 +1,8 @@
 #include "functions.h"
 
+#if SCOM_TASK_ENABLED || DEBUG
 std::mutex serialWrite;
+#endif
 #if DEBUG // For not creating the huge list
 #if PUT_LOGS_TO_SERIAL
 int savedLogsIndex = 0;

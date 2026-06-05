@@ -40,21 +40,21 @@ extern "C"
 
     extern uint32_t rustButtons()
     {
-        buttonState button;
+        buttonState button = None;
         if (rustLimitButtons == false)
         {
             button = useButton();
         }
         else
         {
-            buttMut.lock();
-            // debugLog("useButtonBack state: " + getButtonString(buttonPressed));
-            if (buttonPressed == LongUp || buttonPressed == LongDown || buttonPressed == LongMenu)
+            buttonState state = buttonPressed.load();
+            if (state == LongUp || state == LongDown || state == LongMenu)
             {
-                button = buttonPressed;
-                buttonPressed = None;
+                if (buttonPressed.compare_exchange_strong(state, None))
+                {
+                    button = state;
+                }
             }
-            buttMut.unlock();
         }
 
         switch (button)

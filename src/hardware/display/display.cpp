@@ -8,7 +8,8 @@ void drawCorner(uint16_t color)
     dis->fillCircle(0, 0, 6, color);
 }
 
-void initDisplayDriver(bool initial) {
+void initDisplayDriver(bool initial)
+{
 #if ATCHY_VER == WATCHY_2 || ATCHY_VER == WATCHY_1 || ATCHY_VER == WATCHY_1_5
     dis->epd2.selectSPI(SPI, SPISettings(20000000, MSBFIRST, SPI_MODE0));
     dis->init(0, initial, 10, true);
@@ -121,7 +122,15 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
     if (ignoreSleep == false && updatedScreen == false)
     {
         // debugLog("Sleeping task because display had no update");
-        delayTask(LOOP_NO_SCREEN_WRITE_DELAY_MS);
+        for (uint i = 0; i < LOOP_NO_SCREEN_WRITE_DELAY_MS; i += 10)
+        {
+            if (buttonPressed != None)
+            {
+                break;
+            }
+            delayTask(10);
+            // I think we can skip the mutex here
+        }
     }
 }
 
