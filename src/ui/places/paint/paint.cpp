@@ -9,7 +9,14 @@ uint8_t lastPaintX = 0;
 uint8_t lastPaintY = 0;
 uint8_t cursorX = 0;
 uint8_t cursorY = 0;
-bool isDrawing = false;
+enum PaintState
+{
+    STATE_DRAWING,
+    STATE_CURSOR,
+    STATE_PAUSED
+};
+
+PaintState currentPaintState = STATE_CURSOR;
 uint8_t *savedFramebuffer = nullptr;
 
 uint8_t veryLastPaintX = 0;
@@ -26,7 +33,18 @@ void updateStatus()
     dis->setCursor(1, 8);
     setFont(getFont("dogicapixel4"));
     dis->setTextColor(SCBlack);
-    dis->print(isDrawing ? "Drawing" : "Paused");
+    switch (currentPaintState)
+    {
+    case STATE_DRAWING:
+        dis->print("Drawing");
+        break;
+    case STATE_CURSOR:
+        dis->print("Cursor");
+        break;
+    case STATE_PAUSED:
+        dis->print("Paused");
+        break;
+    }
 }
 
 void initPaint()
@@ -38,7 +56,7 @@ void initPaint()
     lastPaintY = paintY;
     cursorX = paintX;
     cursorY = paintY;
-    isDrawing = false;
+    currentPaintState = STATE_CURSOR;
     lastPaintX = 0;
     lastPaintY = 0;
     veryLastPaintX = 0;
@@ -57,23 +75,18 @@ void initPaint()
 
 void loopPaint()
 {
-    if (useButton() == Menu)
+    buttonState btn = useButton();
+    if (btn == Menu)
     {
-        isDrawing = !isDrawing;
-
-        if (isDrawing)
+        if (currentPaintState == STATE_DRAWING)
         {
-            if (savedFramebuffer != nullptr)
-            {
-                memcpy(dis->_buffer, savedFramebuffer, FRAMEBUFFER_SIZE);
-            }
+            memcpy(savedFramebuffer, dis->_buffer, FRAMEBUFFER_SIZE);
+            currentPaintState = STATE_CURSOR;
         }
-        else
+        else if (currentPaintState == STATE_CURSOR)
         {
-            if (savedFramebuffer != nullptr)
-            {
-                memcpy(savedFramebuffer, dis->_buffer, FRAMEBUFFER_SIZE);
-            }
+            memcpy(dis->_buffer, savedFramebuffer, FRAMEBUFFER_SIZE);
+            currentPaintState = STATE_DRAWING;
         }
 
         updateStatus();
@@ -81,9 +94,23 @@ void loopPaint()
         lastPaintY = paintY;
         dUChange = true;
     }
+    else if (btn == LongMenu)
+    {
+        if (currentPaintState != STATE_PAUSED)
+        {
+            currentPaintState = STATE_PAUSED;
+            memcpy(dis->_buffer, savedFramebuffer, FRAMEBUFFER_SIZE);
+            updateStatus();
+            dUChange = true;
+        }
+        else
+        {
+            currentPaintState = STATE_CURSOR;
+        }
+    }
 
     Accel acc;
-    if (rM.SBMA.getAccel(&acc))
+    if (currentPaintState != STATE_PAUSED && rM.SBMA.getAccel(&acc))
     {
         float degX = getAxisDegrees(acc.x, acc.y, acc.z);
         float degY = getAxisDegrees(acc.y, acc.x, acc.z);
@@ -103,7 +130,7 @@ void loopPaint()
         if (paintY >= dis->height())
             paintY = dis->height() - 1;
 
-        if (isDrawing)
+        if (currentPaintState == STATE_DRAWING)
         {
             for (int i = -2; i <= 2; i++)
             {
@@ -113,7 +140,7 @@ void loopPaint()
             lastPaintX = paintX;
             lastPaintY = paintY;
         }
-        else
+        else if (currentPaintState == STATE_CURSOR)
         {
 
             memcpy(dis->_buffer, savedFramebuffer, FRAMEBUFFER_SIZE);
@@ -135,6 +162,10 @@ void loopPaint()
             }
             loopCount = 0;
         }
+    }
+    else
+    {
+        resetSleepDelay(SLEEP_EVERY_MS);
     }
 
     disUp();
