@@ -124,7 +124,7 @@ void disUp(bool reallyUpdate, bool ignoreCounter, bool ignoreSleep)
         // debugLog("Sleeping task because display had no update");
         for (uint i = 0; i < LOOP_NO_SCREEN_WRITE_DELAY_MS; i += 10)
         {
-            if (buttonPressed != None)
+            if (buttonPressed.load() != None)
             {
                 break;
             }
