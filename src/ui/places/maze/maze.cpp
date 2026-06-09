@@ -21,33 +21,33 @@
 
 #define MAZE_SLEEP_DIFF 20
 
-static uint8_t mazeGrid[MAZE_CELLS][MAZE_CELLS];
-static bool mazeVisited[MAZE_CELLS][MAZE_CELLS];
+uint8_t **mazeGrid = nullptr;
+bool **mazeVisited = nullptr;
 
-static int mazePlayerX = 0;
-static int mazePlayerY = 0;
-static int mazeLastPlayerX = 0;
-static int mazeLastPlayerY = 0;
-static bool mazeWon = false;
-static bool mazeFailed = false;
-static uint32_t mazeStartMs = 0;
-static uint32_t mazeFinishMs = 0;
+int mazePlayerX = 0;
+int mazePlayerY = 0;
+int mazeLastPlayerX = 0;
+int mazeLastPlayerY = 0;
+bool mazeWon = false;
+bool mazeFailed = false;
+uint32_t mazeStartMs = 0;
+uint32_t mazeFinishMs = 0;
 
-static int mazeVeryLastX = 0;
-static int mazeVeryLastY = 0;
-static uint8_t mazeLoopCount = 0;
+int mazeVeryLastX = 0;
+int mazeVeryLastY = 0;
+uint8_t mazeLoopCount = 0;
 
-static int mazeCellPxX(int cx)
+int mazeCellPxX(int cx)
 {
     return cx * MAZE_PLAY_CELL_SIZE;
 }
 
-static int mazeCellPxY(int cy)
+int mazeCellPxY(int cy)
 {
     return MAZE_PLAY_TOP + cy * MAZE_PLAY_CELL_SIZE;
 }
 
-static void mazeCarve(int cx, int cy)
+void mazeCarve(int cx, int cy)
 {
     mazeVisited[cx][cy] = true;
 
@@ -108,7 +108,7 @@ static void mazeCarve(int cx, int cy)
     }
 }
 
-static void mazeGenerate()
+void mazeGenerate()
 {
     for (int x = 0; x < MAZE_CELLS; x++)
     {
@@ -121,7 +121,7 @@ static void mazeGenerate()
     mazeCarve(0, 0);
 }
 
-static void mazeDrawStatus()
+void mazeDrawStatus()
 {
     dis->fillRect(0, 0, MAZE_SCREEN_W, MAZE_STATUS_H, SCWhite);
     dis->setCursor(1, 8);
@@ -145,7 +145,7 @@ static void mazeDrawStatus()
     resetSleepDelay(SLEEP_EVERY_MS);
 }
 
-static void mazeDrawWalls()
+void mazeDrawWalls()
 {
     int mazeW = MAZE_CELLS * MAZE_PLAY_CELL_SIZE;
     int mazeBottom = MAZE_PLAY_TOP + MAZE_CELLS * MAZE_PLAY_CELL_SIZE;
@@ -162,39 +162,47 @@ static void mazeDrawWalls()
             {
                 int x1 = px - MAZE_WALL_THICK;
                 int x2 = px + MAZE_PLAY_CELL_SIZE + MAZE_WALL_THICK;
-                if (x1 < 0) x1 = 0;
-                if (x2 > mazeW) x2 = mazeW;
+                if (x1 < 0)
+                    x1 = 0;
+                if (x2 > mazeW)
+                    x2 = mazeW;
                 dis->fillRect(x1, py, x2 - x1, MAZE_WALL_THICK, SCBlack);
             }
             if (w & MAZE_WALL_W)
             {
                 int y1 = py - MAZE_WALL_THICK;
                 int y2 = py + MAZE_PLAY_CELL_SIZE + MAZE_WALL_THICK;
-                if (y1 < MAZE_PLAY_TOP) y1 = MAZE_PLAY_TOP;
-                if (y2 > mazeBottom) y2 = mazeBottom;
+                if (y1 < MAZE_PLAY_TOP)
+                    y1 = MAZE_PLAY_TOP;
+                if (y2 > mazeBottom)
+                    y2 = mazeBottom;
                 dis->fillRect(px, y1, MAZE_WALL_THICK, y2 - y1, SCBlack);
             }
             if (w & MAZE_WALL_S)
             {
                 int x1 = px - MAZE_WALL_THICK;
                 int x2 = px + MAZE_PLAY_CELL_SIZE + MAZE_WALL_THICK;
-                if (x1 < 0) x1 = 0;
-                if (x2 > mazeW) x2 = mazeW;
+                if (x1 < 0)
+                    x1 = 0;
+                if (x2 > mazeW)
+                    x2 = mazeW;
                 dis->fillRect(x1, py + MAZE_PLAY_CELL_SIZE - MAZE_WALL_THICK, x2 - x1, MAZE_WALL_THICK, SCBlack);
             }
             if (w & MAZE_WALL_E)
             {
                 int y1 = py - MAZE_WALL_THICK;
                 int y2 = py + MAZE_PLAY_CELL_SIZE + MAZE_WALL_THICK;
-                if (y1 < MAZE_PLAY_TOP) y1 = MAZE_PLAY_TOP;
-                if (y2 > mazeBottom) y2 = mazeBottom;
+                if (y1 < MAZE_PLAY_TOP)
+                    y1 = MAZE_PLAY_TOP;
+                if (y2 > mazeBottom)
+                    y2 = mazeBottom;
                 dis->fillRect(px + MAZE_PLAY_CELL_SIZE - MAZE_WALL_THICK, y1, MAZE_WALL_THICK, y2 - y1, SCBlack);
             }
         }
     }
 }
 
-static void mazeDrawGoal()
+void mazeDrawGoal()
 {
     int gx = mazeCellPxX(MAZE_CELLS - 1) + MAZE_WALL_THICK;
     int gy = mazeCellPxY(0) + MAZE_WALL_THICK;
@@ -206,7 +214,7 @@ static void mazeDrawGoal()
     }
 }
 
-static int mazeClampX(int x)
+int mazeClampX(int x)
 {
     if (x < MAZE_WALL_THICK + MAZE_PLAYER_RADIUS)
         return MAZE_WALL_THICK + MAZE_PLAYER_RADIUS;
@@ -216,7 +224,7 @@ static int mazeClampX(int x)
     return x;
 }
 
-static int mazeClampY(int y)
+int mazeClampY(int y)
 {
     if (y < MAZE_PLAY_TOP + MAZE_WALL_THICK + MAZE_PLAYER_RADIUS)
         return MAZE_PLAY_TOP + MAZE_WALL_THICK + MAZE_PLAYER_RADIUS;
@@ -226,7 +234,7 @@ static int mazeClampY(int y)
     return y;
 }
 
-static bool mazeBlockedX(int fromX, int toX, int y)
+bool mazeBlockedX(int fromX, int toX, int y)
 {
     if (toX == fromX)
     {
@@ -273,7 +281,7 @@ static bool mazeBlockedX(int fromX, int toX, int y)
     return false;
 }
 
-static bool mazeBlockedY(int fromY, int toY, int x)
+bool mazeBlockedY(int fromY, int toY, int x)
 {
     if (toY == fromY)
     {
@@ -320,7 +328,7 @@ static bool mazeBlockedY(int fromY, int toY, int x)
     return false;
 }
 
-static void mazeRedrawAll()
+void mazeRedrawAll()
 {
     dis->fillScreen(SCWhite);
     mazeDrawWalls();
@@ -331,6 +339,14 @@ static void mazeRedrawAll()
 
 void initMaze()
 {
+    mazeGrid = (uint8_t **)malloc(MAZE_CELLS * sizeof(uint8_t *));
+    mazeVisited = (bool **)malloc(MAZE_CELLS * sizeof(bool *));
+
+    for (int i = 0; i < MAZE_CELLS; i++) {
+        mazeGrid[i] = (uint8_t *)malloc(MAZE_CELLS * sizeof(uint8_t));
+        mazeVisited[i] = (bool *)malloc(MAZE_CELLS * sizeof(bool));
+    }
+
     mazeGenerate();
 
     mazePlayerX = mazeCellPxX(0) + MAZE_PLAY_CELL_SIZE / 2;
@@ -451,6 +467,17 @@ void loopMaze()
 
 void exitMaze()
 {
+    for (int i = 0; i < MAZE_CELLS; i++) {
+        free(mazeGrid[i]);
+    }
+    free(mazeGrid);
+
+    for (int i = 0; i < MAZE_CELLS; i++) {
+        free(mazeVisited[i]);
+    }
+    free(mazeVisited);
+    mazeGrid = nullptr;
+    mazeVisited = nullptr;
 }
 
 #endif

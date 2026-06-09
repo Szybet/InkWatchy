@@ -10,5 +10,6 @@ void computeNewGeneration(uint8_t *currentGrid, uint8_t *newGrid, uint8_t conway
 
 void initConway();
 void loopConway();
+void exitConway();
 
 #endif

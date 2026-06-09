@@ -1,15 +1,15 @@
 #include "conway.h"
 
-#if CONWAY 
-// Stolen from https://github.com/delhoume/ssd1306_adafruit_game_of_life/blob/master/ssd1306_adafruit_game_of_life.ino
+#if CONWAY
+// Referenced from https://github.com/delhoume/ssd1306_adafruit_game_of_life/blob/master/ssd1306_adafruit_game_of_life.ino
 
 #define CONWAY_APP_WIDTH 200
 #define CONWAY_APP_HEIGHT 200
 
 // width must be multiple of 8
 // 8.6 iterations / second
-uint8_t conwayAppGrid[CONWAY_APP_WIDTH / 8 * CONWAY_APP_HEIGHT];
-uint8_t conwayAppNewGrid[CONWAY_APP_WIDTH / 8 * CONWAY_APP_HEIGHT];
+uint8_t *conwayAppGrid = NULL;
+uint8_t *conwayAppNewGrid = NULL;
 
 static const uint8_t
     GFXsetBit[] = {0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01},
@@ -118,20 +118,32 @@ void computeNewGeneration(uint8_t *currentGrid, uint8_t *newGrid, uint8_t conway
 // disUp(true) is needed here i quess
 void initConway()
 {
+    conwayAppGrid = (uint8_t *)malloc((CONWAY_APP_WIDTH / 8) * CONWAY_APP_HEIGHT);
+    conwayAppNewGrid = (uint8_t *)malloc((CONWAY_APP_WIDTH / 8) * CONWAY_APP_HEIGHT);
+
     dis->fillScreen(SCWhite);
     initConwayGrid(conwayAppGrid, 42, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH);
-    drawGrid(conwayAppGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH, 0 , 0);
+    drawGrid(conwayAppGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH, 0, 0);
 }
 
 void loopConway()
 {
     dis->fillScreen(SCWhite);
     computeNewGeneration(conwayAppGrid, conwayAppNewGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH);
-    drawGrid(conwayAppGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH, 0 , 0);
+    drawGrid(conwayAppGrid, CONWAY_APP_HEIGHT, CONWAY_APP_WIDTH, 0, 0);
     disUp(true);
-    if(useButton() == Menu) {
+    if (useButton() == Menu)
+    {
         initConway();
     }
     resetSleepDelay();
+}
+
+void exitConway()
+{
+    free(conwayAppGrid);
+    free(conwayAppNewGrid);
+    conwayAppGrid = NULL;
+    conwayAppNewGrid = NULL;
 }
 #endif

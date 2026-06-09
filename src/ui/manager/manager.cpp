@@ -527,7 +527,7 @@ void loopManager()
     case conwayApp:
     {
 #if CONWAY
-        managerLaunchFunc(conwayApp, initConway, loopConway);
+        managerLaunchFunc(conwayApp, initConway, loopConway, exitConway);
 #endif
         break;
     }
