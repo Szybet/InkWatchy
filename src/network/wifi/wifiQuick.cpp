@@ -18,7 +18,6 @@ void parseBytes(const char *str, char sep, byte *bytes, int maxBytes, int base)
 #if DEBUG
 int64_t startMill = 0;
 #endif
-cpuSpeed cs;
 
 bool connectWifiQuick(wifiQuickCred creds, int maxTimeMs)
 {
@@ -26,14 +25,14 @@ bool connectWifiQuick(wifiQuickCred creds, int maxTimeMs)
     debugLog("Turning on wifi quick");
     startMill = millisBetter();
 #endif
-    if(strlen(creds.ssid) == 0 || strlen(creds.pass) == 0) {
+    if (strlen(creds.ssid) == 0 || strlen(creds.pass) == 0)
+    {
         return false;
     }
     uint8_t mac[6];
     parseBytes(creds.bssid, ':', mac, 6, 16);
 
-    // Doesn't change anything really, maybe tcp
-    cs = getCpuSpeed();
+    saveCpuSpeed();
     setCpuSpeed(maxSpeed);
     WiFi.setSleep(WIFI_PS_NONE);
 
@@ -56,7 +55,7 @@ bool connectWifiQuick(wifiQuickCred creds, int maxTimeMs)
         {
             debugLog("Failed to connect to quick wifi");
             turnOffWifiMinimal();
-            // setCpuSpeed(cs);
+            restoreCpuSpeed();
             return false;
         }
         delayTask(WIFI_QUICK_CHECK_MS);
@@ -65,7 +64,7 @@ bool connectWifiQuick(wifiQuickCred creds, int maxTimeMs)
 #if DEBUG
     debugLog("Connected to wifi, it took: " + String(millisBetter() - startMill));
 #endif
-    
+
     return true;
 }
 
@@ -73,5 +72,5 @@ void disconnectWifiQuick()
 {
     debugLog("Turning off wifi quick, all the actions took: " + String(millisBetter() - startMill));
     turnOffWifiMinimal();
-    setCpuSpeed(cs);
+    restoreCpuSpeed();
 }

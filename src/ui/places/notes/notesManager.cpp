@@ -25,11 +25,10 @@ void noteSelected() {
     }
 }
 
-cpuSpeed notesSpeedRestore = cpuSpeed::normalSpeed;
 void initNotesManager() {
     if(goingUp == false) {
-        notesSpeedRestore = getCpuSpeed();
-        setCpuSpeed(cpuSpeed::maxSpeed);
+        saveCpuSpeed();
+        setCpuSpeed(maxSpeed);
     }
     goingUp = false;
     if(fsFileExists(NOTES_DIR) == false) {
@@ -73,8 +72,7 @@ void exitNotesManager() {
     if(goingUp == false) {
         hostBleNotifyCallback = NULL;
         hostBleDeInitEverything();
-        setCpuSpeed(notesSpeedRestore);
-        notesSpeedRestore = cpuSpeed::normalSpeed;
+        restoreCpuSpeed();
     }
 }
 #endif

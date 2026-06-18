@@ -59,7 +59,8 @@ void launchBuf()
 
 void initVideoPlayer()
 {
-    setCpuSpeed(cpuSpeed::maxSpeed);
+    saveCpuSpeed();
+    setCpuSpeed(maxSpeed);
     frame = 1;
     launchBuf();
     dis->setCursor(0, 0);
@@ -125,6 +126,7 @@ void exitVideoPlayer()
         free(image1);
         image1 = NULL;
     }
+    restoreCpuSpeed();
     updateDisplay(FULL_UPDATE);
 }
 

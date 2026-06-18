@@ -123,11 +123,10 @@ void drawSpeed()
     writeImageN(130, 15, getImg("baiky/kms"));
 }
 
-cpuSpeed bleCpuSpeed;
 void initBaiky()
 {
     debugLog("Init baiky called");
-    bleCpuSpeed = getCpuSpeed();
+    saveCpuSpeed();
     setCpuSpeed(maxSpeed);
     initBle();
 
@@ -205,7 +204,7 @@ void exitBaiky()
     exitBle();
     free(mapMemory);
     mapMemory = NULL;
-    setCpuSpeed(bleCpuSpeed);
+    restoreCpuSpeed();
 }
 
 #endif

@@ -8,11 +8,11 @@ void (*bleInputHandlerExit)(void) = NULL;
 
 BleKeyboard *bleKeyboard = NULL;
 bool blePeripheralConnected = false;
-bool oneTimeOn = false;
+bool blePeripheraloneTimeOn = false;
 
 void initBlePeripheral()
 {
-    if (oneTimeOn)
+    if (blePeripheraloneTimeOn)
     {
         showErrorOnScreen("It's not possible to run blePeripheral until a reboot (let the watch sleep), sorry, BLE sucks", true);
         return;
@@ -83,7 +83,7 @@ void exitBlePeripheral()
         // End is called in destructor
         delete bleKeyboard;
         bleKeyboard = NULL;
-        oneTimeOn = true;
+        blePeripheraloneTimeOn = true;
     }
     bleInputHandlerInit = NULL;
     bleInputHandlerLoop = NULL;

@@ -80,7 +80,12 @@ void initMainMenu()
 #if BLE_PERIPHERAL
     {
         count = count + 1;
-        buttons[count] = {"BLE Peripheral", &emptyImgPack, switchBlePeripheral};
+        String mess = "BLE Peripheral";
+        if (blePeripheraloneTimeOn)
+        {
+            mess = mess + " N\\A";
+        }
+        buttons[count] = {mess, &emptyImgPack, switchBlePeripheral};
     }
 #endif
 #if APPLE_JOKE
