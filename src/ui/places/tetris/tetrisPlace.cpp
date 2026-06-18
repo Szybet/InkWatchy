@@ -153,12 +153,13 @@ void loopTetris()
             }
         }
         drawTetrisText();
-        disUp(true, false, true);
+        dUChange = true;
     }
     resetSleepDelay();
     // if(move == T_NONE) {
     // delayTask(250);
     //}
+    disUp();
 }
 
 #endif
