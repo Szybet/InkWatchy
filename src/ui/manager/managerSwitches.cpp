@@ -322,6 +322,18 @@ void switchBluetoothHostScanner()
 }
 #endif
 
+#if BLE_PERIPHERAL
+void switchBlePeripheral()
+{
+    generalSwitch(blePeripheral);
+}
+
+void switchBlePeripheralMenu()
+{
+    generalSwitch(blePeripheralMenu);
+}
+#endif
+
 #if FONT_MENU_ENABLED
 void switchFontsPreview()
 {

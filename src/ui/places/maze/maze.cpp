@@ -19,7 +19,7 @@
 #define MAZE_WALL_S 0x4
 #define MAZE_WALL_W 0x8
 
-#define MAZE_SLEEP_DIFF 20
+#define MAZE_SLEEP_DIFF 13
 
 uint8_t **mazeGrid = nullptr;
 bool **mazeVisited = nullptr;

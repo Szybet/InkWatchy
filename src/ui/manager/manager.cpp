@@ -580,6 +580,20 @@ void loopManager()
 #endif
         break;
     }
+    case blePeripheral:
+    {
+#if BLE_PERIPHERAL
+        managerLaunchFunc(blePeripheral, initBlePeripheral, loopBlePeripheral, exitBlePeripheral);
+#endif
+        break;
+    }
+    case blePeripheralMenu:
+    {
+#if BLE_PERIPHERAL
+        managerLaunchFunc(blePeripheralMenu, initBlePeripheralMenu, loopMenu);
+#endif
+        break;
+    }
     case fontPreview:
     {
 #if FONT_MENU_ENABLED

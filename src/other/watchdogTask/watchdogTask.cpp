@@ -3,7 +3,8 @@
 
 bool allButtonCheck()
 {
-    if (buttonRead(BACK_PIN) == BUT_CLICK_STATE && buttonRead(MENU_PIN) == BUT_CLICK_STATE && buttonRead(UP_PIN) == BUT_CLICK_STATE && buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
+    buttonStates btns = readButtons();
+    if (btns.back && btns.menu && btns.up && btns.down)
     {
         return true;
     }
@@ -12,7 +13,8 @@ bool allButtonCheck()
 
 bool anyButtonCheck()
 {
-    if (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
+    buttonStates btns = readButtons();
+    if (btns.back || btns.menu || btns.up || btns.down)
     {
         return true;
     }

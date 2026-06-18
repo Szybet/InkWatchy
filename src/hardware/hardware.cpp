@@ -143,7 +143,6 @@ void loopHardwareDebug()
 {
     loopRTCDebug();
     dumpRTCTime(timeRTCLocal);
-    dumpButtons();
     dumpBattery();
     loopGeneralDebug();
 }
@@ -227,23 +226,23 @@ cpuSpeed getCpuSpeed()
     {
     case CPU_MINIMAL_SPEED:
     {
-        savedCpuSpeed = minimalSpeed;
         return minimalSpeed;
     }
     case CPU_NORMAL_SPEED:
     {
-        savedCpuSpeed = normalSpeed;
         return normalSpeed;
     }
     case CPU_FAST_SPEED:
     {
-        savedCpuSpeed = maxSpeed;
         return maxSpeed;
     }
     }
     debugLog("Something went wrong with cpu speed");
-    savedCpuSpeed = minimalSpeed;
     return minimalSpeed;
+}
+
+void saveCpuSpeed() {
+    savedCpuSpeed = getCpuSpeed();
 }
 
 void restoreCpuSpeed()

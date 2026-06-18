@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[14];
+    entryMenu buttons[15];
 #if CALENDAR
     {
         count = count + 1;
@@ -75,6 +75,12 @@ void initMainMenu()
             wifiToolFunc = initWifiTool;
         }
         buttons[count] = {MENU_WIFI_TOOL ": " + wifiToolStatus(), getImg("wifiTool"), wifiToolFunc};
+    }
+#endif
+#if BLE_PERIPHERAL
+    {
+        count = count + 1;
+        buttons[count] = {"BLE Peripheral", &emptyImgPack, switchBlePeripheral};
     }
 #endif
 #if APPLE_JOKE

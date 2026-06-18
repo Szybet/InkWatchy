@@ -26,6 +26,14 @@ typedef enum
     LongDown = 9,
 } buttonState; // This needs to be here because watchface modules use it too and idk why it doesn't work if its in buttons.h :( send help
 
+struct buttonStates
+{
+    bool back;
+    bool menu;
+    bool up;
+    bool down;
+};
+
 typedef enum
 {
     WifiOff = 0,

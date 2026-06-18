@@ -5,8 +5,8 @@
 #define EMPTY_REG 0
 #define FULL_REG 0xFFFF
 
-bool ignoreInterrupt = false;
-void manageGpioExpanderInt()
+volatile bool ignoreInterrupt = false;
+void IRAM_ATTR manageGpioExpanderInt()
 {
 #if DEBUG
   // Serial.println("mcpI"); // Potential crash
@@ -56,17 +56,29 @@ bool mcp23018::simplerInit(bool withDefault)
   return true;
 }
 
-void mcp23018::setDefaultInterruptsEsp()
+void mcp23018::interruptsManage(bool enable)
 {
-// This is not needed here?
-// if (simplerInit() == false)
-//{
-// return;
-//}
+  // This is not needed here?
+  if (simplerInit() == false)
+  {
+    return;
+  }
+  
 // pinMode(MCP_INTERRUPT_PIN, INPUT); // maybe no
 #if MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS == false || DEBUG == false
-  debugLog("Attaching gpio expander interrupt pin");
-  attachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN), manageGpioExpanderInt, FALLING);
+  // Order, important
+  if (enable)
+  {
+    debugLog("Attaching gpio expander interrupt pin");
+    attachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN), manageGpioExpanderInt, FALLING);
+    internalInterrupts(enable);
+  }
+  else
+  {
+    debugLog("Deattaching gpio expander interrupt pin");
+    internalInterrupts(enable);
+    detachInterrupt(digitalPinToInterrupt(MCP_INTERRUPT_PIN));
+  }
 #else
   debugLog("Not attaching mcp23018 interrupt");
 #endif
@@ -194,7 +206,9 @@ bool mcp23018::resetVerify(bool withDefault)
   if (bootStatus.fromWakeup == true)
   {
     debugLog("mcp23018 from wakeup");
-    setDefaultInterrupts();
+    // This was disabled in sleep, now we enable it
+    setPinMode(MCP_STAT_IN, MCP_INPUT);
+    setInterrupt(MCP_STAT_IN, true);
     return true;
   }
 
@@ -338,8 +352,6 @@ void mcp23018::setDefaultPinStates()
   setPinState(MCP_STAT_OUT, true);
   setPinMode(MCP_STAT_OUT, MCP_OUTPUT);
 
-  setDefaultInterrupts();
-
   isDebug(dumpAllRegisters());
 }
 
@@ -371,37 +383,30 @@ bool mcp23018::digitalRead(uint8_t pin)
   return checkBit(reg, pin);
 }
 
-void mcp23018::setDefaultInterrupts()
+void mcp23018::internalInterrupts(bool enable)
 {
 #if !MCP_GPIO_EXPANDER_DISABLE_INTERRUPTS
-  if (bootStatus.fromWakeup == false)
-  {
 // Buttons
 #if YATCHY_SHIPPING_MODE == 0
 #ifdef YATCHY_BACK_BTN
-    setInterruptCause(BACK_PIN, true, false);
-    setPinPullUp(BACK_PIN, true);
-    setInterrupt(BACK_PIN, true);
+  setInterruptCause(BACK_PIN, true, false);
+  setPinPullUp(BACK_PIN, true);
+  setInterrupt(BACK_PIN, enable);
 #endif
-    setInterruptCause(MENU_PIN, true, false);
-    setPinPullUp(MENU_PIN, true);
-    setInterrupt(MENU_PIN, true);
+  setInterruptCause(MENU_PIN, true, false);
+  setPinPullUp(MENU_PIN, true);
+  setInterrupt(MENU_PIN, enable);
 
-    setInterruptCause(DOWN_PIN, true, false);
-    setPinPullUp(DOWN_PIN, true);
-    setInterrupt(DOWN_PIN, true);
+  setInterruptCause(DOWN_PIN, true, false);
+  setPinPullUp(DOWN_PIN, true);
+  setInterrupt(DOWN_PIN, enable);
 
-    setInterruptCause(UP_PIN, true, false);
-    setPinPullUp(UP_PIN, true);
-    setInterrupt(UP_PIN, true);
+  setInterruptCause(UP_PIN, true, false);
+  setPinPullUp(UP_PIN, true);
+  setInterrupt(UP_PIN, enable);
 #endif
 
-    setInterrupt(MCP_5V, true);
-  }
-
-  // This was disabled in sleep, now we enable it
-  setPinMode(MCP_STAT_IN, MCP_INPUT);
-  setInterrupt(MCP_STAT_IN, true);
+  setInterrupt(MCP_5V, enable);
 #endif
 }
 

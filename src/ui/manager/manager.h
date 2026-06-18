@@ -62,6 +62,8 @@ typedef enum
     notesManager,
     notesApp,
     bluetoothHostScanner,
+    blePeripheral,
+    blePeripheralMenu,
     fontPreview,
     fontPreviewMenu,
     watchfaceSelector,
@@ -213,6 +215,10 @@ void switchNotesManager();
 #endif
 #if BLE_HOST_ENABLED
 void switchBluetoothHostScanner();
+#endif
+#if BLE_PERIPHERAL
+void switchBlePeripheral();
+void switchBlePeripheralMenu();
 #endif
 #if FONT_MENU_ENABLED
 void switchFontsPreview();

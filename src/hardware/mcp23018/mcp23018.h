@@ -9,9 +9,9 @@
 #define MCP_INTERRUPT_PIN 6 // Pin on esp for the interrupt
 
 // Charger
-#define MCP_STAT_IN 6 // A6
+#define MCP_STAT_IN 6  // A6
 #define MCP_STAT_OUT 7 // A7
-#define MCP_5V 15 // B7
+#define MCP_5V 15      // B7
 
 // Acc
 #define MCP_ACC_INT_1 5
@@ -83,27 +83,30 @@ public:
   void deInit();
   buttonState manageInterrupts();
   bool manageInterruptsExit();
-  void setDefaultInterrupts();
-  void setDefaultInterruptsEsp();
-  void setInterrupt(uint8_t pin, bool interrupt);
-  void setInterruptCause(uint8_t pin, bool enableCause, bool causeState);
-  void setPinMode(uint8_t pin, bool mode); // false input, true output
+  void interruptsManage(bool enable);
+
+  // Shouldn't be used until really necessery
   void setPinState(uint8_t pin, bool state);
-  void setPinPullUp(uint8_t pin, bool pull);
+  void setPinMode(uint8_t pin, bool mode); // false input, true output
+  void setInterrupt(uint8_t pin, bool interrupt);
   bool digitalRead(uint8_t pin);
-#if DEBUG
-  void dumpAllRegisters();
-#endif
-  void setBit(uint16_t &val, uint8_t bit, bool state);
+  void setPinPullUp(uint8_t pin, bool pull);
+  uint16_t readRegister(uint8_t reg);
   bool checkBit(uint16_t val, uint8_t bit);
+
+private:
+  void setInterruptCause(uint8_t pin, bool enableCause, bool causeState);
+  void internalInterrupts(bool enable);
+  void setBit(uint16_t &val, uint8_t bit, bool state);
   void writeRegister(uint8_t reg, uint16_t val);
   void writeSingleRegister(uint8_t reg, uint8_t val);
-  uint16_t readRegister(uint8_t reg);
   uint8_t readSingleRegister(uint8_t reg);
   void setDefaultPinStates();
   bool resetVerify(bool withDefault);
+#if DEBUG
+  void dumpAllRegisters();
+#endif
 
-private:
   uint16_t iodirReg;
   uint16_t gpintenReg;
   uint16_t gppuReg;
@@ -111,7 +114,6 @@ private:
 
   uint16_t intconReg;
   uint16_t defvalReg;
-
 
   bool inited = false;
   bool initOngoing = false; // Makes all functions ignore the init. Required for resetVerify function

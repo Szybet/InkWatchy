@@ -36,6 +36,7 @@ typedef enum
 extern cpuSpeed savedCpuSpeed;
 void setCpuSpeed(cpuSpeed speed);
 cpuSpeed getCpuSpeed();
+void saveCpuSpeed();
 void restoreCpuSpeed();
 String resetReasonToString(esp_reset_reason_t reason);
 void softStartDelay();

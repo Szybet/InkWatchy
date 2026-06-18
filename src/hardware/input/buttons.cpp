@@ -87,7 +87,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
     int elapsedtime = 0;
     initCombinations();
     loopCombinations();
-    while (buttonRead(buttonPin) == BUT_CLICK_STATE && elapsedtime <= BUTTON_LONG_PRESS_MS)
+    while (readOnlyOneButton(buttonPin) == BUT_CLICK_STATE && elapsedtime <= BUTTON_LONG_PRESS_MS)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
         elapsedtime = millisBetter() - startime;
@@ -118,7 +118,7 @@ void longButtonCheck(int buttonPin, buttonState normalButton, buttonState longBu
         debugLog("Vibrating long button now");
         vibrateMotor(VIBRATION_BUTTON_LONG_TIME);
         int64_t now = millisBetter();
-        while (buttonRead(buttonPin) == BUT_CLICK_STATE)
+        while (readOnlyOneButton(buttonPin) == BUT_CLICK_STATE)
         {
             delayTask(SMALL_BUTTON_DELAY_MS);
             if (millisBetter() - now > BUTTON_STUCK_MS)
@@ -141,9 +141,11 @@ void loopButtonsTask(void *parameter)
     if (isFullMode() == false)
     {
         // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
-        while (buttonRead(BACK_PIN) == BUT_CLICK_STATE || buttonRead(MENU_PIN) == BUT_CLICK_STATE || buttonRead(UP_PIN) == BUT_CLICK_STATE || buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
+        buttonStates btns = readButtons();
+        while (btns.back || btns.menu || btns.up || btns.down)
         {
             delayTask(SMALL_BUTTON_DELAY_MS * 3);
+            btns = readButtons();
         }
     }
     interruptedButton = None;
@@ -356,27 +358,6 @@ void manageButtonWakeUp()
 #endif
 }
 
-#if DEBUG
-void dumpButtons()
-{
-    if (buttonRead(MENU_PIN) == BUT_CLICK_STATE)
-    {
-        debugLog("Menu button pressed");
-    }
-    else if (buttonRead(BACK_PIN) == BUT_CLICK_STATE)
-    {
-        debugLog("Back button pressed");
-    }
-    else if (buttonRead(UP_PIN) == BUT_CLICK_STATE)
-    {
-        debugLog("Up button pressed");
-    }
-    else if (buttonRead(DOWN_PIN) == BUT_CLICK_STATE)
-    {
-        debugLog("Down button pressed");
-    }
-}
-#endif
 String getButtonString(buttonState state)
 {
     switch (state)
@@ -418,7 +399,31 @@ void turnOnButtons()
     }
 }
 
-bool buttonRead(uint8_t pin)
+buttonStates readButtons()
+{
+    buttonStates btns = { 0 };
+#if ATCHY_VER != YATCHY
+    btns.back = digitalRead(BACK_PIN) == BUT_CLICK_STATE;
+    btns.menu = digitalRead(MENU_PIN) == BUT_CLICK_STATE;
+    btns.down = digitalRead(DOWN_PIN) == BUT_CLICK_STATE;
+    btns.up = digitalRead(UP_PIN) == BUT_CLICK_STATE;
+#else
+#if YATCHY_SHIPPING_MODE == 0
+    if (rM.gpioExpander.simplerInit() == false)
+    {
+        return btns;
+    }
+    uint16_t reg = rM.gpioExpander.readRegister(MCP_GPIO);
+    btns.back = !rM.gpioExpander.checkBit(reg, BACK_PIN);
+    btns.menu = !rM.gpioExpander.checkBit(reg, MENU_PIN);
+    btns.down = !rM.gpioExpander.checkBit(reg, DOWN_PIN);
+    btns.up = !rM.gpioExpander.checkBit(reg, UP_PIN);
+#endif
+#endif
+    return btns;
+}
+
+bool readOnlyOneButton(uint8_t pin)
 {
 #if ATCHY_VER != YATCHY
     return digitalRead(pin);

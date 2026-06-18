@@ -282,6 +282,9 @@ extern uint16_t SCWhite;
 #if BLE_HOST_ENABLED
 #include "../ui/places/BLEHostScanner/BLEHostScanner.h"
 #endif
+#if BLE_PERIPHERAL
+#include "../ui/places/blePeripheral/blePeripheral.h"
+#endif
 #include "../ui/places/errorScreen/errorScreen.h"
 #if SET_CLOCK_GUI
 #include "../ui/places/setClockGuis/setTimeWatch.h"

@@ -360,6 +360,9 @@ CONFIG_BT_BLE_ENABLED=y
 // Notes, needs BLE_HOST_ENABLED
 #define NOTES_APP 0
 
+// Ble peripheral app. Needs BLE_ENABLED
+#define BLE_PERIPHERAL 0
+
 // Advanced
 #define BUTTON_TASK_DELAY 30 // In ms, lower means faster button detection but more cpu usage
 #define TIME_FOR_WATCHFACE_TO_SHOW_MS 2000

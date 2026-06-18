@@ -3,7 +3,7 @@
 
 String errorScreenStr = "";
 
-void showErrorOnScreen(String err)
+void showErrorOnScreen(String err, bool holdBack)
 {
     if (rM.currentPlace != errorDialog &&
         errorScreenStr != err)
@@ -16,7 +16,14 @@ void showErrorOnScreen(String err)
         genpage_set_center();
         genpage_add(err.c_str());
         genpage_add("");
-        genpage_add("If resolved, click back to exit");
+        if (!holdBack)
+        {
+            genpage_add("If resolved, click back to exit");
+        }
+        else
+        {
+            genpage_add("If resolved, hold back to exit");
+        }
         general_page_set_main();
 
         generalSwitch(errorDialog);
