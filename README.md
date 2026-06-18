@@ -56,6 +56,7 @@ Getting <a href="https://github.com/Szybet/InkWatchy/tree/master/components/rust
    - Maze game, Paint - controller by accelerometer
    - Conway game of life
    - Small video player
+   - [BLE game controller](https://github.com/Szybet/InkWatchy/wiki/Demo-videos#ble-game-controller)
 - Experimental heart rate monitor (Just a proof of concept, works best on Yatchy)
 <details> <summary>Baiky app - Navigation & speed via BLE from your phone (Click for details)</summary>
 
