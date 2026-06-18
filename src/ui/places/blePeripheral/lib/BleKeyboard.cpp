@@ -1,3 +1,5 @@
+// from https://github.com/T-vK/ESP32-BLE-Keyboard and it's many forks!
+
 #include "BleKeyboard.h"
 
 #if BLE_PERIPHERAL
