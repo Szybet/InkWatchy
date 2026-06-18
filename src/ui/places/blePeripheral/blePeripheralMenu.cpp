@@ -15,8 +15,7 @@ bool jumpPressed = false;
 bool dashPressed = false;
 int64_t backPressedTimer = 0; // ms timer
 int64_t aliveTimer = 0;
-#define TF_TILT_DEG 20
-#define MIN_BUTTON_TIME 50
+#define TF_TILT_DEG 13
 
 void BIHInitTowerFall()
 {
@@ -141,13 +140,14 @@ void BIHLoopTowerFall()
         debugLog("ACC failed for towerfall");
     }
 
+    delayTask(20);
     buttonStates btns = readButtons();
-    if (btns.menu == true && shootPressed == false)
+    if (btns.down == true && shootPressed == false)
     {
         bleKeyboard->press('x');
         shootPressed = true;
     }
-    else if (btns.menu == false && shootPressed == true)
+    else if (btns.down == false && shootPressed == true)
     {
         bleKeyboard->release('x');
         shootPressed = false;
@@ -164,12 +164,12 @@ void BIHLoopTowerFall()
         jumpPressed = false;
     }
 
-    if (btns.down == true && dashPressed == false)
+    if (btns.menu == true && dashPressed == false)
     {
         bleKeyboard->press(KEY_LEFT_SHIFT);
         dashPressed = true;
     }
-    else if (btns.down == false && dashPressed == true)
+    else if (btns.menu == false && dashPressed == true)
     {
         bleKeyboard->release(KEY_LEFT_SHIFT);
         dashPressed = false;
@@ -205,7 +205,7 @@ void BIHLoopTowerFall()
     }
 
     resetSleepDelay();
-    delayTask(70);
+    delayTask(20);
 }
 
 void BIHExitTowerFall()

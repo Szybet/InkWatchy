@@ -94,6 +94,7 @@ BleKeyboard::~BleKeyboard()
 void BleKeyboard::begin(void)
 {
   BLEDevice::init(deviceName);
+  BLEDevice::setPower(ESP_PWR_LVL_P20);
 
   BLEServer *pServer = BLEDevice::createServer();
   pServer->setCallbacks(this);
@@ -111,7 +112,11 @@ void BleKeyboard::begin(void)
   hid->hidInfo(0x00, 0x01);
 
   pSecurity = new BLESecurity();
-  pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_MITM_BOND);
+  // Use standard bonding without mandatory MITM/Passkeys if not strictly needed
+  pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
+  pSecurity->setCapability(ESP_IO_CAP_NONE);
+  // pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
+  delete pSecurity;
 
   hid->reportMap((uint8_t *)_hidReportDescriptor, sizeof(_hidReportDescriptor));
   hid->startServices();
