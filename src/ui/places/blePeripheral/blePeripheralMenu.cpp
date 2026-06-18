@@ -45,10 +45,12 @@ void BIHInitTowerFall()
     slint_loop();
 
     initAcc();
+    delayTask(100);
 }
 
 void BIHLoopTowerFall()
 {
+    delayTask(20);
     // debugLog("Running BIHLoopTowerFall");
     Accel acc;
     int16_t degX;
@@ -205,7 +207,6 @@ void BIHLoopTowerFall()
     }
 
     resetSleepDelay();
-    delayTask(20);
 }
 
 void BIHExitTowerFall()

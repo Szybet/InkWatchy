@@ -85,7 +85,7 @@ void initMainMenu()
         {
             mess = mess + " N\\A";
         }
-        buttons[count] = {mess, &emptyImgPack, switchBlePeripheral};
+        buttons[count] = {mess, getImg("blePeripheral/BLEPIcon"), switchBlePeripheral};
     }
 #endif
 #if APPLE_JOKE

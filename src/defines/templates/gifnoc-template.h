@@ -360,7 +360,7 @@ CONFIG_BT_BLE_ENABLED=y
 // Notes, needs BLE_HOST_ENABLED
 #define NOTES_APP 0
 
-// Ble peripheral app. Needs BLE_ENABLED
+// Ble peripheral apps, needs BLE_ENABLED
 #define BLE_PERIPHERAL 0
 
 // Advanced
