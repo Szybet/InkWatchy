@@ -4,7 +4,7 @@
 void initMainMenu()
 {
     int count = -1;
-    entryMenu buttons[15];
+    entryMenu buttons[14];
 #if CALENDAR
     {
         count = count + 1;
@@ -75,13 +75,6 @@ void initMainMenu()
             wifiToolFunc = initWifiTool;
         }
         buttons[count] = {MENU_WIFI_TOOL ": " + wifiToolStatus(), getImg("wifiTool"), wifiToolFunc};
-    }
-#endif
-#if BLE_PERIPHERAL
-    {
-        count = count + 1;
-        String mess = "BLE Peripheral";
-        buttons[count] = {mess, getImg("blePeripheral/BLEPIcon"), switchBlePeripheral};
     }
 #endif
 #if APPLE_JOKE
@@ -198,7 +191,7 @@ void initSettingsMenu()
 void initGamesMenu()
 {
     int count = -1;
-    entryMenu buttons[10];
+    entryMenu buttons[11];
 #if TETRIS
     {
         debugLog("Adding Tetris");
@@ -246,6 +239,13 @@ void initGamesMenu()
         debugLog("Adding pong");
         count = count + 1;
         buttons[count] = {MENU_PONG, getImg("pong"), switchPong};
+    }
+#endif
+#if BLE_PERIPHERAL
+    {
+        count = count + 1;
+        String mess = "BLE Peripheral";
+        buttons[count] = {mess, getImg("blePeripheral/BLEPIcon"), switchBlePeripheral};
     }
 #endif
 #if VIDEO_PLAYER

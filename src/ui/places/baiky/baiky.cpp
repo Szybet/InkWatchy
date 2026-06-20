@@ -52,9 +52,8 @@ class doneCallBack : public BLECharacteristicCallbacks
 
 float speed = 0;
 float speedOld = 0;
-uint32_t totalSpeedSum = 0;
+uint64_t totalSpeedSum = 0;
 uint32_t speedCount = 0;
-uint32_t lastSpeedUpdateMillis = 0;
 
 class speedCallBack : public BLECharacteristicCallbacks
 {
@@ -69,12 +68,8 @@ class speedCallBack : public BLECharacteristicCallbacks
         speed = currentSpeed;
 
         uint32_t currentTime = millisBetter();
-        if (currentTime - lastSpeedUpdateMillis >= 30000)
-        {
-            totalSpeedSum += (uint32_t)(speed * 10);
-            speedCount++;
-            lastSpeedUpdateMillis = currentTime;
-        }
+        totalSpeedSum += (uint32_t)(speed * 10);
+        speedCount++;
 
         debugLog("Speed is: " + String(speed));
     }
@@ -106,6 +101,10 @@ void drawSpeed()
     {
         speedStr.remove(speedStr.length() - 1);
     }
+    while (speedStr.endsWith(".") && speedStr.length() > 0)
+    {
+        speedStr.remove(speedStr.length() - 1);
+    }
     writeTextReplaceBack(speedStr, 0, 38);
 
     float avgSpeed = (speedCount == 0) ? 0 : (float)totalSpeedSum / speedCount;
@@ -116,8 +115,13 @@ void drawSpeed()
     {
         avgStr.remove(avgStr.length() - 1);
     }
-    setFont(getFont("DisposableDroidBB9"));
-    writeTextReplaceBack(avgStr, 130, 10);
+    while (avgStr.endsWith(".") && avgStr.length() > 0)
+    {
+        avgStr.remove(avgStr.length() - 1);
+    }
+
+    setFont(getFont("UbuntuMono10"));
+    writeTextReplaceBack(avgStr, 130, 13);
     // debugLog("Average Speed: " + String(avgSpeed));
 
     writeImageN(130, 15, getImg("baiky/kms"));

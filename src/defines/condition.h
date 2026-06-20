@@ -3,15 +3,6 @@
 #include "config.h"
 #include "bareDefines.h"
 
-/*
-Template for versioning
-#if ATCHY_VER == WATCHY_2
-
-#elif ATCHY_VER == WATCHY_3
-
-#endif
-*/
-
 #if YATCHY_SHIPPING_MODE
 #undef AVOID_SLEEP_USB_JTAG
 #define AVOID_SLEEP_USB_JTAG 0
