@@ -26,7 +26,6 @@ void hostBleStartScan(uint32_t durationSeconds);
 int hostBleGetScannedDevicesCount();
 String hostBleGetScannedDeviceName(int index);
 bool hostBleConnectToDevice(int index);
-void hostBleDisconnectDevice();
 extern String hostBleClientName;
 extern notify_callback hostBleNotifyCallback;
 #endif

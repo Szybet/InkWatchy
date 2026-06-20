@@ -128,9 +128,7 @@ void initBle()
     bleClientConnected = false;
     BLEDevice::init("InkWatchy");
     pServer = BLEDevice::createServer();
-    delayTask(500);
     pServer->setCallbacks(new bleServerCallbacks());
-    delayTask(500);
 }
 
 void startBle()
@@ -262,6 +260,7 @@ void hostBleDeInitEverything()
     hostBleClientName = "";
     bleClientConnected = false;
     cleanupBleDevice();
+    hostBlePclient = nullptr;
     BLEDevice::deinit();
 }
 
@@ -406,14 +405,6 @@ bool hostBleConnectToDevice(int index)
         }
     }
     return true;
-}
-
-void hostBleDisconnectDevice()
-{
-    if (hostBlePclient != NULL && hostBlePclient->isConnected())
-    {
-        hostBlePclient->disconnect();
-    }
 }
 
 #endif
