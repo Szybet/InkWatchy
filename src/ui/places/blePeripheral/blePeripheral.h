@@ -17,4 +17,11 @@ void exitBlePeripheral();
 
 void initBlePeripheralMenu();
 
+#if PERIPHERAL_TOWERFALL
+void selectTowerFall();
+#endif
+#if PERIPHERAL_TOWERFALL
+void selectBroforce();
+#endif
+
 #endif

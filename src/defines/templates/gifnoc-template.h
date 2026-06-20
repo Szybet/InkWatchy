@@ -362,6 +362,9 @@ CONFIG_BT_BLE_ENABLED=y
 
 // Ble peripheral apps, needs BLE_ENABLED
 #define BLE_PERIPHERAL 0
+// Enable at least one of them
+#define PERIPHERAL_TOWERFALL 0
+#define PERIPHERAL_BROFORCE 0
 
 // Advanced
 #define BUTTON_TASK_DELAY 30 // In ms, lower means faster button detection but more cpu usage
