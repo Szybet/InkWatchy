@@ -49,15 +49,15 @@ void initDiceMenu()
     entryMenu buttons[5];
 
     count = count + 1;
-    buttons[count] = {"D2", &emptyImgPack, switchD2};
+    buttons[count] = {"D2", "", switchD2};
     count = count + 1;
-    buttons[count] = {"D6", &emptyImgPack, switchD6};
+    buttons[count] = {"D6", "", switchD6};
     count = count + 1;
-    buttons[count] = {"D10", &emptyImgPack, switchD10};
+    buttons[count] = {"D10", "", switchD10};
     count = count + 1;
-    buttons[count] = {"D20", &emptyImgPack, switchD20};
+    buttons[count] = {"D20", "", switchD20};
     count = count + 1;
-    buttons[count] = {"D100", &emptyImgPack, switchD100};
+    buttons[count] = {"D100", "", switchD100};
 
     count = count + 1;
     initMenu(buttons, count, MENU_DICE, 1);

@@ -88,7 +88,7 @@ void setAlarmQuick(int minutes, int id)
 QUICK_ALARM_LIST(X)
 #undef X
 
-#define X(min) {getFormattedAlarmDuration(min), &emptyImgPack, sAQ##min},
+#define X(min) {getFormattedAlarmDuration(min), "", sAQ##min},
 static entryMenu buttons[] = {
     QUICK_ALARM_LIST(X)
 };

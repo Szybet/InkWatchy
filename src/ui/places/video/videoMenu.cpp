@@ -37,7 +37,7 @@ void initVideoMenu() {
     {
         if (file.isDirectory() == true)
         {
-            buttons[counter] = {String(file.name()), &emptyImgPack, choosedVideo};
+            buttons[counter] = {String(file.name()), "", choosedVideo};
             counter = counter + 1;
         }
         file = root.openNextFile();

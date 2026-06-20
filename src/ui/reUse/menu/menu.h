@@ -7,7 +7,7 @@
 
 struct entryMenu {
     String text;
-    ImageDef* image;
+    String imageKey; 
     void (*function)();
 };
 

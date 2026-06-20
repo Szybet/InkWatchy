@@ -163,7 +163,7 @@ void initAirQualityDateMenu()
     entryMenu buttons[days];
     for (u8_t i = 0; i < days; i++)
     {
-        buttons[i] = {unixToDate(daysUnixList[i]), &emptyImgPack, switchAirQualityConditionMenu};
+        buttons[i] = {unixToDate(daysUnixList[i]), "", switchAirQualityConditionMenu};
     }
 
     initMenu(buttons, days, (AIR_QUALITY_SELECT_DATE), 1);
@@ -197,28 +197,28 @@ void initAirQualityConditionMenu()
     // Sulphur Dioxide
 
     entryMenu buttons[21] = {
-        {AIR_MENU_EUAQI, &emptyImgPack, showEuropeanAQI},
-        {AIR_MENU_USAQI, &emptyImgPack, showUS_AQI},
-        {AIR_MENU_EU_AQI_PM2_5, &emptyImgPack, showEUAQI_PM2_5},
-        {AIR_MENU_EU_AQI_PM10, &emptyImgPack, showEUAQI_PM10},
-        {AIR_MENU_EU_AQI_NO2, &emptyImgPack, showEUAQI_NO2},
-        {AIR_MENU_EU_AQI_O3, &emptyImgPack, showEUAQI_O3},
-        {AIR_MENU_EU_AQI_SO2, &emptyImgPack, showEUAQI_SO2},
-        {AIR_MENU_PM2_5, &emptyImgPack, showPM2_5},
-        {AIR_MENU_PM10, &emptyImgPack, showPM10},
-        {AIR_MENU_CARBON_MONOXIDE, &emptyImgPack, showCarbonMonoxide},
-        {AIR_MENU_CARBON_DIOXIDE, &emptyImgPack, showCarbonDioxide},
-        {AIR_MENU_NITROGEN_DIOXIDE, &emptyImgPack, showNitrogenDioxide},
-        {AIR_MENU_SULPHUR_DIOXIDE, &emptyImgPack, showSulphurDioxide},
-        {AIR_MENU_OZONE, &emptyImgPack, showOzone},
-        {AIR_MENU_AEROSOL_OPTICAL_DEPTH, &emptyImgPack, showAerosolOpticalDepth},
-        {AIR_MENU_DUST, &emptyImgPack, showDust},
-        {AIR_MENU_METHANE, &emptyImgPack, showMethane},
-        {AIR_MENU_FORMALDEHYDE, &emptyImgPack, showFormaldehyde},
-        {AIR_MENU_GLYOXAL, &emptyImgPack, showGlyoxal},
-        //   {AIR_MENU_SEA_SALT_AEROSOL, &emptyImgPack, showSeaSaltAerosol},
-        {AIR_MENU_NITROGEN_MONOXIDE, &emptyImgPack, showNitrogenMonoxide},
-        {AIR_MENU_PEROXYACYL_NITRATES, &emptyImgPack, showPeroxyacylNitrates}};
+        {AIR_MENU_EUAQI, "", showEuropeanAQI},
+        {AIR_MENU_USAQI, "", showUS_AQI},
+        {AIR_MENU_EU_AQI_PM2_5, "", showEUAQI_PM2_5},
+        {AIR_MENU_EU_AQI_PM10, "", showEUAQI_PM10},
+        {AIR_MENU_EU_AQI_NO2, "", showEUAQI_NO2},
+        {AIR_MENU_EU_AQI_O3, "", showEUAQI_O3},
+        {AIR_MENU_EU_AQI_SO2, "", showEUAQI_SO2},
+        {AIR_MENU_PM2_5, "", showPM2_5},
+        {AIR_MENU_PM10, "", showPM10},
+        {AIR_MENU_CARBON_MONOXIDE, "", showCarbonMonoxide},
+        {AIR_MENU_CARBON_DIOXIDE, "", showCarbonDioxide},
+        {AIR_MENU_NITROGEN_DIOXIDE, "", showNitrogenDioxide},
+        {AIR_MENU_SULPHUR_DIOXIDE, "", showSulphurDioxide},
+        {AIR_MENU_OZONE, "", showOzone},
+        {AIR_MENU_AEROSOL_OPTICAL_DEPTH, "", showAerosolOpticalDepth},
+        {AIR_MENU_DUST, "", showDust},
+        {AIR_MENU_METHANE, "", showMethane},
+        {AIR_MENU_FORMALDEHYDE, "", showFormaldehyde},
+        {AIR_MENU_GLYOXAL, "", showGlyoxal},
+        //   {AIR_MENU_SEA_SALT_AEROSOL, "", showSeaSaltAerosol},
+        {AIR_MENU_NITROGEN_MONOXIDE, "", showNitrogenMonoxide},
+        {AIR_MENU_PEROXYACYL_NITRATES, "", showPeroxyacylNitrates}};
     initMenu(buttons, 21, AIR_QUALITY_STAT_TITLE, 1);
 }
 

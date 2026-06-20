@@ -16,11 +16,11 @@ void watchfaceSelInit() {
     entryMenu buttons[WATCHFACE_COUNT];
     for(int i = 0; i < WATCHFACE_COUNT; i++) {
         if(watchfacesList[i]->manager != wfmNone) {
-            ImageDef* choosedImage = &emptyImgPack;
+            String choosedImage = "";
             if(rM.watchfaceSelected == i) {
-                choosedImage = getImg("cross");
+                choosedImage = "cross";
             }
-            buttons[c] = {.text = String(watchfacesList[i]->name), .image = choosedImage, .function = watchfaceClicked};
+            buttons[c] = {.text = String(watchfacesList[i]->name), .imageKey = choosedImage, .function = watchfaceClicked};
             c = c + 1;
         }
     }

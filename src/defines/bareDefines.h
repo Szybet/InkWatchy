@@ -34,10 +34,8 @@
 #define WATCHDOG_PRIORITY 1
 #define RGB_PRIORITY 22
 
+// Resources
 #define RESOURCES_NAME_LENGTH 50 // Max
-// Needs to be larger than anything that will reuse the same img pointers over and over again (like a menu)
-#define IMG_COUNT 17
-#define FONT_COUNT 17
 
 // Config
 #define CONF_BOOK_CURRENT_PAGE "current_page_"

@@ -53,14 +53,14 @@ void initSetTimezoneUtcWatch()
             label = String("UTC") + String(offset);
         }
 
-        ImageDef *choosedImage = &emptyImgPack;
+        String choosedImage = "";
         if (tzSelected == i)
         {
-            choosedImage = getImg("cross");
+            choosedImage = "cross";
         }
 
         tzEntries[i].text = label;
-        tzEntries[i].image = choosedImage;
+        tzEntries[i].imageKey = choosedImage;
         tzEntries[i].function = timezoneClicked;
     }
 
@@ -86,7 +86,7 @@ void initSetTimezoneContinentWatch()
     for (int i = 0; i < TZ_HEADER_COUNT; i++)
     {
         tzEntries[i].text = String(tzHeaders[i]);
-        tzEntries[i].image = &emptyImgPack;
+        tzEntries[i].imageKey = "";
         tzEntries[i].function = switchSetTimezoneCityWatchPlace;
     }
 
@@ -171,7 +171,7 @@ void initSetTimezoneCityWatch()
     for (int i = 0; i < zones.count; i++)
     {
         menuEntries[i].text = zones.zones[i];
-        menuEntries[i].image = &emptyImgPack;
+        menuEntries[i].imageKey = "";
         menuEntries[i].function = setTimezoneCity;
     }
 

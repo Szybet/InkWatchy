@@ -25,27 +25,27 @@ void initpowerMenu()
     entryMenu buttons[2];
     {
         count = count + 1;
-        ImageDef *image;
+        String image;
         if (rM.disableAllVibration == true)
         {
-            image = getImg("accept");
+            image = "accept";
         }
         else
         {
-            image = getImg("cross");
+            image = "cross";
         }
         buttons[count] = {MENU_VIBRATIONS_DIS, image, toggleDisableVibrationsEntry};
     }
     {
         count = count + 1;
-        ImageDef *image;
+        String image;
         if (rM.disableWakeUp == true)
         {
-            image = getImg("accept");
+            image = "accept";
         }
         else
         {
-            image = getImg("cross");
+            image = "cross";
         }
         buttons[count] = {MENU_WAKE_UP_DIS, image, toggleWakeUpEntry};
     }

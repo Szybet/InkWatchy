@@ -29,13 +29,15 @@ void resetPreviousItems()
   buttonSize.w = 0;
 }
 
-void initMenu(entryMenu* entryList, int totalMenus, String menuName, int textSize, int linesThick)
+void initMenu(entryMenu *entryList, int totalMenus, String menuName, int textSize, int linesThick)
 {
-  if (currentMenuData.entryList != nullptr) {
+  if (currentMenuData.entryList != nullptr)
+  {
     delete[] currentMenuData.entryList;
   }
   currentMenuData.entryList = new entryMenu[totalMenus];
-  for (int i = 0; i < totalMenus; i++) {
+  for (int i = 0; i < totalMenus; i++)
+  {
     currentMenuData.entryList[i] = entryList[i];
   }
 
@@ -142,7 +144,16 @@ void showMenu()
     // debugLog("Menu entry text is: " + currentMenuData.entryList[i].text);
     String textToShow = currentMenuData.entryList[i].text;
     // To show the cut off text fully when it's selected :D the value of 18 should be calculated somehow
-    ImageDef *img = currentMenuData.entryList[i].image;
+
+    ImageDef *img;
+    if (!currentMenuData.entryList[i].imageKey.isEmpty())
+    {
+      img = getImg(currentMenuData.entryList[i].imageKey);
+    }
+    else
+    {
+      img = &emptyImgPack;
+    }
 
     if (textToShow.length() > 18 && currentMenuData.currentButton != i)
     {
@@ -240,25 +251,3 @@ void loopMenu()
   }
   disUp();
 }
-
-/*
-// Menu testing code
-entryMenu button0 = {"text0", crossImgPack, NULL};
-entryMenu button1 = {"text1", acceptImgPack, NULL};
-entryMenu button2 = {"text2", emptyImgPack, NULL};
-entryMenu button3 = {"text3", emptyImgPack, NULL};
-entryMenu button4 = {"text4", emptyImgPack, NULL};
-entryMenu button5 = {"text5", emptyImgPack, NULL};
-entryMenu button6 = {"text6", emptyImgPack, NULL};
-entryMenu button7 = {"text7", emptyImgPack, NULL};
-entryMenu button8 = {"text8", emptyImgPack, NULL};
-entryMenu button9 = {"text9", emptyImgPack, NULL};
-entryMenu button10 = {"text10", emptyImgPack, NULL};
-entryMenu button11 = {"text11", emptyImgPack, NULL};
-entryMenu button12 = {"text12", emptyImgPack, NULL};
-entryMenu button13 = {"text13", emptyImgPack, NULL};
-entryMenu button14 = {"text14", emptyImgPack, NULL};
-
-entryMenu buttons[15] = {button0, button1, button2, button3, button4, button5, button6, button7, button8, button9, button10, button11, button12, button13, button14};
-initMenu(buttons, 15, "MDKNCMIUEjqi", 2);
-*/

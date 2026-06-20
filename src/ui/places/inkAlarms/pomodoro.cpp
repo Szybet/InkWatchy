@@ -59,14 +59,14 @@ void initPomodoroMenu() {
         } else {
             sta = sta + POMODORO_DISABLED;
         }
-        buttons[c] = {.text = sta, .image = getImg("pomodoro/tomato"), .function = NULL};
+        buttons[c] = {.text = sta, .imageKey = "pomodoro/tomato", .function = NULL};
     }
     {
         c = c + 1;
         if(rM.alarms[ALARM_POMODORO_ID].enabled == true) {
-            buttons[c] = {.text = POMODORO_RESET_TURN_OFF, .image = &emptyImgPack, .function = pomodoroResetTurnOff};
+            buttons[c] = {.text = POMODORO_RESET_TURN_OFF, .imageKey = "", .function = pomodoroResetTurnOff};
         } else {
-            buttons[c] = {.text = POMODORO_START, .image = &emptyImgPack, .function = pomodoroManageForceWrap};
+            buttons[c] = {.text = POMODORO_START, .imageKey = "", .function = pomodoroManageForceWrap};
         }
     }
     c = c + 1;

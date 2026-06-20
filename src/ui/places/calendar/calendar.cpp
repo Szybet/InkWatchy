@@ -69,7 +69,7 @@ void initCalendar()
             String end = getHourMinuteUnix(endUnix);
             String info = start + "-" + end + " " + String(i) + ": " + name;
             debugLog("Final info: " + info);
-            buttons[i] = {info, &emptyImgPack, initCalendar};
+            buttons[i] = {info, "", initCalendar};
         }
         initMenu(buttons, arraySize, date, 1);
         // generalSwitch(calendarEventMenu);
@@ -169,7 +169,7 @@ void initCalendarMenu()
         String dateStr = unixToDate(unixTime) + " " + unixToDayName(unixTime);
         debugLog("dateStr: " + dateStr);
 
-        buttons[i] = {dateStr, &emptyImgPack, switchCalendarEventMenu};
+        buttons[i] = {dateStr, "", switchCalendarEventMenu};
     }
     initMenu(buttons, dates, MENU_CALENDAR, 1);
     // generalSwitch(calendarDateMenu);

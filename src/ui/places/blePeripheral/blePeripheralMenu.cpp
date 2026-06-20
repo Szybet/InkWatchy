@@ -9,13 +9,13 @@ void initBlePeripheralMenu()
 #if PERIPHERAL_TOWERFALL
     {
         count = count + 1;
-        buttons[count] = {"TowerFall", &emptyImgPack, selectTowerFall};
+        buttons[count] = {"TowerFall", "", selectTowerFall};
     }
 #endif
 #if PERIPHERAL_BROFORCE
     {
         count = count + 1;
-        buttons[count] = {"Broforce", &emptyImgPack, selectBroforce};
+        buttons[count] = {"Broforce", "", selectBroforce};
     }
 #endif
 

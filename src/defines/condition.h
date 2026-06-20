@@ -389,3 +389,13 @@
 #else
 #define HEALTH_MENU 0
 #endif
+
+// Resources
+// Needs to be larger than anything that will reuse the same img pointers over and over again (not menu, that's fixed)
+#if ATCHY_VER == WATCHY_3
+#define IMG_COUNT 5
+#define FONT_COUNT 5
+#else
+#define IMG_COUNT 20
+#define FONT_COUNT 20
+#endif

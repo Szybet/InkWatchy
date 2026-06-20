@@ -39,11 +39,11 @@ void initNotesManager() {
 
     entryMenu *entry = new entryMenu[count];
     if(bleClientConnected == false) {
-        entry[0] = {NOTES_CONNECT_KBD, &emptyImgPack, noteSelected};
+        entry[0] = {NOTES_CONNECT_KBD, "", noteSelected};
     } else {
-        entry[0] = {String(NOTES_CONNECTED) + hostBleClientName, &emptyImgPack, NULL};
+        entry[0] = {String(NOTES_CONNECTED) + hostBleClientName, "", NULL};
     }
-    entry[1] = {NOTES_NEW, &emptyImgPack, noteSelected};
+    entry[1] = {NOTES_NEW, "", noteSelected};
 
     File root = LittleFS.open(NOTES_DIR);
     File file = root.openNextFile();
@@ -53,7 +53,7 @@ void initNotesManager() {
         if (!file.isDirectory())
         {
             String fileName = String(file.name());
-            entry[c] = {fileName, &emptyImgPack, noteSelected};
+            entry[c] = {fileName, "", noteSelected};
             c++;
         }
         file = root.openNextFile();

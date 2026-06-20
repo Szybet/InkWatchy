@@ -57,7 +57,7 @@ void initBluetoothHostScanner()
     for (int i = 0; i < count; i++)
     {
         String name = hostBleGetScannedDeviceName(i);
-        devices[i] = {name, &emptyImgPack, onDeviceSelected};
+        devices[i] = {name, "", onDeviceSelected};
     }
 
     hostScannerMenu = true;

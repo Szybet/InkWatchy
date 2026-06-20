@@ -14,16 +14,16 @@ void initSetClockMenu()
     entryMenu buttons[3];
     {
         count = count + 1;
-        buttons[count] = {SETCLOCK_SET_TIME, &emptyImgPack, switchSetTimeWatch};
+        buttons[count] = {SETCLOCK_SET_TIME, "", switchSetTimeWatch};
     }
     {
         count = count + 1;
-        buttons[count] = {SETCLOCK_SET_DATE, &emptyImgPack, switchSetDateWatch};
+        buttons[count] = {SETCLOCK_SET_DATE, "", switchSetDateWatch};
     }
     if (strlen(TIMEZONE_OLSON) == 0 && strlen(TIMEZONE_POSIX) == 0)
     {
         count = count + 1;
-        buttons[count] = {SETCLOCK_TIMEZONE_MENU, &emptyImgPack, switchSetTimezoneMenu};
+        buttons[count] = {SETCLOCK_TIMEZONE_MENU, "", switchSetTimezoneMenu};
     }
 
     count = count + 1;
@@ -61,11 +61,11 @@ void initSetTimezoneMenu()
         {
             currentTimezone = String(rM.posixTimeZone);
         }
-        buttons[count] = {String(SETCLOCK_CURRENT_TIMEZONE) + currentTimezone, &emptyImgPack, NULL};
+        buttons[count] = {String(SETCLOCK_CURRENT_TIMEZONE) + currentTimezone, "", NULL};
     }
     {
         count = count + 1;
-        buttons[count] = {SETCLOCK_CLEAR_TIMEZONE, &emptyImgPack, clearTimezone};
+        buttons[count] = {SETCLOCK_CLEAR_TIMEZONE, "", clearTimezone};
     }
     {
         count = count + 1;
@@ -74,7 +74,7 @@ void initSetTimezoneMenu()
         {
             theFunction = showTimezoneWarning;
         }
-        buttons[count] = {SETCLOCK_SET_UTC_TIMEZONE, &emptyImgPack, theFunction};
+        buttons[count] = {SETCLOCK_SET_UTC_TIMEZONE, "", theFunction};
     }
     {
         count = count + 1;
@@ -83,7 +83,7 @@ void initSetTimezoneMenu()
         {
             theFunction = showTimezoneWarning;
         }
-        buttons[count] = {SETCLOCK_SET_LOCATION_TIMEZONE, &emptyImgPack, theFunction};
+        buttons[count] = {SETCLOCK_SET_LOCATION_TIMEZONE, "", theFunction};
     }
     count = count + 1;
     initMenu(buttons, count, SETCLOCK_TIMEZONE_SETTINGS, 1);

@@ -34,10 +34,10 @@ void initWeatherMenu()
     {
         int count = 1;
         entryMenu buttons[2];
-        buttons[0] = {(WEATHER_AQ_MENU_WEATHER), &emptyImgPack, switchWeatherDateMenu};
+        buttons[0] = {(WEATHER_AQ_MENU_WEATHER), "", switchWeatherDateMenu};
 #if WEATHER_AIR_ENABLED
         count = count + 1;
-        buttons[1] = {(WEATHER_AQ_MENU_AIR_QUALITY), &emptyImgPack, switchAirQualityDateMenu};
+        buttons[1] = {(WEATHER_AQ_MENU_AIR_QUALITY), "", switchAirQualityDateMenu};
 #endif
         initMenu(buttons, count, (WEATHER_AQ_MENU_TITLE));
     }
@@ -147,7 +147,7 @@ void initWeatherDateMenu()
     entryMenu buttons[days];
     for (u8_t i = 0; i < days; i++)
     {
-        buttons[i] = {unixToDate(daysUnixList[i]), &emptyImgPack, switchWeatherConditionMenu};
+        buttons[i] = {unixToDate(daysUnixList[i]), "", switchWeatherConditionMenu};
     }
 
     initMenu(buttons, days, (WEATHER_SELECT_DATE), 1);
@@ -185,29 +185,29 @@ void initWeatherConditionMenu()
     // precipitation
 
     entryMenu buttons[21] = {
-        {WEATHER_MENU_TEMPERATURE, &emptyImgPack, showTemp},
-        {WEATHER_MENU_PRESSURE, &emptyImgPack, showPressure},
-        {WEATHER_MENU_HUMIDITY, &emptyImgPack, showHumidity},
-        {WEATHER_MENU_CONDITIONS, &emptyImgPack, showWeatherCond},
-        {WEATHER_MENU_CLOUDINESS, &emptyImgPack, showClouds},
-        {WEATHER_MENU_WIND_SPEED, &emptyImgPack, showWindSpeed},
-        {WEATHER_MENU_WIND_GUSTS, &emptyImgPack, showWindGuts},
-        {WEATHER_MENU_VISIBILITY, &emptyImgPack, showVisibility},
-        {WEATHER_MENU_PRECIPITATION, &emptyImgPack, showPop},
+        {WEATHER_MENU_TEMPERATURE, "", showTemp},
+        {WEATHER_MENU_PRESSURE, "", showPressure},
+        {WEATHER_MENU_HUMIDITY, "", showHumidity},
+        {WEATHER_MENU_CONDITIONS, "", showWeatherCond},
+        {WEATHER_MENU_CLOUDINESS, "", showClouds},
+        {WEATHER_MENU_WIND_SPEED, "", showWindSpeed},
+        {WEATHER_MENU_WIND_GUSTS, "", showWindGuts},
+        {WEATHER_MENU_VISIBILITY, "", showVisibility},
+        {WEATHER_MENU_PRECIPITATION, "", showPop},
 
-        {WEATHER_MENU_UV_INDEX, &emptyImgPack, showUVIndex},
-        {WEATHER_MENU_UV_INDEX_CLEAR_SKY, &emptyImgPack, showUVIndexClearSky},
-        {WEATHER_MENU_WET_BULB, &emptyImgPack, showWetBulb},
-        {WEATHER_MENU_CAPE, &emptyImgPack, showCAPE},
-        {WEATHER_MENU_DEW_POINT, &emptyImgPack, showDewPoint2m},
-        {WEATHER_MENU_PRECIPITATION_AMOUNT, &emptyImgPack, showPrecipitationAmount},
-        {WEATHER_MENU_SNOW_DEPTH, &emptyImgPack, showSnowDepth},
-        {WEATHER_MENU_LIFTED_INDEX, &emptyImgPack, showLiftedIndex},
-        {WEATHER_MENU_CONVECTIVE_INHIBITION, &emptyImgPack, showConvectiveInhibition},
-        {WEATHER_MENU_TERRESTRIAL_RADIATION, &emptyImgPack, showTerrestrialRadiation},
-        {WEATHER_MENU_DIFFUSE_RADIATION, &emptyImgPack, showDiffuseRadiation},
-        {WEATHER_MENU_DIRECT_RADIATION, &emptyImgPack, showDirectRadiation},
-        //     {WEATHER_MENU_TOTAL_WATER_VAPOUR, &emptyImgPack, showTotalColumnIntegratedWaterVapour}
+        {WEATHER_MENU_UV_INDEX, "", showUVIndex},
+        {WEATHER_MENU_UV_INDEX_CLEAR_SKY, "", showUVIndexClearSky},
+        {WEATHER_MENU_WET_BULB, "", showWetBulb},
+        {WEATHER_MENU_CAPE, "", showCAPE},
+        {WEATHER_MENU_DEW_POINT, "", showDewPoint2m},
+        {WEATHER_MENU_PRECIPITATION_AMOUNT, "", showPrecipitationAmount},
+        {WEATHER_MENU_SNOW_DEPTH, "", showSnowDepth},
+        {WEATHER_MENU_LIFTED_INDEX, "", showLiftedIndex},
+        {WEATHER_MENU_CONVECTIVE_INHIBITION, "", showConvectiveInhibition},
+        {WEATHER_MENU_TERRESTRIAL_RADIATION, "", showTerrestrialRadiation},
+        {WEATHER_MENU_DIFFUSE_RADIATION, "", showDiffuseRadiation},
+        {WEATHER_MENU_DIRECT_RADIATION, "", showDirectRadiation},
+        //     {WEATHER_MENU_TOTAL_WATER_VAPOUR, "", showTotalColumnIntegratedWaterVapour}
     };
     initMenu(buttons, 21, WEATHER_STAT_TITLE, 1);
 }

@@ -44,45 +44,45 @@ void initAlarmEditMenu()
         count = count + 1;
         if (choosedAlarm->enabled == true)
         {
-            buttons[count] = {ALARM_STATUS_ENABLED, getImg("accept"), enabledAlarmChange};
+            buttons[count] = {ALARM_STATUS_ENABLED, "", enabledAlarmChange};
         }
         else
         {
-            buttons[count] = {ALARM_STATUS_DISABLED, getImg("cross"), enabledAlarmChange};
+            buttons[count] = {ALARM_STATUS_DISABLED, "", enabledAlarmChange};
         }
     }
     {
         count = count + 1;
 
-        buttons[count] = {String(ALARM_LABEL_TIME) + alarmGetTime(choosedAlarm), &emptyImgPack, switchSetTimeHandler};
+        buttons[count] = {String(ALARM_LABEL_TIME) + alarmGetTime(choosedAlarm), "", switchSetTimeHandler};
     }
     {
         count = count + 1;
         if (choosedAlarm->onlyOnce == true)
         {
-            buttons[count] = {ALARM_LABEL_ONE_TIME_ALARM, getImg("accept"), oneTimeAlarmChange};
+            buttons[count] = {ALARM_LABEL_ONE_TIME_ALARM, "", oneTimeAlarmChange};
         }
         else
         {
-            buttons[count] = {ALARM_LABEL_ONE_TIME_ALARM, getImg("cross"), oneTimeAlarmChange};
+            buttons[count] = {ALARM_LABEL_ONE_TIME_ALARM, "", oneTimeAlarmChange};
         }
     }
     {
         if (choosedAlarm->onlyOnce == false)
         {
             count = count + 1;
-            buttons[count] = {String(ALARM_LABEL_DAYS) + alarmGetDays(choosedAlarm), &emptyImgPack, switchAlarmEditDays};
+            buttons[count] = {String(ALARM_LABEL_DAYS) + alarmGetDays(choosedAlarm), "", switchAlarmEditDays};
         }
     }
     {
         count = count + 1;
         if (choosedAlarm->requireWifi == true)
         {
-            buttons[count] = {ALARM_LABEL_REQUIRE_WIFI, getImg("accept"), wifiAlarmChange};
+            buttons[count] = {ALARM_LABEL_REQUIRE_WIFI, "accept", wifiAlarmChange};
         }
         else
         {
-            buttons[count] = {ALARM_LABEL_REQUIRE_WIFI, getImg("cross"), wifiAlarmChange};
+            buttons[count] = {ALARM_LABEL_REQUIRE_WIFI, "cross", wifiAlarmChange};
         }
     }
     count = count + 1;

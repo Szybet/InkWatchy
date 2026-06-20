@@ -105,7 +105,7 @@ void initDailyStepsChartMenu()
     entryMenu buttons[days];
     for (u8_t i = 0; i < days; i++)
     {
-        buttons[i] = {unixToDate(daysUnixList[i]), &emptyImgPack, showDailyStepsChart};
+        buttons[i] = {unixToDate(daysUnixList[i]), "", showDailyStepsChart};
     }
 
     initMenu(buttons, days, DAILY_STEPS_TITLE);

@@ -14,7 +14,7 @@ void initFontMenu()
     {
         if (file.isDirectory() == false)
         {
-            buttons[counter] = {String(file.name()), &emptyImgPack, switchFontsPreview};
+            buttons[counter] = {String(file.name()), "", switchFontsPreview};
             counter = counter + 1;
         }
         file = root.openNextFile();

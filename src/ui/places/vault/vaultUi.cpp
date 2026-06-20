@@ -185,7 +185,7 @@ void initVault()
             {
                 if (file.isDirectory() == false)
                 {
-                    buttons[counter] = {String(file.name()), &emptyImgPack, switchBack};
+                    buttons[counter] = {String(file.name()), "", switchBack};
                     counter = counter + 1;
                 }
                 file = root.openNextFile();

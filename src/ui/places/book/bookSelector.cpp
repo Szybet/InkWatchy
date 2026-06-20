@@ -39,7 +39,7 @@ void initBookSelector()
     {
         if (file.isDirectory() == false)
         {
-            buttons[counter] = {String(file.name()), &emptyImgPack, selectedBook};
+            buttons[counter] = {String(file.name()), "", selectedBook};
             counter = counter + 1;
         }
         file = root.openNextFile();
