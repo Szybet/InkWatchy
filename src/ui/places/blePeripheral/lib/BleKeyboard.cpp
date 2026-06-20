@@ -124,6 +124,12 @@ void BleKeyboard::begin(void)
   hid->reportMap((uint8_t *)_hidReportDescriptor, sizeof(_hidReportDescriptor));
   hid->startServices();
 
+  BLE2902 *desc2902;
+  desc2902 = (BLE2902 *)inputKeyboard->getDescriptorByUUID(BLEUUID((uint16_t)0x2902));
+  if (desc2902 != nullptr) desc2902->setNotifications(true);
+  desc2902 = (BLE2902 *)inputMediaKeys->getDescriptorByUUID(BLEUUID((uint16_t)0x2902));
+  if (desc2902 != nullptr) desc2902->setNotifications(true);
+
   onStarted(pServer);
 
   advertising = pServer->getAdvertising();
@@ -520,6 +526,20 @@ size_t BleKeyboard::write(const uint8_t *buffer, size_t size)
 void BleKeyboard::onConnect(BLEServer *pServer)
 {
   this->connected = true;
+  if (this->inputKeyboard != nullptr) {
+    BLE2902 *desc = (BLE2902 *)this->inputKeyboard->getDescriptorByUUID(BLEUUID((uint16_t)0x2902));
+    if (desc != nullptr) {
+      desc->setNotifications(true);
+      Serial.println("[BleKB] inputKeyboard notify enabled");
+    }
+  }
+  if (this->inputMediaKeys != nullptr) {
+    BLE2902 *desc = (BLE2902 *)this->inputMediaKeys->getDescriptorByUUID(BLEUUID((uint16_t)0x2902));
+    if (desc != nullptr) {
+      desc->setNotifications(true);
+      Serial.println("[BleKB] inputMediaKeys notify enabled");
+    }
+  }
 }
 
 void BleKeyboard::onDisconnect(BLEServer *pServer)
