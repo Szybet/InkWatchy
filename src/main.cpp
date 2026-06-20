@@ -24,6 +24,7 @@ void setup()
 #if DEBUG
   initLog();
 #endif
+  Serial.begin();
 
   initHardware();
   // debugLog("Starting millis: " + String(millisBetter()));

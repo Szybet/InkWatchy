@@ -81,10 +81,6 @@ void initMainMenu()
     {
         count = count + 1;
         String mess = "BLE Peripheral";
-        if (blePeripheraloneTimeOn)
-        {
-            mess = mess + " N\\A";
-        }
         buttons[count] = {mess, getImg("blePeripheral/BLEPIcon"), switchBlePeripheral};
     }
 #endif

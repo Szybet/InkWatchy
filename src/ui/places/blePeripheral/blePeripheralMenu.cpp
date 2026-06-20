@@ -50,7 +50,7 @@ void BIHInitTowerFall()
 
 void BIHLoopTowerFall()
 {
-    delayTask(20);
+    delayTask(30);
     // debugLog("Running BIHLoopTowerFall");
     Accel acc;
     int16_t degX;
@@ -142,7 +142,7 @@ void BIHLoopTowerFall()
         debugLog("ACC failed for towerfall");
     }
 
-    delayTask(20);
+    delayTask(30);
     buttonStates btns = readButtons();
     if (btns.down == true && shootPressed == false)
     {

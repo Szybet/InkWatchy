@@ -15,6 +15,7 @@ extern BLEService *bleService;
 void initBle();
 void startBle();
 void exitBle();
+void cleanupBleDevice(); // For use with other ble implementation that don't use exitBle
 #endif
 
 #if BLE_HOST_ENABLED

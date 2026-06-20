@@ -1,6 +1,104 @@
 #include "bleMain.h"
 #include <vector>
 
+#if BLE_ENABLED || BLE_HOST_ENABLED
+
+#if defined(CONFIG_BLUEDROID_ENABLED)
+
+// Template tags and helper structs to access BLEDevice's private static members
+struct BLEDevice_m_pServer_tag {
+  typedef BLEServer** type;
+  friend type get_m_pServer(BLEDevice_m_pServer_tag);
+};
+template<typename Tag, typename Tag::type M>
+struct RobServer {
+  friend typename Tag::type get_m_pServer(Tag) { return M; }
+};
+template struct RobServer<BLEDevice_m_pServer_tag, &BLEDevice::m_pServer>;
+
+struct BLEDevice_m_bleAdvertising_tag {
+  typedef BLEAdvertising** type;
+  friend type get_m_bleAdvertising(BLEDevice_m_bleAdvertising_tag);
+};
+template<typename Tag, typename Tag::type M>
+struct RobAdvertising {
+  friend typename Tag::type get_m_bleAdvertising(Tag) { return M; }
+};
+template struct RobAdvertising<BLEDevice_m_bleAdvertising_tag, &BLEDevice::m_bleAdvertising>;
+
+struct BLEDevice_m_pScan_tag {
+  typedef BLEScan** type;
+  friend type get_m_pScan(BLEDevice_m_pScan_tag);
+};
+template<typename Tag, typename Tag::type M>
+struct RobScan {
+  friend typename Tag::type get_m_pScan(Tag) { return M; }
+};
+template struct RobScan<BLEDevice_m_pScan_tag, &BLEDevice::m_pScan>;
+
+struct BLEDevice_m_pClient_tag {
+  typedef BLEClient** type;
+  friend type get_m_pClient(BLEDevice_m_pClient_tag);
+};
+template<typename Tag, typename Tag::type M>
+struct RobClient {
+  friend typename Tag::type get_m_pClient(Tag) { return M; }
+};
+template struct RobClient<BLEDevice_m_pClient_tag, &BLEDevice::m_pClient>;
+
+void cleanupBleDevice()
+{
+#if BLE_ENABLED
+    extern BLEAdvertising *pAdvertising;
+    extern BLEServer *pServer;
+    extern BLEService *bleService;
+#endif
+
+    // Clean up Advertising
+    BLEAdvertising** pAdvPtr = get_m_bleAdvertising(BLEDevice_m_bleAdvertising_tag());
+    if (*pAdvPtr != nullptr) {
+        (*pAdvPtr)->stop();
+        delete *pAdvPtr;
+        *pAdvPtr = nullptr;
+    }
+#if BLE_ENABLED
+    pAdvertising = nullptr;
+#endif
+
+    // Clean up Server
+    BLEServer** pServerPtr = get_m_pServer(BLEDevice_m_pServer_tag());
+    if (*pServerPtr != nullptr) {
+        delete *pServerPtr;
+        *pServerPtr = nullptr;
+    }
+#if BLE_ENABLED
+    pServer = nullptr;
+    bleService = nullptr;
+#endif
+
+    // Clean up Scan
+    BLEScan** pScanPtr = get_m_pScan(BLEDevice_m_pScan_tag());
+    if (*pScanPtr != nullptr) {
+        delete *pScanPtr;
+        *pScanPtr = nullptr;
+    }
+
+    // Clean up Client
+    BLEClient** pClientPtr = get_m_pClient(BLEDevice_m_pClient_tag());
+    if (*pClientPtr != nullptr) {
+        delete *pClientPtr;
+        *pClientPtr = nullptr;
+    }
+}
+
+#else
+
+void cleanupBleDevice() {}
+
+#endif
+
+#endif
+
 #if BLE_ENABLED
 
 bool bleClientConnected = false; // Used in both bluetooths.
@@ -30,12 +128,13 @@ void initBle()
     bleClientConnected = false;
     BLEDevice::init("InkWatchy");
     pServer = BLEDevice::createServer();
+    delayTask(500);
     pServer->setCallbacks(new bleServerCallbacks());
+    delayTask(500);
 }
 
 void startBle()
 {
-    debugLog("Start ble called");
     bleService->start();
     pAdvertising = BLEDevice::getAdvertising();
     pAdvertising->start();
@@ -43,9 +142,7 @@ void startBle()
 
 void exitBle()
 {
-    pAdvertising->stop();
-    pServer->disconnect(0);
-    bleService->stop();
+    cleanupBleDevice();
     BLEDevice::deinit(false);
     bleClientConnected = false;
 }
@@ -164,6 +261,7 @@ void hostBleDeInitEverything()
     remove_all_bonded_devices();
     hostBleClientName = "";
     bleClientConnected = false;
+    cleanupBleDevice();
     BLEDevice::deinit();
 }
 

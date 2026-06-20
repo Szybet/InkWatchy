@@ -4,6 +4,8 @@
 
 #if BLE_PERIPHERAL
 
+extern void cleanupBleDevice();
+
 #include <BLEDevice.h>
 #include <BLEUtils.h>
 #include <BLEServer.h>
@@ -118,7 +120,6 @@ void BleKeyboard::begin(void)
   pSecurity->setAuthenticationMode(ESP_LE_AUTH_REQ_SC_BOND);
   pSecurity->setCapability(ESP_IO_CAP_NONE);
   // pSecurity->setInitEncryptionKey(ESP_BLE_ENC_KEY_MASK | ESP_BLE_ID_KEY_MASK);
-  delete pSecurity;
 
   hid->reportMap((uint8_t *)_hidReportDescriptor, sizeof(_hidReportDescriptor));
   hid->startServices();
@@ -138,46 +139,38 @@ void BleKeyboard::end(void)
   if (advertising != nullptr)
   {
     advertising->stop();
+    advertising = nullptr;
   }
 
-  /*
+  if (outputKeyboard != nullptr)
+  {
+    outputKeyboard->setCallbacks(nullptr);
+    outputKeyboard = nullptr;
+  }
+  inputKeyboard = nullptr;
+  inputMediaKeys = nullptr;
+
   if (hid != nullptr)
   {
     delete hid;
     hid = nullptr;
   }
-  */
 
-  if (inputKeyboard != nullptr)
-  {
-    inputKeyboard->setCallbacks(nullptr);
-  }
-  if (outputKeyboard != nullptr)
-  {
-    outputKeyboard->setCallbacks(nullptr);
-  }
-  if (inputMediaKeys != nullptr)
-  {
-    inputMediaKeys->setCallbacks(nullptr);
-  }
   BLEServer *pServer = BLEDevice::getServer();
   if (pServer != nullptr)
   {
     pServer->setCallbacks(nullptr);
   }
 
+  if (pSecurity != nullptr)
+  {
+    delete pSecurity;
+    pSecurity = nullptr;
+  }
+
+  cleanupBleDevice();
   BLEDevice::deinit();
 
-  /*
-  if(pSecurity != nullptr) {
-    delete pSecurity;
-  }
-  */
-
-  advertising = nullptr;
-  inputKeyboard = nullptr;
-  outputKeyboard = nullptr;
-  inputMediaKeys = nullptr;
   connected = false;
 }
 
@@ -527,37 +520,13 @@ size_t BleKeyboard::write(const uint8_t *buffer, size_t size)
 void BleKeyboard::onConnect(BLEServer *pServer)
 {
   this->connected = true;
-
-  BLE2902 *desc = (BLE2902 *)this->inputKeyboard->getDescriptorByUUID(BLEUUID((uint16_t)0x2902));
-  if (desc != nullptr)
-    desc->setNotifications(true);
-
-  desc = (BLE2902 *)this->inputMediaKeys->getDescriptorByUUID(BLEUUID((uint16_t)0x2902));
-  if (desc != nullptr)
-    desc->setNotifications(true);
 }
 
 void BleKeyboard::onDisconnect(BLEServer *pServer)
 {
   this->connected = false;
-  this->releaseAll();
-
   if (this->advertising != nullptr)
   {
-    if (this->inputKeyboard != nullptr)
-    {
-      BLE2902 *desc = (BLE2902 *)this->inputKeyboard->getDescriptorByUUID(BLEUUID((uint16_t)0x2902));
-      if (desc != nullptr)
-        desc->setNotifications(false);
-    }
-
-    if (this->inputMediaKeys != nullptr)
-    {
-      BLE2902 *desc = (BLE2902 *)this->inputMediaKeys->getDescriptorByUUID(BLEUUID((uint16_t)0x2902));
-      if (desc != nullptr)
-        desc->setNotifications(false);
-    }
-
     this->advertising->start();
   }
 }

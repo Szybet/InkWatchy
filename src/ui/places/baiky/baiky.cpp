@@ -129,7 +129,6 @@ void initBaiky()
     saveCpuSpeed();
     setCpuSpeed(maxSpeed);
     initBle();
-
     bleService = pServer->createService(GPS_SERVICE_UUID);
 
     mapMemory = (uint8_t *)malloc(5000 * sizeof(uint8_t));
@@ -157,6 +156,7 @@ void initBaiky()
     }
 
     startBle();
+
     drawSpeed();
 
     drawBleStatus();
