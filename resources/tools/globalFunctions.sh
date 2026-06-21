@@ -90,6 +90,16 @@ get_pio_env() {
 extract_serial_port() {
     local esptool_path=$1
     local port
+    local current_day
+    current_day=$(date +%d)
+
+    if [[ -f /tmp/inkwatchy_port_day ]]; then
+        local saved_day
+        saved_day=$(tr -d '\n' < /tmp/inkwatchy_port_day)
+        if [[ "$current_day" != "$saved_day" ]]; then
+            rm -f /tmp/inkwatchy_port /tmp/inkwatchy_port_day
+        fi
+    fi
 
     if [[ -f /tmp/inkwatchy_port ]]; then
         port=$(tr -d '\n' < /tmp/inkwatchy_port)
@@ -97,17 +107,28 @@ extract_serial_port() {
             echo -n "$port"
             return
         else
-            rm -f /tmp/inkwatchy_port
+            rm -f /tmp/inkwatchy_port /tmp/inkwatchy_port_day
         fi
     fi
 
     local ports=(/dev/ttyUSB* /dev/ttyACM*)
     local choices=()
-    for p in "${ports[@]}"; do [[ -e $p ]] && choices+=("$p" ""); done
-    if [[ ${#choices[@]} -eq 0 ]]; then
-        echo "No serial ports found" >&2
-        exit 1
-    fi
+    for p in "${ports[@]}"; do
+        if [[ -e $p ]]; then
+            local desc=""
+            if command -v udevadm >/dev/null 2>&1; then
+                desc=$(udevadm info --query=property --name="$p" 2>/dev/null | grep -E '^ID_MODEL_FROM_DATABASE=|^ID_MODEL=' | head -n 1 | cut -d= -f2)
+            fi
+            if [[ -z "$desc" && -f "/sys/class/tty/${p##*/}/device/../interface" ]]; then
+                desc=$(cat "/sys/class/tty/${p##*/}/device/../interface" 2>/dev/null)
+            fi
+            if [[ -z "$desc" && -f "/sys/class/tty/${p##*/}/device/../product" ]]; then
+                desc=$(cat "/sys/class/tty/${p##*/}/device/../product" 2>/dev/null)
+            fi
+            [[ -z "$desc" ]] && desc="Unknown USB Serial Device"
+            choices+=("$p" "$desc")
+        fi
+    done
 
     local cmd=(dialog --clear --menu "Select serial port" 15 50 5)
     port=$("${cmd[@]}" "${choices[@]}" 2>&1 >/dev/tty)
@@ -115,10 +136,11 @@ extract_serial_port() {
     echo "Checking the selected port if it's valid" >&2
     if "$esptool_path" --port "$port" chip_id >&2; then
         echo -n "$port" > /tmp/inkwatchy_port
+        echo -n "$current_day" > /tmp/inkwatchy_port_day
         echo -n "$port"
     else
         echo "Selected port failed esptool check" >&2
-        rm -f /tmp/inkwatchy_port
+        rm -f /tmp/inkwatchy_port /tmp/inkwatchy_port_day
         exit 1
     fi
 }

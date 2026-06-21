@@ -86,9 +86,12 @@ void drawAmPm()
 {
     bool isPM = (timeRTCLocal.Hour >= 12);
     writeImageN(1, 82 - 19, getImg("terrain/PmAm"));
-    if(isPM == true) {
+    if (isPM == true)
+    {
         writeImageN(AM_PM_X, AM_PM_Y, getImg("terrain/pm"));
-    }  else {
+    }
+    else
+    {
         writeImageN(AM_PM_X, AM_PM_Y, getImg("terrain/am"));
     }
 }
@@ -165,6 +168,19 @@ static void drawBattery()
         int upY = map(rM.bat.percentage, 0, 100, BATTERY_START_SHORT_Y, BATTERY_START_SHORT_Y - BATTERY_START_SHORT_HEIGHT);
         dis->drawLine(195, BATTERY_START_SHORT_Y, 195, upY, SCBlack);
     }
+
+    // Voltage as text
+    String voltage = String(rM.bat.curV);
+    while (voltage.length() > 4)
+    {
+        voltage.remove(voltage.length() - 1);
+    }
+    voltage = voltage + "V";
+    // dis->fillRect(167, 92, 20, 10, SCWhite);
+    setTextSize(1);
+    setFont(getFont("terrain/dedicool4"));
+    // writeTextReplaceBack(voltage, 160, 87);
+    writeTextReplaceBack(voltage, 160, 110);
 }
 
 void drawDuskDawnText()
@@ -201,7 +217,8 @@ static void drawTimeAfterApply(bool forceDraw)
 
         // Bar
         writeImageN(4, 30, getImg("terrain/stepsbar"));
-        if(steps > STEPS_GOAL) {
+        if (steps > STEPS_GOAL)
+        {
             steps = STEPS_GOAL;
         }
         uint16_t percentStepsTmp = uint16_t(((float)steps / (float)STEPS_GOAL) * 100.0);
