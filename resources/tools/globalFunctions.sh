@@ -97,16 +97,20 @@ extract_serial_port() {
         local saved_day
         saved_day=$(tr -d '\n' < /tmp/inkwatchy_port_day)
         if [[ "$current_day" != "$saved_day" ]]; then
+            echo "Stale port day cache detected ($saved_day vs today $current_day). Clearing cache." >&2
             rm -f /tmp/inkwatchy_port /tmp/inkwatchy_port_day
         fi
     fi
 
     if [[ -f /tmp/inkwatchy_port ]]; then
         port=$(tr -d '\n' < /tmp/inkwatchy_port)
+        echo "Found cached port: $port. Testing validity..." >&2
         if "$esptool_path" --port "$port" chip_id >&2; then
+            echo "Cached port $port is valid. Choosing this port." >&2
             echo -n "$port"
             return
         else
+            echo "Cached port $port failed validity check. Clearing cache." >&2
             rm -f /tmp/inkwatchy_port /tmp/inkwatchy_port_day
         fi
     fi
@@ -133,8 +137,10 @@ extract_serial_port() {
     local cmd=(dialog --clear --menu "Select serial port" 15 50 5)
     port=$("${cmd[@]}" "${choices[@]}" 2>&1 >/dev/tty)
 
+    echo "User manually selected port: $port" >&2
     echo "Checking the selected port if it's valid" >&2
     if "$esptool_path" --port "$port" chip_id >&2; then
+        echo "Selected port $port is valid. Saving to cache and choosing this port." >&2
         echo -n "$port" > /tmp/inkwatchy_port
         echo -n "$current_day" > /tmp/inkwatchy_port_day
         echo -n "$port"
