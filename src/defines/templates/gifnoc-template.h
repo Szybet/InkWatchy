@@ -335,7 +335,7 @@ The default is this:
 // It's really heavy on memory too. DO NOT ENABLE BLE until you know what you want.
 // If PANIC happens with this enabled, turn it off, check again
 // If it works without it, disable other things (snake, bitcoin etc.)
-#define BLE_ENABLED 1 // Ble in general
+#define BLE_ENABLED 0 // Ble in general
 #define BLE_NAME "InkWatchy"
 
 // For keyboard for example
