@@ -24,7 +24,11 @@ void initBlePeripheral()
     debugLog("Creating new BleKeyboard");
     bleKeyboard = new BleKeyboard(BLE_NAME);
     debugLog("Launching BleKeyboard begin");
-    bleKeyboard->begin();
+    esp_power_level_t powerLevel = ESP_PWR_LVL_P9;
+#if ATCHY_VER == YATCHY
+    powerLevel = ESP_PWR_LVL_P20;
+#endif
+    bleKeyboard->begin(powerLevel);
     debugLog("After BleKeyboard begin");
 
     init_general_page(2);

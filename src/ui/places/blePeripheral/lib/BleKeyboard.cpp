@@ -95,10 +95,10 @@ BleKeyboard::~BleKeyboard()
   this->end();
 }
 
-void BleKeyboard::begin(void)
+void BleKeyboard::begin(esp_power_level_t powerLevel)
 {
   BLEDevice::init(deviceName);
-  BLEDevice::setPower(ESP_PWR_LVL_P20);
+  BLEDevice::setPower(powerLevel);
 
   BLEServer *pServer = BLEDevice::createServer();
   pServer->setCallbacks(this);
