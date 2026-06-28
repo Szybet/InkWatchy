@@ -105,6 +105,8 @@ void drawSpeed()
     {
         speedStr.remove(speedStr.length() - 1);
     }
+
+    dis->fillRect(0, 0, 130, 40, SCWhite);
     writeTextReplaceBack(speedStr, 0, 38);
 
     float avgSpeed = (speedCount == 0) ? 0 : (float)totalSpeedSum / speedCount;
@@ -121,10 +123,11 @@ void drawSpeed()
     }
 
     setFont(getFont("UbuntuMono10"));
+    dis->fillRect(130, 0, 30, 15, SCWhite);
     writeTextReplaceBack(avgStr, 130, 13);
     // debugLog("Average Speed: " + String(avgSpeed));
 
-    writeImageN(130, 15, getImg("baiky/kms"));
+    writeImageN(130, 15, getImg("baiky/kmh"));
 }
 
 void initBaiky()
