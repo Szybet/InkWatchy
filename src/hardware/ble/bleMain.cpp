@@ -419,7 +419,9 @@ bool hostBleConnectToDevice(int index)
     }
     return true;
 }
+#endif
 
+#if BLE_ENABLED || BLE_HOST_ENABLED
 esp_power_level_t getBlePower()
 {
 #if !EXTREME_HARDWARE_POWER_SAVINGS
@@ -436,5 +438,4 @@ esp_power_level_t getBlePower()
 
 #endif
 }
-
 #endif

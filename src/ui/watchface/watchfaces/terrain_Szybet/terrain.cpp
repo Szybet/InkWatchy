@@ -178,11 +178,12 @@ static void drawBattery()
         voltage.remove(voltage.length() - 1);
     }
     voltage = voltage + "V";
-    // dis->fillRect(167, 92, 20, 10, SCWhite);
+    dis->fillRect(157, 104, 31, 15, SCWhite);
     setTextSize(1);
-    setFont(getFont("terrain/dedicool4"));
+    setFont(getFont("dogicapixel4"));
     // writeTextReplaceBack(voltage, 160, 87);
-    writeTextReplaceBack(voltage, 157, 110);
+    dis->setCursor(157, 114);
+    dis->print(voltage);
 }
 
 void drawDuskDawnText()

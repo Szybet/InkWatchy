@@ -4,6 +4,7 @@
 
 #if BLE_ENABLED || BLE_HOST_ENABLED
 extern bool bleClientConnected;
+esp_power_level_t getBlePower();
 #endif
 
 #if BLE_ENABLED
@@ -28,5 +29,4 @@ String hostBleGetScannedDeviceName(int index);
 bool hostBleConnectToDevice(int index);
 extern String hostBleClientName;
 extern notify_callback hostBleNotifyCallback;
-esp_power_level_t getBlePower();
 #endif
