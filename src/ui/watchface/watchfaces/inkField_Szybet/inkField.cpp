@@ -33,28 +33,35 @@
 #define TIME_CORD TIME_CORD_X, TIME_CORD_Y
 
 // Helper function to get time string based on WATCHFACE_12H setting
-String getInkFieldTimeString(tmElements_t timeEl) {
+String getInkFieldTimeString(tmElements_t timeEl)
+{
 #if WATCHFACE_12H
     // 12-hour format without AM/PM
     int hour = timeEl.Hour;
-    if (hour == 0) hour = 12;
-    else if (hour > 12) hour -= 12;
-    
+    if (hour == 0)
+        hour = 12;
+    else if (hour > 12)
+        hour -= 12;
+
     String hourStr = String(hour);
-    if (hourStr.length() == 1) hourStr = "0" + hourStr;  // Fixed: use "0" instead of " "
-    
+    if (hourStr.length() == 1)
+        hourStr = "0" + hourStr; // Fixed: use "0" instead of " "
+
     String minuteStr = String(timeEl.Minute);
-    if (minuteStr.length() == 1) minuteStr = "0" + minuteStr;
-    
+    if (minuteStr.length() == 1)
+        minuteStr = "0" + minuteStr;
+
     return hourStr + ":" + minuteStr;
 #else
     // 24-hour format
     String hourStr = String(timeEl.Hour);
-    if (hourStr.length() == 1) hourStr = "0" + hourStr;
-    
+    if (hourStr.length() == 1)
+        hourStr = "0" + hourStr;
+
     String minuteStr = String(timeEl.Minute);
-    if (minuteStr.length() == 1) minuteStr = "0" + minuteStr;
-    
+    if (minuteStr.length() == 1)
+        minuteStr = "0" + minuteStr;
+
     return hourStr + ":" + minuteStr;
 #endif
 }
@@ -131,7 +138,8 @@ static void drawTimeAfterApply(bool forceDraw)
         writeTextReplaceBack("   ", TEMPS_TEXT_CORD);
         // Use formatTemperature for device temperature (not weather)
         String tempStr = formatTemperature(rM.previousTemp);
-        if(tempStr.length() > 3) {
+        if (tempStr.length() > 3)
+        {
             tempStr = tempStr.substring(0, 3);
         }
         writeTextReplaceBack(tempStr, TEMPS_TEXT_CORD);
@@ -220,6 +228,15 @@ static void drawBattery()
     drawProgressBar(BATT_BAR_CORD, GENERAL_BAR_SIZE, rM.batteryPercantageWF);
 }
 
+#define LP_CORE_SCREEN_DEFAULT_X 8
+#define LP_CORE_SCREEN_DEFAULT_Y 2
+#define LP_CORE_SCREEN_DEFAULT_W 185
+#define LP_CORE_SCREEN_DEFAULT_H 56
+static void lpCoreScreenPrepareCustom()
+{
+    dis->fillRect(LP_CORE_SCREEN_DEFAULT_X, LP_CORE_SCREEN_DEFAULT_Y, LP_CORE_SCREEN_DEFAULT_W, LP_CORE_SCREEN_DEFAULT_H, SCWhite);
+}
+
 const watchfaceDefOne inkFieldDef = {
     .drawTimeBeforeApply = drawTimeBeforeApply,
     .drawTimeAfterApply = drawTimeAfterApply,
@@ -241,7 +258,8 @@ const watchfaceDefOne inkFieldDef = {
         }
         return false;
     },
-    .lpCoreScreenPrepareCustom = NULL,
+    .lpCoreScreenPrepareCustom = lpCoreScreenPrepareCustom,
+    .lpCoreFile = LP_CORE_FILE_DEFAULT,
 };
 
 #endif

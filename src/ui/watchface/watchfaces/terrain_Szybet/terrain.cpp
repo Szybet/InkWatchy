@@ -315,6 +315,7 @@ const watchfaceDefOne terrainDefOne = {
         }
         return false; },
     .lpCoreScreenPrepareCustom = clearTime,
+    .lpCoreFile = LP_CORE_FILE_TERRAIN,
 };
 
 #endif

@@ -330,6 +330,15 @@ static void drawBattery()
     drawProgressBar(BATT_BAR_CORD, GENERAL_BAR_SIZE, rM.batteryPercantageWF);
 }
 
+#define LP_CORE_SCREEN_DEFAULT_X 8
+#define LP_CORE_SCREEN_DEFAULT_Y 2
+#define LP_CORE_SCREEN_DEFAULT_W 185
+#define LP_CORE_SCREEN_DEFAULT_H 56
+static void lpCoreScreenPrepareCustom()
+{
+    dis->fillRect(LP_CORE_SCREEN_DEFAULT_X, LP_CORE_SCREEN_DEFAULT_Y, LP_CORE_SCREEN_DEFAULT_W, LP_CORE_SCREEN_DEFAULT_H, SCWhite);
+}
+
 const watchfaceDefOne domainDef = {
     .drawTimeBeforeApply = drawTimeBeforeApply,
     .drawTimeAfterApply = drawTimeAfterApply,
@@ -351,7 +360,8 @@ const watchfaceDefOne domainDef = {
         }
         return false;
     },
-    .lpCoreScreenPrepareCustom = NULL,
+    .lpCoreScreenPrepareCustom = lpCoreScreenPrepareCustom,
+    .lpCoreFile = LP_CORE_FILE_DEFAULT,
 };
 
 #endif

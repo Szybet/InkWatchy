@@ -31,6 +31,7 @@ struct watchfaceDefOne {
     bool (*isModuleEngaged)(); // This is how the module checks if more button inputs are available to him. You should use this check to know when to provide those buttons
 
     void (*lpCoreScreenPrepareCustom)(); // Custom lp core screen preparing. Probably should be NULL simply
+    const char* lpCoreFile = NULL;
 };
 
 void wManageOneLaunch(const watchfaceDefOne* wdo, bool init);

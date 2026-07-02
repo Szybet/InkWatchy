@@ -97,8 +97,26 @@ void goSleep()
     //     debugLog("Waiting for motor task");
     //     delayTask(25);
     // }
-#if LP_CORE == true && YATCHY_SHIPPING_MODE == 0
-    if (rM.disableWakeUp == false)
+#if ATCHY_VER == YATCHY && LP_CORE == true && YATCHY_SHIPPING_MODE == 0
+    String lpcoreFile = selectLpCoreFile();
+#if HYBRID_LP_CORE == 0
+    if (lpcoreFile.isEmpty())
+    {
+        if (fsFileExists(String("/other/lpcore/") + LP_CORE_FILE_DEFAULT) == true)
+        {
+            debugLog("Fallback default lpcore");
+            lpcoreFile = LP_CORE_FILE_DEFAULT;
+        } else {
+            // No button input here, this is absolutely last case resort.
+            showErrorOnScreen("CRITICAL. HYBRID_LP_CORE is 0 and no lpcore file found");
+            resetSleepDelay();
+            return;
+        }
+    }
+#endif
+
+    bool isLpCore = lpcoreFile.length() > 0;
+    if (rM.disableWakeUp == false && isLpCore == true)
     {
         deInitScreen();
         delayTask(10);
@@ -108,7 +126,7 @@ void goSleep()
 
         // This, without the screen, gives +150uA - or not really
         initRtcGpio();
-        loadLpCore();
+        loadLpCore(lpcoreFile);
         runLpCore();
 
         // Can be before this scope, doesn't matter in my opinion
@@ -120,19 +138,20 @@ void goSleep()
     }
 #else
     deInitScreen();
-    // Not needed
-#if 0
-    rM.gpioExpander.setPinState(YATCHY_DISPLAY_CS, HIGH);
-    digitalWrite(EPD_RESET, true);
-    digitalWrite(EPD_DC, true);
-#endif
 #endif
 
     // https://esp32.com/viewtopic.php?t=34166
     // turnOffWifi();
 
     // deInitWatchdogTask();
-#if LP_CORE == false && YATCHY_SHIPPING_MODE == 0
+#if ATCHY_VER == YATCHY
+#if YATCHY_SHIPPING_MODE == 0
+    if (isLpCore == false)
+    {
+        wakeUpManageRTC();
+    }
+#endif
+#else
     wakeUpManageRTC();
 #endif
 

@@ -11,9 +11,10 @@ void setAlarmForLpCore();
 void clearLpCoreRtcMem();
 void lpCoreScreenPrepare(bool now, bool setDuChange = true);
 void stopLpCore();
-void loadLpCore(String lp_core_program = "yatchy-lp-program.bin");
+void loadLpCore(String lpcoreFile);
 void runLpCore();
 void initManageLpCore();
+String selectLpCoreFile();
 
 #if DEBUG
 void startLpCoreTest();

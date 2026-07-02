@@ -297,6 +297,10 @@ The default is this:
 #define SOFT_START_DELAY_MS 4500
 #define FORCE_DISABLE_ACC 0   // 1 Means ACC is disabled, BMA530 doesn't like that, increases power consumption
 #define LED_MAX_TIME_MS 30000 // Fallback if diode is on and you forgot to turn it off (flashlight)
+// When this is off, if a watchface doesn't have a lp core, the default one will be selected
+// When this is on, depending on the watchface yatchy could run without a lp core
+// This makes battery life A LOT WORSE, ONLY ENABLE IT IF YOU ACCEPT THAT
+#define HYBRID_LP_CORE 0
 
 // Vault
 #define VAULT 1

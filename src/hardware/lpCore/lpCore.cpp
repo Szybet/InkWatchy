@@ -6,11 +6,6 @@
 bool screenForceNextFullTimeWrite = false; // Make the watchface update the whole time bar
 bool screenTimeChanged = false;            // If the watchface has written time (minutes / hours) to the screen
 
-#define LP_CORE_SCREEN_DEFAULT_X 8
-#define LP_CORE_SCREEN_DEFAULT_Y 2
-#define LP_CORE_SCREEN_DEFAULT_W 185
-#define LP_CORE_SCREEN_DEFAULT_H 56
-
 struct customRtcData
 {
     uint8_t debug_message;
@@ -39,12 +34,8 @@ void lpCoreScreenPrepare(bool now, bool setDuChange)
         {
             currentWatchface->lpCoreScreenPrepareCustom();
         }
-        else
-        {
-            dis->fillRect(LP_CORE_SCREEN_DEFAULT_X, LP_CORE_SCREEN_DEFAULT_Y, LP_CORE_SCREEN_DEFAULT_W, LP_CORE_SCREEN_DEFAULT_H, SCWhite);
-        }
     }
-    
+
     if (now == true)
     {
         updateDisplay(PARTIAL_UPDATE);
@@ -100,11 +91,11 @@ void clearLpCoreRtcMem()
     customRtcData->timezone_offset = int16_t(timeZoneOffset / 60);
 }
 
-void loadLpCore(String lp_core_program)
+void loadLpCore(String lpcoreFile)
 {
     debugLog("Loading lp core");
     // Load it from littlefs first
-    bufSize bin = fsGetBlob(lp_core_program, "/other/");
+    bufSize bin = fsGetBlob(lpcoreFile, "/other/lpcore/");
 
     if (bin.size <= 0)
     {
@@ -122,6 +113,27 @@ void loadLpCore(String lp_core_program)
         debugLog("Failed to load lp core: " + String(esp_err_to_name(err)));
         assert(false);
     }
+}
+
+String selectLpCoreFile()
+{
+    const watchfaceDefOne *watchface = getwatchfaceDefOne();
+    String finalLpCorefile = "";
+    if (watchface != NULL)
+    {
+        if (watchface->lpCoreFile != NULL)
+        {
+            finalLpCorefile = String(watchface->lpCoreFile);
+        }
+    }
+    if (finalLpCorefile != "")
+    {
+        if (fsFileExists(String("/other/lpcore/") + finalLpCorefile) == true)
+        {
+            return finalLpCorefile;
+        }
+    }
+    return String("");
 }
 
 uint64_t microsTillNextMin()

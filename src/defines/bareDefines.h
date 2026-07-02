@@ -59,3 +59,6 @@
 #define IMAGE_MODULE_PATH "watchfaceImages/"
 #define PRECISE_STEP_COUNTING_DIR "/other/steps/"
 #define NOTES_DIR "/notes"
+
+#define LP_CORE_FILE_DEFAULT "default"
+#define LP_CORE_FILE_TERRAIN "terrain"

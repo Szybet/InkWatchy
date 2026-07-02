@@ -19,15 +19,21 @@ if str(pio_env) == "Unknown":
 
 # Lp core check
 if str(pio_env) == "Yatchy":
-     path = "resources/tools/fs/littlefs/other/yatchy-lp-program.bin"
-     if not os.path.isfile(path):
-          with open("src/defines/condition.h") as f:
-               for line in f:
-                    if "#define LP_CORE" in line:
-                         if "1" in line:
-                              print("LP_CORE is defined as 1 but the binary is missing")
-                              sys.exit(1)
-                         break
+    dir_path = "resources/tools/fs/littlefs/other/lpcore/"
+    has_files = False
+    if os.path.isdir(dir_path):
+        files = [f for f in os.listdir(dir_path) if f != ".keep"]
+        if len(files) > 0:
+            has_files = True
+
+    if not has_files:
+        with open("src/defines/condition.h") as f:
+            for line in f:
+                if "#define LP_CORE" in line:
+                    if "1" in line:
+                        print("LP_CORE is defined as 1 but the lpcore directory is empty")
+                        sys.exit(1)
+                    break
 
 file_path = '/tmp/inkwatchy_env'
 if os.path.exists(file_path):
