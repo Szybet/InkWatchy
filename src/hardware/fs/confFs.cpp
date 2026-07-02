@@ -30,26 +30,13 @@ String fsGetString(String conf, String defaultValue, String dir)
         return defaultValue;
     }
 
-    // Ensure null termination for String conversion
-    char *str_buf = (char *)malloc(blob.size + 1);
-    if (!str_buf)
-    {
-        debugLog("Failed to allocate memory for string buffer.");
-        free(blob.buf);
-        return defaultValue;
-    }
-    memcpy(str_buf, blob.buf, blob.size);
-    str_buf[blob.size] = '\0'; // Null-terminate the string
-
-    String str = String(str_buf);
-    free(blob.buf); // Free the buffer allocated by fsGetBlob
-    free(str_buf);  // Free the temporary string buffer
+    String str(blob.buf, blob.size);
+    free(blob.buf);
     return str;
 }
 
 bool fsSetString(String conf, String value, String dir)
 {
-    // Convert String to uint8_t* and its size
     int size = value.length();
     uint8_t *buf = (uint8_t *)malloc(size);
     if (!buf)
@@ -394,7 +381,7 @@ bufSize fsGetBlob(String conf, String dir)
         return emptyBuff;
     }
     int fileSize = file.size();
-    uint8_t *buf = (uint8_t *)malloc(fileSize * sizeof(uint8_t));
+    uint8_t *buf = (uint8_t *)malloc(fileSize);
     if (file.read(buf, fileSize) == 0)
     {
         debugLog("Failed to read the file: " + conf);
