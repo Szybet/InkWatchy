@@ -87,6 +87,14 @@ const watchfaceDef szybetAnalogSharp = {
 };
 #endif
 
+#if WATCHFACE_DOSY
+const watchfaceDef dosyWatchface = {
+    .manager = wfmOne,
+    .name = "Dosy",
+    .data = (genPointer)&dosyDef,
+};
+#endif
+
 #if GSR_WATCHFACES && GSR_STARFIELD
 const watchfaceDef gsrStarfield = {
     .manager = wfmGSR,
@@ -210,6 +218,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_ANALOG_SHARP_SZYBET
     &szybetAnalogSharp,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_DOSY
+    &dosyWatchface,
 #else
     &noWatchFace,
 #endif

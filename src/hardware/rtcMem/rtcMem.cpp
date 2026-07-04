@@ -129,6 +129,14 @@ RTC_DATA_ATTR rtcMem rM = {
         .energySaving = false,
     },
 #endif
+// dosy watchface
+#if WATCHFACE_DOSY
+    .dosy = {
+        .weatherAvailable = false, .lastHourWeatherCheck = 255,
+        .lastTemp = 0,
+        .lastCondition = 255,
+    },
+#endif
     // Watchface modules
     .latestModuleUpdate = 0,
     .currentModule = DEFAULT_WATCHFACE_MODULE_INDEX,

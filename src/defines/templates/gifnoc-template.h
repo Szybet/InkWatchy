@@ -25,6 +25,8 @@
 // Shades & Analog (Code preview watchfaces)
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
+// Dosy watchface
+#define WATCHFACE_DOSY 1
 
 // GSR watchfaces
 // Because of the ways they are written (even in native watchyGSR) they will provide worse battery life than native inkwatchy watchfaces -

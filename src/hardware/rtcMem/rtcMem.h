@@ -138,6 +138,16 @@ struct rtcMem
         bool isPm : 1;
     } terrain;
 #endif
+// dosy watchface
+#if WATCHFACE_DOSY
+    struct
+    {
+        bool weatherAvailable : 1;
+        uint8_t lastHourWeatherCheck;
+        int16_t lastTemp;
+        uint8_t lastCondition;
+    } dosy;
+#endif
     // Watchface modules
     uint64_t latestModuleUpdate;
     int currentModule; // Int because checkMinMax again
