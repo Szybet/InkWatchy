@@ -324,7 +324,7 @@ void initManageLpCore()
     }
 }
 
-#if DEBUG
+#if DEBUG && LP_CORE_TEST_ENABLED
 void startLpCoreTest()
 {
     bootStatus.fromWakeup = false; // To be sure
@@ -337,7 +337,7 @@ void startLpCoreTest()
     clearLpCoreRtcMem();
     stopLpCore();
     initRtcGpio();
-    loadLpCore();
+    loadLpCore("default");
     runLpCore();
 #if LP_CORE_SERIOUS_TEST == false
     monitorLpCore();
