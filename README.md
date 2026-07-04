@@ -98,14 +98,12 @@ Don't try anything by yourself without the wiki, you will probably fail.
 Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 
 ## Sister projects
+- https://github.com/Szybet/Yatchy
 - https://github.com/Szybet/WatchySourcingHub
 - https://github.com/Szybet/watchy-scom
-- https://github.com/Szybet/Yatchy
 
 ## Questions / Contact
 Create a github issue or get in touch with me on the discord server or matrix space (on top of this read are links)
-
-or via matrix: @szybet:matrix.org
 
 <details>
 <summary><h2>Outdated demos</h2></summary>
