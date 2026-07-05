@@ -17,7 +17,7 @@
 // Domain
 #define WATCHFACE_DOMAIN_DOTP 1
 // Terrain
-#define WATCHFACE_TERRAIN 0
+#define WATCHFACE_TERRAIN 1
 // Orbital watchface
 #define WATCHFACE_ORBITAL 1
 // Station watchface

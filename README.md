@@ -1,4 +1,5 @@
-[![](https://dcbadge.limes.pink/api/server/6PUmRXZRGD)](https://discord.gg/6PUmRXZRGD)
+[![Chat on Matrix](https://img.shields.io/badge/Chat%20on-Matrix-000000.svg?style=flat&logo=matrix&logoColor=white)](https://matrix.to/#/#*atchy-community:matrix.org)
+[![Chat on Discord](https://img.shields.io/badge/Chat%20on-Discord-%235865F2.svg?logo=discord&logoColor=white)](https://discord.gg/6PUmRXZRGD)
 
 <h1 align="center">
   InkWatchy
@@ -97,14 +98,12 @@ Don't try anything by yourself without the wiki, you will probably fail.
 Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 
 ## Sister projects
+- https://github.com/Szybet/Yatchy
 - https://github.com/Szybet/WatchySourcingHub
 - https://github.com/Szybet/watchy-scom
-- https://github.com/Szybet/Yatchy
 
 ## Questions / Contact
-Create a github issue or get in touch with me on <a href="https://discord.gg/6PUmRXZRGD">*atchy community</a> discord server
-
-or via matrix: @szybet:matrix.org
+Create a github issue or get in touch with me on the discord server or matrix space (on top of this read are links)
 
 <details>
 <summary><h2>Outdated demos</h2></summary>
