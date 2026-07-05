@@ -144,7 +144,7 @@ void goSleep()
     // turnOffWifi();
 
     // deInitWatchdogTask();
-#if ATCHY_VER == YATCHY
+#if ATCHY_VER == YATCHY && LP_CORE == true
 #if YATCHY_SHIPPING_MODE == 0
     if (isLpCore == false)
     {
