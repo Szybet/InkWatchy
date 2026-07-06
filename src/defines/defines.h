@@ -269,6 +269,9 @@ extern uint16_t SCWhite;
 #if WATCHFACE_TERRAIN
 #include "../ui/watchface/watchfaces/terrain_Szybet/terrain.h"
 #endif
+#if WATCHFACE_DOSY
+#include "../ui/watchface/watchfaces/dosy_choyg/dosy.h"
+#endif
 #if GSR_WATCHFACES
 #include "../ui/watchface/watchfaceManagers/wManageGSR/wManageGSR.h"
 #endif
