@@ -1,10 +1,6 @@
 #include "wManageAll.h"
 #include "rtcMem.h"
 
-#if WATCHFACE_ORBITAL
-#include "../watchfaces/orbital_Defaltastra/orbital.h"
-#endif
-
 #if GSR_WATCHFACES
 #include "importGSR.h"
 #endif
@@ -63,6 +59,14 @@ const watchfaceDef orbitalWatchface = {
 };
 #endif
 
+#if WATCHFACE_DOSY
+const watchfaceDef dosyWatchface = {
+    .manager = wfmOne,
+    .name = "Dosy",
+    .data = (genPointer)&dosyDef,
+};
+#endif
+
 #if WATCHFACE_STATION
 const watchfaceDef stationWatchface = {
     .manager = wfmOne,
@@ -84,14 +88,6 @@ const watchfaceDef szybetAnalogSharp = {
     .manager = wfmTwo,
     .name = "Szybet's Analog sharp",
     .data = (genPointer)&analogConwayDef,
-};
-#endif
-
-#if WATCHFACE_DOSY
-const watchfaceDef dosyWatchface = {
-    .manager = wfmOne,
-    .name = "Dosy",
-    .data = (genPointer)&dosyDef,
 };
 #endif
 
@@ -206,6 +202,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #else
     &noWatchFace,
 #endif
+#if WATCHFACE_DOSY
+    &dosyWatchface,
+#else
+    &noWatchFace,
+#endif
 #if WATCHFACE_STATION
     &stationWatchface,
 #else
@@ -218,11 +219,6 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_ANALOG_SHARP_SZYBET
     &szybetAnalogSharp,
-#else
-    &noWatchFace,
-#endif
-#if WATCHFACE_DOSY
-    &dosyWatchface,
 #else
     &noWatchFace,
 #endif

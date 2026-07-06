@@ -1,7 +1,7 @@
 #include "dosy.h"
-#include "rtcMem.h"
 
 #if WATCHFACE_DOSY
+#include "rtcMem.h"
 
 // Font configuration
 #define DOSY_FONT "UbuntuMono10"
