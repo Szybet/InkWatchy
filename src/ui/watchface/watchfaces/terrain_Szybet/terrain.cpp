@@ -97,16 +97,6 @@ void drawAmPm()
 }
 #endif
 
-static void showTimeBeforeApply()
-{
-#if WATCHFACE_12H
-    if (rM.wFTime.Hour != timeRTCLocal.Hour)
-    {
-        drawAmPm();
-    }
-#endif
-}
-
 static void showTimeFull()
 {
     setTextSize(1);
@@ -295,7 +285,7 @@ static void drawDay()
 }
 
 const watchfaceDefOne terrainDefOne = {
-    .drawTimeBeforeApply = showTimeBeforeApply,
+    .drawTimeBeforeApply = showTimeFull,
     .drawTimeAfterApply = drawTimeAfterApply,
     .drawDay = drawDay,
     .drawMonth = []() {},
