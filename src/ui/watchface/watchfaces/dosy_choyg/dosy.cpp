@@ -167,8 +167,9 @@ namespace DosySpace
             {
                 year_str = "0" + year_str;
             }
-
-            String month_str = String(time_elem.Month);
+            
+            // Month range 0~11 
+            String month_str = String(time_elem.Month+1);
             if (month_str.length() == 1)
             {
                 month_str = "0" + month_str;
