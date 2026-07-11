@@ -357,7 +357,6 @@ void wakeUpManageRTC()
     uint hour = timeRTCLocal.Hour;
     // debugLog("timeRTCLocal.Hour: " + String(hour));
 
-    // Night sleep check
     bool isNight = false;
     if (NIGHT_SLEEP_AFTER_HOUR < NIGHT_SLEEP_BEFORE_HOUR)
       isNight = (hour >= NIGHT_SLEEP_AFTER_HOUR && hour < NIGHT_SLEEP_BEFORE_HOUR);
