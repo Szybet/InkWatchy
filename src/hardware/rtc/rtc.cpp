@@ -356,7 +356,15 @@ void wakeUpManageRTC()
     // isDebug(dumpRTCTime());
     uint hour = timeRTCLocal.Hour;
     // debugLog("timeRTCLocal.Hour: " + String(hour));
-    if (NIGHT_SLEEP_FOR_M != 1 && (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR))
+
+    // Night sleep check
+    bool isNight = false;
+    if (NIGHT_SLEEP_AFTER_HOUR < NIGHT_SLEEP_BEFORE_HOUR)
+      isNight = (hour >= NIGHT_SLEEP_AFTER_HOUR && hour < NIGHT_SLEEP_BEFORE_HOUR);
+    else
+      isNight = (hour >= NIGHT_SLEEP_AFTER_HOUR || hour < NIGHT_SLEEP_BEFORE_HOUR);
+
+    if (NIGHT_SLEEP_FOR_M != 1 && isNight)
     {
       minutes = NIGHT_SLEEP_FOR_M;
     }
