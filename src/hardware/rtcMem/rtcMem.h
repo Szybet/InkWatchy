@@ -138,6 +138,19 @@ struct rtcMem
         bool isPm : 1;
     } terrain;
 #endif
+#if WATCHFACE_CYBER
+    struct
+    {
+        uint16_t steps;
+        uint16_t duskDawnHour;
+        int watchfacePos; // It needs to be int because it's used in checkMinMax
+        bool positionEngaged : 1;
+        bool energySaving : 1;
+        bool isPm : 1;
+        uint16_t weatherMinutes;
+        uint16_t dayTime;
+    } cyber;
+#endif
     // Watchface modules
     uint64_t latestModuleUpdate;
     int currentModule; // Int because checkMinMax again
