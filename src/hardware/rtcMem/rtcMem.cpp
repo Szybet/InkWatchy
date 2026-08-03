@@ -137,7 +137,18 @@ RTC_DATA_ATTR rtcMem rM = {
         .lastCondition = 255,
     },
 #endif
-    // Watchface modules
+// cyber watchface
+ #if WATCHFACE_CYBER
+    .cyber = {
+        .steps = 0,
+        .duskDawnHour = 0,
+        .watchfacePos = 0,
+        .positionEngaged = true,
+        .energySaving = false,
+        .weatherMinutes = 0,
+        .dayTime = 0
+ #endif
+// Watchface modules
     .latestModuleUpdate = 0,
     .currentModule = DEFAULT_WATCHFACE_MODULE_INDEX,
     .previousModuleCount = -1,

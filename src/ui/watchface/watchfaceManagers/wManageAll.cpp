@@ -51,6 +51,14 @@ const watchfaceDef terrainDef = {
 };
 #endif
 
+#if WATCHFACE_CYBER
+const watchfaceDef cyberDef = {
+    .manager = wfmOne,
+    .name = "Naate's Cyber",
+    .data = (genPointer)&cyberDefOne,
+};
+#endif
+
 #if WATCHFACE_ORBITAL
 const watchfaceDef orbitalWatchface = {
     .manager = wfmOne,
@@ -194,6 +202,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_TERRAIN
     &terrainDef,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_CYBER
+    &cyberDef,
 #else
     &noWatchFace,
 #endif
