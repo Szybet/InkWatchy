@@ -154,23 +154,21 @@ static void drawTimeAfterApply(bool forceDraw)
 
 String getDayByIndexCyber(int dayOfWeek, int offset = 0)
 {
-    
-    // static const String dayNames[] = {
-    //     "Sunday",
-    //     "Monday",
-    //     "Tuesday",
-    //     "Wednesday",
-    //     "Thursday",
-    //     "Friday",
-    //     "Saturday",
-    // };
-
+    static const String dayNames[] = {
+        ALARM_DAY_SUNDAY,
+        ALARM_DAY_MONDAY,
+        ALARM_DAY_TUESDAY,
+        ALARM_DAY_WEDNESDAY,
+        ALARM_DAY_THURSDAY,
+        ALARM_DAY_FRIDAY,
+        ALARM_DAY_SATURDAY
+    };
     // Apply offset and wrap around
     int dayIndex = (dayOfWeek + offset + 6) % 7;
 
     if (dayIndex >= 0 && dayIndex < 7)
     {
-        return getLocalizedDayByIndex(dayIndex, offset);
+        return dayNames[dayIndex];
     }
     return "---";
 }

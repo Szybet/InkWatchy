@@ -155,7 +155,7 @@ String cGetWeatherString(uint8_t weatherCode)
     case 99:
         return WF_S_WEATHER_THUNDERSTORM;
     default:
-        return "No Weather Data";
+        return "No Data";
     }
 }
 
@@ -185,9 +185,23 @@ void cyberDrawWeather()
 {
 #if WEATHER_INFO
 
-    
-    // get today's high/low temps
+    // clear
+    dis->fillRect(1, 92, 90, 60, SCWhite);
+
+    // set default strings
     String highLow = "-- / --";
+    String temp = "--";
+    String weatherIcon = "no-weather";
+    String weatherString = "No Data";
+    String weatherString2 = "";
+    int humidity = -1;
+    int precipitation = -1;
+    String humidityString = "--";
+    String precipitationString = "--";
+    float sunrise = 0.0f;
+    float sunset = 0.0f;
+
+    // get today's high/low temps
     OM_HourlyForecastReturn forecast = cyberGeneralWeatherGetData();
     if (forecast.fine == true)
     {
@@ -196,108 +210,99 @@ void cyberDrawWeather()
         highLow = String(int(round(lowNum))) + " / " + String(int(round(highNum)));
     }
 
+    // get today's weather
     OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
     if (wData.fine == true)
     {
-        //clear
-        dis->fillRect(1, 92, 90, 60, SCWhite);
 
         debugLog("Drawing weather in watchface");
-        setTextSize(1);
-        dis->setTextColor(SCBlack);
 
-        String temp = String(getDisplayTemperature(wData.temp)); // formatTemperature(wData.temp);  // Use global function
+        temp = String(getDisplayTemperature(wData.temp)); // formatTemperature(wData.temp);  // Use global function
         if (temp.length() > 2)
         {
             temp = temp.substring(0, 2);
         }
 
-        setFont(getFont("cyber/RajdhaniL14"));
-        int degPos = cyberRightTextXOffset(temp);
-        dis->setCursor(41, 113);
-        dis->print(temp);
-        dis->drawRect(41 + degPos + 4, 97, 3, 5, SCBlack);
-
-        setFont(getFont("cyber/RajdhaniM6"));
-        dis->setCursor(41, 127);
-        dis->print(highLow);
-        
-        String weatherString = cGetWeatherString(wData.weather_code);
-        String weatherString2 = "";
+        weatherString = cGetWeatherString(wData.weather_code);
+        weatherString2 = "";
         if (weatherString.length() > 14)
         {
             int idx = weatherString.lastIndexOf(" ");
             weatherString2 = weatherString.substring(idx + 1, weatherString.length() - 1);
             weatherString = weatherString.substring(0, idx);
         }
+        weatherIcon = cgetWeatherIcon(wData.weather_code);
 
-        setFont(getFont("cyber/RajdhaniM6"));
-        dis->setCursor(5, 140);
-        dis->print(weatherString);
-        dis->setCursor(5, 150);
-        dis->print(weatherString2);
-        writeImageN(5, 96, getImg("cyber/" + cgetWeatherIcon(wData.weather_code)));
+        humidity = wData.humidity;
+        precipitation = wData.precipitation;
 
-        // weather arc graphs
-        writeImageN(93, 95, getImg("cyber/weatherringblock"));
-
-        // humidity
-        dis->setCursor(106 - cyberCenterTextXOffset(String(wData.humidity)), 139);
-        dis->print(String(wData.humidity));
-        cyberDrawPctGraph(wData.humidity/100.0f, 107,137);
-        
-        // precipitation
-        dis->setCursor(140 - cyberCenterTextXOffset(String(wData.precipitation)), 139);
-        dis->print(String(wData.precipitation));
-        cyberDrawPctGraph(wData.precipitation/100.0f, 141,137);
-
-        // SUNRISE/SUNSET graph
-        float hPct = ((timeRTCLocal.Hour + timeRTCLocal.Minute / 60.0f) / 24.0f);
-
-        float sunrise = hour(wData.sunrise) + (minute(wData.sunrise)/60.0f);
-        float sunset = hour(wData.sunset) + (minute(wData.sunset)/60.0f);
-
-        float sunriseDeg = (((sunrise - 0) * 270.0f) / 24.0f);
-        float sunsetDeg = (((sunset - 0) * 270.0f) / 24.0f);
-        
-        cyberDrawPctGraph(hPct, 124,109);
-        cyberDrawArc(sunriseDeg-225, sunsetDeg - sunriseDeg, 124,109,10);
-        String hPctConv = String(hPct*100.0f);
-        if (hPctConv.length() > 2)
-        {
-            hPctConv = hPctConv.substring(0, 2);
-        }
-        dis->setCursor(124 - cyberCenterTextXOffset(hPctConv), 112);
-        dis->print(hPctConv);
+        sunrise = hour(wData.sunrise) + (minute(wData.sunrise) / 60.0f);
+        sunset = hour(wData.sunset) + (minute(wData.sunset) / 60.0f);
     }
     else
     {
         // Use global language system for error messages
-        // writeTextReplaceBack(getInkFieldLocalizedError(), TEMP_CORD, SCBlack, SCWhite, true, 1);
-        // writeTextReplaceBack(getInkFieldLocalizedErrorShort(), HUMIDITY_CORD, SCBlack, SCWhite, true, 1);
-        // writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PRESSURE_CORD, SCBlack, SCWhite, true, 1);
-        // writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PREPICITATION_CORD, SCBlack, SCWhite, true, 1);
-        // writeTextReplaceBack(getInkFieldLocalizedErrorShort(), VISIBILITY_CORD, SCBlack, SCWhite, true, 1);
-        // writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_SPEED_CORD, SCBlack, SCWhite, true, 1);
-        // writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_GUTS_CORD, SCBlack, SCWhite, true, 1);
-        // writeTextReplaceBack(getInkFieldLocalizedErrorShort(), CLOUD_COVER_CORD, SCBlack, SCWhite, true, 1);
-        // writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNRISE_CORD, SCBlack, SCWhite, true, 1);
-        // writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNSET_CORD, SCBlack, SCWhite, true, 1);
-        // writeImageN(WEATHER_ICON_CORD, getImg("inkfield/" + cgetWeatherIcon(255)));
+        weatherString = WF_I_ERROR;
+        weatherIcon = "error";
     }
+    // write the data
+    setTextSize(1);
+    dis->setTextColor(SCBlack);
+    setFont(getFont("cyber/RajdhaniL14"));
+    int degPos = cyberRightTextXOffset(temp);
+    dis->setCursor(41, 113);
+    dis->print(temp);
+    dis->drawRect(41 + degPos + 4, 97, 3, 5, SCBlack);
+
+    setFont(getFont("cyber/RajdhaniM6"));
+    dis->setCursor(41, 127);
+    dis->print(highLow);
+
+    dis->setCursor(5, 140);
+    dis->print(weatherString);
+    dis->setCursor(5, 150);
+    dis->print(weatherString2);
+    writeImageN(5, 96, getImg("cyber/" + weatherIcon));
+
+    // weather arc graphs
+    writeImageN(93, 95, getImg("cyber/weatherringblock"));
+    // humidity
+    if (humidity != -1.0f)
+    {
+        humidityString = String(humidity);
+    }
+    if (precipitation != -1.0f)
+    {
+        precipitationString = String(precipitation);
+    }
+    dis->setCursor(106 - cyberCenterTextXOffset(humidityString), 139);
+    dis->print(humidityString);
+    cyberDrawPctGraph(humidity / 100.0f, 107, 137);
+
+    // precipitation
+    dis->setCursor(140 - cyberCenterTextXOffset(precipitationString), 139);
+    dis->print(precipitationString);
+    cyberDrawPctGraph(wData.precipitation / 100.0f, 141, 137);
+    // SUNRISE/SUNSET graph
+    float hPct = ((timeRTCLocal.Hour + timeRTCLocal.Minute / 60.0f) / 24.0f);
+    String hPctConv = String(hPct * 100.0f);
+    if (hPctConv.length() > 2)
+    {
+        hPctConv = hPctConv.substring(0, 2);
+    }
+    dis->setCursor(124 - cyberCenterTextXOffset(hPctConv), 112);
+    dis->print(hPctConv);
+        
+    if (sunrise > 0 && sunset > 0)
+    {
+        float sunriseDeg = (((sunrise - 0) * 270.0f) / 24.0f);
+        float sunsetDeg = (((sunset - 0) * 270.0f) / 24.0f);
+        cyberDrawArc(sunriseDeg - 225, sunsetDeg - sunriseDeg, 124, 109, 10);
+    }
+    cyberDrawPctGraph(hPct, 124, 109);
+
 #else
-    // Use global language system for error messages
-    writeTextReplaceBack(getInkFieldLocalizedError(), TEMP_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), HUMIDITY_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PRESSURE_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), PREPICITATION_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), VISIBILITY_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_SPEED_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), WIND_GUTS_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), CLOUD_COVER_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNRISE_CORD, SCBlack, SCWhite, true, 1);
-    writeTextReplaceBack(getInkFieldLocalizedErrorShort(), SUNSET_CORD, SCBlack, SCWhite, true, 1);
-    writeImageN(WEATHER_ICON_CORD, getImg("inkfield/meteor"));
+    // no errors b/c no one turned on weather
 #endif
 }
 

@@ -44,7 +44,12 @@ void cyberDrawPctGraph(float pct, int x, int y)
   const float d2r = 0.01745329252f;
   const int radius = 13;
   const float arcStart = 225.0f;
-
+  if(pct < 0) {
+    pct = 0.0f;
+  }
+  if(pct > 1) {
+    pct = 1.0f;
+  }
   pct = 270 * pct;
 
   // Redraw the arc

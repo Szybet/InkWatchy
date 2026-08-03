@@ -3,71 +3,54 @@
 #if WATCHFACE_CYBER
 #include "rtcMem.h"
 
-#define SYS_CORD_X 127
-#define SYS_CORD_Y 147
-
-void drawMarker1Cyber(uint16_t c, bool active)
+void cyberDrawModulePos(uint8_t color, bool active)
 {
-    dis->fillRect(SYS_CORD_X, SYS_CORD_Y, 21, 10, SCWhite);
-    if (c != SCWhite)
-    {
-        if (active)
-        {
-            writeImageN(SYS_CORD_X, SYS_CORD_Y, getImg("cyber/sysOk"));
-        }
-        else
-        {
-            writeImageN(SYS_CORD_X, SYS_CORD_Y, getImg("cyber/sysOff"));
-        }
+    dis->drawLine(186,184,186,189,color);
+    dis->drawLine(186,189,191,189,color);
+    dis->drawLine(191,189,186,184,color);
+    if(active) {
+        dis->drawLine(187,186,187,188,color);
+        dis->drawLine(187,188,189,188,color);
+        dis->drawLine(189,188,187,186,color);
     }
 }
 
-void drawMarker2Cyber(uint16_t c, bool active)
+void cyberDrawModuleEngPos(uint8_t color, bool active)
 {
-    dis->drawPixel(191, 195, c);
-    dis->drawPixel(191, 196, c);
-    dis->drawPixel(190, 196, c);
-    if (active)
-    {
-        dis->drawLine(189, 196, 191, 194, c);
-        dis->drawLine(188, 196, 191, 193, c);
+    dis->drawLine(186,191,186,196,color);
+    dis->drawLine(186,196,192,191,color);
+    dis->drawLine(192,191,186,191,color);
+    if(active) {
+        dis->drawLine(187,192,187,194,color);
+        dis->drawLine(187,194,189,192,color);
+        dis->drawLine(189,192,187,192,color);
     }
+    
 }
 
-void drawMarker3Cyber(uint16_t c, bool active)
+void cyberClearMarkers()
 {
-    drawMarker2Cyber(c, active);
-    dis->drawFastHLine(188, 159, 5, c);
-    dis->drawFastHLine(189, 160, 4, c);
-    dis->drawFastHLine(190, 161, 3, c);
-    dis->drawFastHLine(191, 162, 2, c);
-    dis->drawFastHLine(192, 163, 1, c);
-}
-
-void cleanMarkersCyber()
-{
-    drawMarker1Cyber(SCWhite, true);
-    drawMarker2Cyber(SCWhite, true);
-    drawMarker3Cyber(SCWhite, true);
+    cyberDrawModulePos(SCWhite, true);
+    cyberDrawModuleEngPos(SCWhite, true);
 }
 
 void drawPosMarkerCyber()
 {
     // First clean all Pos markers
-    cleanMarkersCyber();
+    cyberClearMarkers();
 
     // Then draw the one
     if (rM.cyber.watchfacePos == EMPTY_POS)
     {
-        drawMarker1Cyber(SCBlack, rM.cyber.positionEngaged);
+        cyberClearMarkers();
     }
     else if (rM.cyber.watchfacePos == MODULE_POS)
     {
-        drawMarker2Cyber(SCBlack, rM.cyber.positionEngaged);
+        cyberDrawModulePos(SCBlack, rM.cyber.positionEngaged);
     }
     if (rM.cyber.watchfacePos == MODULE_ENG_POS)
     {
-        drawMarker3Cyber(SCBlack, rM.cyber.positionEngaged);
+        cyberDrawModuleEngPos(SCBlack, rM.cyber.positionEngaged);
     }
     dUChange = true;
 }
