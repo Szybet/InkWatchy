@@ -51,14 +51,6 @@ const watchfaceDef terrainDef = {
 };
 #endif
 
-#if WATCHFACE_CYBER
-const watchfaceDef cyberDef = {
-    .manager = wfmOne,
-    .name = "Naate's Cyber",
-    .data = (genPointer)&cyberDefOne,
-};
-#endif
-
 #if WATCHFACE_ORBITAL
 const watchfaceDef orbitalWatchface = {
     .manager = wfmOne,
@@ -72,6 +64,14 @@ const watchfaceDef dosyWatchface = {
     .manager = wfmOne,
     .name = "Dosy",
     .data = (genPointer)&dosyDef,
+};
+#endif
+
+#if WATCHFACE_CYBER
+const watchfaceDef cyberDef = {
+    .manager = wfmOne,
+    .name = "Naate's Cyber",
+    .data = (genPointer)&cyberDefOne,
 };
 #endif
 
@@ -205,11 +205,6 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #else
     &noWatchFace,
 #endif
-#if WATCHFACE_CYBER
-    &cyberDef,
-#else
-    &noWatchFace,
-#endif
 #if WATCHFACE_ORBITAL
     &orbitalWatchface,
 #else
@@ -217,6 +212,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_DOSY
     &dosyWatchface,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_CYBER
+    &cyberDef,
 #else
     &noWatchFace,
 #endif

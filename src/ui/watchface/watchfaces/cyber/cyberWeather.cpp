@@ -292,7 +292,7 @@ void cyberDrawWeather()
     }
     dis->setCursor(124 - cyberCenterTextXOffset(hPctConv), 112);
     dis->print(hPctConv);
-        
+
     if (sunrise > 0 && sunset > 0)
     {
         float sunriseDeg = (((sunrise - 0) * 270.0f) / 24.0f);

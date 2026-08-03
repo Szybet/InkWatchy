@@ -147,6 +147,7 @@ RTC_DATA_ATTR rtcMem rM = {
         .energySaving = false,
         .weatherMinutes = 0,
         .dayTime = 0
+    },
  #endif
 // Watchface modules
     .latestModuleUpdate = 0,
