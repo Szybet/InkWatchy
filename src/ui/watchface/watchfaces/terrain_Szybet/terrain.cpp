@@ -97,16 +97,6 @@ void drawAmPm()
 }
 #endif
 
-static void showTimeBeforeApply()
-{
-#if WATCHFACE_12H
-    if (rM.wFTime.Hour != timeRTCLocal.Hour)
-    {
-        drawAmPm();
-    }
-#endif
-}
-
 static void showTimeFull()
 {
     setTextSize(1);
@@ -184,6 +174,23 @@ static void drawBattery()
     // writeTextReplaceBack(voltage, 160, 87);
     dis->setCursor(157, 114);
     dis->print(voltage);
+
+    // Low fuel / high fuel
+    if (rM.terrain.energySaving != rM.isBatterySaving)
+    {
+        rM.terrain.energySaving = rM.isBatterySaving;
+        // Clear
+        dis->fillRect(LOW_FUEL_X, LOW_FUEL_Y - LOW_FUEL_H, LOW_FUEL_W, LOW_FUEL_H, SCWhite);
+        if (rM.terrain.energySaving)
+        {
+            writeImageN(LOW_FUEL_X, LOW_FUEL_Y, getImg("terrain/lowFuel"));
+        }
+    }
+    dis->fillRect(167, 74, 21, 6, SCBlack); // Clear
+    if (rM.bat.percentage > 90)
+    {
+        writeImageN(167, 74, getImg("terrain/fullFuel"));
+    }
 }
 
 void drawDuskDawnText()
@@ -235,17 +242,6 @@ static void drawTimeAfterApply(bool forceDraw)
         rM.terrain.duskDawnHour = timeRTCLocal.Hour;
         drawFancyDuskDawn();
     }
-
-    if (rM.terrain.energySaving != rM.isBatterySaving || forceDraw == true)
-    {
-        rM.terrain.energySaving = rM.isBatterySaving;
-        // Clear
-        dis->fillRect(LOW_FUEL_X, LOW_FUEL_Y - LOW_FUEL_H, LOW_FUEL_W, LOW_FUEL_H, SCWhite);
-        if (rM.terrain.energySaving)
-        {
-            writeImageN(LOW_FUEL_X, LOW_FUEL_Y, getImg("terrain/lowFuel"));
-        }
-    }
 }
 
 String getDayByIndexTerrain(int dayOfWeek, int offset = 0)
@@ -295,7 +291,7 @@ static void drawDay()
 }
 
 const watchfaceDefOne terrainDefOne = {
-    .drawTimeBeforeApply = showTimeBeforeApply,
+    .drawTimeBeforeApply = showTimeFull,
     .drawTimeAfterApply = drawTimeAfterApply,
     .drawDay = drawDay,
     .drawMonth = []() {},

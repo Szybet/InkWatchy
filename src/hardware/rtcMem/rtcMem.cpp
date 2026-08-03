@@ -129,7 +129,16 @@ RTC_DATA_ATTR rtcMem rM = {
         .energySaving = false,
     },
 #endif
-#if WATCHFACE_CYBER
+// dosy watchface
+#if WATCHFACE_DOSY
+    .dosy = {
+        .weatherAvailable = false, .lastHourWeatherCheck = 255,
+        .lastTemp = 0,
+        .lastCondition = 255,
+    },
+#endif
+// cyber watchface
+ #if WATCHFACE_CYBER
     .cyber = {
         .steps = 0,
         .duskDawnHour = 0,
@@ -138,9 +147,8 @@ RTC_DATA_ATTR rtcMem rM = {
         .energySaving = false,
         .weatherMinutes = 0,
         .dayTime = 0
-    },
-#endif
-    // Watchface modules
+ #endif
+// Watchface modules
     .latestModuleUpdate = 0,
     .currentModule = DEFAULT_WATCHFACE_MODULE_INDEX,
     .previousModuleCount = -1,

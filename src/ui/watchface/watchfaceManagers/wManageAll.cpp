@@ -1,10 +1,6 @@
 #include "wManageAll.h"
 #include "rtcMem.h"
 
-#if WATCHFACE_ORBITAL
-#include "../watchfaces/orbital_Defaltastra/orbital.h"
-#endif
-
 #if GSR_WATCHFACES
 #include "importGSR.h"
 #endif
@@ -68,6 +64,14 @@ const watchfaceDef orbitalWatchface = {
     .manager = wfmOne,
     .name = "Orbital Defaltastra",
     .data = (genPointer)&orbitalDef,
+};
+#endif
+
+#if WATCHFACE_DOSY
+const watchfaceDef dosyWatchface = {
+    .manager = wfmOne,
+    .name = "Dosy",
+    .data = (genPointer)&dosyDef,
 };
 #endif
 
@@ -208,6 +212,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_ORBITAL
     &orbitalWatchface,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_DOSY
+    &dosyWatchface,
 #else
     &noWatchFace,
 #endif
