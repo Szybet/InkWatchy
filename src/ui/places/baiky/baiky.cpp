@@ -197,8 +197,11 @@ void loopBaiky()
         dUChange = false;
 
         isDone = false;
-        uint8_t data[1] = {0};
-        pCharacteristicDone->setValue(data, sizeof(data));
+        if (bleClientConnected)
+        {
+            uint8_t data[1] = {0};
+            pCharacteristicDone->setValue(data, sizeof(data));
+        }
         mapMemoryIndex = 0;
     }
 

@@ -3,7 +3,7 @@
 #include "defines.h"
 
 #if BLE_ENABLED || BLE_HOST_ENABLED
-extern bool bleClientConnected;
+extern volatile bool bleClientConnected;
 esp_power_level_t getBlePower();
 #endif
 

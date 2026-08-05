@@ -113,7 +113,7 @@ void cleanupBleDevice() {}
 
 #if BLE_ENABLED
 
-bool bleClientConnected = false; // Used in both bluetooths.
+volatile bool bleClientConnected = false; // Used in both bluetooths.
 
 BLEServer *pServer = NULL;
 BLEService *bleService = NULL;
