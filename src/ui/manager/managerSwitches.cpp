@@ -249,6 +249,13 @@ void switchGame2048()
 }
 #endif
 
+#if EIGHTBALL
+void switchEightball()
+{
+    generalSwitch(eightball);
+}
+#endif
+
 #if TETRIS
 void switchTetris()
 {

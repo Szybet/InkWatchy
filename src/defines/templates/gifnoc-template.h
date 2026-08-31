@@ -334,6 +334,9 @@ The default is this:
 // 2048 game, requires ACC
 #define GAME_2048 1
 
+// 8-ball game, requires ACC
+#define EIGHTBALL 1
+
 // Dice app
 #define DICE 1
 #define DICE_ANIMATION_TIME_MS 2000

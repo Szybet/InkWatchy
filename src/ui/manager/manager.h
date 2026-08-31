@@ -49,6 +49,7 @@ typedef enum
     maze,
     avoid,
     game2048,
+    eightball,
     tetris,
     jumperGame,
     snake,
@@ -189,6 +190,9 @@ void switchAvoid();
 #endif
 #if GAME_2048
 void switchGame2048();
+#endif
+#if EIGHTBALL
+void switchEightball();
 #endif
 #if TETRIS
 void switchTetris();

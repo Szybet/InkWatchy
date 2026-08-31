@@ -196,6 +196,9 @@ extern uint16_t SCWhite;
 #if GAME_2048
 #include "../ui/places/game2048/game2048.h"
 #endif
+#if EIGHTBALL
+#include "../ui/places/eightball/eightball.h"
+#endif
 #if TETRIS
 #include "../ui/places/tetris/tetrisPlace.h"
 #endif
