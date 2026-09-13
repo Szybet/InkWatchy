@@ -189,6 +189,7 @@
 #define MENU_DEBUG "Debug"
 #define MENU_POWER_SETTINGS "Imp. alimentazione"
 #define MENU_CHANGE_WATCHFACE "Cambia quadrante"
+#define MENU_INVERT_COLORS "Inverti colori"
 #define MENU_TETRIS "Blockchy"
 #define MENU_PONG "Pong"
 #define MENU_SNAKE "Serpente"

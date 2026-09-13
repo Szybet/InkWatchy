@@ -189,6 +189,7 @@
 #define MENU_DEBUG "Debugowanie"
 #define MENU_POWER_SETTINGS "Ustawienia zasilania"
 #define MENU_CHANGE_WATCHFACE "Zmien tarcze"
+#define MENU_INVERT_COLORS "Odwroc kolory"
 #define MENU_TETRIS "Blockchy"
 #define MENU_PONG "Pong"
 #define MENU_SNAKE "Waz"

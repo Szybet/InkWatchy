@@ -160,10 +160,19 @@ void initDebugMenu()
 }
 #endif
 
+void toggleInvertColors()
+{
+    rM.screenInverted = !rM.screenInverted;
+    applyScreenColors();
+    dUChange = true;
+    rM.updateCounter = FULL_DISPLAY_UPDATE_QUEUE;
+    initSettingsMenu();
+}
+
 void initSettingsMenu()
 {
     int count = -1;
-    entryMenu buttons[6];
+    entryMenu buttons[8];
     {
         debugLog("Adding wifi to menu");
         count = count + 1;
@@ -189,6 +198,11 @@ void initSettingsMenu()
         buttons[count] = {SETCLOCK_CLOCK_SETTINGS, "setTimeGui/setTimeClock", switchSetClockMenu};
     }
 #endif
+    {
+        count = count + 1;
+        String image = rM.screenInverted ? "accept" : "cross";
+        buttons[count] = {MENU_INVERT_COLORS, image, toggleInvertColors};
+    }
 
     count = count + 1;
     initMenu(buttons, count, MENU_SETTINGS, 1);

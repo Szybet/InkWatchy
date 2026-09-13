@@ -108,6 +108,7 @@ void initMainMenu();
 void initDebugMenu();
 #endif
 void initSettingsMenu();
+void toggleInvertColors();
 void initGamesMenu();
 #if HEALTH_MENU
 void initHealthMenu();

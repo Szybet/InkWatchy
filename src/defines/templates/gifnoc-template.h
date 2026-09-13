@@ -84,7 +84,8 @@ https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 #define SCREEN_ROTATION 0 // You DON't put here 90,180,270 BUT ONLY 1,2,3 as described above
 // Inverts the color, initially
 // Yatchy lp core will not work correctly with inverted watchface, please request this feature to work if you are an yatchy owner
-#define INITIAL_SCREEN_INVERT 0
+#define INITIAL_SCREEN_INVERT 0 // Inverts colors initially at boot (all pages if INVERT_ONLY_WATCHFACE is 0, or just watchfaces if 1)
+#define INVERT_ONLY_WATCHFACE 1 // If 1, color inversion (INITIAL_SCREEN_INVERT and settings menu toggle) applies only to watchfaces, keeping menus normal
 #define WATCHFACE_INVERT_COLORS 0 // Inverts the colors once again, but only in watchface
 
 // Remap buttons

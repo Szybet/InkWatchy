@@ -56,6 +56,7 @@ RTC_DATA_ATTR rtcMem rM = {
     .disableWakeUp = false,
     .userDisableAllVibration = false,
     .userDisableWakeUp = false,
+    .screenInverted = (bool)INITIAL_SCREEN_INVERT,
     // Manager
     .placeTree = {NoPlace},
     .currentPlace = NoPlace, // For loop manager for launching init or loop of a function
@@ -296,6 +297,13 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
         return true;
     }
 
+    // Screen inverted
+    if (source->screenInverted != destination->screenInverted)
+    {
+        debugLog("Screen inverted differs");
+        return true;
+    }
+
     debugLog("No changes detected");
     return false;
 }
@@ -337,6 +345,9 @@ void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
 
     // Current module
     destination->currentModule = source->currentModule;
+
+    // Screen inverted
+    destination->screenInverted = source->screenInverted;
 }
 
 void rtcMemBackupManage()

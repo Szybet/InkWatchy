@@ -189,6 +189,7 @@
 #define MENU_DEBUG "Debug"
 #define MENU_POWER_SETTINGS "Energie-Einstel."
 #define MENU_CHANGE_WATCHFACE "Zifferblatt and."
+#define MENU_INVERT_COLORS "Farben umkehren"
 #define MENU_TETRIS "Blockchy"
 #define MENU_PONG "Pong"
 #define MENU_SNAKE "Schlange"
