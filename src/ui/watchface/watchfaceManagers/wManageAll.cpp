@@ -99,11 +99,11 @@ const watchfaceDef szybetAnalogSharp = {
 };
 #endif
 
-#if GSR_WATCHFACES && GSR_STARFIELD
-const watchfaceDef gsrStarfield = {
-    .manager = wfmGSR,
-    .name = "GSR Starfield",
-    .data = (genPointer)&MyGSRWatchFaceStarfield,
+#if WATCHFACE_STARFIELD
+const watchfaceDef starfieldWatchface = {
+    .manager = wfmOne,
+    .name = "Starfield",
+    .data = (genPointer)&starfieldDef,
 };
 #endif
 
@@ -235,8 +235,8 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #else
     &noWatchFace,
 #endif
-#if GSR_WATCHFACES && GSR_STARFIELD
-    &gsrStarfield,
+#if WATCHFACE_STARFIELD
+    &starfieldWatchface,
 #else
     &noWatchFace,
 #endif

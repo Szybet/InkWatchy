@@ -5,7 +5,7 @@
 // Watchfaces!
 // https://github.com/Szybet/InkWatchy/wiki/Watchfaces
 // Keep at least one enabled. If you bother me with a problem and the problem will be that you disabled all watchfaces, then I will credit you when implementing a future counter measure.
-#define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate, Taychron, Terrain
+#define WATCHFACE_12H 0             // Show time in 12 hour format | Supported watchfaces: InkField, Slate, Taychron, Terrain, Starfield
 #define WATCHFACE_TEMP_TYPE CELSIUS // CELSIUS or FAHRENHEIT | Supported watchfaces: InkField, Slate and Taychron
 // InkField
 #define WATCHFACE_INKFIELD_SZYBET 1
@@ -29,6 +29,8 @@
 // Shades & Analog (Code preview watchfaces)
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
+// Starfield watchface
+#define WATCHFACE_STARFIELD 1
 
 // GSR watchfaces
 // Because of the ways they are written (even in native watchyGSR) they will provide worse battery life than native inkwatchy watchfaces -
@@ -41,12 +43,9 @@
 /*
 https://github.com/retroisbest/Watchy-GSR-Faces/tree/main
 https://github.com/GuruSR/Watchy_GSR/tree/master
-https://github.com/tyen901/WatchyGSR_Addon_StarfieldWatchface/#
 */
 #define GSR_WATCHFACES 0          // General turn on off every watchface
 #define GSR_WATCHFACES_OPTIMISE 1 // Draws only every minute, not all the time, small optimisations, doesn't change much but could break things but hey
-#define GSR_STARFIELD 0
-#define GSR_STARFIELD_TIMEZONE_THING 0.0 // Hours.Minutes of your timezone (kind of UTC) - yes too lazy to automate that
 #define GSR_CLASSICS_BASICS 0
 #define GSR_CLASSICS_7SEG 0
 #define GSR_CLASSICS_DOS 0

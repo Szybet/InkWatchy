@@ -163,6 +163,23 @@ struct rtcMem
         uint16_t dayTime;
     } cyber;
 #endif
+// starfield watchface
+#if WATCHFACE_STARFIELD
+    struct
+    {
+        uint32_t lastSteps;
+        int8_t lastSunPosition;
+        int8_t lastMoonIndex;
+        uint16_t sunriseMinutes;
+        uint16_t sunsetMinutes;
+        bool lastWifiStatus : 1;
+        bool lastIsPm : 1;
+        uint8_t lastHourTens;
+        uint8_t lastHourUnits;
+        uint8_t lastMinuteTens;
+        uint8_t lastMinuteUnits;
+    } starfield;
+#endif
 // Watchface modules
     uint64_t latestModuleUpdate;
     int currentModule; // Int because checkMinMax again

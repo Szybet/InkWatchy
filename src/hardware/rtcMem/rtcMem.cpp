@@ -150,6 +150,22 @@ RTC_DATA_ATTR rtcMem rM = {
         .dayTime = 0
     },
  #endif
+// starfield watchface
+#if WATCHFACE_STARFIELD
+    .starfield = {
+        .lastSteps = 0xFFFFFFFF,
+        .lastSunPosition = -1,
+        .lastMoonIndex = -1,
+        .sunriseMinutes = 360,
+        .sunsetMinutes = 1080,
+        .lastWifiStatus = false,
+        .lastIsPm = false,
+        .lastHourTens = 255,
+        .lastHourUnits = 255,
+        .lastMinuteTens = 255,
+        .lastMinuteUnits = 255,
+    },
+#endif
 // Watchface modules
     .latestModuleUpdate = 0,
     .currentModule = DEFAULT_WATCHFACE_MODULE_INDEX,
