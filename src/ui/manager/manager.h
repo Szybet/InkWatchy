@@ -11,6 +11,7 @@ typedef enum
     mainMenu,
     debugMenu,
     settingsMenu,
+    uiMenu,
     generalDebug,
     clockDebug,
     batteryDebug,
@@ -108,7 +109,9 @@ void initMainMenu();
 void initDebugMenu();
 #endif
 void initSettingsMenu();
-void toggleInvertColors();
+void initUiMenu();
+void toggleInvertScreen();
+void toggleInvertWatchface();
 void initGamesMenu();
 #if HEALTH_MENU
 void initHealthMenu();
@@ -132,6 +135,7 @@ void overwriteSwitch(UiPlace place);
 
 void switchDebugMenu();
 void switchSettingsMenu();
+void switchUiMenu();
 void switchGamesMenu();
 void switchGeneralDebug();
 void switchClockDebug();

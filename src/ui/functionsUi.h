@@ -25,6 +25,7 @@ void wLineStr(String *dest, const char *text, bool addNewLine = true);
 void wLineStr(String *dest, String text, bool addNewLine = true);
 
 void applyScreenColors();
+void applyWatchfaceColors();
 void invertScreenColors();
 void resetScreenColors();
 bool shouldInvertWatchface();

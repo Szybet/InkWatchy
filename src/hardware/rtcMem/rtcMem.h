@@ -55,6 +55,7 @@ struct rtcMem
     bool userDisableAllVibration : 1;
     bool userDisableWakeUp : 1;
     bool screenInverted : 1;
+    bool watchfaceInverted : 1;
     // Manager
     UiPlace placeTree[PLACE_TREE_MAX_DEPTH];
     UiPlace currentPlace;

@@ -57,6 +57,7 @@ RTC_DATA_ATTR rtcMem rM = {
     .userDisableAllVibration = false,
     .userDisableWakeUp = false,
     .screenInverted = (bool)INITIAL_SCREEN_INVERT,
+    .watchfaceInverted = (bool)WATCHFACE_INVERT_COLORS,
     // Manager
     .placeTree = {NoPlace},
     .currentPlace = NoPlace, // For loop manager for launching init or loop of a function
@@ -320,6 +321,13 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
         return true;
     }
 
+    // Watchface inverted
+    if (source->watchfaceInverted != destination->watchfaceInverted)
+    {
+        debugLog("Watchface inverted differs");
+        return true;
+    }
+
     debugLog("No changes detected");
     return false;
 }
@@ -364,6 +372,9 @@ void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
 
     // Screen inverted
     destination->screenInverted = source->screenInverted;
+
+    // Watchface inverted
+    destination->watchfaceInverted = source->watchfaceInverted;
 }
 
 void rtcMemBackupManage()

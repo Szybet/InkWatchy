@@ -369,30 +369,17 @@ void watchfaceManageAll(bool init)
 
 void loopWatchfaceManage()
 {
-    bool inv = shouldInvertWatchface();
-    if (inv)
-    {
-        invertScreenColors();
-    }
+    applyWatchfaceColors();
     watchfaceManageAll(false);
-    if (inv)
-    {
-        resetScreenColors();
-    }
+    resetScreenColors();
 }
 
 void initWatchfaceManage()
 {
-    bool inv = shouldInvertWatchface();
-    if (inv)
-    {
-        invertScreenColors();
-    }
+    applyWatchfaceColors();
+    dis->fillScreen(SCWhite);
     watchfaceManageAll(true);
-    if (inv)
-    {
-        resetScreenColors();
-    }
+    resetScreenColors();
 }
 
 // Only called when in watchface!

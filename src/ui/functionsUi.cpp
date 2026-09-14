@@ -430,13 +430,9 @@ sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y)
   return {w, h}; // hm?
 }
 
-void applyScreenColors()
+static inline void setScreenColors(bool inverted)
 {
-#if INVERT_ONLY_WATCHFACE
-  SCBlack = GxEPD_BLACK;
-  SCWhite = GxEPD_WHITE;
-#else
-  if (rM.screenInverted)
+  if (inverted)
   {
     SCBlack = GxEPD_WHITE;
     SCWhite = GxEPD_BLACK;
@@ -446,23 +442,22 @@ void applyScreenColors()
     SCBlack = GxEPD_BLACK;
     SCWhite = GxEPD_WHITE;
   }
-#endif
   dis->setTextColor(SCBlack);
+}
+
+void applyScreenColors()
+{
+  setScreenColors(rM.screenInverted);
+}
+
+void applyWatchfaceColors()
+{
+  setScreenColors(rM.watchfaceInverted);
 }
 
 bool shouldInvertWatchface()
 {
-  bool inv = false;
-#if INVERT_ONLY_WATCHFACE
-  if (rM.screenInverted)
-  {
-    inv = !inv;
-  }
-#endif
-#if WATCHFACE_INVERT_COLORS
-  inv = !inv;
-#endif
-  return inv;
+  return rM.watchfaceInverted;
 }
 
 void invertScreenColors()
