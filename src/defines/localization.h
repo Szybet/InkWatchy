@@ -9,6 +9,7 @@
 #define DE 3
 #define SK 4
 #define IT 5
+#define ES 6
 
 // Ensure INKWATCHY_LANG is defined
 #ifndef INKWATCHY_LANG
@@ -25,9 +26,11 @@
 #include "languages/localization_sk.h"
 #elif INKWATCHY_LANG == IT
 #include "languages/localization_it.h"
+#elif INKWATCHY_LANG == ES
+#include "languages/localization_es.h"
 #else // Default fallback to English
 #include "languages/localization_en.h"
-#warning "Unsupported language! Defaulting to English. Please define INKWATCHY_LANG as EN, PL, DE, or SK in config.h"
+#warning "Unsupported language! Defaulting to English. Please define INKWATCHY_LANG as EN, PL, DE, SK, IT, or ES in config.h"
 #endif
 
 // Helper macro for building day name arrays at compile time

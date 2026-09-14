@@ -1,6 +1,6 @@
 #pragma once
 
-#define INKWATCHY_LANG EN // EN, PL, DE and SK | Supported watchfaces: InkField, Slate and Taychron
+#define INKWATCHY_LANG EN // EN, PL, DE, SK, IT, or ES | Supported watchfaces: InkField, Slate and Taychron
 
 // Watchfaces!
 // https://github.com/Szybet/InkWatchy/wiki/Watchfaces
