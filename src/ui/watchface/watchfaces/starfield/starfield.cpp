@@ -11,7 +11,8 @@
 #include "rtcMem.h"
 
 // In the original Starfield watchface there was no temperature.
-// Kept in code and hidden for now; set to 1 if you wish to enable temperature display in the future.
+// It is hidden not only because it was not present in the original design, but also because there is no space in the current watchface layout and it currently overlaps other elements.
+// Kept in code for an eventual future implementation; set to 1 if you wish to enable temperature display in the future.
 #define STARFIELD_SHOW_TEMPERATURE 0
 
 #if STARFIELD_SHOW_TEMPERATURE
