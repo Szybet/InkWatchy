@@ -390,6 +390,22 @@
 #define HEALTH_MENU 0
 #endif
 
+#ifndef SCREEN_INVERT_COLORS
+#define SCREEN_INVERT_COLORS 0
+#endif
+
+#ifndef WATCHFACE_INVERT_COLORS
+#define WATCHFACE_INVERT_COLORS 0
+#endif
+
+#if !SCREEN_INVERT_COLORS
+#define SC_BLACK_INIT GxEPD_BLACK
+#define SC_WHITE_INIT GxEPD_WHITE
+#else
+#define SC_BLACK_INIT GxEPD_WHITE
+#define SC_WHITE_INIT GxEPD_BLACK
+#endif
+
 // Resources
 // Needs to be larger than anything that will reuse the same img pointers over and over again (not menu, that's fixed)
 #if ATCHY_VER == WATCHY_3

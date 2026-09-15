@@ -110,8 +110,6 @@ void initDebugMenu();
 #endif
 void initSettingsMenu();
 void initUiMenu();
-void toggleInvertScreen();
-void toggleInvertWatchface();
 void initGamesMenu();
 #if HEALTH_MENU
 void initHealthMenu();

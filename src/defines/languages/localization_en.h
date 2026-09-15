@@ -189,8 +189,6 @@
 #define MENU_DEBUG "Debug"
 #define MENU_POWER_SETTINGS "Power settings"
 #define MENU_CHANGE_WATCHFACE "Change watchface"
-#define MENU_UI "UI"
-#define MENU_INVERT_COLORS "Invert colors"
 #define MENU_INVERT_SCREEN "Invert screen"
 #define MENU_INVERT_WATCHFACE "Invert watchface"
 #define MENU_TETRIS "Blockchy"

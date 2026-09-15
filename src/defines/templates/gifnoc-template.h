@@ -83,7 +83,7 @@ https://github.com/GuruSR/Watchy_GSR/tree/master
 #define SCREEN_ROTATION 0 // You DON't put here 90,180,270 BUT ONLY 1,2,3 as described above
 // Inverts the color, initially
 // Yatchy lp core will not work correctly with inverted watchface, please request this feature to work if you are an yatchy owner
-#define INITIAL_SCREEN_INVERT 0 // Inverts colors of UI / menus initially at boot
+#define SCREEN_INVERT_COLORS 0 // Inverts colors of UI / menus initially at boot
 #define WATCHFACE_INVERT_COLORS 0 // Inverts colors of watchfaces initially at boot
 
 // Remap buttons

@@ -189,8 +189,6 @@
 #define MENU_DEBUG "Depuracion"
 #define MENU_POWER_SETTINGS "Energia"
 #define MENU_CHANGE_WATCHFACE "Cambiar esfera"
-#define MENU_UI "UI"
-#define MENU_INVERT_COLORS "Invertir colores"
 #define MENU_INVERT_SCREEN "Invertir pantalla"
 #define MENU_INVERT_WATCHFACE "Invertir esfera"
 #define MENU_TETRIS "Blockchy"

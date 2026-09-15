@@ -430,7 +430,7 @@ sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y)
   return {w, h}; // hm?
 }
 
-static inline void setScreenColors(bool inverted)
+static void setScreenColors(bool inverted)
 {
   if (inverted)
   {

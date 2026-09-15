@@ -72,22 +72,6 @@ static const WiFiCred *wifiCredStatic[] = {
 #include <ulp_lp_core_memory_shared.h>
 #endif
 
-#ifndef INITIAL_SCREEN_INVERT
-#define INITIAL_SCREEN_INVERT 0
-#endif
-
-#ifndef WATCHFACE_INVERT_COLORS
-#define WATCHFACE_INVERT_COLORS 0
-#endif
-
-#if !INITIAL_SCREEN_INVERT
-#define SC_BLACK_INIT GxEPD_BLACK
-#define SC_WHITE_INIT GxEPD_WHITE
-#else
-#define SC_BLACK_INIT GxEPD_WHITE
-#define SC_WHITE_INIT GxEPD_BLACK
-#endif
-
 // Screen Colors
 extern uint16_t SCBlack;
 extern uint16_t SCWhite;
@@ -176,6 +160,7 @@ extern uint16_t SCWhite;
 #endif
 #include "../ui/places/watchfaceSelector/watchfaceSel.h"
 #include "../ui/places/powerSettings/powerSettings.h"
+#include "../ui/places/uiMenu/uiMenu.h"
 #if BOOK
 #include "../ui/places/book/bookUi.h"
 #include "../ui/places/book/bookSelector.h"

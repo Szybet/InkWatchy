@@ -189,8 +189,6 @@
 #define MENU_DEBUG "Debugowanie"
 #define MENU_POWER_SETTINGS "Ustawienia zasilania"
 #define MENU_CHANGE_WATCHFACE "Zmien tarcze"
-#define MENU_UI "UI"
-#define MENU_INVERT_COLORS "Odwroc kolory"
 #define MENU_INVERT_SCREEN "Odwroc ekran"
 #define MENU_INVERT_WATCHFACE "Odwroc tarcze"
 #define MENU_TETRIS "Blockchy"
