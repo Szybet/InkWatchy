@@ -248,7 +248,7 @@ void cyberDrawWeather()
     // write the data
     setTextSize(1);
     dis->setTextColor(SCBlack);
-    setFont(getFont("cyber/RajdhaniL14"));
+    setFont(getFont("cyber/RajdhaniNumericL14"));
     int degPos = cyberRightTextXOffset(temp);
     dis->setCursor(41, 113);
     dis->print(temp);
@@ -292,7 +292,7 @@ void cyberDrawWeather()
     }
     dis->setCursor(124 - cyberCenterTextXOffset(hPctConv), 112);
     dis->print(hPctConv);
-
+        
     if (sunrise > 0 && sunset > 0)
     {
         float sunriseDeg = (((sunrise - 0) * 270.0f) / 24.0f);
