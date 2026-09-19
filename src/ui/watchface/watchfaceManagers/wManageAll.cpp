@@ -99,6 +99,14 @@ const watchfaceDef szybetAnalogSharp = {
 };
 #endif
 
+#if WATCHFACE_RETROJUMP
+const watchfaceDef retrojumpDef = {
+    .manager = wfmOne,
+    .name = "Naate's Retrojump",
+    .data = (genPointer)&retrojumpDefOne,
+};
+#endif
+
 #if GSR_WATCHFACES && GSR_STARFIELD
 const watchfaceDef gsrStarfield = {
     .manager = wfmGSR,
@@ -232,6 +240,11 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #endif
 #if WATCHFACE_ANALOG_SHARP_SZYBET
     &szybetAnalogSharp,
+#else
+    &noWatchFace,
+#endif
+#if WATCHFACE_RETROJUMP
+    &retrojumpDef,
 #else
     &noWatchFace,
 #endif
