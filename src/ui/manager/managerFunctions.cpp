@@ -189,6 +189,10 @@ void initSettingsMenu()
         buttons[count] = {SETCLOCK_CLOCK_SETTINGS, "setTimeGui/setTimeClock", switchSetClockMenu};
     }
 #endif
+    {
+        count = count + 1;
+        buttons[count] = {"UI", "ui", switchUiMenu};
+    }
 
     count = count + 1;
     initMenu(buttons, count, MENU_SETTINGS, 1);

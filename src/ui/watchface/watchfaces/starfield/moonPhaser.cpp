@@ -1,5 +1,5 @@
 #include "defines.h"
-#if GSR_WATCHFACES && GSR_STARFIELD
+#if WATCHFACE_STARFIELD
 
 #include <math.h>
 

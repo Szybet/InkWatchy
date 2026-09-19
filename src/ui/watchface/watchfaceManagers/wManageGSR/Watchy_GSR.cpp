@@ -41,15 +41,14 @@ int WatchyGSR::GetWeatherTemperature()
     OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
     if (wData.fine == true)
     {
-        return int(wData.temp);
+        return int(round(getDisplayTemperature(wData.temp)));
     }
     return 0;
 }
 
 bool WatchyGSR::IsMetric()
 {
-    // Burger people are not here :)
-    return true;
+    return (WATCHFACE_TEMP_TYPE == CELSIUS);
 }
 
 TimeData WatchTime;
@@ -100,9 +99,21 @@ String WatchyGSR::MakeMinutes(uint8_t Minutes)
     return (Minutes < 10 ? "0" : "") + String(Minutes);
 }
 
-bool WatchyGSR::IsWeatherAvailable() { return true; }
+bool WatchyGSR::IsWeatherAvailable()
+{
+    OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
+    return wData.fine;
+}
 
-int WatchyGSR::GetWeatherID() { return 0; }
+int WatchyGSR::GetWeatherID()
+{
+    OM_OneHourWeather wData = weatherGetDataHourly(WEATHER_WATCHFACE_HOUR_OFFSET);
+    if (wData.fine)
+    {
+        return wData.weather_code;
+    }
+    return 0;
+}
 
 bool WatchyGSR::NoMenu() { return true; };
 

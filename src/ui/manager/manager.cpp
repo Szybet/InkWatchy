@@ -157,6 +157,11 @@ void loopManager()
         managerLaunchFunc(settingsMenu, initSettingsMenu, loopMenu);
         break;
     }
+    case uiMenu:
+    {
+        managerLaunchFunc(uiMenu, initUiMenu, loopMenu);
+        break;
+    }
     case setTimeWatchPlace:
     {
 #if SET_CLOCK_GUI

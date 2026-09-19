@@ -1,4 +1,5 @@
 #include "functionsUi.h"
+#include "rtcMem.h"
 
 // Default values... are set in screen
 const GFXfont *font = &FreeSansBold9pt7b;
@@ -429,6 +430,36 @@ sizeInfo drawTextSimple(String text, String font, int16_t x, int16_t y)
   return {w, h}; // hm?
 }
 
+static void setScreenColors(bool inverted)
+{
+  if (inverted)
+  {
+    SCBlack = GxEPD_WHITE;
+    SCWhite = GxEPD_BLACK;
+  }
+  else
+  {
+    SCBlack = GxEPD_BLACK;
+    SCWhite = GxEPD_WHITE;
+  }
+  dis->setTextColor(SCBlack);
+}
+
+void applyScreenColors()
+{
+  setScreenColors(rM.screenInverted);
+}
+
+void applyWatchfaceColors()
+{
+  setScreenColors(rM.watchfaceInverted);
+}
+
+bool shouldInvertWatchface()
+{
+  return rM.watchfaceInverted;
+}
+
 void invertScreenColors()
 {
   uint16_t SCTmp = SCBlack;
@@ -439,9 +470,7 @@ void invertScreenColors()
 
 void resetScreenColors()
 {
-  SCBlack = SC_BLACK_INIT;
-  SCWhite = SC_WHITE_INIT;
-  dis->setTextColor(SCBlack);
+  applyScreenColors();
 }
 
 void setNativeScreenColors()

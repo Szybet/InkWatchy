@@ -45,7 +45,7 @@ void initDisplay()
     dis->setRotation(SCREEN_ROTATION);
 #endif
 
-    dis->setTextColor(SCBlack);
+    applyScreenColors();
 
     // Only on first boot, only to be extra sure
 #if SCREEN_PARTIAL_GREY_WORKAROUND || LP_CORE_TEST_ENABLED

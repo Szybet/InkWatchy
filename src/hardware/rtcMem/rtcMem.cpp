@@ -56,6 +56,8 @@ RTC_DATA_ATTR rtcMem rM = {
     .disableWakeUp = false,
     .userDisableAllVibration = false,
     .userDisableWakeUp = false,
+    .screenInverted = (bool)SCREEN_INVERT_COLORS,
+    .watchfaceInverted = (bool)WATCHFACE_INVERT_COLORS,
     // Manager
     .placeTree = {NoPlace},
     .currentPlace = NoPlace, // For loop manager for launching init or loop of a function
@@ -149,6 +151,22 @@ RTC_DATA_ATTR rtcMem rM = {
         .dayTime = 0
     },
  #endif
+// starfield watchface
+#if WATCHFACE_STARFIELD
+    .starfield = {
+        .lastSteps = 0xFFFFFFFF,
+        .lastSunPosition = -1,
+        .lastMoonIndex = -1,
+        .sunriseMinutes = 360,
+        .sunsetMinutes = 1080,
+        .lastWifiStatus = false,
+        .lastIsPm = false,
+        .lastHourTens = 255,
+        .lastHourUnits = 255,
+        .lastMinuteTens = 255,
+        .lastMinuteUnits = 255,
+    },
+#endif
 // Watchface modules
     .latestModuleUpdate = 0,
     .currentModule = DEFAULT_WATCHFACE_MODULE_INDEX,
@@ -296,6 +314,20 @@ bool didRtcChange(rtcMem *source, rtcMem *destination)
         return true;
     }
 
+    // Screen inverted
+    if (source->screenInverted != destination->screenInverted)
+    {
+        debugLog("Screen inverted differs");
+        return true;
+    }
+
+    // Watchface inverted
+    if (source->watchfaceInverted != destination->watchfaceInverted)
+    {
+        debugLog("Watchface inverted differs");
+        return true;
+    }
+
     debugLog("No changes detected");
     return false;
 }
@@ -337,6 +369,12 @@ void rtcMemRetrieve(rtcMem *source, rtcMem *destination)
 
     // Current module
     destination->currentModule = source->currentModule;
+
+    // Screen inverted
+    destination->screenInverted = source->screenInverted;
+
+    // Watchface inverted
+    destination->watchfaceInverted = source->watchfaceInverted;
 }
 
 void rtcMemBackupManage()

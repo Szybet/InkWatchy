@@ -189,6 +189,8 @@
 #define MENU_DEBUG "Debug"
 #define MENU_POWER_SETTINGS "Power settings"
 #define MENU_CHANGE_WATCHFACE "Change watchface"
+#define MENU_INVERT_SCREEN "Invert screen"
+#define MENU_INVERT_WATCHFACE "Invert watchface"
 #define MENU_TETRIS "Blockchy"
 #define MENU_PONG "Pong"
 #define MENU_SNAKE "Snake"

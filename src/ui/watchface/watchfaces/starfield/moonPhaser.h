@@ -1,5 +1,5 @@
 #include "defines.h"
-#if GSR_WATCHFACES && GSR_STARFIELD
+#if WATCHFACE_STARFIELD
 /*
   MoonPhase.h - Library to get moon phase angle
   and percentage illuminated. (as seen from Earth)
