@@ -19,15 +19,15 @@ static void rjDrawTicks()
         int inRad = INNER_RADIUS;
         
         if(i % 20 != 0) {
-            inRad += tickWidth/2;
+            inRad += tickWidth/4;
         }
         float cx1 = center_x + (inRad) * cosf((i - 90) * DEG2RAD);
         float cy1 = center_y + (inRad) * sinf((i - 90) * DEG2RAD);
         float cx2 = center_x + (OUTER_RADIUS+12) * cosf((i - 90) * DEG2RAD);
         float cy2 = center_y + (OUTER_RADIUS+12) * sinf((i - 90) * DEG2RAD);
         dis->drawLine(cx1, cy1, cx2, cy2, SCBlack);
-
     }
+
     //clear top arc
     for(int i = -90; i <= 89; i+= 1) {
         float cx1 = center_x + (OUTER_RADIUS) * cosf((i - 90) * DEG2RAD);
@@ -84,24 +84,41 @@ void rjDrawHand(int centerX, int centerY, uint16_t angle, int length)
     dis->drawLine(center_xA, center_yC, end_xA, end_yC, SCBlack);
     dis->drawLine(center_xB, center_yC, end_xB, end_yC, SCBlack);
     dis->drawLine(center_xC, center_yC, end_xC, end_yC, SCBlack);
+
+
+    //add a little tail
+    end_xA = center_xA + cos(rad+PI) * 6;
+    end_yA = center_yA - sin(rad+PI) * 6;
+    end_xB = center_xB + cos(rad+PI) * 6;
+    end_yB = center_yB - sin(rad+PI) * 6;
+    end_xC = center_xC + cos(rad+PI) * 6;
+    end_yC = center_yC - sin(rad+PI) * 6;
+
+    dis->drawLine(center_xA, center_yA, end_xA, end_yA, SCBlack);
+    dis->drawLine(center_xB, center_yA, end_xB, end_yA, SCBlack);
+    dis->drawLine(center_xC, center_yA, end_xC, end_yA, SCBlack);
+
+    dis->drawLine(center_xA, center_yB, end_xA, end_yB, SCBlack);
+    dis->drawLine(center_xB, center_yB, end_xB, end_yB, SCBlack);
+    dis->drawLine(center_xC, center_yB, end_xC, end_yB, SCBlack);
+
+    dis->drawLine(center_xA, center_yC, end_xA, end_yC, SCBlack);
+    dis->drawLine(center_xB, center_yC, end_xB, end_yC, SCBlack);
+    dis->drawLine(center_xC, center_yC, end_xC, end_yC, SCBlack);
     
+    dis->fillCircle(100,100,3, SCBlack);
 }
 
 void rjDrawWatchface()
 {
     dis->fillScreen(SCWhite);
-    rjDrawTicks();
+    writeImageN(0, 0, getImg("retrojump/watchface"));
+    //rjDrawTicks();
     
-    
-    // rjDrawHand(100,100, 0, OUTER_RADIUS-8);
-    // rjDrawHand(100,100, ((240 * 15) / 60), OUTER_RADIUS-8);
-    // rjDrawHand(100,100, ((240 * 30) / 60), OUTER_RADIUS-8);
-    // rjDrawHand(100,100, ((240 * 45) / 60), OUTER_RADIUS-8);
-    // rjDrawHand(100,100, ((240 * 55) / 60), OUTER_RADIUS-8);
     rjDrawHand(100,100, ((240 * timeRTCLocal.Minute) / 60), OUTER_RADIUS-8);
     //((360 * timeRTCLocal.Minute) / 60)
     
-    dis->fillCircle(100,100,3, SCBlack);
+    
     
 }
 void drawTimeBeforeApply() {return;}
