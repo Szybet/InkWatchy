@@ -3,57 +3,6 @@
 #if WATCHFACE_RETROJUMP
 
 
-#define DEG2RAD 0.01745329252f
-#define OUTER_RADIUS 80
-#define INNER_RADIUS 56
-
-static void rjDrawTicks()
-{
-    const unsigned int center_x = 100;
-    const unsigned int center_y = 100;
-
-    const int tickWidth = OUTER_RADIUS - INNER_RADIUS;
-    //ticks
-    for (int i = -120; i <= 120; i += 4)
-    {
-        int inRad = INNER_RADIUS;
-        
-        if(i % 20 != 0) {
-            inRad += tickWidth/4;
-        }
-        float cx1 = center_x + (inRad) * cosf((i - 90) * DEG2RAD);
-        float cy1 = center_y + (inRad) * sinf((i - 90) * DEG2RAD);
-        float cx2 = center_x + (OUTER_RADIUS+12) * cosf((i - 90) * DEG2RAD);
-        float cy2 = center_y + (OUTER_RADIUS+12) * sinf((i - 90) * DEG2RAD);
-        dis->drawLine(cx1, cy1, cx2, cy2, SCBlack);
-    }
-
-    //clear top arc
-    for(int i = -90; i <= 89; i+= 1) {
-        float cx1 = center_x + (OUTER_RADIUS) * cosf((i - 90) * DEG2RAD);
-        float cy1 = center_y + (OUTER_RADIUS) * sinf((i - 90) * DEG2RAD);
-        float cx2 = center_x + (OUTER_RADIUS+13) * cosf((i - 90) * DEG2RAD);
-        float cy2 = center_y + (OUTER_RADIUS+13) * sinf((i - 90) * DEG2RAD);
-        float cx3 = center_x + (OUTER_RADIUS) * cosf((i - 90 + 1) * DEG2RAD);
-        float cy3 = center_y + (OUTER_RADIUS) * sinf((i - 90 + 1) * DEG2RAD);
-        float cx4 = center_x + (OUTER_RADIUS+13) * cosf((i - 90 + 1) * DEG2RAD);
-        float cy4 = center_y + (OUTER_RADIUS+13) * sinf((i - 90 + 1) * DEG2RAD);
-
-        dis->fillTriangle(cx1, cy1, cx2, cy2, cx3, cy3, SCWhite);
-        dis->fillTriangle(cx2, cy2, cx3, cy3, cx4, cy4, SCWhite);
-    }
-    //clear bottom arc
-    int padWidth = 100-OUTER_RADIUS;
-    dis->fillRect(0,100,padWidth,101, SCWhite);
-    dis->fillRect(200-padWidth,100,padWidth, 101, SCWhite);
-    //inner
-    // dis->fillRect(100-INNER_RADIUS,100,100-(INNER_RADIUS*2),101, SCWhite);
-    dis->fillRect(100-INNER_RADIUS,100,(INNER_RADIUS*2),101, SCWhite);
-
-    //decorations
-    dis->drawRoundRect(100-INNER_RADIUS+8, 100-(INNER_RADIUS-8), (INNER_RADIUS-8)*2, 200, (INNER_RADIUS-8)*2, SCBlack);
-}
-
 
 void rjDrawHand(int centerX, int centerY, uint16_t angle, int length)
 {
@@ -111,26 +60,54 @@ void rjDrawHand(int centerX, int centerY, uint16_t angle, int length)
 
 void rjDrawWatchface()
 {
-    dis->fillScreen(SCWhite);
-    writeImageN(0, 0, getImg("retrojump/watchface"));
-    //rjDrawTicks();
-    
-    rjDrawHand(100,100, ((240 * timeRTCLocal.Minute) / 60), OUTER_RADIUS-8);
-    //((360 * timeRTCLocal.Minute) / 60)
-    
-    
+    writeImageN(0, 0, getImg("retrojump/watchface"));    
+    rjDrawHand(100,100, ((240 * timeRTCLocal.Minute) / 60), 62);
+
+    String time24 = getHourMinute(timeRTCLocal);
+#if WATCHFACE_12H
+    time24 = convertTo12HourFormat(time24);
+#endif
+    writeImageN(87, 137, getImg("retrojump/" + String(time24[0])));
+    writeImageN(102, 137, getImg("retrojump/" + String(time24[1])));
     
 }
-void drawTimeBeforeApply() {return;}
+void drawTimeBeforeApply() {
+    rjDrawWatchface();
+}
 static void drawTimeAfterApply(bool forceDraw)
 {
     (void)forceDraw;
 }
-void drawDay() {return;}
+void drawDay() {
+    dis->fillRect(0,185,50,15,SCWhite);
+    setTextSize(1);
+    setFont(getFont("dogicapixel4"));
+
+    String day = getLocalizedDayByIndex(timeRTCLocal.Wday, 0);
+    String month = getLocalizedMonthName(rM.wFTime.Month);
+    String date = String(rM.wFTime.Day);
+    
+    dis->setCursor(0,197);
+    dis->print(day+", "+month+" "+date);
+}
 void drawMonth() {return;}
 void showTimeFull() {rjDrawWatchface();}
-void initWatchface() {rjDrawWatchface();}
-void drawBattery() {return;}
+void initWatchface() {
+    dis->fillScreen(SCWhite);
+    writeImageN(0, 0, getImg("retrojump/watchface"));
+}
+void drawBattery() {
+    dis->fillRect(150,185,50,15,SCWhite);
+    setTextSize(1);
+    setFont(getFont("dogicapixel4"));
+    String battPct = String(rM.bat.percentage);
+
+    uint16_t w, h;
+    getTextBounds(battPct, NULL, NULL, &w, &h);
+    // -1 from edge b/c dogica miscalculates or something
+    dis->setCursor(199 - w, 197);
+    dis->print(battPct);
+}
 
 static void manageInput(buttonState bt)
 {
