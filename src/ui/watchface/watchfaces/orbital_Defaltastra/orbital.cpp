@@ -352,8 +352,8 @@ static void orbitalDrawNightTime()
 
 void orbitalDrawWatchFace()
 {
-    dis->fillScreen(GxEPD_WHITE);
-    dis->setTextColor(GxEPD_BLACK);
+    dis->fillScreen(SCWhite);
+    dis->setTextColor(SCBlack);
 
     orbitalDrawMoon();
     orbitalDrawWatchMinute();

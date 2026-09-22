@@ -189,6 +189,8 @@
 #define MENU_DEBUG "Ladenie"
 #define MENU_POWER_SETTINGS "Napajanie"
 #define MENU_CHANGE_WATCHFACE "Zmena cifernika"
+#define MENU_INVERT_SCREEN "Obratit obrazovku"
+#define MENU_INVERT_WATCHFACE "Obratit cifernik"
 #define MENU_TETRIS "Blockchy"
 #define MENU_PONG "Pong"
 #define MENU_SNAKE "Had"
