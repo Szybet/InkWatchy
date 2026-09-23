@@ -369,7 +369,7 @@ void wakeUpManageRTC()
     }
     else
     {
-      minutes = 1;
+      minutes = rM.daySleepForM;
     }
   }
   else

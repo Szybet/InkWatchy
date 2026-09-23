@@ -5,3 +5,4 @@
 void initpowerMenu();
 void toggleWakeUpEntry();
 void toggleDisableVibrationsEntry();
+void setSleepIntervalEntry();

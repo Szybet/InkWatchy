@@ -56,6 +56,7 @@ RTC_DATA_ATTR rtcMem rM = {
     .disableWakeUp = false,
     .userDisableAllVibration = false,
     .userDisableWakeUp = false,
+    .daySleepForM = DAY_SLEEP_FOR_M,
     .screenInverted = (bool)SCREEN_INVERT_COLORS,
     .watchfaceInverted = (bool)WATCHFACE_INVERT_COLORS,
     // Manager

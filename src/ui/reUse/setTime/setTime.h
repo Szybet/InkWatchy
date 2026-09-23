@@ -6,6 +6,7 @@
 
 extern int setTimeMinute;
 extern int setTimeHour;
+extern bool setTimeIsSleepInterval;
 
 void initSetTime();
 void loopSetTime();

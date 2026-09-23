@@ -201,6 +201,7 @@
 #define MENU_PARTY "Party"
 #define MENU_VIBRATIONS_DIS "Vibrations disabled"
 #define MENU_WAKE_UP_DIS "Wake up disabled"
+#define MENU_SLEEP_INTERVAL "Sleep interval"
 #define MENU_POWER "Power menu"
 
 // APP AND BOOK TRANSLATIONS
