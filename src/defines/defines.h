@@ -277,6 +277,9 @@ extern uint16_t SCWhite;
 #if WATCHFACE_CYBER
 #include "../ui/watchface/watchfaces/cyber/cyber.h"
 #endif
+#if WATCHFACE_RETROJUMP
+#include "../ui/watchface/watchfaces/retrojump/retrojump.h"
+#endif
 #if WATCHFACE_STARFIELD
 #include "../ui/watchface/watchfaces/starfield/starfield.h"
 #endif

@@ -29,6 +29,8 @@
 // Shades & Analog (Code preview watchfaces)
 #define WATCHFACE_SHADES_SZYBET 1
 #define WATCHFACE_ANALOG_SHARP_SZYBET 1
+// Retrojump watchface
+#define WATCHFACE_RETROJUMP 0
 // Starfield watchface (Ported by GabryDX, based on original Prokuon)
 #define WATCHFACE_STARFIELD 0
 

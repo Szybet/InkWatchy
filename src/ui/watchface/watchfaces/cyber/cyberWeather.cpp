@@ -6,6 +6,8 @@
 #include "cyberHelpers.h"
 #include <MoonPhase.h>
 
+#if WATCHFACE_CYBER
+
 #define TEMP_CORD 36, 126
 #define WEATHER_ICON_CORD 3, 94
 
@@ -330,3 +332,4 @@ void cyberDrawMoon()
     debugLog(String(mp.phaseName));
     writeImageN(MOON_IMG_CORD, getImg("cyber/" + cyberRemoveSpaces(String(mp.phaseName))));
 }
+#endif
