@@ -1,7 +1,9 @@
 #include "powerSettings.h"
 #include "rtcMem.h"
+#if SLEEP_INTERVAL_GUI
 #include "../../manager/manager.h"
 #include "../../reUse/setTime/setTime.h"
+#endif
 
 void toggleDisableVibrationsEntry()
 {
@@ -19,6 +21,7 @@ void toggleWakeUpEntry()
     initpowerMenu();
 }
 
+#if SLEEP_INTERVAL_GUI
 void setSleepIntervalEntry()
 {
     setTimeHour = rM.daySleepForM / 60;
@@ -26,13 +29,14 @@ void setSleepIntervalEntry()
     setTimeIsSleepInterval = true;
     switchSetTime();
 }
+#endif
 
 void initpowerMenu()
 {
     int count = -1;
     rM.userDisableWakeUp = rM.disableWakeUp;
     rM.userDisableAllVibration = rM.disableAllVibration;
-    entryMenu buttons[3];
+    entryMenu buttons[2 + SLEEP_INTERVAL_GUI];
     {
         count = count + 1;
         String image;
@@ -59,10 +63,12 @@ void initpowerMenu()
         }
         buttons[count] = {MENU_WAKE_UP_DIS, image, toggleWakeUpEntry};
     }
+#if SLEEP_INTERVAL_GUI
     {
         count = count + 1;
         buttons[count] = {MENU_SLEEP_INTERVAL, getImg("battery"), setSleepIntervalEntry};
     }
+#endif
     count = count + 1;
     initMenu(buttons, count, MENU_POWER, 1);
 }

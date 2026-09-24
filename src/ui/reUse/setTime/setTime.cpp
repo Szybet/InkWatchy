@@ -5,15 +5,19 @@
 
 int setTimeMinute = 0;
 int setTimeHour = 0;
+#if SLEEP_INTERVAL_GUI
 bool setTimeIsSleepInterval = false;
+#endif
 
 void initSetTime()
 {
+#if SLEEP_INTERVAL_GUI
     if (setTimeIsSleepInterval == true)
     {
         setTimeHour = rM.daySleepForM / 60;
         setTimeMinute = rM.daySleepForM % 60;
     }
+#endif
 
     init_set_time();
     set_time_set_time(setTimeHour, setTimeMinute);
@@ -31,6 +35,7 @@ void exitSetTime()
     setTimeHour = int(time.hour);
     setTimeMinute = int(time.minute);
 
+#if SLEEP_INTERVAL_GUI
     if (setTimeIsSleepInterval == true)
     {
         int totalMinutes = setTimeHour * 60 + setTimeMinute;
@@ -48,6 +53,7 @@ void exitSetTime()
         wakeUpManageRTC();
         setTimeIsSleepInterval = false;
     }
+#endif
 
     slintExit();
 }

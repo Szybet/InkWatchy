@@ -6,7 +6,9 @@
 
 extern int setTimeMinute;
 extern int setTimeHour;
+#if SLEEP_INTERVAL_GUI
 extern bool setTimeIsSleepInterval;
+#endif
 
 void initSetTime();
 void loopSetTime();

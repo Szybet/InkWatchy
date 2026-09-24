@@ -54,7 +54,9 @@ struct rtcMem
     bool disableWakeUp : 1;
     bool userDisableAllVibration : 1;
     bool userDisableWakeUp : 1;
+#if SLEEP_INTERVAL_GUI
     uint16_t daySleepForM;
+#endif
     bool screenInverted : 1;
     bool watchfaceInverted : 1;
     // Manager

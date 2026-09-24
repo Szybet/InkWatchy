@@ -369,7 +369,11 @@ void wakeUpManageRTC()
     }
     else
     {
+#if SLEEP_INTERVAL_GUI
       minutes = rM.daySleepForM;
+#else
+      minutes = DAY_SLEEP_FOR_M;
+#endif
     }
   }
   else

@@ -32,6 +32,9 @@
 // Starfield watchface (Ported by GabryDX, based on original Prokuon)
 #define WATCHFACE_STARFIELD 0
 
+// Power savings
+#define SLEEP_INTERVAL_GUI 0
+
 // GSR watchfaces
 // Because of the ways they are written (even in native watchyGSR) they will provide worse battery life than native inkwatchy watchfaces -
 // Because they write everything every minute, unlike inkwatchy watchfaces which check what needs to be rewritten
