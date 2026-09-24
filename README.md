@@ -105,6 +105,17 @@ Head out to the [wiki](https://github.com/Szybet/InkWatchy/wiki)
 ## Questions / Contact
 Create a github issue or get in touch with me on the discord server or matrix space (on top of this read are links)
 
+## AI & code quality policy
+Using AI is fine as a tool (Only if local, open weight, but that's just my opinion, not enforced), you still need to understand what to tell it and understand what it did. 
+
+If your pull request "works" but is bad code (Doing things the other way that it already happens in other places, complete mess, etc) it will be rejected, if you used AI or not. Just read the codebase and follow already established conventions.
+
+If I see code that doesn't make any sense, the AI just put it there because it thought it's needed, but it's not, I will reject it
+
+For games & watchfaces the code quality policy is less enforced (within reason), as they are just games or watchfaces.
+
+Also, I want to talk with a human, not an AI, if you can't reply to me or write a description of your pull request by yourself, just don't open it at all
+
 <details>
 <summary><h2>Outdated demos</h2></summary>
 Speed is messed up because of recording.
