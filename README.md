@@ -109,13 +109,15 @@ Create a github issue or get in touch with me on the discord server or matrix sp
 Using AI is fine as a tool (Only if local, open weight, but that's just my opinion, not enforced), you still need to understand what to tell it and understand what it did. Just read the codebase and follow already established conventions.
 
 If your pull request "works" but is bad code (Doing things the other way that it already happens in other places, complete mess, AI's favorite unnecessary code, etc) there are a few scenarios:
-- If I see obvious AI usage and the code is bad, I will close the pull request pointing you here. Congratulations, you wasted my time, did you even look at the code or was I the first person to look at it? Start from scratch, consider the crazy idea of learning how to code yourself, huh?
+- If I see obvious AI usage and the code is bad, I will close the pull request pointing you here. Congratulations, you wasted my time, did you even look at the code or was I the first person to look at it? Start from scratch, consider the crazy idea of learning how to code yourself, huh? Only then open the pull request again if you want
 - If it's AI but I provided feedback, then the pull request was worth looking at but I got mad while reading the code and just closed it while pointing you here. Feel free to provide a repaired pull request.
 - If I see no AI usage and problems, I will help you fix them, guide you. Always willing to help fellow humans
 
 For games & watchfaces the code quality policy is less enforced (within reason), as they are just games or watchfaces.
 
 Also, I want to talk with a human, not an AI, if you can't reply to me or write a description of your pull request by yourself, just don't open it at all
+
+If for whatever reason I treated you badly (you didn't used AI, I said you did), then I'm sorry, but that's the world we live in, if you have a better idea how to handle this, with respect for my time, feel free to provide it. Also I really can spot AI usage, don't treat me like an idiot, I do read the code.
 
 <details>
 <summary><h2>Outdated demos</h2></summary>
