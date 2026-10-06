@@ -3,10 +3,10 @@
  */
 
 #include "cyber.h"
-#include "cyberHelpers.h"
-#include <MoonPhase.h>
 
 #if WATCHFACE_CYBER
+#include "cyberHelpers.h"
+#include <MoonPhase.h>
 
 #define TEMP_CORD 36, 126
 #define WEATHER_ICON_CORD 3, 94
@@ -294,7 +294,7 @@ void cyberDrawWeather()
     }
     dis->setCursor(124 - cyberCenterTextXOffset(hPctConv), 112);
     dis->print(hPctConv);
-        
+
     if (sunrise > 0 && sunset > 0)
     {
         float sunriseDeg = (((sunrise - 0) * 270.0f) / 24.0f);

@@ -248,7 +248,7 @@ const watchfaceDef *watchfacesList[WATCHFACE_COUNT] = {
 #else
     &noWatchFace,
 #endif
-  #if WATCHFACE_RETROJUMP
+#if WATCHFACE_RETROJUMP
     &retrojumpDef,
 #else
     &noWatchFace,
