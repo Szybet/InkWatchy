@@ -3,6 +3,8 @@
  */
 
 #include "cyber.h"
+
+#if WATCHFACE_CYBER
 #include "cyberHelpers.h"
 #include <MoonPhase.h>
 
@@ -292,7 +294,7 @@ void cyberDrawWeather()
     }
     dis->setCursor(124 - cyberCenterTextXOffset(hPctConv), 112);
     dis->print(hPctConv);
-        
+
     if (sunrise > 0 && sunset > 0)
     {
         float sunriseDeg = (((sunrise - 0) * 270.0f) / 24.0f);
@@ -330,3 +332,4 @@ void cyberDrawMoon()
     debugLog(String(mp.phaseName));
     writeImageN(MOON_IMG_CORD, getImg("cyber/" + cyberRemoveSpaces(String(mp.phaseName))));
 }
+#endif

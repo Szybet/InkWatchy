@@ -2,7 +2,7 @@
 
 #include "defines.h"
 
-#define WATCHFACE_COUNT 21
+#define WATCHFACE_COUNT 22
 
 // This is a forward declaration
 struct watchfaceDefOne;
