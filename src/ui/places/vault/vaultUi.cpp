@@ -245,6 +245,7 @@ void showVaultImage(String file)
         debugLog("Before base64 encoding");
 
         int baseResult = mbedtls_base64_decode(realImage, vaultItem.size, &written, vaultItem.buf, vaultItem.size);
+        free(vaultItem.buf);
 
         debugLog("Written base64 bytes: " + String(written));
         debugLog("base64 result: " + String(baseResult));
