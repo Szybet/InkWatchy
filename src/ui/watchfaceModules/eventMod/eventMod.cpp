@@ -68,30 +68,34 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     entryMenu buttons[dates];
     int64_t currentTime = getUnixTime(timeRTCLocal);
     debugLog("Current time: " + String(currentTime));
-    int64_t smallestDifference = 9223372036854775807;
     int64_t theUnix = 0;
+    bool foundCurrentDay = false;
     for (int i = 0; i < dates; i++)
     {
         int stringIndex = (i * DATE_BYTES);
         String retrUnix = buf.substring(stringIndex, stringIndex + DATE_BYTES - 1);
         debugLog("Got unix: " + retrUnix);
         int64_t newUnix = retrUnix.toInt();
-        int diff = abs(currentTime - newUnix);
-        if (diff < smallestDifference && newUnix > currentTime)
+        int64_t newUnixLocal = (int64_t)calDisplayUnix((uint64_t)newUnix);
+        if (newUnixLocal <= currentTime)
         {
-            smallestDifference = diff;
             theUnix = newUnix;
+            foundCurrentDay = true;
         }
+    }
+    if (!foundCurrentDay)
+    {
+        theUnix = buf.substring(0, DATE_BYTES - 1).toInt();
     }
     debugLog("Current time: " + String(currentTime));
     debugLog("theUnix: " + String(theUnix));
-    if (day(theUnix) != day(currentTime) || month(theUnix) != month(currentTime))
+    if (day(calDisplayUnix((uint64_t)theUnix)) != day(currentTime) || month(calDisplayUnix((uint64_t)theUnix)) != month(currentTime))
     {
         dis->print("No events today");
         wfEventresetValues();
         return;
     }
-    JsonDocument doc = getCalendarJson(unixToDate(theUnix));
+    JsonDocument doc = getCalendarJson(unixToDate(calDisplayUnix((uint64_t)theUnix)));
     JsonArray array = doc.as<JsonArray>();
     int arraySize = array.size();
     if (array == 0)
@@ -106,9 +110,10 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     for (int i = 0; i < arraySize; i++)
     {
         uint64_t startUnix = array[i]["start_time"].as<String>().toInt();
-        if (startUnix > currentTime)
+        int64_t startUnixLocal = (int64_t)calDisplayUnix(startUnix);
+        if (startUnixLocal > currentTime)
         {
-            int diff = llabs(startUnix - currentTime);
+            int diff = llabs(startUnixLocal - currentTime);
             if (diff < smallDiff)
             {
                 finalI = i;
@@ -126,7 +131,7 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     String des = array[finalI]["name"].as<String>();
     uint64_t end = array[finalI]["end_time"].as<String>().toInt();
 
-    String btnStr = getHourMinuteUnix(eventUnix) + "-" + getHourMinuteUnix(end) + " " + des;
+    String btnStr = getHourMinuteUnix(calDisplayUnix(eventUnix)) + "-" + getHourMinuteUnix(calDisplayUnix(end)) + " " + des;
     debugLog("btnStr: " + btnStr);
 
     if (btnStr.length() <= LINE_LIMIT)
@@ -152,7 +157,7 @@ void wfEventrequestShow(buttonState button, bool *showBool)
     dis->print(details);
 
     // Set the next redraw, kind of
-    rM.currentEventTime = eventUnix;
+    rM.currentEventTime = (int64_t)calDisplayUnix(eventUnix);
     rM.currentDay = -1;
 
     // No.

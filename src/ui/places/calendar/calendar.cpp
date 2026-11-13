@@ -16,6 +16,11 @@ void switchCalendarEventMenu() {
     generalSwitch(calendarEventMenu);
 }
 
+uint64_t calDisplayUnix(uint64_t utcUnix)
+{
+    return utcUnix - (uint64_t)timeZoneOffset;
+}
+
 JsonDocument getCalendarJson(String date)
 {
     String dateFile = fsGetString(date, "", "/calendar/");
@@ -64,9 +69,9 @@ void initCalendar()
 
             String name = array[i]["name"].as<String>();
             uint64_t startUnix = array[i]["start_time"].as<String>().toInt();
-            String start = getHourMinuteUnix(startUnix);
+            String start = getHourMinuteUnix(calDisplayUnix(startUnix));
             uint64_t endUnix = array[i]["end_time"].as<String>().toInt();
-            String end = getHourMinuteUnix(endUnix);
+            String end = getHourMinuteUnix(calDisplayUnix(endUnix));
             String info = start + "-" + end + " " + String(i) + ": " + name;
             debugLog("Final info: " + info);
             buttons[i] = {info, "", initCalendar};
@@ -139,20 +144,24 @@ void initCalendarMenu()
     entryMenu buttons[dates];
     int64_t currentTime = getUnixTime(timeRTCLocal);
     debugLog("Current time: " + String(currentTime));
-    int64_t smallestDifference = 9223372036854775807;
     int indexOfCurrTime = 0;
+    bool foundCurrentDay = false;
     for (int i = 0; i < dates; i++)
     {
         int stringIndex = (i * DATE_BYTES);
         String retrUnix = buf.substring(stringIndex, stringIndex + DATE_BYTES - 1);
         debugLog("Got unix: " + retrUnix);
-        int64_t newUnix = retrUnix.toInt();
-        int diff = abs(currentTime - newUnix);
-        if (diff < smallestDifference)
+        int64_t newUnixLocal = (int64_t)calDisplayUnix((uint64_t)retrUnix.toInt());
+        if (newUnixLocal <= currentTime)
         {
-            smallestDifference = diff;
             indexOfCurrTime = stringIndex;
+            foundCurrentDay = true;
         }
+    }
+    if (!foundCurrentDay)
+    {
+        debugLog("All days are in the future, starting at the first one");
+        indexOfCurrTime = 0;
     }
     debugLog("Current time: " + String(currentTime));
     debugLog("indexOfCurrTime: " + String(indexOfCurrTime));
@@ -166,7 +175,7 @@ void initCalendarMenu()
         debugLog("stringIndex: " + String(stringIndex));
 
         uint64_t unixTime = buf.substring(stringIndex, stringIndex + DATE_BYTES - 1).toInt();
-        String dateStr = unixToDate(unixTime) + " " + unixToDayName(unixTime);
+        String dateStr = unixToDate(calDisplayUnix(unixTime)) + " " + unixToDayName(calDisplayUnix(unixTime));
         debugLog("dateStr: " + dateStr);
 
         buttons[i] = {dateStr, "", switchCalendarEventMenu};
