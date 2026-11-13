@@ -211,27 +211,30 @@ void loopButtonsTask(void *parameter)
 void loopButtonsTask(void *parameter)
 {
     // Wait for all buttons to drop down, helpfull for manageButtonWakeUp
-    while (buttonRead(BACK_PIN) == HIGH || buttonRead(MENU_PIN) == HIGH || buttonRead(UP_PIN) == HIGH || buttonRead(DOWN_PIN) == HIGH)
+    buttonStates btns = readButtons();
+    while (btns.back || btns.menu || btns.up || btns.down)
     {
         delayTask(SMALL_BUTTON_DELAY_MS);
+        btns = readButtons();
     }
     while (true)
     {
         delayTask(BUTTON_TASK_DELAY);
+        buttonStates btns = readButtons();
         buttonState currentPressed = buttonPressed.load();
-        if (buttonRead(BACK_PIN) == HIGH && currentPressed != LongBack)
+        if (btns.back && currentPressed != LongBack)
         {
             longButtonCheck(BACK_PIN, Back, LongBack);
         }
-        else if (buttonRead(MENU_PIN) == HIGH && currentPressed != Back && currentPressed != LongBack && currentPressed != LongMenu)
+        else if (btns.menu && currentPressed != Back && currentPressed != LongBack && currentPressed != LongMenu)
         {
             longButtonCheck(MENU_PIN, Menu, LongMenu);
         }
-        else if (buttonRead(UP_PIN) == HIGH && currentPressed != Menu && currentPressed != Back && currentPressed != LongBack && currentPressed != LongMenu && currentPressed != LongUp)
+        else if (btns.up && currentPressed != Menu && currentPressed != Back && currentPressed != LongBack && currentPressed != LongMenu && currentPressed != LongUp)
         {
             longButtonCheck(UP_PIN, Up, LongUp);
         }
-        else if (buttonRead(DOWN_PIN) == HIGH && currentPressed != Up && currentPressed != Menu && currentPressed != Back && currentPressed != LongUp && currentPressed != LongBack && currentPressed != LongDown && currentPressed != LongMenu)
+        else if (btns.down && currentPressed != Up && currentPressed != Menu && currentPressed != Back && currentPressed != LongUp && currentPressed != LongBack && currentPressed != LongDown && currentPressed != LongMenu)
         {
             longButtonCheck(DOWN_PIN, Down, LongDown);
         }
