@@ -1,24 +1,6 @@
 #include "defines.h"
 #include "rtcMem.h"
 
-// https://github.com/espressif/arduino-esp32/blob/337058ac94e7e3df11d273a93e88d1ea605e6f5f/cores/esp32/main.cpp#L105
-// Why is that? well anyway this task set's it and exits
-TaskHandle_t priorityLoopHandle;
-void priorityLoopSet(void *parameter)
-{
-  while (true)
-  {
-    delayTask(350);
-    TaskHandle_t loopTaskHandle = xTaskGetHandle("loopTask");
-    if (loopTaskHandle != NULL)
-    {
-      vTaskPrioritySet(loopTaskHandle, MAIN_LOOP_PRIORITY);
-      // debugLog("Set loop task priority, exiting...");
-      vTaskDelete(NULL);
-    }
-  }
-}
-
 void setup()
 {
 #if DEBUG
@@ -41,13 +23,8 @@ void setup()
 
     turnOnButtons();
 
-    xTaskCreate(
-        priorityLoopSet,
-        "priorityLoop",
-        1000,
-        NULL,
-        20,
-        &priorityLoopHandle);
+    // setup() runs directly inside loopTask, so passing NULL sets its priority immediately
+    vTaskPrioritySet(NULL, MAIN_LOOP_PRIORITY);
   }
 
 #if INK_ALARMS
