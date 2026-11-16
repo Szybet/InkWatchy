@@ -157,7 +157,7 @@ void goSleep()
 
 #if RTC_MEMORY_BACKUP
     unsigned char tmpHash[16];
-    mbedtls_md5((unsigned char *)&rM, sizeof(rtcMem), tmpHash);
+    getPersistentSettingsHash(&rM, tmpHash);
     if (memcmp(tmpHash, rtcMd5, 16) == 0)
     {
         debugLog("Hashes are equal, not updating backup");

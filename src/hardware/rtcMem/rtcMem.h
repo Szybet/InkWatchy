@@ -246,6 +246,7 @@ extern rtcMem rM;
 
 #if RTC_MEMORY_BACKUP
 extern unsigned char rtcMd5[16];
+void getPersistentSettingsHash(const rtcMem *mem, unsigned char *hashOut);
 bool didRtcChange(rtcMem *source, rtcMem *destination);
 void rtcMemBackupManage();
 #endif

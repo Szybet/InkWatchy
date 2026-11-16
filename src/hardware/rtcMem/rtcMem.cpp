@@ -270,6 +270,46 @@ RTC_DATA_ATTR rtcMem rM = {
 
 RTC_DATA_ATTR unsigned char rtcMd5[16];
 
+namespace {
+struct RtcPersistentData
+{
+#if INK_ALARMS
+    inkAlarm alarms[MAX_ALARMS];
+    uint64_t nextAlarm;
+    int8_t nextAlarmIndex;
+#endif
+    char posixTimeZone[POSIX_TIMEZONE_MAX_LENGTH];
+    int currentModule;
+    uint8_t watchfaceSelected;
+    bool screenInverted;
+    bool watchfaceInverted;
+};
+}
+
+void getPersistentSettingsHash(const rtcMem *mem, unsigned char *hashOut)
+{
+    RtcPersistentData data;
+    memset(&data, 0, sizeof(data));
+
+#if INK_ALARMS
+    memcpy(data.alarms, mem->alarms, sizeof(data.alarms));
+    data.nextAlarm = mem->nextAlarm;
+    data.nextAlarmIndex = mem->nextAlarmIndex;
+#endif
+
+    if (strlen(TIMEZONE_POSIX) == 0 && strlen(TIMEZONE_OLSON) == 0)
+    {
+        memcpy(data.posixTimeZone, mem->posixTimeZone, sizeof(data.posixTimeZone));
+    }
+
+    data.currentModule = mem->currentModule;
+    data.watchfaceSelected = mem->watchfaceSelected;
+    data.screenInverted = mem->screenInverted;
+    data.watchfaceInverted = mem->watchfaceInverted;
+
+    mbedtls_md5((const unsigned char *)&data, sizeof(data), hashOut);
+}
+
 bool didRtcChange(rtcMem *source, rtcMem *destination)
 {
     debugLog("Comparing rtc data");
@@ -394,6 +434,7 @@ void rtcMemBackupManage()
                     debugLog("Rtc backup exists and is correct size, recovering it");
                     rtcMem *rtcMemTmp = (rtcMem *)buff.buf;
                     rtcMemRetrieve(rtcMemTmp, &rM);
+                    getPersistentSettingsHash(&rM, rtcMd5);
                 }
                 else
                 {

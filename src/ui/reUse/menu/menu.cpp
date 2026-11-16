@@ -77,7 +77,7 @@ void showMenu()
   getTextBounds(currentMenuData.menuName, NULL, NULL, NULL, &textHeight);
 
   currentPage = currentMenuData.currentButton / currentMenuData.itemsOnPage;
-  pageNumber = ceil(float(currentMenuData.totalMenus) / float(currentMenuData.itemsOnPage));
+  pageNumber = (currentMenuData.totalMenus + currentMenuData.itemsOnPage - 1) / currentMenuData.itemsOnPage;
 
   String pageString = String(currentPage + 1) + "/" + String(pageNumber);
   debugLog(pageString);
